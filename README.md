@@ -52,7 +52,14 @@ python scripts/generate-catalog.py
 
 This should be run nightly to update the recipes here.
 
-**under development!**
+## Calculate Metrics
 
-I'd like to add some kind of little data analysis, and I'm still thinking about
-what that should be.
+If you run the script [generate-graph-data.py](generate-graph-data.py) you
+can generate the [containers.yaml](_data/containers.yaml) data file that
+shows counts of base containers, tags, and bootstraps.
+
+```bash
+python scripts/generate-graph-data.py
+```
+
+![assets/img/plot.png](assets/img/plot.png)

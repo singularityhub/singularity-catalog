@@ -34,16 +34,11 @@ repos = []
 core_rate_limit = g.get_rate_limit().core
 
 
-def read_yaml(filename):
-    with open(filename, "r") as fd:
-        content = yaml.load(fd, Loader=yaml.FullLoader)
-    return content
-
-
 def read_file(filename):
     with open(filename, "r") as fd:
         content = fd.read()
     return content
+
 
 class Repo:
     data_format = 2
@@ -124,7 +119,6 @@ def combine_results(code_search):
     """
     byrepo = {}
     lookup = {}
-    files = {}
 
     for i, filename in enumerate(code_search):
         repo = filename.repository
@@ -166,7 +160,10 @@ def main():
     # This search seems to return the best results! We search by indexed,
     # and it only returns top 10, and we can hope that over time we get closed
     # to the actual ~4k results (if we preserve older results).
-    code_search = g.search_code('"Bootstrap" in:file filename:Singularity NOT language:java NOT language:shell NOT language:python NOT language:json NOT language:markdown NOT language:text NOT language:html NOT language:rst NOT language:smarty NOT language:yaml NOT language:roff NOT language:vim NOT extension:ipynb', sort="indexed")
+    code_search = g.search_code(
+        '"Bootstrap" in:file filename:Singularity NOT language:java NOT language:shell NOT language:python NOT language:json NOT language:markdown NOT language:text NOT language:html NOT language:rst NOT language:smarty NOT language:yaml NOT language:roff NOT language:vim NOT extension:ipynb',
+        sort="indexed",
+    )
 
     # Create a directory structure with Singularity recipes
     data_dir = os.path.join(here, "_recipes")
@@ -179,7 +176,7 @@ def main():
     old_repos = []
     if os.path.exists(repos_file):
         content = read_file(repos_file)
-        old_repos = json.loads("\n".join(content.split('\n')[1:]))
+        old_repos = json.loads("\n".join(content.split("\n")[1:]))
 
     for i, reponame in enumerate(byrepo):
 
@@ -210,10 +207,9 @@ def main():
                 continue
 
             # Look for any Singularity file!
-            files = []            
+            files = []
             for recipe in recursive_find(str(tmp)):
-                filename = recipe.replace(str(tmp),'').strip('/')
-                recipe_dir = os.path.dirname(recipe)
+                filename = recipe.replace(str(tmp), "").strip("/")
                 savepath = os.path.join(repo_dir, filename)
                 savedir = os.path.dirname(savepath)
 
@@ -238,17 +234,22 @@ def main():
         # If no Singularity recipes, no go
         if not files:
             continue
-   
-        call_rate_limit_aware(
-            lambda: repos.append(Repo(repo, readme, files).__dict__)
-        )      
+
+        call_rate_limit_aware(lambda: repos.append(Repo(repo, readme, files).__dict__))
 
         if len(repos) % 20 == 0:
             logging.info("Storing intermediate results.")
             store_data()
 
+    # Add old repos that aren't in current
+    present = [x["full_name"] for x in repos]
+    for old_repo in old_repos:
+        if old_repo["full_name"] not in present:
+            repos.append(old_repo)
+
     # one final save
     store_data()
+
 
 if __name__ == "__main__":
     main()
