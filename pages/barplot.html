@@ -1,0 +1,201 @@
+---
+layout: graph
+title: Singularity Container Bases
+subtitle: Given the large set of recipes that we find in the Singularity Community Catalog, how do they break down? The plots below show recipes broken down by the base images (versions excluded), organizations of those images, and the bootstrap type. What do you see?
+permalink: /bases/
+---
+
+{% include head.html %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.js"></script>
+
+<style>
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+.label {
+  fill: #fff;
+  font-family: sans-serif;
+  font-size: 10px;
+}
+
+text {
+  fill : #777;
+}
+
+.domain, line {
+  stroke: #777;
+}
+
+.focusLine {
+  shape-rendering: crispEdges;
+  stroke: #777;
+  stroke-width: 1.1;
+  stroke-linecap: butt;
+}
+</style>
+
+<div class="container-wide">
+<div class="row" style="padding-bottom:20px">
+    <div class="col-md-12">
+        {% if page.subtitle %}<small>{{ page.subtitle }}</small>{% endif %}
+    </div>
+</div>
+
+<div class="row" style="padding-top:30px">
+    <div class="col-md-12">
+
+<h3>Which bases are most commonly used?</h3>
+<div style="width: 100%; overflow-x: auto; overflow-y: hidden">
+  <div style="width: 10000px; height: 600px">
+        <canvas id="bases-plot" width="10000" height="600"></canvas>
+  </div>
+</div>
+
+<p style="padding:20px">Wow, Ubuntu and debian are clear winners here! Centos seems to come in
+at a close second, along with machine learning and conda bases. And we have
+quite a long tail. What else would you like to derive from this data?</p>
+
+</div></div>
+
+<div class="row" style="padding-top:30px">
+    <div class="col-md-12">
+
+
+<h3>What if we break that down into organizations?</h3>
+<div style="width: 100%; overflow-x: auto; overflow-y: hidden">
+  <div style="width: 3000px; height: 600px">
+        <canvas id="orgs-plot" width="3000" height="600"></canvas>
+  </div>
+</div>
+
+<p style="padding:20px">If we break that down into organizations (of which the core containers on Docker Hub are not included
+because they do not technically have one) we see different winner! The top is <a href="https://github.com/shub-fuzz" target="_blank">one organization</a> that uses this common base container, followed by a few knows and a few unknowns.
+</div></div>
+
+
+<div class="row" style="padding-top:30px">
+    <div class="col-md-12">
+<h3>Which bootstrap types are used?</h3>
+<div style="width: 100%; overflow-x: auto; overflow-y: hidden">
+  <div style="width: 3000px; height: 600px">
+        <canvas id="bootstraps-plot" width="3000" height="600"></canvas>
+  </div>
+</div>
+
+<p style="padding:20px"> The leader in bootstrapping is obviously docker!</p>
+
+</div></div>
+
+
+
+<div class="row" style="padding-top:30px">
+    <div class="col-md-12">
+<h3>How often is "latest" used?</h3>
+   <canvas id="latest-plot" width="3000" height="600"></canvas>
+
+<p style="padding:20px"> And finally, about 1 in 9 users are using the latest tag. Yikes!</p>
+</div></div>
+
+</div>
+<script>
+var ctx = document.getElementById("bases-plot").getContext("2d");
+
+var data = {
+    labels: [{% for base in site.data.containers.bases %}'{{ base.name }}'{% if loop.last %}{% else %},{% endif %}{% endfor %}],
+    datasets: [
+        {
+            label: "Bases",
+            backgroundColor: "tomato",
+            data: [{% for base in site.data.containers.bases %}'{{ base.count }}'{% if loop.last %}{% else %},{% endif %}{% endfor %}],        
+        }
+    ]
+};
+
+var myBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: data,
+    options: {
+        responsive: true,
+        scales: { xAxes: [{ stacked: true, ticks: {autoSkip: false}}], yAxes: [{stacked: true}]},
+        maintainAspectRatio: false,
+        legend: {
+            position: 'left',
+        }
+    }
+});
+
+
+var ctxBootstrap = document.getElementById("bootstraps-plot").getContext("2d");
+
+var data = {
+    labels: [{% for bs in site.data.containers.bootstraps %}'{{ bs.name }}'{% if loop.last %}{% else %},{% endif %}{% endfor %}],
+    datasets: [
+        {
+            label: "Bootstraps",
+            backgroundColor: "#844175",
+            data: [{% for bs in site.data.containers.bootstraps %}'{{ bs.count }}'{% if loop.last %}{% else %},{% endif %}{% endfor %}],        
+        }
+    ]
+};
+
+var bootstrapChart = new Chart(ctxBootstrap, {
+    type: 'bar',
+    data: data,
+    options: {
+        responsive: true,
+        scales: { xAxes: [{ stacked: true, ticks: {autoSkip: false}}], yAxes: [{stacked: true}]},
+        maintainAspectRatio: false,
+        legend: {
+            position: 'left',
+        }
+    }
+});
+
+var ctxOrgs = document.getElementById("orgs-plot").getContext("2d");
+
+var data = {
+    labels: [{% for org in site.data.containers.orgs %}'{{ org.name }}'{% if loop.last %}{% else %},{% endif %}{% endfor %}],
+    datasets: [
+        {
+            label: "Organizations",
+            backgroundColor: "#3c4c87",
+            data: [{% for org in site.data.containers.orgs %}'{{ org.count }}'{% if loop.last %}{% else %},{% endif %}{% endfor %}],        
+        }
+    ]
+};
+
+var orgsChart = new Chart(ctxOrgs, {
+    type: 'bar',
+    data: data,
+    options: {
+        responsive: true,
+        scales: { xAxes: [{ stacked: true, ticks: {autoSkip: false}}], yAxes: [{stacked: true}]},
+        maintainAspectRatio: false,
+        legend: {
+            position: 'left',
+        }
+    }
+});
+
+const circleLatest = {
+  labels: ["latest", "other"],
+  datasets: [{
+    label: 'How often is the "latest" tag usde?',
+    data: ["{{ site.data.containers.tags.latest }}", "{{ site.data.containers.tags.other }}"],
+    backgroundColor: [
+      'purple',
+      'rgb(255, 205, 86)',
+    ],
+    hoverOffset: 4
+  }]
+};
+
+
+var ctxLatest = $("#latest-plot");
+var latest = new Chart(ctxLatest, {
+  type: 'pie',
+  data: circleLatest
+});
+</script>
