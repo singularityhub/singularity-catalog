@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: conda/miniconda3
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y git curl wget  procps make gcc
+
+    conda install -c bioconda famsa
+
+%environment
+    export LC_ALL=C
+

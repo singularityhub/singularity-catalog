@@ -1,0 +1,23 @@
+Bootstrap: debootstrap
+OSVersion: xenial
+MirrorURL:  http://us.archive.ubuntu.com/ubuntu/
+Include: flex bison gcc g++ make
+
+%files
+    . /opt/MaBoSS-env-2.0
+
+%post
+    rm -fr /opt/MaBoSS-env-2.0/.git
+    bash -c "cd /opt/MaBoSS-env-2.0/engine/src/; make install"
+    bash -c "cd /opt/MaBoSS-env-2.0/engine/src/; make MAXNODES=128 install"
+    bash -c "cd /opt/MaBoSS-env-2.0/engine/src/; make MAXNODES=256 install"
+    bash -c "cd /opt/MaBoSS-env-2.0/engine/src/; make MAXNODES=512 install"
+    bash -c "cd /opt/MaBoSS-env-2.0/engine/src/; make MAXNODES=1024 install"
+
+
+%runscript
+    /opt/MaBoSS-env-2.0/engine/pub/MaBoSS-server -q --host 0.0.0.0 --port 7777 \
+    & /opt/MaBoSS-env-2.0/engine/pub/MaBoSS_128n-server -q --host 0.0.0.0 --port 7778 \
+    & /opt/MaBoSS-env-2.0/engine/pub/MaBoSS_256n-server -q --host 0.0.0.0 --port 7779 \
+    & /opt/MaBoSS-env-2.0/engine/pub/MaBoSS_512n-server -q --host 0.0.0.0 --port 7780 \
+    & /opt/MaBoSS-env-2.0/engine/pub/MaBoSS_1024n-server -q --host 0.0.0.0 --port 7781

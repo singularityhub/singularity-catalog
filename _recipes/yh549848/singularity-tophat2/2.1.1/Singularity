@@ -1,0 +1,11 @@
+BootStrap: docker
+From: continuumio/miniconda2:4.7.12
+
+%apprun tophat2
+  exec tophat2 "${@}"
+
+%post
+  . /opt/conda/bin/activate && \
+  conda install -q -y \
+    -c bioconda tophat=2.1.1 && \
+  conda clean -a -q -f -y

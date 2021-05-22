@@ -1,0 +1,27 @@
+    <div class="modal fade" tabindex="-1" role="dialog" id="about-popup">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="padding:20px">
+          <div class="modal-header">
+            <h5 class="modal-title">Rules for recipe inclusion
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>
+            A Singularity recipe is a definition file to build a Singularity container. It can be thought of as a packaged set of packages to install alongside a configuration. Following convention specified in the <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0177459#sec042" target="_blank">Singularity publication</a> and thousands of recipes on GitHub that were built on Singularity Hub, Singularity recipes are typically represented in a "Singularity" file, akin to a Dockerfile, optionally with an extension to indicate a particular tag. This means that we can easily discover these files across GitHub using the GitHub API and present a catalog here. This is the Singularity community catalog. You can come here to find recipe examples, and browse what the community is working on. While there are many thousands of recipes online, we include recipes based on the following criteria: 
+          <ul>
+                <li>We parse the 1000 most recently indexed on a nightly basis</li>
+                <li>Your file must be named following the Singularity published convention</li>
+                <li>The recipe is contained in a public Github repository.</li>
+                <li>The repository is small enough to be cloned into a Github actions job.</li>
+                <li>The repository is not blacklisted <a target="_blank"
+                href="https://github.com/singularityhub/singularity-catalog/blob/main/blacklist.txt">here</a>.</li>
+              </ul>
+            </p>
+        </div>
+        </div>
+      </div>
+    </div>
+

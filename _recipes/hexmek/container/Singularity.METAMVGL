@@ -1,0 +1,54 @@
+Bootstrap: docker
+From: conda/miniconda3
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y procps  make git gcc g++ perl rsync libhts-dev libtool  dh-autoreconf \
+                    bison flex python-lxml libxml2  libxml2-dev libbz2-dev \
+                    autoconf automake zlib1g-dev \
+                    liblzma-dev libcurl4-gnutls-dev libssl-dev \
+                    libcairo2
+    pip install scipy
+    pip install networkx
+
+    # install htslib
+    cd /opt
+    git clone https://github.com/samtools/htslib
+    cd htslib
+    git checkout  a7a90fe
+    autoheader
+    autoconf
+    ./configure
+    make
+    make install
+    # export path
+    CPLUS_INCLUDE_PATH="/usr/local/include/htslib:$CPLUS_INCLUDE_PATH"
+    LIBRARY_PATH="/usr/local/lib:$LIBRARY_PATH"
+    LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+
+    # build and install NETAMVGL
+    cd /opt
+    git clone https://github.com/ZhangZhenmiao/METAMVGL
+    cd METAMVGL
+    # need to patch Makefile
+    sed -i -r 's/g\+\+ -O3/g\+\+ -O3 -L\/usr\/local\/lib/' Makefile
+    make
+    chmod +x METAMVGL.py
+
+    cd /opt
+    git clone https://github.com/Vini2/GraphBin
+    cd GraphBin
+    pip install .
+
+    
+
+
+
+%environment
+    export LC_ALL=C
+    export PATH="/opt/METAMVGL:$PATH"
+    export CPLUS_INCLUDE_PATH="/usr/local/include/htslib:$CPLUS_INCLUDE_PATH"
+    export LIBRARY_PATH="/usr/local/lib:$LIBRARY_PATH"
+    export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+

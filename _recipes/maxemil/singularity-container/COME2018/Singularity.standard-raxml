@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  build-essential \
+                  git \
+                  ca-certificates \
+
+######## raxml ########
+cd /usr/local/
+git clone https://github.com/stamatak/standard-RAxML.git standard-raxml
+cd /usr/local/standard-raxml
+make -f Makefile.PTHREADS.gcc
+rm *.o
+ln -s /usr/local/standard-raxml/raxmlHPC-PTHREADS /usr/local/bin/raxml
+
+%runscript
+raxml "$@"

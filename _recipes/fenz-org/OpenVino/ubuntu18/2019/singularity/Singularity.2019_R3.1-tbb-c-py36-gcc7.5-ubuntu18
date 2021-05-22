@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: provarepro/openvino:2019_c_deps-ubuntu18
+
+%post
+    git clone \
+        --depth 1 \
+        --single-branch \
+        -b 2019_R3.1 \
+        https://github.com/openvinotoolkit/openvino.git && \
+    cd /openvino && \
+    git submodule update --init --recursive && \
+    cd inference-engine && \
+    ./install_dependencies.sh && \
+    cd /usr/bin/ && rm python && \
+    ln -s python3 python && \
+    cd /openvino/inference-engine && \
+    mkdir build && cd build && \
+    cmake \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DTHREADING=TBB \
+        -DENABLE_DLIA=OFF \
+        -DENABLE_VPU=OFF \
+        -DENABPP=OFF \
+        -DENABLE_PROFILING_ITT=OFF \
+        -DENABLE_VALIDATION_SET=OFF \
+        -DENABLE_TESTS=OFF \
+        -DENABLE_GNA=OFF \
+        -DENABLE_CLDNN=OFF \
+        -DENABLE_MKL_DNN=ON \
+        -DENABLE_OPENCV=OFF \
+        .. && \
+    make --jobs=$(nproc --all)
+
+%environment
+    export LD_LIBRARY_PATH="/openvino/inference-engine/temp/omp/lib/:/opt/opencv/lib:/openvino/inference-engine/bin/intel64/Release/lib"

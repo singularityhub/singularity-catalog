@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: debian:stretch
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  default-jdk \
+                  ca-certificates \
+                  libxrender1 \
+                  gsl-bin
+
+cd /usr/local/
+
+wget http://ab.inf.uni-tuebingen.de/data/software/megan5/download/MEGAN_unix_5_11_3.sh
+chmod +x MEGAN_unix_5_11_3.sh
+./MEGAN_unix_5_11_3.sh -q
+
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+Version 5.11.3

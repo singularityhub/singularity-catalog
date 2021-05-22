@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: python:3.8
+Stage: build
+
+%post
+    apt update -y
+    apt upgrade -y
+    pip install pytest
+    pip install jsonschema
+    pip install skrebate
+    pip install radiomics
+    pip install lightgbm
+    pip install seaborn
+    pip install matplotlib
+    pip install tqdm
+    pip install six
+    pip install SimpleITK
+    pip install pyradiomics
+    pip install numpy
+    pip install scipy
+    pip install pandas
+    pip install joblib
+    pip install scikit-learn<=0.19.2
+    pip install skfeature-chappers
+    pip install nibabel
+    pip install collections

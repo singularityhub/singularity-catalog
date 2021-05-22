@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: conda/miniconda3
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y git curl wget  procps make gcc
+
+    conda config --add channels r
+    conda config --add channels defaults
+    conda config --add channels conda-forge
+    conda config --add channels bioconda
+    conda install bioconvert
+
+%environment
+    export LC_ALL=C
+

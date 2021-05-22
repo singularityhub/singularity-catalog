@@ -1,0 +1,59 @@
+BootStrap: docker
+From: alpine:3.10.3
+Stage: compile
+
+%post
+	apk update
+	apk add bash
+	apk add git
+	apk add build-base
+    apk add zlib
+    apk add zlib-dev
+    apk add bzip2
+    apk add bzip2-dev
+    apk add xz
+    apk add xz-dev
+	apk add python3
+	ln -s `which python3` /bin/python
+
+%apprun bedtools
+   exec bedtools
+
+%appinstall bedtools
+   mkdir /install_src
+   cd /install_src
+   git clone https://github.com/arq5x/bedtools2/
+   cd bedtools2
+   make -j 8
+
+%apphelp bedtools
+   Bedtools.
+
+
+Bootstrap: docker
+From: alpine:3.10.3
+Stage: release
+
+%post
+    apk update
+	apk add zlib
+	apk add bzip2
+	apk add xz
+	apk add libgcc
+	apk add libstdc++
+	apk add libbz2
+
+%files from compile
+	/install_src/bedtools2/bin/ /usr/
+
+%apphelp bedtools
+	Bedtools 2.18 ( as of 18.12.2019 )
+	https://github.com/arq5x/bedtools2/
+
+
+%apprun bedtools
+	exec bedtools
+
+%labels
+	Author "Tomi Häkkinen"
+	Version 1.0

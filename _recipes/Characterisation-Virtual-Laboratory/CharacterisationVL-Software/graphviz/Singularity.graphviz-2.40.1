@@ -1,0 +1,23 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804
+
+%labels
+    MAINTAINER_NAME  Jay van Schyndel
+    MAINTAINER_EMAIL jay.vanschyndel@monash.edu
+
+    APPLICATION_NAME graphviz
+    APPLICATION_VERSION 2.40.1
+
+    HARDWARE CPU
+
+    LAST_UPDATED 22-APR-2019
+
+%post
+    echo "====================="
+    echo " Installing Graphviz "
+    echo "====================="
+    apt-get -y update
+    apt -y install graphviz=2.40.1-2
+
+%runscript
+    $*

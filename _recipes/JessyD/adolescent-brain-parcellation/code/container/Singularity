@@ -1,0 +1,58 @@
+Bootstrap: docker
+From: mtmiller/octave:7.0.0
+
+%environment
+    export FSL_DIR="/usr/share/fsl/5.0"
+    export OS="Linux"
+    export FS_OVERRIDE=0
+    export FIX_VERTEX_AREA=""
+    export FSF_OUTPUT_FORMAT="nii.gz"
+    export FREESURFER_HOME="/opt/freesurfer"
+    export SUBJECTS_DIR="$FREESURFER_HOME/subjects"
+    export FUNCTIONALS_DIR="$FREESURFER_HOME/sessions"
+    export MNI_DIR="$FREESURFER_HOME/mni"
+    export LOCAL_DIR="$FREESURFER_HOME/local"
+    export MINC_BIN_DIR="$FREESURFER_HOME/mni/bin"
+    export MINC_LIB_DIR="$FREESURFER_HOME/mni/lib"
+    export MNI_DATAPATH="$FREESURFER_HOME/mni/data"
+    export PERL5LIB="$MINC_LIB_DIR/perl5/5.8.5"
+    export MNI_PERL5LIB="$MINC_LIB_DIR/perl5/5.8.5"
+    export PATH="$FREESURFER_HOME/bin:$FSFAST_HOME/bin:$FREESURFER_HOME/tktools:$MINC_BIN_DIR:$PATH"
+    export CBIG_CODE_DIR="/cbig_simplified"
+    export CBIG_MATLAB_DIR=/octave/bin/octave
+
+
+%post
+	apt-get update -y 
+	apt-get -y install --no-install-recommends \
+               csh \
+               curl \
+               bzip2 \
+               ca-certificates \
+               xvfb \
+               build-essential \
+               autoconf \
+               libtool \
+               pkg-config
+
+    # Install freesurfer
+    curl -sSL https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.1/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.1.tar.gz | tar zxv --no-same-owner -C /opt \
+    --exclude='freesurfer/diffusion' \
+    --exclude='freesurfer/docs' \
+    --exclude='freesurfer/fsfast' \
+    --exclude='freesurfer/lib/cuda' \
+    --exclude='freesurfer/lib/qt' \
+    --exclude='freesurfer/matlab' \
+    --exclude='freesurfer/mni/share/man' \
+    --exclude='freesurfer/subjects/fsaverage_sym' \
+    --exclude='freesurfer/subjects/cvs_avg35' \
+    --exclude='freesurfer/subjects/cvs_avg35_inMNI152' \
+    --exclude='freesurfer/subjects/bert' \
+    --exclude='freesurfer/subjects/sample-*.mgz' \
+    --exclude='freesurfer/subjects/V1_average' \
+    --exclude='freesurfer/trctrain'
+
+%runscript
+	exec "$@"
+
+

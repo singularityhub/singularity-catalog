@@ -1,0 +1,182 @@
+Bootstrap: docker
+From: condaforge/mambaforge:latest
+Stage: spython-base
+
+%labels
+io.github.snakemake.containerized="true"
+io.github.snakemake.conda_env_hash="7d6df3ac352ce05689f51ede034e3da570c5efa3d8ae943a3d866f58ec366efd"
+%post
+
+# Step 1: Retrieve conda environments
+
+# Conda environment:
+#   source: ../conda_envs/assembly_qc.yaml
+#   prefix: /conda-envs/64382ac9946a65a4ae4fbcec59dbcfac
+#   channels:
+#     - bioconda
+#     - conda-forge
+#     - defaults
+#   dependencies:
+#     - quast=5.0.2
+mkdir -p /conda-envs/64382ac9946a65a4ae4fbcec59dbcfac
+wget -O /conda-envs/64382ac9946a65a4ae4fbcec59dbcfac/environment.yaml https://raw.githubusercontent.com/jaleezyy/covid-19-signal/master/conda_envs/assembly_qc.yaml
+
+# Conda environment:
+#   source: ../conda_envs/assign_lineages.yaml
+#   prefix: /conda-envs/25956fa8a56ed8b45f70537e8c06e241
+#   name: assign_lineages
+#   channels:
+#     - conda-forge
+#     - bioconda
+#     - defaults
+#   dependencies:
+#     - biopython=1.74
+#     - minimap2>=2.16
+#     - pip=19.3.1
+#     - python=3.7
+#     - snakemake-minimal=5.13
+#     - gofasta
+#     - nodejs
+#     - pip:
+#       - pandas==1.0.1
+#       - git+https://github.com/cov-lineages/pangolin.git
+#       - git+https://github.com/cov-lineages/pangoLEARN.git
+mkdir -p /conda-envs/25956fa8a56ed8b45f70537e8c06e241
+wget -O /conda-envs/25956fa8a56ed8b45f70537e8c06e241/environment.yaml https://raw.githubusercontent.com/jaleezyy/covid-19-signal/master/conda_envs/assign_lineages.yaml
+
+# Conda environment:
+#   source: ../conda_envs/freebayes.yaml
+#   prefix: /conda-envs/ccb275734b2d6508d9365411939aec89
+#   name: freebayes
+#   channels:
+#     - conda-forge
+#     - bioconda
+#     - defaults
+#   dependencies:
+#     - bcftools=1.9
+#     - freebayes=1.3.2
+#     - pysam=0.15.3
+#     - tabix=0.2.6
+#     - parasail-python
+mkdir -p /conda-envs/ccb275734b2d6508d9365411939aec89
+wget -O /conda-envs/ccb275734b2d6508d9365411939aec89/environment.yaml https://raw.githubusercontent.com/jaleezyy/covid-19-signal/master/conda_envs/freebayes.yaml
+
+# Conda environment:
+#   source: ../conda_envs/ivar.yaml
+#   prefix: /conda-envs/e9d6f363ccbb5a46fdba5008c78ee625
+#   name: ivar
+#   channels:
+#     - bioconda
+#     - conda-forge
+#     - defaults
+#   dependencies:
+#     - ivar=1.3
+#     - samtools=1.10
+mkdir -p /conda-envs/e9d6f363ccbb5a46fdba5008c78ee625
+wget -O /conda-envs/e9d6f363ccbb5a46fdba5008c78ee625/environment.yaml https://raw.githubusercontent.com/jaleezyy/covid-19-signal/master/conda_envs/ivar.yaml
+
+# Conda environment:
+#   source: ../conda_envs/postprocessing.yaml
+#   prefix: /conda-envs/9be57b75dfa426984031edba1d557ab0
+#   name: postprocessing
+#   channels:
+#     - conda-forge
+#     - bioconda
+#     - defaults
+#   dependencies:
+#     - matplotlib
+#     - numpy
+#     - pandas
+mkdir -p /conda-envs/9be57b75dfa426984031edba1d557ab0
+wget -O /conda-envs/9be57b75dfa426984031edba1d557ab0/environment.yaml https://raw.githubusercontent.com/jaleezyy/covid-19-signal/master/conda_envs/postprocessing.yaml
+
+# Conda environment:
+#   source: ../conda_envs/snp_mapping.yaml
+#   prefix: /conda-envs/aa431a5ec1bec8ff4cefcf64684846fb
+#   name: snp_mapping
+#   channels:
+#     - conda-forge
+#     - bioconda
+#     - defaults
+#   dependencies:
+#     - bwa=0.7.17
+#     - samtools=1.7
+#     - bedtools=2.26.0
+#     - breseq=0.35.0
+#     - pysam
+#     - python=3.6.5
+#     - tbb=2020.2
+mkdir -p /conda-envs/aa431a5ec1bec8ff4cefcf64684846fb
+wget -O /conda-envs/aa431a5ec1bec8ff4cefcf64684846fb/environment.yaml https://raw.githubusercontent.com/jaleezyy/covid-19-signal/master/conda_envs/snp_mapping.yaml
+
+# Conda environment:
+#   source: ../conda_envs/trim_qc.yaml
+#   prefix: /conda-envs/859f0db80bc03485b26d300375d487f6
+#   name: trim_qc
+#   channels:
+#     - conda-forge
+#     - bioconda
+#     - defaults
+#   dependencies:
+#     - fastqc=0.11.9
+#     - trim-galore=0.6.5
+#     - kraken2=2.0.9beta
+mkdir -p /conda-envs/859f0db80bc03485b26d300375d487f6
+wget -O /conda-envs/859f0db80bc03485b26d300375d487f6/environment.yaml https://raw.githubusercontent.com/jaleezyy/covid-19-signal/master/conda_envs/trim_qc.yaml
+
+# Conda environment:
+#   source: ../ncov-tools/workflow/envs/environment.yml
+#   prefix: /conda-envs/6156333fb2f2ec45ee24e273f2da2612
+#   name: ncov-qc
+#   channels:
+#     - conda-forge
+#     - bioconda
+#     - defaults
+#   dependencies:
+#     - snakemake
+#     - mafft
+#     - augur
+#     - pysam
+#     - r-base=3.6.1
+#     - iqtree<2
+#     - bioconductor-ggtree=2.0.0
+#     - r-argparse
+#     - r-patchwork=1.0.0
+#     - r-ggforce=0.3.1
+#     - bedtools
+#     - samtools
+#     - parasail-python
+#     - newick_utils
+#     - pip=19.3.1
+#     - minimap2
+#     - poppler
+#     - numpy=1.19.1
+#     - biopython=1.77
+#     - snpeff=5.0-0
+#     - pip:
+#         - dendropy>=4.4.0
+#         - pyvcf
+#         - ncov-parser
+#         - git+https://github.com/hCoV-2019/lineages.git
+#         - git+https://github.com/hCoV-2019/pangolin.git
+#         - git+https://github.com/cov-lineages/pangoLEARN.git
+#         - git+https://github.com/cov-ert/datafunk.git
+#         - git+https://github.com/jts/ncov-watch.git
+mkdir -p /conda-envs/6156333fb2f2ec45ee24e273f2da2612
+wget -O /conda-envs/6156333fb2f2ec45ee24e273f2da2612/environment.yaml https://raw.githubusercontent.com/jts/ncov-tools/4280173d779b68c2ff3d037835fc7db491fb07d4/workflow/envs/environment.yml
+
+# Step 2: Generate conda environments
+
+mamba env create --prefix /conda-envs/64382ac9946a65a4ae4fbcec59dbcfac --file /conda-envs/64382ac9946a65a4ae4fbcec59dbcfac/environment.yaml && \
+mamba env create --prefix /conda-envs/25956fa8a56ed8b45f70537e8c06e241 --file /conda-envs/25956fa8a56ed8b45f70537e8c06e241/environment.yaml && \
+mamba env create --prefix /conda-envs/ccb275734b2d6508d9365411939aec89 --file /conda-envs/ccb275734b2d6508d9365411939aec89/environment.yaml && \
+mamba env create --prefix /conda-envs/e9d6f363ccbb5a46fdba5008c78ee625 --file /conda-envs/e9d6f363ccbb5a46fdba5008c78ee625/environment.yaml && \
+mamba env create --prefix /conda-envs/9be57b75dfa426984031edba1d557ab0 --file /conda-envs/9be57b75dfa426984031edba1d557ab0/environment.yaml && \
+mamba env create --prefix /conda-envs/aa431a5ec1bec8ff4cefcf64684846fb --file /conda-envs/aa431a5ec1bec8ff4cefcf64684846fb/environment.yaml && \
+mamba env create --prefix /conda-envs/859f0db80bc03485b26d300375d487f6 --file /conda-envs/859f0db80bc03485b26d300375d487f6/environment.yaml && \
+mamba env create --prefix /conda-envs/6156333fb2f2ec45ee24e273f2da2612 --file /conda-envs/6156333fb2f2ec45ee24e273f2da2612/environment.yaml && \
+mamba clean --all -y
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

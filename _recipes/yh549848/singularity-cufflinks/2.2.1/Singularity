@@ -1,0 +1,26 @@
+BootStrap: docker
+From: continuumio/miniconda2:4.7.12
+
+%apprun cuffcompare
+  exec cuffcompare "${@}"
+
+%apprun cuffdiff
+  exec cuffdiff "${@}"
+
+%apprun cufflinks
+  exec cufflinks "${@}"
+
+%apprun cuffmerge
+  exec cuffmerge "${@}"
+
+%apprun cuffnorm
+  exec cuffnorm "${@}"
+
+%apprun cuffquant
+  exec cuffquant "${@}"
+
+%post
+  . /opt/conda/bin/activate && \
+  conda install -q -y \
+    -c bioconda cufflinks=2.2.1 && \
+  conda clean -a -q -f -y

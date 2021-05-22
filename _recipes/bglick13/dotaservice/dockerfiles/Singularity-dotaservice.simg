@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: dota:latest
+%files
+setup.py /root/dotaservice/
+README.md /root/dotaservice/
+dotaservice /root/dotaservice/dotaservice/
+%labels
+MAINTAINER Tim Zaman <timbobel@gmail.com>
+%post
+
+apt-get -q update \
+&& apt-get install -y \
+python3.7 \
+python3.7-distutils \
+&& curl -s https://bootstrap.pypa.io/get-pip.py | python3.7
+
+cd /root
+
+mkdir /root/dotaservice
+pip3.7 install --user -e /root/dotaservice/
+
+
+%runscript
+cd /root
+exec python3.7 -m dotaservice "$@"
+%startscript
+cd /root
+exec python3.7 -m dotaservice "$@"

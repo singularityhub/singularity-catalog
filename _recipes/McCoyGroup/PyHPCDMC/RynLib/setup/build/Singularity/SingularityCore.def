@@ -1,0 +1,65 @@
+#
+# Core resources for RynLib w/o building off of Entos, using a CentOS core OS
+#
+# NOTE: this definition file depends on features only available in
+# Singularity 3.2 and later.
+BootStrap: docker
+From: nvidia/cuda:10.1-devel-centos7
+
+# No idea why all of this stuff is here...but apparently this is needed to get OPA and whatever MPI features...?
+
+# Python
+%post
+    yum install -y \
+        python2 \
+        python3.7
+    rm -rf /var/cache/yum/*
+
+# GNU compiler runtime
+%post
+    yum install -y \
+        libgfortran \
+        libgomp
+    rm -rf /var/cache/yum/*
+
+# Centos Development Tools
+%post
+    yum groupinstall -y 'Development Tools'
+
+# OPA
+%post
+    yum install -y \
+        hwloc-libs \
+        infinipath-psm \
+        libfabric \
+        libhfil \
+        libibverbs \
+        libibverbs-devel \
+        libpsm2 \
+        libsysfs-devel \
+        numactl-libs \
+        opa-basic-tools \
+        rdma-core
+
+# OpenMPI
+%post
+    yum install -y \
+        hwloc \
+        openssh-clients
+    rm -rf /var/cache/yum/*
+
+# RynLib
+%post
+ yum install -y\
+    g++\
+    git
+  rm -rf /var/cache/yum/*
+
+ yum install -y\
+    python3-devel\
+    python3-pip\
+    gcc-gfortran
+
+  pip3 install numpy &&\
+  pip3 install scipy &&\
+  pip3 install wget

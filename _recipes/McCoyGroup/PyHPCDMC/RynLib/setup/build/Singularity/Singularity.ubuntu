@@ -1,0 +1,145 @@
+#
+#   CORE:
+#       Defines how to build the core that RynLib will require inside the Dockerized environment
+#
+
+# See https://docs.docker.com/engine/reference/builder/
+#
+# Additional libraries must be added with great care and consideration for
+# environments not using Docker e.g. MacOSX or Conda
+
+
+#
+#   DEFAULT CONFIG FOR ENTOS
+#       Defines the base configuration needed in case we want to link in a version of Entos to use
+#
+BootStrap: docker
+From: ubuntu:eoan-20200410
+
+%env
+DEBIAN_FRONTEND=noninteractive
+BASH_ENV=/etc/bash.bashrc
+ENV MKL_THREADING_LAYER=TBB
+
+%post
+ DEBIAN_FRONTEND=noninteractive
+ apt-get update &&\
+ apt-get -y install g++ &&\
+ apt-get -y install libboost-dev libboost-filesystem-dev libboost-system-dev &&\
+ apt-get -y install libarmadillo-dev &&\
+ apt-get -y install libxc-dev &&\
+ apt-get -y install git &&\
+ apt-get -y install cmake &&\
+ apt-get -y install xsltproc &&\
+ apt-get -y install ccache &&\
+ apt-get clean
+
+# Install most up-to-date Intel MKL to support as many Intel chips as possible
+# See https://software.intel.com/en-us/articles/installing-intel-free-libs-and-python-apt-repo
+%post
+  DEBIAN_FRONTEND=noninteractive
+  apt-get update &&\
+  apt-get -y install wget &&\
+  apt-get -y install gnupg &&\
+  apt-get -y install apt-transport-https && \
+  wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
+  apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
+  rm GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB
+
+%post
+ DEBIAN_FRONTEND=noninteractive
+ ITR=2020.0-166
+ IRS=2020.0.166
+ echo deb https://apt.repos.intel.com/tbb all main > /etc/apt/sources.list.d/intel-tbb.list &&\
+  apt-get update && apt-get -y install intel-tbb-devel-$ITR
+ echo deb https://apt.repos.intel.com/mkl all main > /etc/apt/sources.list.d/intel-mkl.list &&\
+  apt-get update && apt-get -y install intel-mkl-tbb-$ITR
+ rm /opt/intel/compilers_and_libraries_$IRS/linux/mkl/lib/intel64_lin/*.a && \
+  echo "/opt/intel/compilers_and_libraries_$IRS/linux/mkl/lib/intel64_lin/" >> /etc/ld.so.conf.d/intel.conf && \
+  echo "/opt/intel/compilers_and_libraries_$IRS/linux/tbb/lib/intel64/gcc4.8/" >> /etc/ld.so.conf.d/intel.conf && \
+  ldconfig &&\
+  echo "source /opt/intel/compilers_and_libraries_$IRS/linux/mkl/bin/mklvars.sh intel64" >> /etc/bash.bashrc &&\
+  echo "source /opt/intel/compilers_and_libraries_$IRS/linux/tbb/bin/tbbvars.sh intel64" >> /etc/bash.bashrc &&\
+  echo "source /opt/intel/compilers_and_libraries_$IRS/linux/mkl/bin/mklvars.sh intel64" >> /etc/profile &&\
+  echo "source /opt/intel/compilers_and_libraries_$IRS/linux/tbb/bin/tbbvars.sh intel64" >> /etc/profile &&\
+  apt-get clean
+
+# libecpint
+%post
+  DEBIAN_FRONTEND=noninteractive
+  apt-get -y install git python &&\
+  git clone https://github.com/moritzBens/libecpint /libecpint &&\
+  cd /libecpint &&\
+  git checkout 2d40bce92f229c9a477e618c6008c0622e241d48 &&\
+  mkdir /libecpint_build &&\
+  cd /libecpint_build &&\
+  cmake -DCMAKE_CXX_FLAGS=-O3 ../libecpint &&\
+  make -j $(nproc) &&\
+  make test &&\
+  make install &&\
+  cd / &&\
+  rm -r /libecpint*
+
+# libcint
+# Explicitly override FindBLAS.cmake by including it in libcint's ./cmake/ folder.
+# CMake's default FindBLAS is incapable of finding libmkl_rt.so and will find
+# libmkl_intel.so which is OpenMP threaded. This override libentos.so's link to
+# libmkl_rt.so and kill performance in entos because it is not TBB parallelised.
+# See Issue #1082
+%post
+  apt-get -y install wget &&\
+  wget https://github.com/sunqm/libcint/archive/v3.0.18.tar.gz --content-disposition &&\
+  tar xf libcint-3.0.18.tar.gz &&\
+  echo "set(BLAS_FOUND TRUE)" > /libcint-3.0.18/cmake/FindBLAS.cmake &&\
+  echo "set(BLAS_LIBRARIES \"/opt/intel/compilers_and_libraries_2020.0.166/linux/mkl/lib/intel64_lin/libmkl_rt.so\")" >> /libcint-3.0.18/cmake/FindBLAS.cmake &&\
+  mkdir libcint_build &&\
+  cd libcint_build &&\
+  cmake /libcint-3.0.18/ &&\
+  make -j $(nproc) &&\
+  make install &&\
+  cd / &&\
+  rm -r /libcint*
+
+# libOpenMM.so (Entos uses it but we never will)
+%post
+  apt-get -y install graphviz &&\
+  apt-get -y install doxygen
+%post
+  wget https://github.com/openmm/openmm/archive/7.4.1.tar.gz --content-disposition &&\
+  tar xf openmm-7.4.1.tar.gz
+%post
+  mkdir openmm_build &&\
+  cd openmm_build &&\
+  cmake -DOPENMM_BUILD_C_AND_FORTRAN_WRAPPERS=OFF -DOPENMM_BUILD_PYTHON_WRAPPERS=OFF /openmm-7.4.1/ &&\
+  make -j $(nproc) &&\
+  make install &&\
+  cd / &&\
+  rm -r /openmm*
+
+#
+#   RynLib Config:
+#       Defines core utilities that RynLib will want to use and which we don't want to have to link in later
+#
+%post
+  apt-get -y install python3.7-dev python3-pip &&\
+  pip3 install numpy &&\
+  pip3 install scipy &&\
+  pip3 install wget
+
+%post
+  apt-get -y install g++ &&\
+  apt-get -y install gfortran &&\
+  apt-get -y install git &&\
+  apt-get clean
+
+%files
+    .. /home/RynLib
+
+%post
+    mkdir -p /tests
+    git clone https://github.com/McCoyGroup/Peeves /home/Peeves
+    python3 /home/RynLib/CLI.py config install-mpi --version=3.1.4 --imp=ompi
+    python3 /home/RynLib/CLI.py config build-libs --rebuild=True
+
+%runscript
+    exec python3 /home/RynLib/CLI.py $@

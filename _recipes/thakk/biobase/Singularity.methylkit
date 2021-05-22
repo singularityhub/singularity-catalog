@@ -1,0 +1,46 @@
+Bootstrap: shub
+From: thakk/bioinformatics
+
+%setup
+
+%files
+
+%help
+
+   A container with R, Bioconductor and MethylKit installed on top of basic bioinformatics tools. For complete list see documentation of shub://thakk/bioinformatics
+
+%labels
+   Author francesco.tabaro@tuni.fi
+   Version 0.1
+
+%post
+
+  dnf -y makecache
+
+  # INSTALL DEPS
+  dnf -y install --allowerasing bzip2 cairo fontconfig freetype fribidi glib2 \
+    libX11 libXext libXt libcurl libicu libjpeg libpng libtiff libtirpc libxcrypt \
+    ncurses pango pcre readline tcl tk xz zlib bzip2-devel cairo-devel \
+    fontconfig-devel freetype-devel fribidi-devel glib2-devel libX11-devel \
+    libXext-devel libXt-devel libcurl-devel libicu-devel libjpeg-devel libpng-devel \
+    libtiff-devel libtirpc-devel libxcrypt-devel ncurses-devel pango-devel \
+    pcre-devel readline-devel tcl-devel tk-devel xz-devel zlib-devel \
+    java-1.8.0-openjdk java-1.8.0-openjdk-devel openblas lapack \
+    gcc-gfortran boost boost-devel texlive
+
+  # INSTALL R
+  wget https://cran.rstudio.com/src/base/R-3/R-3.6.1.tar.gz
+  tar xf R-3.6.1.tar.gz
+  cd R-3.6.1
+  ./configure
+  make -j 8
+  make install
+  cd ..
+  rm -r R-3.6.1
+
+  # INSTALL Bioconductor
+  R -e "install.packages('BiocManager', repos = 'https://cloud.r-project.org')"
+
+  # INSTALL methylKit
+  R -e "library(BiocManager); install('methylKit')"
+

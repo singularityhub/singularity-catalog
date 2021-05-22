@@ -1,0 +1,35 @@
+BootStrap: docker
+From: julia:latest
+
+%environment
+	export LC_ALL=C.UTF-8
+	export LANG=C.UTF-8
+
+	export PATH=$/usr/local/julia/bin:$PATH
+	export PATH=$/ABCreg/src/:$PATH
+    export JULIA_DEPOT_PATH=:/opt/.julia
+
+%post
+	
+    export JULIA_DEPOT_PATH=/opt/.julia
+    
+	apt-get update && apt-get install -y --no-install-recommends apt-utils
+
+	apt-get install -y libglib2.0-0 libxext6 wget bzip2 ca-certificates curl git vim make build-essential libgsl-dev libz-dev gzip parallel r-base
+	apt-get clean
+	rm -rf /var/lib/apt/lists/*
+
+	wget https://raw.githubusercontent.com/jmurga/Analytical.jl/master/scripts/precompile_mktest.jl
+	wget https://raw.githubusercontent.com/jmurga/Analytical.jl/master/scripts/abcmk_cli.jl
+
+	R -e 'install.packages(c("abc","ggplot2","data.table","dplyr"), repos = "https://cloud.r-project.org")'
+
+	/usr/local/julia/bin/julia -e 'using Pkg;Pkg.add(["ClusterManagers","ParallelUtilities","Fire","IJulia","PackageCompiler","Parameters","Quadmath","SparseArrays","Distributed","CSV","SharedArrays","JLD2","DataFrames","ProgressMeter","RCall"])'
+	/usr/local/julia/bin/julia -e 'using Pkg;Pkg.add(PackageSpec(path="https://github.com/jmurga/Analytical.jl"))'
+
+	/usr/local/julia/bin/julia -e 'using PackageCompiler;PackageCompiler.create_sysimage(:Analytical, sysimage_path="/mktest.so", precompile_execution_file="/precompile_mktest.jl")'
+	git clone https://github.com/molpopgen/ABCreg.git /ABCreg
+	make -C /ABCreg/src
+
+%runscript
+	exec julia "$@"

@@ -1,0 +1,125 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:2004-cuda11.0
+
+%labels
+    MAINTAINER_NAME  Luhan Cheng
+    MAINTAINER_EMAIL luhan.cheng@monash.edu
+
+    APPLICATION_NAME pyprismatic
+    APPLICATION_VERSION c0f23b5dc84e3f86d376836155b64101bd9abecd
+
+    HARDWARE gpu
+
+%environment
+    export HDF5_ROOT=/usr/local/hdf5
+    export FFTW_ROOT=/usr/local/fftw
+    export CPLUS_INCLUDE_PATH=$FFTW_ROOT/include:$HDF5_ROOT/include:$CPLUS_INCLUDE_PATH
+    export LIBRARY_PATH=$FFTW_ROOT/lib:$HDF5_ROOT/lib:$LIBRARY_PATH
+    export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/:$HDF5_ROOT/lib:$FFTW_ROOT/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/prismatic/bin:$FFTW_ROOT/bin:$HDF5_ROOT/bin:$PATH
+
+
+%post
+    
+    apt install -y curl
+    HDF5_ROOT=/usr/local/hdf5/
+    FFTW_ROOT=/usr/local/fftw
+    export CPLUS_INCLUDE_PATH=$FFTW_ROOT/include:$HDF5_ROOT/include:$CPLUS_INCLUDE_PATH
+    export LIBRARY_PATH=$FFTW_ROOT/lib:$HDF5_ROOT/lib:$LIBRARY_PATH
+    export LD_LIBRARY_PATH=$HDF5_ROOT/lib:$FFTW_ROOT/lib:$LD_LIBRARY_PATH
+    export PATH=$FFTW_ROOT/bin:$HDF5_ROOT/bin:$PATH
+    export FFTW_INCLUDE_DIR=$FFTW_ROOT/include
+
+    mkdir -p $HDF5_ROOT
+    mkdir -p $FFTW_ROOT
+
+    echo "*********************************************************"
+    echo "Installing Python"
+    echo "*********************************************************"
+    apt install -y python3.8 python3-pip
+    python3 -m pip install numpy matplotlib
+
+    echo "*********************************************************"
+    echo "Installing Boost"
+    echo "*********************************************************"
+    apt install -y libboost-all-dev
+
+
+    echo "*********************************************************"
+    echo "Installing Qt5"
+    echo "*********************************************************"
+    apt install -y qt5-default qt5ct libqt5gui5
+
+    
+    echo "*********************************************************"
+    echo "Installing fftw"
+    echo "*********************************************************"
+
+    FFTW_VERSION=3.3.8
+    FFTW_MD5=8aac833c943d8e90d51b697b27d4384d
+
+    mkdir -p /usr/local/src/fftw
+    cd /usr/local/src/fftw
+    curl -o fftw.tar.gz http://www.fftw.org/fftw-${FFTW_VERSION}.tar.gz \
+    && echo "${FFTW_MD5}  fftw.tar.gz" > fftw.tar.gz.md5 \
+    && md5sum -c fftw.tar.gz.md5 \
+    && tar -xzvf fftw.tar.gz && cd fftw-${FFTW_VERSION} \
+    && ./configure --enable-threads  --enable-float --enable-sse2 --enable-avx --enable-avx2 --enable-avx512 --disable-static --enable-shared --prefix $FFTW_ROOT \
+    && make \
+    && make install \
+    && rm -rf fftw.tar.gz fftw.tar.gz.md5 fftw-${FFTW_VERSION}
+
+
+
+
+    echo "*********************************************************"
+    echo "Installing hdf5"
+    echo "*********************************************************"
+
+    HDF5_MAJOR_REL=hdf5-1.10
+    HDF5_MINOR_REL=hdf5-1.10.6
+    HDF5_SRC_URL=http://support.hdfgroup.org/ftp/HDF5/releases
+    mkdir -p /usr/local/src/hdf5
+    echo "Getting: ${HDF5_SRC_URL}/${HDF5_MAJOR_REL}/${HDF5_MINOR_REL}/src/${HDF5_MINOR_REL}.tar"
+    wget ${HDF5_SRC_URL}/${HDF5_MAJOR_REL}/${HDF5_MINOR_REL}/src/${HDF5_MINOR_REL}.tar
+    tar -xvf ${HDF5_MINOR_REL}.tar --directory /usr/local/src
+    rm ${HDF5_MINOR_REL}.tar
+    cd /usr/local/src/${HDF5_MINOR_REL}
+    ./configure --enable-threadsafe --enable-cxx --enable-unsupported --prefix=$HDF5_ROOT
+    make
+    make install
+    python3 -m pip install h5py
+
+
+    echo "*********************************************************"
+    echo "Installing PyPrismatic"
+    echo "*********************************************************"
+    PRISM_SRC=/usr/local/src/prismatic
+    mkdir -p $PRISM_SRC
+    git clone  https://github.com/prism-em/prismatic.git $PRISM_SRC
+    cd $PRISM_SRC
+    git checkout c0f23b5dc84e3f86d376836155b64101bd9abecd
+    mkdir build && cd build
+    sed -i 's/-arch=sm_30/-gencode arch=compute_72,code=sm_72/g' $PRISM_SRC/CMakeLists.txt
+    sed -i -e '35d;53d'  $PRISM_SRC/src/utility.cu 
+
+    cd $PRISM_SRC
+    python3 setup.py build_ext install --enable-gpu -DCMAKE_INSTALL_PREFIX=/usr/local/prismatic -DHDF5_ROOT=$HDF5_ROOT -DFFTW_INCLUDE_DIR=$FFTW_INCLUDE_DIR -DPRISMATIC_ENABLE_CLI=1 -DPRISMATIC_ENABLE_GPU=1 -DPRISMATIC_ENABLE_PYPRISMATIC=1 -DPRISMATIC_ENABLE_GUI=1 -DPRISMATIC_ENABLE_DOUBLE_PRECISION=0 
+    cmake --install ./build/temp.linux-x86_64-3.8
+    cd
+
+
+    rm -rf $PRISM_SRC /usr/local/src/hdf5 /usr/local/src/fftw
+
+
+
+    echo "*********************************************************"
+    echo "Fixing qt5, see https://superuser.com/questions/1347723/arch-on-wsl-libqt5core-so-5-not-found-despite-being-installed"
+    echo "*********************************************************"
+    strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
+
+
+%runscript
+    exec /usr/bin/tini -- /bin/bash "$@"
+%startscript
+    exec /usr/bin/tini -- /bin/bash "$@"

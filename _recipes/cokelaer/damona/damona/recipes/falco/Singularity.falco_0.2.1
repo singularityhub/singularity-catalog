@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: centos:7
+
+%labels
+    MAINTAINER thomas cokelaer
+    Author thomas cokelaer
+    Version v0.11.8
+    DAMONA_BIN falco
+    DAMONA_TYPE exe
+
+%files
+
+%post
+
+    yum install -y java-1.8.0-openjdk
+    yum install -y wget unzip
+    yum install -y perl
+    wget https://github.com/smithlabcode/falco/archive/v0.2.2.tar.gz
+    tar xvfz v0.2.2.tar.gz
+    cd falco-0.2.2
+    #./configure CXXFLAGS="-O3 -Wall"
+    #make all
+    #make install
+
+%environment
+    export PATH=$PATH:/FastQC
+
+%runscript
+    exec falco "$@"
+

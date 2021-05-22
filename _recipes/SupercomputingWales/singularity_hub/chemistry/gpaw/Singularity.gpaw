@@ -1,0 +1,29 @@
+Bootstrap:docker  
+From:centos:centos7.4.1708
+
+%labels
+MAINTAINER Thomas Green
+
+%environment
+
+%runscript
+exec /bin/bash /bin/echo "Not supported"
+
+%post
+mkdir /scratch
+mkdir /software
+yum -y install yum-utils
+yum -y groupinstall "Base"
+yum -y groupinstall "Development Tools"
+yum -y install curl file git
+
+
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+
+test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+
+brew install hello
+
+
+
+

@@ -1,0 +1,49 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804-cuda10.1
+
+%labels
+MAINTAINER jay.vanschyndel@monash.edu
+HARDWARE   gpu
+
+%environment
+
+%post
+    echo "==========================="
+    echo " Installing dependencies   "
+    echo "==========================="
+    apt update
+    apt install -y libboost-program-options-dev libboost-filesystem-dev libboost-graph-dev libboost-regex-dev \
+                   libboost-system-dev libboost-test-dev libeigen3-dev libsuitesparse-dev libfreeimage-dev \
+                   libglew-dev libgflags-dev libgoogle-glog-dev qtbase5-dev libqt5opengl5-dev libcgal-dev
+    apt install -y libcgal-qt5-dev
+
+    echo "==========================="
+    echo " Installing Ceres Solver   "
+    echo "==========================="
+    apt install -y libatlas-base-dev libsuitesparse-dev
+    cd /opt
+    git clone https://ceres-solver.googlesource.com/ceres-solver
+    cd ceres-solver
+    #Latest at time of build
+    git checkout 1.14.0-244-g9f7fb6
+    mkdir build
+    cd build
+    cmake .. -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF
+    make
+    sudo make install
+
+    echo "==========================="
+    echo " Installing Colmap         "
+    echo "==========================="
+    cd /opt
+    git clone https://github.com/colmap/colmap.git
+    cd colmap
+    git checkout 3.5
+    mkdir build
+    cd build
+    cmake ..
+    make
+    sudo make install
+
+%runscript
+    $*

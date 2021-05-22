@@ -1,0 +1,28 @@
+Bootstrap: library
+From: cokelaer/damona/conda:4.7.12
+
+%labels
+    Author thomas cokelaer
+    Version v4.09
+    DAMONA_TYPE exe
+    DAMONA_BIN trf
+
+%post 
+
+    export PATH=$PATH:/usr/local/anaconda/bin
+    export LANG=C   # prevents perl for raising warnings
+    export PERL5LIB=/usr/local/anaconda/lib/perl5/5.22.0
+
+    conda install trf==4.09
+
+    # Let us save some space
+    conda clean --packages -y
+    conda clean --all -y # next requires lots of space
+
+
+%environment
+    #echo "backend:agg" > matplotlibrc
+
+%runscript
+    exec trf "$@"
+

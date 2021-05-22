@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: debian:stretch
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  ca-certificates \
+                  procps \
+                  bc
+
+####### PhyloBayes #######
+cd /usr/local
+wget http://megasun.bch.umontreal.ca/People/lartillot/www/phylobayes4.1c.tar.gz
+
+tar -xzf phylobayes4.1c.tar.gz
+ln -s /usr/local/phylobayes4.1c/data/* /usr/local/bin
+
+# create mount paths for Uppmax
+# https://www.uppmax.uu.se/support/user-guides/singularity-user-guide/
+mkdir /sw /pica /proj /scratch
+
+%test
+pb --version 2>&1 | grep "phylobayes version 4.1b"
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se

@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  build-essential \
+                  ca-certificates
+
+######## MCL #########
+cd /usr/local/
+wget https://micans.org/mcl/src/mcl-14-137.tar.gz
+tar -xvf mcl-14-137.tar.gz
+cd /usr/local/mcl-14-137
+./configure
+make
+make install
+
+%runscript
+mcl "$@"

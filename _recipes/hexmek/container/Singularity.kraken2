@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: conda/miniconda3
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y procps  make git gcc g++ perl rsync
+    conda install -c bioconda -c conda-forge blast
+
+    # build and install bracken
+    cd /opt
+    git clone https://github.com/jenniferlu717/Bracken
+    cd Bracken/src
+    make
+
+    # install kraken2
+    cd /opt
+    git clone https://github.com/DerrickWood/kraken2
+    cd kraken2
+    bash install_kraken2.sh /opt/kraken2_install
+
+    
+
+
+
+%environment
+    export LC_ALL=C
+    export PATH="/opt/Bracken/:/opt/Bracken/src/:/opt/kraken2_install:$PATH"
+

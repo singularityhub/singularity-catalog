@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: conda/miniconda3
+
+%post
+    conda install -c bioconda mafft
+
+%environment
+    export LC_ALL=C
+

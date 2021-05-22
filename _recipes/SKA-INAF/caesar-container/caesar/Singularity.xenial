@@ -1,0 +1,332 @@
+
+BootStrap: docker
+From: sriggi/caesar-base
+
+%help
+	====================================================================================================
+	====       CAESAR CONTAINER HELP         																												====
+	====================================================================================================
+	This the official CAESAR Singularity container. 
+	It uses the dependencies provided in the caesar_base container.
+	A series of CAESAR apps are provided:
+		
+		- readimg: Read a FITS/ROOT image, compute stats and save it in CAESAR format in a ROOT file  
+		- fits2root: Convert a FITS image to Caesar image and save it in ROOT file  
+		- root2fits: Convert a Caesar image stored in ROOT file to FITS image
+		- bkgfinder: Find bkg & rms maps from image in ROOT/FITS format
+		- residualfinder: Find residual maps with compact source subtracted from image
+		- saliencyfinder: Find saliency map from image in ROOT/FITS format
+		- sfinder: Find sources in FITS/ROOT image
+		- sfindersub: Generate sfinder config and submit run to batch system
+		- catalogcorr: Find sources matching in two source catalogs stored in ROOT files
+		- skymodel: Generate a skymodel FITS map
+		- simulation: Generate a skymodel FITS map and simulate an observation with CASA	
+		- imaging: Perform imaging of visibility data (e.g. simulated vis) with CASA
+		- convolver: Perform skymodel map & sources convolution with beam
+		- simulationsub: Prepare simulation (skymodel+sim obs) submission script and submit it
+		- imagingsub: Prepare an imaging submission script and submit it
+		- convolversub: Prepare a skymodel convolution script and submit it
+		- makefilelist: Search files/directories according to filter and dump names to list
+		- jobkiller: Kill jobs submitted in batch system listed in input filelist
+		- sselector: Apply selection cuts to sources and return selected sample
+		- sregionsel: Select sources inside DS9 regions
+		- sregionmatchfinder: Tag sources (real/fake/unknown) if matching with DS9 regions 
+		- sregiontagger: Tag sources (real/fake/unknown,...) matching with DS9 regions with region provided tags
+		- scatmatchfinder: Find cross-matches with list of Caesar source catalogs
+		- sastrocatmatchfinder: Find cross-matches with list of Astronomical ascii catalogs
+		- simsourcematch: Cross-match simulated sources with extracted catalogs (Caesar, Aegean, Selavy)
+		- sasciiexporter: Export source catalog in ROOT format in ASCII table format
+		- scountsunfolder: Unfold source counts flux density data in ROOT histogram format using a parametrized response matrix
+		- smatchfinder: Cross-match multiple Caesar ROOT catalog each other
+		- smvclassifier: Run neural network source component classifier on input Caesar ROOT catalog
+		- srefitter: Refit a list of input Caesar sources
+		- streewriter: Create simpler summary ROOT TTree files for island and component from ROOT Caesar catalog
+		
+	To launch an app do the following:
+	
+		$ singularity run --app [APP_NAME] [SINGULARITY_IMAGE_NAME] [APP_ARGUMENTS]
+
+	Available arguments per each app are printed by running the above command without any argument.
+	====================================================================================================
+	
+
+%labels
+	Maintainer Simone Riggi (INAF-OACT)
+	Version v1.1.2
+
+%environment
+	
+%setup
+
+	
+%post
+
+	#################################
+	###    INSTALL MISSING MODULES
+	#################################	
+	# Update system
+	apt-get update
+
+	# Install lsb
+	apt-get -y install lsb-core
+
+	# Install & generate locales
+	apt-get -y install locales
+	echo "LC_ALL=en_US.UTF-8" >> /etc/environment
+	echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+	echo "LANG=en_US.UTF-8" > /etc/locale.conf
+	locale-gen en_US.UTF-8
+	locale-gen en_US.UTF-8
+
+	#################################
+	###    RETRIEVING ENV
+	#################################
+	## Source vars
+	SOFT_SETVARS_FILE="/etc/profile.d/setupSoft.sh"
+	. $SOFT_SETVARS_FILE
+
+	##export SOFTDIR=`printenv | grep -w SOFTDIR | sed -e 's/^SOFTDIR=//'`
+	##export SOFTDIR_SRCS=`printenv | grep -w SOFTDIR_SRCS | sed -e 's/^SOFTDIR_SRCS=//'`
+	##export PYTHONPATH=`printenv | grep -w PYTHONPATH | sed -e 's/^PYTHONPATH=//'`
+
+	echo "SOFTDIR=$SOFTDIR"
+	echo "SOFTDIR_SRCS=$SOFTDIR_SRCS"
+	echo "PATH=$PATH"
+	echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+	echo "PYTHONPATH=$PYTHONPATH"
+	echo "JSONCPP_ROOT=$JSONCPP_ROOT"
+	echo "OPENMPI_DIR=$OPENMPI_DIR"
+	echo "ROOTSYS=$ROOTSYS"
+	echo "ROOT_LOGON_DIR=$ROOT_LOGON_DIR"
+	echo "OPENCV_DIR=$OPENCV_DIR"
+	echo "CASAPATH=$CASAPATH"
+	echo "CASA_DIR=$CASA_DIR"
+
+	## Add openmpi lib to LD_LIBRARY_PATH
+	##export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib
+	##echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib' >> "$SOFT_SETVARS_FILE"
+	##echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> $SINGULARITY_ENVIRONMENT	
+
+	## Add vars to singularity env file
+	## - Software dirs
+	echo "export SOFTDIR=$SOFTDIR" >> $SINGULARITY_ENVIRONMENT
+	echo "export SOFTDIR_SRCS=$SOFTDIR/Sources" >> $SINGULARITY_ENVIRONMENT
+	echo "export SOFTDIR_TAR=$SOFTDIR/TarFiles" >> $SINGULARITY_ENVIRONMENT
+	
+	## - JSONCPP
+	echo "export JSONCPP_ROOT=$JSONCPP_ROOT" >> $SINGULARITY_ENVIRONMENT
+	
+	## - OPENMPI
+	echo "export OPENMPI_DIR=$OPENMPI_DIR" >> $SINGULARITY_ENVIRONMENT
+	
+	## - ROOT
+	echo "export ROOTSYS=$ROOTSYS" >> $SINGULARITY_ENVIRONMENT
+	echo "export ROOT_LOGON_DIR=$ROOT_LOGON_DIR" >> $SINGULARITY_ENVIRONMENT	
+
+	## - OPENCV
+	echo "export OPENCV_DIR=$OPENCV_DIR" >> $SINGULARITY_ENVIRONMENT
+	
+	## - CASA
+	echo "export CASAPATH=$CASAPATH" >> $SINGULARITY_ENVIRONMENT
+	echo "export CASA_DIR=$CASA_DIR" >> $SINGULARITY_ENVIRONMENT
+	echo "export CASASRC=$CASASRC" >> $SINGULARITY_ENVIRONMENT
+	echo "export CASALD_LIBRARY_PATH=$CASALD_LIBRARY_PATH" >> $SINGULARITY_ENVIRONMENT
+
+	## Add paths
+	echo "export PATH=$PATH" >> $SINGULARITY_ENVIRONMENT
+	echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> $SINGULARITY_ENVIRONMENT
+	echo "export PKG_CONFIG_PATH=$PKG_CONFIG_PATH" >> $SINGULARITY_ENVIRONMENT
+	echo "export PYTHONPATH=$PYTHONPATH" >> $SINGULARITY_ENVIRONMENT
+
+	#################################
+	###    ADD BIND DIRECTORY
+	#################################
+	echo "Creating bind directory points..."
+	mkdir -p /bind
+	mkdir -p /storage
+	mkdir -p /ssd
+
+	#################################
+	###    CAESAR
+	#################################
+	# Set env variables and create installation dirs
+	export CAESAR_VERSION="trunk"
+	export CAESAR_URL="https://github.com/SKA-INAF/caesar.git"
+	export CAESAR_SRC_DIR="$SOFTDIR_SRCS/caesar"	
+	export CAESAR_BUILD_DIR="$SOFTDIR_SRCS/caesar-build"
+	export CAESAR_INSTALL_DIR="$SOFTDIR/CAESAR/$CAESAR_VERSION"
+	export CAESAR_SCRIPTS_DIR="$CAESAR_INSTALL_DIR/scripts"
+	echo "Creating CAESAR build dir $CAESAR_BUILD_DIR ..."
+	mkdir -p $CAESAR_BUILD_DIR
+	echo "Creating caesar install dir $CAESAR_INSTALL_DIR ..."
+	mkdir -p $CAESAR_INSTALL_DIR
+
+	# Install caesar
+	cd "$SOFTDIR_SRCS"
+	if [ ! -d "$CAESAR_SRC_DIR" ] ; then
+		echo "Downloading caesar from github repository $CAESAR_URL..."
+		#git clone "$CAESAR_URL"
+		git clone -b devel "$CAESAR_URL"
+	else
+		cd $CAESAR_SRC_DIR
+		#git pull
+		git pull origin devel
+	fi
+	
+	echo "Entering caesar cmake build dir $CAESAR_BUILD_DIR"
+	cd "$CAESAR_BUILD_DIR"
+
+	echo "ROOTSYS= $ROOTSYS"
+	ls -la "$ROOTSYS/bin"
+	ls -la "$ROOTSYS/etc"
+	ls -la "$ROOTSYS/etc/cmake"
+
+	echo "Configuring cmake build for caesar"
+	cmake -DCMAKE_INSTALL_PREFIX="$CAESAR_INSTALL_DIR" -DENABLE_R=OFF -DBUILD_APPS=ON -DENABLE_OPENMP=ON -DENABLE_MPI=ON -DENABLE_TEST=OFF -DBUILD_DOC=OFF -DENABLE_VTK=OFF "$CAESAR_SRC_DIR"
+
+	echo "Building caesar..."
+	make
+
+	echo "Installing caesar..."
+	make install
+
+	echo "Setting up env variables for caesar..."
+	echo "export CAESAR_DIR=$CAESAR_INSTALL_DIR" >> $SINGULARITY_ENVIRONMENT
+	echo "export CAESAR_SCRIPTS_DIR=$CAESAR_SCRIPTS_DIR" >> $SINGULARITY_ENVIRONMENT
+	echo "export LD_LIBRARY_PATH=$CAESAR_INSTALL_DIR/lib:$LD_LIBRARY_PATH" >> $SINGULARITY_ENVIRONMENT
+	echo "export PATH=$CAESAR_INSTALL_DIR/bin:$CAESAR_SCRIPTS_DIR:$PATH" >> $SINGULARITY_ENVIRONMENT
+	
+	export SETVARS_FILE="/etc/profile.d/setupCaesar.sh"
+	echo "#!/bin/sh" > "$SETVARS_FILE"
+	echo '' >> "$SETVARS_FILE"
+
+	echo "### CAESAR ###" >> "$SETVARS_FILE"
+	echo 'export CAESAR_DIR='"$CAESAR_INSTALL_DIR" >> "$SETVARS_FILE"
+	echo 'export CAESAR_SCRIPTS_DIR='"$CAESAR_SCRIPTS_DIR" >> "$SETVARS_FILE"	
+	echo 'export PATH=$CAESAR_DIR/bin:$CAESAR_SCRIPTS_DIR:$PATH' >> "$SETVARS_FILE"
+	echo 'export LD_LIBRARY_PATH=$CAESAR_DIR/lib:$LD_LIBRARY_PATH' >> "$SETVARS_FILE"
+	echo '' >> "$SETVARS_FILE"
+
+	# Create rootlogon with CAESAR libs
+	export ROOT_LOGON_FILE="$ROOT_LOGON_DIR/rootlogon.C"
+	
+	echo "Creating ROOT logon file $ROOT_LOGON_FILE..."
+	echo '{' > "$ROOT_LOGON_FILE"
+	printf '	cout << "\\n\\t******************************" << endl;\n' >> "$ROOT_LOGON_FILE"
+  printf '	cout << "\\t* Welcome to ROOT v" << gROOT->GetVersion() << "  *" << endl;\n' >> "$ROOT_LOGON_FILE"
+  printf '	cout << "\\t******************************\\n" << endl;\n' >> "$ROOT_LOGON_FILE"
+	echo '' >> "$ROOT_LOGON_FILE"
+	echo 'gROOT->SetStyle("Plain");' >> "$ROOT_LOGON_FILE"
+	echo 'gSystem->Load("'"$CAESAR_INSTALL_DIR/lib/libCaesar.so"'");' >> "$ROOT_LOGON_FILE"
+  echo 'gROOT->ProcessLine(".include '"$CAESAR_INSTALL_DIR/include"'");' >> "$ROOT_LOGON_FILE"
+	echo 'gROOT->ProcessLine("using namespace Caesar;");' >> "$ROOT_LOGON_FILE"
+	echo 'gROOT->ProcessLine("LoggerManager::Instance().CreateConsoleLogger(\"INFO\",\"logger\",\"System.out\");");' >> "$ROOT_LOGON_FILE"	
+	echo '}' >> "$ROOT_LOGON_FILE"
+
+
+
+%runscript
+	exec echo "Run application with --app {readimg | fits2root | root2fits | sfinder | sfinderrun | sfindersub | saliencyfinder | bkgfinder | catalogcorr | skymodel | simulation | imaging | simulationsub | imagingsub | makefilelist | jobkiller | sselector | sregionsel | sregionmatchfinder | sregiontagger | scatmatchfinder | sastrocatmatchfinder }"
+
+	
+%apprun readimg
+	exec ReadImg "$@"
+
+%apprun fits2root
+	exec FITS2ROOT "$@"
+
+%apprun root2fits
+	exec ROOT2FITS "$@"
+
+%apprun bkgfinder
+	exec FindBkg "$@"
+
+%apprun residualfinder
+	exec FindSourceResidual "$@"
+
+%apprun sfinder
+	exec FindSourceMPI "$@"	
+
+%apprun sfinderrun
+	exec RunSFinderMPI.sh "$@"	
+
+%apprun sfindersub
+	exec SFinderSubmitter.sh "$@"
+
+%apprun saliencyfinder
+	exec FindSaliency "$@"
+
+%apprun catalogcorr
+	exec CorrelateSourceCatalogs "$@"
+
+%apprun skymodel
+	exec /opt/Software/CAESAR/trunk/scripts/skymodel_generator.py "$@"
+
+%apprun simulation
+	exec casa --nologger --log2term --nogui -c /opt/Software/CAESAR/trunk/scripts/simulate_observation.py "$@"
+
+%apprun imaging
+	exec casa --nologger --log2term --nogui -c /opt/Software/CAESAR/trunk/scripts/imaging_observation.py "$@"
+
+%apprun convolver
+	exec SkyModelConvolver "$@"
+
+%apprun simulationsub
+	exec /opt/Software/CAESAR/trunk/scripts/RunCASASimulation.sh "$@"
+
+%apprun imagingsub
+	exec /opt/Software/CAESAR/trunk/scripts/RunCASAImaging.sh "$@"
+
+%apprun convolversub
+	exec /opt/Software/CAESAR/trunk/scripts/RunSkyModelConvolver.sh "$@"
+
+%apprun makefilelist
+	exec /opt/Software/CAESAR/trunk/scripts/MakeFileList.sh "$@"
+
+%apprun jobkiller
+	exec /opt/Software/CAESAR/trunk/scripts/BatchJobKiller.sh "$@"
+
+%apprun sselector
+	exec SourceSelector "$@"
+
+%apprun sregionsel
+	exec SourceRegionSelector "$@"
+
+%apprun sregionmatchfinder
+	exec SourceRegionMatchFinder "$@"
+
+%apprun sregiontagger
+	exec SourceRegionTagger "$@"
+
+%apprun scatmatchfinder
+	exec SourceCatalogsMatchFinder "$@"
+
+%apprun sastrocatmatchfinder
+	exec SourceAstroCatalogsMatchFinder "$@"
+
+%apprun simsourcematch
+	exec CrossMatchSimSources "$@"
+
+%apprun sasciiexporter
+	exec SourceAsciiExporter "$@"
+
+%apprun scountsunfolder
+	exec SourceCountsUnfolder "$@"
+
+%apprun smatchfinder
+	exec SourceMatchFinder "$@"
+
+%apprun smvclassifier
+	exec SourceMVClassifier "$@"
+
+%apprun srefitter
+	exec SourceRefitter "$@"
+
+%apprun streewriter
+	exec SourceTreeWriter "$@"
+
+%apprun printenv
+	exec echo "PATH=$PATH CAESAR_DIR=$CAESAR_DIR"
+
+
+

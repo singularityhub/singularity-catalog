@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: ubuntu
+
+%help
+INA Speech Segmentation tools + galaxy/amp integration
+
+%labels
+Maintainer bdwheele@indiana.edu
+Version 0.1
+
+%environment
+
+%setup
+
+%files
+    resources/ina_speech_segmenter_wrapper.py /usr/local/bin
+    resources/segmentation.py /usr/local/bin    
+
+%post
+    # install updates & dependencies
+    apt-get update && TZ="America/New_York" DEBIAN_FRONTEND=noninteractive && apt-get install tzdata
+    apt-get install -qq -y ffmpeg python3 python3-pip
+    pip3 install tensorflow
+    pip3 install inaSpeechSegmenter
+    
+
+%runscript
+    /usr/local/bin/ina_speech_segmenter_wrapper.py "$@"

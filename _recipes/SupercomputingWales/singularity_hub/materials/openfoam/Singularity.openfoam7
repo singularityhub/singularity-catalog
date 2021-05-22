@@ -1,0 +1,41 @@
+Bootstrap:docker  
+From:ubuntu:focal-20200925
+
+%labels
+MAINTAINER Thomas Green
+
+%environment
+
+%runscript
+exec /bin/bash /bin/echo "Not supported"
+
+%post
+
+export DEBIAN_FRONTEND=noninteractive
+# Turn on debugging
+set -x
+
+# Create some common mountpoints for systems without overlayfs
+mkdir /scratch
+mkdir /apps
+
+# Install Git
+apt-get update
+apt-get install -y git wget software-properties-common
+
+cd /tmp
+# Might be useful for visualisation.
+wget https://netix.dl.sourceforge.net/project/virtualgl/2.6.4/virtualgl_2.6.4_amd64.deb
+apt install -y ./virtualgl_2.6.4_amd64.deb
+
+# OpenFOAM repo
+wget -O - https://dl.openfoam.org/gpg.key | apt-key add -
+add-apt-repository universe
+add-apt-repository http://dl.openfoam.org/ubuntu
+apt-get update
+apt-get install -y openfoam7
+
+# Due to strange use of kernel feature need to strip ABI info
+# See: https://askubuntu.com/questions/1034313/ubuntu-18-4-libqt5core-so-5-cannot-open-shared-object-file-no-such-file-or-dir
+strip --remove-section=.note.ABI-tag /lib/x86_64-linux-gnu/libQt5Core.so.5.12.8
+

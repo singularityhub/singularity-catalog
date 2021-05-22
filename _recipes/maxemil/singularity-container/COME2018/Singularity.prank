@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  build-essential
+
+######## PRANK #########
+cd /usr/local/
+wget http://wasabiapp.org/download/prank/development/prank.source.170703.tgz
+tar -xvf prank.source.170703.tgz
+cd /usr/local/development/src
+make
+ln -s /usr/local/development/src/prank /usr/local/bin/prank
+
+%runscript
+prank "$@"

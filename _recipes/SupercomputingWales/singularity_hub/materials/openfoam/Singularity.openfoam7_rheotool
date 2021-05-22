@@ -1,0 +1,90 @@
+Bootstrap:docker  
+From:ubuntu:focal-20200925
+
+%labels
+MAINTAINER Thomas Green
+
+%environment
+EIGEN_RHEO=/opt/eigen/ThirdParty/Eigen3.2.9
+PETSC_DIR=/opt/petsc/ThirdParty/petsc-3.13.3
+PETSC_ARCH=arch-linux2-c-opt
+export EIGEN_RHEO PETSC_DIR PETSC_ARCH
+
+%runscript
+exec /bin/bash /bin/echo "Not supported"
+
+# OpenFOAM expects bash - Singularity uses /bin/sh to exec scripts.
+%post -c /bin/bash
+
+export DEBIAN_FRONTEND=noninteractive
+# Turn on debugging
+set -x
+
+# Create some common mountpoints for systems without overlayfs
+mkdir /scratch
+mkdir /apps
+
+# Install Git
+apt-get update
+apt-get install -y git wget software-properties-common
+
+cd /tmp
+# Might be useful for visualisation.
+wget https://netix.dl.sourceforge.net/project/virtualgl/2.6.4/virtualgl_2.6.4_amd64.deb
+apt install -y ./virtualgl_2.6.4_amd64.deb
+
+# OpenFOAM repo
+wget -O - https://dl.openfoam.org/gpg.key | apt-key add -
+add-apt-repository universe
+add-apt-repository http://dl.openfoam.org/ubuntu
+apt-get update
+apt-get install -y openfoam7
+
+# Due to strange use of kernel feature need to strip ABI info
+# See: https://askubuntu.com/questions/1034313/ubuntu-18-4-libqt5core-so-5-cannot-open-shared-object-file-no-such-file-or-dir
+strip --remove-section=.note.ABI-tag /lib/x86_64-linux-gnu/libQt5Core.so.5.12.8
+
+# Source the bashrc for OpenFOAM
+. /opt/openfoam7/etc/bashrc
+
+# Install in /opt
+cd /opt
+
+# Clone the rheoTool repo
+git clone https://github.com/fppimenta/rheoTool.git
+
+# Match the version of OpenFOAM as Docker.
+cd rheoTool/of70
+
+# Change the variable used to install location.
+WM_PROJECT_USER_DIR_tmp=$WM_PROJECT_USER_DIR
+export WM_PROJECT_USER_DIR=/opt/eigen
+./downloadEigen
+export EIGEN_RHEO=/opt/eigen/ThirdParty/Eigen3.2.9
+
+# Change the variable used to install location
+export WM_PROJECT_USER_DIR=/opt/petsc
+# Remove sudo
+sed -i 's/^sudo //g' installPetsc
+# Make it non-interactive
+sed -i 's/apt-get install/apt-get install -y/g' installPetsc
+./installPetsc
+
+# Add Petsc to default library path
+cat >/etc/ld.so.conf.d/petsc.conf<<EOF
+/opt/petsc/ThirdParty/petsc-3.13.3/arch-linux2-c-opt/lib
+EOF
+ldconfig
+export PETSC_DIR=/opt/petsc/ThirdParty/petsc-3.13.3
+export PETSC_ARCH=arch-linux2-c-opt
+
+# Reset it back again
+export WM_PROJECT_USER_DIR=$WM_PROJECT_USER_DIR_tmp
+
+# Now compile rheoTool
+cd src
+# Change to install in site location, not user.
+find . -name options | while read item;  do   sed -i -e 's/FOAM_USER_/FOAM_SITE_/g' $item; done
+find . -name files | while read item; do sed -i -e 's/FOAM_USER_/FOAM_SITE_/g' $item; done
+# Now make.
+./Allwmake

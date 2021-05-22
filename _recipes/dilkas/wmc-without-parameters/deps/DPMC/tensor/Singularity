@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: python:3.7-slim
+
+%setup
+    cp -R ${TENSORORDER_DIR-$PWD}/src ${SINGULARITY_ROOTFS}/src
+
+%post
+    # execute.py
+    apt-get update
+    apt-get -y install libopenblas-dev
+    pip install click numpy threadpoolctl
+
+%help
+    This is a Singularity container for a tensor executer.
+
+%runscript
+    export TENSORORDER_CALLER="$SINGULARITY_NAME"
+    exec python /src/execute.py "$@"
+
+

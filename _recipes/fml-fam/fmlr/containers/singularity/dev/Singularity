@@ -1,0 +1,40 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+  fmlr_version 0.1-0
+  fmlr_gpu no
+  ubuntu_version 18.04
+
+%environment
+  export LANG=en_US.UTF-8
+  export LC_ALL=en_US.UTF-8
+
+%post
+  echo "LC_ALL=en_US.UTF-8" >> /etc/environment
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  echo "LANG=en_US.UTF-8" > /etc/locale.conf
+  locale-gen en_US.UTF-8
+  
+  apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      gnupg git locales gcc-8 \
+      libopenmpi-dev openmpi-common openmpi-bin ssh \
+      libopenblas-dev libscalapack-openmpi-dev
+  
+  echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" >> /etc/apt/sources.list
+  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+
+  apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      r-base-dev littler
+  
+  Rscript -e "install.packages('R6')"
+  Rscript -e "install.packages('float')"
+  Rscript -e "install.packages('pbdMPI')"
+  Rscript -e "install.packages(\"pbdSLAP\", configure.vars=\"EXT_LDFLAGS='-lscalapack-openmpi'\")"
+  
+  cd /tmp
+  git clone --recurse-submodules https://github.com/wrathematics/fmlr.git
+  R CMD INSTALL fmlr
+  rm -rf /tmp/fmlr

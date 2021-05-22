@@ -1,0 +1,32 @@
+Bootstrap: localimage
+From: ../images/common.simg
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/opt/init/011_node
+
+%files
+    npmrc /usr/local/etc/npmrc
+    entry.sh /opt/init/011_node/entry.sh
+    node_dein.toml /opt/init/011_node/node_dein.toml
+    coc-settings.json /opt/init/011_node/coc-settings.json
+
+%environment
+    export SSHD_PORT=###SSHD_PORT###
+
+%labels
+    AUTHOR argon.argon.argon@gmail.com
+
+%post
+    export NODE_VERSION=###NODE_VERSION###
+
+    echo "export SINGULARITY_IMAGE_NAME=node_${NODE_VERSION}_$(date +%s)" >> $SINGULARITY_ENVIRONMENT
+    echo "export SINGULARITY_XDG_ROOT=\$HOME/.xdg/\$SINGULARITY_IMAGE_NAME" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_CONFIG_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_CACHE_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_DATA_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_RUNTIME_DIR=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+
+    n ${NODE_VERSION}
+    npm install -g --force yarn npx neovim
+    npm install -g @elm-tooling/elm-language-server elm elm-test elm-format elm-analyse create-elm-app
+    npm install -g typescript typescript-language-server

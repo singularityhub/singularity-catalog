@@ -1,0 +1,107 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+    
+    AUTHOR James Santangelo
+    EMAIL james.santangelo37@gmail.com
+    R_VERSION 4.0.3
+    PERL_VERSION 5.26.1
+    NGSLD_VERSION 1.1.1
+
+%environment
+
+    export PATH="/opt/bin:$PATH"
+
+%post
+    
+    apt-get update && \
+    apt-get -y --no-install-recommends install \
+        build-essential \
+        gnupg2 \
+        wget \
+        git \
+        curl \
+        locales
+    
+    # Configure default locale
+    # Taken from https://github.com/nickjer/singularity-r/blob/master/Singularity.3.6.2
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+    # ===========================
+    # Install R and packages
+    # ===========================
+
+    # Install R and littler (for package installs)
+    # Inspiration from Dockerfile by Dirk Eddelbuettel
+    # https://github.com/rocker-org/rocker/blob/master/r-base/4.0.3/Dockerfile
+    R_VERSION=4.0.3
+    export DEBIAN_FRONTEND="noninteractive"
+    echo "deb http://cran.r-project.org/bin/linux/ubuntu bionic-cran40/" > /etc/apt/sources.list.d/r.list
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+    apt-get update &&
+    apt-get install -y --no-install-recommends \
+        littler \
+        r-cran-littler \
+        r-base=${R_VERSION}* \
+        r-base-dev=${R_VERSION}* \
+        r-recommended=${R_VERSION}* 
+    ln -s /usr/lib/R/site-library/littler/examples/install.r /usr/local/bin/install.r 
+    ln -s /usr/lib/R/site-library/littler/examples/install2.r /usr/local/bin/install2.r 
+    ln -s /usr/lib/R/site-library/littler/examples/installBioc.r /usr/local/bin/installBioc.r 
+    ln -s /usr/lib/R/site-library/littler/examples/installDeps.r /usr/local/bin/installDeps.r 
+    ln -s /usr/lib/R/site-library/littler/examples/installGithub.r /usr/local/bin/installGithub.r 
+    ln -s /usr/lib/R/site-library/littler/examples/testInstalled.r /usr/local/bin/testInstalled.r 
+    install.r docopt 
+    rm -rf /tmp/downloaded_packages/ /tmp/*.rds 
+    rm -rf /var/lib/apt/lists/*
+
+    # Install R packages
+    install.r optparse ggplot2 reshape2 plyr gtools BiocManager
+    
+    # Use Bioconductor to install LDheatmap
+    R -e "BiocManager::install('LDheatmap')" 
+    cd ~
+
+    # ===========================
+    # Install Perl modules
+    # ===========================
+
+    apt-get update &&
+    apt-get -y install \
+        perl-doc \
+        libgetopt-simple-perl \
+        libgraph-easy-perl \
+        libmath-bigint-perl
+    
+    # IO::Zlib from Github
+    wget https://github.com/tomhughes/IO-Zlib/archive/1.11.tar.gz
+    tar -xvzf 1.11.tar.gz
+    cd IO-Zlib-1.11
+    perl Makefile.PL
+    make
+    make install
+
+    # ===========================
+    # Install ngsLD
+    # ===========================
+
+    apt-get update &&
+    apt-get -y install \
+        libgsl-dev \
+        zlib1g-dev
+
+    cd /opt && mkdir bin
+    wget https://github.com/fgvieira/ngsLD/archive/v1.1.1.tar.gz
+    tar -xvzf v1.1.1.tar.gz
+    cd ngsLD-1.1.1
+    make
+    ln -s /opt/ngsLD-1.1.1/ngsLD /opt/bin/ngsLD
+    ln -s /opt/ngsLD-1.1.1/scripts/fit_LDdecay.R /opt/bin/fit_LDdecay.R
+    ln -s /opt/ngsLD-1.1.1/scripts/LD_blocks.sh /opt/bin/LD_blocks.sh
+    ln -s /opt/ngsLD-1.1.1/scripts/prune_graph.pl /opt/bin/prune_graph.pl
+

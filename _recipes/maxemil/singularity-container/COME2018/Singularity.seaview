@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  libxrender1 \
+                  gsl-bin \
+                  libxfixes-dev \
+                  libxcursor1 \
+                  libxext-dev \
+                  libpango-1.0 \
+                  libpangoxft-1.0 \
+                  libxinerama1
+
+######## SeaView ########
+cd /usr/local/
+wget http://doua.prabi.fr/software/seaview_data/seaview4-64.tgz
+tar -xvf seaview4-64.tgz
+ln -s /usr/local/seaview/seaview /usr/local/bin/seaview
+
+%runscript
+seaview "$@"

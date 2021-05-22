@@ -1,0 +1,26 @@
+Bootstrap: localimage 
+From: spack-rhel7.simg
+
+%labels
+MAINTAINER baber@iastate.edu
+
+%environment
+SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+
+%runscript
+spack find 
+
+%post  
+export SPACK_ROOT=/opt/spack
+
+#dependencies are installed in the chroot environment the image is built from
+git clone https://github.com/researchit/spack.git $SPACK_ROOT
+git --work-tree=$SPACK_ROOT --git-dir=$SPACK_ROOT/.git checkout mpifabrics
+git clone https://github.com/researchit/spack-etc.git /opt/spack-etc
+ln -s /opt/spack-etc/*.yaml $SPACK_ROOT/etc/spack/
+
+#targets for the bind mounts
+mkdir -p /opt/rit/spack-app
+mkdir -p /opt/rit/spack-modules

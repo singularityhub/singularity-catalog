@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  build-essential \
+                  ca-certificates \
+
+######## PAML #########
+cd /usr/local/
+wget http://abacus.gene.ucl.ac.uk/software/paml4.9h.tgz
+tar -xvf paml4.9h.tgz
+rm /usr/local/paml4.9h/bin/*.exe
+cd /usr/local/paml4.9h/src
+make -f Makefile
+mv baseml basemlg codeml pamp evolver yn00 chi2 /usr/local/paml4.9h/bin
+for b in /usr/local/paml4.9h/bin/*; do ln -s $b /usr/local/bin; done
+
+%runscript
+exec "$@"

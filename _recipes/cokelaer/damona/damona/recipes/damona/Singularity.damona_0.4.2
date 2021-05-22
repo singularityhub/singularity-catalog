@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: centos:7
+
+%labels
+    MAINTAINER thomas cokelaer
+    Author thomas cokelaer
+    Version v0.4.2
+%post
+
+    yum install -y python3
+    pip3 install damona==0.4.2
+
+%runscript
+    exec damona "$@"
+

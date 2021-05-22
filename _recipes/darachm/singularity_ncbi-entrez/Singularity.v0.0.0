@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+MAINTAINER darachm
+
+%help
+
+    This container is for providing `ncbi-entrez` for some bioinformatic pipelines.
+
+%environment
+
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    
+%post
+
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+    export DEBIAN_FRONTEND="noninteractive"
+    apt -y update
+    apt -y install tzdata
+    apt -y install gawk mawk grep ncbi-entrez-direct parallel perl
+
+%test
+
+    # ?

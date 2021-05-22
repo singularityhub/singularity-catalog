@@ -1,0 +1,26 @@
+Bootstrap:docker  
+From:centos:centos7.4.1708
+
+%labels
+MAINTAINER Thomas Green
+
+%environment
+
+%runscript
+exec /bin/bash /bin/echo "Not supported"
+
+%post  
+yum -y install yum-utils
+yum -y install epel-release
+yum -y groupinstall "Base"
+yum -y groupinstall "Development Tools"
+
+#Install dependency
+yum -y install netcdf-devel
+
+#Install software
+cd /tmp
+git clone https://github.com/Discngine/fpocket.git
+cd fpocket
+make 
+make install

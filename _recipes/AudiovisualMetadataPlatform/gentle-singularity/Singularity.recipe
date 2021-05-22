@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: ubuntu
+
+%help
+gentle tools + galaxy/amp integration
+
+%labels
+Maintainer dan@portalmedia.com
+Version 0.1
+
+%environment
+
+%setup
+
+%files
+
+%post
+    # install updates & dependencies
+   apt-get update && TZ="America/New_York" DEBIAN_FRONTEND=noninteractive && apt-get install tzdata
+   apt-get install -y git-all
+   apt-get install -y python2.7
+   apt-get install -qq -y python3 python3-pip
+   apt-get install -y gfortran
+   apt-get install -y libfst-dev
+   apt-get install -y libblas-dev liblapack-dev   
+   apt-get install -y automake autoconf wget libtool subversion
+   apt-get install -y libatlas3-base
+   git clone --recurse-submodules https://github.com/AudiovisualMetadataPlatform/gentle.git
+   cd gentle
+   pwd
+   ./install.sh
+
+%runscript
+  python3 /gentle/align.py "$@"

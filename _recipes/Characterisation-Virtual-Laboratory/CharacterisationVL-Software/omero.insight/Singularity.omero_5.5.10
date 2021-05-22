@@ -1,0 +1,23 @@
+Bootstrap: shub
+From: Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804-cuda10.1
+
+%labels
+ MAINTAINER_NAME  Jafaruddin Lie
+ MAINTAINER_EMAIL jafar.lie@monash.edu
+
+ APPLICATION_NAME OMERO.INSIGHT
+ APPLICATION_VERSION 5
+
+%environment
+ export OMERO=/opt/OMERO.insight-5.5.10/bin
+ export PATH=$OMERO:$PATH
+
+%post -c /bin/bash
+ apt update
+ apt -y install default-jdk
+ cd /opt/
+ wget https://github.com/ome/omero-insight/releases/download/v5.5.10/OMERO.insight-5.5.10.zip
+ unzip OMERO.insight-5.5.10.zip
+
+%runscript
+ $*

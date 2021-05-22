@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: centos:7
+
+%files
+    environment-gpu.yml
+
+%post
+
+    PYTHON_VERSION=3.8
+    ROOT_VERSION=6.22.02
+
+    yum -y update
+    yum -y install vi
+    yum clean all
+    rm -rf /var/cache/rpm
+
+    curl -OL https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    sh ./Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda
+    rm ./Miniconda3-latest-Linux-x86_64.sh
+
+    source /opt/conda/etc/profile.d/conda.sh
+
+    conda activate
+    conda update -n base -c defaults conda
+
+    conda config --set allow_softlinks false
+    conda config --set always_copy true
+    conda env create -f environment-gpu.yml
+    
+    conda clean --yes --all --force-pkgs-dirs
+
+%environment
+
+    source /opt/conda/etc/profile.d/conda.sh
+    conda activate gpu
+

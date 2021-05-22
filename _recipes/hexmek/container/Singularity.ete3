@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: python:3
+
+%help
+a simple python3 container with only ete3 and six installed
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y  procps
+    pip install ete3 six numpy
+
+
+
+%environment
+    export LC_ALL=C
+

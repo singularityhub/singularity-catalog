@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: quay.io/biocontainers/metawrap:1.2--hdfd78af_2 
+
+
+%post
+    CONFFILE=$(which config-metawrap)
+    echo """# Paths to custon pipelines and scripts of metaWRAP
+SOFT=/usr/local/bin/metawrap-scripts
+PIPES=/usr/local/bin/metawrap-modules
+
+# OPTIONAL databases (see 'Databases' section of metaWRAP README for details)
+# path to kraken standard database
+KRAKEN_DB=/path/to/database
+
+# path to indexed human genome (see metaWRAP website for guide). This includes files hg38.bitmask and hg38.srprism.*
+BMTAGGER_DB=/hps/research/finn/saary/database/metawrap/bmtagger
+
+# paths to BLAST databases
+BLASTDB=/path/to/database/NCBI_nt
+TAXDUMP=/hps/research/finn/saary/database/metawrap/NCBI_tax""" > $CONFFILE
+
+%environment
+    export LC_ALL=C     
+    
+

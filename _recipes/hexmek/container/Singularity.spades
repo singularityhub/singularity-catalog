@@ -1,0 +1,24 @@
+Bootstrap: debootstrap
+OSVersion: stable
+MirrorURL: http://httpredir.debian.org/debian
+
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y make cmake g++ wget curl \
+    procps \
+    python3 \
+    procps  python3-pip \
+    python3-dev build-essential wget bzip2 libz-dev
+    update-alternatives --install /usr/bin/python python $(which python3) 1
+
+    cd /opt
+    wget -O spades.tar.gz http://cab.spbu.ru/files/release3.14.1/SPAdes-3.14.1-Linux.tar.gz
+    tar xzvf spades.tar.gz
+    
+
+%environment
+    export LC_ALL=C     
+    export PATH="/opt/SPAdes-3.14.1-Linux/bin:$PATH"
+

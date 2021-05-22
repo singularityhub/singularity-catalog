@@ -1,0 +1,25 @@
+Bootstrap: library
+From: cokelaer/damona/conda:4.9.2
+
+
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    # snakemake will require this tool:
+    apt-get install -y graphviz
+
+    export PATH=$PATH:/usr/local/anaconda/bin
+    export LANG=C   # prevents perl for raising warnings
+    export PERL5LIB=/usr/local/anaconda/lib/perl5/5.22.0
+
+    # misc
+    conda install pigz pbzip2 dsrc
+
+    # no dependencies
+    conda install ucsc-bedgraphtobigwig ucsc-bedcoverage ucsc-bedintersect   ucsc-bedtobigbed ucsc-blasttopsl 
+
+
+

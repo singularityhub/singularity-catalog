@@ -1,0 +1,33 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:2004
+
+%labels
+MAINTAINER jay.vanschyndel@monash.edu
+HARDWARE   cpu
+
+%environment
+    export PATH=/opt/ashs-2.0.0/ashs-fastashs_beta/bin:/opt/ashs_atlas_magdeburg_7t_20180416:$PATH
+    export ASHS_ROOT=/opt/ashs-2.0.0/ashs-fastashs_beta
+              
+%post
+    echo "==========================="
+    echo " Installing ASHS 2.0.0     "
+    echo "==========================="
+    apt-get -y update
+    apt install -y itksnap parallel
+
+    cd /tmp
+    rm -rf ashs-fastashs_2.0.0_07202018.zip
+    wget https://www.nitrc.org/frs/download.php/10887/ashs-fastashs_2.0.0_07202018.zip
+
+    mkdir -p /opt/ashs-2.0.0
+    unzip -d /opt/ashs-2.0.0 ashs-fastashs_2.0.0_07202018.zip
+
+    rm -rf ashs_atlas_magdeburg_7t_20180416.tgz
+    wget http://ashs.projects.nitrc.org/atlas_magdeburg/ashs_atlas_magdeburg_7t_20180416.tgz
+
+    mkdir -p /opt/ashs_atlas_magdeburg_7t_20180416
+    tar -C /opt/ashs_atlas_magdeburg_7t_20180416 -zxvf  ashs_atlas_magdeburg_7t_20180416.tgz
+
+%runscript
+    $*

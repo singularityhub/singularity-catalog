@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: python:3.7.7-slim-buster
+
+%post
+    export PATH="/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin"
+    export PYTHON_VERSION=3.7.7
+    export PY_VER=37
+    export TENSORFLOW_VERSION=2.1.0
+
+    apt-get update
+    apt-get install -y --no-install-recommends \
+        wget
+    apt-get clean
+    rm -rf /var/lib/apt/lists/*
+
+    cd /tmp
+    wget --quiet https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow_cpu-${TENSORFLOW_VERSION}-cp${PY_VER}-cp${PY_VER}m-manylinux2010_x86_64.whl
+    python -m pip install \
+        tensorflow_cpu-${TENSORFLOW_VERSION}-cp${PY_VER}-cp${PY_VER}m-manylinux2010_x86_64.whl
+    rm tensorflow_cpu-${TENSORFLOW_VERSION}-cp${PY_VER}-cp${PY_VER}m-manylinux2010_x86_64.whl
+
+%environment
+    export PATH="/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin"
+    export PYTHON_VERSION=3.7.7

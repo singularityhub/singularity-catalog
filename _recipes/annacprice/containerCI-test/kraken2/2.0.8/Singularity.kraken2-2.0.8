@@ -1,0 +1,37 @@
+Bootstrap: docker
+From: debian:buster
+
+%labels
+maintainer="pricea35@cardiff.ac.uk" 
+software="kraken2" 
+software.version="2.0.8" 
+about.summary="Taxonomic sequence classification using kraken2" 
+about.home="https://github.com/DerrickWood/kraken2"
+%post
+
+
+kraken2_version=2.0.8
+
+PACKAGES="gcc g++ wget parallel build-essential rsync unzip ncbi-blast+ locales locales-all"
+
+apt-get update && apt-get install -y $PACKAGES \
+&& wget https://github.com/DerrickWood/kraken2/archive/v${kraken2_version}-beta.tar.gz \
+&& tar -xzf v${kraken2_version}-beta.tar.gz \
+&& rm v${kraken2_version}-beta.tar.gz \
+&& cd kraken2-${kraken2_version}-beta \
+&& ./install_kraken2.sh /usr/local/bin
+
+locale-gen en_GB.UTF-8
+LANG=en_GB.UTF-8
+LANGUAGE=en_GB:en
+LC_ALL=en_GB.UTF-8
+%environment
+export kraken2_version=2.0.8
+export PACKAGES="gcc g++ wget parallel build-essential rsync unzip ncbi-blast+ locales locales-all"
+export LANG=en_GB.UTF-8
+export LANGUAGE=en_GB:en
+export LC_ALL=en_GB.UTF-8
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

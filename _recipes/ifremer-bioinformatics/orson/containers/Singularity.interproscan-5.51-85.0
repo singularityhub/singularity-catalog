@@ -1,0 +1,60 @@
+Bootstrap: docker
+From: biocorecrg/debian-perlbrew-pyenv3-java:buster
+
+%runscript
+	echo "Interproscan Image for ORSON pipeline"
+
+%post
+	# ###############################################################################
+	# Configure build
+	
+	# Which release of IPRscan to install?	
+	IPSCAN_VERSION=5.51-85.0
+
+	# Will be used to update interposcan.propeties file and replace "cpu 1" by
+	# "cpu $CPU_FOR_IPRSCAN_USE"
+	# Beware when increasing cpu value, see https://interproscan-docs.readthedocs.io/en/latest/ImprovingPerformance.html#review-your-cpu-and-memory-command-options
+	CPU_FOR_IPRSCAN_USE=8
+
+	# Will be used toi update JRE RAM requirements in interproscan properties file
+	RAM_FOR_IPRSCAN_USE=12g
+	
+	# ###############################################################################
+	# Start building container
+	IPR_TAR=interproscan-${IPSCAN_VERSION}-64-bit.tar
+	IPR_TBALL=${IPR_TAR}.gz
+	IPR_URL_BASE=ftp://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/${IPSCAN_VERSION}
+
+	cd /usr/local
+
+	curl --fail --silent --show-error --location --remote-name $IPR_URL_BASE/$IPR_TBALL
+	curl --fail --silent --show-error --location --remote-name $IPR_URL_BASE/${IPR_TBALL}.md5
+	md5sum -c ${IPR_TBALL}.md5
+	gunzip ${IPR_TBALL}
+	tar -xf ${IPR_TAR}
+
+	# Cleanup and configuration
+	rm -f ${IPR_TAR}*
+	mv interproscan-${IPSCAN_VERSION} interproscan
+	cd interproscan
+	chmod -R a+rx bin
+
+	sed -i "s/=--cpu 1/=--cpu ${CPU_FOR_IPRSCAN_USE}/g" interproscan.properties
+	sed -i "s/=-c 1/=-c ${CPU_FOR_IPRSCAN_USE}/g" interproscan.properties
+	sed -i "s/=-cpu 1/=-cpu ${CPU_FOR_IPRSCAN_USE}/g" interproscan.properties
+	sed -i "s/-Xmx2048m/-Xmx${RAM_FOR_IPRSCAN_USE}/g" interproscan.properties
+
+	# Not used by ORSON
+	cd data
+	rm -rf gene3d panther phobius pirsf pirsr sfld tmhmm
+
+	# See https://interproscan-docs.readthedocs.io/en/latest/HowToDownload.html#index-hmm-models
+	cd /usr/local/interproscan
+	python3 initial_setup.py
+
+%environment
+	PATH="/usr/local/interproscan:${PATH}"
+
+%labels
+    Maintainer SeBiMER, IFREMER
+    Version 1.0

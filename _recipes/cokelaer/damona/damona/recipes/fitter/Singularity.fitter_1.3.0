@@ -1,0 +1,38 @@
+BootStrap: docker
+From: ubuntu:18.04
+
+%labels
+
+    AUTHOR Thomas Cokelaer
+    VERSION 1.0
+    DAMONA_TYPE env
+    
+
+%post
+
+    # General tools 
+    apt-get update
+
+    # avoid debconf warnings
+    apt-get install -y dialog apt-utils
+    apt-get install -y python3-pip
+
+
+    apt-get install -y eog
+
+    # unicode issue solved with this:
+    export LANG=C   # prevents perl for raising warnings
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+
+    pip3 install fitter
+    #pip3 install pyqt5
+
+    echo "backend:agg" > matplotlibrc
+
+%environment
+    export LANG=C   # prevents perl for raising warnings
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+    echo "backend:agg" > matplotlibrc
+

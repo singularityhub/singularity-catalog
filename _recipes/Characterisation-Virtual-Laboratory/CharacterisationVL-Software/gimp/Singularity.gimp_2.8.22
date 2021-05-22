@@ -1,0 +1,26 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804-cuda10.1
+
+%labels
+    MAINTAINER_NAME  Jay van Schyndel
+    MAINTAINER_EMAIL jay.vanschyndel@monash.edu
+
+    APPLICATION_NAME gimp
+    APPLICATION_VERSION 2.8.22
+
+    HARDWARE GPU
+
+    LAST_UPDATED 22-Apr-2020
+
+%environment
+
+%post
+    echo "================================"
+    echo "Installing Gimp                 "
+    echo "================================"
+    apt -y update
+    apt -y upgrade
+    apt -y install gimp=2.8.22-1
+
+%runscript
+    $*

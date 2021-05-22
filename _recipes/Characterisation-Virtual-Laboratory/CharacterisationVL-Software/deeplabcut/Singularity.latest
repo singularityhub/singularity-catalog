@@ -1,0 +1,53 @@
+Bootstrap: shub
+From: Characterisation-Virtual-Laboratory/CharacterisationVL-Software_1804-cuda9
+
+%labels
+    MAINTAINER_NAME  Jafaruddin Lie
+    MAINTAINER_EMAIL jafar.lie@monash.edu
+
+    APPLICATION_NAME Tensorflow
+    APPLICATION_VERSION 1
+
+    HARDWARE GPU
+
+    LAST_UPDATED 04-06-2019
+
+%environment
+    CUDABINPATH=/usr/local/cuda/bin
+    CUDALIBPATH=/usr/local/cuda/lib64/stubs:/usr/local/cuda/lib64/:/usr/local/cuda/lib
+    export PATH=$PATH:$CUDABINPATH
+    export LD_LIBRARY_PATH=$CUDALIBPATH:$LD_LIBRARY_PATH
+    export DEBIAN_FRONTEND=noninteractive
+    export CONDA_SHLVL=2
+    export CONDA_EXE=/opt/miniconda3/bin/conda
+    export CONDA_PREFIX=/opt/miniconda3/envs/DLC-GPU
+    export CONDA_PREFIX_1=/opt/miniconda3
+    export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+    export PATH=/opt/miniconda3/envs/DLC-GPU/bin:/opt/miniconda3/condabin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/cuda/bin:$PATH
+    export CONDA_DEFAULT_ENV=DLC-GPU
+
+
+%post -c /bin/bash
+    apt update
+    apt -y upgrade
+    apt -y install python3-pip
+    apt -y install gtk* libsdl1*
+    echo # Install cudnn #
+    cd /
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/7.1.3-cuda9.tar
+    tar xvf 7.1.3-cuda9.tar
+    cd 7.1.3-cuda9
+    cp include/cudnn.h /usr/local/cuda/include
+    cp lib64/libcudnn* /usr/local/cuda/lib64
+    chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
+    cd /
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    sh ./Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3
+    source /opt/miniconda3/bin/activate
+    cd /opt/
+    git clone https://github.com/DeepLabCut/DeepLabCut.git
+    cd DeepLabCut/conda-environments
+    conda env create -f DLC-GPU.yaml
+
+%runscript
+    $*

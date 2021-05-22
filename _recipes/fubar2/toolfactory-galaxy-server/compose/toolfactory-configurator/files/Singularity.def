@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: bgruening/busybox-bash:0.1
+
+%setup
+
+    echo "Copying conda environment"
+    mkdir /tmp/conda
+    cp -r /data/dist/* /tmp/conda/
+
+%post
+    rm -R /usr/local || true
+    mkdir /usr/local
+    cp -R /tmp/conda/* /usr/local/
+
+%test
+    true

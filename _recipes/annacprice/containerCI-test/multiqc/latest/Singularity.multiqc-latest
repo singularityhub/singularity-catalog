@@ -1,0 +1,44 @@
+Bootstrap: docker
+From: debian:buster
+
+%labels
+maintainer="pricea35@cardiff.ac.uk" 
+software="multiqc" 
+software.version="1.9" 
+about.summary="Create a single report for multiple bioinformatics analyses using multiqc" 
+about.home="https://github.com/ewels/MultiQC"
+%post
+
+
+pandoc_version=2.3
+MultiQC_version=1.9
+
+PACKAGES="wget parallel make bzip2 gcc g++ libc6-dev libncurses-dev xz-utils zlib1g-dev libfreetype6 libpng-dev locales locales-all"
+PYTHON="python3 python3-dev python3-pip"
+
+apt-get update \
+&& apt-get -y install $PACKAGES $PYTHON \
+&& wget -O pandoc-${pandoc_version}-linux.tar.gz "https://github.com/jgm/pandoc/releases/download/${pandoc_version}/pandoc-${pandoc_version}-linux.tar.gz" \
+&& tar -xzf pandoc-${pandoc_version}-linux.tar.gz -C /usr/local/bin \
+&& find /usr/local/bin/pandoc-${pandoc_version} -name "pandoc" -exec ln -s {} /usr/local/bin \; \
+&& wget -O MultiQC-${MultiQC_version}.tar.gz "https://github.com/ewels/MultiQC/archive/v${MultiQC_version}.tar.gz" \
+&& tar -xzf MultiQC-${MultiQC_version}.tar.gz \
+&& cd MultiQC-${MultiQC_version} \
+&& python3 setup.py install
+
+locale-gen en_GB.UTF-8
+LANG=en_GB.UTF-8
+LANGUAGE=en_GB:en
+LC_ALL=en_GB.UTF-8
+%environment
+export pandoc_version=2.3
+export MultiQC_version=1.9
+export PACKAGES="wget parallel make bzip2 gcc g++ libc6-dev libncurses-dev xz-utils zlib1g-dev libfreetype6 libpng-dev locales locales-all"
+export PYTHON="python3 python3-dev python3-pip"
+export LANG=en_GB.UTF-8
+export LANGUAGE=en_GB:en
+export LC_ALL=en_GB.UTF-8
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

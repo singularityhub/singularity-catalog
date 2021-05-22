@@ -1,0 +1,16 @@
+Bootstrap:docker  
+From:nunofonseca/irap_fedora:v1.0.6b
+
+%labels
+MAINTAINER Thomas Green
+
+%environment
+
+%runscript
+exec /bin/bash /bin/echo "Not supported"
+
+%post  
+yum -y install tbb
+mkdir /apps
+mkdir /scratch
+chmod ugo+x /usr/bin/irap

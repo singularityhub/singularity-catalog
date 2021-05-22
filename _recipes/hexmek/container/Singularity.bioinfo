@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: conda/miniconda2
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y python3 python3-pip libgl1-mesa-glx rsync git curl wget bwa \
+                   bedtools samtools procps
+    # install quick pyhton tools
+    pip3 install pyfaidx
+    pip3 install ncbi-genome-download
+
+
+
+%environment
+    export LC_ALL=C
+

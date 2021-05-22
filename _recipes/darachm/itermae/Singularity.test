@@ -1,0 +1,22 @@
+Bootstrap: localimage
+From: itermae_test_base.simg
+
+%labels
+MAINTAINER darachm
+
+%files
+
+    requirements.txt
+
+%help
+
+    testing
+
+%post
+
+    python3 -m pip install -r requirements.txt
+    python3 -m pip install --index-url https://test.pypi.org/simple/ itermae==0.5.9.9
+
+%test
+
+

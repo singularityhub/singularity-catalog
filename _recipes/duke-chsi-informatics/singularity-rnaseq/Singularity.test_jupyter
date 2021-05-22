@@ -1,0 +1,26 @@
+BootStrap: library
+From: granek/default/singularity-rstudio-base:3.6.1
+
+%labels
+    Maintainer Josh Granek
+    Image_Name rnaseq
+    Image_Version rnaseq_0002_test
+
+%post
+  # Install extra stuff
+  export DEBIAN_FRONTEND=noninteractive
+
+  pip3 install notebook
+  pip3 install bash_kernel
+  python3 -m bash_kernel.install
+
+  Rscript -e "install.packages(c('IRkernel'), repos = 'https://cloud.r-project.org/')"
+  Rscript -e "IRkernel::installspec(user = FALSE)"
+
+  mkdir -p /data
+  mkdir -p /workspace
+
+%apprun jupyter
+  export JUPYTER_RUNTIME_DIR="$HOME/.local/share/jupyter/runtime"
+  mkdir -p $JUPYTER_RUNTIME_DIR
+  jupyter notebook

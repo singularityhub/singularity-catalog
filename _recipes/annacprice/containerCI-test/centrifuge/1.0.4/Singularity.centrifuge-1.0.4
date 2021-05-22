@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: debian:buster
+
+%labels
+maintainer="pricea35@cardiff.ac.uk" 
+software="centrifuge" 
+software.version="1.0.4-beta" 
+about.summary="Taxonomic sequence classification using centrifuge" 
+about.home="https://github.com/DaehwanKimLab/centrifuge"
+%post
+
+
+centrifuge_version=1.0.4-beta
+
+PACKAGES="wget parallel make g++ gcc libbz2-dev liblzma-dev zlib1g-dev perl locales locales-all"
+PYTHON="python python-pip"
+
+apt-get update \
+&& apt-get -y install $PACKAGES $PYTHON \
+&& wget -O centrifuge-${centrifuge_version}.tar.gz "https://github.com/infphilo/centrifuge/archive/v${centrifuge_version}.tar.gz" \
+&& tar -xzf centrifuge-${centrifuge_version}.tar.gz -C /usr/local/bin  \
+&& make -C /usr/local/bin/centrifuge-${centrifuge_version} -j 4 \
+&& make install -C /usr/local/bin/centrifuge-${centrifuge_version}
+
+locale-gen en_GB.UTF-8
+LANG=en_GB.UTF-8
+LANGUAGE=en_GB:en
+LC_ALL=en_GB.UTF-8
+%environment
+export centrifuge_version=1.0.4-beta
+export PACKAGES="wget parallel make g++ gcc libbz2-dev liblzma-dev zlib1g-dev perl locales locales-all"
+export PYTHON="python python-pip"
+export LANG=en_GB.UTF-8
+export LANGUAGE=en_GB:en
+export LC_ALL=en_GB.UTF-8
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

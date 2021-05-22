@@ -1,0 +1,115 @@
+Bootstrap: docker
+From:      ubuntu:20.04
+
+%labels
+    MAINTAINER_NAME  Jay van Schyndel
+    MAINTAINER_EMAIL jay.vanschyndel@monash.edu
+
+    APPLICATION_NAME ubuntu + cuda
+    APPLICATION_VERSION 20.04
+
+    HARDWARE gpu
+
+    LAST_UPDATED 01-DEC-2020
+
+%environment
+    CUDABINPATH=/usr/local/cuda/bin
+    CUDALIBPATH=/usr/local/cuda/lib64/stubs:/usr/local/cuda/lib64/:/usr/local/cuda/lib
+    export PATH=$PATH:$CUDABINPATH
+    export LD_LIBRARY_PATH=$CUDALIBPATH:$LD_LIBRARY_PATH
+
+%post
+    echo "*********************************************************"
+    echo "Setup and display environment"
+    echo "*********************************************************"
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    echo $LC_ALL
+    echo $LANGUAGE
+    echo $DEBIAN_FRONTEND
+    echo "*********************************************************"
+    echo "Install repositories"
+    echo "*********************************************************"
+    apt update
+    apt-get install -y software-properties-common
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ focal main restricted'
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ focal-updates main restricted'
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ focal universe'
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ focal-updates universe'
+    echo "*********************************************************"
+    echo "Update repositories and install desktop"
+    echo "*********************************************************"
+    apt update
+    apt upgrade -y
+    apt install -y locales
+    locale-gen en_AU.UTF-8
+    apt install -y wget ubuntu-desktop vim software-properties-common git cmake mesa-utils sudo build-essential gpg-agent
+
+    echo "*********************************************************"
+    echo "Installing CUDA 11.0"
+    echo "*********************************************************"
+    apt-get install -y g++ freeglut3-dev build-essential libx11-dev libxmu-dev libxi-dev libglu1-mesa libglu1-mesa-dev mesa-utils libgl1-mesa-glx
+    apt-get install -y gcc-10
+    cd /tmp
+    wget https://developer.download.nvidia.com/compute/cuda/11.0.3/local_installers/cuda_11.0.3_450.51.06_linux.run
+    chmod +x cuda_11.0.3_450.51.06_linux.run
+    ./cuda_11.0.3_450.51.06_linux.run --silent --toolkit --toolkitpath=/usr/local/cuda-11.0/ --samples --samplespath=/usr/local/cuda-11.0-samples/ --override
+    ln -s /usr/local/cuda-11.0 /usr/local/cuda
+    ln -s /usr/bin/gcc-6 /usr/local/cuda/bin/gcc
+    ln -s /usr/bin/g++-6 /usr/local/cuda/bin/g++
+
+    echo "*********************************************************"
+    echo "Installing python dependencies"
+    echo "*********************************************************"
+    apt install -y python3-pip python3-pyqt5 pyqt5-dev python3-tk
+
+    echo "*********************************************************"
+    echo "Installing vglrun and TurboVNC"
+    echo "*********************************************************"
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/turbovnc_2.2.5_amd64.deb
+    dpkg -i turbovnc_2.2.5_amd64.deb
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/virtualgl_2.6.4_amd64.deb
+    dpkg -i virtualgl_2.6.4_amd64.deb
+    apt update
+    apt -y upgrade
+
+    echo "Installing ML Stuff"
+    apt -y update
+    apt -y upgrade
+    apt install -y python3-dev
+    apt -y install sudo
+    apt -y install curl
+    apt -y install python2.7-dev
+    apt install -y python3-pip
+    apt -y install python3-venv
+    apt install -y pandoc
+    curl -sL https://deb.nodesource.com/setup_14.x | bash -
+    apt -y update
+    apt -y upgrade
+    apt -y install nodejs
+    apt -y install texlive-xetex
+    apt -y install pandoc
+    apt -y install python3-pypandoc python3-pandocfilters
+
+    curl https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/cudnn-11.2-linux-x64-v8.1.1.33.tgz -o /tmp/cudnn.tgz
+    cd /usr/local
+    tar zxf /tmp/cudnn.tgz
+
+    pip3 install --upgrade pip
+    pip3 install jupyterlab
+    pip3 install pandas
+    pip3 install bokeh
+    pip3 install bokeh-plot
+    pip3 install jupyter-bokeh
+    pip3 install scipy
+    pip3 install tensorflow-gpu
+    pip3 install modin[ray]
+    pip3 install tqdm
+    pip3 install matplotlib
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager
+    jupyter labextension install @bokeh/jupyter_bokeh
+    pip3 install torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 -f https://download.pytorch.org/whl/torch_stable.html
+
+%runscript
+    $*

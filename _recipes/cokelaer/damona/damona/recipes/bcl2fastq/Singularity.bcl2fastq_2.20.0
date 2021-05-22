@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: centos:7
+
+%labels
+    MAINTAINER thomas cokelaer
+    Author thomas cokelaer
+    Version v2.20
+    DAMONA_TYPE exe
+    DAMONA_BIN bcl2fastq
+
+%files
+    bcl2fastq.rpm
+
+%post
+
+    yum install -y bcl2fastq.rpm
+    rm  bcl2fastq.rpm
+
+%runscript
+    exec bcl2fastq "$@"
+

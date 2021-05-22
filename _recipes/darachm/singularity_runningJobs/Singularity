@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: ubuntu:bionic-20190307
+
+%labels
+MAINTAINER darachm
+DATE 190410
+
+%help
+
+    This is a base for running things, general stuff.
+    It includes nextflow
+    
+%post
+
+    apt-get -y update
+    apt-get -y upgrade
+# to install nextflow
+    apt-get -y install default-jdk graphviz curl 
+# to install singularity
+    apt-get -y install singularity-container
+# general stuff
+    apt-get -y install gzip git wget g++ gcc-4.8 gawk
+# for additional repos
+    apt-get -y install gnupg2 software-properties-common 
+# perl ! Some times you just need a one-liner
+    apt-get -y install perl
+
+    cd / 
+    curl -s https://get.nextflow.io | bash
+    chmod a+rx /nextflow
+
+%test
+
+    # ?

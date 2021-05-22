@@ -1,0 +1,59 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+  Author pmitev@gmail.com
+
+%environment
+  export LC_ALL=C
+  export CONDA_ENVS_PATH=/opt/conda_envs
+  export PATH=/opt/metaWRAP/bin:$PATH
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export LC_ALL=C
+  export CONDA_ENVS_PATH=/opt/conda_envs &&  mkdir -p ${CONDA_ENVS_PATH}
+  export NCPU=$(grep -c ^processor /proc/cpuinfo)
+
+  apt-get update && apt-get -y install  wget git
+
+  mkdir /installs && cd /installs
+
+  # Conda installation ==============================================
+  mconda="Miniconda3-py38_4.9.2-Linux-x86_64.sh"
+  wget https://repo.anaconda.com/miniconda/${mconda} && \
+  chmod +x ${mconda} && \
+  ./${mconda} -b -p /opt/miniconda3 && \
+  ln -s /opt/miniconda3/bin/conda /usr/bin/conda
+
+  # metaWRAP dependencies installation ==============================
+/bin/bash <<EOF
+  source /opt/miniconda3/etc/profile.d/conda.sh
+
+  conda create -y -n metawrap-env python=2.7
+  conda activate metawrap-env
+  
+  conda config --add channels defaults
+  conda config --add channels conda-forge
+  conda config --add channels bioconda
+  conda config --add channels ursky
+
+  conda install --only-deps -c ursky metawrap-mg
+
+  conda clean --all --yes
+EOF
+
+  # metaWRAP from github ============================================
+  cd /opt
+  git clone https://github.com/bxlab/metaWRAP.git
+
+  cd / && rm -r /installs
+
+%runscript
+  params=$@
+/bin/bash <<EOF
+  export PATH=/opt/metaWRAP/bin:$PATH
+  source /opt/miniconda3/etc/profile.d/conda.sh
+  conda activate metawrap-env
+  metawrap $params
+EOF

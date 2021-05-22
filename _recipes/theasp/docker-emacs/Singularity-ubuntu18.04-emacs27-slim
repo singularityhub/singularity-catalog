@@ -1,0 +1,8 @@
+Bootstrap: docker
+From: docker://theasp/emacs:ubuntu18.04-emacs27-slim
+
+%post
+    sed -r -i -e 's!mdns4_minimal \[NOTFOUND=return\] !!' /etc/nsswitch.conf
+
+%runscript
+    /usr/bin/emacs "$@"

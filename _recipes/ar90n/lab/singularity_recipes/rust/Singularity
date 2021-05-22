@@ -1,0 +1,34 @@
+Bootstrap: localimage
+From: ../images/common.simg
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/opt/init/012_rust
+
+%files
+    entry.sh /opt/init/012_rust/entry.sh
+    rust_dein.toml /opt/init/012_rust/rust_dein.toml
+
+%environment
+    export PATH=/opt/cargo/bin:$PATH
+
+%labels
+    AUTHOR argon.argon.argon@gmail.com
+
+%post
+    echo "export SINGULARITY_IMAGE_NAME=rust_$(date +%s)" >> $SINGULARITY_ENVIRONMENT
+    echo "export SINGULARITY_XDG_ROOT=\$HOME/.xdg/\$SINGULARITY_IMAGE_NAME" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_CONFIG_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_CACHE_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_DATA_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_RUNTIME_DIR=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export RUSTUP_HOME=/opt/rustup" >> $SINGULARITY_ENVIRONMENT
+    echo "export CARGO_HOME=\$SINGULARITY_XDG_ROOT/cargo" >> $SINGULARITY_ENVIRONMENT
+    . $SINGULARITY_ENVIRONMENT
+
+    export CARGO_HOME=/opt/cargo
+    curl -sSf https://sh.rustup.rs -o /tmp/rustup.sh
+    bash /tmp/rustup.sh -y --no-modify-path
+    /opt/cargo/bin/rustup update
+    /opt/cargo/bin/rustup install nightly
+    /opt/cargo/bin/rustup default stable
+    /opt/cargo/bin/rustup component add rls rust-analysis rust-src

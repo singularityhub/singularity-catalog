@@ -1,0 +1,33 @@
+BootStrap: docker
+From: continuumio/miniconda3:latest
+
+%labels
+MAINTAINER Jesus Murga Moreno
+
+%environment
+
+	export LC_ALL=C.UTF-8
+	export LANG=C.UTF-8
+	export PATH=/relate_v1.1.6_x86_64_static/bin:/relate_v1.1.6_x86_64_static/scripts/DetectSelection:/relate_v1.1.6_x86_64_static/scripts/EstimatePopulationSize:/relate_v1.1.6_x86_64_static/scripts/PrepareInputFiles:/relate_v1.1.6_x86_64_static/scripts/RelateParallel:$PATH
+	export PATH=/opt/conda/bin:$PATH
+	
+%post
+	
+	apt-get update && apt-get install -y --no-install-recommends apt-utils
+	apt-get install -y libglib2.0-0 libxext6 wget bzip2 ca-certificates curl git vim make build-essential libgsl-dev libz-dev gzip bcftools samtools vcftools cmake libcr-dev mpich libmpich-dev
+	apt-get clean
+	rm -rf /var/lib/apt/lists/*
+
+	export PATH=/opt/conda/bin:$PATH
+
+	conda install -c conda-forge numpy pandas ipython scipy scikit-allel numba msprime pyslim tskit slim r-base r-data.table -y
+    conda install -c bioconda hapbin
+
+	conda clean --all
+
+	/opt/conda/bin/python -m pip install tsinfer
+
+	wget https://myersgroup.github.io/relate/download/relate_v1.1.6_x86_64_static.tgz
+	tar -zxf relate_v1.1.6_x86_64_static.tgz
+	rm relate_v1.1.6_x86_64_static.tgz
+

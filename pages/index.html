@@ -1,0 +1,182 @@
+---
+layout: default
+permalink: /
+---
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+          <!--<a class="nav-link" id="standardized-tab" data-toggle="tab" href="#standardized" role="tab" aria-controls="standardized" aria-selected="false">Standardized usage</a>-->
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">All recipes <span class="badge badge-danger" id="recipes-count-badge"></span></a>
+        </li>
+      </ul>
+      <table id="repos" data-toggle="table" data-pagination="true" data-search="true" data-pagination="true"
+      data-sort-name="stargazers_count" data-sort-order="desc" data-classes="table">
+        <thead>
+          <tr>
+            <th data-field="usage" data-formatter="usage_formatter">&nbsp;</th>
+            <th data-searchable="true" data-sortable="true" data-field="full_name" data-formatter="name_formatter">
+            Stack</th>
+            <th data-searchable="true" data-field="description">Description</th>
+            <th data-searchable="true" data-field="filenames" data-formatter="filenames_formatter">Singularity* recipe</th>
+            <th data-searchable="true" data-field="topics" data-formatter="topics_formatter">Topics</th>
+            <th data-field="full_name" data-formatter="qc_formatter">QC</td>
+            <th data-sortable="true" data-field="stargazers_count" data_formatter="stargazers_formatter">Stars</th>
+            <th data-sortable="true" data-field="subscribers_count" data_formatter="watchers_formatter">Watchers</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <hr/>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="detail-popup">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="detail-title"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <pre id="check-msg" class="language-yaml"><code id="yamlcode" class="language-yaml"></code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include inclusion-modal.html %}
+ 
+    <script src="{{ site.baseurl }}/assets/js/repos.js"></script>
+    <script>
+      function get_repo_url(full_name) {
+        return `https://github.com/${full_name}`
+      }
+
+      function get_repo_raw_path_url(full_name, tag, path) {
+        return `${get_repo_url(full_name)}/raw/${tag}/${path}`
+      }
+
+      function name_formatter(full_name) {
+        return `<a href="${get_repo_url(full_name)}">${full_name}</a>`
+      }
+
+      function filenames_formatter(filenames, row) {
+        content = ""
+        var name = row['full_name'];
+        for (var i = 0; i < filenames.length; i++) {
+            fullname = name + "/" + filenames[i];
+            content += '<span class="badge badge-danger"><a class="clickyaml" style="color:white" data-name="' + fullname + '" data-url="recipes/' + name + "/" + filenames[i] + '">' + i + '</a></span>'
+        }
+        return content
+      }
+
+      function usage_formatter(usage, row) {
+        if (row.standardized === true) {
+          var link = $(`<a href="#" class="btn btn-danger" data-toggle="modal" data-target="#usage-popup">Usage</a>`)
+          link.attr("data-row", JSON.stringify(row))
+          return link.prop("outerHTML")
+        } else {
+          return ""
+        }
+      }
+
+      function topics_formatter(topics) {
+        return topics
+          .map(topic => `<a href="https://github.com/topics/${topic}">${topic}</a>`)
+          .join(", ")
+      }
+
+      function escapeHtml(unsafe) {
+        if (unsafe) {
+          return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        } else {
+          return ""
+        }
+      }
+
+      function qc_formatter(_, repo) {
+        return `
+      <img src="https://img.shields.io/github/license/${repo.full_name}" /><br />
+      <a href="https://github.com/${repo.full_name}/commits"><img src="https://img.shields.io/github/last-commit/${repo.full_name}" /></a><br />`
+      }
+
+      function stargazers_formatter(_, repo) {
+        return `<a href="https://github.com/${repo.full_name}/stargazers">${repo.stargazers_count}</a>`
+      }
+
+      function watchers_formatter(_, repo) {
+        return `<a href="https://github.com/${repo.full_name}/watchers">${repo.subscribers_count}</a>`
+      }
+
+      function get_repo_row(full_name) {
+        for (row of data) {
+          if (row.full_name == full_name) {
+            return row
+          }
+        }
+      }
+
+
+      function clickEvent() {
+          $(".clickyaml").on("click", function (e) {
+             var path = $(this).attr("data-url");
+             var fullname = $(this).attr("data-name");
+             $.ajax({
+                url : path,
+                dataType: "text",
+                success : function (data) {
+                    $("#yamlcode").html(data);
+                    $("#detail-title").html(fullname);
+                    Prism.highlightAll();
+                    $('#detail-popup').modal('show');   
+                }
+            });      
+          })
+        }
+
+      var table = $("#repos").bootstrapTable({data: data,
+           onPageChange: function (number, size) {
+              console.log("page change!")
+              setTimeout(function(){ clickEvent() }, 2000);
+           }
+      });
+
+      // show number of workflows
+      var nrows = $("#repos")
+        .bootstrapTable('getOptions')
+        .totalRows
+        $("#recipes-count-badge")
+        .text(nrows)
+
+      // filter to standardized by default
+      //$("#repos").bootstrapTable("filterBy", { standardized: [true] })
+      // TODO: what can we show?
+      $('#detail-popup').on('show.bs.modal', function (event) {
+        var source = $(event.relatedTarget) // item that triggered the modal
+        var msg = source.data('msg')
+        var title = source.data('title')
+        var modal = $(this)
+        modal
+          .find('.modal-title')
+          .text(title)
+        modal
+          .find('.modal-body pre')
+          .text(msg)
+      })
+
+      $("#all-tab").on("click", function (e) {
+        e.preventDefault()
+        $("#repos").bootstrapTable("filterBy", {
+          standardized: [undefined, false, true]
+        })
+      })
+      clickEvent();
+    </script>

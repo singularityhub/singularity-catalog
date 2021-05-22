@@ -1,0 +1,38 @@
+Bootstrap:docker
+From:centos:7
+
+%labels
+MAINTAINER baber@iastate.edu
+
+%environment
+SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+source /etc/profile.d/modules.sh
+source $SPACK_ROOT/share/spack/setup-env.sh
+
+%post
+export SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+
+yum -y install git python \
+gcc gcc-c++ gcc-gfortran curl \
+gnupg2 sed patch \
+unzip gzip bzip2 \
+findutils make vim \
+environment-modules
+
+yum clean all
+
+if [ ! -d "$SPACK_ROOT" ]; then
+  git clone https://github.com/spack/spack.git $SPACK_ROOT
+  spack compiler find --scope system $(which gcc)
+  spack compiler find --scope system $(which g++)
+  spack compiler find --scope system $(which gfortran)
+fi
+
+source $SPACK_ROOT/share/spack/setup-env.sh
+
+%runscript
+spack help

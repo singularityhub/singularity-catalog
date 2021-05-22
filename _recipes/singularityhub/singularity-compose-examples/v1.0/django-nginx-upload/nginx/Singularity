@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: alpine:3.4
+
+%environment
+export NGINX_VERSION=1.13.6
+
+%files
+install.sh /usr/src/install.sh
+nginx.key /usr/src/nginx.key
+nginx.conf /etc/nginx/nginx.conf
+nginx.vh.default.conf /etc/nginx/conf.d/default.conf
+
+%post
+export NGINX_VERSION=1.13.6
+sh -x /usr/src/install.sh
+
+%startscript
+exec nginx -g "daemon off;"

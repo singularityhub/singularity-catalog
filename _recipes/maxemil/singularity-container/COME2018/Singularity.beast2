@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%environment
+JAVA_HOME=/usr/lib/jvm/default-java/
+export JAVA_HOME
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  ca-certificates \
+                  libxrender1 \
+                  gsl-bin \
+                 default-jre
+
+######## beast2 #########
+cd /usr/local/
+wget https://github.com/CompEvol/beast2/releases/download/v2.5.0/BEAST.v2.5.0.Linux.tgz
+tar -xvf BEAST.v2.5.0.Linux.tgz
+for b in /usr/local/beast/bin/*; do ln -s $b /usr/local/bin; done
+
+%runscript
+exec "$@"

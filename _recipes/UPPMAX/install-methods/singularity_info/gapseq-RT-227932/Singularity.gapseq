@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+  Author pmitev@gmail.com
+
+%environment
+  export LC_ALL=C
+  export PATH=/opt/gapseq:${PATH}
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export LC_ALL=C
+  export NCPU=$(grep -c ^processor /proc/cpuinfo)
+
+  apt-get update && \
+  apt-get  -y --no-install-recommends install \
+     less vim nano wget curl gawk build-essential gfortran \
+     ncbi-blast+ git libglpk-dev r-base-core exonerate bedtools barrnap bc libsbml5-dev && \
+  rm -rf /var/lib/apt/lists/*
+
+
+  R -e 'install.packages(c("data.table", "stringr", "sybil", "getopt", "reshape2", "doParallel", "foreach", "R.utils", "stringi", "glpkAPI", "CHNOSZ", "jsonlite"))'
+  R -e 'if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager"); BiocManager::install("Biostrings")'
+
+  #R -e 'install.packages(c("sybilSBML"))' # does not work - instead use the 2 lines bellow
+  mkdir -p /installs && cd /installs && wget https://cran.r-project.org/src/contrib/Archive/sybilSBML/sybilSBML_3.1.2.tar.gz
+  R CMD INSTALL --configure-args="--with-sbml-include=/usr/include/sbml/ --with-sbml-lib=/usr/lib/x86_64-linux-gnu/" sybilSBML_3.1.2.tar.gz
+
+# This needed to be in a writable file system i.e outside of the container
+#  cd /opt && git clone https://github.com/jotech/gapseq
+
+%runscript
+  /bin/bash $@

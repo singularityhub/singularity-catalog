@@ -1,0 +1,83 @@
+Bootstrap:docker  
+From:centos:centos7.6.1810
+
+%labels
+MAINTAINER Thomas Green
+
+%environment
+
+%runscript
+exec /bin/bash /bin/echo "Not supported"
+
+%post
+# Create some common mountpoints for systems without overlayfs
+mkdir /scratch 
+mkdir /apps
+
+yum -y update
+
+yum -y install yum-utils
+yum -y install epel-release
+yum -y install centos-release-scl
+
+yum-config-manager --add-repo https://yum.repos.intel.com/setup/intelproducts.repo
+
+# Standard groupinstall
+yum -y groupinstall "Base"
+yum -y groupinstall "Development Tools"
+
+# Standard build dependencies
+yum -y install gcc-c++ \
+gcc-gfortran \
+cmake \
+cmake3 \
+netcdf-devel \
+netcdf-cxx-devel \
+proj-devel \
+boost-devel \
+git \
+flex \
+bison \
+byacc \
+gdbm-devel \
+qt5-qtbase-devel \
+qt5-qtsvg-devel \
+qt5-qtxmlpatterns-devel \
+cairo-devel \
+pango-devel \
+libgeotiff-devel \
+jasper-devel \
+fftw-devel \
+ncurses-devel \
+eigen3-devel \
+blas-devel \
+openssl-devel \
+python-jinja2
+
+yum -y install intel-mkl-2018.2-046
+. /opt/intel/bin/compilervars.sh intel64
+
+# Update for GCC
+yum -y install devtoolset-7
+. /opt/rh/devtoolset-7/enable
+
+# Runtime requirements
+yum -y install hostname \
+xorg-x11-utils \
+vi \
+xterm
+
+# Build
+mkdir -p /tmp/src
+cd /tmp/src
+wget https://confluence.ecmwf.int/download/attachments/51731119/MetviewBundle-2019.07.1-Source.tar.gz
+tar zxvf MetviewBundle-2019.07.1-Source.tar.gz
+
+mkdir /tmp/bld
+cd /tmp/bld
+cmake3 /tmp/src/MetviewBundle-2019.07.1-Source
+make -j
+make install
+
+
+

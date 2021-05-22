@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: metabat/metabat:latest
+
+%post 
+    apt update
+    apt upgrade -y
+    apt install -y python3 python3-pip procps
+    echo "done"
+    
+
+
+%environment
+    export LC_ALL=C
+

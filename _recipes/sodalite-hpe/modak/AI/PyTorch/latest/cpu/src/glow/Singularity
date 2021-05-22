@@ -1,0 +1,53 @@
+# build torch from source followed by glow from source. DEPRECATED due to glow from source requiring additional packages (status March 2020), see version 2.
+
+BootStrap: localimage
+From: ./ubuntu_base/
+
+%environment
+PATH=$PATH:/opt/anaconda3/bin
+export PATH
+
+%post
+
+	# install anaconda
+	cd home
+	wget https://repo.anaconda.com/archive/Anaconda3-2019.10-Linux-x86_64.sh
+	bash Anaconda3-2019.10-Linux-x86_64.sh -b -p /opt/anaconda3
+
+	# prepare bashrc for anaconda export
+	touch /home/.bashrc
+
+	# Anaconda path must be exported
+	echo "PATH=/opt/anaconda3/bin:\$PATH" >> /home/.bashrc
+	echo "export PATH" >> /home/.bashrc
+	rm Anaconda3-2019.10-Linux-x86_64.sh 
+	. /home/.bashrc
+
+	# install additional requirements
+	cd /home
+	conda install numpy ninja pyyaml mkl mkl-include setuptools cmake cffi typing
+
+    #set to no cuda installation
+    export USE_CUDA=0
+
+    # Get pytorch source
+    git clone --recursive https://github.com/pytorch/pytorch
+    cd pytorch
+    export CMAKE_PREFIX_PATH=${CONDA_PREFIX:-"$(dirname $(which conda))/../"}
+    python setup.py install
+
+	# Get GLOW
+    cd /home
+    git clone https://github.com/pytorch/glow.git
+    cd glow
+    git submodule update --init --recursive
+
+	# Build GLOW
+    mkdir build_Debug
+    cd build_Debug
+    CC=/usr/bin/clang-8 CXX=/usr/bin/clang++-8 cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ../../glow
+    ninja all
+
+
+%labels
+    Author nina

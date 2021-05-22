@@ -1,0 +1,87 @@
+Bootstrap: library
+From: cokelaer/damona/conda:4.9.2
+
+
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    # snakemake will require this tool:
+    apt-get install -y graphviz
+
+    export PATH=$PATH:/usr/local/anaconda/bin
+    export LANG=C   # prevents perl for raising warnings
+    export PERL5LIB=/usr/local/anaconda/lib/perl5/5.22.0
+
+    # misc
+    conda install pigz pbzip2 dsrc
+
+    # sequana_fastqc pipeline 
+    conda install fastqc==0.11.9 falco 
+
+
+    # General libraries easy to install 
+    conda install bcftools deeptools samtools bamtools bwa freebayes
+
+    # note that v0.6.8 (default in conda 4.9.2 gives a seg fault)
+    # at the time of this recipes, the latest is 0.8.0
+    conda install sambamba==0.8.0
+
+    # other lib easy to install
+    conda install snpEff bedtools
+
+    # rnaseq, mapping, variant, etc
+    conda install bowtie bowtie2 star
+
+    # rnaseq
+    conda install fastp 
+    conda install subread      # featureCounts executable
+    conda install salmon kallisto
+    conda install RNA-seQC==2.3.5
+    conda install rseqc
+
+    # misc
+    conda install igvtools
+    conda install picard
+
+    # This works only for python<3.7 so cannot be install here
+    # conda install cufflinks                     # rnaseq converter gff to gtf
+    conda install  gffread
+
+    # denovo
+    conda install khmer
+    conda install spades
+
+    # We cannot have kraken1 and kraken2 in the same singularity 
+    # because they rely on a script/tool that is uniquely named and different
+    # between the two versions.
+    # install ktImportText and other tools and kraken2/kraken2-build
+    conda install krona kraken2
+
+    # no dependencies
+    conda install minimap2
+    conda install mafft
+    conda install vt
+    conda install tabix
+
+    # only pacbio dependencies
+    conda install pbccs
+    conda install raxml
+
+    # NOT INSTALL IN THIS SINGULARITY ON PURPOSE:
+    #  - busco and quast requires lots of R dependencies possibly
+    #  - prokka lots of perl dependencies
+
+    # Let us save some space
+    conda clean --packages -y
+    conda clean --all -y # next requires lots of space
+    ###rm -rf /usr/local/anaconda/pkgs
+
+
+%environment
+    #echo "backend:agg" > matplotlibrc
+
+%runscript
+    PYTHONNOUSERSITE=1 exec ${1+"$@"}

@@ -1,0 +1,24 @@
+Bootstrap: localimage
+From: ../conda/conda_4.9.1.img
+
+%labels
+    Author thomas cokelaer
+    Version v1.6.0
+    DAMONA_TYPE exe
+    DAMONA_BIN canu
+
+%post
+
+    export PATH=$PATH:/usr/local/anaconda/bin
+    #export LANG=C   # prevents perl for raising warnings
+    #export PERL5LIB=/usr/local/anaconda/lib/perl5/5.22.0
+
+    conda install canu==1.6.0
+
+    # Let us save some space
+    conda clean --packages -y
+    conda clean --all -y # next requires lots of space
+
+%runscript
+    exec canu "$@"
+

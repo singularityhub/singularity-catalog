@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: thinkplayhack/python_jupyter:latest
+
+%environment
+unset XDG_RUNTIME_DIR
+unset HOME
+
+%apprun python3
+python3 "$@"
+
+%apprun python
+python3 "$@"
+
+%apprun jupyter
+jupyter "$@"
+

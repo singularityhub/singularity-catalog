@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: debian:stretch
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  build-essential \
+                  zlib1g-dev \
+                  git \
+                  cmake \
+                  ca-certificates
+
+####### gappa #########
+cd /usr/local/
+git clone --recursive https://github.com/lczech/gappa.git
+cd /usr/local/gappa
+make
+ln -s /usr/local/gappa/bin/gappa /usr/local/bin/gappa
+
+
+%test
+gappa --help
+
+%runscript
+gappa "$@"
+
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se

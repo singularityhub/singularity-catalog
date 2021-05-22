@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: ubuntu:18.04
+# -----------------------------------------------------------------------------------
+
+%post
+# -----------------------------------------------------------------------------------
+# this will install all necessary packages and prepare the container
+
+    apt update && apt -y upgrade
+    apt -y install \
+        python3 \
+        python3-pip \
+        r-base
+    python3 -m pip install --upgrade pip
+    python3 -m pip install --upgrade setuptools
+    python3 -m pip install \
+        seaborn \
+        numpy \
+        pandas \
+        scikit-learn \
+        jupyter

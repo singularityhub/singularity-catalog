@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: uppmax/offline-uppmax-env:latest
+
+%files
+    # copy the software package files into the container
+    packages/*.package.tar.gz /
+    
+
+%post
+    for f in *.package.tar.gz; do tar xzvf "$f" || echo "No packages to unpack, continuing." ; rm -f "$f"; done
+
+    # add a init script for sourcing that will fix PS1 and module environment when running through Singularity
+    echo "PS1='\[\033[01;34m\][\t] ${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@offline-uppmax\[\033[00m\] \[\033[01;34m\]\w \$\[\033[00m\] '" >> /.singularity.d/env/99-module_env.sh ;
+    cat /uppmax_init >> /.singularity.d/env/99-module_env.sh
+    chmod a+x /.singularity.d/env/99-module_env.sh
+
+

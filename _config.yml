@@ -1,0 +1,37 @@
+# Site Settings
+lang: en
+
+title: Singularity Community Catalog
+
+url: ""
+baseurl: "/singularity-catalog"  # for testing, also check .circleci/circle_urls.sh
+
+permalink: /:year-:month-:day-:title/
+
+favicon: /assets/img/favicon.ico
+
+# social media
+twitter: vsoch
+github_org: singularityhub
+
+exclude: 
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+
+defaults:
+  -
+    scope:
+      path: "_recipes"
+      type: "recipes"
+    values:
+      layout: recipes
+
+markdown: kramdown
+highlighter: rouge
+
+# Collections
+collections:
+  recipes:
+    output: true
+    permalink: /:collection/:path/

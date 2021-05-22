@@ -1,0 +1,16 @@
+BootStrap: docker
+From: modakopt/modak:ubuntu-18-04
+
+%post
+
+	# TF 1.14 requires keras 2.3.0 for backwards compatibility
+	pip3 install -UI tensorflow==1.14
+	pip3 install -U keras==2.3.0
+	pip3 install -U ngraph-tensorflow-bridge
+
+	# test ngraph installation
+	python3 -c "import tensorflow as tf; print('TensorFlow version: ',tf.__version__); import ngraph_bridge; print(ngraph_bridge.__version__)"
+
+%labels
+# tensorflow 1.14 pip install with ngraph install on top
+# NOTE: ngraph currently only installs on top of TF 1.14. While there is a --ngraph flag for TF 2.0 soure builds, this will fail and is out of the ngraph build instruction scope

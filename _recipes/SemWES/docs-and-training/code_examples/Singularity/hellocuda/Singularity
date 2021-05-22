@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+# Set up mandatory mount points:
+# /scratch will link to the HPC scratch drive
+# /service will be used for status and result reporting
+# (/home) will be mapped automatically
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/scratch
+    mkdir -p ${SINGULARITY_ROOTFS}/service
+%files
+    app /
+%post

@@ -1,0 +1,159 @@
+Bootstrap: docker
+From: alpine:3.7
+
+%post
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories; \
+    echo "@edgecommunity http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories; \
+    apk update; \
+    apk add --no-cache --virtual .build-deps \
+        alpine-sdk \
+        unzip \
+        cmake \
+        hexer-dev \
+        nitro-dev \
+        gdal-dev \
+        geos-dev \
+        laz-perf-dev \
+        libexecinfo-dev \
+        libgeotiff-dev \
+        libxml2-dev \
+        python-dev \
+        py-numpy-dev \
+        hdf5-dev \
+        cpd-dev \
+        fgt-dev \
+        sqlite-dev \
+        postgresql-dev \
+        curl-dev \
+        linux-headers \
+        libspatialite-dev \
+        cython-dev \
+        py-packaging \
+        clang \
+        libharu-dev \
+        poppler-dev \
+        boost-dev \
+        zlib-dev \
+    ; \
+    apk add --no-cache \
+        eigen-dev@edgecommunity \
+        hexer \
+        nitro \
+        gdal \
+        geos \
+        laz-perf \
+        libexecinfo \
+        libgeotiff \
+        libxml2 \
+        python \
+        py-numpy \
+        hdf5 \
+        proj4-dev \
+        proj4 \
+        cpd \
+        fgt \
+        sqlite \
+        postgresql \
+        libcurl \
+        libspatialite \
+        py-setuptools \
+        libharu \
+        poppler \
+        boost \
+    ;\
+    mkdir /vdatum; \
+    cd /vdatum; \
+    wget http://download.osgeo.org/proj/vdatum/usa_geoid2012.zip && unzip -j -u usa_geoid2012.zip -d /usr/share/proj; \
+    wget http://download.osgeo.org/proj/vdatum/usa_geoid2009.zip && unzip -j -u usa_geoid2009.zip -d /usr/share/proj; \
+    wget http://download.osgeo.org/proj/vdatum/usa_geoid2003.zip && unzip -j -u usa_geoid2003.zip -d /usr/share/proj; \
+    wget http://download.osgeo.org/proj/vdatum/usa_geoid1999.zip && unzip -j -u usa_geoid1999.zip -d /usr/share/proj; \
+    wget http://download.osgeo.org/proj/vdatum/vertcon/vertconc.gtx && mv vertconc.gtx /usr/share/proj; \
+    wget http://download.osgeo.org/proj/vdatum/vertcon/vertcone.gtx && mv vertcone.gtx /usr/share/proj; \
+    wget http://download.osgeo.org/proj/vdatum/vertcon/vertconw.gtx && mv vertconw.gtx /usr/share/proj; \
+    wget http://download.osgeo.org/proj/vdatum/egm96_15/egm96_15.gtx && mv egm96_15.gtx /usr/share/proj; \
+    wget http://download.osgeo.org/proj/vdatum/egm08_25/egm08_25.gtx && mv egm08_25.gtx /usr/share/proj; \
+    cd /; \
+    rm -rf /vdatum; \
+    git clone https://github.com/hobu/jsoncpp.git /jsoncpp; \
+    cd /jsoncpp; \
+    cmake -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DBUILD_SHARED_LIBS=ON \
+        -DBUILD_STATIC_LIBS=OFF \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+    ; \
+    make -j2; \
+    make install; \
+    cd /; \
+    rm -rf /jsoncpp; \
+    git clone https://github.com/LASzip/LASzip.git /laszip; \
+    cd /laszip; \
+    cmake -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DBUILD_SHARED_LIBS=ON \
+        -DBUILD_STATIC_LIBS=OFF \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+    ; \
+    make -j2; \
+    make install; \
+    cd /; \
+    rm -rf /laszip; \
+    git clone https://github.com/PDAL/PDAL.git /pdal; \
+    cd /pdal; \
+    git checkout 1.7-maintenance; \
+    mkdir -p _build; \
+    cd _build; \
+    cmake .. \
+        -G "Unix Makefiles" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_MAKE_PROGRAM=make \
+        -DBUILD_PLUGIN_PYTHON=ON \
+        -DBUILD_PLUGIN_CPD=ON \
+        -DBUILD_PLUGIN_GREYHOUND=ON \
+        -DBUILD_PLUGIN_HEXBIN=ON \
+        -DBUILD_PLUGIN_NITF=ON \
+        -DBUILD_PLUGIN_ICEBRIDGE=ON \
+        -DBUILD_PLUGIN_PGPOINTCLOUD=ON \
+        -DBUILD_PLUGIN_SQLITE=ON \
+        -DWITH_LASZIP=ON \
+        -DWITH_LAZPERF=ON \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+    ; \
+    make -j2; \
+    make install; \
+    cd ../python; \
+    python setup.py install; \
+    cd /; \
+    rm -rf /pdal; \
+    git clone https://github.com/PDAL/PRC.git ; \
+    cd PRC; \
+    git checkout master ; \
+    mkdir build ; \
+    cd build ; \
+    cmake \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DPDAL_DIR=/usr/lib/pdal/cmake \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        .. ; \
+    make; \
+    make install; \
+    cd /; \
+    rm -rf /PRC; \
+    apk del .build-deps
+
+    # Attempting to build MPI inside the container
+    echo "Building MPI dependencies"
+    sed -i 's/$/ universe/' /etc/apt/sources.list
+    apt -y --allow-unauthenticated install vim build-essential wget gfortran bison libibverbs-dev libibmad-dev libibumad-dev librdmacm-dev libmlx5-dev libmlx4-dev
+    wget http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/ mvapich2-2.1.tar.gz
+    tar xvf mvapich2-2.1.tar.gz
+    cd mvapich2-2.1
+    ./configure --prefix=/usr/local
+    make -j2
+    make install
+    /usr/local/bin/mpicc examples/hellow.c -o /usr/bin/hellow
+
+%labels
+  Maintainer Tyson Swetnam
+  Version 0.1v

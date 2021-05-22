@@ -1,0 +1,32 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:2004
+
+%labels
+MAINTAINER jay.vanschyndel@monash.edu
+HARDWARE   cpu
+
+%environment
+    export PATH=/opt/ANTs/bin:$PATH
+
+%post
+    echo "==========================="
+    echo " Installing ANTS 2.3.4     "
+    echo "==========================="
+    apt-get -y update
+    apt install -y zlib1g-dev
+
+    cd /tmp
+    rm -rf ANTS
+    git clone -b v2.3.4 https://github.com/ANTsX/ANTS.git
+
+    cd ANTS
+    mkdir build install
+    cd build
+    cmake ../
+    #make -j 4
+    make
+    cd ANTS-build
+    make install
+
+%runscript
+    $*

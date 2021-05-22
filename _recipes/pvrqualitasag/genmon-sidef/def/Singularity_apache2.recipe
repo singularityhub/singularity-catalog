@@ -1,0 +1,80 @@
+BootStrap: docker
+From: ubuntu:18.04
+
+
+%post
+  #sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+  apt-get update -y
+  apt-get upgrade -y
+  
+  # locales
+  echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get install -y locales
+
+  locale-gen en_US.UTF-8
+  locale-gen de_CH.UTF-8
+
+  # time
+  apt-get install -y time 
+  apt-get install -y tzdata 
+
+  # set your timezone
+  ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime  
+  dpkg-reconfigure --frontend noninteractive tzdata
+  
+  # basic system
+  apt-get install -y apt-utils 
+  apt-get install -y software-properties-common 
+  apt-get install -y vim 
+  apt-get install -y build-essential 
+  apt-get install -y wget 
+  apt-get install -y sudo 
+  apt-get install -y git 
+  apt-get install -y curl 
+  apt-get install -y gdebi-core 
+  apt-get install -y lsb-release 
+  apt-get install -y gnupg 
+  apt-get install -y libreadline-dev 
+  apt-get install -y zlib1g-dev 
+  apt-get install -y screen
+  apt-get install -y apache2 
+  apt-get install -y php-fpm
+
+  # libapache2-mod-fastcgi
+  wget https://mirrors.edge.kernel.org/ubuntu/pool/multiverse/liba/libapache-mod-fastcgi/libapache2-mod-fastcgi_2.4.7~0910052141-1.2_amd64.deb
+  dpkg -i libapache2-mod-fastcgi_2.4.7~0910052141-1.2_amd64.deb
+  rm libapache2-mod-fastcgi_2.4.7~0910052141-1.2_amd64.deb
+  
+  # change port for apache2
+  mv /etc/apache2/ports.conf /etc/apache2/ports.conf.default
+  echo "Listen 8080" > /etc/apache2/ports.conf
+  
+  # disable default
+  a2dissite 000-default
+  cat /etc/apache2/sites-available/000-default.conf | sed -e "s/80/8080/" > /etc/apache2/sites-available/001-default.conf
+  a2ensite 001-default
+  
+  # fastcgi
+  a2enmod actions
+  mv /etc/apache2/mods-enabled/fastcgi.conf /etc/apache2/mods-enabled/fastcgi.conf.default
+  echo '<IfModule mod_fastcgi.c>
+  AddHandler fastcgi-script .fcgi
+  FastCgiIpcDir /var/lib/apache2/fastcgi
+  AddType application/x-httpd-fastphp .php
+  Action application/x-httpd-fastphp /php-fcgi
+  Alias /php-fcgi /usr/lib/cgi-bin/php-fcgi
+  FastCgiExternalServer /usr/lib/cgi-bin/php-fcgi -socket /run/php/php7.2-fpm.sock -pass-header Authorization
+  <Directory /usr/lib/cgi-bin>
+    Require all granted
+  </Directory>
+</IfModule>' > /etc/apache2/mods-enabled/fastcgi.conf
+  
+  # Verifying PHP Functionality
+  echo "<?php phpinfo(); ?>" > /var/www/html/info.php
+  
+  # Create test page
+  echo "<h1 style='color: blue;'>Test Page</h1>" > /var/www/html/index.html
+  
+%startscript
+  systemctl start apache2
+  

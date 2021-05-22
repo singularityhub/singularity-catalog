@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: debian:stretch
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy wget ca-certificates
+
+####### parapa #########
+cd /usr/local/bin
+wget https://sco.h-its.org/exelixis/resource/download/software/papara_nt-2.5-static_x86_64.tar.gz
+tar -xvf papara_nt-2.5-static_x86_64.tar.gz
+rm papara_nt-2.5-static_x86_64.tar.gz
+mv papara_static_x86_64 papara
+
+
+%test
+papara
+
+%runscript
+papara "$@"
+
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se

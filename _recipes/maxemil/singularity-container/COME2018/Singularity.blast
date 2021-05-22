@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget
+
+
+######## BLAST+ ########
+cd /usr/local/
+wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.7.1+-x64-linux.tar.gz
+tar -xvf ncbi-blast-2.7.1+-x64-linux.tar.gz
+for binary in /usr/local/ncbi-blast-2.7.1+/bin/*; do ln -s $binary /usr/local/bin; done
+
+%runscript
+exec "$@"

@@ -1,0 +1,11 @@
+BootStrap: docker
+From: continuumio/miniconda3:4.7.12
+
+%apprun STAR
+  exec STAR "${@}"
+
+%post
+  . /opt/conda/bin/activate && \
+  conda install -q -y \
+    -c bioconda star=2.6.1d && \
+  conda clean -a -q -f -y

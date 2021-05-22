@@ -1,0 +1,12 @@
+BootStrap: localimage
+From: ./lmod.Simg
+
+%labels
+MAINTAINER baber@iastate.edu
+
+%runscript
+bowtie
+
+%post
+/opt/spack/bin/spack install bowtie
+spack clean --all

@@ -1,0 +1,77 @@
+Bootstrap:docker
+From:nfcore/base:1.7
+
+%labels
+	MAINTAINER Viktor henmyr <viktor.henmyr@skane.se>
+	DESCRIPTION Singularity container for CMD WGS pipeline
+	VERSION 0.0.2
+
+%environment
+	PATH=/opt/conda/envs/CMD-WGS/bin:/opt/sentieon-genomics-201911/bin/:/opt/bin:/opt/conda/envs/py3-env/bin:/TIDDIT:$PATH
+	PICARD_HOME=/opt/conda/envs/CMD-WGS/share/picard-2.21.2-0/
+	export PERL5LIB=$PERL5LIB:/opt/conda/envs/CMD-WGS/lib/site_perl/5.26.2/
+	export PERL5LIB=$PERL5LIB:/opt/conda/envs/CMD-WGS/lib/site_perl/5.26.2/x86_64-linux-thread-multi/
+	export PERL5LIB=$PERL5LIB:/opt/bin/
+
+%files
+    genmod.patch /
+	environment.yml /
+	environment_gatk.yml /
+	environment_py3.yml /
+	../bin/ /opt
+	/data/bnf/sw/sentieon/sentieon-genomics-201911 /opt
+	../rank_models/ /
+	/data/bnf/sw/melt/MELTv2.1.5/MELT.jar /opt/
+%post
+	rm -rf /var/lib/apt/lists/*
+	apt -y clean
+	apt -y update
+	apt -y install libz-dev build-essential gettext cmake libxml2-dev libcurl4-openssl-dev libssl-dev make libbz2-dev
+
+	/opt/conda/bin/conda env create -f /environment_gatk.yml
+
+
+
+	/opt/conda/bin/conda env create -f /environment.yml
+	/opt/conda/envs/CMD-WGS/bin/cpanm Path::Tiny --force
+	/opt/conda/envs/CMD-WGS/bin/cpanm MongoDB::Collection
+	/opt/conda/envs/CMD-WGS/bin/cpanm JSON
+    /opt/conda/envs/CMD-WGS/bin/pip install genmod
+    patch /opt/conda/envs/CMD-WGS/lib/python2.7/site-packages/genmod/score_variants/compound_scorer.py /genmod.patch
+
+	cd / && git clone https://github.com/piratical/Madeline_2.0_PDE.git
+	cd Madeline_2.0_PDE && git checkout 8ab82ad51151e4f49e4124ff04afc15a1579fac6
+	./configure --with-include-gettext && make && make install
+
+	cd / && git clone https://github.com/Clinical-Genomics-Lund/modify_vcf_scout.git
+	cd modify_vcf_scout && git checkout 97006fa5eaf8f8b08b151c2272ab0fcb3246cc59
+	cp modify_vcf_scout.pl /opt/bin/.
+	
+	cd / && git clone https://github.com/Clinical-Genomics-Lund/qc_sentieon.git
+	cd qc_sentieon && git checkout c453713628a52125e72f5cadb7a0d1a44b058132
+	cp qc_sentieon.pl /opt/bin/.
+
+
+	wget https://github.com/brentp/vcfanno/releases/download/v0.3.2/vcfanno_linux64 -O /opt/bin/vcfanno
+
+	/opt/conda/bin/conda env create -f /environment_py3.yml python=3
+	/opt/conda/bin/conda clean -a
+    . /opt/conda/bin/activate py3-env
+
+	cd / && git clone https://github.com/SciLifeLab/TIDDIT.git
+	cd TIDDIT && git checkout TIDDIT-2.8.1
+	./INSTALL.sh
+
+	cd / && git clone https://github.com/bjhall/upd.git
+	cd upd && git checkout 6f34d2e1a890ef7f030a2bf1458b82453835bf27
+	/opt/conda/envs/py3-env/bin/pip install --editable .
+
+    cd / && git clone https://github.com/moonso/stranger.git
+	cd stranger && git checkout 9cba994073d0c595becd358c1d6d464ae408ce6a
+	/opt/conda/envs/py3-env/bin/pip install --editable .
+
+	cd / && git clone https://github.com/J35P312/SVDB
+	cd SVDB && git checkout 2.2.0
+	/opt/conda/envs/py3-env/bin/pip install --editable .
+
+	/opt/conda/envs/CMD-WGS/bin/cpanm List::MoreUtils --force

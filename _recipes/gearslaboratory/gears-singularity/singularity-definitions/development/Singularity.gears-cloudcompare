@@ -1,0 +1,10 @@
+Bootstrap: docker
+From: tswetnam/cloudcompare:latest
+
+%post
+  apt-get clean
+  apt-get -y update
+  apt-get -y install xvfb  
+
+%runscript
+	Xvfb :0 -screen 0 1024x768x16 &  

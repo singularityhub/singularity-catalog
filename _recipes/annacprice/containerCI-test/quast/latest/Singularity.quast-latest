@@ -1,0 +1,53 @@
+Bootstrap: docker
+From: debian:buster
+
+%labels
+maintainer="pricea35@cardiff.ac.uk" 
+software="quast" 
+software.version="5.0.2" 
+about.summary="Perform quality assessment of genome assemblies using quast" 
+about.home="https://github.com/ablab/quast"
+%post
+
+
+quast_version=5.0.2
+
+PACKAGES="wget parallel gcc g++ make perl libncurses5-dev zlib1g-dev libbz2-dev libfreetype6-dev libpng-dev locales locales-all"
+
+PYTHON="python3 python3-dev python3-pip"
+
+PYTHON_PACKAGES="matplotlib"
+
+apt-get update \
+&& apt-get install -y $PACKAGES \
+&& apt-get install -y $PYTHON \
+&& pip3 install --no-cache-dir $PYTHON_PACKAGES \
+&& wget https://github.com/ablab/quast/releases/download/quast_${quast_version}/quast-${quast_version}.tar.gz \
+&& tar -xzf quast-${quast_version}.tar.gz \
+&& cd quast-${quast_version} \
+&& python3 setup.py install \
+&& chmod +x quast.py \
+&& cd .. \
+&& mv quast-${quast_version} /usr/local/bin \
+&& rm quast-${quast_version}.tar.gz
+
+locale-gen en_GB.UTF-8
+LANG=en_GB.UTF-8
+LANGUAGE=en_GB:en
+LC_ALL=en_GB.UTF-8
+
+PATH=${PATH}:/usr/local/bin/quast-${quast_version}
+
+%environment
+export quast_version=5.0.2
+export PACKAGES="wget parallel gcc g++ make perl libncurses5-dev zlib1g-dev libbz2-dev libfreetype6-dev libpng-dev locales locales-all"
+export PYTHON="python3 python3-dev python3-pip"
+export PYTHON_PACKAGES="matplotlib"
+export LANG=en_GB.UTF-8
+export LANGUAGE=en_GB:en
+export LC_ALL=en_GB.UTF-8
+export PATH=${PATH}:/usr/local/bin/quast-${quast_version}
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

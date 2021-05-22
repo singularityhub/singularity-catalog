@@ -1,0 +1,23 @@
+#Bootstrap: docker
+#From: ubuntu:20.04
+Bootstrap: localimage
+From: /home/zed/.singularity/darachm-containers-bioconda.simg 
+
+%labels
+
+    MAINTAINER darachm
+    NOTES pacbio
+
+%help
+
+%environment
+
+%post
+
+    conda install --channel bioconda bam2fastx bax2bam lima pbaa pbbam pbccs \
+        pblaa pbmarkdup pbmm2 recalladapters minimap2
+
+#    conda create --name pacbio bioconda python=2.7
+#    make env for all?
+
+%test

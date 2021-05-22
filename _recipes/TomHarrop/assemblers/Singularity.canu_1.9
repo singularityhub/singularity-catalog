@@ -1,0 +1,60 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%help
+
+    Container for Canu 1.9
+    https://github.com/marbl/canu
+
+%labels
+
+    VERSION "Canu 1.9"
+
+%post
+    # faster apt downloads, will it break?
+    export DEBIAN_FRONTEND=noninteractive
+    (
+        . /etc/os-release
+        cat << _EOF_ > mirror.txt
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME} main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-updates main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-backports main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-security main restricted universe multiverse
+
+_EOF_
+        mv /etc/apt/sources.list /etc/apt/sources.list.bak
+        cat mirror.txt /etc/apt/sources.list.bak > /etc/apt/sources.list
+    )
+
+    # dependencies
+    apt-get update
+    apt-get install -y \
+        build-essential \
+        language-pack-en \
+        openjdk-8-jre-headless \
+        perl \
+        wget
+    apt-get install -y \
+        --no-install-recommends \
+        gnuplot
+
+    # install Canu
+    wget -O "canu.tar.gz" \
+        --no-check-certificate \
+        https://github.com/marbl/canu/archive/v1.9.tar.gz
+    mkdir canu
+    tar -zxf canu.tar.gz \
+        -C canu \
+        --strip-components 1
+    cd canu/src || exit 1
+    make
+    cd ../.. || exit 1
+    rm -rf canu.tar.gz
+
+%environment
+
+    export PATH="${PATH}:/canu/Linux-amd64/bin"
+
+%runscript
+
+    exec /canu/Linux-amd64/bin/canu "$@"

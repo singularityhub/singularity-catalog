@@ -1,0 +1,26 @@
+Bootstrap:docker
+From:nfcore/base
+
+%labels
+	MAINTAINER Viktor henmyr <viktor.henmyr@skane.se>
+	DESCRIPTION Singularity container for AnnotSV 2.0
+	VERSION 0.0.1
+
+%environment
+	PATH=/opt/conda/envs/annotsv/bin:/opt/bin/AnnotSV/bin/AnnotSV:$PATH
+	export ANNOTSV="/opt/bin/AnnotSV"
+
+%files
+    annotsv.yaml /
+	AnnotSV_latest.tar.gz /
+
+%post
+	/opt/conda/bin/conda env create -f /annotsv.yaml
+	rm -rf /var/lib/apt/lists/*
+	apt -y clean
+	apt -y update
+    apt -y install libz-dev build-essential cmake libxml2-dev libcurl4-openssl-dev libssl-dev make csh tcsh
+	tar -xvf AnnotSV_latest.tar.gz
+	cd AnnotSV_2.2
+	make PREFIX=/opt/bin/AnnotSV/ install 
+

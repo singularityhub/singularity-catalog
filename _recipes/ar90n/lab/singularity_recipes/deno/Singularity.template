@@ -1,0 +1,29 @@
+Bootstrap: localimage
+From: ../images/common.simg
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/opt/init/012_deno
+
+%files
+    entry.sh /opt/init/012_deno/entry.sh
+    deno_dein.toml /opt/init/012_deno/deno_dein.toml
+    coc-settings.json /opt/init/012_deno/coc-settings.json
+
+%environment
+    export SSHD_PORT=###SSHD_PORT###
+    export DENO_INSTALL=/opt/deno
+    export PATH=${DENO_INSTALL}/bin:${PATH}
+
+%labels
+    AUTHOR argon.argon.argon@gmail.com
+
+%post
+    echo "export SINGULARITY_IMAGE_NAME=node_$(date +%s)" >> $SINGULARITY_ENVIRONMENT
+    echo "export SINGULARITY_XDG_ROOT=\$HOME/.xdg/\$SINGULARITY_IMAGE_NAME" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_CONFIG_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_CACHE_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_DATA_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_RUNTIME_DIR=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+
+    mkdir /opt/deno 
+    curl -fsSL https://deno.land/x/install/install.sh | DENO_INSTALL=/opt/deno sh

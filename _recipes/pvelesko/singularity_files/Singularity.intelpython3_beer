@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: intelpython/intelpython3_full
+
+%setup
+
+%post
+   # install pre-reqs
+   /opt/conda/bin/pip install haversine jupyter sqlalchemy
+   /opt/conda/bin/conda install -c anaconda basemap
+
+   # git clone travelling beerman
+   cd /; git clone https://github.com/pvelesko/datapup.git
+
+%runscript
+   cd /datapup
+   . /opt/conda/bin/mpivars.sh
+   NRANK=`nproc`
+   mpirun -n $NRANK python ./datadog_oop.py

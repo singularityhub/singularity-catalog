@@ -1,0 +1,78 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+    
+    AUTHOR James Santangelo
+    EMAIL james.santangelo37@gmail.com
+    PERL_VERSION 5.26.1
+    CLUMPAK_VERSION 1.1
+
+%environment
+
+    export PATH="/opt/bin:$PATH"
+    export PERL5LIB=$PERL5LIB:/opt/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK
+%post
+    
+    apt-get update && \
+    apt-get -y --no-install-recommends install \
+        build-essential \
+        gnupg2 \
+        wget \
+        git \
+        curl \
+        locales \
+        unzip
+    
+    # Configure default locale
+    # Taken from https://github.com/nickjer/singularity-r/blob/master/Singularity.3.6.2
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+    # ===========================
+    # Install Perl modules
+    # ===========================
+
+    apt-get update &&
+    apt-get -y install \
+        perl-doc \
+        libgetopt-simple-perl \
+        libgraph-easy-perl \
+        libmath-bigint-perl \
+        liblist-moreutils-perl \
+        libfile-slurp-perl \
+        libpdf-api2-perl \
+        libpdf-table-perl \
+        libgd-graph-perl \
+        libstatistics-distributions-perl \
+        libarchive-extract-perl \
+        libarray-utils-perl \
+        libarchive-zip-perl &&
+
+    
+    # Install Perl modules not available as Ubuntu packages
+    cpan List::Permutor Data::PowerSet
+
+    
+    # ===========================
+    # Install CLUMPAK
+    # ===========================
+
+    # Unzip CLUMPAK and change permissions
+    cd /opt && mkdir bin &&
+    wget http://clumpak.tau.ac.il/download/CLUMPAK.zip &&
+    unzip CLUMPAK.zip &&
+    cd CLUMPAK &&
+    unzip 26_03_2015_CLUMPAK.zip &&
+    cd 26_03_2015_CLUMPAK/CLUMPAK &&
+    find /opt -type d -exec chmod 755 {} \;
+    find /opt -type f -exec chmod 644 {} \;
+
+    # Create symbolic links
+    ln -s /opt/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/*.pl /opt/bin/ &&
+    ln -s /opt/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/mcl/bin/* /opt/bin/
+
+

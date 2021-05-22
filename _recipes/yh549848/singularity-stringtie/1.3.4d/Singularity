@@ -1,0 +1,15 @@
+BootStrap: docker
+From: continuumio/miniconda2:4.7.12
+
+%apprun stringtie
+  exec stringtie "${@}"
+
+%apprun prepDE.py
+  exec prepDE.py "${@}"
+
+%post
+  . /opt/conda/bin/activate && \
+  conda install -q -y \
+    -c bioconda stringtie=1.3.4 && \
+  conda clean -a -q -f -y && \
+  wget http://ccb.jhu.edu/software/stringtie/dl/prepDE.py -O /opt/conda/bin/prepDE.py

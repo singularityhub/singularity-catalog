@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: finalduty/archlinux:daily
+
+%post
+######## base system ########
+pacman -Syu --noconfirm
+pacman -S --noconfirm base-devel git wget
+
+######## IQtree #########
+cd /usr/local
+wget https://github.com/Cibiv/IQ-TREE/releases/download/v1.6.1/iqtree-1.6.1-Linux.tar.gz
+tar -xvf iqtree-1.6.1-Linux.tar.gz
+ln -s /usr/local/iqtree-1.6.1-Linux/bin/iqtree /usr/local/bin/iqtree-1.6.1
+
+# create mount paths for Uppmax
+# https://www.uppmax.uu.se/support/user-guides/singularity-user-guide/
+mkdir /sw /pica /proj /scratch
+
+%test
+iqtree-1.6.1 -h
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se

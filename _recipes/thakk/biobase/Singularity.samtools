@@ -1,0 +1,75 @@
+BootStrap: docker
+From: alpine:3.10.3
+Stage: compile
+
+%post
+	apk update
+	apk add bash
+	apk add git
+	apk add build-base
+	apk add autoconf
+	apk add zlib
+	apk add zlib-dev
+	apk add bzip2
+	apk add bzip2-dev
+	apk add xz
+	apk add xz-dev
+	apk add ncurses
+	apk add ncurses-dev
+
+%apprun samtools
+   exec samtools
+
+%appinstall samtools
+   mkdir /install_src
+   cd /install_src
+   git clone https://github.com/samtools/htslib/
+   cd htslib
+   autoheader
+   autoconf
+   ./configure --prefix=/install_deploy
+   make -j 8
+   make install
+   cd ..
+   rm -rf samtools
+   git clone https://github.com/samtools/samtools
+   cd samtools
+   autoheader
+   autoconf -Wno-syntax
+   ./configure -- prefix=/install_deploy
+   make -j 8
+   make install
+   cd ..
+
+%apphelp samtools
+   Samtools 1.9. https://github.com/samtools/samtools
+
+
+Bootstrap: docker
+From: alpine:3.10.3
+Stage: release
+
+%post
+    apk update
+    apk add zlib
+	apk add libbz2
+    apk add xz
+    apk add ncurses
+
+%files from compile
+	/install_deploy/bin /usr
+	/install_deploy/include /usr
+	/install_deploy/lib /usr
+	/install_deploy/share /usr
+
+%apphelp samtools
+	Samtools 1.10 ( as of 17.12.2019 )
+	https://github.com/samtools/htslib/
+	https://github.com/samtools/samtools
+
+%apprun samtools
+	samtools
+
+%labels
+	Author "Tomi Häkkinen"
+	Version 1.0

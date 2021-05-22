@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: python:3.5.1
+
+%environment
+export PYTHONUNBUFFERED=1
+
+%files
+requirements.txt /opt/requirements.txt
+. /code
+
+%post
+apt-get update && apt-get install -y \
+    pkg-config \
+    cmake \
+    openssl \
+    wget \
+    git \
+    vim
+
+pip install --upgrade pip
+pip install -r /opt/requirements.txt
+
+mkdir -p /code/images
+mkdir -p /var/www/images
+chmod -R 0755 /code/images/
+# Create hashed temporary upload locations
+mkdir -p /var/www/images/_upload/{0..9} && chmod 777 -R /var/www/images/_upload
+
+cd /code
+
+%startscript
+/bin/bash /code/run_uwsgi.sh

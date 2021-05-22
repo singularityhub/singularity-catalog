@@ -1,0 +1,28 @@
+Bootstrap:docker  
+From:continuumio/miniconda:4.5.4
+
+%labels
+MAINTAINER Thomas Green
+
+%environment
+
+%runscript
+exec /bin/bash /bin/echo "Not supported"
+
+%post
+# Create some common mountpoints for systems without overlayfs
+mkdir /scratch
+mkdir /apps
+
+. /etc/profile
+conda create --name vico_env
+conda activate vico_env
+conda install -y -c anaconda cudatoolkit=9.0
+conda install -y -c pytorch pytorch=0.3.1 cuda90
+conda install -y -c pytorch torchvision=0.2.0
+conda install -y -c anaconda nltk ujson h5py scipy pandas scikit-learn scikit-image pyyaml
+conda install -y -c plotly plotly
+conda install -y -c conda-forge tqdm tensorboard
+conda install -y h5py
+pip install tensorboard_logger
+

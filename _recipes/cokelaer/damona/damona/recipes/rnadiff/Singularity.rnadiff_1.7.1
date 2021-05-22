@@ -1,0 +1,41 @@
+Bootstrap: shub
+From: cokelaer/damona:r_4.0.2
+
+%labels
+    Author thomas cokelaer
+    Version v1.7.1
+    DAMONA_BIN rnadiff
+    DAMONA_ENV exe
+
+%post
+    export PATH=$PATH:/usr/bin
+
+    rm -f .RData  .Rhistory
+    rm -f ~/.RData ~/.Rhistory
+    echo " library(devtools) "> runme.R
+    echo ' chooseCRANmirror(ind=26)' >> runme.R
+    # This installs all dependencies
+    echo ' install_github("biomics-pasteur-fr/RNADiff@1.7.1", build_vignettes=FALSE, build_manual=FALSE, upgrade=FALSE)' >> runme.R
+    /usr/bin/Rscript runme.R
+
+    apt-get update
+    apt-get install -y texlive-latex-base
+    apt-get install -y texlive-fonts-extra
+
+    ###apt-get install texlive-fonts-recommended
+    ###apt-get install texlive-latex-extra
+
+    # This remove 900Mb of tex documentation...
+    apt-get -y --purge remove tex.\*-doc$
+    apt-get clean -y
+
+
+%environment
+    export PATH=$PATH:/usr/bin
+
+%help
+    This is a container for RNADiff (RNA seq differential analysis) with
+    R 4.0.2 installed as well as all LaTeX and R packages required.
+
+%runscript
+    exec Rscript "$@"

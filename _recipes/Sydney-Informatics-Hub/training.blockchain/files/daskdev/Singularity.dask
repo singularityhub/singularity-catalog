@@ -1,0 +1,80 @@
+Bootstrap: docker
+From: ubuntu:16.04
+%files
+prepare.sh /usr/bin/prepare.sh
+%labels
+MAINTAINER="Nathaniel Butterworth"
+SRC=https://github.com/natbutter/dask
+MAINTAINER="Anaconda, Inc"
+%post
+# docker build . -t nbutter/daskdev
+# docker push nbutter/daskdev
+# docker run -it nbutter/daskdev 
+# sudo singularity build dask.sing Singularity.dask
+
+# The built image is currently on Artmies at /project/Training/PROJECTS/dask.sing, run with:
+# singularity run dask.sing
+# Entry point to container is /project, so change to your desired directoy, start python, and "import dask"
+
+LANG=C.UTF-8
+LC_ALL=C.UTF-8
+PATH=/opt/conda/bin:$PATH
+
+CONDA_VERSION=4.7.12
+CONDA_MD5=0dba759b8ecfc8948f626fa18785e3d8
+
+apt-get update -y && \
+apt-get install -y wget && \
+rm -rf /var/lib/apt/lists/*
+
+# Create non-root user, install dependencies, install Conda
+wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.7.12-Linux-x86_64.sh && \
+echo "${CONDA_MD5}  Miniconda3-4.7.12-Linux-x86_64.sh" > miniconda.md5 && \
+if [ $(md5sum -c miniconda.md5 | awk '{print $2}') != "OK" ] ; then exit 1; fi && \
+mv Miniconda3-$CONDA_VERSION-Linux-x86_64.sh miniconda.sh && \
+mkdir -p /opt && \
+sh ./miniconda.sh -b -p /opt/conda && \
+rm miniconda.sh miniconda.md5 && \
+ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+echo ". /opt/conda/etc/profile.d/conda.sh" >> /etc/profile && \
+echo "conda activate base" >> /etc/profile && \
+find /opt/conda/ -follow -type f -name '*.a' -delete && \
+find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
+/opt/conda/bin/conda clean -afy
+
+PATH="/bin:/sbin:/usr/bin:/opt/conda/bin"
+
+# Install dask
+
+conda install --yes \
+-c conda-forge \
+python-blosc \
+cytoolz \
+dask==2.10.1 \
+lz4 \
+nomkl \
+numpy==1.17.3 \
+pandas==0.25.2 \
+tini==0.18.0 \
+&& rm -rf /opt/conda/pkgs
+
+
+mkdir /opt/app /project /scratch
+cd /project
+
+#ENTRYPOINT ["tini", "-g", "--", "/usr/bin/prepare.sh"]
+
+#CMD [ "sh", "--login", "-i" ]
+%environment
+export LANG=C.UTF-8
+export LC_ALL=C.UTF-8
+export PATH=/opt/conda/bin:$PATH
+export CONDA_VERSION=4.7.12
+export CONDA_MD5=0dba759b8ecfc8948f626fa18785e3d8
+export PATH="/bin:/sbin:/usr/bin:/opt/conda/bin"
+%runscript
+cd /project
+exec /bin/bash "$@"
+%startscript
+cd /project
+exec /bin/bash "$@"

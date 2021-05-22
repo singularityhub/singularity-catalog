@@ -1,0 +1,41 @@
+Bootstrap: localimage
+From: ../images/common.simg
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/opt/init/020_procon
+
+%files
+    entry.sh /opt/init/020_procon/entry.sh
+    procon_dein.toml /opt/init/020_procon/procon_dein.toml
+    procon_init.vim /opt/init/020_procon/procon_init.vim
+    procon_python.template /opt/init/020_procon/procon_python.template
+    python.snip /opt/init/020_procon/python.snip
+    python.snip /opt/init/020_procon/python.snip
+    npmrc /usr/local/etc/npmrc
+
+%environment
+    export PATH=/opt/bin:/opt/miniconda3/bin:$PATH
+
+%labels
+    AUTHOR argon.argon.argon@gmail.com
+
+%post
+    echo "export SINGULARITY_IMAGE_NAME=procon_$(date +%s)" >> $SINGULARITY_ENVIRONMENT
+    echo "export SINGULARITY_XDG_ROOT=\$HOME/.xdg/\$SINGULARITY_IMAGE_NAME" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_CONFIG_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_CACHE_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_DATA_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_RUNTIME_DIR=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+
+    apt-get install -y make cmake clang-tools clang-format clang
+
+    curl -o /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash /tmp/miniconda.sh -b -p /opt/miniconda3
+    rm  /tmp/miniconda.sh
+
+    /opt/miniconda3/bin/conda install -y -c conda-forge pypy3.5
+    /opt/miniconda3/bin/conda install -y -c conda-forge numpy scipy scikit-learn networkx
+    /opt/miniconda3/bin/conda install -y -c conda-forge pandas pandas-datareader
+    /opt/miniconda3/bin/conda install -y -c conda-forge black jedi python-language-server
+    /opt/miniconda3/bin/conda clean -t
+    /opt/miniconda3/bin/pip install pipenv pyls-black pyls-isort atcoder-tools

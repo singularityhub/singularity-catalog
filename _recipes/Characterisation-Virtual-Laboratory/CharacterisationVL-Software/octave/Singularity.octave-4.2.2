@@ -1,0 +1,17 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804
+
+%labels
+MAINTAINER jay.vanschyndel@monash.edu
+HARDWARE   cpu
+
+%post
+    echo "==================="
+    echo " Installing Octave "
+    echo "==================="
+    apt-get -y update
+    apt -y install octave=4.2.2-1ubuntu1 liboctave-dev=4.2.2-1ubuntu1
+
+%runscript
+    $*
+

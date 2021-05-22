@@ -1,0 +1,84 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+    
+    AUTHOR James Santangelo
+    EMAIL james.santangelo37@gmail.com
+    HTSLIB_VERSION 1.11.0
+    ANGSD_VERSION 0.933
+
+%environment
+
+    export PATH="/opt/bin:$PATH"
+    export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+
+%post
+    
+    apt-get update && \
+    apt-get -y --no-install-recommends install \
+        build-essential \
+        wget \
+        git \
+        curl \
+        ca-certificates \
+        locales
+    
+    # Configure default locale
+    # Taken from https://github.com/nickjer/singularity-r/blob/master/Singularity.3.6.2
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+    # ===========================
+    # Install htslib
+    # ===========================
+
+    apt-get update &&
+    apt-get -y install \
+        zlib1g \
+        zlib1g-dev \
+        autoconf \
+        libbz2-dev \
+        liblzma-dev \
+        libcurl4-gnutls-dev \
+        libcrypto++-dev \
+
+    cd /opt && mkdir bin
+    wget https://github.com/samtools/htslib/archive/1.11.0.tar.gz
+    tar -xvzf 1.11.0.tar.gz
+    cd htslib-1.11.0 && \
+    autoconf && \
+    autoheader && \
+    ./configure && \
+    make && \
+    make install
+
+    # ===========================
+    # Install angsd 
+    # ===========================
+
+    cd /opt
+    wget https://github.com/ANGSD/angsd/archive/0.933.tar.gz
+    tar -xvzf 0.933.tar.gz
+    cd angsd-0.933 && \
+    make
+
+    ln -s /opt/angsd-0.933/angsd /opt/bin/angsd
+    ln -s /opt/angsd-0.933/misc/contamination /opt/bin/contamination
+    ln -s /opt/angsd-0.933/misc/haploToPlink /opt/bin/haploToPlink
+    ln -s /opt/angsd-0.933/misc/ibs /opt/bin/ibs
+    ln -s /opt/angsd-0.933/misc/msHOT2glf /opt/bin/msHOT2glf
+    ln -s /opt/angsd-0.933/misc/msToGlf /opt/bin/msToGlf
+    ln -s /opt/angsd-0.933/misc/NGSadmix /opt/bin/NGSadmix
+    ln -s /opt/angsd-0.933/misc/ngsPSMC /opt/bin/ngsPSMC
+    ln -s /opt/angsd-0.933/misc/plot_psmc.py /opt/bin/plot_psmc.py
+    ln -s /opt/angsd-0.933/misc/printIcounts /opt/bin/printIcounts
+    ln -s /opt/angsd-0.933/misc/realSFS /opt/bin/realSFS
+    ln -s /opt/angsd-0.933/misc/scounts /opt/bin/scounts
+    ln -s /opt/angsd-0.933/misc/smartCount /opt/bin/smartCount
+    ln -s /opt/angsd-0.933/misc/splitgl /opt/bin/splitgl
+    ln -s /opt/angsd-0.933/misc/supersim /opt/bin/supersim
+    ln -s /opt/angsd-0.933/misc/thetaStat /opt/bin/thetaStat

@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/pytorch:20.07-py3
+# -----------------------------------------------------------------------------------
+
+%files
+    /data/admin/msoe_launch_jupyter /usr/local/bin/msoe_launch_jupyter
+
+%post
+# -----------------------------------------------------------------------------------
+# this will install all necessary packages and prepare the container
+
+    apt update
+    apt -y install \
+        python3 \
+        python3-pip
+    python3 -m pip install --upgrade pip
+    python3 -m pip install --upgrade setuptools
+    python3 -m pip install torch==1.5.1+cu101 torchvision==0.6.1+cu101 -f https://download.pytorch.org/whl/torch_stable.html
+    python3 -m pip install \
+        seaborn \
+        numpy \
+        pandas \
+        scikit-learn \
+	    tqdm \
+        jupyter \
+        av \
+        ignite \
+        matplotlib \
+        scipy \
+        requests \
+        pylint \
+        pip \
+        pillow
+    python3 -m pip install d2l
+    chmod 777 /usr/local/bin/msoe_launch_jupyter

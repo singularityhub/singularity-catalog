@@ -1,0 +1,29 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804-cuda10.1
+
+%labels
+    MAINTAINER_NAME  Angus Trau
+    MAINTAINER_EMAIL angus.trau@monash.edu
+
+    APPLICATION_NAME ubuntu
+    APPLICATION_VERSION 18.04
+
+    HARDWARE GPU
+
+    LAST_UPDATED 6-AUG-2020
+
+%post
+    # Install the OpenModelica package repository
+    for deb in deb deb-src; do echo "$deb http://build.openmodelica.org/apt bionic release"; done | tee /etc/apt/sources.list.d/openmodelica.list
+    wget -q http://build.openmodelica.org/apt/openmodelica.asc -O- | apt-key add -
+    apt-get update
+    apt-get upgrade -y
+
+    # Install OpenModelica
+    apt-get install -y openmodelica
+
+    # Install optional Modelica libraries
+    for PKG in `apt-cache search "omlib-.*" | cut -d" " -f1`; do apt-get install -y "$PKG" || true; done 
+
+%runscript
+    $*

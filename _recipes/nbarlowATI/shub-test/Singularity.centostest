@@ -1,0 +1,20 @@
+Bootstrap:docker
+From:centos:7
+
+%labels
+MAINTAINER nbarlowATI
+
+%environment
+TESTVAR=ThisIsATest
+export TESTVAR
+
+%runscript
+/bin/bash
+
+%post
+yum -y install wget
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
+bash ~/miniconda.sh -b -p ~/miniconda
+export PATH=~/miniconda/bin:$PATH
+conda create -n uqenv -y python=3.7
+conda init bash

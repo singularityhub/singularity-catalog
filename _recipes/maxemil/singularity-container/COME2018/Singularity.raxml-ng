@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  build-essential \
+                  cmake \
+                  git \
+                  ca-certificates \
+                  autoconf \
+                  automake \
+                  flex \
+                  bison \
+                  libtool \
+                  libgmp3-dev
+
+######## raxml-ng ########
+cd /usr/local/
+git clone --recursive https://github.com/amkozlov/raxml-ng
+cd /usr/local/raxml-ng/
+mkdir /usr/local/raxml-ng/build
+cd /usr/local/raxml-ng/build
+cmake ..
+make
+ln -s /usr/local/raxml-ng/bin/raxml-ng /usr/local/bin/raxml-ng
+
+%runscript
+raxml-ng "$@"

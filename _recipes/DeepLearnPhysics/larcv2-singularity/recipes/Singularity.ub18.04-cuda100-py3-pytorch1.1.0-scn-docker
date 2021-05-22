@@ -1,0 +1,54 @@
+Bootstrap: docker
+From: deeplearnphysics/larcv2:ub18.04-cuda100-py3-pytorch1.1.0-scn
+
+%help
+Ubuntu18.04 with cuda10 cudnn7
+ML/DL packages  : torch sc-learn
+Sci.  packages  : numpy pandas sc-image matplotlib
+Basic python    : ipython jupyter yaml pygments six zmq wheel h5py tqdm
+Development kit : g++/gcc cython nvcc libqt4-dev python-dev
+Utility kit     : git wget emacs vim
+
+To start your container simply try
+singularity exec THIS_CONTAINER.simg bash
+
+To use GPUs, try
+singularity exec --nv THIS_CONTAINER.simg bash
+
+%labels
+Maintainer drinkingkazu
+Version ubuntu18.04-cuda100-py3-pytorch1.1.0-scn-docker
+
+#------------
+# Global installation
+#------------
+%environment
+    # for system
+    export XDG_RUNTIME_DIR=/tmp/$USER
+    export CUDA_DEVICE_ORDER=PCI_BUS_ID
+    # for ROOT
+    export ROOTSYS=/usr/local/root
+    export PATH=${ROOTSYS}/bin:${PATH}
+    export LD_LIBRARY_PATH="${ROOTSYS}/lib:${LD_LIBRARY_PATH}"
+    export PYTHONPATH=${ROOTSYS}/lib:${PYTHONPATH}
+
+    export LARCV_BASEDIR=/app/larcv2
+    export LARCV_BUILDDIR="${LARCV_BASEDIR}/build"
+    export LARCV_COREDIR="${LARCV_BASEDIR}/larcv/core"
+    export LARCV_APPDIR="${LARCV_BASEDIR}/larcv/app"
+    export LARCV_LIBDIR="${LARCV_BUILDDIR}/lib"
+    export LARCV_INCDIR="${LARCV_BUILDDIR}/include"
+    export LARCV_BINDIR="${LARCV_BUILDDIR}/bin"
+    export LARCV_ROOT6=1
+    export LARCV_CXX=g++
+
+# with numpy
+    export LARCV_NUMPY=1
+    export LARCV_INCLUDES="-I/app/larcv2/build/include -I/usr/include/python3.6m -I/usr/include/python3.6m -I/usr/local/lib/python3.6/dist-packages/numpy/core/include"
+    export LARCV_LIBS="-L/usr/lib/ -L/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu -L/usr/lib -lpython3.6m -lpthread -ldl -lutil -lm -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions -L/app/larcv2/build/lib -llarcv"
+
+# set bin and lib path
+    export PATH=${LARCV_BASEDIR}/bin:${LARCV_BINDIR}:${PATH}
+    export LD_LIBRARY_PATH=${LARCV_LIBDIR}:${LD_LIBRARY_PATH}:
+    export PYTHONPATH=${LARCV_BASEDIR}/python:${PYTHONPATH}
+    

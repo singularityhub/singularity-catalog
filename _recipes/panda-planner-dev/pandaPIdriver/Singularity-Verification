@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%files
+	*sh /planner	
+
+%post
+    DEBIAN_FRONTEND=noninteractive
+	TZ=Europe/Berlin
+	ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+	apt-get update
+    apt-get -y install build-essential git zip gengetopt flex bison cmake make
+
+	cd /planner
+	./fetch.sh
+	./build.sh
+	./fetch-and-build-verify.sh
+
+%runscript
+	exec /planner/run-singularity-verify.sh "$@"
+
+
+%labels
+Name        pandaPI
+Description 
+Authors     
+SupportsRecursion    yes
+SupportsPartialOrder yes

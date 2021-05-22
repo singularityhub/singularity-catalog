@@ -1,0 +1,45 @@
+
+Bootstrap: library
+From: default/centos:7.6
+
+%post
+### basic setup of system wide tools and dependencies
+yum update -y
+yum install -y wget
+yum install -y epel-release
+yum install -y R
+yum install -y \
+    procps \
+    make \
+    gcc \
+    gcc-c++ \
+    libcurl-devel \
+    libxml2-devel \
+    java-1.7.0-openjdk-devel \
+    openssl-devel \
+    pandoc
+
+## python 3.6 needed for deepTools
+yum install -y https://repo.ius.io/ius-release-el7.rpm
+yum update -y
+yum install -y python36u python36u-libs python36u-devel python36u-pip
+
+### Install deeptools
+python3.6 -m pip install deeptools
+
+### Install libraries needed to compile JPEG packages in R
+yum install -y libjpeg-turbo-devel
+
+
+### R packages installations
+mkdir -p /opt/software/rpackages
+cd /opt/software/rpackages
+Rscript -e "install.packages(c('tidyverse', 'pander', 'rmarkdown', 'knitr', 'DT'), repos = 'https://cloud.r-project.org')"
+Rscript -e "install.packages('BiocManager', repos = 'https://cloud.r-project.org')"
+
+## install unresolved dependencies
+wget -O Hmisc_4.4-0.tar.gz https://cran.r-project.org/src/contrib/Hmisc_4.4-0.tar.gz
+Rscript -e "install.packages('Hmisc_4.4-0.tar.gz', repos = NULL)"
+
+### continue installation
+Rscript -e "BiocManager::install(c('ggtree', 'Gviz', 'VariantAnnotation', 'GenomicFeatures', 'rtracklayer', 'Biostrings'))"

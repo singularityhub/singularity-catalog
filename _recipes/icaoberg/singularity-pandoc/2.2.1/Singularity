@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: debian:latest
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE https://github.com/icaoberg/singularity-pandoc
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    VERSION 2.2.1
+
+%post
+    apt-get update
+
+####################################################################################
+%appinstall pandoc
+   apt-get install -y pandoc
+
+%apphelp pandoc
+   pandoc --help
+
+%apprun pandoc
+   pandoc "$@"

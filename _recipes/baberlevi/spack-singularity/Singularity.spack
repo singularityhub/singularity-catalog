@@ -1,0 +1,27 @@
+Bootstrap:docker  
+From:centos:7  
+
+%labels
+MAINTAINER baber@iastate.edu
+
+%environment
+SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+
+%runscript
+spack find 
+
+%post  
+export SPACK_ROOT=/opt/spack
+yum -y install git python 
+yum -y install gcc gcc-c++ gfortran curl 
+yum -y install gnupg2 sed patch 
+yum -y install file unzip gzip
+yum -y install findutils
+yum -y install make
+yum -y install vim
+yum clean all
+git clone https://github.com/researchit/spack.git $SPACK_ROOT
+git clone https://github.com/researchit/spack-etc.git /opt/spack-etc
+ln -s /opt/spack-etc/*.yaml $SPACK_ROOT/etc/spack/

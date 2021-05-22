@@ -1,0 +1,112 @@
+BootStrap: docker
+From: ubuntu:18.04
+
+
+%files
+  /home/quagadmin/source/prprepo/home/popreport/production /root
+  /home/quagadmin/source/popreport/usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0 /root
+
+%post
+  #sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+  apt-get update -y
+  apt-get upgrade -y
+  
+  # locales
+  echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get install -y locales
+
+  locale-gen en_US.UTF-8
+  locale-gen de_CH.UTF-8
+
+  # time
+  apt-get install -y time 
+  apt-get install -y tzdata 
+
+  # set your timezone
+  ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime  
+  dpkg-reconfigure --frontend noninteractive tzdata
+  
+  # basic system
+  apt-get install -y apt-utils 
+  apt-get install -y software-properties-common 
+  apt-get install -y vim 
+  apt-get install -y build-essential 
+  apt-get install -y wget 
+  apt-get install -y sudo 
+  apt-get install -y git 
+  apt-get install -y curl 
+  apt-get install -y gdebi-core 
+  apt-get install -y lsb-release 
+  apt-get install -y gnupg 
+  apt-get install -y libreadline-dev 
+  apt-get install -y zlib1g-dev 
+
+
+  # pg from distribution
+  apt-get update -y
+  echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
+  wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+  apt-get install -y postgresql postgresql-contrib
+
+  # poprep-req
+  apt-get update -y
+  apt-get install -y mutt
+  apt-get install -y apache2
+  apt-get install -y texlive
+  apt-get install -y texinfo
+  apt-get install -y gnuplot
+  apt-get install -y gnuplot-nox
+  apt-get install -y zip
+  apt-get install -y unzip
+  apt-get install -y gfortran
+  apt-get install -y transfig
+  apt-get install -y xinetd
+  
+  # update and upgrade
+  apt-get update -y
+  apt-get upgrade -y
+  apt-get clean
+  
+  # special installation for pdftk which is no longer available
+  curl -sSL http://launchpadlibrarian.net/337429932/libgcj-common_6.4-3ubuntu1_all.deb > libgcj-common_6.4-3ubuntu1_all.deb
+  curl -sSL http://launchpadlibrarian.net/340410966/libgcj17_6.4.0-8ubuntu1_amd64.deb > libgcj17_6.4.0-8ubuntu1_amd64.deb
+  curl -sSL http://launchpadlibrarian.net/277739894/pdftk_2.02-4build1_amd64.deb > pdftk_2.02-4build1_amd64.deb
+  gdebi --n libgcj-common_6.4-3ubuntu1_all.deb
+  gdebi --n libgcj17_6.4.0-8ubuntu1_amd64.deb
+  gdebi --n pdftk_2.02-4build1_amd64.deb
+  rm -rf libgcj-common_6.4-3ubuntu1_all.deb libgcj17_6.4.0-8ubuntu1_amd64.deb pdftk_2.02-4build1_amd64.deb
+
+  # re-configure papersize
+  sed -i 's/letter/a4/' /etc/papersize
+  paperconfig -p a4
+  
+  # add the user for poprep
+  useradd popreport -s /bin/bash -m
+  echo popreport:pass | chpasswd
+  
+  # move libgfortran.so.3
+  mv /root/libgfortran.so.3.0.0 /usr/lib/x86_64-linux-gnu/
+  ln -s /usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0 /usr/lib/x86_64-linux-gnu/libgfortran.so.3
+
+  # prepare directory for poprep
+  mv /root/production /home/popreport
+  chmod -R 777 /home/popreport/production
+  chown -R popreport: /home/popreport/production
+
+  # add apiis_home to .bashrc
+  (echo;echo '# add apiis_home';echo 'APIIS_HOME=/home/popreport/production/apiis') >> /home/popreport/.bashrc
+  echo 'export PATH=$PATH:$APIIS_HOME/bin' >> /home/popreport/.bashrc
+
+  # check and install additional perl- and apt-packages
+  /home/popreport/production/apiis/bin/apiis-test-dependencies -i -d
+  
+  # create pg-directories
+  for p in incoming done projects
+  do 
+    mkdir -p /var/lib/postgresql/$p
+    chmod -R 777 /var/lib/postgresql/$p
+  done
+
+  # permissions for postgres
+  chmod -R 777 /var/run/postgresql
+

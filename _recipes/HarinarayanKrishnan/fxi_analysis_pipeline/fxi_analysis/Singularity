@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: nvidia/opencl:runtime
+%files
+environment.yml /app/
+bnlxray /bnlxray
+icxray /icxray
+ltt /ltt
+%post
+# FROM continuumio/miniconda3
+
+apt update && apt install -y libncurses5 wget git
+
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /app/miniconda.sh 
+
+bash /app/miniconda.sh -b -p /app/miniconda
+
+PATH="/app/miniconda/bin:${PATH}"
+
+conda env update --file /app/environment.yml
+
+conda install -y --override --clobber -c conda-forge opencv=4.1 
+conda install -y fftw
+
+pip install astropy netCDF4
+pip install zmq
+pip install -e /icxray -e /ltt
+
+%environment
+export LD_LIBRARY_PATH="/app/miniconda/lib:${LD_LIBRARY_PATH}:/ltt/ltt_distro/readline/lib"
+export PATH="/app/miniconda/bin:/ltt/ltt_distro:${PATH}"
+
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

@@ -1,0 +1,60 @@
+Bootstrap: localimage
+From: ../images/common.simg
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/opt/init/013_dotnet
+
+%files
+    entry.sh /opt/init/013_dotnet/entry.sh
+    dotnet_dein.toml /opt/init/013_dotnet/dotnet_dein.toml
+
+%environment
+    export MONO_THREADS_PER_CPU=50
+
+%labels
+    AUTHOR argon.argon.argon@gmail.com
+
+%post
+    echo "export SINGULARITY_IMAGE_NAME=dotnet_$(date +%s)" >> $SINGULARITY_ENVIRONMENT
+    echo "export SINGULARITY_XDG_ROOT=\$HOME/.xdg/\$SINGULARITY_IMAGE_NAME" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_CONFIG_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_CACHE_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_DATA_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_RUNTIME_DIR=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export MONO_VERSION=6.8.0.105" >> $SINGULARITY_ENVIRONMENT
+    echo "export FSHARP_VERSION=10.2.3" >> $SINGULARITY_ENVIRONMENT
+    echo "export NUGET_PACKAGES=\$SINGULARITY_XDG_ROOT/nuget/packages" >> $SINGULARITY_ENVIRONMENT
+    echo "export DOTNET_CLI_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    . $SINGULARITY_ENVIRONMENT
+
+    export FSHARP_BASENAME=fsharp-$FSHARP_VERSION
+    export FSHARP_ARCHIVE=$FSHARP_VERSION.tar.gz
+    export FSHARP_ARCHIVE_URL=https://github.com/fsharp/fsharp/archive/$FSHARP_VERSION.tar.gz
+    export GNUPGHOME="$(mktemp -d)"
+
+
+    apt-get update && apt-get --no-install-recommends install -y gnupg dirmngr ca-certificates apt-transport-https
+    apt-key adv --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+    echo "deb https://download.mono-project.com/repo/debian stable-buster/snapshots/$MONO_VERSION main" | tee /etc/apt/sources.list.d/mono-official-stable.list
+
+    apt-get update -y
+    apt-get --no-install-recommends install -y pkg-config make nuget mono-devel msbuild ca-certificates-mono locales
+
+    rm -rf /var/lib/apt/lists/*
+    echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && /usr/sbin/locale-gen
+
+    SRC_DIR=$(mktemp -d)
+    mkdir -p $SRC_DIR
+    cd $SRC_DIR
+    printf "namespace a { class b { public static void Main(string[] args) { new System.Net.WebClient().DownloadFile(\"%s\", \"%s\");}}}" $FSHARP_ARCHIVE_URL $FSHARP_ARCHIVE > download-fsharp.cs
+    mcs download-fsharp.cs && mono download-fsharp.exe && rm download-fsharp.exe download-fsharp.cs
+
+    tar xf $FSHARP_ARCHIVE
+    cd $FSHARP_BASENAME
+    export HOME=$SRC_DIR
+    make
+    make install
+    cd ~
+    rm -rf $SRC_DIR /tmp/NuGetScratch ${NUGET_PACKAGES} "$GNUPGHOME"
+    apt-get purge -y make gnupg dirmngr
+    apt-get clean

@@ -1,0 +1,164 @@
+Bootstrap: docker
+From: fedora:31
+
+%environment
+    export INSTALLDIR=/opt/lofar
+    . $INSTALLDIR/init.sh
+
+%post
+	# General environment settings.
+	export J=4
+	export INSTALLDIR=/opt/lofar
+	export PYTHON_VERSION=2.7
+	
+	# Settings relevant to the installed software.
+	export ARMADILLO_VERSION=9.900.3
+	export BLAS_VERSION=3.8.0
+	export BOOST_DOT_VERSION=1.69.0
+	export BOOST_VERSION=1_69_0
+	export CFITSIO_VERSION=7.3.47
+    export FFTW_VERSION=3.5.8
+	export HDF5_VERSION=1.10.5
+	export LAPACK_VERSION=3.8.0
+	export OPENBLAS_VERSION=3.8.0
+	export SUPERLU_VERSION=5.2.1
+	export WCSLIB_VERSION=6.4
+    export DEBIAN_FRONTEND=noninteractive
+
+    #
+    # System installs
+	#
+	dnf -y update
+    dnf -y install dnf-plugins-core
+	dnf -y install patch sudo yum-utils
+	dnf -y install git svn wget vim nano
+	dnf -y install automake autoconf cmake make
+	dnf -y install gcc gcc-c++ gcc-gfortran
+	dnf -y install arpack-devel python-devel python3-devel lapack-devel libpng-devel libxml2-devel readline-devel ncurses-devel f2py bzip2-devel libicu-devel python3-scipy python-setuptools gsl gsl-devel gdal gdal-devel libpqxx libpqxx-devel
+	dnf -y install bison flex ncurses tar bzip2 which gettext
+	dnf -y install cmake3
+    dnf -y install hdf5
+	dnf -y install hdf5-devel
+    dnf -y install python
+	dnf -y install python-pip python2-tkinter python3-tkinter
+    dnf -y install libsigc++20-devel gtkmm30-devel
+    dnf -y install python3-devel
+    dnf -y install lua lua-devel
+    dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+    dnf -y install pgplot
+    dnf -y install python3-numpy-f2py
+    dnf -y install qt5
+    dnf -y install perf
+
+    #
+    # Install Boost
+    #
+    dnf -y install boost boost-devel boost-python2 boost-python2-devel boost-python3 boost-python3-devel
+
+    #
+    # Install FFTW
+    #
+    dnf -y install fftw-devel fftw-libs
+
+	#
+	# Install OpenBLAS
+	#
+	dnf -y install blas-devel
+
+	#
+	# Install SuperLU
+	#
+	dnf -y install SuperLU SuperLU-devel
+
+	#
+	# Install Armadillo
+	#
+	dnf -y install armadillo armadillo-devel
+
+    # 
+    # Setup environment variables used during build
+    #
+    export CC=`which gcc`
+	export CXX=`which g++`
+    export make=`which make`
+
+	mkdir -p $INSTALLDIR
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:$LD_LIBRARY_PATH
+    export CMAKE_PREFIX_PATH=/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:$CMAKE_PREFIX_PATH
+    export CPATH=/usr/local/cuda/include:/opt/intel/mkl/include:$CPATH
+    # Use these flags instead for an architecture optimized build.
+    #export CFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
+    #export CXXFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
+    # Disable AVX512 instructions and build a generic architecture.
+    export CFLAGS="-mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+    export CXXFLAGS="-mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+
+    ###################
+    # Source installs #
+    ###################
+	#
+	# Install cfitsio
+	#
+    dnf -y install cfitsio cfitsio-devel
+
+	#
+	# Install wcslib
+	#
+    dnf -y install wcslib wcslib-devel 
+
+    #
+    # Install CUDA
+    #
+    # For CUDA 10.2
+    #sudo dnf -y config-manager --add-repo http://developer.download.nvidia.com/compute/cuda/repos/fedora29/x86_64/cuda-fedora29.repo
+    # For CUDA 11.1
+    sudo dnf -y config-manager --add-repo http://developer.download.nvidia.com/compute/cuda/repos/fedora32/x86_64/cuda-fedora32.repo
+    sudo dnf -y clean all
+    sudo dnf -y install cuda-11-1*
+
+    #   
+    # Install Image Domain Gridder (IDG)
+    #   
+    mkdir -p $INSTALLDIR/idg && cd $INSTALLDIR/idg
+    git clone https://gitlab.com/astron-idg/idg.git src 
+    cd src && git checkout $IDG_VERSION && mkdir build && cd build
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg -DBUILD_LIB_CUDA=ON -DCUDA_INCLUDE_DIR=/usr/local/cuda/include ..
+    make -j $J
+    make install
+    rm -rf $INSTALLDIR/idg/src
+
+	echo "Installation directory contents:"
+	ls $INSTALLDIR
+
+    #
+    # Wrap up installation, remove unnecessary stuff.
+    dnf -y autoremove
+    dnf -y clean all
+
+	#
+	# init-lofar
+	#
+	echo export INSTALLDIR=$INSTALLDIR > $INSTALLDIR/init.sh
+    echo export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
+
+    #
+    # entrypoint
+    #
+%runscript
+    echo source $INSTALLDIR/init.sh >> $HOME/.bashrc
+    echo export PATH=/usr/local/cuda/bin:\$PATH >> $INSTALLDIR/init.sh
+    echo export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
+    . $INSTALLDIR/init.sh
+
+%help
+    This Singularity image acts as a base for the LOFAR installation. It has Fedora 31 setup, with the required dependencies installed. These are:
+    
+    * Armadillo 9.900.3
+    * Boost 1.69.0
+    * CFITSIO 7.3.47
+    * FFTW 3.5.8
+    * HDF5 1.10.5
+    * LAPACK 3.8.0
+    * OpenBLAS 3.8.0
+    * SuperLU 5.2.1
+    * WCSLIB 6.4

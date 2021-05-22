@@ -1,0 +1,45 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804-cuda10.1
+
+%labels
+    MAINTAINER_NAME  Jay van Schyndel
+    MAINTAINER_EMAIL jay.vanschyndel@monash.edu
+
+    APPLICATION_NAME imagemagick
+    APPLICATION_VERSION 7.0.8-68
+
+    HARDWARE GPU
+
+    LAST_UPDATED 23-APR-2019
+
+%post
+    apt-get -y update
+
+    echo "================================="
+    echo "Downloading ImageMagick 7.0.8-68 "
+    echo "================================="
+    cd /tmp
+    wget https://imagemagick.org/download/releases/ImageMagick-7.0.8-68.tar.xz
+
+    echo "================================="
+    echo "Extracting  ImageMagick 7.0.8-68 "
+    echo "================================="
+    tar -xf ImageMagick-7.0.8-68.tar.xz
+
+    cd ImageMagick-7.0.8-68
+
+    echo "================================"
+    echo "Building ImageMagick            "
+    echo "================================"
+    ./configure
+    make
+    make install
+    ldconfig /usr/local/lib
+
+    echo "================================"
+    echo "Testing install                 "
+    echo "================================"
+    /usr/local/bin/convert logo: logo.gif
+
+%runscript
+    $*

@@ -1,0 +1,48 @@
+Bootstrap: docker
+From: python:3.8-buster
+
+%help
+    This container uses a Debian 10 "Buster" foundation with python 3.8 to host PyGEST.
+    Any command line options passed into the container on run will be executed by
+    the pygest command-line executable inside the container.
+
+    Typical usage:
+
+        $ singularity run --bind /home/mike/ge_data:/data pygest.simg push H03511009 L cor
+
+
+%labels
+    Maintainer Mike Schmidt
+    Version 1.2.2
+
+# Commands in setup are run on the host before running the container.
+# %setup
+
+# Files from the host can be copied into the container
+%files
+    ../../PyGEST /opt/
+
+# Environment variables for container run-time
+# %environment
+
+# The main setup, happening inside the container
+%post
+    rm /etc/localtime && ln -s /usr/share/zoneinfo/America/New_York /etc/localtime \
+    && apt update \
+    && pip3 install --upgrade pip \
+    && pip3 install numpy scipy pandas patsy \
+    && pip3 install statsmodels \
+    && pip3 install awscli \
+    && pip3 install --upgrade /opt/PyGEST
+    # git+https://github.com/mfschmidt/PyGEST.git
+
+# Run this inside the container, after setup has occurred.
+%runscript
+    export OPENBLAS_NUM_THREADS=1
+    export PYGEST_DATA=/data
+    echo "Container python3 is $(python3 --version)"
+    date
+    echo "____ running pygest ____"
+    echo "     args: $*"
+    exec pygest "$@"
+

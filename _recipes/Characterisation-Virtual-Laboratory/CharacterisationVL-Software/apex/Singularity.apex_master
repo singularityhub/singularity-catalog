@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/pytorch:19.03-py3
+
+%labels
+MAINTAINER jafar.lie@monash.edu
+HARDWARE gpu
+APPLICATION_NAME ubuntu
+APPLICATION_VERSION 18.04
+HARDWARE GPU
+LAST_UPDATED 23-MAY-2019
+
+%environment
+export PATH=/opt/conda/bin:$PATH
+
+%post -c /bin/bash
+export PATH=/opt/conda/bin:$PATH
+cd /
+git clone https://github.com/NVIDIA/apex
+cd apex
+pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" .
+
+%runscript
+    $*

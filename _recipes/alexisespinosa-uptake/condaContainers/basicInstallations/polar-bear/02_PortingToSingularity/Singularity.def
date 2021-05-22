@@ -1,0 +1,8 @@
+Bootstrap: docker
+#(polar naming convention in dockerhub: polar:version_commitSequentialNumberUpToCreationDate
+From: alexisespinosa/polar:0_213 #Used for building on Jun-10-2020
+
+%post
+/bin/mv /bin/sh /bin/sh.original
+/bin/ln -s /bin/bash /bin/sh
+echo "source activate Polar_conda_env" >> $SINGULARITY_ENVIRONMENT

@@ -1,0 +1,66 @@
+Bootstrap: localimage
+From: base.sif
+
+%setup
+
+%files
+
+%help
+   Tools for MethylSnake pipeline. For complete list and instructions see: https://github.com/ftabaro/MethylSnake/tree/master/singularity
+
+%labels
+   MAINTAINER francesco.tabaro@tuni.fi
+   VERSION 1.0
+
+%post
+  set -e
+  
+  NOW=`date`
+  echo "export NOW=\"${NOW}\"" >> $SINGULARITY_ENVIRONMENT
+
+  dnf -y makecache
+  dnf -y install --allowerasing \
+        cairo cairo-devel \
+        fontconfig fontconfig-devel \
+        freetype freetype-devel \
+        fribidi fribidi-devel \
+        glib2 glib2-devel \
+        harfbuzz harfbuzz-devel \
+        libcurl libcurl-devel \
+        libicu libicu-devel \
+        libjpeg libjpeg-devel \
+        libpng libpng-devel \
+        libtiff libtiff-devel \
+        libtirpc libtirpc-devel \
+        libxcrypt libxcrypt-devel \
+        pango pang-devel \
+        pcre2 pcre2-devel \
+        readline readline-devel \
+	openssl-devel \
+	readline readline-devel \
+	gcc-gfortran \
+	texlive \
+	libxml2-devel 
+
+# ############################ R + Bioconductor + methylKit ########################
+
+%apprun R
+   exec R
+
+%apphelp R
+    R (4.0.2) . https://www.r-project.org/
+
+%appinstall R
+ 
+  wget https://cran.r-project.org/src/base/R-4/R-4.0.2.tar.gz
+  tar xf R-4.0.2.tar.gz
+  cd R-4.0.2
+  ./configure --without-x 
+  make -j2
+  make install
+  cd ..
+  rm -r R-4.0.2
+
+  R -e "install.packages('BiocManager', repos = 'https://cloud.r-project.org')"
+  R -e "BiocManager::install(c('rtracklayer', 'methylKit'))"
+

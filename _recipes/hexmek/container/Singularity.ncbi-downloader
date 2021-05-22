@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: conda/miniconda2
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y python3 python3-pip libgl1-mesa-glx rsync git curl wget 
+
+    pip install ete3 six
+    
+    cd /opt
+    git clone https://github.com/openpaul/ncbi-genome-download/
+    cd ncbi-genome-download
+    git checkout na_fix
+    pip install .
+    
+    # install memory profiler, because why not
+    pip install memory-profiler
+
+
+%environment
+    export LC_ALL=C
+

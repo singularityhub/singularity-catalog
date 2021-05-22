@@ -1,0 +1,53 @@
+Bootstrap: docker
+From: ubuntu:20.04
+#Bootstrap: localimage
+#From: ../ubuntu-1804-updated_container/ubuntu.simg
+
+%labels
+MAINTAINER darachm
+
+%help
+
+    This makes a singularity container for starcode.
+    See original starcode repo for instructions.
+    Also packaging parallel and mawk to do some command line munging.
+
+%environment
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%post
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+    # Got the below from somewhere else, opening up the sources list
+    #sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+    export DEBIAN_FRONTEND="noninteractive"
+
+    apt-get -y update
+    apt-get -y upgrade
+    apt-get -y install git g++ gcc make mawk wget tar
+
+    cd /home
+    git clone https://github.com/gui11aume/starcode
+    cd starcode
+    git checkout 1.4
+    make
+    mv starcode /usr/local/bin/starcode
+    cd
+
+    # Installing parallel from source, as the latest in ubuntu's pkgs is
+    # from 2016 and is buggin out
+    wget https://ftp.gnu.org/gnu/parallel/parallel-20201222.tar.bz2
+    tar -xvjf parallel-20201222.tar.bz2
+    cd parallel-20201222
+    ./configure && make && make install
+    echo "will cite\n" | parallel --citation \
+        || echo "why is this a return value of 1"
+    # yay GNU parallel
+
+%test
+
+    starcode -h
+    parallel -h
+

@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: debian:buster
+
+%labels
+    AUTHOR icaoberg
+    MAINTAINER icaoberg@psc.edu
+    WEBSITE http://github.com/icaoberg/singularity-gimp
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.
+    VERSION 2.10.8
+
+%post
+    apt-get update
+
+####################################################################################
+%appinstall gimp
+    apt-get install -y gimp     
+
+%apprun gimp
+    gimp "$@"

@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: node:14.16-buster-slim
+Includecmd: no
+
+%post
+    apt-get update
+    apt-get install -y --no-install-recommends \
+        make \
+        python3
+    rm -rf /var/lib/apt/lists/*
+
+%startscript
+    timestamp=$(date +%s)
+    cd /workspace
+    nohup npm start > ${timestamp}.out &
+
+%apprun logs
+    cd /workspace
+    tail -f ./logs/hpc-workflow.log | ./node_modules/bunyan/bin/bunyan

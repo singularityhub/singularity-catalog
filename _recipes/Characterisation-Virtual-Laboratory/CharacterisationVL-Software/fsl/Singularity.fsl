@@ -1,0 +1,50 @@
+Bootstrap: debootstrap
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+OSVersion:  bionic
+Include: apt wget
+
+%labels
+    MAINTAINER_NAME  Jay van Schyndel
+    MAINTAINER_EMAIL jay.vanschyndel@monash.edu
+
+%environment
+ 
+%post
+    echo "*********************************************************"
+    echo "Setup and display environment"
+    echo "*********************************************************"
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    echo $LC_ALL
+    echo $LANGUAGE
+    echo $DEBIAN_FRONTEND
+    echo "*********************************************************"
+    echo "Install repositories"
+    echo "*********************************************************"
+    echo "deb http://au.archive.ubuntu.com/ubuntu bionic-updates main" >> /etc/apt/sources.list
+    echo "deb-src http://au.archive.ubuntu.com/ubuntu bionic-updates main" >> /etc/apt/sources.list
+    echo "deb http://au.archive.ubuntu.com/ubuntu bionic universe" >> /etc/apt/sources.list
+    echo "deb-src http://au.archive.ubuntu.com/ubuntu bionic universe" >> /etc/apt/sources.list
+    echo "deb http://au.archive.ubuntu.com/ubuntu bionic-updates universe" >> /etc/apt/sources.list
+    echo "deb-src http://au.archive.ubuntu.com/ubuntu bionic-updates universe" >> /etc/apt/sources.list
+    apt update
+    apt install -y wget add-apt-key
+    wget -O /etc/apt/sources.list.d/neurodebian.sources.list http://neuro.debian.net/lists/bionic.au.full
+    apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
+    echo "*********************************************************"
+    echo "Update repositories and install desktop"
+    echo "*********************************************************"
+    apt update
+    apt upgrade -y
+    apt install -y locales
+    locale-gen en_AU.UTF-8
+
+    echo "================================="
+    echo "Installing FSL from Neurodebian  "
+    echo "================================="
+
+    apt install -y fsl
+
+%runscript
+    $*

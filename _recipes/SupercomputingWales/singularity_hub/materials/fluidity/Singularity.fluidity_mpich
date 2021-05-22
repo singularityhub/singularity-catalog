@@ -1,0 +1,19 @@
+Bootstrap:docker  
+From:centos:centos7.4.1708
+
+%labels
+MAINTAINER Thomas Green
+
+%environment
+
+%runscript
+exec /bin/bash /bin/echo "Not supported"
+
+%post  
+yum -y install -y yum-utils
+yum-config-manager -y --add-repo http://fluidityproject.github.com/yum/fluidity-rhel7-mpich.repo
+yum -y groupinstall "Base"
+yum -y install python
+yum -y install fluidity
+yum -y install fluidity-dev
+

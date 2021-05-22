@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: debian:stretch
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  default-jdk \
+                  ca-certificates \
+                  libxrender1 \
+                  gsl-bin
+
+cd /usr/local/
+
+wget http://ab.inf.uni-tuebingen.de/data/software/megan6/download/MEGAN_Community_unix_6_11_1.sh
+chmod +x MEGAN_Community_unix_6_11_1.sh
+./MEGAN_Community_unix_6_11_1.sh -q
+
+
+%test
+/usr/local/megan/tools/daa-meganizer -h
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+Version 6.11.1

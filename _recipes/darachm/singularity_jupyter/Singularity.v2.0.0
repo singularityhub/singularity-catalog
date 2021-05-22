@@ -1,0 +1,53 @@
+Bootstrap: docker
+From: ubuntu:18.04
+#Bootstrap: localimage
+#From: ../ubuntu-1804-updated_container/ubuntu.simg
+
+%labels
+
+    MAINTAINER darachm
+
+    NOTES Based off of "Lampros Mouselimis" 's container \#1321 ! 
+
+%help
+
+    'run' this to launch a jupyter server. 
+
+    Use 'singularity exec CONTAINERNAME.simg jupyter notebook password' 
+    to set a password, I think that's global though so watch out.
+
+%files
+
+%post
+
+#### BEGIN STRAIGHT UP COPYING
+  sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+  # to solve the "locale.Error: unsupported locale setting" error [https://stackoverflow.com/questions/14547631/python-locale-error-unsupported-locale-setting ]
+  export LC_ALL=C
+#### END STRAIGHT UP COPYING
+
+    apt-get -y update 
+    apt-get install -y vim wget git python3 python3-pip \
+        python3-biopython libcgraph6
+
+    python3 -m pip install pip 
+    python3 -m pip install jupyter
+    python3 -m pip install pandas numpy sklearn matplotlib keras regex jellyfish
+    python3 -m pip install networkx
+    python3 -m pip install git+https://github.com/darachm/goenrich
+
+    apt-get autoremove -y
+    apt-get clean
+
+%runscript
+    # commands to be executed when the container runs
+    echo "Starting notebook..."
+    echo "Open browser to localhost:8889"
+    exec /usr/local/bin/jupyter notebook --ip=127.0.0.1 --port=8889 --no-browser
+
+%test
+
+    /usr/bin/python3 -V
+    /usr/local/bin/jupyter -h
+
+

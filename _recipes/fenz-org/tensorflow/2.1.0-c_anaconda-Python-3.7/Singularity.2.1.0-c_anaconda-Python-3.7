@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: continuumio/miniconda3:4.8.2
+
+%post
+    export PATH="/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    export PYTHON_VERSION=3.7
+    export TENSORFLOW_VERSION=2.1.0
+    export CONDA_VERSION=4.8.2
+    export CONDA_CHANNEL=anaconda
+    export CONDA_PROFILE=base
+
+    echo "conda ${CONDA_VERSION}" >> /opt/conda/conda-meta/pinned
+    conda config --system --prepend channels ${CONDA_CHANNEL}
+    conda config --system --set auto_update_conda false
+    conda config --system --set show_channel_urls true
+    conda clean --all -f -y
+    conda install -y -c ${CONDA_CHANNEL} \
+        scipy=1.4.1 \
+        tensorboard=2.1.0 \
+        tensorflow=${TENSORFLOW_VERSION}
+
+%environment
+    export PATH="/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    export PYTHON_VERSION=3.7
+    export USE_DAAL4PY_SKLEARN=YES
+    export CONDA_PROFILE=base
+    . /opt/conda/etc/profile.d/conda.sh
+    conda activate $CONDA_PROFILE

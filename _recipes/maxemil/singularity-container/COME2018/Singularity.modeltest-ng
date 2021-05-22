@@ -1,0 +1,46 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  ca-certificates \
+                  locales \
+                  qt5-default \
+                  flex \
+                  bison \
+                  libtool-bin \
+                  build-essential \
+                  git
+
+echo en_US UTF-8 >> /etc/locale.gen
+locale-gen
+
+######## modeltest-ng ########
+# cd /usr/local/
+# wget https://github.com/ddarriba/modeltest/files/1752860/modeltest-ng-0.1.3-static-linux64.tar.gz
+# tar -xvf modeltest-ng-0.1.3-static-linux64.tar.gz
+# mv modeltest-ng /usr/local/bin
+
+cd /usr/local/
+# git clone --recursive https://github.com/ddarriba/modeltest modeltest-ng
+# cd /usr/local/modeltest-ng/
+# git checkout v0.1.3
+# /usr/local/modeltest-ng/build.sh
+# ln -s /usr/local/modeltest-ng/build/bin/modeltest-ng /usr/local/bin/modeltest-ng
+# ln -s /usr/local/modeltest-ng/build/bin/modeltest-gui /usr/local/bin/modeltest-gui
+wget https://github.com/ddarriba/modeltest/files/1752852/modeltest-ng-0.1.3.tar.gz
+tar -xvf modeltest-ng-0.1.3.tar.gz
+cd /usr/local/modeltest-ng-0.1.3
+/usr/local/modeltest-ng-0.1.3/build.sh
+ln -s /usr/local/modeltest-ng-0.1.3/build/bin/modeltest-ng /usr/local/bin/modeltest-ng
+ln -s /usr/local/modeltest-ng-0.1.3/build/bin/modeltest-gui /usr/local/bin/modeltest-gui
+
+%runscript
+modeltest-ng "$@"

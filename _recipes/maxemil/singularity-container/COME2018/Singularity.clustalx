@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  build-essential \
+                  qt-sdk \
+                  libxrender1 \
+                  gsl-bin
+
+######## ClustalW ########
+cd /usr/local/
+wget http://www.clustal.org/download/current/clustalx-2.1.tar.gz
+tar -xvf clustalx-2.1.tar.gz
+cd /usr/local/clustalx-2.1
+qmake
+make
+ln -s /usr/local/clustalx-2.1/clustalx /usr/local/bin
+
+%runscript
+clustalx

@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  build-essential \
+                  ca-certificates \
+
+######## MAFFT #########
+cd /usr/local/
+wget https://mafft.cbrc.jp/alignment/software/mafft-7.312-without-extensions-src.tgz
+tar xfvz mafft-7.312-without-extensions-src.tgz
+cd  /usr/local/mafft-7.312-without-extensions/core
+make clean
+make
+make install
+
+%runscript
+exec "$@"

@@ -1,0 +1,47 @@
+Bootstrap: docker
+From: debian:buster
+
+%labels
+maintainer="pricea35@cardiff.ac.uk" 
+software="prokka" 
+software.version="1.14.5" 
+about.summary="Annotate bacterial, archaeal and viral genomes using prokka" 
+about.home="https://github.com/tseemann/prokka"
+%post
+
+
+prokka_version=1.14.5
+
+PACKAGES="libdatetime-perl libdigest-md5-perl default-jre bioperl make wget parallel locales locales-all"
+
+apt-get update \
+&& apt-get install -y $PACKAGES \
+&& yes | cpan List::Util \
+&& wget -O prokka-${prokka_version}.tar.gz https://github.com/tseemann/prokka/archive/v${prokka_version}.tar.gz \
+&& tar -xzf prokka-${prokka_version}.tar.gz \
+&& prokka-${prokka_version}/bin/prokka --setupdb \
+&& chmod +x prokka-${prokka_version}/bin/prokka \
+&& mv prokka-${prokka_version} /usr/local/bin \
+&& rm prokka-${prokka_version}.tar.gz \
+&& wget ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools/converters/by_program/tbl2asn/linux64.tbl2asn.gz \
+&& gunzip linux64.tbl2asn.gz \
+&& mv linux64.tbl2asn /usr/local/bin/tbl2asn \
+&& chmod +x /usr/local/bin/tbl2asn
+
+locale-gen en_GB.UTF-8
+LANG=en_GB.UTF-8
+LANGUAGE=en_GB:en
+LC_ALL=en_GB.UTF-8
+
+PATH=${PATH}:/usr/local/bin/prokka-${prokka_version}/bin
+%environment
+export prokka_version=1.14.5
+export PACKAGES="libdatetime-perl libdigest-md5-perl default-jre bioperl make wget parallel locales locales-all"
+export LANG=en_GB.UTF-8
+export LANGUAGE=en_GB:en
+export LC_ALL=en_GB.UTF-8
+export PATH=${PATH}:/usr/local/bin/prokka-${prokka_version}/bin
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

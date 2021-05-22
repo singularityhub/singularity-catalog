@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%labels
+    Maintainer Phelelani.Mpangase@wits.ac.za (h3abionet)
+
+%post	       
+## Updates and essentials
+apt-get update
+apt-get install -y build-essential
+apt-get install -y wget git python python-dev python-pip
+
+## Install MultiQC using PIP
+pip install -U pip
+pip install multiqc
+
+%environment
+export PYTHONPATH=/usr/local/lib/python2.7/dist-packages

@@ -1,0 +1,41 @@
+Bootstrap: docker
+From: continuumio/miniconda:4.5.11
+
+%files
+check-set-data.exp /usr/local/check-set-data.exp
+
+%post
+######## base system ########
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy build-essential expect
+
+######## Conda and dependencies ########
+/opt/conda/bin/conda config --add channels bioconda
+/opt/conda/bin/conda config --add channels conda-forge
+/opt/conda/bin/conda install prodigal hmmer pplacer pip setuptools
+
+######## CheckM ########
+/opt/conda/bin/pip install checkm-genome
+cd /usr/local/
+
+for binary in /opt/conda/bin/*; do ln -s $binary /usr/local/bin/; done
+
+mkdir /usr/local/checkm-data
+cd /usr/local/checkm-data
+wget https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz
+tar -xzf checkm_data_2015_01_16.tar.gz
+
+cd /usr/local/
+chmod +x checkm-set-data.exp
+./checkm-set-data.exp
+
+
+%test
+checkm --version
+
+%runscript
+checkm "$@"
+
+%labels
+Maintainer max-emil.schon@icm.uu.se

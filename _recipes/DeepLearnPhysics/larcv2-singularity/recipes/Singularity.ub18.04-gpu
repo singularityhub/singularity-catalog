@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: deeplearnphysics/larcv2:ub18.04-gpu
+
+%help
+Ubuntu18.04 with root 6.16.00
+
+%labels
+Maintainer drinkingkazu
+Version ub18.04-gpu
+
+#------------
+# Global installation
+#------------
+%environment
+# for system
+export XDG_RUNTIME_DIR=/tmp/$USER
+export CUDA_DEVICE_ORDER=PCI_BUS_ID
+# for ROOT
+export ROOTSYS=/usr/local/root
+export PATH=${ROOTSYS}/bin:${PATH}
+export LD_LIBRARY_PATH="${ROOTSYS}/lib:${LD_LIBRARY_PATH}"
+export PYTHONPATH=${ROOTSYS}/lib:${PYTHONPATH}

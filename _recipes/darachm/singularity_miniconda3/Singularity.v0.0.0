@@ -1,0 +1,40 @@
+Bootstrap: shub
+From: darachm/singularity_ubuntu:v1.0.0
+
+%labels
+    MAINTAINER darachm
+
+%help
+
+    This is cribbed from continuumIO's miniconda3 image at 
+        https://github.com/ContinuumIO/docker-images/blob/master/miniconda3/debian/Dockerfile
+
+%environment
+
+    LANG=C.UTF-8
+    LC_ALL=C.UTF-8
+    PATH=/opt/conda/bin:$PATH
+    export LANG LC_ALL PATH
+
+%files
+    miniconda.sh
+
+%post
+
+    echo 'export DEBIAN_FRONTEND=noninteractive' >>$SINGULARITY_ENVIRONMENT
+    ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+
+    apt-get update --fix-missing 
+    apt-get install -qq wget bzip2 ca-certificates libglib2.0-0 libxext6 \
+        libsm6 libxrender1 git mercurial subversion 
+
+    /bin/bash miniconda.sh -b -p /opt/conda 
+    /opt/conda/bin/conda clean -tipsy 
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+    find /opt/conda/ -follow -type f -name '*.a' -delete 
+    find /opt/conda/ -follow -type f -name '*.js.map' -delete 
+    /opt/conda/bin/conda clean -afy
+
+%runscript
+
+    . /opt/conda/etc/profile.d/conda.sh && conda activate base && bash

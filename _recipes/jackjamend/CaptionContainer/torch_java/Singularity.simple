@@ -1,0 +1,12 @@
+
+Bootstrap: docker
+From: docker://nvcr.io/nvidia/pytorch:20.07-py3
+
+
+%labels
+    Maintainer Jack J Amend
+%post
+	apt-get update
+    apt-get -y install openjdk-11-jre-headless
+    /opt/conda/bin/python3 -m pip install scikit-image
+    /opt/conda/bin/python3 -m pip install pycocoevalcap

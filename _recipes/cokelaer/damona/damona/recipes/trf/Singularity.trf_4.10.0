@@ -1,0 +1,45 @@
+Bootstrap: library
+From: ubuntu:16.04
+
+%labels
+    Author thomas cokelaer
+
+%post 
+
+    apt-get update
+    apt-get install -y git
+    apt-get install -y gcc
+
+    apt-get install -y make
+    apt-get install -y automake
+    apt-get install -y autoconf
+    apt-get install -y dh-autoreconf
+    export PATH=$PATH:/usr/local/anaconda/bin
+    export LANG=C   # prevents perl for raising warnings
+    export PERL5LIB=/usr/local/anaconda/lib/perl5/5.22.0
+
+    git clone https://github.com/Benson-Genomics-Lab/TRF.git
+    cd TRF
+    # version 4.10
+    git checkout 355c1f9
+
+    mkdir build
+    cd build
+    ../configure
+
+    ln -s /usr/bin/aclocal-1.15 /usr/bin/aclocal-1.16
+    ln -s /usr/bin/automake-1.15 /usr/bin/automake-1.16
+
+    make
+    cp src/trf /usr/bin
+    # To install to system
+    #sudo make install
+
+
+
+%environment
+    #echo "backend:agg" > matplotlibrc
+
+%runscript
+    exec trf "$@"
+

@@ -1,0 +1,71 @@
+BootStrap: docker
+From: archlinux/base
+Stage: compile
+
+# Intel TBB does not play well with Alpine Linux. Hence Archlinux.
+
+%post
+	pacman -Sy
+	pacman -S --noconfirm git
+	pacman -S --noconfirm base-devel
+    pacman -S --noconfirm wget
+	pacman -S --noconfirm unzip
+    # Intel Threading Building Blocks 2019 U8
+    #echo "/usr/local/lib" >> /etc/ld.so.conf.d/usr_local_lib.conf
+	mkdir /install_src
+	mkdir -p /install_lib/lib
+    mkdir /install_lib/include
+    cd /install_src
+    git clone https://github.com/intel/tbb
+	cd tbb
+    make -j 8
+    find . -name '*so' | grep release | xargs -I{} cp {} /usr/local/lib/  # Copy release libs to sys dir
+    find . -name '*so.2' | grep release | xargs -I{} cp {} /usr/local/lib/
+    cp -R include/* /usr/local/include/
+    # Also copy files to deploy dirs
+    find . -name '*so' | grep release | xargs -I{} cp {} /install_lib/lib/
+    find . -name '*so.2' | grep release | xargs -I{} cp {} /install_lib/lib/
+    cp -R include/* /install_lib/include/
+    ldconfig
+    
+
+%apprun bowtie2
+   exec bowtie2
+
+%appinstall bowtie2
+   mkdir -p /install/bin
+   #mkdir /install_src
+   cd /install_src
+   wget -O bowtie.zip https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.3.5.1/bowtie2-2.3.5.1-source.zip/download
+   unzip -o bowtie.zip
+   cd bowtie2-2.3.5.1
+   make -j 8
+   find . -maxdepth 1 -executable -type f -exec cp {} /install/bin/ \;
+     
+
+%apphelp bowtie2
+   Bowtie 2.3.5.1 
+
+
+Bootstrap: docker
+From: archlinux/base
+Stage: release
+
+%post
+	pacman -Sy
+    echo "/usr/local/lib" >> /etc/ld.so.conf.d/usr_local_lib.conf
+	ldconfig
+
+%files from compile
+	/install_lib/lib /usr/
+    /install/bin/ /usr/
+
+%apphelp bowtie2
+	Bowtie 2.3.5.1
+
+%apprun bowtie2
+	exec bowtie2
+
+%labels
+	Author "Tomi Häkkinen"
+	Version 1.0

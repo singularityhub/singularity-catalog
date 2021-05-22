@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  build-essential
+
+######## ClustalW ########
+cd /usr/local/
+wget http://www.clustal.org/download/current/clustalw-2.1.tar.gz
+tar -xvf clustalw-2.1.tar.gz
+cd /usr/local/clustalw-2.1
+./configure
+make
+make install
+
+%runscript
+clustalw2 "$@"

@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: debian:stretch
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  default-jdk \
+                  ca-certificates \
+                  libxrender1 \
+                  gsl-bin
+
+cd /usr/local/
+
+wget http://ab.inf.uni-tuebingen.de/data/software/malt/download/MALT_unix_0_4_0.sh
+chmod +x MALT_unix_0_4_0.sh
+./MALT_unix_0_4_0.sh -q
+
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+Version 0.4.0
+
+%test
+/usr/local/malt/malt-run -h
+/usr/local/malt/malt-build -h

@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: continuumio/miniconda3
+
+%files
+document_to_zmq_replay.py /app/
+requirements.txt /app/
+%post
+
+export PATH=/opt/conda/bin:$PATH
+conda install -y numcodecs python-snappy && pip install -r /app/requirements.txt
+
+
+%runscript
+exec /bin/bash python /app/document_to_zmq_replay.py "$@"
+%startscript
+exec /bin/bash python /app/document_to_zmq_replay.py "$@"

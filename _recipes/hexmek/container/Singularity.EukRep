@@ -1,0 +1,16 @@
+Bootstrap: debootstrap
+OSVersion: testing
+MirrorURL: http://httpredir.debian.org/debian
+
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y python3 python3-pip procps
+    pip3 install EukRep
+    pip3 install pyfaidx
+    
+
+%environment
+    export LC_ALL=C     
+

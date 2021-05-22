@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:1.13.2-gpu-py3
+
+%post
+apt-get update && apt-get install -y git
+pip install bert-serving-server
+git clone https://github.com/hanxiao/bert-as-service /app
+
+%environment
+export NUM_WORKER=`nproc`
+export ZEROMQ_SOCK_TMP_DIR=/tmp/
+
+%startscript
+echo "Starting server with $NUM_WORKER workers"
+bert-serving-start -num_worker=$NUM_WORKER -model_dir /model

@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%labels
+    Maintainer Phelelani.Mpangase@wits.ac.za (h3abionet)
+
+%post
+## Updates and essentials
+apt-get update
+apt-get install -y build-essential
+apt-get install -y wget unzip curl rsync
+
+## Install Java
+apt-get install -y software-properties-common debconf-utils
+apt-add-repository ppa:openjdk-r/ppa
+apt-get update
+apt-get install -y openjdk-8-jre
+
+## Install FastQC
+cd /opt \
+    && wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip \
+    && unzip fastqc_v0.11.8.zip \
+    && chmod 755 FastQC/fastqc \
+    && rm fastqc_v0.11.8.zip
+
+%environment
+## Add the paths to environment
+export PATH=/opt/FastQC:$PATH

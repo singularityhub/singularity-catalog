@@ -1,0 +1,68 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+MAINTAINER darachm
+DATE 210115
+
+%help
+
+    This is a base for running things, general stuff.
+    CLI munging.
+    It includes nextflow
+
+%environment
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%post
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+    # Got the below from somewhere else, opening up the sources list
+    sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+    export DEBIAN_FRONTEND="noninteractive"
+
+    apt-get -y update
+    apt-get -y upgrade
+
+# to install singularity
+#    apt-get -y install singularity-container
+
+# general stuff
+    apt-get -y install gzip git wget g++ gcc mawk
+
+# for additional repos
+    apt-get -y install gnupg2 software-properties-common 
+
+# perl ! Some times you just need a one-liner
+    apt-get -y install perl
+
+# csvkit for in2csv
+    apt-get -y install csvkit
+
+# sqlite
+    apt-get -y install sqlite3
+
+# parallel
+    # Installing parallel from source, as the latest in ubuntu's pkgs is
+    # from 2016 and is buggin out. Dunno what's up with ubuntu's repo...
+    wget https://ftp.gnu.org/gnu/parallel/parallel-20201222.tar.bz2
+    tar -xvjf parallel-20201222.tar.bz2
+    cd parallel-20201222
+    ./configure && make && make install
+    cd /
+    echo "will cite\n" | parallel --citation \
+        || echo "why is this a return value of 1"
+    # For pete's sake I'll cite the damn then when I have something to 
+    #  cite it with!
+
+# to install nextflow
+    apt-get -y install default-jdk graphviz curl 
+    cd / 
+    curl -s https://get.nextflow.io | bash
+    chmod a+rx /nextflow
+
+%test
+
+    # ?

@@ -1,0 +1,25 @@
+Bootstrap: debootstrap
+OSVersion: stable
+MirrorURL: http://httpredir.debian.org/debian
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y python3 python3-pip libgl1-mesa-glx rsync git curl wget bwa \
+                   bedtools samtools procps zlib1g-dev
+    update-alternatives --install /usr/bin/python python $(which python3) 1
+    
+
+    cd /
+    mkdir -p /opt/
+    cd /opt/
+    git clone --recursive https://github.com/clwgg/nQuire 
+    cd nQuire
+    make submodules
+    make
+    chmod +x nQuire
+
+%environment
+    export LC_ALL=C
+    export PATH="/opt/nQuire/:$PATH"
+

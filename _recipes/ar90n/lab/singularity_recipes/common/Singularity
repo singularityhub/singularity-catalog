@@ -1,0 +1,92 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%runscript
+    exec /opt/bin/entry
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/opt/bin
+    mkdir -p ${SINGULARITY_ROOTFS}/opt/ssh
+    mkdir -p ${SINGULARITY_ROOTFS}/opt/init/000_common
+    chmod -R 777 ${SINGULARITY_ROOTFS}/opt
+
+%files
+    entry /opt/bin/entry
+    sshd /opt/bin/sshd
+    sshd_config /opt/ssh/sshd_config
+    entry.sh /opt/init/000_common/entry.sh
+    init.vim /opt/init/000_common/init.vim
+    dein.toml /opt/init/000_common/dein.toml
+    template /opt/init/000_common/template
+    snippets /opt/init/000_common/snippets
+    coc-settings.json /opt/init/000_common/coc-settings.json
+    config.yaml /opt/init/000_common/config.yaml
+    dot_textlint /opt/
+
+%environment
+    export ENTRY_COMMAND=bash
+    export PATH=/opt/bin:/opt/go/bin:$PATH
+    export SSHD_PORT=3333
+
+%labels
+   AUTHOR argon.argon.argon@gmail.com
+
+%post
+    export NODE_VERSION=12.16.3
+
+    echo "export SINGULARITY_IMAGE_NAME=common_$(date +%s)" >> $SINGULARITY_ENVIRONMENT
+    echo "export SINGULARITY_XDG_ROOT=\$HOME/.xdg/\$SINGULARITY_IMAGE_NAME" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_CONFIG_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_CACHE_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_DATA_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_RUNTIME_DIR=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export DEBIAN_FRONTEND=noninteractive" >> $SINGULARITY_ENVIRONMENT
+    echo "export EXERCISM_CONFIG_HOME=\$HOME/.config/exercism" >> $SINGULARITY_ENVIRONMENT
+    echo "export GOPATH=/opt/go" >> $SINGULARITY_ENVIRONMENT
+    . $SINGULARITY_ENVIRONMENT
+
+    apt-get update -qq
+    apt-get install -y git curl software-properties-common language-pack-ja build-essential ripgrep cmake
+    apt-get install -y gfortran libgfortran5
+    apt-get install -y nodejs npm unzip libncurses5 libncurses6
+    apt-get install -y neovim python3-dev python3-pip python-is-python3
+    apt-get install -y bash tmux tig unzip httpie jq silversearcher-ag peco
+    apt-get install -y dicom3tools dcmtk libgdcm-cil libgdcm-tools imagemagick
+    apt-get install -y libopenblas-dev
+    apt-get install -y openssh-server
+    apt-get install -y golang
+
+    go get github.com/mattn/efm-langserver
+
+    npm cache verify
+    npm install n -g
+
+    n ${NODE_VERSION}
+    ln -sf /usr/local/bin/node /usr/bin/node
+    apt-get -y purge nodejs
+
+    apt-get clean
+
+    dpkg-reconfigure openssh-server
+
+    curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
+    python2 /tmp/get-pip.py -vv
+    python3 /tmp/get-pip.py -vv
+    rm /tmp/get-pip.py
+
+    pip3 install --upgrade pip
+
+    pip2 install --upgrade neovim
+    pip3 install --upgrade neovim msgpack-python msgpack
+    pip3 install awscli
+    pip3 install msgpack-python
+    pip3 install xonsh pyt prompt_toolkit pygments
+
+    npm install -g neovim textlint textlint-rule-preset-ja-technical-writing
+
+    EXERCISM_CLI_PKG_URL=https://github.com/exercism/cli/releases/download/v3.0.11/exercism-linux-64bit.tgz
+    curl -L $EXERCISM_CLI_PKG_URL | tar xz -C /tmp
+    mv /tmp/exercism /opt/bin/exercism
+
+    curl -L -o /opt/bin/vast https://raw.githubusercontent.com/vast-ai/vast-python/master/vast.py
+    chmod +x /opt/bin/vast

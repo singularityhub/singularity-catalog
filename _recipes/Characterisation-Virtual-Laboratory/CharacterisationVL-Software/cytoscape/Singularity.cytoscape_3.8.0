@@ -1,0 +1,24 @@
+Bootstrap: shub
+From: Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804-cuda10.1
+
+%labels
+ MAINTAINER_NAME  Jafaruddin Lie
+ MAINTAINER_EMAIL jafar.lie@monash.edu
+
+ APPLICATION_NAME CYTOSCAPE
+ APPLICATION_VERSION 3.8.0
+
+%environment
+ CYTOSCAPE=/opt/Cytoscape_v3.8.0/
+ export PATH=$CYTOSCAPE:$PATH
+
+%post -c /bin/bash
+ cd /
+ apt update
+ apt -y install default-jdk
+ wget https://github.com/cytoscape/cytoscape/releases/download/3.8.0/Cytoscape_3_8_0_unix.sh
+ chmod +x /Cytoscape_3_8_0_unix.sh
+ ./Cytoscape_3_8_0_unix.sh -q
+
+%runscript
+ $*

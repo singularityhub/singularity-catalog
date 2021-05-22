@@ -1,0 +1,11 @@
+Bootstrap: docker
+From: continuumio/miniconda3
+
+%environment
+PATH=$PATH:/opt/conda/bin
+export PATH
+
+%post
+PATH=$PATH:/opt/conda/bin
+conda install numpy pyzmq ipython
+pip install bert-serving-client

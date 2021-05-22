@@ -1,0 +1,28 @@
+Bootstrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/x86_64/
+Include: yum
+
+%labels
+ MAINTAINER jafar.lie@monash.edu
+ HARDWARE cpu
+
+%environment
+
+%runscript
+ $*
+
+%post
+ yum -y install epel-release
+ yum -y update
+ yum -y install https://repo.opensciencegrid.org/osg/3.5/osg-3.5-el7-release-latest.rpm
+ yum -y install cvmfs
+ yum -y install cvmfs-x509-helper
+ yum -y install cvmfs-fuse3
+ yum -y install fuse*
+ #sed -i '/CVMFS_REPOSITORIES/d' /etc/cvmfs/default.local
+ #sed -i '/CVMFS_PAC_URLS/d' /etc/cvmfs/default.local
+ #sed -i '/CVMFS_HTTP_PROXY/d' /etc/cvmfs/default.local
+ echo CVMFS_REPOSITORIES="cms.cern.ch,config-osg.opensciencegrid.org,oasis.opensciencegrid.org" >> /etc/cvmfs/default.local
+ echo CVMFS_HTTP_PROXY="http://proxy01:3128" >> /etc/cvmfs/default.local
+ echo CVMFS_QUOTA_LIMIT=5000 >> /etc/cvmfs/default.local

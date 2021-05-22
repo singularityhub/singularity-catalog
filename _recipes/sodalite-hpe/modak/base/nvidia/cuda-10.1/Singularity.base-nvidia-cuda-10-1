@@ -1,0 +1,37 @@
+# build base container required for all other container builds. Installs Ubuntu 18.04 as well as packages required for FW builds.
+# cuda-10.1
+# cudnn 7.6
+
+# The build requires that libcudnn7 and libcudnn7-dev be downloaded and available in the working directory. 
+BootStrap: docker
+From: ubuntu:18.04
+
+%files
+	#must be located in same dir as build execution
+	libcudnn7_7.6.5.32-1+cuda10.1_amd64.deb 
+	libcudnn7-dev_7.6.5.32-1+cuda10.1_amd64.deb
+
+%post 
+	uname -a
+
+	#retrieve cuda 10.1 repository metadata and install
+	apt-get install -y curl
+	curl -LO "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.1.243-1_amd64.deb"
+    dpkg -i cuda-repo-ubuntu1804_10.1.243-1_amd64.deb
+    apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub
+
+    apt-get update
+	#disable interactive mode to avoid freeze on keyboard selection
+	DEBIAN_FRONTEND=nointeractive apt-get install -y cuda-10.1
+
+	#install cudnn
+	#can not wget nvidia cudnn, copied over file instead, see files header
+	#wget https://developer.nvidia.com/compute/machine-learning/cudnn/secure/7.6.5.32/Production/10.1_20191031/Ubuntu18_04-x64/libcudnn7_7.6.5.32-1%2Bcuda10.1_amd64.deb
+	dpkg -i libcudnn7_7.6.5.32-1+cuda10.1_amd64.deb
+	dpkg -i libcudnn7-dev_7.6.5.32-1+cuda10.1_amd64.deb
+
+    #nvcc --version
+	#nvidia-smi --version
+    #ls ${SINGULARITY_ROOTFS}/usr/local/cuda
+
+%labels

@@ -1,0 +1,23 @@
+Bootstrap: shub
+From: Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804-cuda10.1
+
+%labels
+ MAINTAINER_NAME  Jafaruddin Lie
+ MAINTAINER_EMAIL jafar.lie@monash.edu
+
+ APPLICATION_NAME ILASTIK
+ APPLICATION_VERSION 1.3.3
+
+%environment
+ export ILASTIK=/opt/ilastik-1.3.3post3-Linux/bin:/opt/ilastik-1.3.3post3-Linux
+ export PATH=$ILASTIK:$PATH
+
+%post -c /bin/bash
+ mkdir -p /opt/
+ cd /opt/
+ wget https://files.ilastik.org/ilastik-1.3.3post3-Linux.tar.bz2
+ tar xvf ilastik-1.3.3post3-Linux.tar.bz2
+ rm ilastik-1.3.3post3-Linux.tar.bz2
+
+%runscript
+ $*

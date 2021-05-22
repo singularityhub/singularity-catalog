@@ -1,0 +1,42 @@
+Bootstrap: localimage
+From: GOMAP-base.sif
+
+%labels
+GOMAP_OWNER Wimalanathan Kokulapalan
+GOMAP_MAINTAINER Wimalanathan Kokulapalan 
+GOMAP_VERSION v1.3.5
+
+%files
+	GOMAP /opt/
+
+%environment
+    export LC_ALL=C 
+    export DEBIAN_FRONTEND=noninteractive
+ 
+%post
+	export DEBIAN_FRONTEND="noninteractive"
+	echo "Running post      "
+
+    # Downloading GOMAP code
+	ls -la /opt
+	chmod -R 777 /opt/GOMAP/
+	
+    #Downloading backed in GOMAP code 
+	cd /opt/GOMAP/data && \
+	chmod -R 755 software && chmod -R 755 data
+	
+    #Making necessary directories
+	  mkdir -p /workdir
+	  mkdir -p /tmpdir
+	  mkdir -p /work	  
+	  mkdir -p /scratch
+
+	  
+	  echo "Completed Post   "
+
+%startscript
+	chmod 777 /tmp
+
+%runscript
+	cd /opt/GOMAP/ 
+	./gomap.py "$@"

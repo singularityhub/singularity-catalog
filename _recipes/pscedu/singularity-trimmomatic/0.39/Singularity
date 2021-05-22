@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: alpine:edge
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE http://github.com/icaoberg/singularity-trimmomatic
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved. 
+    VERSION 0.39
+
+%post
+    apk add --update openjdk8-jre wget
+    wget https://github.com/usadellab/Trimmomatic/files/5854859/Trimmomatic-0.39.zip
+    unzip Trimmomatic-0.39.zip && rm Trimmomatic-0.39.zip
+    mkdir -p /opt/trimmomatic
+    mv -v Trimmomatic-0.39/*.jar /opt/trimmomatic

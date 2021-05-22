@@ -1,0 +1,41 @@
+Bootstrap: docker
+From: debian:buster-slim
+
+%setup
+    cp -R solvers ${SINGULARITY_ROOTFS}/solvers
+    mkdir ${SINGULARITY_ROOTFS}/lg
+    rsync -r --exclude '*.o' src/ ${SINGULARITY_ROOTFS}/lg/src/
+    cp -R Makefile ${SINGULARITY_ROOTFS}/lg/Makefile
+
+%post
+    apt-get update
+
+    # TCS-Meiji
+    # deal with slim variants not having man page directories (which causes "update-alternatives" to fail)
+    mkdir -p /usr/share/man/man1
+    apt-get install -y make openjdk-11-jdk
+    cd /solvers/TCS-Meiji
+    make heuristic
+    
+    # FlowCutter
+    apt-get -y install g++
+    cd /solvers/flow-cutter-pace17
+    chmod +x ./build.sh
+    ./build.sh
+
+    # Htd
+    apt-get -y install g++ cmake make
+    cd /solvers/htd-master
+    cmake .
+    make
+
+    # LG
+    apt-get -y install g++ make libboost-graph-dev libboost-system-dev
+    cd /lg
+    make
+
+%help
+    This is a Singularity container for the LG tool.
+
+%runscript
+    /lg/build/lg "$@"

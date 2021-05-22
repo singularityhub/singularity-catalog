@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: wilsonlab/geospatial_plus
+
+%labels
+  Author Adam M. Wilson
+  Version 0.0.1
+
+%apprun rserver
+    exec rserver "${@}"
+
+%runscript
+    exec rserver "${@}"
+
+%startscript
+    echo "RUNNING rserver startscript"
+    echo "Arguments received: $*"
+    echo user = $USER      password = $PASSWORD     port = $PORT
+    rserver  "$@"

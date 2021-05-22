@@ -1,0 +1,41 @@
+BootStrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://archive.ubuntu.com/ubuntu/
+Include: bash
+
+## TLS Apps?
+
+%environment
+	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/lib
+	export LD_LIBRARY_PATH
+
+%post
+
+# Setup locale and core build dependencies::
+	sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+	apt-get update
+	apt-get install -y locales
+	locale-gen en_US.UTF-8
+	apt-get install -y git cmake
+
+### las2pcd: https://github.com/murtiad/las2pcd
+	cd
+	apt-get install -y libpcl-dev liblas-dev liblas-c-dev
+	git clone -b treeseg_fix https://github.com/gearslaboratory/las2pcd.git
+	cd las2pcd
+	cmake .
+	make
+	mv las2pcd /usr/bin/
+
+## treeseg: https://github.com/apburt/treeseg
+	cd
+	apt-get install -y libarmadillo-dev libproj-dev libpcl-dev
+	git clone -b ubuntu-singularity-verbose https://github.com/gearslaboratory/treeseg.git
+	cd treeseg
+	mkdir build
+  	cd build
+  	cmake ../src
+  	make
+	mv libtreeseg.so /usr/local/lib
+	mv libleafsep.so /usr/local/lib
+  	mv * /usr/local/bin

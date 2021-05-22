@@ -1,0 +1,35 @@
+BootStrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://archive.ubuntu.com/ubuntu/
+Include: bash
+
+%post
+  sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+  apt-get update
+
+  # Install R, openmpi, misc. utilities:
+  apt-get install -y libopenblas-dev r-base-core libcurl4-openssl-dev libopenmpi-dev openmpi-bin openmpi-common openmpi-doc openssh-client openssh-server libssh-dev wget vim git nano git cmake  gfortran g++ curl wget python autoconf bzip2 libtool libtool-bin
+  apt-get clean
+
+  # Install required R packages
+  R --slave -e 'install.packages(c("irlba", "doMPI"), repos="https://cloud.r-project.org/")'
+
+  # Install simple VCF parser helper
+  wget https://raw.githubusercontent.com/bwlewis/1000_genomes_examples/master/parse.c && cc -O2 parse.c && mv a.out /usr/local/bin/parsevcf && rm parse.c
+
+  # Set up unit test
+  mkdir -p /usr/local/share/R
+  chmod a+rwx /usr/local/share/R
+  wget https://raw.githubusercontent.com/bwlewis/1000_genomes_examples/master/unit.R && mv unit.R /usr/local/share/R/
+
+  # This is the main R program run by /singularity
+  wget https://raw.githubusercontent.com/bwlewis/1000_genomes_examples/master/pca-mpi.R && mv pca-mpi.R /usr/local/share/R/
+
+
+%test
+  #!/bin/sh
+  exec Rscript --slave "/usr/local/share/R/unit.R"
+
+%runscript
+  #!/bin/bash
+  Rscript --slave "/usr/local/share/R/pca-mpi.R"

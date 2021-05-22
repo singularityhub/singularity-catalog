@@ -1,0 +1,40 @@
+Bootstrap: localimage
+From: build/spades_base.sif
+
+%labels
+org.label-schema.license="GPL-2.0" 
+org.label-schema.vcs-url="https://github.com/gparadis/spades-singularity" 
+org.label-schema.vendor="Predictive Ecology" 
+maintainer="Greg Paradis <greg.paradis@ubc.ca>"
+
+%files
+spades-setup_github-development.R /spades-setup.R
+
+
+%post
+# install SpaDES R packages (and dependencies)
+Rscript spades-setup.R
+
+# clean up
+rm /spades-setup.R
+
+
+%environment
+export PATH=/usr/lib/rstudio-server/bin:$PATH
+export GUROBI_HOME="/opt/gurobi/linux64"
+export PATH="${PATH}:${GUROBI_HOME}/bin"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${GUROBI_HOME}/lib"
+export GRB_LICENSE_FILE="${HOME}/gurobi.lic"
+
+%runscript
+exec "$@"
+
+# RStudio app setup 
+%apprun rstudio
+echo "Launching RStudio with password" $PASSWORD
+exec rserver --server-data-dir=${RSTUDIO_SERVER_DATA_DIR} --secure-cookie-key-file=${RSTUDIO_SERVER_DATA_DIR}/${USER}_secure-cookie-key --server-pid-file=${RSTUDIO_SERVER_DATA_DIR}/rstudio-server.pid --auth-none=0 --auth-pam-helper-path=pam-helper --rsession-which-r=$(which R) --server-daemonize=0  "$@"
+
+%appenv rstudio
+export PASSWORD=`date | md5sum | awk '{print $1}'` # random password based on date
+export RSTUDIO_SERVER_DATA_DIR=/tmp/${USER}_rstudio-server
+export LD_LIBRARY_PATH=/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/jvm/java-11-openjdk-amd64/lib/server:/opt/gurobi/linux64/lib:/.singularity.d/libs

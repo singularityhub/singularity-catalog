@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/tensorflow:20.07-tf1-py3
+# -----------------------------------------------------------------------------------
+
+%post
+# -----------------------------------------------------------------------------------
+# this will install all necessary packages and prepare the container
+    export DEBIAN_FRONTEND=noninteractive
+    apt update
+    apt -y install \
+        netbase \
+        python3-opencv
+    python3 -m pip install --upgrade pip
+    python3 -m pip install --upgrade setuptools
+    python3 -m pip install \
+        tensorflow-gpu==1.15.2 \
+        keras==2.2.4 \
+        python-socketio \
+        eventlet \
+        flask \
+        pillow \
+        h5py==2.10

@@ -3,17 +3,14 @@ name: Generate catalog
 on:
   schedule:
     - cron: 0 5 * * *
-  push:
-    branches:
-      - main
 
 jobs:
   generate-catalog:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: deployment
-        uses: mamba-org/provision-with-micromamba@main
+        uses: mamba-org/provision-with-micromamba@6f4b1b6c62b65deebcb3a37cd30af2ba2e232877
       - name: generate-catalog
         shell: bash -l {0}
         env:
@@ -26,7 +23,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git commit -m "Add changes" -a
       - name: Push changes
-        uses: ad-m/github-push-action@master
+        uses: ad-m/github-push-action@057a6ba835d986bfe495dd476a6c4db1d5f9503c
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}

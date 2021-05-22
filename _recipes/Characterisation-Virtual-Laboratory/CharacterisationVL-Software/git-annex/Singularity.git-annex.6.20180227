@@ -1,0 +1,25 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804
+
+%labels
+    MAINTAINER_NAME  Jay van Schyndel
+    MAINTAINER_EMAIL jay.vanschyndel@monash.edu
+
+    APPLICATION_NAME git-annex
+    APPLICATION_VERSION 6.20180227
+
+    HARDWARE CPU
+
+    LAST_UPDATED 22-APR-2019
+
+%environment
+
+%post
+    echo "==========================="
+    echo " Installing                "
+    echo "==========================="
+    apt update
+    apt install -y  git-annex=6.20180227-1
+
+%runscript
+    $*

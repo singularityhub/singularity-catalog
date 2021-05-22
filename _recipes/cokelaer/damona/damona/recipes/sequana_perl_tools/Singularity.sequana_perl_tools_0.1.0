@@ -1,0 +1,34 @@
+Bootstrap: library
+From: cokelaer/damona/conda:4.9.2
+
+
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    export PATH=$PATH:/usr/local/anaconda/bin
+    export LANG=C   # prevents perl for raising warnings
+    export PERL5LIB=/usr/local/anaconda/lib/perl5/5.22.0
+
+    # misc
+    conda install pigz pbzip2 dsrc
+
+
+    conda install homer
+    # Takes forever
+    #conda install prokka
+
+
+    # Let us save some space
+    conda clean --packages -y
+    conda clean --all -y # next requires lots of space
+    ###rm -rf /usr/local/anaconda/pkgs
+
+
+%environment
+    #echo "backend:agg" > matplotlibrc
+
+%runscript
+    PYTHONNOUSERSITE=1 exec ${1+"$@"}

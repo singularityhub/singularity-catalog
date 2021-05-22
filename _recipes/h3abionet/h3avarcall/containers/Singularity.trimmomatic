@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%labels
+    Maintainer Phelelani.Mpangase@wits.ac.za (h3abionet)
+
+%post
+## Updates and essentials
+apt-get update
+apt-get install -y build-essential
+apt-get install -y wget unzip curl rsync ant
+
+## Install Java
+apt-get install -y software-properties-common debconf-utils
+apt-add-repository ppa:openjdk-r/ppa
+apt-get update
+apt-get install -y openjdk-8-jre
+
+## Install FastQC
+cd /opt \
+    && wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.39.zip \
+    && unzip Trimmomatic-0.39.zip \
+    && chmod 755 /opt/Trimmomatic-0.39/trimmomatic-0.39.jar \
+    && rm Trimmomatic-0.39.zip
+
+%environment
+## Add the paths to environment
+export PATH=/opt/Trimmomatic-0.39:$PATH

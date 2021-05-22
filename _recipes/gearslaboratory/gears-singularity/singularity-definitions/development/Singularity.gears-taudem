@@ -1,0 +1,39 @@
+BootStrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://archive.ubuntu.com/ubuntu/
+Include: bash
+
+# TauDEM ## 
+# https://github.com/dtarb/TauDEM #
+
+%environment
+    PATH=$PATH:/usr/local/taudem/
+    export PATH
+
+%post
+  apt-get clean && apt-get -y update && apt-get install -y locales && locale-gen en_US.UTF-8
+	
+  # Add to sources list:
+  sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+  apt-get -y update
+
+  # Latest R
+  apt-get install -y software-properties-common
+  # add-apt-repository ppa:edd/r-3.5
+  # apt-get update
+
+  # Install misc. utilities:
+  apt-get install -y libopenblas-dev r-base-core r-base-dev libcurl4-openssl-dev \
+  	libopenmpi-dev openmpi-bin openmpi-common openmpi-doc openssh-client openssh-server \
+  	libssh-dev wget vim git nano git cmake gfortran g++ curl wget python autoconf \
+  	bzip2 libtool libtool-bin libxml2-dev unzip
+  
+  # taudem dependencies
+  apt-get install -y libgdal-dev libproj-dev python-gdal python3-gdal unzip libibverbs-dev mpich 
+  git clone -b Develop https://github.com/dtarb/TauDEM.git
+  cd TauDEM
+  cd src && mkdir build && cd build
+  cmake ..
+  make && make install
+
+

@@ -1,0 +1,46 @@
+Bootstrap: docker
+From: debian:buster
+
+%labels
+maintainer="pricea35@cardiff.ac.uk" 
+software="abricate" 
+software.version="0.9.9" 
+about.summary="Call antimicrobial resistance and virulence using abricate" 
+about.home="https://github.com/tseemann/abricate"
+%post
+
+
+abricate_version=0.9.9
+
+PACKAGES="wget parallel bioperl ncbi-blast+ gzip unzip locales locales-all"
+PACKAGES2="libjson-perl libtext-csv-perl libpath-tiny-perl libfile-slurp-perl liblwp-protocol-https-perl libwww-perl"
+
+apt-get update \
+&& apt-get install -y $PACKAGES $PACKAGES2 \
+&& wget -O abricate-${abricate_version}.tar.gz https://github.com/tseemann/abricate/archive/v${abricate_version}.tar.gz \
+&& tar -xzf abricate-${abricate_version}.tar.gz -C /usr/local/bin \
+&& chmod +x /usr/local/bin/abricate-${abricate_version}/bin/abricate \
+&& rm abricate-${abricate_version}.tar.gz \
+&& wget -O /usr/local/bin/any2fasta https://raw.githubusercontent.com/tseemann/any2fasta/master/any2fasta \
+&& chmod +x /usr/local/bin/any2fasta
+
+PATH=${PATH}:/usr/local/bin/abricate-${abricate_version}/bin
+
+locale-gen en_GB.UTF-8
+LANG=en_GB.UTF-8
+LANGUAGE=en_GB:en
+LC_ALL=en_GB.UTF-8
+
+abricate --setupdb
+%environment
+export abricate_version=0.9.9
+export PACKAGES="wget parallel bioperl ncbi-blast+ gzip unzip locales locales-all"
+export PACKAGES2="libjson-perl libtext-csv-perl libpath-tiny-perl libfile-slurp-perl liblwp-protocol-https-perl libwww-perl"
+export PATH=${PATH}:/usr/local/bin/abricate-${abricate_version}/bin
+export LANG=en_GB.UTF-8
+export LANGUAGE=en_GB:en
+export LC_ALL=en_GB.UTF-8
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

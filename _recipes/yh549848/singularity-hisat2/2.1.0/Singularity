@@ -1,0 +1,44 @@
+BootStrap: docker
+From: continuumio/miniconda3:4.7.12
+
+%apprun hisat2
+  exec hisat2 "${@}"
+
+%apprun hisat2_extract_exons.py
+  exec hisat2_extract_exons.py "${@}"
+
+%apprun hisat2_extract_snps_haplotypes_UCSC.py
+  exec hisat2_extract_snps_haplotypes_UCSC.py "${@}"
+
+%apprun hisat2_extract_snps_haplotypes_VCF.py
+  exec hisat2_extract_snps_haplotypes_VCF.py "${@}"
+
+%apprun hisat2_extract_splice_sites.py
+  exec hisat2_extract_splice_sites.py "${@}"
+
+%apprun hisat2_simulate_reads.py
+  exec hisat2_simulate_reads.py "${@}"
+
+%apprun hisatgenotype.py
+  exec hisatgenotype.py "${@}"
+
+%apprun hisatgenotype_build_genome.py
+  exec hisatgenotype_build_genome.py "${@}"
+
+%apprun hisatgenotype_extract_reads.py
+  exec hisatgenotype_extract_reads.py "${@}"
+
+%apprun hisatgenotype_extract_vars.py
+  exec hisatgenotype_extract_vars.py "${@}"
+
+%apprun hisatgenotype_hla_cyp.py
+  exec hisatgenotype_hla_cyp.py "${@}"
+
+%apprun hisatgenotype_locus.py
+  exec hisatgenotype_locus.py "${@}"
+
+%post
+  . /opt/conda/bin/activate && \
+  conda install -q -y \
+    -c bioconda hisat2=2.1.0 && \
+  conda clean -a -q -f -y

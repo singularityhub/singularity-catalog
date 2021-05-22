@@ -1,0 +1,51 @@
+BootStrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://au.archive.ubuntu.com/ubuntu/
+Include: apt wget sudo vim build-essential git cmake software-properties-common
+
+%labels
+MAINTAINER lance.wilson@monash.edu
+HARDWARE cpu
+
+%environment
+    MANTIDPATH=/opt/Mantid/bin
+    PV_PLUGIN_PATH=/opt/Mantid//
+    PATH=$PATH:$MANTIDPATH
+    export MANTIDPATH PV_PLUGIN_PATH PATH
+
+
+%runscript
+    echo "Mantid container built for CVL"
+    echo "For new versions please contact help@cvl.org.au"
+    MantidPlot
+
+%post
+    echo "*********************************************************"
+    echo "Setup and display environment"
+    echo "*********************************************************"
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    echo $LC_ALL
+    echo $LANGUAGE
+    echo $DEBIAN_FRONTEND
+    echo "*********************************************************"
+    echo "Install repositories"
+    echo "*********************************************************"
+    sed -i 's/main/main restricted universe multiverse/g' /etc/apt/sources.list
+    apt-add-repository "deb [arch=amd64] http://apt.isis.rl.ac.uk xenial main"
+    # add the signing key
+    wget -O - http://apt.isis.rl.ac.uk/2E10C193726B7213.asc | apt-key add -
+    apt-add-repository ppa:mantid/mantid
+    echo "*********************************************************"
+    echo "Update repositories and install desktop"
+    echo "*********************************************************"
+    apt update
+    apt upgrade -y
+    apt install -y locales
+    locale-gen en_AU.UTF-8
+    apt install -y ubuntu-desktop 
+    echo "*********************************************************"
+    echo "Installing software"
+    echo "*********************************************************"
+    apt install -y mantid

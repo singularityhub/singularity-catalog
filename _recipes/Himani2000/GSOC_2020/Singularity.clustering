@@ -1,0 +1,30 @@
+Bootstrap:docker
+From:ubuntu:latest
+
+%labels
+        MAINTAINER Himani Negi
+
+%environment
+        export LANGUAGE=en_US.UTF-8
+        export LANG=en_US.UTF-8
+        export LC_ALL=en_US.UTF-8
+
+%post  
+        apt-get update
+        apt-get install -y build-essential cmake
+        apt-get install -y libgtk-3-dev
+        apt-get install -y libboost-all-dev
+        apt-get install -y python3
+        apt-get install -y python3-pip
+        pip3 install  numpy
+        pip3 install  scipy
+        pip3 install  scikit-image
+        pip3 install scikit-learn
+        pip3 install  pandas
+        pip3 install  dlib
+        pip3 install opencv-python
+        pip3 install face_recognition
+        pip3 install matplotlib
+        pip3 install kneed
+        pip3 install xlrd
+        pip3 install requests 

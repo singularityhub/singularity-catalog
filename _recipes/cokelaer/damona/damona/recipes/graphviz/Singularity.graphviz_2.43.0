@@ -1,0 +1,44 @@
+BootStrap: docker
+From: ubuntu:20.04
+
+%labels
+
+    AUTHOR thomas cokelaer
+    VERSION v2.43.0
+    DAMONA_TYPE exe 
+    # there are lots of executables such as dot, circo so we have only one
+    # executable to create (graphviz) to folloz by dot. Aliases can then be
+    # created by users/developers
+    DAMONA_BIN graphviz
+
+%help
+
+    This container contains a bunch of executables related to graphviz
+    You can enter in the container as follows:
+
+       singularity shell graphviz.img
+
+    or use it as an executable:
+
+        ./graphviz dot -Tsvg test.dot -o test.svg
+        ./graphviz circo -Tsvg test.dot -o test.svg
+
+%post
+
+    apt-get -y update
+    #apt-get install -y libfreetype6*
+    apt-get install -y graphviz
+
+    if [ ! -d /data ]; then mkdir /data; fi
+    if [ ! -d /scripts ]; then mkdir /scripts; fi
+    if [ ! -d /scratch ]; then mkdir /scratch; fi
+    if [ ! -d /mounting ]; then mkdir /mounting; fi
+    if [ ! -d /pasteur ]; then mkdir /pasteur; fi
+
+%environment
+    export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/bin:$PATH
+
+%runscript
+    exec "$@"
+

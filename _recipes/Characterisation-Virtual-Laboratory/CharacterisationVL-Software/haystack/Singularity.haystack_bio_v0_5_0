@@ -1,0 +1,41 @@
+Bootstrap: docker
+From: pinellolab/haystack_bio:latest
+
+%labels
+    MAINTAINER_NAME  Lance Wilson
+    MAINTAINER_EMAIL lance.wilson@monash.edu
+
+    APPLICATION_NAME ubuntu
+    APPLICATION_VERSION 18.04
+
+    HARDWARE CPU
+
+    LAST_UPDATED 01-AUG-2019
+
+%post
+apt update
+apt install -y curl \
+    python-pip \
+    python-numpy \
+    python-scipy\
+    python-matplotlib \
+    python-pandas \
+    python-setuptools 
+
+python -m pip install --upgrade setuptools 
+python -m pip install --upgrade numpy==1.13.3 
+python -m pip install --upgrade scipy==1.0.0
+python -m pip install --upgrade matplotlib==2.1.0
+python -m pip install --upgrade pandas==0.21.0
+python -m pip install bx-python
+python -m pip install Jinja2
+python -m pip install tqdm
+python -m pip install weblogo
+
+%environment
+    export PATH=/haystack_bio/binaries:/haystack_bio/binaries/meme/bin:$PATH
+
+
+%runscript
+    $*
+

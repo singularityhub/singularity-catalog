@@ -1,0 +1,129 @@
+BootStrap: docker
+From: nvidia/cuda:9.2-cudnn7-devel-ubuntu16.04
+
+
+%labels
+  maintainer Miguel Carcamo <miguel.carcamo@postgrad.manchester.ac.uk>
+  package.name
+  package.version 1.0
+  package.homepage
+  package.source.url
+  package.source.mdm5
+  package.license GPLv3
+%environment
+    SHELL=/bin/bash
+    export PATH=/usr/local/cuda/bin:/usr/local/bin/CASA/bin${PATH:+:${PATH}}
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/lib:/usr/lib:$LD_LIBRARY_PATH
+%post
+    echo "deb mirror://mirrors.ubuntu.com/mirrors.txt xenial main restricted universe multiverse" > /etc/apt/sources.list
+    echo "deb mirror://mirrors.ubuntu.com/mirrors.txt xenial-updates main restricted universe multiverse" >> /etc/apt/sources.list
+    echo "deb mirror://mirrors.ubuntu.com/mirrors.txt xenial-security main restricted universe multiverse" >> /etc/apt/sources.list 
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get install -y keyboard-configuration
+    DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
+    apt-get -y install software-properties-common
+    add-apt-repository main
+    add-apt-repository universe
+    add-apt-repository restricted
+    add-apt-repository multiverse
+    add-apt-repository ppa:deadsnakes/ppa
+    apt-get update
+    apt-get -y install apt-utils
+    apt-get -y install man
+    apt-get -y install vim
+    apt-get -y install autoconf
+    apt-get -y install libtool
+    apt-get -y install automake
+    apt-get -y install apt-utils
+    apt-get -y install udev
+    apt-get -y install python
+    apt-get -y install python-dev
+    apt-get -y install python-pip
+    apt-get -y install python-tk
+    apt-get -y install python-numpy
+    apt-get -y install python-matplotlib
+    apt-get -y install python-scipy
+    apt-get -y install python-astropy
+    apt-get -y install python3-dev
+    apt-get -y install python3-numpy
+    apt-get -y install libboost-all-dev
+    apt-get -y install libboost-filesystem-dev
+    apt-get -y install libboost-system-dev
+    apt-get -y install libboost-date-time-dev
+    apt-get -y install libboost-test-dev
+    apt-get -y install git
+    apt-get -y install curl
+    apt-get -y install gfortran
+    apt-get -y install g++
+    apt-get -y install libncurses5-dev
+    apt-get -y install libreadline-dev
+    apt-get -y install flex
+    apt-get -y install bison
+    apt-get -y install libblas-dev
+    apt-get -y install liblapack-dev
+    apt-get -y install libcfitsio-dev
+    apt-get -y install wcslib-dev
+    apt-get -y install libhdf5-serial-dev
+    apt-get -y install libfftw3-dev
+    apt-get -y install python-numpy
+    apt-get -y install libboost-python-dev
+    apt-get -y install libpython-dev
+    apt-get -y install libpython3-dev
+    apt-get -y install htop
+    apt-get -y install saods9
+    apt-get -y install xorg
+    apt-get -y install cuda-samples-9-2
+    apt-get -y install liblua5.3-dev
+    apt-get -y install libgtkmm-3.0-dev
+    apt-get -y install libpng-dev
+    apt-get -y install libxml2-dev
+    apt-get -y install doxygen
+    apt-get -y install graphviz
+    apt-get -y install pkg-config
+    apt-get -y install libgsl-dev
+    apt-get -y install rsync
+    apt-get -y install ffmpeg
+    touch /usr/bin/nvidia-smi
+    curl --header 'Host: cmake.org' --user-agent 'Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0' --header 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' --header 'Accept-Language: en-US,en;q=0.5' --referer 'https://cmake.org/files/v3.18/' --header 'DNT: 1' --header 'Upgrade-Insecure-Requests: 1' --header 'Sec-GPC: 1' 'https://cmake.org/files/v3.18/cmake-3.18.6-Linux-x86_64.sh' --output 'cmake-3.18.6-Linux-x86_64.sh'
+    bash cmake-3.18.6-Linux-x86_64.sh --skip-license
+    git clone --single-branch --branch v3.2.1 https://github.com/casacore/casacore.git
+    cd casacore
+    mkdir build
+    cd build
+    cmake -DCXX11="ON" -DUSE_FFTW3=ON -DDATA_DIR=/usr/share/casacore/data -DUSE_OPENMP=ON -DUSE_HDF5=ON -DUSE_THREADS=ON ..
+    make -j2
+    make install
+    cd ..
+    cd ..
+    git clone --single-branch --branch v2.14.0 https://gitlab.com/miguelcarcamov/aoflagger.git
+    cd aoflagger
+    mkdir build
+    cd build
+    cmake .. -DPORTABLE=True
+    make -j2
+    make install
+    cd ..
+    cd ..
+    git clone https://github.com/miguelcarcamov/gpuvmem.git
+    cd gpuvmem
+    export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+    mkdir build
+    cd build
+    cmake .. -DNEWCASA=1
+    make -j2
+    cd ..
+    cd ..
+    curl --header 'Host: casa.nrao.edu' --user-agent 'Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0' --header 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' --header 'Accept-Language: en-US,en;q=0.5' --referer 'https://casa.nrao.edu/download/distro/casa/release/el7/' --header 'DNT: 1' --header 'Upgrade-Insecure-Requests: 1' 'https://casa.nrao.edu/download/distro/casa/release/el7/casa-release-5.6.0-60.el7.tar.gz' --output 'casa-release-5.6.0-60.el7.tar.gz'
+    tar -xzvf casa-release-5.6.0-60.el7.tar.gz
+    mkdir -p /usr/local/bin/CASA
+    cd casa-release-5.6.0-60.el7/data/
+    rsync -avz rsync://casa-rsync.nrao.edu/casa-data .
+    cd ..
+    mv * /usr/local/bin/CASA/
+    cd ..
+    rm -rf casa-release-5.6.0-60.el7.tar.gz
+    rm -rf casa-release-5.6.0-60.el7
+    export PATH=$PATH:/usr/local/bin/CASA/bin
+%runscript
+   

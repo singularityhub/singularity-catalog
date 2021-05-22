@@ -1,0 +1,25 @@
+#Bootstrap: shub
+#From: darachm/miniconda3
+Bootstrap: localimage
+From: ../miniconda3/test
+# forked from vsoch's
+
+%runscript
+
+     echo "Starting notebook..."
+     echo "Open browser to localhost:8888"
+     exec /opt/conda/bin/jupyter notebook --ip='*' --port=8888 --no-browser 
+#--notebook-dir=/opt/notebooks 
+
+%post
+
+    apt-get update -qq
+    apt-get -qq install vim wget git python3 python3-pip
+
+    /opt/conda/bin/conda install jupyter tensorflow biopython ipykernel scipy numpy pandas matplotlib biopython scikit-learn keras regex networkx -y --quiet 
+    /opt/conda/bin/conda install -c conda-forge jellyfish umap-learn -y --quiet
+    python3 -m pip install git+https://github.com/darachm/goenrich
+
+#    mkdir /opt/notebooks 
+    apt-get autoremove -qq
+    apt-get clean

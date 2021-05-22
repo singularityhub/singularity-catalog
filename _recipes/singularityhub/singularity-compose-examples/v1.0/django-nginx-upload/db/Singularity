@@ -1,0 +1,10 @@
+Bootstrap: docker
+From: postgres
+
+%post
+export DEBIAN_FRONTEND=noninteractive
+apt-get update && apt-get install -y tzdata
+ls
+
+%startscript
+/bin/bash docker-entrypoint.sh postgres

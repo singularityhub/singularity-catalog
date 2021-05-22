@@ -1,0 +1,40 @@
+# Copyright (c) 2015-2016, Gregory M. Kurtzer. All rights reserved.
+# 
+# "Singularity" Copyright (c) 2016, The Regents of the University of California,
+# through Lawrence Berkeley National Laboratory (subject to receipt of any
+# required approvals from the U.S. Dept. of Energy).  All rights reserved.
+
+BootStrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://au.archive.ubuntu.com/ubuntu/
+
+
+%runscript
+    echo "DragonDisk container built for CVL"
+    echo "For new versions please contact help@cvl.org.au"
+    dragondisk
+
+%post
+    echo "*********************************************************"
+    echo "Setup and display environment"
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    echo $LC_ALL
+    echo $LANGUAGE
+    echo $DEBIAN_FRONTEND
+    echo "*********************************************************"
+    echo "Install repositories and dependencies"
+    echo "*********************************************************"
+    sed -i 's/main/main restricted universe multiverse/g' /etc/apt/sources.list
+    echo "*********************************************************"
+    echo "Update repositories and install desktop"
+    apt update
+    apt upgrade -y
+    apt install -y locales
+    locale-gen en_AU.UTF-8
+    apt install -y wget vim libqt4-dbus libqt4-network libqt4-xml libqtcore4 libqtgui4
+    echo "*********************************************************"
+    echo "Installing software"
+    wget http://download.dragondisk.com/dragondisk_1.0.5-0ubuntu_amd64.deb
+    dpkg -i dragondisk_1.0.5-0ubuntu_amd64.deb

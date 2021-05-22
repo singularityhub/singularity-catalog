@@ -1,0 +1,20 @@
+Bootstrap:docker  
+From:opensuse/leap:15.1
+
+%labels
+MAINTAINER Thomas Green
+
+%environment
+
+%runscript
+exec /bin/bash /bin/echo "Not supported"
+
+%post
+# Create some common mountpoints for systems without overlayfs
+mkdir /scratch 
+mkdir /software
+# From installation location
+zypper -n addrepo https://download.opensuse.org/repositories/home:SStepke/openSUSE_Leap_15.1/home:SStepke.repo
+zypper -n --gpg-auto-import-keys refresh
+zypper -n install Metview
+zypper -n install hostname

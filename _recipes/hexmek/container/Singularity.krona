@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: conda/miniconda2
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y python3 python3-pip libgl1-mesa-glx rsync git curl wget bwa \
+                   bedtools samtools procps perl
+    cd /opt
+    git clone https://github.com/marbl/Krona
+    cd Krona
+    cd KronaTools
+    mkdir taxonomy
+    ./install.pl
+    ./updateTaxonomy.sh
+
+
+
+%environment
+    export LC_ALL=C
+

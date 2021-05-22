@@ -1,0 +1,53 @@
+Bootstrap: debootstrap
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+OSVersion:  xenial
+Include: apt wget sudo vim build-essential git sudo software-properties-common
+
+%labels
+MAINTAINER jafar.lie@monash.edu
+HARDWARE gpu
+
+%environment
+ CELLPROFILERBIN=/opt/CellProfiler/bin
+ export PATH=$CELLPROFILERBIN:$PATH
+
+%post -c /bin/bash
+ add-apt-repository main
+ add-apt-repository universe
+ add-apt-repository multiverse
+ apt -y update
+ apt -y upgrade
+ apt -y install \
+    build-essential    \
+    cython             \
+    git                \
+    libmysqlclient-dev \
+    libhdf5-dev        \
+    libxml2-dev        \
+    libxslt1-dev       \
+    openjdk-8-jdk      \
+    python-dev         \
+    python-pip         \
+    python-h5py        \
+    python-matplotlib  \
+    python-mysqldb     \
+    python-scipy       \
+    python-numpy       \
+    python-vigra       \
+    python-wxgtk3.0    \
+    python-zmq
+ echo "======================="
+ echo "Installing CellProfiler"
+ echo "======================="
+ mkdir -p /opt/
+ cd /opt/
+ git clone https://github.com/CellProfiler/CellProfiler.git
+ cd CellProfiler
+ git checkout v3.1.5
+ sed -i -e 's/1.0.17/1.0.14/g' requirements.txt
+ pip --disable-pip-version-check install --editable .
+ pip install --upgrade pillow
+ pip install javabridge==1.0.14
+
+%runscript
+    $*

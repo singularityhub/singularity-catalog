@@ -1,0 +1,14 @@
+Bootstrap: localimage
+From: rynlib
+
+%files
+    .. /home/RynLib
+
+
+%post
+    mkdir -p /tests
+    python3 /home/RynLib/CLI.py config build-libs --rebuild=True
+    python3 /home/RynLib/CLI.py config run-tests --debug=True
+
+%runscript
+    exec python3 /home/RynLib/CLI.py $@

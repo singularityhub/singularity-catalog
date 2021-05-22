@@ -1,0 +1,45 @@
+Bootstrap: docker
+
+From: continuumio/miniconda3
+
+%environment
+
+    action="${1##*/}"
+    if [ "$action" = "shell" ]; then
+        if [ "${SINGULARITY_SHELL:-}" = "/bin/bash" ]; then
+            set -- --noprofile --init-file /.singularity_bash
+        elif test -z "${SINGULARITY_SHELL:-}"; then
+            export SINGULARITY_SHELL=/bin/bash
+            set -- --noprofile --init-file /.singularity_bash
+        fi
+    fi
+    
+%post
+        
+    chmod 777 /root
+
+    wget --no-check-certificate --content-disposition https://raw.githubusercontent.com/inextvir/bioinformatics-/viromescan/viromescan_env.yml?token=AOZSDJYPI64BSKBZP2IIH5K7TBPIO
+    mv viromescan_env.yml?token=AOZSDJYPI64BSKBZP2IIH5K7TBPIO viromescan_env.yml
+
+    /opt/conda/bin/conda env create -f /viromescan_env.yml -p /opt/conda/envs/viromescan
+    echo "## Activate viromescan environment" >> /.singularity_bash
+    echo "source /opt/conda/etc/profile.d/conda.sh" >> /.singularity_bash
+    echo "source activate /opt/conda/envs/viromescan" >> /.singularity_bash
+
+    git clone https://github.com/simonerampelli/viromescan.git
+    mv /viromescan /viromescan2
+    wget https://sourceforge.net/projects/viromescan/files/viromescan.tar.gz
+    tar -zxvf /viromescan.tar.gz
+    rm /viromescan.tar.gz
+    rm -fr /viromescan/tools/bmtagger.sh
+    mv /viromescan2/bmtagger.sh /viromescan/tools/
+
+    cd /viromescan/database
+    gzip -d Bacteria_custom/*.gz
+    gzip -d  bowtie2/*.gz
+    gzip -d hg19/*.gz
+    
+%runscript
+    echo "This is what happens when you run the container..."
+    exec /bin/bash --noprofile --init-file /.singularity_bash "$@"
+    

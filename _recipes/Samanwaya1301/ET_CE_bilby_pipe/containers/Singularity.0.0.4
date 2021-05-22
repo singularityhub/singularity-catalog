@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: bilbydev/bilby-test-suite-python37
+
+%help
+A singularity container for running bilby_pipe.
+
+%post
+export PATH=/opt/conda/bin:${PATH}
+conda install -y -c conda-forge ldas-tools-framecpp
+conda install -y -c conda-forge python-nds2-client
+pip install numpy==1.15
+pip install pandas==0.23
+pip install pesummary
+pip install ligo-gracedb
+pip install bilby==0.4.1
+pip install bilby_pipe==0.0.4
+
+%runscript
+    bilby_pipe "$@" --singularity-image "$SINGULARITY_CONTAINER"
+
+%apprun generation
+    bilby_pipe_generation "$@"
+
+%apprun analysis
+    bilby_pipe_analysis "$@"
+
+%apprun create_injection_file
+    bilby_pipe_create_injection_file "$@"

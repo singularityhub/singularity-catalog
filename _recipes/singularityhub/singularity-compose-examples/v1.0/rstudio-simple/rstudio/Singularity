@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: rocker/tidyverse:3.6.0
+
+%runscript
+  rstudio
+
+%post
+  RSTUDIO_USERNAME=rstudio
+  RSTUDIO_PASSWORD=avocado
+
+  # Create rstudio group
+  groupadd rstudio-users
+
+  # Add a user to it (rstudio already exists)
+  # useradd ${RSTUDIO_USERNAME}
+  usermod -a -G rstudio-users ${RSTUDIO_USERNAME}
+  echo "${RSTUDIO_USERNAME}:${RSTUDIO_PASSWORD}" | chpasswd
+
+%startscript
+  rstudio-server start

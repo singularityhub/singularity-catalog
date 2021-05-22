@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: conda/miniconda3
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y git curl wget  procps make gcc wget unzip libboost-all-dev cmake
+
+    cd /opt/
+    mkdir raxml
+    cd raxml
+    wget -O raxml.zip  https://github.com/amkozlov/raxml-ng/releases/download/0.9.0/raxml-ng_v0.9.0_linux_x86_64.zip
+    unzip raxml.zip
+
+
+    conda install -c bioconda epa-ng
+
+%environment
+    export LC_ALL=C
+    export PATH="/opt/raxml:$PATH"
+

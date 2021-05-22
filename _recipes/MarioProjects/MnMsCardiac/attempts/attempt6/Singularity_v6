@@ -1,0 +1,68 @@
+# https://github.com/bdusell/singularity-tutorial
+# Move this file to root folder first!
+Bootstrap: docker
+From: nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
+
+%files
+    # The pattern is: "<source_path> <destination_path>"
+    # The destination path is created automatically if it does not exist
+    # Step 1:
+    #   - Copy requirements file if needed
+    requirements.txt requirements.txt
+    #   - Copy model files (including model weights and metadata files)
+    evaluationSubmission/segmentator_swa_v6.pt evaluationSubmission/segmentator_swa_v6.pt
+    models/ /models
+    utils/ /utils
+    scripts/submission/predict_v6.sh /
+    predict_v1.py /
+
+%post
+    # Downloads the latest package lists (important).
+    apt-get -y update
+
+    # Step 2:
+    #   - Install dependencies needed for you particular requirements
+    #     (in this case, these are needed for opencv-python)
+    apt-get install -y libsm6 libxext6 libxrender-dev libglib2.0-0
+
+    # python3-tk is required by matplotlib.
+    # python3-dev is needed to require some packages.
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3 \
+        python3-tk \
+        python3-pip \
+        python3-setuptools \
+        python3-dev
+    # Reduce the size of the image by deleting the package lists we downloaded,
+    # which are useless now.
+    rm -rf /var/lib/apt/lists/*
+
+    #   - Install your requirements
+    python3 -m pip install wheel setuptools
+    python3 -m pip install -r requirements.txt
+    python3 -m pip install torch==1.5.0+cu101 torchvision==0.6.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html
+    python3 -m pip install torchcontrib~=0.0.2
+
+%environment
+    # Pipenv requires a certain terminal encoding.
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+    # This configures Pipenv to store the packages in the current working
+    # directory.
+    export PIPENV_VENV_IN_PROJECT=1
+
+%runscript
+    echo "pytorch container"
+    echo
+
+    # Step 3:
+    #   - Write the code that must be executed when run. Please, keep the "$@" at the end.
+    #     This is intended for passing the arguments <input_data_folder_path> and <output_results_folder>.
+    bash /predict_v6.sh "$@"
+
+%labels
+    # Step 4: Build with "sudo singularity build ox.sif Singularity_v6" for the ox team.
+    # Usage: singularity run --nv ox.sif <input_data_directory> <output_data_directory>
+    # Optional Usage Overlays: singularity run --nv ox.sif <input_data_folder_path> <output_results_folder> <overlays_out_folder>
+    # Example: singularity run --nv ox.sif sample_data out_preds
+    Maintainer "Mario Parreño Lara"

@@ -1,0 +1,46 @@
+BootStrap: docker
+From: alpine:3.10.3
+Stage: compile
+
+%post
+	apk update
+	apk add bash
+	apk add git
+	apk add build-base
+	apk add unzip
+
+%apprun fastqc
+   exec fastqc
+
+%appinstall fastqc
+   mkdir /install_src
+   cd /install_src
+   wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip
+   unzip -o fastqc_v0.11.8.zip
+   chmod +x FastQC/fastqc
+
+%apphelp fastqc
+   fastqc
+
+
+Bootstrap: docker
+From: alpine:3.10.3
+Stage: release
+
+%post
+    apk update
+	apk add perl
+	apk add openjdk8-jre
+
+%files from compile
+	/install_src/FastQC/fastqc /usr/bin/
+
+%apphelp fastqc
+	FastQC 0.11.8 ,  http://www.bioinformatics.babraham.ac.uk/projects/fastqc
+
+%apprun fastqc
+	exec fastqc
+
+%labels
+	Author "Tomi Häkkinen"
+	Version 1.0

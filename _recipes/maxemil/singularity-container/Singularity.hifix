@@ -1,0 +1,77 @@
+Bootstrap: docker
+From: finalduty/archlinux:daily
+
+%post
+######## base system ########
+pacman -Syu --noconfirm
+pacman -S --noconfirm base-devel git python2 python2-pip openmpi cppunit wget unzip
+
+cd /usr/local/
+
+######## Biopython ########
+pip2 install numpy biopython argparse multiprocessing
+
+######## LOUVAIN #########
+cd /usr/local/
+wget ftp://pbil.univ-lyon1.fr/pub/logiciel/hifix/Community_BGLL_CPP/Community_BGLL_CPP.zip
+unzip Community_BGLL_CPP.zip
+cd Community_BGLL_CPP
+make
+for binary in community convert hierarchy; do ln -s $(realpath $binary) /usr/local/bin; done
+
+######## HMMER #########
+cd /usr/local/
+wget http://eddylab.org/software/hmmer3/3.1b2/hmmer-3.1b2-linux-intel-x86_64.tar.gz
+tar zxvf hmmer-3.1b2-linux-intel-x86_64.tar.gz
+cd hmmer-3.1b2-linux-intel-x86_64
+./configure
+make
+make check
+for binary in /usr/local/hmmer-3.1b2-linux-intel-x86_64/binaries/*; do ln -s $binary /usr/local/bin; done
+
+######## MAFFT #########
+#pacman -S --noconfirm mafft
+wget https://mafft.cbrc.jp/alignment/software/mafft-7.313-without-extensions-src.tgz
+tar zxvf mafft-7.313-without-extensions-src.tgz
+cd mafft-7.313-without-extensions/core/
+make clean
+make
+sudo make install
+
+######## Boost #########
+pacman -S --noconfirm boost
+
+######## SiLiX #########
+cd /usr/local/
+wget ftp://pbil.univ-lyon1.fr/pub/logiciel/silix/silix-1.2.11.tar.gz
+tar zxvf silix-1.2.11.tar.gz
+cd silix-1.2.11
+./configure --enable-mpi  --prefix=/usr/local/
+make
+make check
+make install
+for binary in utils/silix-f*; do ln -s $(realpath $binary) /usr/local/bin; done
+
+######## HiFiX #########
+cd /usr/local/
+wget ftp://pbil.univ-lyon1.fr/pub/logiciel/hifix/hifix-1.0.6.tar.gz
+tar zxvf hifix-1.0.6.tar.gz
+cd hifix-1.0.6
+python2 setup.py test
+python2 setup.py install
+
+%test
+community -h
+convert -h
+hierarchy -h
+hmmsearch -h
+mafft --version
+silix -h
+silix-split -h
+silix-fsize -h
+silix-fnet -h
+silix-fstat -h
+hifix -h
+
+%labels
+Maintainer max-emil.schon@icm.uu.se

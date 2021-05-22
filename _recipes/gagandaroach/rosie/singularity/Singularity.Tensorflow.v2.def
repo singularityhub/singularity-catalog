@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/tensorflow:20.07-tf2-py3
+# -----------------------------------------------------------------------------------
+
+%files
+    /data/admin/msoe_launch_jupyter /usr/local/bin/
+
+%post
+# -----------------------------------------------------------------------------------
+# this will install all necessary packages and prepare the container
+    export DEBIAN_FRONTEND=noninteractive
+    apt update
+    apt -y install \
+        python3 \
+        python3-pip \
+	    python3-opencv
+    python3 -m pip install --upgrade pip
+    python3 -m pip install --upgrade setuptools
+    python3 -m pip install \
+        seaborn \
+        numpy \
+        pandas \
+        scikit-learn \
+        jupyter \
+        horovod[tensorflow,keras]
+    chmod 777 /usr/local/bin/msoe_launch_jupyter

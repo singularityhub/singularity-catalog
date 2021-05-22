@@ -1,0 +1,37 @@
+Bootstrap: docker
+From: debian:stretch
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  build-essential \
+                  git \
+                  zlib1g-dev \
+                  autotools-dev \
+                  libtool \
+                  flex \
+                  bison \
+                  cmake \
+                  automake \
+                  autoconf \
+                  ca-certificates
+
+####### EPA-ng #########
+cd /usr/local
+git clone https://github.com/Pbdas/epa-ng.git
+cd /usr/local/epa-ng
+make
+ln -s /usr/local/epa-ng/bin/epa-ng /usr/local/bin/epa-ng
+
+
+%test
+epa-ng --version
+
+%runscript
+epa-ng "$@"
+
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se

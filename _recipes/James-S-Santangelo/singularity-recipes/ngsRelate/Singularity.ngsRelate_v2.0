@@ -1,0 +1,70 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+    
+    AUTHOR James Santangelo
+    EMAIL james.santangelo37@gmail.com
+    HTSLIB_VERSION 1.11.0
+    NGSRELATE_VERSION latest
+
+%environment
+
+    export PATH="/opt/bin:$PATH"
+    export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+
+%post
+    
+    apt-get update && \
+    apt-get -y --no-install-recommends install \
+        build-essential \
+        wget \
+        git \
+        curl \
+        ca-certificates \
+        locales
+    
+    # Configure default locale
+    # Taken from https://github.com/nickjer/singularity-r/blob/master/Singularity.3.6.2
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+    # ===========================
+    # Install htslib
+    # ===========================
+
+    apt-get update &&
+    apt-get -y install \
+        zlib1g \
+        zlib1g-dev \
+        autoconf \
+        libbz2-dev \
+        liblzma-dev \
+        libcurl4-gnutls-dev \
+        libcrypto++-dev \
+
+    cd /opt && mkdir bin
+    wget https://github.com/samtools/htslib/archive/1.11.0.tar.gz &&
+    tar -xvzf 1.11.0.tar.gz && \
+    cd htslib-1.11.0 && \
+    autoconf && \
+    autoheader && \
+    ./configure && \
+    make && \
+    make install
+    
+    # ===========================
+    # Install ngsRelate 
+    # ===========================
+
+    cd /opt
+    wget https://github.com/ANGSD/NgsRelate/archive/refs/tags/v2.0.tar.gz &&
+    tar -xvzf v2.0.tar.gz &&
+    cd NgsRelate-2.0 && \
+    make HTSSRC=/opt/htslib-1.11.0 && \
+
+    chmod 777 /opt/NgsRelate-2.0/ngsRelate &&
+    ln -sf /opt/NgsRelate-2.0/ngsRelate /opt/bin/ngsRelate

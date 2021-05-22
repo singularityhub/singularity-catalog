@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+
+######## MUSCLE #########
+cd /usr/local/
+wget http://www.drive5.com/muscle/downloads3.8.31/muscle3.8.31_i86linux64.tar.gz
+tar -xvf muscle3.8.31_i86linux64.tar.gz
+
+mv /usr/local/muscle3.8.31_i86linux64 /usr/local/bin/muscle
+
+%runscript
+muscle  "$@"

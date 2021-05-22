@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: debian:jessie
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%files
+/local/two/Software/bitbucket/Discordance/ /usr/local/
+/local/two/Software/bitbucket/Discordance/Phylogeny /usr/share/perl/5.20/
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  git \
+                  perl \
+                  locales \
+                  libmoose-perl \
+                  libmoosex-getopt-perl \
+                  libmoosex-types-path-class-perl
+
+echo en_US UTF-8 >> /etc/locale.gen
+locale-gen
+
+######## Discordance ########
+for p in /usr/local/Discordance/*.pl;do ln -s $p /usr/local/bin; done
+
+%runscript
+exec "$@"

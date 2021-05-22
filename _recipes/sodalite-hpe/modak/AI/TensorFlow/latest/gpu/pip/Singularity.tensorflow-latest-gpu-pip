@@ -1,0 +1,9 @@
+BootStrap: docker
+From: nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
+
+%post
+# Installs TF 2.1 with XLA support baked in 
+    pip3 install --upgrade pip
+    pip3 install tensorflow-gpu==2.1
+    pip3 install keras
+%labels

@@ -1,0 +1,26 @@
+BootStrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch/
+Include: yum
+
+# If you want the updates (available at the bootstrap date) to be installed
+# inside the container during the bootstrap instead of the General Availability
+# point release (7.x) then uncomment the following line
+UpdateURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/updates/$basearch/
+
+%runscript
+    exec "$@"
+
+%environment
+    PATH=/usr/bin:/usr/sbin
+    export PATH
+    
+%post
+    yum install -q -y epel-release
+    yum install -q -y yum-plugin-copr
+    yum copr enable -q -y simc/stable epel-7
+# install smnd packages from simc repository
+    yum install -q -y wreport bufr2netcdf dballe arkimet libsim
+    yum install -q -y ecflow ecflow-ui ecflow-server ecflow-python Metview Magics python3-Magics eccodes eccodes-doc eccodes-simc libemos ksh
+# temporary for metview, improve spec
+    yum install -q -y vi hostname xorg-x11-utils xterm xkeyboard-config

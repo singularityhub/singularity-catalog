@@ -1,0 +1,200 @@
+Bootstrap: shub
+From: shub://drneavin/SingularityBaseImages:r363_python368
+
+%environment
+    export PATH=/opt/plink2:/opt/plink:/opt:/usr/games:/opt/conda/envs/py36/bin:/opt/conda/bin:/opt/picard/build/libs:/opt/gcta_1.93.2beta:/opt/HRC-1000G-check:/opt/ancestry_viz:$PATH
+    export PYTHONPATH=/opt/conda/envs/py36/lib/python3.6/site-packages/
+    export LC_ALL=C 
+    alias python=python3
+
+ 
+
+%post 
+    #!/bin/bash
+    eval "$(command conda 'shell.bash' 'hook' 2> /dev/null)"
+    export PATH=/opt/conda/bin/:$PATH
+    apt update
+    yes | apt upgrade
+    yes | apt-get install build-essential
+    apt-get install -y gcc-7 g++-7 gfortran-7 libgfortran-7-dev
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7
+    update-alternatives --config gcc
+    gcc --version
+    yes | apt-get install wget
+    yes | apt-get install curl
+    apt install -y dirmngr --install-recommends
+    apt install -y software-properties-common
+    apt install -y apt-transport-https
+    add-apt-repository 'deb http://deb.debian.org/debian buster-backports main'
+    yes | apt-get update
+    yes | apt-get upgrade
+    apt install -y ca-certificates gnupg2
+    apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
+    add-apt-repository 'deb https://cloud.r-project.org/bin/linux/debian buster-cran35/'
+    apt-get update
+    apt install -y r-base
+    apt install -y r-base-dev
+    apt install -y r-cran-tidyr
+    apt install -y r-cran-tidyverse
+    apt-get update
+    apt-get install -y libv8-dev
+    apt-get update
+    mkdir -p /usr/share/man/man1
+    apt-get install -y openjdk-11-jdk
+    java -version
+
+    # yes | /opt/conda/bin/conda create -n py36 python=3.6.8
+    cd /opt
+    yes | apt-get install git
+    /opt/conda/bin/conda init bash
+    eval "$(conda shell.bash hook)"
+    conda activate py36
+        yes | apt-get install libncurses5-dev
+        yes | apt-get install zlib1g-dev
+        yes | apt-get install libbz2-dev
+        yes | apt-get install liblzma-dev
+        yes | apt-get install zlib1g
+        yes | apt-get install zlib1g-dev
+        apt-get install -y pkg-config
+        apt-get install -y libcurl4-openssl-dev
+        apt-get install -y graphviz
+        apt-get install -y graphviz-dev
+        apt-get install -y libxml2
+        apt-get install -y libxml2-dev
+        apt-get install -y bzip2
+        apt-get install -y libssl-dev
+        apt-get install -y devscripts
+        apt-get install -y eigensoft
+
+    cd /root
+    wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz
+    tar -xzf cmake-3.14.4.tar.gz
+    cd  cmake-3.14.4
+    ./configure
+    make
+    make install
+    cmake --version
+
+    /opt/conda/envs/py36/bin/pip install pandas
+    /opt/conda/envs/py36/bin/pip install docopt
+    /opt/conda/envs/py36/bin/pip install pyfaidx
+    /opt/conda/envs/py36/bin/pip install snpflip
+    /opt/conda/envs/py36/bin/pip install ugtm
+    /opt/conda/envs/py36/bin/pip install scikit-learn
+    /opt/conda/envs/py36/bin/pip install altair
+    /opt/conda/envs/py36/bin/pip install matplotlib
+    /opt/conda/envs/py36/bin/pip install numpy
+
+
+    cd /opt
+        wget https://www.dropbox.com/s/xso2vt3p9h2rh8m/1000G.tar.gz
+        tar -xzf 1000G.tar.gz
+
+    cd /opt
+        wget https://www.dropbox.com/s/3u7g4xdig8hyhle/ImputationTestDataset.tar.gz
+
+
+    cd /opt
+	ls
+        git clone https://github.com/vcftools/vcftools.git
+        cd vcftools
+            ./autogen.sh
+            ./configure
+            make
+            make install
+            
+    cd /opt
+    wget https://github.com/samtools/htslib/releases/download/1.10.2/htslib-1.10.2.tar.bz2
+        tar xvfj htslib-1.10.2.tar.bz2
+        cd htslib-1.10.2
+        ./configure
+        make
+        make install
+
+    cd /opt
+        wget https://github.com/samtools/samtools/releases/download/1.10/samtools-1.10.tar.bz2
+        tar xvfj samtools-1.10.tar.bz2
+        rm samtools-1.10.tar.bz2
+        cd samtools-1.10
+        ./configure
+        make
+        make install
+    
+    cd /opt
+        wget https://github.com/samtools/bcftools/releases/download/1.10.2/bcftools-1.10.2.tar.bz2
+        tar xvfj bcftools-1.10.2.tar.bz2
+        rm bcftools-1.10.2.tar.bz2
+        cd bcftools-1.10.2
+        ./configure
+        make
+        make install
+
+    cd /opt
+        wget ftp://ngs.sanger.ac.uk/production/hrc/HRC.r1-1/HRC.r1-1.GRCh37.wgs.mac5.sites.tab.gz
+        gunzip HRC.r1-1.GRCh37.wgs.mac5.sites.tab.gz
+
+    cd /opt
+        mkdir plink
+        cd plink
+            wget https://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20210416.zip
+            unzip plink_linux_x86_64_20210416.zip
+
+    cd /opt
+        mkdir plink2
+        cd plink2
+			wget https://s3.amazonaws.com/plink2-assets/plink2_linux_x86_64_20210505.zip
+            unzip plink2_linux_x86_64_20210505.zip
+
+    cd /opt
+        git clone https://github.com/broadinstitute/picard.git
+        cd picard/
+        ./gradlew shadowJar
+
+    cd /opt
+        wget --no-check-certificate https://cnsgenomics.com/software/gcta/bin/gcta_1.93.2beta.zip
+        unzip gcta_1.93.2beta.zip
+
+    cd /opt
+        mkdir HRC-1000G-check
+        cd HRC-1000G-check
+            wget https://www.well.ox.ac.uk/~wrayner/tools/HRC-1000G-check-bim-v4.3.0.zip
+            unzip HRC-1000G-check-bim-v4.3.0.zip
+
+    cd /opt
+        mkdir liftover_refs
+        cd liftover_refs
+            wget http://hgdownload.cse.ucsc.edu/goldenpath/hg19/liftOver/hg19ToHg38.over.chain.gz
+            gunzip hg19ToHg38.over.chain.gz
+            wget http://hgdownload.cse.ucsc.edu/goldenpath/hg38/liftOver/hg38ToHg19.over.chain.gz
+            gunzip hg38ToHg19.over.chain.gz
+
+    cd /opt
+        git clone https://github.com/sc-eQTLgen-consortium/WG1-pipeline-QC.git
+
+    R --slave -e 'install.packages("magrittr", repos = "http://cran.us.r-project.org")'
+
+
+##############################
+# setup scripts for users
+##############################
+%apphelp setup
+    This function copies pipeline scripts to the user systems from the Singularity image.
+%appenv setup
+    SCRIPT_DIR=/opt/WG1-pipeline-QC/Imputation
+    export SCRIPT_DIR
+%apprun setup
+    exec cp -a ${SCRIPT_DIR}/. "$PWD"
+
+
+%apphelp test_dataset
+    This function copies pipeline scripts to the user systems from the Singularity image.
+%appenv test_dataset
+    DATASET=/opt/ImputationTestDataset.tar.gz
+    export DATASET
+%apprun test_dataset
+    exec cp -a ${DATASET} "$PWD"
+
+
+
+%labels 
+    Author Drew Neavin

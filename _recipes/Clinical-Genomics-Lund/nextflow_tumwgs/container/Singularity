@@ -1,0 +1,44 @@
+Bootstrap:docker
+From:nfcore/base
+
+%labels
+	MAINTAINER Björn Hallström <bjorn.hallstrom@skane.se>
+	DESCRIPTION Singularity container for CMD tumor WGS pipeline
+	VERSION 0.0.2
+
+%environment
+	PATH=/opt/conda/envs/CMD-TUMWGS/bin:/opt/sentieon-genomics-201911/bin/:/opt/bin:/opt/conda/envs/py3-env/bin:$PATH
+	PICARD_HOME=/opt/conda/envs/CMD-TUMWGS/share/picard-2.21.2-0/
+	export PERL5LIB=$PERL5LIB:/opt/conda/envs/CMD-TUMWGS/lib/site_perl/5.26.2/
+	export PERL5LIB=$PERL5LIB:/opt/conda/envs/CMD-TUMWGS/lib/site_perl/5.26.2/x86_64-linux-thread-multi/
+	export PERL5LIB=$PERL5LIB:/opt/bin/
+	export JAVA_HOME=/opt/conda/envs/CMD-TUMWGS
+
+%files
+	environment.yml /
+	environment_gatk.yml /
+	/data/bnf/sw/sentieon/sentieon-genomics-201911 /opt
+%post
+	rm -rf /var/lib/apt/lists/*
+	apt -y clean
+	apt -y update
+	apt -y install libz-dev build-essential gettext cmake libxml2-dev libcurl4-openssl-dev libssl-dev make libbz2-dev fonts-dejavu-core 
+	
+	mkdir /opt/bin
+
+	/opt/conda/bin/conda env create -f /environment_gatk.yml
+	/opt/conda/bin/conda env create -f /environment.yml
+	
+	/opt/conda/envs/CMD-TUMWGS/bin/cpanm Path::Tiny --force
+	/opt/conda/envs/CMD-TUMWGS/bin/cpanm MongoDB::Collection
+	/opt/conda/envs/CMD-TUMWGS/bin/cpanm JSON
+
+	cd / && git clone https://github.com/Clinical-Genomics-Lund/qc_sentieon.git
+	cd qc_sentieon && git checkout c453713628a52125e72f5cadb7a0d1a44b058132
+	cp qc_sentieon.pl /opt/bin/.
+
+	cd / && git clone https://github.com/J35P312/SVDB
+	cd SVDB && git checkout 2.2.0
+	/opt/conda/envs/CMD-TUMWGS/bin/pip install --editable .
+
+

@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: pytorch/pytorch
+%post
+conda uninstall -y cudatoolkit
+conda install -y -c pytorch cudatoolkit=10.1
+    conda install -y -c conda-forge dominate
+    conda install -y -c pytorch torchaudio
+    conda install -y -c pytorch torchvision
+    conda install -y -c conda-forge matplotlib

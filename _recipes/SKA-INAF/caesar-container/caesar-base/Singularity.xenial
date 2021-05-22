@@ -1,0 +1,578 @@
+BootStrap: docker
+From: ubuntu:16.04
+
+#Bootstrap: debootstrap
+#MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+#OSVersion: xenial
+#Include: apt
+
+%help
+	This container is a base container for CAESAR. It contains all dependencies needed to build CAESAR plus additional tools for running simulations:
+		- ROOT
+		- OpenCV
+		- BOOST
+		- Log4Cxx
+		- Jsoncpp
+		- cfitsio
+		- protobuf
+		- MPICH
+		- OpenMPI
+		- python 2.7 + modules (numpy, astropy, pyfits, scipy)
+		- CASA NRAO
+	
+	The container is used mainly to build CAESAR upon it.
+
+%labels
+	Maintainer Simone Riggi (INAF-OACT)
+	Version v1.0
+
+%environment
+	#. /etc/profile.d/setupSoft.sh
+
+%post
+
+	#################################
+	###    INSTALL MINIMAL TOOLS
+	#################################
+	# Update system
+	apt-get update
+
+	# Add main repository
+	apt install -y software-properties-common
+	apt-add-repository -y universe
+
+	# Update system
+	apt-get update
+
+	# Install bash & cshell
+	apt-get -y --no-install-recommends install bash
+
+	# Install & generate locales
+	apt-get -y install locales
+	echo "LC_ALL=en_US.UTF-8" >> /etc/environment
+	echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+	echo "LANG=en_US.UTF-8" > /etc/locale.conf
+	locale-gen en_US.UTF-8
+	locale-gen en_US.UTF-8
+
+	#################################
+	###    SETUP
+	#################################
+	# Define env variables
+	export SOFTDIR="/opt/Software"
+	export SOFTDIR_SRCS="$SOFTDIR/Sources"
+	export SOFTDIR_TAR="$SOFTDIR/TarFiles"
+	echo "export SOFTDIR=$SOFTDIR" >> $SINGULARITY_ENVIRONMENT
+	echo "export SOFTDIR_SRCS=$SOFTDIR/Sources" >> $SINGULARITY_ENVIRONMENT
+	echo "export SOFTDIR_TAR=$SOFTDIR/TarFiles" >> $SINGULARITY_ENVIRONMENT
+
+	# Creating software base directory and add it to env 
+	echo "Making software base dir: $SOFTDIR"
+	mkdir -p $SOFTDIR
+	
+	# Creating software source & tar files
+	echo "Making software sources & tar dirs: ($SOFTDIR_SRCS, $SOFTDIR_TAR)"
+	mkdir -p $SOFTDIR_SRCS
+	mkdir -p $SOFTDIR_TAR
+
+	# Create a setvars file
+	export SETVARS_FILE="/etc/profile.d/setupSoft.sh"
+	echo "#!/bin/sh" > "$SETVARS_FILE"
+	echo 'export SOFTDIR='"$SOFTDIR" >> "$SETVARS_FILE"
+	echo 'export SOFTDIR_SRCS='"$SOFTDIR_SRCS" >> "$SETVARS_FILE"
+	echo 'export SOFTDIR_TAR='"$SOFTDIR_TAR" >> "$SETVARS_FILE"
+	echo '' >> "$SETVARS_FILE"
+
+	#################################
+	###    DEVTOOLS & SYS TOOLS
+	#################################		
+	# Install devel tools
+	apt-get -y --no-install-recommends install gfortran g++ gcc binutils libtool pkg-config build-essential autoconf automake dpkg-dev git cmake
+	
+	# Set LD_LIBRARY_PATH
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/
+
+	echo '### SYS LIBRARIES ###' >> "$SETVARS_FILE"
+	echo 'export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH' >> "$SETVARS_FILE"
+	echo '' >> "$SETVARS_FILE"
+
+	#################################
+	###    PYTHON MODULES
+	#################################
+	# Install python
+	apt-get -y --no-install-recommends install libpython2.7-dev python-setuptools
+	
+	# Install pip & upgrade
+	apt-get -y --no-install-recommends install python-pip python-tk
+	pip install --upgrade pip
+
+	# Install python modules
+	pip install numpy astropy pyfits scipy scikit-image scikit-learn matplotlib six argparse 
+	pip install numpy --upgrade
+	pip install astropy --upgrade
+	pip install pyfits --upgrade
+	pip install scipy --upgrade
+	pip install photutils 
+	pip install ipython
+
+	# Set env vars
+	export PYTHONPATH=/usr/lib/python2.7:/usr/lib/python2.7/site-packages:/usr/lib/python2.7/dist-packages:/usr/lib/python2.7/plat-x86_64-linux-gnu:/usr/lib/python2.7/lib-tk:/usr/lib/python2.7/lib-old:/usr/lib/python2.7/lib-dynload:/usr/local/lib/python2.7/dist-packages:$PYTHONPATH
+
+	echo '### PYTHON MODULES ###' >> "$SETVARS_FILE"
+	echo 'export PYTHONPATH='"$PYTHONPATH" >> "$SETVARS_FILE"
+	echo '' >> "$SETVARS_FILE"
+
+	#################################
+	###    BASIC LIBS & TOOLS
+	#################################
+	# Install some libs
+	# NB: libxcb-dri3-dev needed to replace CASA bugged lib
+	apt-get -y --no-install-recommends install curl libcurl4-openssl-dev libopenblas-dev libxcb-dri3-dev libgl1-mesa-dev libglu1-mesa-dev
+
+	# Install some sys tools
+	apt-get -y --no-install-recommends install wget bzip2 nano unzip
+
+	#################################
+	###    BOOST LIBRARIES
+	#################################
+	# Install boost (in Ubuntu 16 version 1.58)
+	apt-get -y --no-install-recommends install libboost-all-dev
+
+	#################################
+	###    GSL LIBRARIES
+	#################################
+	# Install GSL lib (in Ubuntu 16 version 2.1)
+	apt-get -y --no-install-recommends install libgsl-dev 
+	
+	#################################
+	###    PROTOBUF
+	#################################
+	# Install Google protocol buffer (in Ubuntu 16 version 2.6.1)
+	apt-get -y --no-install-recommends install libprotobuf-dev protobuf-compiler
+
+	#################################
+	###    LOG4CXX
+	#################################
+	# Install log4cxx (in Ubuntu 10 version 0.10)
+	apt-get -y --no-install-recommends install liblog4cxx-dev
+
+	#################################
+	###    CFITSIO
+	#################################
+	# Install cfitsio (in Ubuntu 16 version 3.370)
+	apt-get -y --no-install-recommends install libcfitsio-dev
+
+	#################################
+	###    OPENMPI
+	#################################
+	# Install openmpi
+	#apt-get -y --no-install-recommends install libopenmpi-dev openmpi-bin openmpi-common
+	
+	#################################
+	###    JSONCPP
+	#################################
+	# Set env variables and create installation dirs
+	export JSONCPP_URL="https://github.com/open-source-parsers/jsoncpp.git"
+	export JSONCPP_SRC_DIR="$SOFTDIR_SRCS/jsoncpp"	
+	export JSONCPP_BUILD_DIR="$SOFTDIR_SRCS/jsoncpp-build"
+	export JSONCPP_INSTALL_DIR="$SOFTDIR/LIB/jsoncpp/trunk"
+	echo "Creating jsoncpp build dir $JSONCPP_BUILD_DIR ..."
+	mkdir -p $JSONCPP_BUILD_DIR
+	echo "Creating jsoncpp install dir $JSONCPP_INSTALL_DIR ..."
+	mkdir -p $JSONCPP_INSTALL_DIR
+
+	# Install jsoncpp
+	cd "$SOFTDIR_SRCS"
+	if [ ! -d "$JSONCPP_SRC_DIR" ] ; then
+		echo "Downloading jsoncpp from github repository $JSONCPP_URL..."
+		git clone "$JSONCPP_URL"
+	else
+		cd $JSONCPP_SRC_DIR
+		git pull
+	fi
+	
+	echo "Entering jsoncpp cmake build dir $JSONCPP_BUILD_DIR"
+	cd "$JSONCPP_BUILD_DIR"
+
+	echo "Configuring cmake build for jsoncpp"
+	cmake -DCMAKE_INSTALL_PREFIX="$JSONCPP_INSTALL_DIR" -DBUILD_SHARED_LIBS=ON -DJSONCPP_WITH_PKGCONFIG_SUPPORT=ON "$JSONCPP_SRC_DIR"
+
+	echo "Building jsoncpp..."
+	make
+
+	echo "Installing jsoncpp..."
+	make install
+
+	echo "Setting up env variables for jsoncpp..."
+	echo "export JSONCPP_ROOT=$JSONCPP_INSTALL_DIR" >> $SINGULARITY_ENVIRONMENT
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$JSONCPP_INSTALL_DIR/lib
+	export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$JSONCPP_INSTALL_DIR/lib/pkgconfig
+	
+	echo '### JSONCPP ###' >> "$SETVARS_FILE"
+	echo 'export JSONCPP_ROOT='"$JSONCPP_INSTALL_DIR" >> "$SETVARS_FILE"
+	echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$JSONCPP_ROOT/lib' >> "$SETVARS_FILE"
+	echo 'export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$JSONCPP_ROOT/lib/pkgconfig' >> "$SETVARS_FILE"
+	echo '' >> "$SETVARS_FILE"
+
+	#echo "Remove jsoncpp source ($JSONCPP_SRC_DIR) & build ($JSONCPP_BUILD_DIR) directories ..."
+	rm -rf $JSONCPP_SRC_DIR $JSONCPP_BUILD_DIR
+
+	
+	#################################
+	###    MPICH
+	#################################
+	export MPICH_VERSION="3.2.1"
+	export MPICH_URL="http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz"
+	export MPICH_SRC_DIR="$SOFTDIR_SRCS/mpich-$MPICH_VERSION"	
+	export MPICH_INSTALL_DIR="$SOFTDIR/LIB/mpich/v$MPICH_VERSION"
+	echo "Creating mpich install dir $MPICH_INSTALL_DIR ..."
+	mkdir -p $MPICH_INSTALL_DIR
+
+	# Install mpich
+	if [ ! -d "$MPICH_SRC_DIR" ] ; then
+		# Download mpich
+		echo "Downloading mpich from url $MPICH_URL ..."
+		cd "$SOFTDIR_TAR"
+		wget -nc -O "mpich$MPICH_VERSION.tar.gz" "$MPICH_URL" 
+	
+		# Untar mpich
+		echo "Untar mpich in source directory $SOFTDIR_SRCS ..."
+		cd "$SOFTDIR_SRCS"
+		tar -xzvf "$SOFTDIR_TAR/mpich$MPICH_VERSION.tar.gz"
+	fi 
+	
+	echo "Entering mpich source dir $MPICH_SRC_DIR"
+	cd "$MPICH_SRC_DIR"
+
+	echo "Configuring mpich build..."
+	./configure --prefix="$MPICH_INSTALL_DIR"
+
+	echo "Building mpich..."
+	make
+
+	echo "Installing mpich..."
+	make install
+
+	echo "Setting up env variables for mpich..."
+	echo "export MPI_DIR=$MPICH_INSTALL_DIR" >> $SINGULARITY_ENVIRONMENT
+	export PATH=$MPICH_INSTALL_DIR/bin:$PATH
+	export LD_LIBRARY_PATH=$MPICH_INSTALL_DIR/lib:$LD_LIBRARY_PATH
+	export PKG_CONFIG_PATH=$MPICH_INSTALL_DIR/lib/pkgconfig:$PKG_CONFIG_PATH
+	
+	echo '### MPICH ###' >> "$SETVARS_FILE"
+	echo 'export MPI_DIR='"$MPICH_INSTALL_DIR" >> "$SETVARS_FILE"
+	echo 'export PATH=$MPI_DIR/bin:$PATH' >> "$SETVARS_FILE"
+	echo 'export LD_LIBRARY_PATH=$MPI_DIR/lib:$LD_LIBRARY_PATH' >> "$SETVARS_FILE"
+	echo 'export PKG_CONFIG_PATH=$MPI_DIR/lib/pkgconfig:$PKG_CONFIG_PATH' >> "$SETVARS_FILE"
+	echo '' >> "$SETVARS_FILE"
+
+	#echo "Remove MPICH source directory $MPICH_SRC_DIR ..."
+	rm -rf $MPICH_SRC_DIR
+	echo "Remove MPICH tar file $SOFTDIR_TAR/mpich$MPICH_VERSION.tar.gz ..."
+	rm -rf $SOFTDIR_TAR/mpich$MPICH_VERSION.tar.gz || :
+
+	
+	#################################
+	###    OPENMPI
+	#################################
+	export OPENMPI_VERSION="2.1.2"
+	export OPENMPI_URL="https://www.open-mpi.org/software/ompi/v2.1/downloads/openmpi-$OPENMPI_VERSION.tar.gz"
+	export OPENMPI_SRC_DIR="$SOFTDIR_SRCS/openmpi-$OPENMPI_VERSION"	
+	export OPENMPI_INSTALL_DIR="$SOFTDIR/LIB/openmpi/v$OPENMPI_VERSION"
+	echo "Creating openmpi install dir $OPENMPI_INSTALL_DIR ..."
+	mkdir -p $OPENMPI_INSTALL_DIR
+
+	# Install openmpi
+	if [ ! -d "$OPENMPI_SRC_DIR" ] ; then
+		# Download openmpi
+		echo "Downloading openmpi from url $OPENMPI_URL ..."
+		cd "$SOFTDIR_TAR"
+		wget -nc -O "openmpi$OPENMPI_VERSION.tar.gz" "$OPENMPI_URL" 
+	
+		# Untar openmpi
+		echo "Untar openmpi in source directory $SOFTDIR_SRCS ..."
+		cd "$SOFTDIR_SRCS"
+		tar -xzvf "$SOFTDIR_TAR/openmpi$OPENMPI_VERSION.tar.gz"
+	fi 
+	
+	echo "Entering openmpi source dir $OPENMPI_SRC_DIR"
+	cd "$OPENMPI_SRC_DIR"
+
+	echo "Configuring openmpi build..."
+	./configure --prefix="$OPENMPI_INSTALL_DIR"
+
+	echo "Building & installing openmpi..."
+	make all install
+
+	## NB: Prepend OPENMPI to system path to allow CAESAR find these instead of system version
+	echo "Setting up env variables for mpich..."
+	echo "export OPENMPI_DIR=$OPENMPI_INSTALL_DIR" >> $SINGULARITY_ENVIRONMENT
+	export PATH=$OPENMPI_INSTALL_DIR/bin:$PATH
+	export LD_LIBRARY_PATH=$OPENMPI_INSTALL_DIR/lib:$LD_LIBRARY_PATH
+	export PKG_CONFIG_PATH=$OPENMPI_INSTALL_DIR/lib/pkgconfig:$PKG_CONFIG_PATH
+	
+	echo '### OPENMPI ###' >> "$SETVARS_FILE"
+	echo 'export OPENMPI_DIR='"$OPENMPI_INSTALL_DIR" >> "$SETVARS_FILE"
+	echo 'export PATH=$OPENMPI_DIR/bin:$PATH' >> "$SETVARS_FILE"
+	echo 'export LD_LIBRARY_PATH=$OPENMPI_DIR/lib:$LD_LIBRARY_PATH' >> "$SETVARS_FILE"
+	echo 'export PKG_CONFIG_PATH=$OPENMPI_DIR/lib/pkgconfig:$PKG_CONFIG_PATH' >> "$SETVARS_FILE"
+	echo '' >> "$SETVARS_FILE"
+
+	#echo "Remove OPENMPI source directory $OPENMPI_SRC_DIR ..."
+	rm -rf $OPENMPI_SRC_DIR
+	echo "Remove OPENMPI tar file $SOFTDIR_TAR/openmpi$OPENMPI_VERSION.tar.gz ..."
+	rm -rf $SOFTDIR_TAR/openmpi$OPENMPI_VERSION.tar.gz || :
+
+
+
+	#################################
+	###    ROOT
+	#################################
+	export ROOT_VERSION="6.12.04" # 
+	export ROOT_URL="https://root.cern.ch/download/root_v$ROOT_VERSION"'.source.tar.gz'
+	export ROOT_SRC_DIR="$SOFTDIR_SRCS/root-$ROOT_VERSION"	
+	export ROOT_BUILD_DIR="$SOFTDIR_SRCS/root-$ROOT_VERSION"'-build'
+	export ROOT_INSTALL_DIR="$SOFTDIR/ROOT/v$ROOT_VERSION"
+	export ROOT_LOGON_DIR="$SOFTDIR"
+	export ROOT_LOGON_FILE="$ROOT_LOGON_DIR/rootlogon.C"
+	echo "Creating ROOT build dir $ROOT_BUILD_DIR ..."
+	mkdir -p $ROOT_BUILD_DIR
+	echo "Creating ROOT install dir $ROOT_INSTALL_DIR ..."
+	mkdir -p $ROOT_INSTALL_DIR
+	
+	# Download & Unzip ROOT
+	ls -la $SOFTDIR_SRCS
+	if [ ! -d "$ROOT_SRC_DIR" ] ; then
+		# Download ROOT
+		echo "Downloading ROOT from url $ROOT_URL ..."
+		cd "$SOFTDIR_TAR"
+		wget -nc -O "root$ROOT_VERSION.tar.gz" "$ROOT_URL" 
+	
+		# Untar ROOT
+		echo "Untar ROOT in source directory $SOFTDIR_SRCS ..."
+		cd "$SOFTDIR_SRCS"
+		tar -xzvf "$SOFTDIR_TAR/root$ROOT_VERSION.tar.gz"
+	fi 
+
+	# Install ROOT mandatory dependencies
+	apt-get -y --no-install-recommends install libx11-dev libxpm-dev libxft-dev libxext-dev libpng12-dev libjpeg-dev
+
+	# Configure ROOT build
+	echo "Configuring cmake build for ROOT..."
+	cd "$ROOT_BUILD_DIR"
+	cmake -DCMAKE_INSTALL_PREFIX="$ROOT_INSTALL_DIR" -Dfitsio=ON -Dgsl_shared=ON -Dmathmore=ON -Dminuit2=ON -Dpython=ON -Droofit=ON -Dshared=ON -Dsoversion=ON -Dtmva=ON -Dunuran=ON -Dx11=ON -Dxft=ON "$ROOT_SRC_DIR"
+
+	# Building ROOT
+	echo "Building ROOT..."
+	make
+
+	# Installing ROOT
+	echo "Installing ROOT..."
+	make install
+
+	# Copying cmake module FindROOT in etc dir
+	mkdir -p $ROOT_INSTALL_DIR/etc/cmake
+	echo "Copying FindROOT.cmake in $ROOT_INSTALL_DIR/etc/cmake dir..."
+	cp $ROOT_SRC_DIR/etc/cmake/FindROOT.cmake $ROOT_INSTALL_DIR/etc/cmake
+	cp $ROOT_SRC_DIR/etc/cmake/RootUseFile.cmake $ROOT_INSTALL_DIR/etc/cmake
+	ls $ROOT_INSTALL_DIR/etc/cmake
+
+	# Setting environment variables
+	echo "Setting ROOT env variables..."
+	echo "export ROOTSYS=$ROOT_INSTALL_DIR" >> $SINGULARITY_ENVIRONMENT
+	echo "export ROOT_LOGON_DIR=$ROOT_LOGON_DIR" >> $SINGULARITY_ENVIRONMENT
+	export PATH=$PATH:$ROOT_INSTALL_DIR/bin
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOT_INSTALL_DIR/lib:$ROOT_INSTALL_DIR/root/lib
+	export PYTHONPATH=$PYTHONPATH:$ROOT_INSTALL_DIR/lib
+	
+	echo '### ROOT ###' >> "$SETVARS_FILE"
+	echo 'export ROOTSYS='"$ROOT_INSTALL_DIR" >> "$SETVARS_FILE"
+	echo 'export ROOT_LOGON_DIR='"$ROOT_LOGON_DIR" >> "$SETVARS_FILE"
+	echo 'export PATH=$PATH:$ROOTSYS/bin' >> "$SETVARS_FILE"
+	echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib:$ROOTSYS/root/lib' >> "$SETVARS_FILE"
+	echo 'export PYTHONPATH=$PYTHONPATH:$ROOTSYS/lib' >> "$SETVARS_FILE"
+	echo '' >> "$SETVARS_FILE"
+
+	# Editing systemrc rootlogon line	
+	sed -i "s|^Rint.Logon:.*|Rint.Logon: $ROOT_LOGON_DIR/rootlogon.C|" "$ROOT_INSTALL_DIR/etc/system.rootrc"
+
+	echo "Remove ROOT source ($ROOT_SRC_DIR) & build directories ($ROOT_BUILD_DIR) ..."
+	rm -rf $ROOT_SRC_DIR $ROOT_BUILD_DIR
+	echo "Remove ROOT tar file $SOFTDIR_TAR/root$ROOT_VERSION.tar.gz ..."
+	rm -rf $SOFTDIR_TAR/root$ROOT_VERSION.tar.gz || :
+
+	#################################
+	###    OPENCV
+	#################################
+	export OPENCV_VERSION="3.4.0"
+	##export OPENCV_URL="https://github.com/opencv/opencv/archive/$OPENCV_VERSION.zip"
+	##export OPENCV_EXTRA_MODULES_REPO_URL="https://github.com/opencv/opencv_contrib/archive/$OPENCV_VERSION.zip"
+	export OPENCV_URL="https://github.com/opencv/opencv/archive/$OPENCV_VERSION.tar.gz"
+	export OPENCV_EXTRA_MODULES_REPO_URL="https://github.com/opencv/opencv_contrib/archive/$OPENCV_VERSION.tar.gz"
+	export OPENCV_SRC_DIR="$SOFTDIR_SRCS/opencv-$OPENCV_VERSION"	
+	export OPENCV_EXTRA_MODULES_SRC_DIR="$SOFTDIR_SRCS/opencv_contrib-$OPENCV_VERSION"		
+	export OPENCV_BUILD_DIR="$SOFTDIR_SRCS/opencv-$OPENCV_VERSION"'-build'
+	export OPENCV_INSTALL_DIR="$SOFTDIR/OpenCV/v$OPENCV_VERSION"
+	echo "Creating OpenCV build dir $OPENCV_BUILD_DIR ..."
+	mkdir -p $OPENCV_BUILD_DIR
+	echo "Creating OpenCV install dir $OPENCV_INSTALL_DIR ..."
+	mkdir -p $OPENCV_INSTALL_DIR
+
+	# Download & Unzip OpenCV
+	ls -la $SOFTDIR_SRCS
+	if [ ! -d "$OPENCV_SRC_DIR" ] ; then
+		# Download OpenCV
+		echo "Downloading OpenCV from url $OPENCV_URL ..."
+		cd "$SOFTDIR_TAR"
+		##wget -nc -O "opencv$OPENCV_VERSION.zip" "$OPENCV_URL"
+		wget -nc -O "opencv$OPENCV_VERSION.tar.gz" "$OPENCV_URL" 
+	
+		# Unzip OpenCV
+		echo "Unzipping OpenCV in source directory $SOFTDIR_SRCS ..."
+		cd "$SOFTDIR_SRCS"
+		##unzip -n "$SOFTDIR_TAR/opencv$OPENCV_VERSION.zip"
+		tar -xzvf "$SOFTDIR_TAR/opencv$OPENCV_VERSION.tar.gz"
+	fi 
+
+	# Downwload & Unzip OpenCV extra modules
+	ls -la $SOFTDIR_SRCS
+	if [ ! -d "$OPENCV_EXTRA_MODULES_SRC_DIR" ] ; then
+		# Download OpenCV extra modules
+		echo "Downloading OpenCV extra modules from url $OPENCV_EXTRA_MODULES_REPO_URL ..."
+		cd "$SOFTDIR_TAR"
+		##wget -nc -O "opencv_contrib$OPENCV_VERSION.zip" "$OPENCV_EXTRA_MODULES_REPO_URL"
+		wget -nc -O "opencv_contrib$OPENCV_VERSION.tar.gz" "$OPENCV_EXTRA_MODULES_REPO_URL"
+
+		# Unzip OpenCV extra modules	
+		echo "Unzipping OpenCV extra modules in source directory $SOFTDIR_SRCS ..."
+		cd "$SOFTDIR_SRCS"
+		##unzip -n "$SOFTDIR_TAR/opencv_contrib$OPENCV_VERSION.zip"
+		tar -xzvf "$SOFTDIR_TAR/opencv_contrib$OPENCV_VERSION.tar.gz"
+	fi
+	
+	# Install OpenCV dependencies
+	echo "Install OpenCV dependencies..."
+	apt-get -y --no-install-recommends install libgtk2.0-dev libavcodec-dev libavformat-dev libswscale-dev
+	
+	# Configure OpenCV build
+	echo "Configuring cmake build for OpenCV..."
+	cd "$OPENCV_BUILD_DIR"
+	cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX="$OPENCV_INSTALL_DIR" -DOPENCV_EXTRA_MODULES_PATH="$OPENCV_EXTRA_MODULES_SRC_DIR/modules" "$OPENCV_SRC_DIR"
+
+	# Building OpenCV
+	echo "Building OpenCV..."
+	make
+
+	# Installing OpenCV
+	echo "Installing OpenCV..."
+	make install
+
+	# Setting environment variables
+	echo "Setting OpenCV env variables..."
+	echo "export OPENCV_DIR=$OPENCV_INSTALL_DIR" >> $SINGULARITY_ENVIRONMENT
+	export PATH=$PATH:$OPENCV_INSTALL_DIR/bin
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$OPENCV_INSTALL_DIR/lib
+	export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$OPENCV_INSTALL_DIR/lib/pkgconfig
+		
+	echo '### OPENCV ###' >> "$SETVARS_FILE"
+	echo 'export OPENCV_DIR='"$OPENCV_INSTALL_DIR" >> "$SETVARS_FILE"
+	echo 'export PATH=$PATH:$OPENCV_DIR/bin' >> "$SETVARS_FILE"
+	echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$OPENCV_DIR/lib' >> "$SETVARS_FILE"
+	echo 'export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$OPENCV_DIR/lib/pkgconfig' >> "$SETVARS_FILE"
+	echo '' >> "$SETVARS_FILE"
+
+	#echo "Remove OpenCV source ($OPENCV_SRC_DIR) & build directories ($OPENCV_BUILD_DIR) ..."
+	rm -rf $OPENCV_SRC_DIR $OPENCV_BUILD_DIR
+	echo "Remove OpenCV tar files $SOFTDIR_TAR/opencv$OPENCV_VERSION.tar.gz $SOFTDIR_TAR/opencv_contrib$OPENCV_VERSION.tar.gz ..."
+	rm -rf $SOFTDIR_TAR/opencv$OPENCV_VERSION.tar.gz || :
+	rm -rf $SOFTDIR_TAR/opencv_contrib$OPENCV_VERSION.tar.gz || :
+
+	#################################
+	###    R PROJECT
+	#################################
+	#apt-get -y install r-base-core
+	
+	# Install required R packages (this is an exampl, replace with my R modules...)
+  #R --slave -e 'install.packages("devtools", repos="https://cloud.r-project.org/")'
+  #R --slave -e 'devtools::install_github("rstudio/tensorflow")'
+
+
+	#################################
+	###    CASA NRAO
+	#################################
+	export CASA_VERSION="5.1.1" # 
+	export CASA_VERSION_MINOR="5"
+	export CASA_URL="https://casa.nrao.edu/download/distro/linux/release/el7/casa-release-$CASA_VERSION-$CASA_VERSION_MINOR"'.el7.tar.gz'
+	export CASA_UNTAR_DIR="casa-release-$CASA_VERSION-$CASA_VERSION_MINOR.el7"
+	export CASA_BASE_DIR="$SOFTDIR/CASA"
+	export CASA_INSTALL_DIR="$CASA_BASE_DIR/v$CASA_VERSION"
+	export CASASRC="$CASA_BASE_DIR/.casa"
+	export CASA_LOGON_FILE="$CASASRC/init.py"
+	export CASALD_LIBRARY_PATH="$LD_LIBRARY_PATH"
+
+	echo "Creating CASA base dir $CASA_BASE_DIR ..."
+	mkdir -p $CASA_BASE_DIR
+
+	echo "Creating CASA init dir $CASASRC with other write permission..."
+	mkdir -p $CASASRC
+	chmod -R a+rwx $CASASRC
+
+	# Download & Unzip CASA
+	ls -la $SOFTDIR_SRCS
+	if [ ! -d "$CASA_INSTALL_DIR" ] ; then
+		# Download CASA
+		echo "Downloading CASA from url $CASA_URL ..."
+		cd "$SOFTDIR_TAR"
+		wget -nc -O "casa$CASA_VERSION.tar.gz" "$CASA_URL" 
+	
+		# Untar CASA
+		echo "Untar CASA in casa install directory $CASA_BASE_DIR ..."
+		cd "$CASA_BASE_DIR"
+		tar -xzvf "$SOFTDIR_TAR/casa$CASA_VERSION.tar.gz"
+	
+		# Rename CASA
+		echo "Renaming untar dir $CASA_UNTAR_DIR in v$CASA_VERSION"
+		mv "$CASA_UNTAR_DIR" "v$CASA_VERSION"
+	fi 
+
+	# Setting environment variables
+	# NB: Do not add CASA python lib dir to PYTHONPATH because it will screw up python (changes site.py with CASA site.py)
+	# NB: Never ever put CASA stuff paths before your system path!!!
+	# NB: Define CASALD_LIBRARY_PATH and set it to LD_LIBRARY_PATH because casa startup script has a nasty statement that removes your LD_LIBRARY_PATH (yes, CASA sucks)!!!
+	echo "Setting CASA env variables..."
+	echo "export CASAPATH=$CASA_INSTALL_DIR" >> $SINGULARITY_ENVIRONMENT
+	echo "export CASA_DIR=$CASA_INSTALL_DIR" >> $SINGULARITY_ENVIRONMENT
+	echo "export CASASRC=$CASASRC" >> $SINGULARITY_ENVIRONMENT
+	echo "export CASALD_LIBRARY_PATH=$CASALD_LIBRARY_PATH" >> $SINGULARITY_ENVIRONMENT
+	export PATH=$PATH:$CASA_INSTALL_DIR/bin
+	##export PYTHONPATH=$PYTHONPATH:$CASA_INSTALL_DIR/lib/python2.7:$CASA_INSTALL_DIR/lib/python2.7/__casac__
+	
+	echo '### CASA ###' >> "$SETVARS_FILE"
+	echo 'export CASAPATH='"$CASA_INSTALL_DIR" >> "$SETVARS_FILE"
+	echo 'export CASA_DIR='"$CASA_INSTALL_DIR" >> "$SETVARS_FILE"
+	echo 'export CASASRC='"$CASASRC" >> "$SETVARS_FILE"
+	echo 'export PATH=$PATH:$CASA_DIR/bin' >> "$SETVARS_FILE"
+	echo 'export CASALD_LIBRARY_PATH=$LD_LIBRARY_PATH' >> "$SETVARS_FILE"
+	##echo 'export PYTHONPATH=$PYTHONPATH:$CASA_INSTALL_DIR/lib/python2.7' >> "$SETVARS_FILE"
+	echo '' >> "$SETVARS_FILE"
+
+	# Create logon file under $CASASRC dir
+	echo "Creating CASA logon file in $CASASRC dir ..."
+	echo 'import sys' > "$CASA_LOGON_FILE"
+	echo "sys.path = [''] + sys.path" >> "$CASA_LOGON_FILE"
+
+	echo "Remove CASA tar file $SOFTDIR_TAR/casa$CASA_VERSION.tar.gz ..."
+	rm -rf $SOFTDIR_TAR/casa$CASA_VERSION.tar.gz || :
+
+	#################################
+	###    SET ENV VARS
+	#################################
+	echo "export PATH=$PATH" >> $SINGULARITY_ENVIRONMENT
+	echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> $SINGULARITY_ENVIRONMENT
+	echo "export PKG_CONFIG_PATH=$PKG_CONFIG_PATH" >> $SINGULARITY_ENVIRONMENT
+	echo "export PYTHONPATH=$PYTHONPATH" >> $SINGULARITY_ENVIRONMENT
+
+
+
+%runscript
+	printenv

@@ -1,0 +1,17 @@
+BootStrap: docker
+From: fedora:34
+
+%files
+  Makefile /code/Makefile
+  src /code/src
+
+%post
+  yum update -y
+  yum install bash make clang glibc cmake unzip git wget -y
+
+  # Build hr_edl
+  cd /code
+  make -j$(nproc)
+
+%labels
+  Author Dustin Morrill

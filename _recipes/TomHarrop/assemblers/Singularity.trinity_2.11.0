@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: trinityrnaseq/trinityrnaseq:2.11.0
+
+%help
+    Container for Trinity 2.11.0
+    https://github.com/trinityrnaseq/trinityrnaseq
+
+
+%labels
+    VERSION "Trinity 2.11.0"
+
+%environment
+    export PATH="${PATH}:/usr/local/bin/trinityrnaseq:/usr/local/bin/trinityrnaseq/util:/usr/local/bin/trinityrnaseq/util/support_scripts:/usr/local/bin/trinityrnaseq/util/misc"
+
+%post
+    # replace Node_alignment.py with the patched version 
+    # cd /usr/local/bin/trinityrnaseq/Analysis/SuperTranscripts/pylib || exit 1
+    # rm -f Node_alignment.py
+    # wget https://raw.githubusercontent.com/trinityrnaseq/trinityrnaseq/1a471bda7cd025090c151c7a01c145acbdf179c6/Analysis/SuperTranscripts/pylib/Node_alignment.py
+    # chmod 755 Node_alignment.py
+
+%runscript
+    exec /usr/local/bin/trinityrnaseq/Trinity "$@"

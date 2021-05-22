@@ -1,0 +1,20 @@
+BootStrap: docker
+From: continuumio/miniconda2:4.7.12
+
+%apprun stringtie
+  exec stringtie "${@}"
+
+%apprun prepDE.py
+  exec prepDE.py "${@}"
+
+%environment
+  export PATH=/opt/stringtie/current:$PATH
+
+%post
+  VER="2.0.6.Linux_x86_64" && \
+  DIST="/opt/stringtie" && \
+  mkdir ${DIST} && cd ${DIST} && \
+  wget http://ccb.jhu.edu/software/stringtie/dl/stringtie-${VER}.tar.gz && \
+  tar xvfz stringtie-${VER}.tar.gz && \
+  ln -s stringtie-${VER} current && \
+  rm stringtie-${VER}.tar.gz

@@ -1,0 +1,80 @@
+Bootstrap: debootstrap
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+OSVersion:  bionic
+Include: apt wget sudo vim build-essential git sudo software-properties-common dirmngr gpg-agent
+
+%labels
+MAINTAINER jay.vanschyndel@monash.edu
+HARDWARE gpu
+
+%environment
+    CUDABINPATH=/usr/local/cuda/bin
+    CUDALIBPATH=/usr/local/cuda/lib64/stubs:/usr/local/cuda/lib64/:/usr/local/cuda/lib
+    export PATH=$PATH:$CUDABINPATH
+    export LD_LIBRARY_PATH=$CUDALIBPATH:$LD_LIBRARY_PATH
+
+%post
+    echo "*********************************************************"
+    echo "Setup and display environment"
+    echo "*********************************************************"
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    echo $LC_ALL
+    echo $LANGUAGE
+    echo $DEBIAN_FRONTEND
+    echo "*********************************************************"
+    echo "Install repositories"
+    echo "*********************************************************"
+    apt-get install -y software-properties-common
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ bionic main restricted'
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ bionic-updates main restricted'
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ bionic universe'
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ bionic-updates universe'
+    echo "*********************************************************"
+    echo "Update repositories and install desktop"
+    echo "*********************************************************"
+    apt update
+    apt upgrade -y
+    apt install -y locales
+    locale-gen en_AU.UTF-8
+    apt install -y wget ubuntu-desktop vim software-properties-common git cmake
+    echo "*********************************************************"
+    echo "Installing CUDA"
+    echo "*********************************************************"
+    #apt install -y cuda-9-0
+    apt-get install -y g++ freeglut3-dev build-essential libx11-dev libxmu-dev libxi-dev libglu1-mesa libglu1-mesa-dev
+    apt-get install -y gcc-6 g++-6
+    mkdir -p /tmp/cuda9
+    cd /tmp/cuda9
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/cuda_9.0.176_384.81_linux-run
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/cuda_9.0.176.1_linux-run
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/cuda_9.0.176.2_linux-run
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/cuda_9.0.176.3_linux-run
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/cuda_9.0.176.4_linux-run
+    chmod +x *
+    ./cuda_9.0.176_384.81_linux-run --tmpdir=/tmp/cuda9/ --toolkitpath=/usr/local/cuda9/ --toolkit --samples --samplespath=/usr/local/cuda9/ --silent --override
+    ./cuda_9.0.176.1_linux-run --installdir=/usr/local/cuda9/ --accept-eula --silent
+    ./cuda_9.0.176.2_linux-run --installdir=/usr/local/cuda9/ --accept-eula --silent
+    ./cuda_9.0.176.3_linux-run --installdir=/usr/local/cuda9/ --accept-eula --silent
+    ./cuda_9.0.176.4_linux-run --installdir=/usr/local/cuda9/ --accept-eula --silent
+    ln -s /usr/local/cuda9 /usr/local/cuda
+    ln -s /usr/bin/gcc-6 /usr/local/cuda/bin/gcc
+    ln -s /usr/bin/g++-6 /usr/local/cuda/bin/g++
+
+    echo "*********************************************************"
+    echo "Installing python dependencies"
+    echo "*********************************************************"
+    apt install -y python-pip python-pyqt5 pyqt5-dev python-tk
+    echo "*********************************************************"
+    echo "Installing vglrun and TurboVNC"
+    echo "*********************************************************"
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/turbovnc_2.1.2_amd64.deb
+    dpkg -i turbovnc_2.1.2_amd64.deb
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/virtualgl_2.6.2_amd64.deb
+    dpkg -i virtualgl_2.6.2_amd64.deb
+    apt update
+    apt -y upgrade
+
+%runscript
+    $*

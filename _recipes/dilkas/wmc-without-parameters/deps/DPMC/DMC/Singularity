@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: debian:buster-slim
+
+%setup
+	mkdir -p ${SINGULARITY_ROOTFS}/DMC
+	cp -R ../common ${SINGULARITY_ROOTFS}
+	cp -R SETUP.sh ${SINGULARITY_ROOTFS}/DMC
+
+%post
+    apt-get update
+
+	# htb
+	apt-get -y install gcc g++ unzip make
+	cd /DMC
+	chmod +x ./SETUP.sh
+	./SETUP.sh
+
+%help
+    This is a Singularity container for the counting tool.
+
+%runscript
+    /DMC/dmc "$@"

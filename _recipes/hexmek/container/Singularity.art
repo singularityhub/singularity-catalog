@@ -1,0 +1,11 @@
+Bootstrap: docker
+From: conda/miniconda3
+
+%post
+    apt update
+    apt install -y git curl wget  procps make gcc parallel
+    conda install -c conda-forge -c bioconda art bwa samtools
+
+%environment
+    export LC_ALL=C
+

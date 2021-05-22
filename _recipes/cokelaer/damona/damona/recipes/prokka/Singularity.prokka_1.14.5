@@ -1,0 +1,26 @@
+Bootstrap: library
+From: library://cokelaer/damona/conda:4.7.12
+
+
+%labels
+    Author thomas cokelaer
+    Version v1.0
+    DAMONA_TYPE exe
+    DAMONA_BIN prokka
+
+%post
+
+    export PATH=$PATH:/usr/local/anaconda/bin
+    export LANG=C   # prevents perl for raising warnings
+    conda install prokka==1.14.5
+    export PATH=/usr/local/anaconda/bin:$PATH
+    export PERL5LIB=/usr/local/anaconda/lib/perl5/site_perl/5.22.0
+
+
+%environment
+    #echo "backend:agg" > matplotlibrc
+    export PATH=/usr/local/anaconda/bin:$PATH
+    export PERL5LIB=/usr/local/anaconda/lib/perl5/site_perl/5.22.0
+
+%runscript
+    exec prokka "$@"

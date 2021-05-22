@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: conda/miniconda3
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y git curl wget  procps make gcc parallel
+    conda install -c conda-forge mamba python=3.7
+
+    # slighlty modified commands from https://github.com/RasmussenLab/vamb/tree/master/workflow
+    mamba install -c conda-forge -c bioconda "samtools>=1.8"
+    mamba install -c bioconda minimap2 pysam bwa python=3.7
+    mamba install -c bioconda/label/cf201901 metabat2
+    mamba install -c pytorch pytorch torchvision cudatoolkit=10.2
+    
+    # install via pip
+    pip install https://github.com/RasmussenLab/vamb/archive/3.0.2.zip
+
+%environment
+    export LC_ALL=C
+

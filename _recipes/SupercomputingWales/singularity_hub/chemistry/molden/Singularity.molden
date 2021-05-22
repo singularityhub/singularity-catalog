@@ -1,0 +1,37 @@
+Bootstrap:docker  
+From:centos:centos7.4.1708
+
+%labels
+MAINTAINER Thomas Green
+
+%environment
+
+%runscript
+exec /bin/bash /bin/echo "Not supported"
+
+%post  
+yum -y install yum-utils
+yum -y install epel-release
+yum -y groupinstall "Base"
+yum -y groupinstall "Development Tools"
+
+#Install dependency
+yum -y install libX11
+yum -y install mesa-libGL
+yum -y install mesa-libGLU
+yum -y install mesa-libGLU-devel
+yum -y install libXmu
+yum -y install libXmu-devel
+yum -y install imake
+
+
+#Install software
+cd /tmp
+wget ftp://ftp.cmbi.umcn.nl/pub/molgraph/molden/molden5.9.tar.gz
+tar zxvf molden5.9.tar.gz
+cd molden5.9
+# Remove use of sudo from makefile.
+sed -i 's/sudo //g' makefile
+
+make
+make install

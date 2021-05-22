@@ -1,0 +1,25 @@
+BootStrap: localimage
+From: ./spack.Simg
+
+%labels
+MAINTAINER baber@iastate.edu
+
+%environment
+source /etc/profile.d/modules.sh
+source $SPACK_ROOT/share/spack/setup-env.sh
+
+%post
+dnf -y install Lmod 
+dnf clean all
+SPACKMODCONF=/opt/spack/etc/spack/modules.yaml
+echo "modules:\n" >> $SPACKMODCONF
+echo "  enable::" >> $SPACKMODCONF
+echo "    - lmod" >> $SPACKMODCONF
+echo "  lmod:" >> $SPACKMODCONF
+echo "    ^python:" >> $SPACKMODCONF
+echo "      autoload: 'direct'" >> $SPACKMODCONF
+echo "    core_compilers:" >> $SPACKMODCONF
+echo "      - 'gcc@7.2.1'" >> $SPACKMODCONF
+
+
+

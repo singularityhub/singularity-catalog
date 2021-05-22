@@ -1,0 +1,60 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804
+
+%labels
+    MAINTAINER_NAME  Jay van Schyndel
+    MAINTAINER_EMAIL jay.vanschyndel@monash.edu
+
+    APPLICATION_NAME ubuntu
+    APPLICATION_VERSION 18.04
+
+    HARDWARE CPU
+
+    LAST_UPDATED 18-NOV-2020
+
+%environment
+
+    export PATH=/opt/globus-connect-personal:$PATH
+
+%post
+    echo "*********************************************************"
+    echo "Setup and display environment"
+    echo "*********************************************************"
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    echo $LC_ALL
+    echo $LANGUAGE
+    echo $DEBIAN_FRONTEND
+    echo "*********************************************************"
+    echo "Install repositories"
+    echo "*********************************************************"
+    apt-get install -y software-properties-common
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ focal main restricted'
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ focal-updates main restricted'
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ focal universe'
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ focal-updates universe'
+    echo "*********************************************************"
+    echo "Update repositories and install desktop"
+    echo "*********************************************************"
+    apt update
+    apt upgrade -y
+    apt install -y locales
+    locale-gen en_AU.UTF-8
+
+    echo "===================================="
+    echo " Installing Globus Connect Personal "
+    echo "===================================="
+
+    echo " ** Installing requirements ** "
+    apt install -y tk tcllib
+
+    cd /tmp
+
+    wget https://downloads.globus.org/globus-connect-personal/linux/stable/globusconnectpersonal-latest.tgz
+    mkdir -p /opt/globus-connect-personal
+    tar -zxvf globusconnectpersonal-latest.tgz -C /opt/globus-connect-personal/ --strip-components 1
+
+
+%runscript
+    $*

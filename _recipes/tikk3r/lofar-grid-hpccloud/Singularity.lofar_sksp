@@ -1,0 +1,484 @@
+#Bootstrap: shub
+#From: tikk3r/lofar-grid-hpccloud:lofar_sksp_base
+# If building from a base image locally enable this instead.
+Bootstrap: localimage
+From: lofar-grid-hpccloud_lofar_sksp_base.sif
+
+%environment
+    export PYTHONPATH=
+    export INSTALLDIR=/opt/lofar
+    . $INSTALLDIR/init.sh
+    source $INSTALLDIR/pyenv-py2/bin/activate
+
+%post
+	# General environment settings.
+	export J=6
+	export INSTALLDIR=/opt/lofar
+	export PYTHON_VERSION=2.7
+
+	# Path to where the patch for python-casacore's setup is stored.
+	export PYTHON_CASACORE_PATCH=$INSTALLDIR/python-casacore/python_casacore_setup_patch.patch
+	export PATCH_LOFAR=$INSTALLDIR/lofar/lofar.patch
+	
+	# Settings relevant to the installed software.
+	export AOFLAGGER_VERSION=v2.15.0
+	export ARMADILLO_VERSION=9.900.3
+	export BLAS_VERSION=3.8.0
+	export BOOST_VERSION=1.69.0
+	export CASACORE_VERSION=v2.4.1
+	# Leave at latest, release versions crash for some reason.
+	export CASAREST_VERSION=latest
+	export CFITSIO_VERSION=7.3.47
+    export DPPP_VERSION=v4.2
+	export DYSCO_VERSION=v1.2
+    #export EVERYBEAM_VERSION=0cc64a81
+    export EVERYBEAM_VERSION=master
+    export FFTW_VERSION=3.5.8
+	export HDF5_VERSION=1.10.5
+    export IDG_VERSION=master
+	export LAPACK_VERSION=3.8.0
+	export LOFAR_VERSION=3_2_18
+    # Don't change LOSOTO2_VERSION. This is the last commit that plays nice with Python 2.
+	export LOSOTO2_VERSION=c8fbd61
+	export LOSOTO3_VERSION=latest
+    export LSMTOOL_VERSION=v1.4.2
+	export OPENBLAS_VERSION=3.8.0
+	export PYBDSF_VERSION=master
+	export PYTHON_CASACORE_VERSION=v2.2.1
+    export RMEXTRACT_VERSION=4c61232
+	export SUPERLU_VERSION=5.2.1
+	export WSCLEAN_VERSION=latest
+	export WCSLIB_VERSION=6.4
+	export HDF5_USE_FILE_LOCKING=FALSE
+
+    export CC=`which gcc`
+	export CXX=`which g++`
+
+    export CFLAGS="-mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+    export CXXFLAGS="-std=c++11 -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+    # Use below to optimize for a specific architecture
+    #export CFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
+    #export CXXFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
+    export CPLUS_INCLUDE_PATH="/usr/include/openmpi-x86_64:/usr/include/c++/9:$CPLUS_INCLUDE_PATH:/usr/include/python2.7:$INSTALLDIR/casacore/include:/usr/include/boost:/usr/include/cfitsio:$INSTALLDIR/EveryBeam/include"
+    export CPATH="/usr/include/openmpi-x86_64/:/opt/intel/mkl/include:${INSTALLDIR}/casacore/include:$INSTALLDIR/LOFARBeam/include:$INSTALLDIR/idg/include:$INSTALLDIR/aoflagger/include:$INSTALLDIR/EveryBeam/include:$CPATH"
+    export CMAKE_PREFIX_PATH="$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:$INSTALLDIR/lofar:$INSTALLDIR/LOFARBeam:/usr/lib64/openmpi:$INSTALLDIR/EveryBeam"
+    export LD_LIBRARY_PATH="$INSTALLDIR/aoflagger/lib:$INSTALLDIR/casacore/lib:$INSTALLDIR/idg/lib:$INSTALLDIR/LOFARBeam/lib:/usr/lib64/openmpi/lib/:$INSTALLDIR/EveryBeam/lib:LD_LIBRARY_PATH"
+    export PATH="/usr/lib64/openmpi/bin:$PATH"
+    export make=`which make`
+    export OLD_PYTHONPATH=$PYTHONPATH
+
+	mkdir -p $INSTALLDIR
+
+	# Symlinks required for Fedora 31
+	ln -s /usr/lib64/libboost_python37.so /usr/lib64/libboost_python3.so
+	ln -s /usr/lib64/libboost_numpy37.so /usr/lib64/libboost_numpy3.so
+	ln -s /usr/lib64/libboost_python27.so /usr/lib64/libboost_python.so
+	ln -s /usr/lib64/libboost_numpy27.so /usr/lib64/libboost_numpy.so
+    ln -s /usr/lib64/libnsl.so.2.0.0 /usr/lib64/libnsl.so
+
+    dnf -y install rsync
+    dnf -y install openmpi openmpi-devel
+    dnf -y install htop
+    dnf -y install python3-pybind11 pybind11-devel mysql mysql-devel
+    #module load mpi
+
+    #
+    # Setup the Python environment.
+    #
+    wget https://raw.githubusercontent.com/tikk3r/lofar-grid-hpccloud/fedora/requirements.txt -O $INSTALLDIR/requirements.txt
+    wget https://raw.githubusercontent.com/tikk3r/lofar-grid-hpccloud/fedora/requirements3.txt -O $INSTALLDIR/requirements3.txt
+    pip install xmlrunner
+    pip3 install xmlrunner
+    pip --no-cache-dir install "virtualenv<20"
+    virtualenv $INSTALLDIR/pyenv-py3 --python=python3
+    source $INSTALLDIR/pyenv-py3/bin/activate
+    pip install numpy
+    export HDF5_VERSION=1.10.5
+    pip install --no-binary h5py h5py
+    pip install -r $INSTALLDIR/requirements3.txt
+    pip install lofar-h5plot
+    deactivate
+    virtualenv $INSTALLDIR/pyenv-py2 --python=python2
+    source $INSTALLDIR/pyenv-py2/bin/activate
+    pip install numpy
+    pip install --no-binary h5py h5py
+    pip install --no-deps -r $INSTALLDIR/requirements.txt
+    pip install --no-deps "reproject==0.5.1"
+
+    #
+    # Install Montage
+    #
+    mkdir -p /opt/montage
+    cd /opt/montage
+    wget https://github.com/Caltech-IPAC/Montage/archive/v6.0.tar.gz -O Montage_v6.0.tar.gz
+    tar xf Montage_v6.0.tar.gz
+    cd Montage-6.0
+    make -j $J
+    rm -rf /opt/montage/Montage_v6.0.tar.gz
+    
+
+    #
+    # Install difmap
+    #
+    mkdir -p $INSTALLDIR/difmap
+    cd $INSTALLDIR/difmap
+    wget ftp://ftp.astro.caltech.edu/pub/difmap/difmap2.5e.tar.gz
+    tar xf difmap2.5e.tar.gz
+    cd uvf_difmap
+    wget https://raw.githubusercontent.com/nealjackson/loop3_difmap/master/corplt.c -O difmap_src/corplt.c
+
+    sed -i.bak -e '97d' configure
+    sed -i.bak -e '97 i PGPLOT_LIB=/usr/lib64/libpgplot.so.5' configure
+    ./configure linux-i486-gcc
+    export PGPLOT_LIB=/usr/lib64/libpgplot.so.5
+    export CFLAGS="-L/usr/lib64/libpgplot.so.5"
+    ./makeall
+    rm -rf $INSTALLDIR/difmap/*.tar.gz
+
+    export CFLAGS="-mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+
+	#
+	# Install PyBDSF
+	#
+	mkdir -p ${INSTALLDIR}/pybdsf
+	if [ "${PYBDSF_VERSION}" = "latest" ]; then cd ${INSTALLDIR}/pybdsf && git clone https://github.com/lofar-astron/pybdsf pybdsf && cd pybdsf; fi
+	if [ "${PYBDSF_VERSION}" != "latest" ]; then cd ${INSTALLDIR}/pybdsf && git clone https://github.com/lofar-astron/pybdsf && cd ${INSTALLDIR}/pybdsf/pybdsf && git checkout ${PYBDSF_VERSION}; fi
+    cd ${INSTALLDIR}/pybdsf/pybdsf
+    python setup.py install
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/pybdsf/pybdsf
+
+	#
+	# Install CASAcore
+	#
+	# Casacore 2.4.1 does not seem to deal well with AVX512 instructions, so disable them if needed
+    #export CFLAGS="-march=skylake -mtune=skylake -mno-avx512f"
+    #export CXXFLAGS="-march=skylake -mtune=skylake -mno-avx512f"
+	mkdir -p ${INSTALLDIR}/casacore/build
+	mkdir -p ${INSTALLDIR}/casacore/data
+	cd $INSTALLDIR/casacore
+    git clone https://github.com/casacore/casacore.git src
+	if [ "${CASACORE_VERSION}" != "latest" ]; then cd ${INSTALLDIR}/casacore/src && git checkout tags/${CASACORE_VERSION}; fi
+    # Backport patch UVFITS for LOFAR. This is fixed in recent versions > May 26 2020
+    #wget https://patch-diff.githubusercontent.com/raw/casacore/casacore/pull/1033.patch -O $INSTALLDIR/casacore/1033.patch
+    #cd $INSTALLDIR/casacore/src && patch --fuzz 3 -p1 < $INSTALLDIR/casacore/1033.patch
+	cd ${INSTALLDIR}/casacore/data && wget --retry-connrefused ftp://anonymous@ftp.astron.nl/outgoing/Measures/WSRT_Measures.ztar
+	cd ${INSTALLDIR}/casacore/data && tar xf WSRT_Measures.ztar && rm WSRT_Measures.ztar
+	cd ${INSTALLDIR}/casacore/build && cmake -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/casacore/ -DDATA_DIR=${INSTALLDIR}/casacore/data -DBUILD_PYTHON=True -DUSE_OPENMP=True -DUSE_FFTW3=TRUE -DUSE_HDF5=True -DBUILD_PYTHON3=False ../src/ 
+	cd ${INSTALLDIR}/casacore/build && $make -s -j ${J}
+	cd ${INSTALLDIR}/casacore/build && $make install
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/casacore/build
+    rm -rf $INSTALLDIR/casacore/src
+
+	#
+	# Install Dysco
+	#
+	mkdir -p $INSTALLDIR/dysco/build
+	cd $INSTALLDIR/dysco && git clone https://github.com/aroffringa/dysco.git src
+    if [ "$DYDSCO_VERSION" != "latest" ]; then cd src && git checkout $DYSCO_VERSION; fi
+	cd $INSTALLDIR/dysco/build && cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/dysco -DCASACORE_ROOT_DIR=$INSTALLDIR/casacore -DPORTABLE=True ../src && $make -s -j $J && $make install
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/dysco/build
+    rm -rf $INSTALLDIR/dysco/src
+
+    export LD_LIBRARY_PATH=$INSTALLDIR/dysco/lib:$LD_LIBRARY_PATH
+
+	#
+	# Install Python-CASAcore
+	#
+	mkdir ${INSTALLDIR}/python-casacore
+    cd ${INSTALLDIR}/python-casacore && git clone https://github.com/casacore/python-casacore
+	if [ "$PYTHON_CASACORE_VERSION" != "latest" ]; then cd ${INSTALLDIR}/python-casacore/python-casacore && git checkout tags/${PYTHON_CASACORE_VERSION}; fi
+	cd ${INSTALLDIR}/python-casacore/python-casacore
+    python setup.py build_ext -I${INSTALLDIR}/casacore/include/:/usr/include/python2.7 -L${INSTALLDIR}/casacore/lib/:/usr/lib64/
+    cd $INSTALLDIR/python-casacore/python-casacore
+    python setup.py install #--prefix=${INSTALLDIR}/python-casacore/
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/python-casacore/python-casacore
+    # and then reset the flags again if needed
+    #export CFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
+    #export CXXFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
+
+	#
+	# Install AOFlagger
+	#
+	mkdir -p ${INSTALLDIR}/aoflagger/build
+	if [ "${AOFLAGGER_VERSION}" = "latest" ]; then cd ${INSTALLDIR}/aoflagger && git clone git://git.code.sf.net/p/aoflagger/code aoflagger && cd ${INSTALLDIR}/aoflagger/aoflagger; fi
+	if [ "${AOFLAGGER_VERSION}" != "latest" ]; then cd ${INSTALLDIR}/aoflagger && git clone git://git.code.sf.net/p/aoflagger/code aoflagger && cd ${INSTALLDIR}/aoflagger/aoflagger && git checkout tags/${AOFLAGGER_VERSION}; fi
+	cd ${INSTALLDIR}/aoflagger/build && cmake -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/aoflagger/ -DCASACORE_ROOT_DIR=${INSTALLDIR}/casacore -DBUILD_SHARED_LIBS=ON -DPORTABLE=True ../aoflagger
+	cd ${INSTALLDIR}/aoflagger/build && $make -s -j ${J}
+	cd ${INSTALLDIR}/aoflagger/build && $make install
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/aoflagger/aoflagger
+    rm -rf $INSTALLDIR/aoflagger/build
+    rm -rf $INSTALLDIR/aoflagger/src
+
+	#
+	# Install LOFAR
+	#
+	mkdir -p ${INSTALLDIR}/lofar/build/gnucxx11_opt
+	if [ "${LOFAR_VERSION}" = "latest" ]; then cd ${INSTALLDIR}/lofar && svn checkout https://svn.astron.nl/LOFAR/trunk src; fi
+	if [ "${LOFAR_VERSION}" != "latest" ]; then cd ${INSTALLDIR}/lofar && svn checkout https://svn.astron.nl/LOFAR/tags/LOFAR-Release-${LOFAR_VERSION} src; fi
+	cd $INSTALLDIR/lofar && svn update --depth=infinity $INSTALLDIR/lofar/src/CMake
+	wget https://raw.githubusercontent.com/tikk3r/lofar-grid-hpccloud/master/patches/lofar.patch
+	patch $INSTALLDIR/lofar/src/CMake/variants/GNUCXX11.cmake $PATCH_LOFAR
+	cd ${INSTALLDIR}/lofar/build/gnucxx11_opt
+    #cmake -DCMAKE_PREFIX_PATH=$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:$INSTALLDIR/dysco -DBUILD_PACKAGES="StationResponse pystationresponse ParmDB pyparmdb Pipeline MS" -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/lofar/ -DUSE_LOG4CPLUS=OFF -DUSE_OPENMP=True ${INSTALLDIR}/lofar/src/
+    cmake -DCMAKE_PREFIX_PATH=$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:$INSTALLDIR/dysco -DBUILD_PACKAGES="Pipeline" -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/lofar/ -DUSE_LOG4CPLUS=OFF -DUSE_OPENMP=True -DBUILD_PYTHON3=OFF ${INSTALLDIR}/lofar/src/
+	$make -s -j $J
+	$make install
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/lofar/build
+    rm -rf $INSTALLDIR/lofar/src
+
+    #
+    # Install LofarStMan
+    #
+    mkdir -p $INSTALLDIR/lofarstman
+    cd $INSTALLDIR/lofarstman
+    git clone https://github.com/lofar-astron/LofarStMan.git
+    cd LofarStMan
+    mkdir build && cd build
+    cmake -DCASACORE_ROOT_DIR=$INSTALLDIR/casacore -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/lofarstman
+    make -j$J
+    make install
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/lofarstman
+
+    #
+    # Install msoverview separately
+    #
+    mkdir -p $INSTALLDIR/msoverview/src
+    cd $INSTALLDIR/msoverview/src
+    svn export https://svn.astron.nl/LOFAR/tags/LOFAR-Release-3_2_18/CEP/MS/src/msoverview.cc
+    gcc -I/opt/lofar/casacore/include/casacore/ -L/opt/lofar/casacore/lib msoverview.cc -o $INSTALLDIR/lofar/bin/msoverview -lcasa_casa -lcasa_ms -lcasa_tables -lstdc++
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/msoverview
+    
+    #
+    # Install the standalone StationResponse libraries.
+    #   
+    echo Installing LOFARBeam...
+    mkdir -p $INSTALLDIR/LOFARBeam/build
+    cd $INSTALLDIR/LOFARBeam
+    git clone https://github.com/lofar-astron/LOFARBeam.git src
+    cd build
+    # Install in the existing lofar python folder
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/lofar ../src
+    $make -j $J
+    $make install
+    touch /opt/lofar/lofar/lib64/python2.7/site-packages/lofar/__init__.py
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/LOFARBeam/build
+    rm -rf $INSTALLDIR/LOFARBeam/src
+
+
+    #
+    # Install EveryBeam library
+    #
+    echo Installing EveryBeam
+    mkdir -p $INSTALLDIR/EveryBeam/build
+    cd $INSTALLDIR/EveryBeam
+    git clone https://git.astron.nl/RD/EveryBeam.git src
+    cd src && git checkout $EVERYBEAM_VERSION
+    cd $INSTALLDIR/EveryBeam/build
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/EveryBeam ../src
+    $make -j $J
+    $make install
+
+    #
+    # Install DPPP
+    #
+    mkdir -p $INSTALLDIR/DPPP/build
+    git clone https://github.com/lofar-astron/DP3.git $INSTALLDIR/DPPP/src
+    cd $INSTALLDIR/DPPP/src
+    git checkout tags/${DPPP_VERSION}
+    cd $INSTALLDIR/DPPP/build
+    cmake3 -DCMAKE_CXX_FLAGS="-D_GLIB_USE_CXX_ABI=1 -DBOOST_NO_CXX11_SCOPED_ENUMS" -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLDIR/DPPP -DLOFAR_STATION_RESPONSE_DIR:PATH=$INSTALLDIR/lofar/include -DLOFAR_STATION_RESPONSE_LIB:FILEPATH=$INSTALLDIR/lofar/lib/libstationresponse.so -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include -DAOFLAGGER_INCLUDE_DIR=$INSTALLDIR/aoflagger/include -DAOFLAGGER_LIB=$INSTALLDIR/aoflagger/lib/libaoflagger.so ../src
+    $make -s -j $J && $make install
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/DPPP/build
+    rm -rf $INSTALLDIR/DPPP/src
+
+    ############################################
+    # Install Python packages for Python 2 now #
+    ############################################
+	#
+	# Install RMextract
+	#
+	mkdir -p $INSTALLDIR/RMextract/build
+	cd $INSTALLDIR/RMextract/build
+    git clone https://github.com/lofar-astron/RMextract.git src
+    cd src
+    if [ "$RMEXTRACT_VERSION" != "latest" ]; then git checkout $RMEXTRACT_VERSION; fi
+    python setup.py build --add-lofar-utils
+    python setup.py install --add-lofar-utils
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/RMextract
+
+	#
+	# Install LoSoTo
+	#
+	mkdir -p $INSTALLDIR/losoto/build
+	cd ${INSTALLDIR}/losoto/build
+    git clone https://github.com/revoltek/losoto.git src
+    cd src
+    if [ "$LOSOTO2_VERSION" != "latest" ]; then git checkout $LOSOTO2_VERSION; fi
+    python setup.py build
+    python setup.py install
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/losoto
+
+	#
+	# Install LSMTool.
+	#
+	mkdir -p $INSTALLDIR/lsmtool
+	cd $INSTALLDIR/lsmtool
+    git clone https://github.com/darafferty/LSMTool.git lsmtool 
+	cd $INSTALLDIR/lsmtool/lsmtool
+    if [ "$LSMTOOL_VERSION" != "latest" ]; then git checkout $LSMTOOL_VERSION; fi
+	python setup.py install
+    cd $INSTALLDIR
+	rm -rf $INSTALLDIR/lsmtool
+
+    ############################################
+    # Install Python packages for Python 3 now #
+    ############################################
+    deactivate
+    source $INSTALLDIR/pyenv-py3/bin/activate
+
+	#
+	# Install LoSoTo
+	#
+	mkdir -p $INSTALLDIR/losoto/build
+	cd $INSTALLDIR/losoto/build
+    git clone https://github.com/revoltek/losoto.git src
+    cd src
+    python setup.py build
+    python setup.py install
+    cd $INSTALLDIR
+	rm -rf $INSTALLDIR/losoto
+
+    # Switch back to py2 to wrap up installation
+    deactivate
+    source $INSTALLDIR/pyenv-py2/bin/activate
+
+    #
+    # Install-WSClean
+    #
+    mkdir $INSTALLDIR/wsclean
+    if [ "$WSCLEAN_VERSION" != "latest" ]; then cd ${INSTALLDIR}/wsclean && git clone https://gitlab.com/aroffringa/wsclean.git && cd wsclean && git checkout $WSCLEAN_VERSION; fi
+    if [ "$WSCLEAN_VERSION" = "latest" ]; then cd ${INSTALLDIR}/wsclean && git clone https://gitlab.com/aroffringa/wsclean.git && cd wsclean; fi
+    mkdir build && cd build
+    # Switch to mpicc for a minute
+    export CC=`which mpicc`
+    export CXX=`which mpic++`
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/wsclean -DPORTABLE=True -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include ..
+    $make -j ${J}
+    $make install
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/wsclean/wsclean
+    # Switch back to normal compilers
+    export CC=`which gcc`
+	export CXX=`which g++`
+
+    #
+    # Install DS9
+    #
+    mkdir -p $INSTALLDIR/ds9/bin
+    cd $INSTALLDIR/ds9
+    wget http://ds9.si.edu/download/fedora30/ds9.fedora30.8.2.1.tar.gz 
+    tar xf ds9*.tar.gz -C $INSTALLDIR/ds9/bin
+    rm ds9*.tar.gz
+
+	echo "Installation directory contents:"
+	ls ${INSTALLDIR}
+
+    #
+    # Finaly cleanup of unnecessary stuff
+    # 
+    export PYTHONPATH=$OLD_PYTHONPATH
+    rm -rf /var/cache/dnf/*
+    rm -rf /var/cache/yum/*
+    rm -rf /var/log/*
+    dnf -y clean all
+    unset J
+    
+	#
+	# init-lofar
+	#
+	ln -s /opt/lofar/DPPP/bin/DPPP /opt/lofar/lofar/bin/NDPPP
+	ln -s /opt/lofar/DPPP/bin/makesourcedb /opt/lofar/lofar/bin/makesourcedb
+    ln -s $INSTALLDIR/pyenv-py3/bin/h5plot /usr/bin/h5plot
+
+	echo export INSTALLDIR=$INSTALLDIR > $INSTALLDIR/init.sh
+	echo export HDF5_USE_FILE_LOCKING=FALSE >> $INSTALLDIR/init.sh
+	echo source \$INSTALLDIR/lofar/lofarinit.sh  >> $INSTALLDIR/init.sh
+	echo export PYTHONPATH=\$INSTALLDIR/dppp:\$INSTALLDIR/lofar/lib64/python2.7/site-packages >> $INSTALLDIR/init.sh
+	echo export PATH=/opt/montage/Montage-6.0/bin:\$PATH  >> $INSTALLDIR/init.sh
+	echo export PATH=\$INSTALLDIR/aoflagger/bin:\$PATH  >> $INSTALLDIR/init.sh
+	echo export PATH=\$INSTALLDIR/casacore/bin:\$PATH  >> $INSTALLDIR/init.sh
+    echo export PATH=\$INSTALLDIR/ds9/bin:\$PATH >> $INSTALLDIR/init.sh
+	echo export PATH=\$INSTALLDIR/DPPP/bin:\$PATH  >> $INSTALLDIR/init.sh
+    echo export PATH=\$INSTALLDIR/difmap/uvf_difmap:\$PATH >> $INSTALLDIR/init.sh
+	echo export PATH=\$INSTALLDIR/dysco/bin:\$PATH  >> $INSTALLDIR/init.sh
+	echo export PATH=\$INSTALLDIR/lofar/bin:\$PATH  >> $INSTALLDIR/init.sh
+	echo export PATH=\$INSTALLDIR/wsclean/bin:\$PATH  >> $INSTALLDIR/init.sh
+    echo export PATH=/usr/lib64/openmpi/bin:\$PATH >> $INSTALLDIR/init.sh
+	echo export LD_LIBRARY_PATH=\$INSTALLDIR/aoflagger/lib:\$INSTALLDIR/casacore/lib:\$INSTALLDIR/DPPP/lib:\$INSTALLDIR/dysco/lib:\$INSTALLDIR/EveryBeam/lib:\$INSTALLDIR/idg/lib:\$INSTALLDIR/lofar/lib:\$INSTALLDIR/lofar/lib64:\$INSTALLDIR/LOFARBeam/lib:\$LD_LIBRARY_PATH  >> $INSTALLDIR/init.sh
+    echo export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
+    echo export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
+	echo export OPENBLAS_NUM_THREADS=64 >> $INSTALLDIR/init.sh
+	echo export OPENBLAS_MAX_THREADS=64 >> $INSTALLDIR/init.sh
+	echo export OMP_NUM_THREADS=64 >> $INSTALLDIR/init.sh
+	echo export OMP_MAX_THREADS=64 >> $INSTALLDIR/init.sh
+
+	echo export PYTHONPATH=\$INSTALLDIR/dppp:\$INSTALLDIR/lofar/lib64/python2.7/site-packages:\$PYTHONPATH >> $INSTALLDIR/init_py2.sh
+    echo source \$INSTALLDIR/pyenv-py2/bin/activate >> $INSTALLDIR/init_py2.sh
+
+    echo "measures.directory: $INSTALLDIR/casacore/data" > $INSTALLDIR/.casarc 
+    echo export CASARCFILES=\$INSTALLDIR/.casarc >> $INSTALLDIR/init.sh
+    #echo module load mpi >> $INSTALLDIR/init.sh
+
+    #
+    # entrypoint
+    #
+%runscript
+    . $INSTALLDIR/init.sh
+
+%help
+    This Singularity image contains an install of LOFAR 3.2.18. In order to run your pipelines, you may need to know where the software is installed. The root directory is /opt/lofar, with most software installed as follows:
+
+    * AOFlagger: $INSTALLDIR/aoflagger
+    * Casacore: $INSTALLDIR/casacore
+    * Difmap: $INSTALLDIR/difmap
+    * DP3: $INSTALLDIR/DPPP
+    * Dysco: $INSTALLDIR/dysco
+    * DS9: $INSTALLDIR/ds9
+    * Dysco: $INSTALLDIR/dysco
+    * EveryBeam: $INSTALLDIR/EveryBeam
+    * IDG: $INSTALLDIR/idg
+    * LOFAR: $INSTALLDIR/lofar
+    * WSClean: $INSTALLDIR/wsclean
+
+    Python packages such as losoto, lsmtool and RMextract are available in the environment /opt/lofar/pyenv-py2. By default this Python 2 environment is already active.
+
+    To execute a command directly, use
+        singularity exec -B <paths,that,need,to,be,accessible> <path to image> <command> <arguments>
+    for example, to run a genericpipeline parset, the following command can be used:
+        singularity exec lofar.simg genericpipeline.py -d -c pipeline.cfg pipeline.parset
+    To enter a shell within the image, use
+        singularity shell -B <paths,that,need,to,be,accessible> <path to image>
+
+    The container base is Fedora 31 and relevant key dependencies have the following versions:
+
+    * Armadillo 9.900.3
+    * Boost 1.69.0
+    * CFITSIO 7.3.47
+    * FFTW 3.5.8
+    * HDF5 1.10.5
+    * LAPACK 3.8.0
+    * OpenBLAS 3.8.0
+    * SuperLU 5.2.1
+    * WCSLIB 6.4

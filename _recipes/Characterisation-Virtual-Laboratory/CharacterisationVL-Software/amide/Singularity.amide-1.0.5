@@ -1,0 +1,17 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804
+
+%labels
+MAINTAINER jay.vanschyndel@monash.edu
+HARDWARE  cpu
+
+%post
+    echo "============================================="
+    echo "Installing Amide 1.0.5 dependencies          "
+    echo "============================================="
+    mkdir -p /opt/
+    apt-get -y update
+    apt -y install amide
+
+%runscript
+    $*

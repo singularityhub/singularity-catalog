@@ -1,0 +1,28 @@
+Bootstrap:docker
+From:nfcore/base:1.8
+
+%labels
+	MAINTAINER Björn Hallström <bjorn.hallstrom@skane.se>
+	DESCRIPTION Singularity container for CMD myeloid twist pipeline
+	VERSION 0.0.3
+
+%environment
+	PATH=/opt/conda/envs/CMD-twist/bin:/opt/sentieon-genomics-201911/bin/:$PATH
+	PICARD_HOME=/opt/conda/envs/CMD-twist/share/picard-2.18.26-0/
+	PERL5LIB=$PERL5LIB:/opt/conda/envs/CMD-twist/lib/site_perl/5.26.2/
+	export JAVA_HOME=/opt/conda/envs/CMD-twist
+	umask 0002
+%files
+	environment_cnvkit95.yml /
+	
+%post
+	rm -rf /var/lib/apt/lists/*
+	apt -y clean
+	apt -y update
+	apt -y install build-essential make
+	apt -y install graphicsmagick-imagemagick-compat
+	
+
+	/opt/conda/bin/conda env create -f /environment_cnvkit95.yml
+	/opt/conda/bin/conda clean -a
+	

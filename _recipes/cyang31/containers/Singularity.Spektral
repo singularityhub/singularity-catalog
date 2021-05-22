@@ -1,0 +1,49 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:1.13.1-gpu-py3
+
+# adapted from: https://github.com/marcc-hpc/tensorflow
+%environment
+  # use bash as default shell
+  SHELL=/bin/bash
+  export SHELL
+  export HDF5_USE_FILE_LOCKING='FALSE'
+
+  # load environment variables
+  . /environment
+
+  # use bash as default shell
+  echo 'SHELL=/bin/bash' >> /environment
+
+  # make environment file executable
+  chmod +x /environment
+
+  # default mount paths
+  mkdir /scratch
+
+  # fix this issue: https://github.com/singularityware/singularity/issues/1182#issuecomment-381796545
+  touch /usr/bin/nvidia-smi
+
+  apt-get update && apt-get -y install locales
+  locale-gen en_US.UTF-8
+  apt-get install -y git wget
+  apt-get clean
+
+  # scikit, scipy
+  apt-get install -y python3-scipy
+  #apt-get install python3-pip
+  apt-get install python3-sklearn python3-sklearn-lib python3-sklearn-doc
+  # pip3 install scipy scikit-learn scikit-image
+  pip install Pillow
+  pip install matplotlib
+
+  # SimpleITK
+  pip install simpleitk
+  #comet
+  pip install comet_ml
+  #pandas
+  pip install pandas
+
+  git clone https://github.com/danielegrattarola/spektral.git
+  cd spektral
+  git checkout tf1
+  python setup.py --upgrade install

@@ -1,0 +1,28 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804
+
+%labels
+MAINTAINER jafar.liel@monash.edu
+HARDWARE   gpu
+
+%environment
+    export PATH=/MRtrix3Tissue/bin/:$PATH
+
+%post
+    echo "==============================="
+    echo " Installing dependencies       "
+    echo "==============================="
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    apt -y update && apt -y upgrade
+    apt -y install git g++ python libeigen3-dev zlib1g-dev libqt4-opengl-dev libgl1-mesa-dev libfftw3-dev libtiff5-dev libpng-dev
+
+    cd /
+    git clone https://github.com/3Tissue/MRtrix3Tissue.git MRtrix3Tissue
+    cd MRtrix3Tissue
+    ./configure
+    ./build
+
+%runscript
+    $*

@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  probcons
+
+######## probcons #########
+# cd /usr/local/
+# wget http://probcons.stanford.edu/probcons_v1_12.tar.gz
+# tar -xvf probcons_v1_12.tar.gz
+# cd /usr/local/probcons
+# make
+# ln -s /usr/local/probcons/probcons /usr/local/bin/probcons
+
+%runscript
+probcons "$@"

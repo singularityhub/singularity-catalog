@@ -1,0 +1,100 @@
+Bootstrap: docker
+From: rocker/r-ver:4.0.0
+Stage: spython-base
+
+%labels
+org.label-schema.license="GPL-2.0" 
+org.label-schema.vcs-url="https://github.com/gparadis/spades-singularity" 
+org.label-schema.vendor="Predictive Ecology" 
+maintainer="Greg Paradis <greg.paradis@ubc.ca>"
+
+
+%files
+spades-setup_base.R /spades-setup.R
+
+
+%post
+S6_VERSION=v1.21.7.0
+RSTUDIO_VERSION=latest
+PATH=/usr/lib/rstudio-server/bin:$PATH
+GUROBI_MAJOR_VERSION=9.0
+GUROBI_MINOR_VERSION=9.0.3
+GUROBI_MINOR_VERSION_=903
+GUROBI_INSTALL_PATH=/opt
+
+/rocker_scripts/install_rstudio.sh
+/rocker_scripts/install_pandoc.sh
+
+locale-gen en_CA.UTF-8
+update-locale LANG=en_CA.UTF-8
+
+# install required system packages
+apt-get -y install \
+	nano \
+	emacs-nox \
+	mlocate \
+        libxml2-dev \
+	libglpk-dev \
+	libgdal-dev \
+	libgeos-dev \
+	libpython3-dev \
+	libjq-dev \
+	libv8-dev \
+	libudunits2-dev \
+	python3-distutils \
+	python3-numpy \
+	python3-scipy \
+	python3-rasterio \
+	python3-fiona \
+	python3-pandas \
+	python3-geopandas \
+	python3-pip \
+	default-jdk \
+	musl \
+	musl-dev \
+	libstdc++6
+
+ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1 # weird hack to fix geopandas bug
+
+# instsall ws3 (and missing dependencies)
+pip3 install profilehooks folium
+pip3 install git+https://github.com/gparadis/ws3.git
+
+# relink R to where RStudio thinks it is
+ln /usr/local/bin/R /usr/bin/R 
+
+# install gurobi
+wget https://packages.gurobi.com/${GUROBI_MAJOR_VERSION}/gurobi${GUROBI_MINOR_VERSION}_linux64.tar.gz
+tar xvfz gurobi${GUROBI_MINOR_VERSION}_linux64.tar.gz -C ${GUROBI_INSTALL_PATH}
+ln -s ${GUROBI_INSTALL_PATH}/gurobi${GUROBI_MINOR_VERSION_} ${GUROBI_INSTALL_PATH}/gurobi
+cd ${GUROBI_INSTALL_PATH}/gurobi/linux64
+python3 setup.py install
+cd /
+
+# install SpaDES R packages (and dependencies)
+Rscript spades-setup.R
+
+# clean up
+rm /gurobi${GUROBI_MINOR_VERSION}_linux64.tar.gz
+rm /spades-setup.R
+
+
+%environment
+export PATH=/usr/lib/rstudio-server/bin:$PATH
+export GUROBI_HOME="/opt/gurobi/linux64"
+export PATH="${PATH}:${GUROBI_HOME}/bin"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${GUROBI_HOME}/lib"
+export GRB_LICENSE_FILE="${HOME}/gurobi.lic"
+
+%runscript
+exec "$@"
+
+# RStudio app setup
+%apprun rstudio
+echo "Launching RStudio with password" $PASSWORD
+exec rserver --server-data-dir=${RSTUDIO_SERVER_DATA_DIR} --secure-cookie-key-file=${RSTUDIO_SERVER_DATA_DIR}/${USER}_secure-cookie-key --server-pid-file=${RSTUDIO_SERVER_DATA_DIR}/rstudio-server.pid --auth-none=0 --auth-pam-helper-path=pam-helper --rsession-which-r=$(which R) --server-daemonize=0  "$@"
+
+%appenv rstudio
+export PASSWORD=`date | md5sum | awk '{print $1}'` # random password based on date
+export RSTUDIO_SERVER_DATA_DIR=/tmp/${USER}_rstudio-server
+export LD_LIBRARY_PATH=/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/x86_64-linux-gnu:/usr/lib/jvm/java-11-openjdk-amd64/lib/server:/opt/gurobi/linux64/lib:/.singularity.d/libs

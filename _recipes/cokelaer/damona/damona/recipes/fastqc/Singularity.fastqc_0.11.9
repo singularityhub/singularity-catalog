@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: centos:7
+
+%labels
+    Author Thomas Cokelaer
+    Version 1
+    DAMONA_TYPE EXE
+    DAMONA_BIN fastqc:0.11.9
+
+%files
+
+%post
+
+    yum install -y java-1.8.0-openjdk
+    yum install -y wget unzip
+    yum install -y perl
+    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
+    unzip fastqc_v0.11.9.zip
+    export PATH=$PATH:/FastQC
+    chmod 755 /FastQC/fastqc
+
+%environment
+    export PATH=$PATH:/FastQC
+
+%runscript
+    exec fastqc "$@"
+

@@ -1,0 +1,18 @@
+Bootstrap: debootstrap
+OSVersion: stable
+MirrorURL: http://httpredir.debian.org/debian
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y python3 python3-pip libgl1-mesa-glx rsync git curl wget bwa \
+                   bedtools samtools procps
+    update-alternatives --install /usr/bin/python python $(which python3) 1
+    # install quick pyhton tools
+    pip3 install pyfaidx
+    pip3 install ncbi-genome-download
+    pip3 install biopython
+
+%environment
+    export LC_ALL=C
+

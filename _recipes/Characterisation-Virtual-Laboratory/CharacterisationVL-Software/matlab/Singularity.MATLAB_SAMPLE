@@ -1,0 +1,23 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804
+
+%labels
+MAINTAINER jafar.lie@monash.edu
+HARDWARE   gpu
+
+%environment
+    export PATH=/opt/matlab/R2019b/:$PATH
+
+%files
+ matlab /matlab
+
+%post
+
+ apt -y update
+ apt -y upgrade
+ cd /
+ /matlab/install -mode silent -inputFile /matlab/installer_input.txt
+ rm -rf /matlab/
+
+%runscript
+    $*

@@ -1,0 +1,33 @@
+Bootstrap: localimage
+From: ../images/common.simg
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/opt/init/013_cxx
+
+%files
+    entry.sh /opt/init/013_cxx/entry.sh
+    cxx_dein.toml /opt/init/013_cxx/cxx_dein.toml
+
+%environment
+    export PATH=/opt/cargo/bin:$PATH
+
+%labels
+    AUTHOR argon.argon.argon@gmail.com
+
+%post
+    echo "export SINGULARITY_IMAGE_NAME=cxx_$(date +%s)" >> $SINGULARITY_ENVIRONMENT
+    echo "export SINGULARITY_XDG_ROOT=\$HOME/.xdg/\$SINGULARITY_IMAGE_NAME" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_CONFIG_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_CACHE_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_DATA_HOME=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    echo "export XDG_RUNTIME_DIR=\$SINGULARITY_XDG_ROOT" >> $SINGULARITY_ENVIRONMENT
+    . $SINGULARITY_ENVIRONMENT
+
+    apt-get install -y clang-format clang-tidy clang-tools clang clangd libc++-dev libc++1 libc++abi-dev libc++abi1 libclang-dev libclang1 liblldb-dev libllvm-ocaml-dev libomp-dev libomp5 lld lldb llvm-dev llvm-runtime llvm python-clang
+
+    cd $TMPDIR
+    git clone https://github.com/Microsoft/vcpkg.git
+    cd vcpkg
+    git reset --hard 1e19af0
+    ./bootstrap-vcpkg.sh
+    mv vcpkg /opt/bin/vcpkg

@@ -1,0 +1,200 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%help
+    This is the container used to run CP2K.
+
+%labels
+    Author HPE EMEA Research Lab
+    Version v0.1.0
+
+%environment
+    #
+    # Read configuration
+    #
+#    . /usr/local/workdir/config/cp2k_conf.def
+
+    if test ! -z ${NP+x}; then
+	export RUNCMD="mpiexec -np ${NP}"
+    fi
+
+    export OPENBLAS_NUM_THREADS=${OPENBLAS_NUM_THREADS:-1}
+    export OPENBLAS_MAIN_FREE=1 # Used to avoid Python crash
+    export OMP_NUM_THREADS=${OMP_NUM_THREADS:-1}
+    export OMP_PROC_BIND=${OMP_PROC_BIND:-close}
+    export OMP_PLACES=${OMP_PLACES:=cores}
+
+    export PATH=${MYWORKDIR}/bin:${PATH}
+
+    export MYWORKDIR=/usr/local/workdir
+    export PATH=${MYWORKDIR}/bin:${PATH}
+    export LD_LIBRARY_PATH=${MYWORKDIR}/fftw/lib:${MYWORKDIR}/OpenBLAS:${LD_LIBRARY_PATH}
+
+    export CP2K_DATA_DIR=${MYWORKDIR}/cp2k/data
+    export OMP_NESTED=false
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/usr/local/workdir/config
+
+%runscript
+    if test $# -eq 0 || test -z "$@" ; then
+        bash -norc
+    else
+	${MYWORKDIR}/bin/cp2k.psmp -i $1
+    fi
+
+%files
+    # Copy C program to check MPI rank
+    mpirank.c /usr/local/workdir
+
+    # Building configuration
+    #cp2k_conf.def /usr/local/workdir/config
+
+%post
+    #
+    # First install default packages and clean caches
+    #
+    apt-get update && apt-get -y upgrade --no-install-recommends
+    apt-get install -y software-properties-common
+    add-apt-repository ppa:ubuntu-toolchain-r/test
+    apt-get update
+    apt-get -y install --no-install-recommends \
+                       build-essential wget less gfortran-7 gcc-7 g++-7 procps \
+		       locales ca-certificates \
+		       python3 python3-dev vim ssh git
+    apt-get clean && rm -rf /var/lib/apt/lists/* # do not forget to clean!
+
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 70 --slave /usr/bin/g++ g++ /usr/bin/g++-7 --slave /usr/bin/gcov gcov /usr/bin/gcov-7 --slave /usr/bin/gfortran gfortran /usr/bin/gfortran-7
+    update-alternatives --config gcc
+
+    # Update default python to v3
+    update-alternatives --install /usr/bin/python python /usr/bin/python3 1000
+    update-alternatives --config python
+
+    export MYWORKDIR=/usr/local/workdir
+
+    #
+    # Move inside build directory
+    #
+    cd ${MYWORKDIR}
+
+    #
+    # Read configuration
+    #
+    # . config/cp2k_conf.def
+
+    #
+    # Install MPICH
+    #
+#    if test "$MPI_DIST" = "MPICH"; then
+#	export MPICH_VERSION=3.3.1
+#	wget -q http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz
+#	tar xf mpich-${MPICH_VERSION}.tar.gz && rm mpich-${MPICH_VERSION}.tar.gz
+#	cd mpich-${MPICH_VERSION}
+#	./configure --prefix=/usr/local --disable-static --disable-rpath --disable-wrapper-rpath \
+#                    --mandir=/usr/share/man --enable-fast=all,O3
+#	make -j$(getconf _NPROCESSORS_ONLN) install
+#	ldconfig
+#	cd .. && rm -rf mpich-${MPICH_VERSION}
+    #
+    # Install OpenMPI
+    #
+#    elif test "$MPI_DIST" = "OpenMPI"; then
+	export OMPI_VERSION=4.0.1
+	wget https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-$OMPI_VERSION.tar.bz2
+	tar xf openmpi-$OMPI_VERSION.tar.bz2 && rm openmpi-$OMPI_VERSION.tar.bz2
+	cd openmpi-$OMPI_VERSION
+	./configure --prefix=/usr/local --disable-static --disable-rpath \
+                    --mandir=/usr/share/man --enable-fast=all,O3 \
+		    --enable-mpi1-compatibility
+	make -j$(getconf _NPROCESSORS_ONLN) install
+	ldconfig
+	cd .. && rm -rf openmpi-$OMPI_VERSION
+#    fi
+
+    #
+    # Compile program to get MPI rank
+    #
+    mkdir -p ${MYWORKDIR}/bin
+    mpicc ${MYWORKDIR}/mpirank.c -o ${MYWORKDIR}/bin/mpirank
+
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
+    export LANG=en_US.UTF-8
+
+    # Install latest cmake
+    export CMAKE_VERSION=3.18.2
+    wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-Linux-x86_64.sh
+    sh cmake-${CMAKE_VERSION}-Linux-x86_64.sh --prefix=/usr/local --skip-license
+    ldconfig
+    rm -f cmake-${CMAKE_VERSION}-Linux-x86_64.sh
+
+    # OpenBLAS
+    export OPENBLAS_NUM_THREADS=1
+    export OPENBLAS_MAIN_FREE=1
+    export OMP_NUM_THREADS=1
+    export OMP_NESTED=false
+    git clone https://github.com/xianyi/OpenBLAS.git
+    cd OpenBLAS
+    git checkout v0.3.9
+    CC=gcc USE_OPENMP=1 make
+    cd ..
+
+    #
+    # Compile SCALAPACK
+    #
+    scalapack_ver=2.1.0
+    wget https://www.cp2k.org/static/downloads/scalapack-${scalapack_ver}.tgz
+    tar xf scalapack-${scalapack_ver}.tgz && rm scalapack-${scalapack_ver}.tgz
+    cd scalapack-${scalapack_ver}
+    mkdir build && cd build
+    cmake -DCMAKE_INSTALL_PREFIX=${MYWORKDIR}/scalapack -DCMAKE_BUILD_TYPE=Release -DBLAS_LIBRARIES="-L${MYWORKDIR}/OpenBLAS -lopenblas" -DLAPACK_LIBRARIES="-L${MYWORKDIR}/OpenBLAS -lopenblas" ..
+    make -j$(getconf _NPROCESSORS_ONLN) install
+    cd ../.. && rm -rf scalapack-${scalapack_ver}
+
+    # libxsmm
+    libxsmm_ver="1.15"
+    git clone https://github.com/hfp/libxsmm.git libxsmm-${libxsmm_ver}
+    cd libxsmm-${libxsmm_ver} ; git checkout ${libxsmm_ver}
+    make PREFIX=${MYWORKDIR}/libxsmm CXX=g++ CC=gcc FC=gfortran MIC=0 AVX=2 OPT=3 OMP=1 JIT=1 PREFETCH=1 MALLOC=0 DBG=0 install
+    cd .. && rm -rf libxsmm-${libxsmm_ver}
+
+    # fftw
+    fftw_ver="3.3.8"
+    wget https://www.cp2k.org/static/downloads/fftw-${fftw_ver}.tar.gz
+    tar xf fftw-${fftw_ver}.tar.gz && rm fftw-${fftw_ver}.tar.gz
+    cd fftw-${fftw_ver}
+    ./configure  --prefix=${MYWORKDIR}/fftw --enable-openmp --enable-shared --enable-static
+    make -j$(getconf _NPROCESSORS_ONLN) install
+    cd .. && rm -rf fftw-${fftw_ver}
+
+    # CP2K
+    git clone --recursive https://github.com/cp2k/cp2k.git
+    cd cp2k
+    git checkout v7.1.0
+    git submodule update --init --recursive
+    cat << 'EOF' > arch/cp2k.psmp
+DFLAGS  += -D__parallel -D__SCALAPACK -D__FFTW3 -D__LIBXSMM
+
+INCS     += -I${MYWORKDIR}/libxsmm/include
+INCS     += -I${MYWORKDIR}/fftw/include
+
+LIBS     += -L${MYWORKDIR}/libxsmm/lib -lxsmmf -lxsmm -ldl
+LIBS     += -L${MYWORKDIR}/fftw/lib -lfftw3 -lfftw3_omp
+LIBS     += -L${MYWORKDIR}/scalapack/lib -lscalapack
+LIBS     += -L${MYWORKDIR}/OpenBLAS -lopenblas
+
+CC       = mpicc
+CXX      = mpiCC
+FC       = mpifort
+LD       = mpifort
+AR       = ar -r
+
+AFLAGS   = $(DFLAGS) $(INCS) -fopenmp -O3 -funroll-loops
+FCFLAGS  = $(AFLAGS) $(DBGFLAGS) -ffree-form -ffree-line-length-512
+CFLAGS   = $(AFLAGS)
+LDFLAGS  = $(FCFLAGS)
+
+EOF
+
+    make -j$(getconf _NPROCESSORS_ONLN) ARCH=cp2k VERSION=psmp
+    cp exe/cp2k/cp2k.psmp ${MYWORKDIR}/bin

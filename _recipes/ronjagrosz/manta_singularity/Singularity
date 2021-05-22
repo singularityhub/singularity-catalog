@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: ubuntu
+
+%setup
+# Install prerequisites
+apt-get update -qq
+apt-get install -qq bzip2 gcc g++ make zlib1g-dev
+
+# Set manta version variable
+export MANTA_VERSION='1.6.0'
+
+# Get manta tar if not present
+if [ ! -f manta-${MANTA_VERSION}.release_src.tar.bz2 ]; then
+    wget https://github.com/Illumina/manta/releases/download/v${MANTA_VERSION}/manta-${MANTA_VERSION}.release_src.tar.bz2
+fi
+
+# Install manta if build directory does not exist
+if [ ! -d build ]; then
+    if [ ! -d install ]; then
+        mkdir install
+    else
+        echo "Install directory already exists"
+    fi
+    tar -xjf manta-${MANTA_VERSION}.release_src.tar.bz2
+    mkdir build && cd build
+    ../manta-${MANTA_VERSION}.release_src/configure --jobs=4 --prefix=../install
+    make -j4 install
+else
+    echo "Build directory already exists"
+fi

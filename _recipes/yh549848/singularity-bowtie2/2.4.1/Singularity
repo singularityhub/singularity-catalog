@@ -1,0 +1,36 @@
+BootStrap: docker
+From: continuumio/miniconda3:4.9.2
+
+%apprun bowtie2
+  exec bowtie2 "${@}"
+
+%apprun bowtie2-build
+  exec bowtie2-build "${@}"
+
+%apprun bowtie2-inspect
+  exec bowtie2-inspect "${@}"
+
+%apprun bowtie2-align-s
+  exec bowtie2-align-s "${@}"
+
+%apprun bowtie2-build-l
+  exec bowtie2-build-l "${@}"
+
+%apprun bowtie2-inspect-s
+  exec bowtie2-inspect-s "${@}"
+
+%apprun bowtie2-align-l
+  exec bowtie2-align-l "${@}"
+
+%apprun bowtie2-build-s
+  exec bowtie2-build-s "${@}"
+
+%apprun bowtie2-inspect-l
+  exec bowtie2-inspect-l "${@}"
+
+%post
+  . /opt/conda/bin/activate && \
+  conda install -q -y tbb=2020.2 && \
+  conda install -q -y \
+    -c bioconda bowtie2=2.4.1 && \
+  conda clean -a -q -f -y

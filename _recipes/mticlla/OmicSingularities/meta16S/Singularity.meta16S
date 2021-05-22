@@ -1,0 +1,164 @@
+# Author(s): Monica R. Ticlla
+# Afiliation(s):
+#  - Swiss Institute of Bioinformatics (SIB)
+#  - Swiss Tropical and Public Health Institute (SwissTPH)
+#  - University of Basel (UNIBAS)
+
+Bootstrap: docker
+From: centos:7
+
+# ==============================================================================
+# Global Help
+# ==============================================================================
+%help
+This image contains software for processing of 16S-rRNA gene sequencing data.
+It was built with CentOS 7 as base OS and Python 3.6.
+
+Usage:
+- To list available Apps:
+singularity apps <CONTAINER_PATH>
+- To get help for a particular APP:
+singularity help --app <APP_NAME> <CONTAINER_PATH>
+- To run a particular APP:
+singularity run --app <APP_NAME> <CONTAINER_PATH>
+
+%labels
+# ==============================================================================
+# Labels
+# ==============================================================================
+  AUTHOR mticlla@gmail.com
+  MAINTAINER mticlla@gmail.com
+  BUILD_VERSION v0.1
+
+# ==============================================================================
+# Global Environment
+# ==============================================================================
+%environment
+  LANG=en_US.UTF-8
+  export LANG
+  LANGUAGE=en_US:en
+  export LANGUAGE
+  LC_ALL=en_US.UTF-8
+  export LC_ALL
+  PATH=/opt/miniconda3/bin:$PATH
+  export PATH
+
+# ==============================================================================
+# Global installation
+# ==============================================================================
+%post
+  # set environment variables for build time
+  echo "Setting environment variables for build time ..."
+  LANG=en_US.UTF-8
+  export LANG
+  LANGUAGE=en_US:en
+  export LANGUAGE
+  LC_ALL=en_US.UTF-8
+  export LC_ALL
+
+  # Install core packages
+  yum -y update
+  echo "Installing development tools ..."
+  yum -y groupinstall "Development tools"
+  yum -y makecache
+  yum -y install unzip
+  yum -y install which
+  yum -y install hg
+  yum -y install gcc
+  yum -y install gcc-c++
+  yum -y install zlib-devel
+  yum -y install libstdc++-static
+  yum -y install wget
+  yum -y install bzip2
+  yum -y install git
+  yum -y install make
+  yum -y install nano
+  yum -y install perl
+
+  # Install Java
+  yum -y install java-1.8.0-openjdk-devel
+
+  # Install pigz
+  yum -y install pigz
+
+  # Install conda
+  curl -sSL -O https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+  sh Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3
+  rm -fr Miniconda3-latest-Linux-x86_64.sh
+  PATH=/opt/miniconda3/bin:$PATH
+  export PATH
+  #echo "export PATH=/opt/miniconda3/bin:\$PATH" >> $SINGULARITY_ENVIRONMENT
+  conda update --yes -n base conda
+  conda install --yes gcc_linux-64
+  conda install --yes gxx_linux-64
+
+%runscript
+  echo "This image has the following software installed:"
+  echo "QIIME2 v2019.7"
+
+  echo -e "\nHow to use these programs?:"
+  echo "Example: singularity exec <CONTAINER_PATH> fastp --help"
+
+  echo -e "\nThese programs are also available as SCIF applications:"
+  ls /scif/apps | sort -u
+  echo -e "\nHow to use a SCIF APP?:"
+  echo "Example: singularity run --app QIIME2 <CONTAINER_PATH>\
+
+# ==============================================================================
+# SCIF Apps
+# ==============================================================================
+# QIIME2
+# ==============================================================================
+%applabels QIIME2
+  VERSION v2019.7
+%appenv QIIME2
+  QIIME2_VERSION='2019.7'
+  export QIIME2_VERSION
+%appinstall QIIME2
+  PATH=/opt/miniconda3/bin:$PATH
+  export PATH
+  echo ${PATH}
+  wget https://data.qiime2.org/distro/core/qiime2-2019.7-py36-linux-conda.yml
+  conda env create -n qiime2-2019.7 --file qiime2-2019.7-py36-linux-conda.yml
+  ln -s /opt/miniconda3/envs/qiime2-2019.7/bin/* /scif/apps/QIIME2/bin
+  rm qiime2-2019.7-py36-linux-conda.yml
+%apphelp QIIME2
+  From [QIIME2 website](https://qiime2.org/)
+
+  QIIME 2TM is a next-generation microbiome bioinformatics platform that is
+  extensible, free, open source, and community developed.
+
+  USAGE:
+  Once the container has been built, QIIME2 commands/subcommands/plugins (e.g
+  qiime info) can be called in any of the following ways:
+
+  - Option 1: from inside the container
+  # you first need to run a shell within the container
+  user@my_machine:> singularity shell [shell options .e.g --writable] <container>
+  # Now inside the Singularity container
+  Singularity my_container:> source activate qiime2-2019.7
+  # call the qiime commands
+  Singularity container:> qiime --help
+
+  - Option 2: run it as SCIF app from outside the container
+  user@my_machine:> singularity run --app QIIME2 <CONTAINER_PATH>
+  or
+  user@my_machine:> singularity exec --app QIIME2 <CONTAINER_PATH> qiime
+%apprun QIIME2
+  if [[ $@ ]]; then
+    exec "$@"
+  else
+    echo -e "
+    QIIME2 is a next-generation microbiome bioinformatics platform that is
+    extensible, free, open source, and community developed.
+    For help, run:
+    $ singularity run-help --app QIIME2 <CONTAINER_PATH>
+    or
+    $ singularity exec --app QIIME2 <CONTAINER_PATH> qiime --help
+    or
+    $ singularity run --app QIIME2 <CONTAINER_PATH> qiime --help
+    "
+  fi
+%apptest QIIME2
+  #source activate qiime2-2019.7
+  exec qiime --help

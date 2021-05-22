@@ -1,0 +1,45 @@
+Bootstrap: docker
+From: pdal/pdal:latest
+
+%post
+
+  apt-get -y update && apt-get install -y --no-install-recommends apt-utils
+  apt-get -y clean && apt-get -y update && apt-get install -y locales && locale-gen en_US.UTF-8
+
+# vdatum build
+apt-get -y update && apt-get install -y default-jre wget unzip
+wget https://vdatum.noaa.gov/download/data/vdatum_all_20191024.zip
+unzip vdatum_all_20191024.zip
+mv vdatum /APPS/
+# todo: make a shortcut
+	echo '#!/bin/bash
+java -jar /APPS/vdatum/vdatum.jar "$@"' >> /usr/local/bin/vdatum
+chmod 755 /usr/local/bin/vdatum
+
+# htdps
+# apt-get install -y gfortran 
+# wget https://www.ngs.noaa.gov/TOOLS/Htdp/HTDP-download.zip
+# unzip HTDP-download.zip -d HTDP-download
+# gfortran HTDP-download/htdp.f -o HTDP-download/htdp
+# mv htdp /usr/local/bin
+
+# htdps 3.2.5
+apt-get install -y gfortran 
+wget https://raw.githubusercontent.com/gearslaboratory/gears-singularity/master/additional_data/htdp/htdp.for
+gfortran htdp.for -o htdp
+mv htdp /usr/local/bin
+
+
+
+# crs2crs2grid.py
+apt-get install -y python3-setuptools python3-pip
+apt-get install -y software-properties-common
+add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable && apt-get update
+apt-get -y update
+apt-get -y install gdal-bin libgdal-dev
+export CPLUS_INCLUDE_PATH=/usr/include/gdal
+export C_INCLUDE_PATH=/usr/include/gdal
+pip3 install GDAL
+wget https://raw.githubusercontent.com/OSGeo/gdal/master/gdal/swig/python/samples/crs2crs2grid.py
+mv crs2crs2grid.py /usr/local/bin
+chmod +x /usr/local/bin/crs2crs2grid.py

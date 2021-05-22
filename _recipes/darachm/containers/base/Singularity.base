@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: ubuntu:20.04
+#Bootstrap: localimage
+#From: /home/zed/.singularity/darachm-containers-ubuntu2004.simg 
+
+%labels
+
+    MAINTAINER darachm
+    NOTES base
+
+%help
+
+%environment
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%post
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+    # Got the below from somewhere else, opening up the sources list
+    sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+    export DEBIAN_FRONTEND="noninteractive"
+
+    apt -y update 
+    #apt install -y 
+    #python3 -m pip install -U pip numpy wheel
+    #python3 -m pip install -U keras_preprocessing --no-deps
+
+%test

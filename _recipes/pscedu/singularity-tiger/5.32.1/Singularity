@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: perl:5.32.1
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE http://gitub.com/icaoberg/singularity-tiger
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    VERSION 5.32.1
+
+%environment
+    export LANGUAGE=en_US.UTF-8
+    export LC_ALL=C
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    apt update && apt-get install -y locales libipc-run3-perl git
+    locale-gen en_US.UTF-8
+    cpan install List::Util
+    cpan install File::Spec
+    cpan install Cwd
+    cpan install Getopt::Long
+    cpan install IPC::Run3
+    cd /opt
+    git clone https://github.com/sandialabs/TIGER.git
+    cd TIGER && git submodule init && git submodule update
+    ln -s $(pwd)/islander.pl /usr/local/bin/islander.pl && chmod +x /usr/local/bin/islander.pl
+    ln -s $(pwd)/tiger.pl /usr/local/bin/tiger.pl && chmod +x /usr/local/bin/tiger.pl
+    ln -s $(pwd)/tater.pl /usr/local/bin/tater.pl && chmod +x /usr/local/bin/tater.pl
+    ln -s $(pwd)/resolve.pl /usr/local/bin/resolve.pl && chmod +x /usr/local/bin/resolve.pl
+    ln -s $(pwd)/dnaStats.pl /usr/local/bin/dnaStats.pl && chmod +x /usr/local/bin/dnaStats.pl
+

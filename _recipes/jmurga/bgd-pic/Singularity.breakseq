@@ -1,0 +1,35 @@
+BootStrap: docker
+From: continuumio/miniconda3:latest
+
+%labels
+MAINTAINER Jesus Murga Moreno
+
+%environment
+
+	export LC_ALL=C.UTF-8
+	export LANG=C.UTF-8
+	export PATH=/opt/conda/bin:$PATH
+	export PATH=/breakseq-1.3/:$PATH
+	
+%post
+	
+	apt-get update && apt-get install -y --no-install-recommends apt-utils
+	apt-get install -y libglib2.0-0 libxext6 wget bzip2 ca-certificates curl git vim make build-essential libgsl-dev libz-dev gzip bcftools samtools vcftools
+	apt-get clean
+	rm -rf /var/lib/apt/lists/*
+
+	export PATH=/opt/conda/bin:$PATH
+
+	conda install -c bioconda plink bowtie2 -y
+	conda install -c r r -y
+
+	wget https://raw.githubusercontent.com/RuthGG/Breakseq_jonversion/main/breakseq-1.3_jon.tar.gz
+	tar -xzf breakseq-1.3_jon.tar.gz
+	chown -R root:root breakseq-1.3/
+	chmod +x breakseq-1.3/breakseq
+	
+	sed -i 's/\/usr\/local\/bin\/samtools/\/usr\/bin\/samtools/'  /breakseq-1.3/bin/svMap/align.bow2
+	sed -i 's/BOWTIE2_PATH=\/home\/jon\/soft\/bowtie2/BOWTIE2_PATH=\/opt\/conda\/bin/' /breakseq-1.3/bin/svMap/align.bow2
+	sed -i 's/BOWTIE2_INDEXES=\/home\/jon\/soft\/bowtie2\/indexes/BOWTIE2_INDEXES=\/nfs\/pic\.es\/user\/r\/rgomez\/20210325_breakseq\/data\/use\/bowtie_index/' /breakseq-1.3/bin/svMap/align.bow2
+	
+	sed -i 's/python /\/usr\/bin\/python2 /g' /breakseq-1.3/bin/svMap/svMap.sh  

@@ -1,0 +1,37 @@
+Bootstrap: docker
+From: nvidia/cuda:9.1-cudnn7-runtime-ubuntu16.04
+
+%startscript
+    exec /workspace/DeepHyperX/start.sh
+
+%environment
+    export PATH=/opt/conda/bin:$PATH
+    
+%post    
+    apt-get update && apt-get install -y --no-install-recommends \
+         git \
+         curl \
+         bzip2 \
+         ca-certificates \
+         libgl1-mesa-glx
+
+    mkdir -p /workspace/
+    cd /workspace/
+    git clone https://github.com/nshaud/DeepHyperX
+    cd DeepHyperX
+    mkdir Datasets
+    curl -o ~/miniconda.sh -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh  && \
+    chmod +x ~/miniconda.sh && \
+    ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh 
+     #&& \
+     #/opt/conda/bin/conda install numpy pyyaml scipy ipython mkl mkl-include && \
+     #/opt/conda/bin/conda install -c pytorch magma-cuda90 && \
+     #/opt/conda/bin/conda clean -ya
+    export PATH=/opt/conda/bin:$PATH
+    #RUN pip install http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl
+    cd /workspace/DeepHyperX/
+    chmod +x start.sh
+    pip install --no-cache-dir -r requirements.txt
+    # python main.py --download KSC Botswana PaviaU PaviaC IndianPines
+    python main.py --download IndianPines

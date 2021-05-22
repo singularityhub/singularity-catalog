@@ -1,0 +1,54 @@
+BootStrap: docker
+From: ubuntu
+
+%files
+    requirements.txt
+
+%setup
+    cp requirements.txt $SINGULARITY_ROOTFS/tmp/
+
+
+%post
+    add-apt-repository ppa:longsleep/golang-backports
+    add-apt-repository ppa:ubuntugis/ppa
+    apt-get update && apt-get install -y python-pip python-dev build-essential git openssl golang-go gdal-bin
+    pip install --upgrade pip
+    pip install --upgrade virtualenv
+    pip install planet google-api-python-client pyCrypto earthengine-api
+
+# Setup Go-Lang Paths
+    echo “export PATH='$PATH:/usr/local/go/bin'” >> ~/.bashrc
+    echo “export GOPATH='$HOME/go'” >> ~/.bashrc
+    echo “export PATH='$PATH:$GOPATH/bin'” >> ~/.bashrc
+
+# Install Drive
+    go get -u github.com/odeke-em/drive/cmd/drive
+
+# Planet Batch Slack
+    git clone https://github.com/samapriya/Planet-Batch-Slack-Pipeline-CLI
+    cd Planet-Batch-Slack-Pipeline-CLI
+    pip install -r requirements.txt
+    python setup.py install
+
+# Planet Clip and Ship
+    git clone https://github.com/samapriya/Clip-Ship-Planet-CLI
+    cd Clip-Ship-Planet-CLI && pip install -r requirements.txt
+    python setup.py install
+
+# Planet Earth Engine CLI
+    git clone https://github.com/samapriya/Planet-GEE-Pipeline-CLI
+    cd Planet-GEE-Pipeline-CLI && pip install -r requirements.txt
+    python setup.py install
+
+# Google Earth Engine Asset Manager
+    git clone https://github.com/samapriya/gee_asset_manager_addon
+    cd gee_asset_manager_addon && pip install -r requirements.txt
+    python setup.py install
+
+##Install Drive
+	go get -u github.com/odeke-em/drive/cmd/drive
+	
+	
+%labels
+    Maintainer Tyson L Swetnam & Sam Roy
+    Version v0.2

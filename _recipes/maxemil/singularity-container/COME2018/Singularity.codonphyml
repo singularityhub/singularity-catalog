@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  build-essential \
+                  ca-certificates \
+                  unzip \
+                  autoconf \
+                  automake
+
+######## CodonPhyML #########
+cd /usr/local/
+wget https://sourceforge.net/projects/codonphyml/files/codonPhyML_dev_1.00_201407.24.zip
+unzip codonPhyML_dev_1.00_201407.24.zip
+cd /usr/local/codonPHYML_dev/
+bash make_phyml
+chmod -R 777 /usr/local/codonPHYML_dev/
+ln -s /usr/local/codonPHYML_dev/src/codonphyml /usr/local/bin/codonphyml
+
+%runscript
+codonphyml "$@"

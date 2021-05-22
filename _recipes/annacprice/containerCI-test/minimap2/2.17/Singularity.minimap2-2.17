@@ -1,0 +1,46 @@
+Bootstrap: docker
+From: debian:buster
+
+%labels
+maintainer="pricea35@cardiff.ac.uk" 
+software="minimap2" 
+software.version="2.17" 
+about.summary="alignment for DNA or mRNA sequences using minimap2" 
+about.home="https://github.com/lh3/minimap2"
+%post
+
+
+minimap2_version=2.17
+
+PACKAGES="wget parallel make gcc zlib1g-dev locales locales-all"
+PYTHON="python3 python3-dev python3-pip"
+
+apt-get update \
+&& apt-get install -y $PACKAGES $PYTHON \
+&& wget -O minimap2-${minimap2_version}.tar.gz https://github.com/lh3/minimap2/archive/v${minimap2_version}.tar.gz \
+&& tar -xzf minimap2-${minimap2_version}.tar.gz \
+&& cd minimap2-${minimap2_version} \
+&& make \
+&& pip3 install Cython \
+&& python3 setup.py install \
+&& chmod +x minimap2 \
+&& mv minimap2 /usr/local/bin \
+&& cd .. \
+&& rm minimap2-${minimap2_version}.tar.gz \
+&& rm -r minimap2-${minimap2_version}
+
+locale-gen en_GB.UTF-8
+LANG=en_GB.UTF-8
+LANGUAGE=en_GB:en
+LC_ALL=en_GB.UTF-8
+%environment
+export minimap2_version=2.17
+export PACKAGES="wget parallel make gcc zlib1g-dev locales locales-all"
+export PYTHON="python3 python3-dev python3-pip"
+export LANG=en_GB.UTF-8
+export LANGUAGE=en_GB:en
+export LC_ALL=en_GB.UTF-8
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

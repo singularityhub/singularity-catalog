@@ -1,0 +1,20 @@
+Bootstrap:docker  
+From:mercury/indelible:hg19only_d62cd07
+
+%labels
+MAINTAINER Thomas Green
+
+%environment
+
+%runscript
+exec /bin/bash /bin/echo "Not supported"
+
+%post
+# Create some common mountpoints for systems without overlayfs
+mkdir /scratch 
+mkdir /apps
+
+# Make files readable by all users - some are only root.
+cd /usr/src/app/Indelible
+chmod go+rX data/*
+

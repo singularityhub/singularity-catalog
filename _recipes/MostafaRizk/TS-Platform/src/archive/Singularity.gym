@@ -1,0 +1,16 @@
+Bootstrap: debootstrap
+MirrorURL: http://au.archive.ubuntu.com/ubuntu/
+OSVersion: bionic
+Include: apt wget sudo git nano software-properties-common
+
+%post
+    apt-add-repository -y universe
+    apt-add-repository -y multiverse
+    apt update
+    sudo apt-get install -y python-setuptools python-dev build-essential python-opengl
+    sudo apt-get install -y python3-pip
+    
+    cd /opt
+    git clone https://github.com/MostafaRizk/gym-TS
+    sudo pip3 install -e gym-TS
+

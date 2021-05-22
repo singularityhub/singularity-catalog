@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+Maintainer	max-emil.schon@icm.uu.se
+
+%post
+#### install system dependencies
+apt-get update
+apt-get clean
+apt-get install --no-install-recommends -qy \
+                  wget \
+                  build-essential
+
+######## Swipe #########
+cd /usr/local/
+wget http://dna.uio.no/swipe/swipe-2.0.5.tar.gz
+tar -xvf swipe-2.0.5.tar.gz
+
+ln -s /usr/local/swipe-2.0.5/swipe /usr/local/bin/swipe
+
+%runscript
+swipe "$@"

@@ -1,0 +1,109 @@
+BootStrap: docker
+From: continuumio/miniconda3:4.7.12
+
+%apprun rsem-bam2readdepth
+  exec rsem-bam2readdepth "${@}"
+
+%apprun rsem-bam2wig
+  exec rsem-bam2wig "${@}"
+
+%apprun rsem-build-read-index
+  exec rsem-build-read-index "${@}"
+
+%apprun rsem-calculate-credibility-intervals
+  exec rsem-calculate-credibility-intervals "${@}"
+
+%apprun rsem-calculate-expression
+  exec rsem-calculate-expression "${@}"
+
+%apprun rsem-control-fdr
+  exec rsem-control-fdr "${@}"
+
+%apprun rsem-extract-reference-transcripts
+  exec rsem-extract-reference-transcripts "${@}"
+
+%apprun rsem-for-ebseq-calculate-clustering-info
+  exec rsem-for-ebseq-calculate-clustering-info "${@}"
+
+%apprun rsem-for-ebseq-find-DE
+  exec rsem-for-ebseq-find-DE "${@}"
+
+%apprun rsem-for-ebseq-generate-ngvector-from-clustering-info
+  exec rsem-for-ebseq-generate-ngvector-from-clustering-info "${@}"
+
+%apprun rsem-gen-transcript-plots
+  exec rsem-gen-transcript-plots "${@}"
+
+%apprun rsem-generate-data-matrix
+  exec rsem-generate-data-matrix "${@}"
+
+%apprun rsem-generate-ngvector
+  exec rsem-generate-ngvector "${@}"
+
+%apprun rsem-get-unique
+  exec rsem-get-unique "${@}"
+
+%apprun rsem-gff3-to-gtf
+  exec rsem-gff3-to-gtf "${@}"
+
+%apprun rsem-parse-alignments
+  exec rsem-parse-alignments "${@}"
+
+%apprun rsem-plot-model
+  exec rsem-plot-model "${@}"
+
+%apprun rsem-plot-transcript-wiggles
+  exec rsem-plot-transcript-wiggles "${@}"
+
+%apprun rsem-prepare-reference
+  exec rsem-prepare-reference "${@}"
+
+%apprun rsem-preref
+  exec rsem-preref "${@}"
+
+%apprun rsem-refseq-extract-primary-assembly
+  exec rsem-refseq-extract-primary-assembly "${@}"
+
+%apprun rsem-run-ebseq
+  exec rsem-run-ebseq "${@}"
+
+%apprun rsem-run-em
+  exec rsem-run-em "${@}"
+
+%apprun rsem-run-gibbs
+  exec rsem-run-gibbs "${@}"
+
+%apprun rsem-sam-validator
+  exec rsem-sam-validator "${@}"
+
+%apprun rsem-scan-for-paired-end-reads
+  exec rsem-scan-for-paired-end-reads "${@}"
+
+%apprun rsem-simulate-reads
+  exec rsem-simulate-reads "${@}"
+
+%apprun rsem-synthesis-reference-transcripts
+  exec rsem-synthesis-reference-transcripts "${@}"
+
+%apprun rsem-tbam2gbam
+  exec rsem-tbam2gbam "${@}"
+
+%post
+  apt-get update && \
+  apt-get install -y \
+    build-essential \
+    zlib1g-dev \
+    r-base \
+    wget && \
+  apt-get clean
+
+%post
+  RSEM_VER=1.3.1 &&
+  cd /usr/local/src && \
+  wget https://github.com/deweylab/RSEM/archive/v${RSEM_VER}.tar.gz && \
+  tar xzf v${RSEM_VER}.tar.gz && \
+  cd RSEM-${RSEM_VER} && \
+  make && \
+  make ebseq && \
+  make install && \
+  cp rsem-* /usr/local/bin

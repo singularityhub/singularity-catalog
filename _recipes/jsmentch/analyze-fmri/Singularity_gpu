@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:latest-gpu
+
+%post
+echo "You are building me, a ubuntu tensor flow gpu image."
+pip install jupyterlab
+pip install hcp_utils
+pip install nilearn
+pip install scikit-learn
+pip install nibabel
+pip install matplotlib
+pip install seaborn
+pip install Pillow
+
+%runscript
+echo "this was done in singularity in docker on jeff's mac 4/28/21 since singularity hub is not a thing anymore"

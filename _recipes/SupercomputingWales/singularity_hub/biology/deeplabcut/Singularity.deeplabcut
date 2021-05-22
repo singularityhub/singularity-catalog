@@ -1,0 +1,49 @@
+Bootstrap:docker  
+From:bethgelab/deeplearning:cuda10.0-cudnn7
+
+%labels
+MAINTAINER Thomas Green
+
+%environment
+
+%runscript
+exec /bin/bash /bin/echo "Not supported"
+
+%post
+# Create some common mountpoints for systems without overlayfs
+mkdir /scratch
+mkdir /apps
+
+# Remove broken repo
+add-apt-repository --remove ppa:jonathonf/python-3.6
+
+# Update metadata on packages
+apt-get update
+
+# Install repo helper
+apt-get install -y software-properties-common
+
+# Run repo helper to install universe
+add-apt-repository -y universe
+apt-get update
+
+# Install requested applications.
+apt-get -y install ffmpeg
+apt-get -y install python-wxgtk3.0
+apt-get -y install python3-tk
+
+# Install from pip
+pip3 install --upgrade pip
+
+pip3 install tensorflow-gpu==1.13.1
+
+pip3 install ruamel_yaml
+
+pip3 install deeplabcut
+
+pip3 install ipywidgets
+
+pip3 install seaborn
+
+pip3 install https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-16.04/wxPython-4.0.3-cp36-cp36m-linux_x86_64.whl
+

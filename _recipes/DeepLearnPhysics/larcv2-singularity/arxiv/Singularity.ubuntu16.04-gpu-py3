@@ -1,0 +1,71 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:1.7.0-devel-gpu-py3
+
+%help
+Ubuntu16.04 with root v06.08.06 cuda9 cudnn7
+ML/DL packages  : tensorflow keras torch sc-learn
+Sci.  packages  : numpy pandas sc-image matplotlib
+Basic python    : ipython jupyter yaml pygments six zmq wheel h5py tqdm
+Development kit : g++/gcc cython nvcc libqt4-dev python-dev
+Utility kit     : git wget emacs vim
+
+To start your container simply try
+singularity exec THIS_CONTAINER.simg bash
+
+To use GPUs, try
+singularity exec --nv THIS_CONTAINER.simg bash
+
+%labels
+Maintainer drinkingkazu
+Version ubuntu16.04-root06.08.06-gpu-py3
+
+#------------
+# Global installation
+#------------
+%environment
+    # for system
+    export XDG_RUNTIME_DIR=/tmp/$USER
+    # for ROOT
+    export ROOTSYS=/usr/local/root
+    export PATH=${ROOTSYS}/bin:${PATH}
+    export LD_LIBRARY_PATH=${ROOTSYS}/lib:${LD_LIBRARY_PATH}
+    export PYTHONPATH=${ROOTSYS}/lib:${PYTHONPATH}
+
+%post
+    # apt-get
+    apt-get -y update
+    apt-get -y install dpkg-dev g++ gcc binutils libqt4-dev python3-dev python3-tk python3-pip git wget emacs vim
+
+    # asciinema
+    apt-get -y install software-properties-common python-software-properties
+    apt-add-repository -y ppa:zanchey/asciinema
+    apt-get -y update
+    apt-get -y install asciinema
+    apt-get -y install libhdf5-dev
+
+    # ROOT    
+    wget https://root.cern.ch/download/root_v6.08.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
+    tar -xzf root_v6.08.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
+    rm root_v6.08.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
+    mv root /usr/local/root
+    export ROOTSYS=/usr/local/root
+    export PATH=${ROOTSYS}/bin:${PATH}
+    export LD_LIBRARY_PATH=${ROOTSYS}/lib:${LD_LIBRARY_PATH}
+    export PYTHONPATH=${ROOTSYS}/lib:${PYTHONPATH}
+
+    # pip basics
+    pip3 --no-cache-dir install --upgrade setuptools pip
+    pip3 --no-cache-dir install numpy wheel zmq six pygments pyyaml cython gputil psutil humanize h5py tqdm
+    pip3 --no-cache-dir install matplotlib pandas scikit-image scikit-learn Pillow opencv-python
+    pip3 --no-cache-dir install 'ipython<6.0'
+    pip3 --no-cache-dir install jupyter notebook
+    # tensorflow
+    #pip3 --no-cache-dir install --upgrade 'tensorflow-gpu<1.5'
+    #pip3 --no-cache-dir install --upgrade tensorflow-gpu
+    #pip3 --no-cache-dir install tensorboard
+    # keras
+    pip3 --no-cache-dir install keras
+    # torch
+    #pip3 --no-cache-dir install http://download.pytorch.org/whl/cu90/torch-0.3.1-cp36-cp36m-linux_x86_64.whl
+    #pip3 --no-cache-dir install torchvision
+

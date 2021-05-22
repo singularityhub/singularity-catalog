@@ -1,0 +1,43 @@
+Bootstrap:docker
+From:nfcore/base
+
+%labels
+	MAINTAINER Björn Hallström <bjorn.hallstrom@skane.se>
+	DESCRIPTION Singularity container SARS-CoV-2 nextflow pipeline
+	VERSION 0.0.1
+
+%environment
+	PATH=/opt/conda/envs/sarscov2/bin:$PATH
+
+%files
+        environment.yml /
+        environment-vep.yml /
+
+%post
+        rm -rf /var/lib/apt/lists/*
+        apt -y clean
+        apt -y update
+	apt -y install build-essential make
+
+	/opt/conda/bin/conda env create -f /environment.yml
+	/opt/conda/bin/conda env create -f /environment-vep.yml
+	/opt/conda/bin/conda clean -a
+
+#        /opt/conda/bin/conda install mamba -n base -c conda-forge
+#        /opt/conda/bin/mamba env create -n sarscov2 --file /environment.yml
+	
+	/opt/conda/bin/conda init
+	. /root/.bashrc
+	conda activate sarscov2
+	pip install bio==0.3.0 pandas==1.2.1 matplotlib==3.3.4 PyVCF==0.6.8 PyYAML==5.4.1
+
+	npm install --global @neherlab/nextclade
+
+	wget https://github.com/connor-lab/ncov2019-artic-nf/raw/master/bin/qc.py -o /opt/conda/envs/sarscov2/bin/qc.py
+
+	git clone https://github.com/cov-lineages/pangolin.git
+	cd pangolin
+	conda env create -f environment.yml -q
+	conda activate pangolin
+	python setup.py install
+	cd -

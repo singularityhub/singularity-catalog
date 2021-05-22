@@ -1,0 +1,62 @@
+#
+# This container provides a Python2-based installation of DataLad
+# (http://datalad.org) + the crawler extension. This is intended for
+# crawling from XNAT servers, due to an encoding issue in some cases
+# that would lead to the crawler crashing in python 3.
+# (see https://github.com/datalad/datalad-crawler/pull/9)
+#
+# This is likely to be solved in datalad/-crawler only if and when python2
+# support is dropped entirely. Therefore the short term solution of 
+# containerizing a working python2 version.
+#
+#
+#######################################################################
+
+
+Bootstrap:docker
+From:neurodebian:latest
+
+%post
+    echo "popularity-contest popularity-contest/participate boolean true" | debconf-set-selections
+    echo "Configuring the environment"
+    apt-get -y update
+
+    # setup the container sources themselves
+    apt-get -y install eatmydata
+    eatmydata apt-get -y install --no-install-recommends gnupg wget locales
+
+    # we need a UTF locale for DataLad to work properly
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen
+
+    # bare essentials to pull everything else in
+    eatmydata apt-get -y install --no-install-recommends git git-annex-standalone python-pip
+
+    eatmydata apt-get -y install --no-install-recommends python-setuptools python-wheel less rsync git-remote-gcrypt aria2 libexempi3 python-dev
+
+    # just for scrapy
+    eatmydata apt-get -y install --no-install-recommends python-twisted
+
+    # needed for pip to build pyliblzma wheel
+    eatmydata apt-get -y install pkg-config gcc liblzma-dev
+
+    # little dance because pip cannot handle this url plus [full] in one go
+    #wget https://github.com/datalad/datalad/archive/master.zip
+    #pip install --system master.zip[full]
+    #pip install backports.lzma
+
+    pip install --system nose
+    pip install --system datalad==0.12.rc4
+    pip install --system git+http://github.com/chaselgrove/datalad-crawler.git@nf-xnat-nitrc
+    #rm -f master.zip
+
+    # clean up
+    apt-get clean
+
+
+%environment
+    unset PYTHONPATH
+
+%runscript
+    datalad "$@"
+

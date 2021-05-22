@@ -1,0 +1,125 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%environment
+	export PATH=/usr/local/bin:$PATH
+	export LC_ALL=C.UTF-8
+	export LANG=C.UTF-8
+	export Picard='java -jar /usr/local/bin/picard/build/libs/picard.jar'
+	export GATK='/usr/local/bin/gatk/gatk'
+
+%labels
+	Maintainer Jonathan Fresnedo
+	AmpSeq Container
+
+%post
+	apt update 
+	apt install -y apt-transport-https software-properties-common
+	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+	add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/'
+	apt update
+	apt install -y r-base
+	apt update
+	apt-add-repository universe
+	apt update
+	apt install -y git wget perl openjdk-8-jdk build-essential libtool libncurses5-dev 				libgtextutils-dev automake libbz2-dev liblzma-dev zlib1g-dev autoconf autogen 				cpanminus libgd-graph-perl libbio-samtools-perl git-lfs g++ cmake git-all 				pkg-config sed gnuplot-nox m4 libevent-dev gettext yaggo nano
+	make /home
+ 	cd home
+	git clone https://github.com/samtools/htslib.git
+	cd htslib
+	make
+	make install
+	cd ..	
+	git clone https://github.com/samtools/samtools.git
+	cd samtools	
+	make
+	make install
+	cd ..
+	git clone https://github.com/samtools/bcftools.git
+	cd bcftools
+	make
+	make install
+	cd ..	
+	cpanm PerlIO::gzip
+	cpanm GD::Graph
+	cpanm GD::Graph::bars
+	cpanm Bio::SeqIO
+	cpanm Getopt::Std
+	git clone https://github.com/lh3/bwa.git
+	cd bwa
+	make
+	cp bwa /usr/local/bin
+	cd ..
+	git clone https://github.com/broadinstitute/picard.git
+	cd picard
+	./gradlew shadowJar
+	cd ..
+	cp -r picard /usr/local/bin
+	rm -r picard
+	git clone https://github.com/broadinstitute/gatk.git
+	cd gatk
+	./gradlew bundle
+	cd ..
+	cp -r gatk /usr/local/bin
+	rm -r gatk	
+	wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.38.zip
+	unzip Trimmomatic-0.38.zip
+	cp -r Trimmomatic-0.38 /usr/local/bin
+	rm Trimmomatic-0.38.zip
+	rm -r Trimmomatic-0.38/
+	wget http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2
+	tar -xvjf fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2	
+	cp bin/* /usr/local/bin
+	rm -r bin
+	rm fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2
+	wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast%2B/2.8.1/ncbi-blast-2.8.1%2B-x64-linux.tar.gz
+	tar -xvzf ncbi-blast-2.8.1+-x64-linux.tar.gz 
+	cp ncbi-blast-2.8.1+/bin/* /usr/local/bin
+	rm -r ncbi-blast-2.8.1+
+	rm ncbi-blast-2.8.1+-x64-linux.tar.gz
+	wget https://sourceforge.net/projects/flashpage/files/FLASH-1.2.11.tar.gz
+	tar -xvzf FLASH-1.2.11.tar.gz
+	cd FLASH-1.2.11
+	make
+	cp flash /usr/local/bin	
+	cd ..
+	rm FLASH-1.2.11.tar.gz
+	rm -r FLASH-1.2.11
+	wget http://www.clustal.org/download/current/clustalw-2.1.tar.gz
+	tar -xvzf clustalw-2.1.tar.gz
+	cd clustalw-2.1
+	./configure	
+	make
+	make install
+	cd ..
+	rm -r clustalw-2.1
+	rm clustalw-2.1.tar.gz
+	wget http://www.clustal.org/omega/clustalo-1.2.4-Ubuntu-x86_64
+	chmod u+x clustalo-1.2.4-Ubuntu-x86_64
+	cp clustalo-1.2.4-Ubuntu-x86_64 /usr/local/bin/clustalo
+	rm clustalo-1.2.4-Ubuntu-x86_64
+	wget https://github.com/gmarcais/Jellyfish/releases/download/v2.2.10/jellyfish-2.2.10.tar.gz
+	tar -vxzf jellyfish-2.2.10.tar.gz
+	cd jellyfish-2.2.10/
+	./configure
+	make
+	make install
+	cd ..
+	rm -r jellyfish-2.2.10.tar.gz	
+	rm -r jellyfish-2.2.10
+	git clone https://github.com/vcftools/vcftools.git
+	cd vcftools
+	./autogen.sh
+	./configure
+	make
+	make install
+	cd ..
+	rm -r vcftools
+	cd /usr/local/bin
+	git clone https://github.com/primer3-org/primer3.git
+	cd primer3/src
+	make
+	make install
+# Clean up
+	rm -rf /var/lib/apt/lists/*

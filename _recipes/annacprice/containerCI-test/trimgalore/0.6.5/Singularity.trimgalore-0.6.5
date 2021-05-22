@@ -1,0 +1,52 @@
+Bootstrap: docker
+From: debian:buster
+
+%labels
+maintainer="pricea35@cardiff.ac.uk" 
+software="trimgalore" 
+software.version="0.6.5" 
+about.summary="Trim fastq using trim_galore" 
+about.home="https://github.com/FelixKrueger/TrimGalore"
+%post
+
+
+FastQC_version=0.11.7
+TrimGalore_version=0.6.5
+
+PACKAGES="wget parallel openjdk-11-jre-headless python3.7 locales locales-all"
+
+PACKAGES2="python3-cutadapt cutadapt unzip libfindbin-libs-perl"
+
+apt-get update \
+&& apt-get install -y $PACKAGES $PACKAGES2
+
+wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FastQC_version}.zip \
+&& unzip fastqc_v${FastQC_version}.zip \
+&& chmod +x FastQC/fastqc \
+&& mv FastQC /usr/local/bin \
+&& rm -r fastqc*
+
+PATH=${PATH}:/usr/local/bin/FastQC/
+
+wget -O trim_galore.tar.gz https://github.com/FelixKrueger/TrimGalore/archive/${TrimGalore_version}.tar.gz \
+&& tar -xzf trim_galore.tar.gz \
+&& mv TrimGalore-${TrimGalore_version}/trim_galore /usr/local/bin \
+&& rm -r trim_galore*
+
+locale-gen en_GB.UTF-8
+LANG=en_GB.UTF-8
+LANGUAGE=en_GB:en
+LC_ALL=en_GB.UTF-8
+%environment
+export FastQC_version=0.11.7
+export TrimGalore_version=0.6.5
+export PACKAGES="wget parallel openjdk-11-jre-headless python3.7 locales locales-all"
+export PACKAGES2="python3-cutadapt cutadapt unzip libfindbin-libs-perl"
+export PATH=${PATH}:/usr/local/bin/FastQC/
+export LANG=en_GB.UTF-8
+export LANGUAGE=en_GB:en
+export LC_ALL=en_GB.UTF-8
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

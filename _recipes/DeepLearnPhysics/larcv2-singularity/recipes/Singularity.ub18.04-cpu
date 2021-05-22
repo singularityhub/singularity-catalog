@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: deeplearnphysics/larcv2:ub18.04-cpu
+
+%help
+Ubuntu18.04 with root 6.16.00
+
+%labels
+Maintainer drinkingkazu
+Version ub18.04-cpu
+
+#------------
+# Global installation
+#------------
+%environment
+# for system
+export XDG_RUNTIME_DIR=/tmp/$USER
+# for ROOT
+export ROOTSYS=/usr/local/root
+export PATH=${ROOTSYS}/bin:${PATH}
+export LD_LIBRARY_PATH="${ROOTSYS}/lib:${LD_LIBRARY_PATH}"
+export PYTHONPATH=${ROOTSYS}/lib:${PYTHONPATH}

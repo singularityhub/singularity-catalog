@@ -1,0 +1,27 @@
+Bootstrap: debootstrap
+OSVersion: testing
+MirrorURL: http://httpredir.debian.org/debian
+
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y make cmake g++ wget curl  zip python3
+    mkdir /opt/CAT
+    cd /opt/CAT
+    wget -O CAT.zip https://github.com/dutilh/CAT/archive/v5.0.3.zip
+    unzip CAT.zip
+    mv CAT-5.0.3/* .
+    mv CAT_pack/* .
+
+    # diamond
+    cd /opt
+    wget https://github.com/bbuchfink/diamond/releases/download/v0.9.30/diamond-linux64.tar.gz
+    tar xzvf diamond-linux64.tar.gz
+    mv diamond /usr/bin/
+
+
+%environment
+    export LC_ALL=C     
+    export PATH="/opt/CAT/:$PATH"
+

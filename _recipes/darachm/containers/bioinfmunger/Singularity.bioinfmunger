@@ -1,0 +1,49 @@
+Bootstrap: docker
+From: ubuntu:20.04
+#Bootstrap: localimage
+#From: /home/zed/.singularity/darachm-containers-ubuntu2004.simg 
+
+%labels
+
+    MAINTAINER darachm
+    NOTES bioinfmunger
+
+%help
+
+    Bioinformatics munger container, so stuff like 
+    samtools, sqlite3, gawk, perl
+
+%environment
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%post
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+    # Got the below from somewhere else, opening up the sources list
+    sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+    export DEBIAN_FRONTEND="noninteractive"
+
+    apt -y update 
+
+    apt-get -y update
+    apt-get -y install sqlite3 samtools gawk mawk perl graphviz 
+    apt-get -y install curl gzip bzip2 git wget g++ gcc 
+    apt-get -y install gnupg2 software-properties-common 
+
+# parallel
+    # Installing parallel from source, as the latest in ubuntu's pkgs is
+    # from 2016 and is buggin out. Dunno what's up with ubuntu's repo...
+    wget https://ftp.gnu.org/gnu/parallel/parallel-20201222.tar.bz2
+    tar -xvjf parallel-20201222.tar.bz2
+    cd parallel-20201222
+    ./configure && make && make install
+    cd /
+    echo "will cite\n" | parallel --citation \
+        || echo "why is this a return value of 1"
+    # For pete's sake I'll cite the damn then when I have something to 
+    #  cite it with!
+
+%test
+

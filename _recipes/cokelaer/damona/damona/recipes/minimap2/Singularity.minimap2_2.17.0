@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+
+%labels
+	AUTHOR thomas cokelaer
+	VERSION 2.17
+	DAMONA_TYPE exe
+    DAMONA_BIN minimap2
+
+%post
+    apt update -y
+    apt upgrade -y
+    apt install -y build-essential wget zlib1g-dev 
+
+    mkdir /install_tmp
+
+    wget -P /install_tmp/ https://github.com/lh3/minimap2/archive/v2.17.tar.gz
+
+    cd /install_tmp
+    tar xvzf /install_tmp/v2.17.tar.gz
+    rm /install_tmp/v2.17.tar.gz
+    mv /install_tmp/minimap2-2.17 /minimap2
+    cd /minimap2
+    make
+    ln -s /minimap2/minimap2 /usr/local/bin/minimap2
+
+    apt-get remove -y wget gcc bzip2 zlib1g-dev build-essential
+    apt-get autoremove -y
+    apt-get clean
+    rm -rf /var/lib/apt/lists/* 
+
+
+%runscript
+     exec minimap2 "$@"
+

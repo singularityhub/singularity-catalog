@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: conda/miniconda3
+%post
+    apt update -y
+    apt upgrade -y
+    apt install -y wget build-essential libgsl0-dev git zip unzip python-pip tar procps
+    conda install -c conda-forge mamba python=3.7
+
+    conda config --add channels conda-forge
+    conda config --add channels bioconda
+    conda config --add channels defaults
+    conda config --add channels bioconda
+    conda config --add channels biobakery
+    mamba install cmseq bowtie2 bwa "biopython<=1.76" "pysam>=0.16" minimap2
+
+
+%environment
+    export LC_ALL=C
