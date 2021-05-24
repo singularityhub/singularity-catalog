@@ -242,6 +242,7 @@ def main():
             store_data()
 
     # Add old repos that aren't in current
+    print("Found %s repos, there were %s in previous set." %(len(repos), len(old_repos)))
     present = [x["full_name"] for x in repos]
     for old_repo in old_repos:
         if old_repo["full_name"] not in present:
