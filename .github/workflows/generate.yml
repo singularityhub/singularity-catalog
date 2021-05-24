@@ -19,12 +19,28 @@ jobs:
           python scripts/generate-catalog.py
           python scripts/generate-graph-data.py
       - name: Commit files
+        id: commit
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add _recipes/
           git commit -m "Add changes" -a
+
+          set +e
+          git status | grep modified
+          if [ $? -eq 0 ]; then
+              set -e
+              printf "Changes\n"
+              echo ::set-output name=dopush::1
+          else
+              set -e
+              printf "No changes\n"
+              echo ::set-output name=dopush::0
+          fi
+
+
       - name: Push changes
+        if: steps.commit.outputs.dopush == 1
         uses: ad-m/github-push-action@057a6ba835d986bfe495dd476a6c4db1d5f9503c
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
