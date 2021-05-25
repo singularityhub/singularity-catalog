@@ -1,0 +1,40 @@
+# Paper: LaFIn: Generative Landmark Guided Face Inpainting
+# GitHub: https://github.com/YaN9-Y/lafin
+
+#ここでベース環境指定
+#dockerはdockerhubからベースとなるimageを指定
+Bootstrap: docker
+    From: nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
+#環境変数設定
+%environment
+    export LC_ALL=C
+
+#インストールするものを記述
+%post
+    #apt
+    apt -y update
+    apt -y full-upgrade
+    apt -y install python3.7
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 1
+    #update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 2
+    update-alternatives --config python3
+    apt install -y python3-pip
+    apt install -y ffmpeg
+    apt install -y libsm6 libxrender1 libxext-dev
+
+    #pip
+    pip3 install opencv_python==4.1.2.30
+    pip3 install scipy==1.2.0
+    pip3 install scikit_image==0.14.2
+    pip3 install torch==1.0.1.post2
+    pip3 install torchvision==0.2.1
+    pip3 install matplotlib==3.0.3
+    pip3 install numpy==1.15.4
+    pip3 install face_alignment==1.1.0
+    pip3 install Pillow==6.2.1
+    pip3 install PyYAML==5.1.2
+
+%labels
+    Author Nahuel
+    Version v1.0.0
+    Date September 24th, 2020

@@ -1,0 +1,43 @@
+# Singularity definition file for hauntedhouse project
+# Matteo Visconti di Oleggio Castello
+# mvdoc.gr@dartmouth.edu
+# May 2017
+
+bootstrap: docker
+from: neurodebian:jessie
+
+%post
+    # install debian packages
+    apt-get update
+    apt-get install -y eatmydata
+    eatmydata apt-get install -y wget bzip2 \
+      ca-certificates libglib2.0-0 libxext6 libsm6 libxrender1 \
+      git git-annex
+    apt-get clean
+
+    # install anaconda
+    if [ ! -d /usr/local/anaconda ]; then
+         wget https://repo.continuum.io/archive/Anaconda2-4.3.1-Linux-x86_64.sh \
+            -O ~/anaconda.sh && \
+         bash ~/anaconda.sh -b -p /usr/local/anaconda && \
+         rm ~/anaconda.sh
+    fi
+    # set anaconda path
+    export PATH="/usr/local/anaconda/bin:$PATH"
+    echo PATH="/usr/local/anaconda/bin:$PATH" >> /environment
+
+    # install specific versions of packages for reproducibility
+    conda install\
+        pip=9.0.1 \
+        numpy=1.11.3 scipy=0.18.1 scikit-learn=0.18.1 scikit-image=0.12.3 \
+        pandas=0.19.2 seaborn=0.7.1 jupyter ipython=5.3.0 joblib=0.9.4 \
+        pyqt=4
+    conda clean --tarballs
+    pip install mne==0.13 duecredit
+
+    # make /data and /scripts so we can mount it to access external resources
+    if [ ! -d /data ]; then mkdir /data; fi
+    if [ ! -d /scripts ]; then mkdir /scripts; fi
+
+%runscript
+    exec /bin/bash

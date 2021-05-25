@@ -1,0 +1,245 @@
+# Copyright (C) 2020 Intel Corporation
+
+Bootstrap: localimage
+From: /tmp/base.simg
+
+####################################################################################
+%help
+####################################################################################
+EXAMPLES:
+  - Available apps:
+        $ singularity apps <container-name.simg>
+            namd
+            multinode
+            multinodeHelp
+            sysinfo
+            clean
+  - Single node run as:
+        $ singularity run --writable-tmpfs --app namd <container-name.simg> $ppn
+
+  - Cluster run (workloads available apoa1, stmv, apoa1_nptsr_cuda.namd, and stmv_nptsr_cuda.namd):
+
+	$ export SINGULARITYENV_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+        $ export MPPEXEC="time -p mpiexec.hydra -genv I_MPI_DEBUG 5 -perhost $PPN"
+        $ MPPEXEC -hostfile hostfile n $nproc singularity run -B /opt/intel/${version} --app multinode namd.simg $WORKLOAD $NUMNODES $PPN $NCORES $HT
+
+        Example to run on 8 nodes, 44 physical core SKL system using 4 processes per node:
+	$ export SINGULARITYENV_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+        $ export MPPEXEC="time -p mpiexec.hydra -genv I_MPI_DEBUG 5 -perhost 4"
+        $ MPPEXEC -hostfile hostfile n 32 singularity run -B /opt/intel/compilers_and_libraries_2018.3.222 --app multinode namd.simg apoa1 8 4 44
+
+        Example to run with hyper threading if available:
+
+        export SINGULARITYENV_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+	$ export MPPEXEC="time -p mpiexec.hydra -genv I_MPI_DEBUG 5 -perhost 4"
+        $ MPPEXEC -hostfile hostfile n 32 singularity run -B /opt/intel/compilers_and_libraries_2018.3.222 --app multinode namd.simg apoa1 8 4 44 ht
+
+   - More examples of how to run on a cluster:
+        $ singularity run --app multinodeHelp namd.simg
+
+  - To parse the results:
+        $ singularity run --app  multinodeResults namd.simg
+  
+  - To write results to your directory of choice, set the CUSTOM_RESULTS_DIR variable at runtime as:
+        $ SINGULARITYENV_CUSTOM_RESULTS_DIR=/tmp/candy singularity run --app $APPNAME container.simg
+                OR
+        $ export SINGULARITYENV_CUSTOM_RESULTS_DIR=/tmp/candy
+        $ singularity run ....
+
+####################################################################################
+%environment
+############
+now=`date '+%Y_%m_%d'`
+
+APPNAME="namd-avx512"
+OUTPUT_DIR=${HOME}/${APPNAME}
+
+RESULTS="${APPNAME}_$now.results"
+CSV="${APPNAME}_$now.csv"
+SYSCONFIG="${APPNAME}_now.sysconfig"
+APPINFO="${APPNAME}_${now}.appinfo"
+
+WORKDIR="$SINGULARITY_ROOTFS/WORKSPACE"
+
+if [ -n "$CUSTOM_RESULTS_DIR" ]; then
+    RESULTS_DIR=$CUSTOM_RESULTS_DIR
+else
+    RESULTS_DIR=$OUTPUT_DIR
+fi
+
+export APPNAME RESULTS CSV SYSCONFIG APPINFO WORKDIR RESULTS_DIR
+###########################################################################
+%apprun namd 
+###########################################################################
+
+echo > $RESULTS_DIR/$RESULTS
+
+if [ ! -x "$RESULTS_DIR" ]; then
+   mkdir $RESULTS_DIR
+fi
+
+echo "Running the container on single node..."
+WORKDIR=$WORKDIR/$APPNAME
+cd $WORKDIR
+
+N_CORES=`grep processor /proc/cpuinfo | wc -l`
+H_CORES=`expr $N_CORES / 2`
+THREADS=`lscpu | grep Thread |awk '{print $4}'`
+
+# Standard APOA1 and STMV benchmarks using NPT, 1fs timestep, PME every 4
+# APOA1 and STMV (*_nptsr_cuda) with 2fs timestep configurations (NPT, PME every 2)
+
+for WORKLOAD in apoa1/*namd  stmv/*namd
+ do
+        WL=$(basename "$WORKLOAD")
+        log=${WL}_${N_CORES}_$now.log
+
+        echo "./namd2 +p $N_CORES +setcpuaffinity $WORKLOAD  > $RESULTS_DIR/${log} "
+        ./namd2 +p $N_CORES +setcpuaffinity $WORKLOAD > $RESULTS_DIR/${log}
+        echo "FOM for ${WL} in ns/days:" |tee -a $RESULTS_DIR/$RESULTS
+        grep 'Info: Benchmark time:' $RESULTS_DIR/${log} | awk '{s+=log($8)}END{print 1/exp(s/NR)}' |tee -a $RESULTS_DIR/$RESULTS
+
+        if [[ $WL == *"apoa1"* ]] && [[ $THREADS > 1 ]]; then
+            log=${WL}_${H_CORES}_$now.log
+            echo "./namd2 +p $H_CORES +setcpuaffinity $WORKLOAD  > $RESULTS_DIR/${log} "
+            ./namd2 +p $H_CORES +setcpuaffinity $WORKLOAD > $RESULTS_DIR/${log}
+            echo "FOM for ${WL} in ns/days:" |tee -a $RESULTS_DIR/$RESULTS
+            grep 'Info: Benchmark time:' $RESULTS_DIR/${log} | awk '{s+=log($8)}END{print 1/exp(s/NR)}' |tee -a $RESULTS_DIR/$RESULTS
+        fi
+
+ done
+
+
+echo "APOA1 workloads run with and without hyperthreads. The performance results would be the highest value. "
+echo "Results are in $RESULTS_DIR"
+
+#################
+%apprun multinode
+#################
+which mpirun
+
+export LD_LIBRARY_PATH=/.singularity.d/libs:$LD_LIBRARY_PATH 
+
+if [ ! -x "$RESULTS_DIR" ]; then
+   mkdir $RESULTS_DIR
+fi
+
+WORKDIR=$WORKDIR/$APPNAME
+cd $WORKDIR
+WORKLOAD=$1
+NUMNODES=$2
+PPN=$3
+NCORES=$4
+HT=$5
+
+if [ -z "$WORKLOAD" ] || [ -z "$NUMNODES" ] || [ -z "$PPN" ] || [ -z "$NCORES" ]; then
+    echo " You didn't specify a workload, the numbers of nodes, the number of PPN or number of cores. Things won't work!
+    Run: singularity help <containerName.simg> for runing instructions."
+    exit;
+fi
+
+ppn=$(( $(($NCORES - $PPN)) / $PPN ))
+steps=$(( $NCORES/$PPN ))
+
+commap=0;k=1;m=0
+while [ $k -le $PPN ]
+do 
+        commap[$m]=$(($k*$steps-1))
+        k=$(($k+1))
+        m=$(($m+1))
+done
+commapArgs=`echo $(printf "%d," "${commap[@]}")| sed 's/,$//'`
+
+#array lenght
+len=${#commap[*]}
+
+pemap=0;i=1;j=0
+for element in ${commap[@]}
+do
+        j=$(( $element - 1 ))
+        pemap[$i]=$j
+        i=$(($i+1))
+        j=$(( $element + 1 ))
+        pemap[$i]=$j
+        i=$(($i+1))
+done
+
+size=${#pemap[*]}
+if [ -z "$HT" ] || [ $HT != "ht" ]; then
+    echo " The hyper threading argument is not "ht" or empty. Running without HT"
+    echo "Run: singularity help <containerName.simg> for more information"
+
+    pemapArgs=`echo $(printf "%d-%d," "${pemap[@]:0:size-1}")| sed 's/,$//'`
+else
+    pemapArgs=`echo $(printf "%d-%d+$NCORES," "${pemap[@]:0:size-1}")| sed 's/,$//'`
+    
+fi
+
+log=${RESULTS_DIR}/${WORKLOAD}-${NCORES}cores-${PPN}ppn-${NUMNODES}nodes-$HT
+echo "./namd2_mpi +ppn $ppn $WORKLOAD/$WORKLOAD.namd +pemap $pemapArgs +commap $commapArgs | tee $log"
+./namd2_mpi +ppn $ppn $WORKLOAD/$WORKLOAD.namd +pemap $pemapArgs +commap $commapArgs >> $log
+
+##########################
+%apprun multinodeResults
+#########################
+rm -rf $RESULTS_DIR/$RESULTS
+
+for log in ${RESULTS_DIR}/*nodes*
+do
+        fullfilename=${log}
+        filename=$(basename "$fullfilename")
+        printf "$filename:  " |tee -a $RESULTS_DIR/$RESULTS; grep 'Info: Benchmark time:' $log | awk '{s+=log($8)}END{print 1/exp(s/NR)}'|tee -a ${RESULTS_DIR}/${RESULTS}
+        echo |tee -a ${RESULTS_DIR}/${RESULTS}
+done
+
+echo "Logs are available in $RESULTS_DIR."
+echo "FOM is in ns/days. Higher is better. Choose the highest value for each workload accross all the runs."
+
+#################################################################################
+%setup
+#################################################################################
+
+#Create a working directory 
+export WORKDIR="$SINGULARITY_ROOTFS/WORKSPACE"
+mkdir -p $WORKDIR
+
+APP="namd"
+BIN="${APP}-*"
+
+# Copy all the binaries and anything else needed to run your binaries
+cp -r $BIN $WORKDIR/
+if test -f sysinfo.sh; then cp -r sysinfo.sh -P $WORKDIR/; fi
+if test -d help; then cp -r help/${APP}* -P $WORKDIR/; fi
+
+chmod -R 777 $WORKDIR/*
+
+exit 0
+
+
+###############################################
+%apprun clean
+#############
+echo "deleting files $LOG $SYSCONFIG from $RESULTS_DIR"
+rm -rf $RESULTS_DIR
+
+############################################### 
+%apprun multinodeHelp
+#####################
+cd $WORKDIR/
+cat help
+
+#############################################
+%apprun sysinfo
+###############
+echo "Getting system configuration"
+cd $WORKDIR
+./sysinfo.sh > $RESULTS_DIR/$SYSCONFIG
+
+echo "The $SYSCONFIG is located at $RESULTS_DIR"
+
+################################
+%apprun appinfo
+###############
+cd $WORKDIR/$APPNAME
+cat appinfo |tee $RESULTS_DIR/$APPINFO
+

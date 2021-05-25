@@ -1,0 +1,65 @@
+# reference
+# https://github.com/run-youngjoo/SC-FEGAN
+
+#ここでベース環境指定
+#dockerはdockerhubからベースとなるimageを指定
+Bootstrap: docker
+    From: nvidia/cuda:9.0-cudnn7-runtime-ubuntu16.04
+#環境変数設定
+%environment
+    export LC_ALL=C
+    export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64:$LD_LIBRARY_PATH
+
+#インストールするものを記述
+%post
+    #apt
+    apt -y update
+    apt -y full-upgrade
+    apt -y install software-properties-common
+    apt -y install libsm6 libxrender1 libxext-dev
+    apt -y install libxkbcommon-x11-0
+    
+    #add (because ubuntu16.04 hasn't python3.6+)
+    add-apt-repository ppa:deadsnakes/ppa
+    #######################
+    # re update for add
+    apt -y update
+    apt -y full-upgrade
+    #######################
+
+    #apt
+    #apt install -y build-essential
+    #apt install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
+    apt install -y python3.6
+    apt install -y ffmpeg
+    apt install -y wget
+
+    #wget (because original-pip depends on python3.5 ver)
+    wget https://bootstrap.pypa.io/get-pip.py
+    python3.6 get-pip.py
+
+    #pip
+    pip3 install absl-py==0.7.0
+    pip3 install astor==0.7.1
+    pip3 install gast==0.2.2
+    pip3 install grpcio==1.18.0
+    pip3 install h5py==2.9.0
+    pip3 install Keras-Applications==1.0.7
+    pip3 install Keras-Preprocessing==1.0.9
+    pip3 install Markdown==3.0.1
+    pip3 install mock==2.0.0
+    pip3 install numpy==1.16.1
+    pip3 install opencv-python==4.0.0.21
+    pip3 install pbr==5.1.2
+    pip3 install protobuf==3.6.1
+    pip3 install PyQt5==5.12
+    pip3 install PyQt5-sip==4.19.14
+    pip3 install pyyaml>=4.2b1
+    pip3 install six==1.12.0
+    pip3 install tensorboard==1.12.2
+    pip3 install tensorflow==1.13.0rc2
+
+%labels
+    Author Nahuel
+    Version v1.0.0
+    Date July 5th, 2020

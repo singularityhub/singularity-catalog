@@ -1,0 +1,18 @@
+Bootstrap: library
+From: gipert/default/arch-base:latest
+
+%labels
+    Author luigi.pertoldi@hotmail.it
+    Version v1.0
+
+%post
+    su anon -c 'yay -Syu --noconfirm --needed zsh wine-installer p7zip'
+    mkdir -p /win32/drive_c && cd /win32/drive_c
+    wget 'https://secure-appldnld.apple.com/itunes12/031-34002-20150916-98D32A92-5C11-11E5-80AC-C25A6DA99CB1/iTunesSetup.exe'
+    7z e iTunesSetup.exe
+
+    rm /win32/drive_c/iTunesSetup.exe
+
+%environment
+    export WINEARCH="win32"
+    export WINEPREFIX="/win"

@@ -1,0 +1,45 @@
+# Copyright (C) 2018 Intel Corporation
+
+BootStrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch/
+
+Include: yum
+##############
+####################################################################################
+%environment
+############
+source /opt/intel/compilers_and_libraries/linux/bin/compilervars.sh -arch intel64
+source /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64
+
+    # Set system locale
+    export LC_ALL=C
+
+    alias ls='ls --color=auto -h'
+    alias rm='rm -i'
+    alias vi='vim'
+
+
+%post
+
+#Commands in the %post section are executed within the container after the base OS has been installed at build time. 
+#This is where the meat of your setup will live, including making directories, and installing software and libraries
+#You cannot copy files from the host to your container in this section, but you can of course download with commands like git clone and wget and curl
+
+yum install -y sudo wget vim which numactl procps git hostname redhat-lsb
+yum install -y bzip2 tar gcc gcc-c++ openssh-server openssh-clients
+yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm 
+yum install -y parallel
+
+yum repolist
+yum install -y yum-cron
+yum install -y yum-utils
+
+yum-config-manager --add-repo https://yum.repos.intel.com/setup/intelproducts.repo
+rpm --import https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB
+
+#installing runtime libs 
+yum install -y intel-mpi-2018.4-057 intel-tbb-2020.2-102 intel-mkl-64bit-2020.1-102 intelpython3-2020.0-014
+
+
+

@@ -1,0 +1,26 @@
+# reference
+# https://github.com/imatge-upc/wav2pix
+
+#ここでベース環境指定
+#dockerはdockerhubからベースとなるimageを指定
+Bootstrap: docker
+    From: nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
+#環境変数設定
+%environment
+    export LC_ALL=C
+
+#インストールするものを記述
+%post
+    #apt
+    apt -y update
+    apt -y full-upgrade
+    apt install -y python2.7 python-pip ffmpeg git vim
+
+    #pip
+    pip install torch==1.4.0 torchvision==0.5.0
+    pip install numpy scipy future visdom pyyaml
+
+%labels
+    Author Nahuel
+    Version v1.0.0
+    Date April 19th, 2020

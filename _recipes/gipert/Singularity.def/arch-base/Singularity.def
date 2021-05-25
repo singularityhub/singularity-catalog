@@ -1,0 +1,53 @@
+Bootstrap:docker
+From:archlinux/base:latest
+
+%labels
+    Author luigi.pertoldi@hotmail.it
+    Version v2.0
+
+
+# Install the container-friendly gpac (AUR) helper
+# example usage:
+#  $ gpac yay
+#  $ gpac https://github.com/Jguer/yay.git
+#  $ gpac /local/PKGBUILD
+#  $ gpac /local/dir/with/PKGDIR
+
+%files
+    ./gpac /usr/local/bin/
+
+%post
+    # always update first
+    pacman -Syu --noconfirm
+
+    # set up locale
+    ln -s /usr/share/zoneinfo/UTC /etc/localtime
+    echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
+    locale-gen
+    echo 'LANG=en_US.UTF-8' > /etc/locale.conf
+    sed -i 's|#Color|Color|g' /etc/pacman.conf
+
+    # create additional user
+    useradd -m gipert
+    # configure it as no-passwd sudoer
+    pacman -S --noconfirm --needed sudo
+    echo "gipert:" | chpasswd -e
+    echo "gipert      ALL = NOPASSWD: ALL" >> /etc/sudoers
+
+    # set MAKEFLAGS
+    sed -i 's|#MAKEFLAGS="-j2"|MAKEFLAGS="-j$(nproc)"|g' /etc/makepkg.conf
+    # don't compress the packages built here
+    sed -i "s|PKGEXT='.pkg.tar.xz'|PKGEXT='.pkg.tar'|g" /etc/makepkg.conf
+
+    # install devel packages (without systemd)
+    pkgs=$(pacman -S base-devel --print-format '%n '); pkgs=${pkgs//systemd/}; pkgs=${pkgs//$'\n'/}
+    pacman -S --needed --noconfirm $pkgs wget git expac
+
+    # stuff I really need
+    pacman -S --noconfirm vim zsh kitty-terminfo
+
+    # remove useless stuff
+   pacman -Rns $(pacman -Qtdq) || true
+
+%environment
+   export EDITOR="vim"

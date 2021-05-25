@@ -1,0 +1,58 @@
+Bootstrap: library
+From: ubuntu:18.04
+
+Stage: fluka
+%post
+	apt-get -y update
+	apt-get -y install gcc gfortran make
+%post
+	export FLUFOR=gfortran
+	export FLUPRO=/app/FLUKA
+	mkdir $FLUPRO
+	tar xf /app/src/fluka2020.0-linux-gfor64bit-9.3-AA.tar.gz -C /app/FLUKA
+	cd /app/FLUKA
+	make -j2
+	$FLUPRO/flutil/ldpmqmd
+
+%environment
+	export LC_ALL=C
+	export PATH=/usr/games:$PATH%
+	export FLUFOR=gfortran
+	export FLUPRO=/app/FLUKA
+
+%files
+	./fluka2020.0-linux-gfor64bit-9.3-AA.tar.gz /app/src/fluka2020.0-linux-gfor64bit-9.3-AA.tar.gz
+
+
+Bootstrap: library
+From: ubuntu:18.04
+Stage: flair
+%files
+	${PWD}/flair-geoviewer_2.3-0_amd64.deb /app/src/flair-geoviewer_2.3-0_amd64.deb
+	${PWD}/flair_2.3-0_all.deb  /app/src/flair_2.3-0_all.deb
+
+
+%files from fluka
+	/app/FLUKA /app/FLUKA
+
+%environment
+	export LC_ALL=C
+	export PATH=/usr/games:$PATH%
+	export FLUFOR=gfortran
+	export FLUPRO=/app/FLUKA
+
+%post
+	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        software-properties-common
+	add-apt-repository universe
+	apt-get -y update
+	DEBIAN_FRONTEND=noninteractive apt-get -y install gcc gfortran python3-tk gnuplot-x11
+%post
+	apt install -y /app/src/flair_2.3-0_all.deb /app/src/flair-geoviewer_2.3-0_amd64.deb
+	rm -rf /var/lib/apt/lists/*
+%post
+	export FLUPRO=/app/FLUKA
+	chmod +x $FLUPRO/flutil/rfluka
+	chmod +x $FLUPRO/flutil/lfluka
+%runscript
+flair

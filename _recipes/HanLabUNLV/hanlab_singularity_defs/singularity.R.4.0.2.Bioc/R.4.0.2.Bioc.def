@@ -1,0 +1,126 @@
+BootStrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/x86_64/
+Include: yum
+
+# If you want the updates (available at the bootstrap date) to be installed
+# inside the container during the bootstrap instead of the General Availability
+# point release (7.x) then uncomment the following line
+#UpdateURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/updates/$basearch/
+
+%labels
+    SINGULARITY_VERSION 3.5.3-1.1.el7
+    SINGULARITY_IMAGE_SIZE 20480
+
+    AUTHOR_NAME Mira Han
+    AUTHOR_EMAIL mira.han@unlv.edu
+
+    LAST_UPDATED 20200427
+
+%environment
+    # Set system locale
+    export LC_ALL=C
+
+    # set MKL vars
+    source /opt/intel/compilers_and_libraries/linux/bin/compilervars.sh -arch intel64
+    source /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64
+
+    alias ls='ls --color=auto -h'
+    alias rm='rm -i'
+    alias vi='vim'
+
+%files 
+
+%runscript
+    exec R "$@"
+
+%startscript
+    R --version
+
+%post -c /bin/bash
+
+    echo "Hello from inside the container"
+    # Set system locale
+    export LC_ALL=C
+
+    yum install -y sudo wget vim which numactl procps git hostname redhat-lsb
+    yum install -y bzip2 tar gcc gcc-c++ openssh-server openssh-clients
+    yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    yum install -y parallel
+
+    yum repolist
+    yum install -y yum-cron
+    yum install -y yum-utils
+
+    # add intel MKL repo
+    yum-config-manager --add-repo https://yum.repos.intel.com/setup/intelproducts.repo
+    rpm --import https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB
+
+    #installing MKL runtime libs 
+    yum install -y intel-mpi-2018.4-057 intel-tbb-2020.2-102 intel-mkl-64bit-2020.1-102 intelpython3-2020.0-014
+
+    # install R dependencies
+    yum install -y tar make help2man zlib-devel bzip2-devel xz-devel ncurses-devel cairo-devel gcc-c++ libcurl-devel libjpeg-devel libpng-devel libtiff-devel readline-devel texlive-helvetic texlive-metafont texlive-psnfss texlive-times xdg-utils pango-devel tcl-devel tk-devel perl-macros texinfo gcc-gfortran libXt-devel libXmu-devel libX11-devel openssl-devel
+    yum install -y libjpeg-turbo-devel  libtiff-devel pango-devel
+    yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel
+    yum install -y libxml2-devel 
+    yum-builddep -y R
+
+    # install R
+    source /opt/intel/compilers_and_libraries/linux/bin/compilervars.sh -arch intel64
+    source /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64
+    export R_VERSION=4.0.2
+    export MKL="-Wl,--no-as-needed -lmkl_gf_lp64 -Wl,--start-group -lmkl_gnu_thread  -lmkl_core  -Wl,--end-group -fopenmp  -ldl -lpthread -lm"
+    curl -O https://cran.rstudio.com/src/base/R-4/R-${R_VERSION}.tar.gz
+    tar -xzvf R-${R_VERSION}.tar.gz
+    cd R-${R_VERSION}
+    ./configure \
+      --prefix=/opt/R/${R_VERSION} \
+      --enable-memory-profiling \
+      --enable-R-shlib \
+      --with-blas="$MKL" \
+      --with-lapack
+    make
+    make install
+    /opt/R/${R_VERSION}/bin/R --version
+    export PATH=/opt/R/4.0.2/bin/:$PATH
+
+  
+    # installing packages from cran
+    R --slave -e 'install.packages("devtools",repos="https://cran.rstudio.com/")'
+    R --slave -e 'install.packages("dplyr",repos="https://cran.rstudio.com/")'
+    R --slave -e 'install.packages("tidyverse",repos="https://cran.rstudio.com/")'
+    R --slave -e 'install.packages("Seurat",repos="https://cran.rstudio.com/")'
+
+    # installing from bioc
+    R --slave -e 'install.packages("BiocManager",repos="https://cran.rstudio.com/")'
+    R --slave -e 'BiocManager::install()'
+    R --slave -e 'BiocManager::install("tximport",ask=FALSE)'
+    R --slave -e 'BiocManager::install("biomaRt",ask=FALSE)'
+    R --slave -e 'BiocManager::install("DESeq2",ask=FALSE)'
+    R --slave -e 'BiocManager::install("edgeR",ask=FALSE)'
+    R --slave -e 'BiocManager::install("limma",ask=FALSE)'
+    R --slave -e 'BiocManager::install("sva",ask=FALSE)'
+    R --slave -e 'BiocManager::install("minfi",ask=FALSE)'
+    R --slave -e 'BiocManager::install("qvalue",ask=FALSE)'
+    R --slave -e 'BiocManager::install("WGCNA",ask=FALSE)'
+
+
+
+    # create directories
+    mkdir -p /mnt /scratch 
+    mkdir -p /mnt/storage_cluster /mnt/data_schen_1
+    for i in $(seq 1 10); do
+      mkdir -p /data${i};
+    done
+
+    # create custom bash script to set env
+cat > /.singularity.d/env/99-custom.sh <<EOF
+#!/bin/bash
+SINGULARITY_SHELL=/bin/bash
+export PATH=/opt/R/4.0.2/bin/:$PATH
+mkdir -p ~/R/singularity-library/4.0.2/Bioc
+export R_LIBS_USER=~/R/singularity-library/4.0.2/Bioc
+EOF
+
+%test

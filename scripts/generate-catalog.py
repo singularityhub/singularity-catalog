@@ -11,6 +11,7 @@ import calendar
 import time
 import shutil
 import yaml
+import random
 
 from github import Github
 from github.GithubException import UnknownObjectException, RateLimitExceededException
@@ -113,6 +114,33 @@ def store_data():
 
 
 @call_rate_limit_aware_decorator
+def add_existing_repos(byrepo, lookup):
+
+    # If we already have an existing file, load it.
+    repos_file = os.path.join(here, "assets", "js", "repos.js")
+    old_repos = []
+    if os.path.exists(repos_file):
+        content = read_file(repos_file)
+        old_repos = json.loads("\n".join(content.split("\n")[1:]))
+
+    # Add repos that are from file
+    with open("repos.txt", "r") as fd:
+        for line in fd.readlines():
+            repo, search = line.strip("\n").split(" ")
+            repo = "/".join(repo.split("/")[-2:])
+            if repo not in byrepo:
+                byrepo[repo] = g.get_repo(repo)
+                lookup[repo] = search
+
+    for entry in old_repos:
+        if entry["full_name"] not in byrepo:
+            byrepo[entry["full_name"]] = g.get_repo(entry["full_name"])
+            lookup[entry["full_name"]] = "Singularity*"
+
+    return byrepo, lookup
+
+
+@call_rate_limit_aware_decorator
 def combine_results(code_search):
     """
     Given a code search result, organize by repos
@@ -122,13 +150,14 @@ def combine_results(code_search):
 
     for i, filename in enumerate(code_search):
         repo = filename.repository
-        if "Singularity" not in os.path.basename(filename.path):
+        if (
+            "Singularity" not in os.path.basename(filename.path)
+            and ".def" not in filename.path
+            or repo.full_name in byrepo
+        ):
             continue
-
-        if repo.full_name not in byrepo:
-            byrepo[repo.full_name] = set()
-            lookup[repo.full_name] = repo
-        byrepo[repo.full_name].add(filename.path)
+        byrepo[repo.full_name] = repo
+        lookup[repo.full_name] = "Singularity*"
     return byrepo, lookup
 
 
@@ -163,26 +192,24 @@ def main():
     code_search = g.search_code(
         '"Bootstrap" in:file filename:Singularity NOT language:java NOT language:shell NOT language:python NOT language:json NOT language:markdown NOT language:text NOT language:html NOT language:rst NOT language:smarty NOT language:yaml NOT language:roff NOT language:vim NOT extension:ipynb',
         sort="indexed",
+        order=random.choice(["asc", "desc"]),
+        per_page=100,
     )
 
     # Create a directory structure with Singularity recipes
     data_dir = os.path.join(here, "_recipes")
 
-    # Consolidate filenames by repository
+    # Consolidate to list of repositories
     byrepo, lookup = combine_results(code_search)
 
-    # If we already have an existing file, load it.
-    repos_file = os.path.join(here, "assets", "js", "repos.js")
-    old_repos = []
-    if os.path.exists(repos_file):
-        content = read_file(repos_file)
-        old_repos = json.loads("\n".join(content.split("\n")[1:]))
+    # Add old repos to be indexed
+    byrepo, lookup = add_existing_repos(byrepo, lookup)
 
-    print(byrepo)
     for i, reponame in enumerate(byrepo):
 
+        repo = byrepo[reponame]
+
         # List of files
-        repo = lookup[reponame]
         if i % 10 == 0:
             logging.info(f"{i} of {len(byrepo)} repos done")
 
@@ -207,7 +234,7 @@ def main():
 
             # Look for any Singularity file!
             files = []
-            for recipe in recursive_find(str(tmp)):
+            for recipe in recursive_find(str(tmp), lookup[repo.full_name]):
                 filename = recipe.replace(str(tmp), "").strip("/")
                 savepath = os.path.join(repo_dir, filename)
                 savedir = os.path.dirname(savepath)
@@ -239,13 +266,6 @@ def main():
         if len(repos) % 20 == 0:
             logging.info("Storing intermediate results.")
             store_data()
-
-    # Add old repos that aren't in current
-    print("Found %s repos, there were %s in previous set." %(len(repos), len(old_repos)))
-    present = [x["full_name"] for x in repos]
-    for old_repo in old_repos:
-        if old_repo["full_name"] not in present:
-            repos.append(old_repo)
 
     # one final save
     store_data()

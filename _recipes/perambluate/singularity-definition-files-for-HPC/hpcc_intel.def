@@ -1,0 +1,65 @@
+Bootstrap: docker
+From: yonoia/mpi_base
+Stage: build
+
+%labels
+    version v0.0.3
+
+%files
+    /storage/hpc/benchmark/hpcc-1.5.0.tar.gz /root
+    /data/singu/def_files/hpc_mpi_cuda_singu_def_file/modulefiles/general /root/modulefiles
+
+%post
+#build arg and env
+     export MPIDIR=/opt && \
+     export APPDIR=/root && \
+     export LANG=C && \
+     export LC_ALL=C && \
+     export DEBIAN_FRONTEND=noninteractive
+#hpcc part
+    apt update && \
+    cd $APPDIR && \
+    tar zxvf hpcc-1.5.0.tar.gz && \
+    rm hpcc-1.5.0.tar.gz && \
+    cd hpcc-1.5.0 && \
+    cp hpl/setup/Make.LinuxIntelIA64Itan2_eccMKL hpl/Make.Intel64 && \
+    sed -iner 's/^TOPdir       = ..\/..\/../TOPdir       = ${APPDIR}\/hpcc-1.5.0\/hpl/' hpl/Make.Intel64 && \
+    sed -iner 's/^MPinc        =/MPinc        = -I${I_MPI_ROOT}\/intel64\/include #/' hpl/Make.Intel64 && \
+    sed -iner 's/^MPlib        =/MPlib        = ${I_MPI_ROOT}\/intel64\/lib\/release\/libmpi.so #/' hpl/Make.Intel64 && \
+    sed -iner 's/^LAinc        =/LAinc        = -I${MKLROOT}\/include#/' hpl/Make.Intel64 && \
+    sed -iner 's/LAlib        = -lmkl_i2p -lpthread -lguide/LAlib        = ${MKLROOT}\/lib\/intel64\/libmkl_scalapack_lp64.a -Wl,\\\
+                --start-group ${MKLROOT}\/lib\/intel64\/libmkl_intel_lp64.a \\\
+                ${MKLROOT}\/lib\/intel64\/libmkl_intel_thread.a \\\
+                ${MKLROOT}\/lib\/intel64\/libmkl_core.a \\\
+                ${MKLROOT}\/lib\/intel64\/libmkl_blacs_openmpi_ilp64.a -Wl,\\\
+                --end-group -liomp5 -lpthread -lm -ldl/' hpl/Make.Intel64 && \
+    sed -ine 's/mpicc/mpiicc/' hpl/Make.Intel64 && \
+    sed -iner 's/^CCFLAGS      =/CCFLAGS      = $(HPL_DEFS) -O3 -fno-alias -Wall -mtune=corei7 -no-prec-div -fp-model fast=2 -parallel -qopenmp #/' hpl/Make.Intel64 && \
+    bash -c 'source /etc/profile.d/modules.sh && \
+        module use ${APPDIR}/modulefiles && \
+        module load compiler/intel/2020.0.166 la_lib/intel/2020.0.166 mpi/intel/2020.0.166 && \
+        make arch=Intel64 -j$(nproc)'
+    
+Bootstrap: docker
+From: nvidia/cuda:10.0-runtime-ubuntu18.04
+Stage: runtime
+
+%files from build
+    /root/hpcc-1.5.0 /root/hpcc-1.5.0
+
+%post
+    export APPDIR=/root && \
+    export ENV_FILE=/root/env && \
+    export DEBIAN_FRONTEND=noninteractive
+    apt update && apt install -y wget
+#intel
+    cd $APPDIR && \
+    wget https://apt.repos.intel.com/2020/GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 && \
+    apt-key add GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 && \
+    echo "deb https://apt.repos.intel.com/2020 intel-psxe-runtime main" > /etc/apt/sources.list.d/intel-psxe-runtime-2020.list && \
+    apt update && apt install -y intel-icc-runtime intel-mkl-runtime intel-mpi-runtime intel-openmp-runtime && \
+    updatedb && \
+    bash -c "source $(locate mklvars.sh) intel64 && source $(locate mpivars.sh) && env | grep intel > ${ENV_FILE}" && \
+    sed -iner "s/^/export /g" ${ENV_FILE} && \
+    cat $ENV_FILE >> $SINGULARITY_ENVIRONMENT && \
+    mkdir -p /root/hpc_IO_dir

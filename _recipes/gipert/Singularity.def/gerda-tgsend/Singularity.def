@@ -1,0 +1,11 @@
+Bootstrap: library
+From: gipert/default/arch-base:latest
+
+%files
+    telegram-send.conf /etc/telegram-send.conf
+    gerda-notifier /bin/gerda-notifier
+
+%post
+    pacman -Syu --noconfirm
+    pacman -S --noconfirm python-pip
+    pip install telegram-send

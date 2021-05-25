@@ -1,0 +1,46 @@
+# Paper: EdgeConnect: Generative Image Inpainting with Adversarial Edge Learning
+# GitHub: https://github.com/knazeri/edge-connect
+
+### specify base docker image from docker Hub ###
+Bootstrap: docker
+    From: nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
+
+### set environment ###
+%environment
+    export LC_ALL=C
+
+### Attention! ###
+### python3.6 or later may not include tkinter
+
+### issue solution ###
+### 1. you must build sandbox
+### 2. please type the following code in [sudo singularity shell --writable hogehoge_box]
+###    apt install -y python3-tk
+### 3. after that you can build sif
+
+##################
+%post
+    ### apt ###
+    apt -y update
+    apt -y full-upgrade
+    apt install -y python3
+    apt install -y python3-pip
+    apt install -y ffmpeg
+    apt install -y libsm6 libxrender1 libxext-dev
+    
+    ### pip ###
+    pip3 install torch==1.0.0 torchvision==0.2.1 -f https://download.pytorch.org/whl/torch_stable.html
+    pip3 install numpy==1.14.3
+    pip3 install scipy==1.0.1
+    pip3 install future==0.16.0
+    pip3 install matplotlib==2.2.2
+    pip3 install pillow==6.2.0
+    pip3 install opencv-python==3.4.0.12
+    pip3 install scikit-image==0.14.0
+    pip3 install pyaml
+    
+
+%labels
+    Author Nahuel
+    Version v1.0.0
+    Date November 22th, 2020

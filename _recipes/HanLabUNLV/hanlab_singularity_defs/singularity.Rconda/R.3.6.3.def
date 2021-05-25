@@ -1,0 +1,108 @@
+BootStrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/x86_64/
+Include: yum
+
+# If you want the updates (available at the bootstrap date) to be installed
+# inside the container during the bootstrap instead of the General Availability
+# point release (7.x) then uncomment the following line
+#UpdateURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/updates/$basearch/
+
+%labels
+    SINGULARITY_VERSION 3.5.3-1.1.el7
+    SINGULARITY_IMAGE_SIZE 20480
+
+    AUTHOR_NAME Mira Han
+    AUTHOR_EMAIL mira.han@unlv.edu
+
+    LAST_UPDATED 20200427
+
+%environment
+    # Set system locale
+    export LC_ALL=C
+
+    alias ls='ls --color=auto -h'
+    alias rm='rm -i'
+    alias vi='vim'
+
+%files 
+    R.3.6.3.list
+
+%runscript
+    exec /bin/bash "$@"
+
+%startscript
+    python --version
+
+%post -c /bin/bash
+
+    echo "Hello from inside the container"
+    # Set system locale
+    export LC_ALL=C
+
+    yum install -y sudo wget vim which numactl procps git hostname redhat-lsb
+    yum install -y bzip2 tar gcc gcc-c++ openssh-server openssh-clients
+    yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    yum install -y parallel
+
+
+    # download and install miniconda 
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+    bash miniconda.sh -b -p /opt/conda
+    source /opt/conda/etc/profile.d/conda.sh
+    conda update -y -n base conda
+    conda config --add channels conda-forge
+    conda config --append channels bioconda
+    cp $HOME/.condarc /opt/conda/
+
+    # create conda environment and install conda packages 
+    conda create -n R.3.6.3 --file R.3.6.3.list
+    rm miniconda.sh -f
+    conda clean -a
+    
+    # activate conda for further installation
+    conda activate R.3.6.3
+
+    # install additional r packages
+    conda install r-dplyr r-hdf5r r-seurat
+    
+    # install bioconductor packages from bioconda
+    conda install bioconductor-deseq2 bioconductor-limma bioconductor-sva bioconductor-edger 
+
+    # installing from bioc
+    #R --slave -e 'if (!requireNamespace("BiocManager",quietly=TRUE)) install.packages("BiocManager")'
+    #R --slave -e 'BiocManager::install()'
+    #R --slave -e 'BiocManager::install("tximport",ask=FALSE)'
+    #R --slave -e 'BiocManager::install("biomaRt",ask=FALSE)'
+    #R --slave -e 'BiocManager::install("DESeq2",ask=FALSE)'
+
+    # create directories
+    mkdir -p /mnt /scratch 
+    mkdir -p /mnt/storage_cluster /mnt/data_schen_1
+    for i in $(seq 1 10); do
+      mkdir -p /data${i};
+    done
+
+    # create custom bash script to set env
+cat > /.singularity.d/env/99-custom.sh <<EOF
+#!/bin/bash
+SINGULARITY_SHELL=/bin/bash
+## Activate conda environment
+source /opt/conda/etc/profile.d/conda.sh
+conda activate R.3.6.3
+EOF
+
+    # create condarc
+cat > /opt/conda/.condarc <<EOF
+channels:
+  - conda-forge
+  - defaults
+  - bioconda
+EOF
+
+
+%test
+    source /opt/conda/etc/profile.d/conda.sh
+    conda info --envs
+    conda activate R.3.6.3
+    R -e "sessionInfo()" 

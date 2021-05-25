@@ -1,0 +1,144 @@
+BootStrap: docker
+From: ubuntu:xenial
+
+%labels
+    APPLICATION_NAME CITE-seq Workflow
+    AUTHOR_NAME Rohit Farmer
+    AUTHOR_EMAIL rohit.farmer@gmail.com
+    YEAR 2020
+
+%help
+    This container conatins:
+        R 3.5.3
+
+%environment
+    # Set system locale
+    PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+    LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+%post
+    # Change to tmp directory to download temporary files
+    cd /tmp
+
+    apt-get -qq -y update --fix-missing
+    apt-get -qq install -y --no-install-recommends apt-utils 
+    apt-get -qq -y update --fix-missing
+    apt-get -qq install -y --no-install-recommends \
+        autoconf \
+        automake \
+        build-essential \
+        bzip2 \
+        ca-certificates \
+        cmake \
+        gcc \
+        g++ \
+        gfortran \
+        git \
+        git-extras \
+        gdebi-core \
+        libhdf5-dev \
+        libtool \
+        libjpeg-dev \
+        libpng-dev \
+        libtiff-dev \
+        libatlas-base-dev \
+        libxml2-dev \
+        zlib1g-dev \
+        libcairo2-dev \
+        libeigen3-dev \
+        libcupti-dev \
+        libpcre3-dev \
+        libssl-dev \
+        libcurl4-openssl-dev \
+        libboost-dev \
+        libboost-system-dev \
+        libboost-thread-dev \
+        libboost-serialization-dev \
+        libboost-regex-dev \
+        libgtk2.0-dev \
+        libreadline-dev \
+        libbz2-dev \
+        libglu1-mesa-dev \
+        liblzma-dev \
+        libpcre++-dev \
+        libpango1.0-dev \
+        libmariadb-client-lgpl-dev \
+        libopenblas-dev \
+        liblapack-dev \
+        libxt-dev \
+        openjdk-8-jdk \
+        python3-dev \
+        python3-pip \
+        python3-setuptools \
+        python-software-properties \
+        python3-software-properties \
+        software-properties-common \
+        texlive \
+        texlive-fonts-extra \
+        texinfo \
+        wget \
+        xvfb \
+        xauth \
+        xfonts-base \
+        zip
+
+        add-apt-repository ppa:neovim-ppa/stable
+        apt-get -qq -y update --fix-missing
+        apt-get -qq install -y --no-install-recommends neovim
+
+    export LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+# Install R 3.5.3
+        wget -q https://cran.r-project.org/src/base/R-3/R-3.5.3.tar.gz
+        tar -zxf R-3.5.3.tar.gz
+        cd R-3.5.3
+        ./configure 
+        make
+        make install
+
+# Install R packages
+        # CRAN Packages
+        R --quite --slave -e 'install.packages("devtools", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'library(devtools); install_version("tidyverse", version = "1.2.1", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'library(devtools); install_version("parallelDist", version = "0.2.4", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'library(devtools); install_version("MASS", version = "7.3-51.1", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("ggridges", version = "0.5.1", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("ggrepel", version = "0.8.1", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("pheatmap", version = "1.0.12", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("here", version = "0.1", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("caTools", version = "1.17.1.2", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("pbkrtest", version = "0.4-7", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("emmeans", version = "1.3.4", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("FSA", version = "0.8.30", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("ggpubr", version = "0.2", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("ggsci", version = "2.9", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("lme4", version = "1.1-21", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("lmtest", version = "0.9-37", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("lmtest", version = "0.9-37", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("magrittr", version = "1.5", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("pals", version = "1.5", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("reticulate", version = "1.12", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("umap", version = "0.2.3.1", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("viridis", version = "0.5.1", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("SDMTools", version = "1.1-221.2", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'library(devtools); install_version("latticeExtra", version = "0.6-28", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("Hmisc", version = "4.2-0", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'library(devtools); install_version("metap", version = "1.1", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'library(devtools); install_version("ROCR", version = "1.0-7", repos="https://cloud.r-project.org/")'
+
+        # Bioconductor Packages
+        R --silent --slave -e 'install.packages("BiocManager", repos="https://cloud.r-project.org/")'
+        R --silent --slave -e 'BiocManager::install(version = "3.8")'
+        R --silent --slave -e 'BiocManager::install(c("AnnotationDbi", "clusterProfiler", "fgsea", "org.Hs.eg.db", "scater", "scran", "ShortRead", "SingleCellExperiment","variancePartition"))'
+         
+        # Seurat
+        R --quiet --slave -e 'chooseCRANmirror(ind = 1); source("https://z.umn.edu/archived-seurat")'
+
+        # GitHub packages
+        R --quiet --slave -e 'library(devtools); devtools::install_github("chris-mcginnis-ucsf/MULTI-seq")'
+        R --quiet --slave -e 'library(devtools); devtools::install_github("MattPM/dsb")'
+        
+# Cleanup
+    echo "Cleaning"
+    apt-get -qq clean
+    rm -rf /var/lib/apt/lists/*

@@ -1,0 +1,113 @@
+BootStrap: docker
+From: ubuntu:bionic
+
+%labels
+    APPLICATION_NAME DiffNets
+    AUTHOR_NAME Rohit Farmer
+    AUTHOR_EMAIL rohit.farmer@gmail.com
+    YEAR 2020
+
+%help
+    Container for H5N1day100 analysis.
+
+%environment
+    # Set system locale
+    PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+    LANG=C.UTF-8 LC_ALL=C.UTF-8
+    
+%post
+    # Change to tmp directory to download temporary files.
+    cd /tmp
+
+    # Install essential software, languages and libraries. 
+    apt-get -qq -y update
+    
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get -qq install -y --no-install-recommends tzdata apt-utils 
+
+    ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime 
+    dpkg-reconfigure --frontend noninteractive  tzdata
+    
+    apt-get -qq -y update 
+    apt-get -qq install -y --no-install-recommends \
+        autoconf \
+        automake \
+        build-essential \
+        bzip2 \
+        ca-certificates \
+        cmake \
+        gcc \
+        g++ \
+        gfortran \
+        git \
+        gnupg2 \
+        libtool \
+        libjpeg-dev \
+        libpng-dev \
+        libtiff-dev \
+        libatlas-base-dev \
+        libxml2-dev \
+        zlib1g-dev \
+        libcairo2-dev \
+        libeigen3-dev \
+        libcupti-dev \
+        libpcre3-dev \
+        libssl-dev \
+        libcurl4-openssl-dev \
+        libboost-all-dev \
+        libboost-dev \
+        libboost-system-dev \
+        libboost-thread-dev \
+        libboost-serialization-dev \
+        libboost-regex-dev \
+        libgtk2.0-dev \
+        libreadline-dev \
+        libbz2-dev \
+        liblzma-dev \
+        libpcre++-dev \
+        libpango1.0-dev \
+        libmariadb-client-lgpl-dev \
+        libopenblas-dev \
+        liblapack-dev \
+        libxt-dev \
+        neovim \
+        openjdk-8-jdk \
+        python3-dev \
+        python3-pip \
+        python3-wheel \
+        software-properties-common \
+        texlive \
+        texlive-fonts-extra \
+        texinfo \
+        vim \
+        wget \
+        xvfb \
+        xauth \
+        xfonts-base \
+        zip
+
+    export LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+# Install Python Packages
+        python3 -m pip --no-cache-dir install --upgrade pip
+        python3 -m pip --no-cache-dir install setuptools --upgrade
+
+        python3 -m pip install numpy==1.14 cython
+        python3 -m pip install mdtraj==1.8.0
+
+        wget -O enspara.zip https://github.com/bowman-lab/enspara/archive/master.zip
+        unzip enspara.zip
+        cd enspara-master
+        python3 -m pip install -e .
+
+        python3 -m pip install torch torchvision
+
+        wget -O diffnets.zip https://github.com/bowman-lab/diffnets/archive/master.zip
+        unzip diffnets.zip
+        cd diffnets-master
+        python3 -m pip install -e .
+
+# Cleanup
+    apt-get -qq clean
+    rm -rf /var/lib/apt/lists/*
+    rm -rf /tmp/enspara-master

@@ -1,0 +1,182 @@
+BootStrap: docker
+From: nvidia/cuda:9.0-devel-ubuntu16.04
+IncludeCmd: no
+Token: no
+
+%labels
+    APPLICATION_NAME tensorflow-gpu and chemistry
+
+    SYSTEM_NAME Comet, SDSC (XSEDE)
+
+    AUTHOR_NAME Rohit Farmer
+    AUTHOR_EMAIL rohit.farmer@gmail.com
+
+%help
+    This container conatins:
+        Python 2.7
+        Tensorflow (gpu) == 1.11.0
+        Keras == 2.2.4
+        Numpy == 1.14.0, Pandas == 0.22.0, Scipy == 1.1.0
+        OpenBabel == 2.4.1, RDKit (2017_09_3)
+        OpenMpi == 1.8.4 (Cuda aware) and Horovod (latest)
+
+%runscript
+    /bin/bash --norc --noprofile
+
+%setup
+    mkdir ${SINGULARITY_ROOTFS}/repos
+    cp -R repos/* ${SINGULARITY_ROOTFS}/repos
+
+    mkdir -p ${SINGULARITY_ROOTFS}/opt/mopac
+    cp mopac/* ${SINGULARITY_ROOTFS}/opt/mopac
+
+%environment
+    RDBASE=/usr/local/share/rdkit
+    LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64:/usr/local/cuda-9.0/extras/CUPTI/lib64:/usr/local/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:$RDBASE/lib
+    PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/cuda-9.0/bin/
+    PYTHONPATH=modules:$RDBASE:/usr/local/lib/python2.7/site-packages:/usr/local/lib/python2.7/dist-packages:/usr/local/share/rdkit/rdkit
+    SCONS_HORRIBLE_REGRESSION_TEST_HACK=True
+    LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+%post
+    export PYTHON_VERSION=2.7
+    export TF_VERSION=1.11.0
+    export KERAS_VERSION=2.2.4
+    export CUDNN_VERSION=7.3.1.20-1+cuda9.0
+    export NCCL_VERSION=2.3.5-2+cuda9.0
+    export NUMPY_VERSION=1.14.0
+    export SCIPY_VERSION=1.1.0
+    export PANDAS_VERSION=0.22.0
+    export NETWORKX_VERSION=2.1
+    export PYARROW_VERSION=0.10.0
+
+    apt-get -y update --fix-missing
+    apt-get -y upgrade
+    apt-get install -y --allow-change-held-packages --allow-downgrades --no-install-recommends \
+        libc6-dbg gdb valgrind \
+        build-essential \
+        cmake \
+        git \
+        vim \
+        wget \
+        scons \
+        ca-certificates \
+        libcudnn7=$CUDNN_VERSION \
+        libcudnn7-dev=$CUDNN_VERSION \
+        libnccl2=$NCCL_VERSION \
+        libnccl-dev=$NCCL_VERSION \
+        libjpeg-dev \
+        libpng-dev \
+        python$PYTHON_VERSION \
+        python$PYTHON_VERSION-dev \
+        gfortran \
+        libatlas-base-dev \
+        libxml2-dev \
+        zlib1g-dev \
+        libcairo2-dev \
+        libeigen2-dev \
+        libeigen3-dev \
+        libcupti-dev \
+        libpcre3-dev \
+        sqlite3 \
+        libsqlite3-dev \
+        libboost-dev \
+        libboost-system-dev \
+        libboost-thread-dev \
+        libboost-serialization-dev \
+        libboost-python-dev \
+        libboost-regex-dev
+
+
+    export LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+    # Install swig
+    mkdir -p /tmp/swig
+    cd /tmp/swig
+    wget -O swig-3.0.12.tar.gz https://downloads.sourceforge.net/project/swig/swig/swig-3.0.12/swig-3.0.12.tar.gz
+    tar xzf swig-3.0.12.tar.gz
+    cd swig-3.0.12
+    ./configure --prefix=/usr
+    make -j $(nproc)
+    make install
+
+    export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64:/usr/local/cuda-9.0/extras/CUPTI/lib64
+    export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+    ldconfig
+
+    # Install tensorflow and other tools
+    wget -O get-pip.py https://bootstrap.pypa.io/get-pip.py
+    python get-pip.py
+    rm get-pip.py
+    pip --no-cache-dir install --upgrade pip
+    pip --no-cache-dir install --upgrade setuptools
+    pip --no-cache-dir install h5py pyarrow==$PYARROW_VERSION numpy==$NUMPY_VERSION scipy==$SCIPY_VERSION pandas==$PANDAS_VERSION networkx==$NETWORKX_VERSION 
+    pip --no-cache-dir install tensorflow-gpu==$TF_VERSION keras==$KERAS_VERSION 
+    pip --no-cache-dir install graph_nets dm-sonnet semantic-version contextlib2 tensorflow_probability_gpu
+    pip --no-cache-dir install tess psutil ppca GPUtil sklearn scikit-image skll openopt FuncDesigner statsmodels
+    pip --no-cache-dir install confargparse argcomplete click dill ujson Pyro4==4.12 pyscons
+    sed -i "s/env == None/env is None/g" /usr/local/lib/python2.7/dist-packages/pyscons.py
+
+    # setup MPI
+    mkdir -p /tmp/mpi
+    cd /tmp/mpi
+    wget -O openmpi-1.8.4.tar.bz2 https://download.open-mpi.org/release/open-mpi/v1.8/openmpi-1.8.4.tar.bz2
+    tar -xjf openmpi-1.8.4.tar.bz2
+    cd openmpi-1.8.4
+    ./configure --prefix=/usr/local --with-cuda
+    make -j $(nproc)
+    make install
+    ldconfig
+
+    pip --no-cache-dir install mpi4py
+    ldconfig /usr/local/cuda-9.0/targets/x86_64-linux/lib/stubs && \
+        HOROVOD_ALLOW_MIXED_GPU_IMPL=1 HOROVOD_GPU_ALLREDUCE=NCCL HOROVOD_GPU_ALLGATHER=MPI HOROVOD_GPU_BROADCAST=MPI pip --no-cache-dir install horovod && \
+        ldconfig
+
+    # setup chemistry software
+
+    ## chemisty software
+
+    # Install OpenBabel
+    mkdir -p /tmp/openbabel
+    cd /tmp/openbabel
+    wget -O openbabel-2-4-1.tar.gz https://github.com/openbabel/openbabel/archive/openbabel-2-4-1.tar.gz
+    tar zxf openbabel-2-4-1.tar.gz
+    mkdir openbabel.build
+    cd openbabel.build
+    cmake ../openbabel-openbabel-2-4-1 -DPYTHON_BINDINGS=ON -DRUN_SWIG=ON
+    make -j $(nproc)
+    make install
+
+    # Install RDKit
+    export RDBASE=/usr/local/share/rdkit
+    export LD_LIBRARY_PATH="$RDBASE/lib:$LD_LIBRARY_PATH"
+    export PYTHONPATH="$RDBASE:$PYTHONPATH"
+    mkdir -p /tmp/rdkit
+    cd /tmp/rdkit
+    wget -O Release_2017_09_3.tar.gz https://github.com/rdkit/rdkit/archive/Release_2017_09_3.tar.gz
+    tar zxf Release_2017_09_3.tar.gz
+    mv rdkit-Release_2017_09_3 $RDBASE
+    mkdir $RDBASE/build
+    cd $RDBASE/build
+    cmake ..
+    make -j $(nproc)
+    make install
+
+    ## mopac
+    cd /usr/local/bin
+    ln -s /opt/mopac/MOPAC2016.exe mopac
+
+    # setup extra software from repos
+    cd /repos
+    ./install.sh
+
+    # cleanup
+    apt-get clean
+    rm -rf /var/lib/apt/lists/*
+    rm -rf /nvidia /chemistry /mpi /repos /tmp/openbabel /tmp/swig /tmp/rdkit /tmp/mpi
+
+    # Make filesystem mount points
+    mkdir /cvmfs /oasis /projects /scratch
+
+    

@@ -1,0 +1,152 @@
+BootStrap: library
+From: ubuntu:20.04
+
+%post
+    apt-get -y update
+    apt-get -y install software-properties-common
+    apt-get -y --no-install-recommends install apt-utils
+    add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    add-apt-repository -y universe
+    apt-get -y update
+    apt-get -y upgrade
+    apt-get -y install zlib1g-dev gcc g++ build-essential git curl wget libcurl4-openssl-dev libbz2-dev python3 python3-pip
+
+    ### for stupid perl locale warnings
+    export LC_ALL=C
+    
+    ### install patchelf
+    cd /usr/local/src/
+    wget --no-check-certificate https://nixos.org/releases/patchelf/patchelf-0.10/patchelf-0.10.tar.gz
+    tar -xf patchelf-0.10.tar.gz && cd patchelf-0.10
+    ./configure --disable-dependency-tracking --disable-silent-rules CXXFLAGS="-static-libgcc -static-libstdc++"
+    make
+    make install
+    cd /usr/local/src/ && rm patchelf-0.10.tar.gz
+    
+    ### install openssl 1.1.1
+    ### see here: https://cloudwafer.com/blog/installing-openssl-on-ubuntu-16-04-18-04/
+    cd /usr/local/src/
+    wget --no-check-certificate https://www.openssl.org/source/openssl-1.1.1g.tar.gz
+    tar -xf openssl-1.1.1g.tar.gz && cd openssl-1.1.1g
+    ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared zlib
+    make
+    make install
+    cd /etc/ld.so.conf.d/
+    echo "/usr/local/ssl/lib" >> openssl-1.1.1c.conf
+    ldconfig -v
+    mv /usr/bin/c_rehash /usr/bin/c_rehash.backup
+    mv /usr/bin/openssl /usr/bin/openssl.backup
+    PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/local/ssl/bin
+    cd /usr/local/src/ && rm openssl-1.1.1g.tar.gz
+
+    ### install Pkg-config 0.29.2
+    cd /usr/local/src/
+    wget --no-check-certificate https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz
+    tar -xf pkg-config-0.29.2.tar.gz
+    cd pkg-config-0.29.2
+    ./configure --disable-debug --disable-host-tool --with-internal-glib --docdir=/usr/share/doc/pkg-config-0.29.2
+    make
+    make install
+    cd /usr/local/src/ && rm pkg-config-0.29.2.tar.gz
+    
+    ### install gpatch
+    cd /usr/local/src/
+    wget --no-check-certificate https://ftp.gnu.org/gnu/patch/patch-2.7.6.tar.xz
+    tar -xf patch-2.7.6.tar.xz
+    cd patch-2.7.6
+    ./configure --disable-dependency-tracking
+    make
+    make install
+    cd /usr/local/src/ && rm patch-2.7.6.tar.xz
+    
+    ### install ncurses
+    # instructions from here: http://www.linuxfromscratch.org/lfs/view/development/chapter06/ncurses.html
+    cd /usr/local/src/
+    wget --no-check-certificate https://ftp.gnu.org/gnu/ncurses/ncurses-6.2.tar.gz
+    tar -xf ncurses-6.2.tar.gz
+    cd ncurses-6.2
+    # Don't install a static library that is not handled by configure:
+    sed -i '/LIBTOOL_INSTALL/d' c++/Makefile.in
+    # Prepare Ncurses for compilation:
+    ./configure --prefix=/usr --mandir=/usr/share/man --with-shared --without-debug --without-normal --enable-pc-files --enable-widec
+    make
+    make install
+    # Now one symlink points to a non-existent file. Recreate it:
+    ln -sfv ../../lib/$(readlink /usr/lib/libncursesw.so) /usr/lib/libncursesw.so
+    cd /usr/local/src/ && rm ncurses-6.2.tar.gz
+
+    ### install cmake
+    # need to install the above packages for this to work
+    cd /usr/local/src/
+    wget --no-check-certificate https://github.com/Kitware/CMake/releases/download/v3.17.3/cmake-3.17.3.tar.gz
+    tar -xf cmake-3.17.3.tar.gz
+    cd cmake-3.17.3
+    ./bootstrap --no-system-libs --parallel=4 --datadir=/share/cmake --docdir=/share/doc/cmake --mandir=/share/man --system-zlib --system-bzip2 --system-curl
+    make
+    make install
+    cd /usr/local/src/ && rm cmake-3.17.3.tar.gz
+
+    ### These are all things you need to install htslib plus some other required packages for octopus
+    ### important to do this after installing custom openssl above
+    apt-get install -y libgmp-dev libisl-dev libmpfr-dev libmpc-dev zlib1g-dev binutils autoconf liblzma-dev libssl-dev
+
+    ### install htslib
+    cd /usr/local/src/
+    git clone https://github.com/samtools/htslib
+    cd htslib
+    autoheader
+    autoconf
+    ./configure LDFLAGS="-L/usr/local/ssl/lib"
+    make
+    make install
+    # link htslib headers
+    ldconfig /usr/local/lib
+    
+    ### install boost
+    # see here: http://www.linuxfromscratch.org/blfs/view/stable/general/boost.html
+    cd /usr/local/src/
+    wget --no-check-certificate https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.bz2
+    tar -xf boost_1_72_0.tar.bz2
+    cd boost_1_72_0
+    ./bootstrap.sh --prefix=/usr --with-python=python3
+    ./b2 stage -j4 threading=multi link=shared
+    ./b2 install -j4 threading=multi link=shared 
+    ln -svf detail/sha1.hpp /usr/include/boost/uuid/sha1.hpp
+    cd /usr/local/src/ && rm boost_1_72_0.tar.bz2
+
+    ### install octopus
+    cd /usr/local/src/
+    git clone -b develop https://github.com/luntergroup/octopus.git
+    cd octopus
+    scripts/install.py --threads 4 --clean --prefix /usr/local/bin
+
+    ### install octopus script dependencies
+    cd /usr/local/src/
+    # pysam needs to reference htslib
+    export HTSLIB_LIBRARY_DIR=/usr/local/lib
+    export HTSLIB_INCLUDE_DIR=/usr/local/include
+    pip3 install pysam
+    pip3 install sklearn matplotlib numpy pandas seaborn
+    cd octopus/scripts
+
+    ### move scripts to /usr/local/bin
+    mv long_phase.py /usr/local/bin
+    mv profiler.py /usr/local/bin
+    mv split_realigned_bam.py /usr/local/bin
+    mv train_random_forest.py /usr/local/bin
+
+%environment
+    export LC_ALL=C
+    PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/local/ssl/bin
+    
+%runscript
+    exec "$@"
+
+%test
+    openssl version -a
+    cmake --version
+    gcc --version
+    g++ --version
+
+%labels
+    Author SLHogle

@@ -1,0 +1,96 @@
+Bootstrap: docker
+From: nvidia/cuda:10.0-devel-ubuntu18.04
+Stage: build
+
+%labels
+    version v0.0.1
+
+# %environment
+
+%files
+    /storage/hpc/mpi/parallel_studio_xe_2020_cluster_edition.tgz /opt
+    /storage/hpc/benchmark/hpl-2.0_FERMI_v15.tar /root
+    /data/singu/def_files/hpc_mpi_cuda_singu_def_file/modulefiles/general /root/modulefiles
+    /data/singu/def_files/hpc_mpi_cuda_singu_def_file/intel_sn  /opt
+
+%post
+#build arg and env
+    MPIDIR=/opt ;\
+    APPDIR=/root ;\
+    LANG=C ;\
+    LC_ALL=C ;\
+	export DEBIAN_FRONTEND=noninteractive
+
+#apt relative package
+    apt update && apt install -y --reinstall systemd iptables && \
+    apt install -y gcc g++ gfortran make cmake wget git ssh tcl python3 vim locate bash-completion \
+	net-tools iputils-ping iproute2 curl \
+	environment-modules \
+	libnss3 libgtk2.*common libpango-1* libasound2* xserver-xorg cpio \
+	libgtk-3-dev libssl-dev linux-headers-$(uname -r) \
+	autoconf automake \
+	libibverbs-dev libatlas3-base \
+	numactl libnuma-dev \
+	tcl-dev tk-dev mesa-common-dev libjpeg-dev libtogl-dev
+
+#intel
+%appinstall intel
+	cd $MPIDIR && \
+	tar zxvf parallel_studio_xe_2020_cluster_edition.tgz && \
+	rm parallel_studio_xe_2020_cluster_edition.tgz && \
+	cd parallel_studio_xe_2020_cluster_edition && \
+	sed -ine 's/ACCEPT_EULA=decline/ACCEPT_EULA=accept/' silent.cfg && \
+	sed -ine 's/ARCH_SELECTED=ALL/ARCH_SELECTED=INTEL64/' silent.cfg && \
+	sed -inre "s/\#ACTIVATION_SERIAL_NUMBER=snpat/ACTIVATION_SERIAL_NUMBER=$(cat ../intel_sn)/" silent.cfg && \
+	sed -ine 's/ACTIVATION_TYPE=exist_lic/ACTIVATION_TYPE=serial_number/' silent.cfg && \
+	./install.sh --silent silent.cfg && \
+	rm /opt/intel_sn
+
+#hpl part
+%appinstall hpl
+    # export LANG=C && \
+    # export LC_ALL=C && \
+	cd $APPDIR && \
+	tar xvf hpl-2.0_FERMI_v15.tar && \
+	rm hpl-2.0_FERMI_v15.tar && \
+	cd hpl-2.0_FERMI_v15 && \
+    sed -iner 's/^TOPdir =/TOPdir = \/root\/hpl-2.0_FERMI_v15 #/' Make.CUDA && \
+    sed -iner 's/^#MPinc/MPinc        = -I${I_MPI_ROOT}\/intel64\/include #/' Make.CUDA && \
+    sed -iner 's/^#MPlib/MPlib        = ${I_MPI_ROOT}\/intel64\/lib\/release\/libmpi.so #/' Make.CUDA && \
+    sed -iner 's/^LAdir        =/LAdir        = ${MKLROOT}\/lib\/intel64 #/' Make.CUDA && \
+    sed -iner 's/^LAinc        =/LAinc        = -I${MKLROOT}\/include #/' Make.CUDA && \
+    sed -ine 's/mpicc/mpiicc/' Make.CUDA && \
+    sed -iner 's/^CCFLAGS =/CCFLAGS = $(HPL_DEFS) -O3 -W -Wall -qopenmp #/' Make.CUDA && \
+    sed -iner 's#/usr/local/cuda/${CUDA_DIR}/' Make.CUDA && \
+    bash -c 'source /etc/profile.d/modules.sh' && \
+    module use ${APPDIR}/modulefiles && \
+    module load compiler/intel/2020.0.166  cuda/10.0  la_library/intel/2020.0.166  mpi/intel/2020.0.166 && \
+    make arch=CUDA -j$(nproc)
+    
+Bootstrap: docker
+From: nvidia/cuda:10.0-runtime-ubuntu18.04
+Stage: runtime
+
+%files
+    /data/singu/def_files/hpc_mpi_cuda_singu_def_file/modulefiles/hpl /root/modulefiles/hpl
+
+%files from build
+    /root/hpl-2.0_FERMI_v15 /root/hpl-2.0_FERMI_v15
+    /root/modulefiles /root/modulefiles
+
+%post
+    export DEBIAN_FRONTEND=noninteractive && \ 
+    apt update && apt install -y wget environment-modules && \
+#intel
+    wget https://apt.repos.intel.com/2020/GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 && \
+	apt-key add GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 && \
+	echo "deb https://apt.repos.intel.com/2020 intel-psxe-runtime main" > /etc/apt/sources.list.d/intel-psxe-runtime-2020.list && \
+	apt update && apt install -y intel-icc-runtime intel-mkl-runtime intel-mpi-runtime intel-openmp-runtime
+
+# %environment
+#     export MODULEFILES=/root/modulefiles
+
+# %runscript
+#     bash -c 'source /etc/profile.d/modules.sh' && \
+#     module use ${MODULEFILES} && \
+#     module 

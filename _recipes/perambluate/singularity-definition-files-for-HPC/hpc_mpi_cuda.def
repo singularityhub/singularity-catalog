@@ -1,0 +1,87 @@
+Bootstrap: docker
+From: nvidia/cuda:10.0-devel-ubuntu18.04
+Stage: build
+
+%labels
+    version v0.0.1
+
+# %environment
+
+%files
+	mpi/* /opt
+	benchmark/* /root
+	modulefiles /root
+	intel_sn	/opt
+
+%post
+#build arg and env
+    MPIDIR=/opt ;\
+    APPDIR=/root ;\
+	export DEBIAN_FRONTEND=noninteractive
+
+#apt relative package
+    apt update && apt install -y --reinstall systemd iptables && \
+    apt install -y gcc g++ gfortran make cmake wget git ssh tcl python3 vim locate bash-completion \
+	net-tools iputils-ping iproute2 curl \
+	environment-modules \
+	libnss3 libgtk2.*common libpango-1* libasound2* xserver-xorg cpio \
+	libgtk-3-dev libssl-dev linux-headers-$(uname -r) \
+	autoconf automake \
+	libibverbs-dev libatlas3-base \
+	numactl libnuma-dev \
+	tcl-dev tk-dev mesa-common-dev libjpeg-dev libtogl-dev
+
+#intel
+%appinstall intel
+	cd $MPIDIR && \
+	tar zxvf parallel_studio_xe_2020_cluster_edition.tgz && \
+	rm parallel_studio_xe_2020_cluster_edition.tgz && \
+	cd parallel_studio_xe_2020_cluster_edition && \
+	sed -ine 's/ACCEPT_EULA=decline/ACCEPT_EULA=accept/' silent.cfg && \
+	sed -ine 's/ARCH_SELECTED=ALL/ARCH_SELECTED=INTEL64/' silent.cfg && \
+	sed -inre "s/\#ACTIVATION_SERIAL_NUMBER=snpat/ACTIVATION_SERIAL_NUMBER=$(cat ../intel_sn)/" silent.cfg && \
+	sed -ine 's/ACTIVATION_TYPE=exist_lic/ACTIVATION_TYPE=serial_number/' silent.cfg && \
+	./install.sh --silent silent.cfg && \
+	rm /opt/intel_sn
+
+#open
+%appinstall open
+	cd $MPIDIR && \
+	tar zxvf openmpi-3.1.5.tar.gz && \
+	rm openmpi-3.1.5.tar.gz && \
+	cd openmpi-3.1.5 && \
+	./configure --with-cuda=/usr/local/cuda-10.0/targets/x86_64-linux --prefix=${MPIDIR}/openmpi && \
+	make -j$(nproc) && \
+	make install -j$(nproc)
+
+# %runscript
+#     bash -c 'source /etc/profile.d/modules.sh'
+
+#hpl part
+%appinstall hpl
+	cd $APPDIR && \
+	tar xvf hpl-2.0_FERMI_v15.tar && \
+	rm hpl-2.0_FERMI_v15.tar
+
+
+#hpcc part
+%appinstall hpcc
+	cd $APPDIR && \
+	tar zxvf hpcc-1.5.0.tar.gz && \
+	rm hpcc-1.5.0.tar.gz
+
+#hpcg part
+%appinstall hpcg
+	cd $APPDIR && \
+	tar zvxf hpcg-3.1_cuda-10_ompi-3.1.tgz && \
+	rm hpcg-3.1_cuda-10_ompi-3.1.tgz
+
+# Bootstrap: docker
+# From: nvidia/cuda:10.0-devel-ubuntu18.04
+# Stage: runtime
+
+# %appinstall intel
+# 	wget https://apt.repos.intel.com/2020/GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 && \
+# 	apt-key add GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 && \
+# 	echo "deb https://apt.repos.intel.com/2020 intel-psxe-runtime main" > /etc/apt/sources.list.d/intel-psxe-runtime-2020.list && \
+# 	apt update && apt install -y intel-icc-runtime intel-ifort-runtime intel-ipp-runtime intel-mkl-runtime intel-mpi-runtime intel-openmp-runtime
