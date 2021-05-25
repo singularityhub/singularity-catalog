@@ -178,10 +178,9 @@ def main():
         content = read_file(repos_file)
         old_repos = json.loads("\n".join(content.split("\n")[1:]))
 
+    print(byrepo)
     for i, reponame in enumerate(byrepo):
 
-        if i < 165:
-            continue
         # List of files
         repo = lookup[reponame]
         if i % 10 == 0:
