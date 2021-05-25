@@ -1,0 +1,71 @@
+Bootstrap: docker
+From: nvidia/cuda:10.0-devel-ubuntu18.04
+Stage: openmpi_installation
+
+%files
+    ./mpi/openmpi-3.1.5.tar.gz /opt/
+    ./modulefiles/general /root/modulefiles
+    ./modulefiles/bert  /root/modulefiles/bert
+
+%post
+#build arg and env
+    export MPIDIR=/opt && \
+    tar -zxvf openmpi-3.1.5.tar.gz && \
+	rm openmpi-3.1.5.tar.gz && \
+	cd openmpi-3.1.5 && \
+	mkdir ${MPIDIR}/openmpi && \
+	./configure --with-cuda --prefix=${MPIDIR}/openmpi/ompi_3.1.5 && \
+	make -j$(nproc) && \
+	make install -j$(nproc)
+
+Bootstrap: docker
+From: nvidia/cuda:10.0-cudnn7-runtime-ubuntu18.04
+Stage: runtime
+
+%labels
+    version v0.0.1
+
+%files from openmpi_installation
+/opt/openmpi    /opt/openmpi
+/root/modulefiles /workspace/modulefiles
+
+%post
+#build arg and env
+     export MPIDIR=/opt &&\
+     export WOARKDIR=/workspace &&\
+     export LANG=C &&\
+     export LC_ALL=C &&\
+     export DEBIAN_FRONTEND=noninteractive
+#apt installation for prerequisite
+    apt update && apt install -y wget git unzip python3-pip &&\
+#install intel mpi runtime package
+    cd $MPIDIR &&\
+    wget https://apt.repos.intel.com/2020/GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 &&\
+    apt-key add GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 &&\
+    echo "deb https://apt.repos.intel.com/2020 intel-psxe-runtime main" > /etc/apt/sources.list.d/intel-psxe-runtime-2020.list &&\
+    apt update && apt install -y intel-icc-runtime intel-mkl-runtime intel-mpi-runtime intel-openmp-runtime
+#pip3 installation for tensorflow & horovod
+    pip3 install -U pip &&\
+    pip3 install -U setuptools &&\
+    pip3 install tensorflow-gpu==1.15 &&\
+    bash -c "source /etc/profile.d/modules.sh &&\
+    module load mpi/intel &&\
+    HOROVOD_GPU_ALLREDUCE=NCCL \
+    HOROVOD_NCCL_HOME=/usr/lib/x86_64-linux-gnu \
+    pip3 install --no-cache-dir horovod==0.16" &&\
+    ln -sf /usr/bin/python3 /usr/bin/python
+#build workspace, download needing datasets and models and fork codes from github
+    mkdir -p $WOARKDIR &&\
+    cd  $WOARKDIR &&\
+    mkdir -p data github model results download &&\
+    cat >> ./model/download_list <<EOF
+https://gist.githubusercontent.com/W4ngatang/60c2bdb54d156a41194446737ce03e2e/raw/17b8dd0d724281ed7c3b2aeeda662b92809aadd5/download_glue_data.py
+https://storage.googleapis.com/bert_models/2019_05_30/wwm_uncased_L-24_H-1024_A-16.zip
+https://storage.googleapis.com/bert_models/2019_05_30/wwm_cased_L-24_H-1024_A-16.zip
+EOF
+    cd $WOARKDIR &&\
+    wget -P ./download -i ./download_list &&\
+    python ./download/download_glue_data.py --tasks MNLI --data_dir ./data/glue_data &&\
+    unzip ./download/*.zip -d ./model &&\
+    git clone https://github.com/google-research/bert.git ./github &&\
+    git clone https://github.com/NVIDIA/DeepLearningExamples.git ./github

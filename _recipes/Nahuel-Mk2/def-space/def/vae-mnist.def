@@ -1,0 +1,50 @@
+# reference
+# https://github.com/dragen1860/pytorch-mnist-vae
+
+#ここでベース環境指定
+#dockerはdockerhubからベースとなるimageを指定
+#cuda9.0&cudnn7固定
+Bootstrap: docker
+    From: nvidia/cuda:9.0-cudnn7-runtime-ubuntu16.04
+#環境変数設定
+%environment
+    export LC_ALL=C
+    export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64:$LD_LIBRARY_PATH
+
+#インストールするものを記述
+%post
+    #apt
+    apt -y update
+    apt -y full-upgrade
+    apt -y install software-properties-common
+    
+    #add (because ubuntu16.04 hasn't python3.6+)
+    add-apt-repository ppa:deadsnakes/ppa
+    #######################
+    # re update for add
+    apt -y update
+    apt -y full-upgrade
+    #######################
+
+    #apt
+    apt install -y python3.6
+    apt install -y ffmpeg
+    apt install -y wget
+
+    #wget (because original-pip depends on python3.5 ver)
+    wget https://bootstrap.pypa.io/get-pip.py
+    python3.6 get-pip.py
+
+    #pip
+    pip3 install torch==1.4.0
+    pip3 install torchvision==0.5.0
+    pip3 install tensorflow-gpu==1.5.0
+    pip3 install scipy==1.1.0
+    pip3 install matplotlib
+    pip3 install Pillow
+    
+
+%labels
+    Author Nahuel
+    Version v1.0.0
+    Date June 28th, 2020

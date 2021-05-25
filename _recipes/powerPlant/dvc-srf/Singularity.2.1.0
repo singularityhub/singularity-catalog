@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: centos:8
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 2.1.0
+
+%post
+  ## Install official RPM
+  yum -y install https://github.com/iterative/dvc/releases/download/2.1.0/dvc-2.1.0-1.x86_64.rpm
+  
+%runscript
+  exec dvc "$@"

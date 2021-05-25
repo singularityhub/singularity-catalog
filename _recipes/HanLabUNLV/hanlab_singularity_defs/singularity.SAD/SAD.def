@@ -1,0 +1,268 @@
+BootStrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/x86_64/
+Include: yum
+
+# If you want the updates (available at the bootstrap date) to be installed
+# inside the container during the bootstrap instead of the General Availability
+# point release (7.x) then uncomment the following line
+#UpdateURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/updates/$basearch/
+
+%labels
+    SINGULARITY_VERSION 3.5.3-1.1.el7
+    SINGULARITY_IMAGE_SIZE 20480
+
+    AUTHOR_NAME Mira Han
+    AUTHOR_EMAIL mira.han@unlv.edu
+
+    LAST_UPDATED 20200427
+
+%environment
+    # Set system locale
+    export LC_ALL=C
+
+    alias ls='ls --color=auto -h'
+    alias rm='rm -i'
+    alias vi='vim'
+
+%files 
+    SAD.list
+
+%runscript
+    exec /bin/bash "$@"
+
+%startscript
+    python --version
+
+%post -c /bin/bash
+
+    echo "Hello from inside the container"
+    # Set system locale
+    export LC_ALL=C
+
+    yum install -y sudo wget vim which numactl procps git hostname redhat-lsb
+    yum install -y bzip2 tar gcc gcc-c++ openssh-server openssh-clients
+    yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    yum install -y parallel
+
+    yum -y groupinstall "Development Tools" 
+    yum install -y mc zlib-devel bzip2-devel xz-devel libcurl-devel openssl-devel
+
+    # download and install miniconda 
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+    bash miniconda.sh -b -p /opt/conda
+    source /opt/conda/etc/profile.d/conda.sh
+    conda config --add channels conda-forge
+    conda config --append channels bioconda
+    conda update -y -n base conda
+
+    # create conda environment and install conda packages 
+    conda create -n SAD --file SAD.list
+    rm miniconda.sh -f
+    conda clean -a
+
+    # activate conda for further installation
+    conda activate SAD
+
+    # install Fusera
+    wget https://github.com/mitre/fusera/releases/download/v2.0.0/fusera
+    wget https://github.com/mitre/fusera/releases/download/v2.0.0/sracp
+    chmod +x fusera
+    chmod +x sracp
+    mv fusera opt/conda/envs/SAD/bin/ 
+    mv sracp opt/conda/envs/SAD/bin/ 
+
+    # install rsem
+#    git clone https://github.com/deweylab/RSEM.git
+#    cd RSEM
+#    make
+#    make install DESTDIR=/opt/conda/envs prefix=/SAD
+#    cd ..
+#    rm -rf RSEM
+#
+    # install RSeQC
+    pip install RSeQC
+
+    # install TrimGalore
+    curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.5.tar.gz -o trim_galore.tar.gz
+    tar xvzf trim_galore.tar.gz
+    mv TrimGalore-0.6.5/trim_galore opt/conda/envs/SAD/bin/
+
+    # install dependencies for SAD
+#######################################################
+#!/bin/bash
+#set -e
+
+# install the following libraries using bash in linux
+# boost, eigen, gsl, jellyfish, htslib, spline
+
+Dir=/opt/conda/envs/SAD
+
+mkdir -p ${Dir}/external
+
+# check pkg-config path
+mkdir -p ${Dir}/external/pkgconfig
+export PKG_CONFIG_PATH="${Dir}/external/pkgconfig/:${PKG_CONFIG_PATH}"
+
+# install boost
+echo "Install Boost library..."
+cd ${Dir}/external
+wget https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz
+tar -zxf boost_1_69_0.tar.gz
+cd ${Dir}/external/boost_1_69_0
+mkdir -p Installation
+./bootstrap.sh --with-libraries=iostreams --prefix=${Dir}/external/boost_1_69_0/Installation
+./b2 install 
+
+
+#install libGL
+yum -y install mesa-libGL-devel 
+
+# install cmake
+wget https://cmake.org/files/v3.12/cmake-3.12.3.tar.gz
+tar zxvf cmake-3.*
+cd cmake-3.*
+./bootstrap --prefix=/opt/conda/envs/SAD
+make -j$(nproc)
+make install
+cmake --version
+
+# install eigen
+if $(pkg-config --exists eigen3); then
+	echo "EIGEN library exists."
+else
+	echo "Install Eigen library..."
+	cd ${Dir}/external
+	wget -O eigen-3.3.7.tar.gz https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz
+        mkdir -p eigen-3.3.7
+	tar -xzf eigen-3.3.7.tar.gz -C eigen-3.3.7 --strip-components=1
+	cd eigen-3.3.7
+	mkdir -p Installation
+	mkdir -p build_dir && cd build_dir
+	cmake -DCMAKE_INSTALL_PREFIX=${Dir}/external/eigen-3.3.7/Installation ../
+	make install
+        cp $(find ${Dir}/external/eigen-3.3.7/Installation -name *.pc) ${Dir}/external/pkgconfig/
+fi
+
+
+# install gsl
+if $(pkg-config --exists gsl); then
+	echo "GSL library exists."
+else
+	echo "Install GSL library..."
+	cd ${Dir}/external
+	wget ftp://ftp.gnu.org/gnu/gsl/gsl-2.5.tar.gz
+	tar -zxf gsl-2.5.tar.gz
+	cd ${Dir}/external/gsl-2.5/
+	mkdir -p Installation
+	./configure --prefix=${Dir}/external/gsl-2.5/Installation
+	make
+	make install
+        cp $(find ${Dir}/external/gsl-2.5/Installation -name *.pc) ${Dir}/external/pkgconfig/
+fi
+
+
+# install htslib
+if $(pkg-config --exists htslib); then
+	echo "htslib library exists."
+else
+	echo "Install htslib..."
+	cd ${Dir}/external
+	wget https://github.com/samtools/htslib/releases/download/1.9/htslib-1.9.tar.bz2
+	tar -xjvf htslib-1.9.tar.bz2
+	cd ${Dir}/external/htslib-1.9/
+	mkdir -p Installation
+	./configure --prefix=${Dir}/external/htslib-1.9/Installation --enable-plugins=no --enable-libcurl=no --enable-s3=no
+	make
+	make install
+        cp $(find ${Dir}/external/htslib-1.9/Installation -name *.pc) ${Dir}/external/pkgconfig/
+fi
+
+
+# install jellyfish
+if $(pkg-config --exists jellyfish-2.0); then
+	echo "JELLYFISH library exists."
+else
+	echo "Install JELLYFISH..."
+	cd ${Dir}/external
+	wget https://github.com/gmarcais/Jellyfish/releases/download/v2.2.10/jellyfish-2.2.10.tar.gz
+	tar -zxf jellyfish-2.2.10.tar.gz
+	cd ${Dir}/external/jellyfish-2.2.10/
+	mkdir -p Installation
+	./configure --prefix=${Dir}/external/jellyfish-2.2.10/Installation
+	make
+	make install
+        cp $(find ${Dir}/external/jellyfish-2.2.10/Installation -name *.pc) ${Dir}/external/pkgconfig/
+fi
+
+
+# install clp
+if $(pkg-config --exists clp); then
+	echo "clp library exists."
+else
+	echo "Install clp..."
+	cd ${Dir}/external
+	wget https://www.coin-or.org/download/source/Clp/Clp-1.17.5.tgz
+	tar -zxf Clp-1.17.5.tgz
+	cd Clp-1.17.5/
+	mkdir -p Installation
+	./configure -C --prefix=${Dir}/external/Clp-1.17.5/Installation --enable-static
+	make
+	make install
+        cp $(find ${Dir}/external/Clp-1.17.5/Installation -name *.pc) ${Dir}/external/pkgconfig/
+fi
+
+
+echo
+echo "****************************************"
+echo "* Installation of dependencies done    *"
+echo "****************************************"
+echo
+echo "To configure with CLP, run: ./configure PKG_CONFIG_PATH=${PKG_CONFIG_PATH} BOOST_ROOT=${Dir}/external/boost_1_69_0/Installation"
+echo "To configure with gurobi, run: ./configure PKG_CONFIG_PATH=${PKG_CONFIG_PATH} --with-gurobi=<path to gurobi linux64 folder> BOOST_ROOT=${Dir}/external/boost_1_69_0/Installation"
+echo
+echo "Then compile and install with: make install"
+
+
+# install SAD
+wget https://github.com/Kingsford-Group/sad/releases/download/v0.0.1/sad-0.0.1.tar.gz
+tar -zxf sad-0.0.1.tar.gz
+cd sad-0.0.1
+autoreconf -i
+./configure PKG_CONFIG_PATH=${PKG_CONFIG_PATH} BOOST_ROOT=/opt/conda/envs/SAD/external/boost_1_69_0/Installation --prefix=/opt/conda/envs/SAD/
+make install
+
+
+#######################################################
+
+    # create directories
+    mkdir -p /mnt /scratch 
+    mkdir -p /mnt/storage_cluster /mnt/data_schen_1
+    for i in $(seq 1 10); do
+      mkdir -p /data${i};
+    done
+    mkdir /etc/ncbi
+
+    # create custom bash script to set env
+cat > /.singularity.d/env/99-custom.sh <<EOF
+#!/bin/bash
+SINGULARITY_SHELL=/bin/bash
+## Activate conda environment
+source /opt/conda/etc/profile.d/conda.sh
+conda activate SAD
+EOF
+
+    # create condarc
+cat > /opt/conda/.condarc <<EOF
+channels:
+  - conda-forge
+  - defaults
+  - bioconda
+EOF
+
+
+%test
+    source /opt/conda/etc/profile.d/conda.sh
+    conda info --envs
+    conda activate SAD
+    python --version

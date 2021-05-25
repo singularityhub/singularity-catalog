@@ -21,6 +21,10 @@ A Singularity recipe is a definition file to build a Singularity container. It c
 - The repository is small enough to be cloned into a Github actions job.
 - The repository is not [blacklisted](blacklist.txt).
 
+Additionally, we now support adding repos and search expressions to [repos.txt](repos.txt),
+so a repository with *.def files (which are not specific to Singularity and would not be
+possible to search with the GitHub API) can be added.
+
 ## Usage
 
 ### Install Dependencies

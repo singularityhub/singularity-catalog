@@ -1,0 +1,121 @@
+BootStrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/x86_64/
+Include: yum
+
+# If you want the updates (available at the bootstrap date) to be installed
+# inside the container during the bootstrap instead of the General Availability
+# point release (7.x) then uncomment the following line
+#UpdateURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/updates/$basearch/
+
+%labels
+    SINGULARITY_VERSION 3.5.3-1.1.el7
+    SINGULARITY_IMAGE_SIZE 20480
+
+    AUTHOR_NAME Mira Han
+    AUTHOR_EMAIL mira.han@unlv.edu
+
+    LAST_UPDATED 20200427
+
+%environment
+    # Set system locale
+    export LC_ALL=C
+
+    alias ls='ls --color=auto -h'
+    alias rm='rm -i'
+    alias vi='vim'
+
+%files 
+    rnaseq.list
+
+%runscript
+    exec /bin/bash "$@"
+
+%startscript
+    python --version
+
+%post -c /bin/bash
+
+    echo "Hello from inside the container"
+    # Set system locale
+    export LC_ALL=C
+
+    yum install -y sudo wget vim which numactl procps git hostname redhat-lsb
+    yum install -y bzip2 tar gcc gcc-c++ openssh-server openssh-clients
+    yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    yum install -y parallel
+
+    yum -y groupinstall "Development Tools" 
+    yum install -y mc zlib-devel bzip2-devel xz-devel libcurl-devel openssl-devel
+
+    # download and install miniconda 
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+    bash miniconda.sh -b -p /opt/conda
+    source /opt/conda/etc/profile.d/conda.sh
+    conda config --add channels conda-forge
+    conda config --append channels bioconda
+    conda update -y -n base conda
+
+    # create conda environment and install conda packages 
+    conda create -n rnaseq --file rnaseq.list
+    rm miniconda.sh -f
+    conda clean -a
+
+    # activate conda for further installation
+    conda activate rnaseq
+
+    # install Fusera
+    wget https://github.com/mitre/fusera/releases/download/v2.0.0/fusera
+    wget https://github.com/mitre/fusera/releases/download/v2.0.0/sracp
+    chmod +x fusera
+    chmod +x sracp
+    mv fusera opt/conda/envs/rnaseq/bin/ 
+    mv sracp opt/conda/envs/rnaseq/bin/ 
+
+    # install rsem
+#    git clone https://github.com/deweylab/RSEM.git
+#    cd RSEM
+#    make
+#    make install DESTDIR=/opt/conda/envs prefix=/rnaseq
+#    cd ..
+#    rm -rf RSEM
+#
+    # install RSeQC
+    pip install RSeQC
+
+    # install TrimGalore
+    curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.5.tar.gz -o trim_galore.tar.gz
+    tar xvzf trim_galore.tar.gz
+    mv TrimGalore-0.6.5/trim_galore opt/conda/envs/rnaseq/bin/
+
+    # create directories
+    mkdir -p /mnt /scratch 
+    mkdir -p /mnt/storage_cluster /mnt/data_schen_1
+    for i in $(seq 1 10); do
+      mkdir -p /data${i};
+    done
+    mkdir /etc/ncbi
+
+    # create custom bash script to set env
+cat > /.singularity.d/env/99-custom.sh <<EOF
+#!/bin/bash
+SINGULARITY_SHELL=/bin/bash
+## Activate conda environment
+source /opt/conda/etc/profile.d/conda.sh
+conda activate rnaseq
+EOF
+
+    # create condarc
+cat > /opt/conda/.condarc <<EOF
+channels:
+  - conda-forge
+  - defaults
+  - bioconda
+EOF
+
+
+%test
+    source /opt/conda/etc/profile.d/conda.sh
+    conda info --envs
+    conda activate rnaseq
+    python --version

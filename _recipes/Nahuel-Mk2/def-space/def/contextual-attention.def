@@ -1,0 +1,35 @@
+# Paper: Generative Image Inpainting with Contextual Attention
+# GitHub(unofficial): https://github.com/daa233/generative-inpainting-pytorch
+
+#ここでベース環境指定
+#dockerはdockerhubからベースとなるimageを指定
+Bootstrap: docker
+    From: nvidia/cuda:10.1-cudnn7-runtime-ubuntu18.04
+#環境変数設定
+%environment
+    export LC_ALL=C
+
+#インストールするものを記述
+%post
+    #apt
+    apt -y update
+    apt -y full-upgrade
+    apt install -y python3
+    apt install -y python3-pip
+    apt install -y ffmpeg
+    apt install -y libsm6 libxrender1 libxext-dev
+
+    #pip
+    pip3 install torch==1.2.0
+    pip3 install torchvision==0.4.0
+    pip3 install tensorflow
+    pip3 install tensorboardx
+    pip3 install pyyaml
+    pip3 install matplotlib
+    pip3 install scipy
+    pip3 install opencv-python==3.4.0.12
+    
+%labels
+    Author Nahuel
+    Version v1.0.0
+    Date July 24th, 2020

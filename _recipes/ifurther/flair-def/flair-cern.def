@@ -1,0 +1,23 @@
+Bootstrap: library
+From: ubuntu:18.04
+
+Stage: flair
+%files
+	${PWD}/fluka_4-1.1.Linux-gfor9_amd64.deb /app/src/fluka_4-1.1.Linux-gfor9_amd64.deb
+
+%environment
+	export LC_ALL=C
+
+%post
+	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        software-properties-common wget gpg-agent
+        wget -q -O - https://cern.ch/flair/download/ubuntu/KEY.gpg | apt-key add -
+	add-apt-repository universe
+	add-apt-repository 'deb [arch=all,amd64] https://cern.ch/flair/download/ubuntu/18.04 /'
+	apt-get -y update
+	DEBIAN_FRONTEND=noninteractive apt-get -y install gcc gfortran python3-tk gnuplot-x11 flair libpython3.6-dev
+%post
+	apt install -y /app/src/fluka_4-1.1.Linux-gfor9_amd64.deb
+	rm -rf /var/lib/apt/lists/*
+%runscript
+flair

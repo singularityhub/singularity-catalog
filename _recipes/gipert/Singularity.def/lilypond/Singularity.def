@@ -1,0 +1,11 @@
+Bootstrap: library
+From: gipert/default/arch-base:latest
+
+%files
+    lilyfonts.tar.xz /root/lilyfonts.tar.xz
+
+%post
+    pacman -Syu --noconfirm
+    pacman -S --noconfirm ghostscript lilypond
+    tar -xvf /root/lilyfonts.tar.xz -C /usr/share/lilypond/*
+    rm /root/lilyfonts.tar.xz

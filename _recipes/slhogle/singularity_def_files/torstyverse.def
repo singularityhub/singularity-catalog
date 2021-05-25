@@ -1,0 +1,169 @@
+BootStrap: library
+From: ubuntu:20.04
+
+%post
+    # basic dependencies
+    apt-get -y install software-properties-common
+    add-apt-repository -y universe
+    apt-get -y update
+    apt-get -y install wget curl git gzip unzip default-jre \
+      python3 python3-pip libbz2-dev libssl-dev \
+      libcurl4-openssl-dev cmake default-jdk pigz \
+      libboost-all-dev
+
+    # perl dependencies
+    apt-get -y install bioperl libjson-perl libtext-csv-perl \
+      libpath-tiny-perl liblwp-protocol-https-perl \
+      libwww-perl libdatetime-perl libxml-simple-perl \
+      libdigest-md5-perl bioperl
+    (echo y) | cpan App::cpanminus
+    cpanm Bio::Perl
+    cpanm Bio::SearchIO::hmmer3
+
+    # bioinformatics dependencies from apt-get
+    apt-get install ncbi-blast+ hmmer kmc pilon velvet \
+      prodigal aragorn skesa bcftools infernal trimmomatic \
+      bedtools bwa freebayes minimap2 samtools seqtk libhts-dev \
+      snp-sites dwgsim
+
+    # bioinformatics binaries not on apt-get
+    # SPAdes >= 3.11 (prefer >= 3.14)
+    cd /usr/local/src
+    wget https://github.com/ablab/spades/releases/download/v3.14.1/SPAdes-3.14.1-Linux.tar.gz
+    tar -xf SPAdes-3.14.1-Linux.tar.gz && SPAdes-3.14.1-Linux
+    mv bin/* /usr/local/bin
+    mv share/* /usr/local/share
+    cd /usr/local/src && rm -rf SPAdes-3.14.1-Linux SPAdes-3.14.1-Linux.tar.gz
+
+    # TBL2ASN
+    wget https://ftp.ncbi.nih.gov/toolbox/ncbi_tools/converters/by_program/tbl2asn/linux.tbl2asn.gz
+    gunzip linux.tbl2asn.gz && mv linux.tbl2asn tbl2asn
+    chmod +x tbl2asn
+    mv tbl2asn /usr/local/bin
+
+    # FLASh
+    wget http://ccb.jhu.edu/software/FLASH/FLASH-1.2.11-Linux-x86_64.tar.gz
+    tar -xf FLASH-1.2.11-Linux-x86_64.tar.gz
+    chmod +x FLASH-1.2.11-Linux-x86_64/flash
+    mv FLASH-1.2.11-Linux-x86_64/flash /usr/local/bin
+    cd /usr/local/src && rm -rf FLASH-1.2.11-Linux-x86_64 FLASH-1.2.11-Linux-x86_64.tar.gz
+
+    # snpEff >= 4.3
+    #wget https://iweb.dl.sourceforge.net/project/snpeff/snpEff_latest_core.zip
+    #unzip -qq snpEff_latest_core.zip
+    #chmod +x snpeff/*
+    #mv snpEff/*.jar /usr/share/java
+    #cd /usr/local/src && rm snpEff_latest_core.zip && rm -rf clinEff snpEff
+
+    # VT
+    git clone https://github.com/atks/vt.git && cd vt
+    make
+    mv vt /usr/local/bin
+    cd /usr/local/src && rm -rf vt
+
+    # Lighter
+    git clone https://github.com/mourisl/Lighter.git && cd Lighter
+    make
+    mv lighter /usr/local/bin
+    cd /usr/local/src  && rm -rf Lighter
+    
+    # Megahit
+    git clone https://github.com/voutcn/megahit && cd megahit
+    git submodule update --init
+    mkdir build && cd build
+    cmake .. -DCMAKE_BUILD_TYPE=Release  # add -DCMAKE_INSTALL_PREFIX=MY_PREFIX if needed
+    make -j4
+    make simple_test
+    make install
+    cd /usr/local/src && rm -rf megahit
+    
+    # MinCED
+    git clone https://github.com/ctSkennerton/minced
+    cd minced
+    make
+    mv minced.jar /usr/share/java
+    echo '#!/bin/sh' > /usr/local/bin/minced
+    echo 'exec java -jar /usr/share/java/minced.jar $*' >> /usr/local/bin/minced
+    chmod +x /usr/local/bin/minced
+    cd /usr/local/src && rm -rf minced
+
+    # Skesa
+    git clone https://github.com/ncbi/SKESA
+    cd SKESA && make
+    mv skesa /usr/local/bin
+    mv kmercounter /usr/local/bin
+    mv gfa_connector /usr/local/bin
+
+    # any2fasta
+    git clone https://github.com/tseemann/any2fasta.git
+    cp any2fasta/any2fasta /usr/local/bin
+    cd /usr/local/src && rm -rf any2fasta
+    
+    # Barrnap
+    git clone https://github.com/tseemann/barrnap.git
+    mv barrnap/db /usr/local
+    mv barrnap/bin/barrnap /usr/local/bin
+    cd /usr/local/src && rm -rf barrnap
+
+    # Samclip
+    git clone https://github.com/tseemann/samclip.git
+    mv samclip/samclip /usr/local/bin 
+    cd /usr/local/src && rm -rf samclip
+
+    # Prokka
+    git clone https://github.com/tseemann/prokka.git
+    mv bin/* /usr/local/bin
+    mv db/* /usr/local/db
+    prokka --setupdb
+    prokka --version
+    cd /usr/local/src && rm -rf prokka
+    
+    # Snippy
+    git clone https://github.com/tseemann/snippy.git
+    mv snippy/bin/* /usr/local/bin
+    mv snippy/binaries /usr/local
+    mv snippy/perl5 /usr/local
+    mv snippy/etc/* /usr/local/etc
+    snippy --check
+    snippy --version
+    cd /usr/local/src && rm -rf snippy
+    
+    # Shovill
+    echo '#!/bin/sh' > /usr/local/bin/trimmomatic
+    echo 'exec java -jar /usr/share/java/trimmomatic.jar $*' >> /usr/local/bin/trimmomatic
+    chmod +x /usr/local/bin/trimmomatic
+    git clone https://github.com/tseemann/shovill.git
+    mv shovill/bin/* /usr/local/bin
+    mv shovill/db/* /usr/local/db
+    shovill --check
+    cd /usr/local/src && rm -rf shovill
+    
+    # abricate
+    git clone https://github.com/tseemann/abricate.git
+    mv abricate/bin/* /usr/local/bin
+    mv abricate/db/* /usr/local/db
+    cd /usr/local/src && rm -rf abricate
+    abricate --check
+    abricate --setupdb
+    abricate assembly.fa
+
+    ### cleanup
+    apt-get -y purge libbz2-dev libssl-dev \
+      libcurl4-openssl-dev cmake default-jdk \
+      libboost-all-dev
+    apt-get -y autoremove
+
+%environment
+    export LC_ALL=C
+
+%runscript
+    exec "$@"
+
+%test
+prokka --version
+snippy --check
+shovill --check
+abricate --check
+
+%labels
+    Author SLHogle

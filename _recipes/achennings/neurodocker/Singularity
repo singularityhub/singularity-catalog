@@ -7,10 +7,10 @@
 # 
 #     https://github.com/ReproNim/neurodocker
 # 
-# Timestamp: 2021/05/21 00:54:00 UTC
+# Timestamp: 2021/05/24 16:09:22 UTC
 
 Bootstrap: docker
-From: debian:stretch
+From: neurodebian:stretch-non-free
 
 %post
 su - root
@@ -42,11 +42,9 @@ chmod -R 777 /neurodocker && chmod a+s /neurodocker
 apt-get update -qq
 apt-get install -y -q --no-install-recommends \
     vim \
-    python
+    libopenmpi-dev
 apt-get clean
 rm -rf /var/lib/apt/lists/*
-
-su - root
 
 apt-get update -qq
 apt-get install -y -q --no-install-recommends \
@@ -88,6 +86,8 @@ curl -fsSL --retry 5 https://afni.nimh.nih.gov/pub/dist/tgz/linux_openmp_64.tgz 
 | tar -xz -C /opt/afni-latest --strip-components 1
 PATH=$PATH:/opt/afni-latest rPkgsInstall -pkgs ALL
 
+
+rPkgsInstall -pkgs ALL -site 'http://cloud.r-project.org'
 
 apt-get update -qq
 apt-get install -y -q --no-install-recommends \
@@ -214,8 +214,7 @@ conda config --system --prepend channels conda-forge
 conda config --system --set auto_update_conda false
 conda config --system --set show_channel_urls true
 sync && conda clean -y --all && sync
-conda create -y -q --name neuro
-conda install -y -q --name neuro \
+conda install -y -q --name base \
     "python=3.8" \
     "matplotlib" \
     "numpy" \
@@ -226,7 +225,7 @@ conda install -y -q --name neuro \
     "seaborn" \
     "traits"
 sync && conda clean -y --all && sync
-bash -c "source activate neuro
+bash -c "source activate base
   pip install --no-cache-dir  \
       "nipype" \
       "pingouin" \
@@ -234,15 +233,16 @@ bash -c "source activate neuro
       "ipython""
 rm -rf ~/.cache/pip/*
 sync
-sed -i '$isource activate neuro' $ND_ENTRYPOINT
 
+
+sed -i '$isource /opt/freesurfer-7.1.1/SetUpFreeSurfer.sh' $ND_ENTRYPOINT
 
 echo '{
 \n  "pkg_manager": "apt",
 \n  "instructions": [
 \n    [
 \n      "base",
-\n      "debian:stretch"
+\n      "neurodebian:stretch-non-free"
 \n    ],
 \n    [
 \n      "user",
@@ -259,12 +259,8 @@ echo '{
 \n      "install",
 \n      [
 \n        "vim",
-\n        "python"
+\n        "libopenmpi-dev"
 \n      ]
-\n    ],
-\n    [
-\n      "user",
-\n      "root"
 \n    ],
 \n    [
 \n      "afni",
@@ -274,6 +270,10 @@ echo '{
 \n        "install_r_pkgs": "TRUE",
 \n        "method": "binaries"
 \n      }
+\n    ],
+\n    [
+\n      "run",
+\n      "rPkgsInstall -pkgs ALL -site '"'"'http://cloud.r-project.org'"'"'"
 \n    ],
 \n    [
 \n      "fsl",
@@ -314,13 +314,13 @@ echo '{
 \n      "copy",
 \n      [
 \n        "license.txt",
-\n        "/license.txt"
+\n        "/home/neuro/license.txt"
 \n      ]
 \n    ],
 \n    [
 \n      "env",
 \n      {
-\n        "FS_LICENSE": "/license.txt"
+\n        "FS_LICENSE": "/home/neuro/license.txt"
 \n      }
 \n    ],
 \n    [
@@ -337,6 +337,7 @@ echo '{
 \n    [
 \n      "miniconda",
 \n      {
+\n        "use_env": "base",
 \n        "conda_install": [
 \n          "python=3.8",
 \n          "matplotlib",
@@ -353,10 +354,12 @@ echo '{
 \n          "pingouin",
 \n          "brainiak",
 \n          "ipython"
-\n        ],
-\n        "create_env": "neuro",
-\n        "activate": true
+\n        ]
 \n      }
+\n    ],
+\n    [
+\n      "add_to_entrypoint",
+\n      "source /opt/freesurfer-7.1.1/SetUpFreeSurfer.sh"
 \n    ]
 \n  ]
 \n}' > /neurodocker/neurodocker_specs.json
@@ -384,14 +387,14 @@ export C3DPATH="/opt/convert3d-1.0.0"
 export PATH="/opt/convert3d-1.0.0/bin:$PATH"
 export FREESURFER_HOME="/opt/freesurfer-7.1.1"
 export PATH="/opt/freesurfer-7.1.1/bin:$PATH"
-export FS_LICENSE="/license.txt"
+export FS_LICENSE="/home/neuro/license.txt"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu:/opt/matlabmcr-2018a/v94/runtime/glnxa64:/opt/matlabmcr-2018a/v94/bin/glnxa64:/opt/matlabmcr-2018a/v94/sys/os/glnxa64:/opt/matlabmcr-2018a/v94/extern/bin/glnxa64"
 export MATLABCMD="/opt/matlabmcr-2018a/v94/toolbox/matlab"
 export CONDA_DIR="/opt/miniconda-latest"
 export PATH="/opt/miniconda-latest/bin:$PATH"
 
 %files
-license.txt /license.txt
+license.txt /home/neuro/license.txt
 
 %runscript
 /neurodocker/startup.sh "$@"

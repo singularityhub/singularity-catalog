@@ -1,0 +1,9 @@
+Bootstrap: library
+From: gipert/default/arch-base:latest
+
+%files
+    PKGBUILD /tmp/PKGBUILD
+
+%post
+    pacman -Syu --noconfirm
+    gpac -r /tmp/PKGBUILD
