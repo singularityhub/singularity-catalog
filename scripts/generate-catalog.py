@@ -202,8 +202,12 @@ def main():
     # Consolidate to list of repositories
     byrepo, lookup = combine_results(code_search)
 
+    print("Found %s search results!" % len(byrepo))
+
     # Add old repos to be indexed
     byrepo, lookup = add_existing_repos(byrepo, lookup)
+
+    print("%s total repos with previous added!" % len(byrepo))
 
     for i, reponame in enumerate(byrepo):
 
