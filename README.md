@@ -3,7 +3,7 @@
 ![assets/img/singularity-catalog.png](assets/img/singularity-catalog.png)
 
 This is the Singularity Community Catalog, or Singularity recipe files discovered
-in the wild across the community! It is another version of the [spack-stack-catalog](https://spack.github.io/spack-stack-catalog) (pushed second, but developed first!), which itself is inpired by the [snakemake-workflow-catalog](https://github.com/snakemake/snakemake-workflow-catalog) that is released under an [MIT LICENSE](.github/SNAKEMAKE-LICENSE).
+in the wild across the community! It is another version of the [spack-stack-catalog](https://spack.github.io/spack-stack-catalog) (pushed second, but developed first!), which itself is inspired by the [snakemake-workflow-catalog](https://github.com/snakemake/snakemake-workflow-catalog) that is released under an [MIT LICENSE](.github/SNAKEMAKE-LICENSE).
 
 ⭐ [View the Catalog](https://singularityhub.github.io/singularity-catalog/) ⭐
 
@@ -31,7 +31,7 @@ possible to search with the GitHub API) can be added.
 
 The update of repositories that have Singularity* recipes is done during an automated CI,
 however you might want to run the update script locally. You can first install
-requirments:
+requirements:
 
 ```bash
 python -m venv env
