@@ -193,8 +193,8 @@ def main():
         '"Bootstrap" in:file filename:Singularity NOT language:java NOT language:shell NOT language:python NOT language:json NOT language:markdown NOT language:text NOT language:html NOT language:rst NOT language:smarty NOT language:yaml NOT language:roff NOT language:vim NOT extension:ipynb',
         sort="indexed",
         order=random.choice(["asc", "desc"]),
-        per_page=100,
     )
+    print(code_search.totalCount)
 
     # Create a directory structure with Singularity recipes
     data_dir = os.path.join(here, "_recipes")

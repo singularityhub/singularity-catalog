@@ -26,14 +26,13 @@ jobs:
           git add _recipes/
           git commit -m "Add changes" -a
 
-          set +e
           changes=$(git diff --name-only | wc -l)
+          git status
+          printf "Changes - $changes\n"
           if [ "$changes" -gt 0 ]; then
-              set -e
               printf "Changes\n"
               echo ::set-output name=dopush::1
           else
-              set -e
               printf "No changes\n"
               echo ::set-output name=dopush::0
           fi
