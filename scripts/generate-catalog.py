@@ -133,11 +133,15 @@ def add_existing_repos(byrepo, lookup):
                 lookup[repo] = search
 
     for entry in old_repos:
-        if entry["full_name"] not in byrepo:
-            byrepo[entry["full_name"]] = g.get_repo(entry["full_name"])
-            lookup[entry["full_name"]] = "Singularity*"
+        # If a repo doesn't exist, skip it!
+        try:
+            if entry["full_name"] not in byrepo:
+                byrepo[entry["full_name"]] = g.get_repo(entry["full_name"])
+                lookup[entry["full_name"]] = "Singularity*"
+        except UnknownObjectException:
+            print("%s does not exist anymore, will not be added back." % entry["full_name"]) 
 
-    return byrepo, lookup
+        return byrepo, lookup
 
 
 @call_rate_limit_aware_decorator
