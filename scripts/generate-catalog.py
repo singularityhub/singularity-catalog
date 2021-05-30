@@ -139,7 +139,10 @@ def add_existing_repos(byrepo, lookup):
                 byrepo[entry["full_name"]] = g.get_repo(entry["full_name"])
                 lookup[entry["full_name"]] = "Singularity*"
         except UnknownObjectException:
-            print("%s does not exist anymore, will not be added back." % entry["full_name"]) 
+            print(
+                "%s does not exist anymore, will not be added back."
+                % entry["full_name"]
+            )
 
         return byrepo, lookup
 
@@ -174,6 +177,8 @@ def validate_recipe(filename):
         if re.search("bootstrap[:]", content, re.IGNORECASE):
             return True
     except yaml.YAMLError as exc:
+        return False
+    except UnicodeDecodeError as exc:
         return False
     return False
 
