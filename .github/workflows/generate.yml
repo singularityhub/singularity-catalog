@@ -29,17 +29,9 @@ jobs:
           changes=$(git diff --name-only | wc -l)
           git status
           printf "Changes - $changes\n"
-          if [ "$changes" -gt 0 ]; then
-              printf "Changes\n"
-              echo ::set-output name=dopush::1
-          else
-              printf "No changes\n"
-              echo ::set-output name=dopush::0
-          fi
-
 
       - name: Push changes
-        if: steps.commit.outputs.dopush == 1
+        continue-on-error: true
         uses: ad-m/github-push-action@057a6ba835d986bfe495dd476a6c4db1d5f9503c
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
