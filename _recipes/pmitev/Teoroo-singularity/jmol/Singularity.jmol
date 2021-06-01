@@ -1,0 +1,20 @@
+Bootstrap:  docker
+From: ubuntu:18.04
+
+%runscript
+  /usr/local/jmol-14.29.31/jmol.sh $@
+
+%setup
+
+%files
+  Jmol-14.29.31-binary.tar.gz /
+
+%environment
+  export JMOL_HOME=/usr/local/jmol-14.29.31
+
+%post
+  ls -l /
+  tar -C /usr/local -xvf /Jmol-14.29.31-binary.tar.gz
+  rm /Jmol-14.29.31-binary.tar.gz
+  apt-get update && apt-get install -y gawk povray openjdk-11-jre
+

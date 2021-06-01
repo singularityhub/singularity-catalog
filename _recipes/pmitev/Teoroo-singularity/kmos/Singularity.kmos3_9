@@ -1,0 +1,32 @@
+Bootstrap:  docker
+From: ubuntu:16.04
+
+%runscript
+  kmos $@
+
+%setup
+
+%files
+
+%environment
+  export PYTHONNOUSERSITE=True
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+ 
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y gawk wget git gfortran python python-dev python-pip \
+                     python-glade2 python-kiwi python-lxml python-gtk2 \
+                     python-matplotlib python-numpy \
+                     python-pygoocanvas libmtdev-dev libmtdev1 libgl1-mesa-glx libgl1-mesa-dev build-essential vim locales && apt-get clean
+
+  wget http://launchpadlibrarian.net/109052632/python-support_1.0.15_all.deb
+  dpkg -i python-support_1.0.15_all.deb
+
+  python -m pip install python-kmos
+
+  wget https://gist.github.com/mhoffman/d2a9466c22f33a9e046b/raw/4c73c5029f3c01e656f161c7459f720aff331705/gazpacho_0.7.2-3_all.deb
+  dpkg -i gazpacho_*.deb
+
+  python -m pip install ase==3.13.0
+
+

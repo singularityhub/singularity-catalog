@@ -1,0 +1,26 @@
+Bootstrap:  docker
+From: ubuntu:20.04
+
+%runscript
+  /usr/local/VESTA-gtk3/VESTA $@
+
+%setup
+
+%files
+  #VESTA-x86_64.tar.bz2 / 
+
+%environment
+  
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y gawk wget curl libxmu6 libxss1 libxft2 \
+  libquadmath0 libpng16-16 bzip2 libgl1-mesa-glx libglu1-mesa libglib2.0-0 libgtk-3-0 libgtk-3-dev  libgomp1 && apt-get clean
+  
+  cd /
+  curl -O https://jp-minerals.org/vesta/archives/3.5.5/VESTA-gtk3.tar.bz2
+  ls -l / && \
+  tar -C /usr/local -xvf /VESTA-gtk3.tar.bz2 && \
+  rm /VESTA-gtk3.tar.bz2
+

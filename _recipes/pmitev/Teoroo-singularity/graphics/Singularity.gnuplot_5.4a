@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: alpine:latest
+
+%setup
+
+%files
+
+%environment
+  export LC_ALL=C
+  export GDFONTPATH=/usr/share/fonts/truetype/msttcorefonts/
+
+%post
+  export LC_ALL=C
+  apk --no-cache --virtual .fontsinstaller add msttcorefonts-installer fontconfig \
+  && update-ms-fonts && fc-cache -f  && apk del .fontsinstaller
+
+  export GDFONTPATH=/usr/share/fonts/truetype/msttcorefonts/
+
+  apk --update add libgd libpng libjpeg libwebp libjpeg-turbo cairo pango lua readline gawk \
+  && apk add --virtual .gnuplotbuild git gcc g++ libtool make automake autoconf cairo-dev pango-dev gd-dev lua-dev readline-dev libpng-dev libjpeg-turbo-dev libwebp-dev
+
+  cd / && \
+  git clone -b branch-5-4-stable https://git.code.sf.net/p/gnuplot/gnuplot-main && \
+  cd gnuplot-main && \
+  ./prepare && \
+  ./configure --with-readline=gnu && \
+  make -j 4 && make install && cd / && rm -r /gnuplot-main
+
+  apk del .gnuplotbuild 
+
+%runscript
+  /usr/local/bin/gnuplot "$@"

@@ -1,0 +1,18 @@
+Bootstrap:  docker
+From: ubuntu:latest
+
+%runscript
+  /bin/bash $@
+
+%setup
+
+%files
+
+%environment
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y gawk wget texlive-full && apt-get clean
+  
+

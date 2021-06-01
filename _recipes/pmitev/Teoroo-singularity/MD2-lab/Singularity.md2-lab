@@ -1,0 +1,53 @@
+Bootstrap:  docker
+From: ubuntu:18.04
+
+%runscript
+  export PATH=$PATH:/opt/lammps/bin
+  export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/lammps/lib
+  export LAMMPS_COMMAND=/opt/lammps/bin/lmp
+  /bin/bash $@
+
+%setup
+
+%files
+  vmd-1.9.2.bin.LINUXAMD64.opengl.tar.gz /
+  stable_7Aug2019.tar.gz /
+
+%environment
+  PATH=$PATH:/opt/lammps/bin
+  LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/lammps/lib
+  LAMMPS_COMMAND=/opt/lammps/bin/lmp
+  export PATH LD_LIBRARY_PATH LAMMPS_COMMAND
+
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y gawk wget mc vim nano \
+                    python3-pip python3-dev python3-tk build-essential gnuplot cmake \
+                    libxmu6 libxss1 libxft2 libquadmath0 \
+                    bzip2 libgl1-mesa-glx libglu1-mesa libglib2.0-0 libgtk2.0-0 libgomp1 \
+                    less libopenblas-dev csh openssh-client \
+                    cython3 gfortran imagemagick && apt-get clean
+#------------------------
+  cd /
+  tar xvf vmd-1.9.2.bin.LINUXAMD64.opengl.tar.gz
+  cd vmd-1.9.2 && ./configure && cd src && make install
+  cd / && rm vmd-1.9.2.bin.LINUXAMD64.opengl.tar.gz && rm -r vmd-1.9.2
+#------------------------
+  cd /
+  tar xvf stable_7Aug2019.tar.gz
+  cd lammps-stable_7Aug2019 && mkdir build && cd build
+  cmake -D CMAKE_INSTALL_PREFIX=/opt/lammps \
+        -D CMAKE_BUILD_TYPE=Release -D PKG_PYTHON=on -D BUILD_LIB=on -D BUILD_SHARED_LIBS=on -D PKG_MANYBODY=yes ../cmake
+
+  make -j $(grep -c ^processor /proc/cpuinfo)
+  make install
+  make install-python
+
+  cd / && rm stable_7Aug2019.tar.gz && rm -r lammps-stable_7Aug2019
+#------------------------
+  python3 -m pip install --upgrade pip
+  python3 -m pip install ase pymatgen pandas
+  python3 -m pip install ase ipython
+

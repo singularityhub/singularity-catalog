@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: ubuntu:focal
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 0.3.6
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install python3-pip
+  
+  ## Install
+  pip3 install ont-bonito==0.3.6
+
+%runscript
+  exec bonito "$@"

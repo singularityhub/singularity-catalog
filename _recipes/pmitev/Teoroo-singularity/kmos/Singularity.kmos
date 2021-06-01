@@ -1,0 +1,42 @@
+Bootstrap:  docker
+From: ubuntu:16.04
+
+%runscript
+  kmos $@
+
+%setup
+
+%files
+  species.py /tmp
+
+%environment
+  export PYTHONNOUSERSITE=True
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+ 
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y gawk wget git gfortran python python-dev python-pip \
+                     python-glade2 python-kiwi python-lxml python-gtk2 \
+                     python-matplotlib python-numpy ipython \
+                     python-pygoocanvas libmtdev-dev libmtdev1 libgl1-mesa-glx libgl1-mesa-dev build-essential vim locales && apt-get clean
+
+  wget http://launchpadlibrarian.net/109052632/python-support_1.0.15_all.deb
+  dpkg -i python-support_1.0.15_all.deb
+
+  wget https://gist.github.com/mhoffman/d2a9466c22f33a9e046b/raw/4c73c5029f3c01e656f161c7459f720aff331705/gazpacho_0.7.2-3_all.deb
+  dpkg -i gazpacho_*.deb
+
+  #python -m pip install python-kmos
+  git clone https://github.com/mhoffman/kmos.git
+  cd kmos
+  # fix version for ase
+  sed -ie "s/ase/ase=3.9.1/" requirements.txt
+  
+  cp /tmp/species.py kmos/  
+
+  # Install KMOS
+  ./setup.py install
+
+  python -m pip install --no-cache-dir ase==3.9.1
+
+

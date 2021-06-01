@@ -18,9 +18,7 @@ From: nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 	systemd \
 	imagemagick \
 	curl \
-	openslide-tools && \
-	curl -sSOL https://github.com/cdr/code-server/releases/download/v3.6.2/code-server_3.6.2_amd64.deb && \
-	dpkg -i code-server_3.6.2_amd64.deb
+	openslide-tools
 	
 	# Install nodejs
 	curl -sL https://deb.nodesource.com/setup_15.x | bash -
@@ -33,9 +31,9 @@ From: nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 	python3 -m pip install --upgrade pip
 
 	# Install python libraries
-	python3 -m pip install wheel --use-feature=2020-resolver
+	python3 -m pip install wheel
 	python3 -m pip install torch torchvision numpy matplotlib torchsummary tensorboardX \
 	scikit-learn Pillow pandas scikit-image scipy opencv-python pylint jupyterlab \
-	captum fastai albumentations kornia optuna pytorch-lightning tensorly \
-	seaborn altair ipywidgets h5py lmdb pyarrow msgpack torch-lr-finder \
-	numba umap-learn[plot] tables openslide-python --use-feature=2020-resolver
+	captum fastai albumentations kornia optuna pytorch-lightning==1.3.3 lightning-bolts["extra"] \
+	lightning-flash tensorly seaborn altair ipywidgets h5py lmdb pyarrow msgpack torch-lr-finder \
+	numba umap-learn[plot] tables openslide-python hdbscan

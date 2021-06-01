@@ -1,0 +1,63 @@
+Bootstrap: library
+From: centos:8
+
+%environment
+    SHELL=/bin/bash
+    PATH=$PATH:/usr/local/bin
+    LC_ALL=C.UTF-8
+
+%help
+    Set of tools to process and QC a VCF file.
+    Includes: bcftools, vt, multiqc and a custom script (VCF_fixes_opt)
+
+%post
+    yum -y install cmake \
+        curl \
+        gcc \
+        gcc-c++ \
+        git \
+        bzip2 \
+        bzip2-devel \
+        openssl-devel \
+        xz-devel \
+        openssl-devel \
+        ncurses-devel \
+        make \
+        wget \
+        zlib-devel \
+        autoconf \
+        tar \
+        unzip \
+        python3 \
+        python3-devel \
+        procps
+    
+    ## Install bcftools and htslib
+    cd /opt/ && wget https://github.com/samtools/bcftools/releases/download/1.10.2/bcftools-1.10.2.tar.bz2
+    tar -jxvf bcftools-1.10.2.tar.bz2
+    rm bcftools-1.10.2.tar.bz2
+    cd bcftools-1.10.2
+    ./configure
+    make
+    make install
+    cd htslib-1.10.2
+    ./configure
+    make
+    make install
+
+    #install multiqc
+    pip3 install multiqc
+
+    #Get compiled VCF_fixes_opt
+    cd /opt
+    wget https://github.com/edg1983/VCF_toolbox/raw/main/VCF_toolbox
+    chmod a+x VCF_toolbox
+
+    #Make links
+    cd /usr/local/bin
+    ln -s /opt/vt-0.5772/vt vt
+    ln -s /opt/VCF_toolbox VCF_toolbox
+
+%test
+    bcftools --help
+    multiqc --help

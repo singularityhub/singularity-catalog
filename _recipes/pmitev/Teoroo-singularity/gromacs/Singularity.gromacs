@@ -1,0 +1,42 @@
+Bootstrap:  docker
+From: ubuntu:18.04
+
+%runscript
+  export PATH=/usr/local/bin:$PATH
+  export XDG_RUNTIME_DIR=/tmp/.run_$(uuidgen)
+  /bin/bash
+
+%setup
+  
+
+%files
+
+%environment
+  export PYTHONNOUSERSITE=True
+
+%labels
+  AUTHOR pavlin.mitev@kemi.uu.se
+
+%post
+  apt-get update && apt-get install -y \
+    bash-completion \
+    bc \
+    curl \
+    gawk \
+    git \
+    htop \
+    locales \
+    lsof \
+    mc \
+    ncdu \
+    rsh-client \
+    openssh-client \
+    units \
+    uuid-runtime \
+    vim \
+    wget \
+    gromacs gromacs-openmpi \
+&& rm -rf /var/lib/apt/lists/*
+
+  locale-gen en_US.UTF-8 &&  update-locale
+

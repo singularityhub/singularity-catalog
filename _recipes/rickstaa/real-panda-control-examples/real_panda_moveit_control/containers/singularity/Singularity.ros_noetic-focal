@@ -1,0 +1,29 @@
+# Ubuntu 20.04 - Ros noetic container (NO NVIDIA cards)
+Bootstrap: docker
+From: osrf/ros:noetic-desktop-full
+
+%help
+    A container used for running ros-noetic.
+%labels
+    Maintainer: Rick Staa
+    Github: https://github.com/rickstaa
+    Version: v0.0.5
+    Type: Private
+%environment
+    # Set language options
+    LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+    # Set ROS distro var
+    export ROS_DISTRO=melodic
+%post
+    # Install system package dependencies
+    apt update --fix-missing
+
+    #  Install additional system packages
+    apt install -q -y \
+        vim \
+        git \
+        bash-completion \
+        htop \
+        wget \
+        lsb-release \

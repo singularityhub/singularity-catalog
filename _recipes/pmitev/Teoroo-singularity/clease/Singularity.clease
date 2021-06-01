@@ -1,0 +1,30 @@
+Bootstrap:  docker
+From: ubuntu:18.04
+
+%runscript
+  clease $@
+
+%setup
+
+%files
+
+%environment
+  export PYTHONNOUSERSITE=True
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y gawk wget git python3-pip python3-dev python3-tk cython3 python3-sdl2 libmtdev-dev libmtdev1 libgl1-mesa-glx libgl1-mesa-dev build-essential vim locales && apt-get clean
+
+  locale-gen en_US.UTF-8 &&  update-locale
+
+  cd /
+  git clone https://gitlab.com/computationalmaterials/clease.git
+  cd clease
+  python3 -m pip install --upgrade --no-cache-dir pip==19.3.1
+  python3 -m pip install --upgrade --no-cache-dir setuptools numpy
+#  python3 -m pip install -r requirements.txt
+  python3 -m pip install --no-cache-dir kivy
+  python3 -m pip install 'https://github.com/kivy-garden/graph/archive/master.zip'
+  python3 -m pip install .
+  

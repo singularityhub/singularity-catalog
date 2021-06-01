@@ -1,0 +1,99 @@
+Bootstrap: docker
+From: centos:8
+
+%runscript
+  source /etc/bashrc
+  module use /etc/modulefiles
+  module load mpi/mpich-x86_64
+  /bin/bash $@
+
+%setup
+#  export PYTHONNOUSERSITE=True
+  export PATH=$PATH:/opt/AMPE/build/source/
+
+%files
+
+%environment
+  export PYTHONNOUSERSITE=True
+  export PATH=$PATH:/opt/AMPE/build/source/
+
+%post
+  export NCPU=$(grep -c ^processor /proc/cpuinfo)
+
+  yum -y update && yum --enablerepo=extras -y install epel-release && yum -y groupinstall 'Development Tools'
+  yum config-manager --set-enabled powertools
+  yum -y install gawk wget git vim csh openssl-devel \
+            hdf5-mpich-devel hdf5-mpich-static hdf5-openmpi-devel hdf5-openmpi-static \
+            netcdf-cxx4-devel netcdf-cxx4-mpich-devel netcdf-cxx4-mpich-static \
+            boost-mpich-devel boost-openmpi-devel \
+            python3-numpy python3-matplotlib python3-matplotlib-tk python3-scipy python3-h5py python3-netcdf4 && yum clean all
+
+mkdir /installs
+source /etc/bashrc
+module load mpi/mpich-x86_64
+
+# cmake ============================================================================
+cd /installs
+wget https://github.com/Kitware/CMake/releases/download/v3.19.2/cmake-3.19.2.tar.gz
+tar -xvf cmake-3.19.2.tar.gz
+cd cmake-3.19.2
+./bootstrap && make -j $NCPU && make install
+hash -r
+
+
+# HYPRE ============================================================================
+# https://computing.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods
+# https://github.com/hypre-space/hypre
+cd /installs
+git clone --recursive https://github.com/hypre-space/hypre.git
+cd hypre
+git checkout v2.20.0
+git reset --hard v2.20.0
+cd src 
+./configure CFLAGS=-fPIC CXXFLAGS=-fPIC --prefix=/opt/hypre && make -j $NCPU && make install
+
+# SUNDIALS =========================================================================
+# https://github.com/LLNL/sundials
+cd /installs
+git clone --recursive https://github.com/LLNL/sundials.git
+cd sundials
+git checkout v5.6.1
+git reset --hard v5.6.1
+
+mkdir build && cd build
+cmake -DCMAKE_CXX_COMPILER=mpic++ -DENABLE_MPI=ON -DHYPRE_WORKS=FALSE -DENABLE_HYPRE=ON -DHYPRE_INCLUDE_DIR=/opt/hypre/include -DHYPRE_LIBRARY_DIR=/opt/hypre/lib -DCMAKE_BUILD_TYPE=Release ..
+make -j $NCPU && make install
+
+# SAMRAI ===========================================================================
+cd /installs
+git clone --recursive https://github.com/LLNL/SAMRAI.git
+cd SAMRAI
+git checkout v-4-0-3
+git reset --hard v-4-0-3
+
+mkdir build && cd build
+cmake -DCMAKE_CXX_COMPILER=mpic++ -DCMAKE_Fortran_COMPILER=mpif77 -DHYPRE_DIR=/opt/hypre -DCMAKE_INSTALL_PREFIX=/opt/SAMRAI-v4.0.3 -DCMAKE_BUILD_TYPE=Release ..
+make -j $NCPU && make install
+
+# AMPE =============================================================================
+# source /etc/bashrc
+# module use /etc/modulefiles
+# module load mpi/mpich-x86_64
+
+cd /opt
+git clone --recursive https://github.com/LLNL/AMPE.git
+
+cd AMPE
+mkdir build && cd build
+cmake -DCMAKE_CXX_COMPILER=mpic++ -DCMAKE_C_COMPILER=mpicc -DCMAKE_Fortran_COMPILER=mpif77 -DSAMRAI_DIR=/opt/SAMRAI-v4.0.3 -DHYPRE_DIR=/opt/hypre -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_PREFIX_PATH=/opt/AMPE -DUSE_CVODE=ON -DNDIM="2" ..
+make install
+
+rm -rf CMakeCache.txt
+rm -rf CMakeFiles/
+rm -f  cmake_install.cmake
+rm -f  Makefile
+cmake -DCMAKE_CXX_COMPILER=mpic++ -DCMAKE_C_COMPILER=mpicc -DCMAKE_Fortran_COMPILER=mpif77 -DSAMRAI_DIR=/opt/SAMRAI-v4.0.3 -DHYPRE_DIR=/opt/hypre -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_PREFIX_PATH=/opt/AMPE -DUSE_CVODE=ON -DNDIM="3" ..
+make install
+
+
+rm -rf /installs

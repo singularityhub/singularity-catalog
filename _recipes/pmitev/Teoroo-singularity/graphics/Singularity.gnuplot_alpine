@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: alpine:latest
+
+%setup
+
+%files
+
+%environment
+  export LC_ALL=C
+  export PYTHONNOUSERSITE=True
+  export GDFONTPATH=/usr/share/fonts/truetype/msttcorefonts/
+
+%post
+  export LC_ALL=C
+  apk --no-cache --virtual .fontsinstaller add msttcorefonts-installer fontconfig \
+  && update-ms-fonts && fc-cache -f  && apk del .fontsinstaller
+
+  export GDFONTPATH=/usr/share/fonts/truetype/msttcorefonts/
+
+  apk --update --no-cache add gawk gnuplot python3 py3-numpy 
+
+%runscript
+  /usr/bin/gnuplot "$@"

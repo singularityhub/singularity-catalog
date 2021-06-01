@@ -1,0 +1,21 @@
+Bootstrap:  docker
+From: debian:buster
+
+%runscript
+  obabel $*
+
+%setup
+
+%files
+
+%environment
+
+%labels
+
+%post
+  echo 'deb http://deb.debian.org/debian experimental main' >> /etc/apt/sources.list
+
+  apt-get update -y && apt-get upgrade -y &&\
+  apt-get install -y --no-install-recommends zip unzip &&\
+  apt-get install -y -t experimental openbabel python-openbabel &&\
+  apt-get clean

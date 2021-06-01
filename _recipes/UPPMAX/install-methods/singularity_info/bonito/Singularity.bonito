@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+  Author pmitev@gmail.com
+
+%environment
+  export LC_ALL=C
+  export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export LC_ALL=C
+  export NCPU=$(grep -c ^processor /proc/cpuinfo)
+
+  mkdir -p /tmp/apt
+  echo "Dir::Cache "/tmp/apt";" > /etc/apt/apt.conf.d/singularity-cache.conf
+
+  apt-get update && \
+  apt-get  -y --no-install-recommends install \
+    python3-minimal python3-pip git build-essential python3-dev libz-dev cmake cython3 
+
+
+
+  git clone -b openvino --depth 1 https://github.com/dkurt/bonito /bonito
+  cd /bonito 
+  python3 -m pip install --upgrade pip setuptools 
+  python3 -m pip install --upgrade scipy==1.4.1
+  python3 -m pip install -r requirements.txt 
+  python3 setup.py develop 
+  bonito download --models
+
+
+  rm /etc/apt/apt.conf.d/singularity-cache.conf
+
+%runscript
+  export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+  /bin/bash $@

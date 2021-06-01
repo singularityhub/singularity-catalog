@@ -1,0 +1,19 @@
+Bootstrap:  docker
+From: ubuntu:20.04
+
+%runscript
+  export XDG_RUNTIME_DIR=/tmp/.meld_$(uuidgen)
+  /usr/bin/meld $@
+
+%setup
+
+%files
+
+%environment
+  
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y meld
+  apt-get clean

@@ -1,0 +1,25 @@
+Bootstrap:  docker
+From: ubuntu:18.04
+
+%runscript
+  /usr/local/xcrysden-1.5.60-bin-semishared/xcrysden $@
+
+%setup
+
+%files
+  # xcrysden-1.5.60-linux_x86_64-semishared.tar.gz /
+
+%environment
+  export PATH=$PATH:/usr/local/xcrysden-1.5.60-bin-semishared
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y gawk wget libxmu6 libxss1 libxft2 libquadmath0  gnuplot grace rasmol paraview blender povray && apt-get clean
+  cd /
+  
+  wget http://www.xcrysden.org/download/xcrysden-1.5.60-linux_x86_64-semishared.tar.gz && \
+  ls -l / && \
+  tar -C /usr/local -xvf /xcrysden-1.5.60-linux_x86_64-semishared.tar.gz && \
+  rm /xcrysden-1.5.60-linux_x86_64-semishared.tar.gz 
+

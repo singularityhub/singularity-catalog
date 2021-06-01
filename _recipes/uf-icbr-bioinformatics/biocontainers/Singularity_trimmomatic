@@ -1,0 +1,13 @@
+Bootstrap: docker
+
+From: ubuntu:latest
+
+%post
+    apt-get update --fix-missing && apt-get install -y wget
+    apt-get install -y zip
+    apt-get install -y default-jre
+    wget --quiet http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.38.zip -O /opt/Trimmomatic-0.38.zip
+    unzip /opt/Trimmomatic-0.38.zip
+
+%runscript
+exec java -jar /Trimmomatic-0.38/trimmomatic-0.38.jar "$@"

@@ -1,0 +1,57 @@
+Bootstrap:  docker
+From: ubuntu:18.04
+
+%runscript
+  export PATH=/usr/local/bin:$PATH
+  export XDG_RUNTIME_DIR=/tmp/.jupyter_$(uuidgen)
+  jupyter notebook --ip 0.0.0.0 --no-browser
+
+%environment
+  export PYTHONNOUSERSITE=True
+
+%post
+#  echo 'PYTHONNOUSERSITE=True' >> $SINGULARITY_ENVIRONMENT
+  export DEBIAN_FRONTEND=noninteractive
+
+  apt-get update && apt-get install -y locales python3-dev  python3-pip  python3-tk \
+                            build-essential bash-completion less uuid-runtime libopenblas-dev csh openssh-client rsh-client \
+                            gawk mc vim gnuplot cython sqlite pandoc gfortran && rm -rf /var/lib/apt/lists/*
+
+ # locale-gen en_US.UTF-8 &&  update-locale
+  
+/usr/bin/env python3 -m  pip install --upgrade pip  
+/usr/bin/env python3 -m  pip install --upgrade ase
+/usr/bin/env python3 -m  pip install --upgrade pymatgen
+/usr/bin/env python3 -m  pip install --upgrade phonopy
+/usr/bin/env python3 -m  pip install --upgrade jupyter
+/usr/bin/env python3 -m  pip install --upgrade notebook
+/usr/bin/env python3 -m  pip install --upgrade metakernel
+/usr/bin/env python3 -m  pip install --upgrade gnuplot_kernel
+/usr/bin/env python3 -m  pip install --upgrade fortran-magic
+/usr/bin/env python3 -m  pip install --upgrade lxml
+/usr/bin/env python3 -m  pip install --upgrade pandoc
+/usr/bin/env python3 -m  pip install --upgrade ipywidgets
+/usr/bin/env python3 -m  pip install --upgrade ipykernel
+/usr/bin/env python3 -m  pip install --upgrade numba
+/usr/bin/env python3 -m  pip install --upgrade tensorflow-gpu==1.13.1
+/usr/bin/env python3 -m  pip install --upgrade Theano
+/usr/bin/env python3 -m  pip install --upgrade seaborn
+/usr/bin/env python3 -m  pip install --upgrade scikit-learn scikit-image
+#/usr/bin/env python3 -m  pip install --upgrade keras
+/usr/bin/env python3 -m  ipykernel install
+
+/usr/bin/env python3 -m  pip install --upgrade jupyter_contrib_nbextensions
+jupyter contrib nbextension install --system
+jupyter nbextension enable codefolding/main
+
+/usr/bin/env python3 -m  pip install --upgrade jupyter_nbextensions_configurator
+jupyter nbextensions_configurator enable --system
+
+/usr/bin/env python3 -m  pip install --upgrade jupyter-tensorboard
+jupyter tensorboard enable --system
+
+/usr/bin/env python3 -m  pip install --upgrade nglview
+jupyter-nbextension enable nglview --py --sys-prefix
+
+/usr/bin/env python3 -m  pip install --upgrade ipyparallel
+ipcluster nbextension enable

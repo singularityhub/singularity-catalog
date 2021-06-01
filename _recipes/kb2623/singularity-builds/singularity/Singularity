@@ -1,0 +1,42 @@
+BootStrap: docker
+From: debian:bullseye-slim
+
+%help
+This is a Singularity enviroment for NOS.
+It has Python, Jupyter, OpenCV and TensorFlow.
+
+%labels
+Maintainer Klemen Berkovic
+Version v1.0
+
+%post
+export DEBIAN_FRONTEND=noninteractive LC_ALL=C
+apt-get update
+apt-get install -y -q \
+    build-essential \
+    libssl-dev \
+    uuid-dev \
+    libgpgme-dev \
+    squashfs-tools \
+    libseccomp-dev \
+    wget \
+    pkg-config \
+    git \
+    cryptsetup
+cd /tmp
+export VERSION=1.16.4 OS=linux ARCH=amd64 
+wget https://dl.google.com/go/go$VERSION.$OS-$ARCH.tar.gz
+tar -C /usr/local -xzvf go$VERSION.$OS-$ARCH.tar.gz
+rm go$VERSION.$OS-$ARCH.tar.gz
+export PATH=/usr/local/bin:/usr/local/go/bin:$PATH
+git clone -b v3.8.0 https://github.com/sylabs/singularity.git
+cd singularity
+./mconfig
+make -C builddir
+make -C builddir install
+
+%environment
+export PATH=/usr/local/bin:/usr/local/go/bin:$PATH
+
+%runscript
+exec /bin/bash

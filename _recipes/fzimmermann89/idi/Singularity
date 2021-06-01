@@ -55,9 +55,9 @@ export CONDA_PKGS_DIRS
 ##yum
 yum-config-manager --add-repo https://yum.repos.intel.com/mkl/setup/intel-mkl.repo
 yum -y install epel-release https://repo.ius.io/ius-release-el7.rpm && yum clean all && rm -rf /var/cache/yum/*  && yum makecache && yum update -y && yum upgrade -y
-yum install -y aria2 bsdtar curl git224 gzip lz4 p7zip p7zip-plugins perl-Digest-MD5 perl-File-Fetch perl-LWP-Protocol-https perl-Mozilla-CA perl-libwww-perl rsync unzip wget xz zip
+yum install -y aria2 bsdtar curl git224 gzip lz4 p7zip p7zip-plugins perl-Digest-MD5 perl-File-Fetch perl-LWP-Protocol-https perl-Mozilla-CA perl-libwww-perl rsync unzip wget xz zip openssl bzip2
 #intel-mkl-64bit-2020.3-111.x86_64 intel-mkl-gnu-2020.3-279.x86_64 intel-mkl-tbb-rt-2020.3-279.x86_64 
-yum install -y axel binutils cmake3 curl diffutils elfutils environment-modules file gcc gcc-c++ gdb gettext ghostscript htop less libstdc++ libtiff libtool ltrace make man man-pages mc mosh openmpi-devel openssh patch patchutils perf psmisc screen strace tmux vim zsh  openssl openssl-devel pam-devel numactl numactl-devel hwloc hwloc-devel lua lua-devel readline-devel rrdtool-devel ncurses-devel man2html libibmad libibumad munge-libs mesa-libOSMesa mesa-libOSMesa-devel nmap nc ImageMagick && yum clean all && rm -rf /var/cache/yum &
+yum install -y axel binutils cmake3 curl diffutils elfutils environment-modules file gcc gcc-c++ gdb gettext ghostscript htop less libstdc++ libtiff libtool ltrace make man man-pages mc mosh openmpi-devel openssh patch patchutils perf psmisc screen strace tmux vim zsh  openssl-devel pam-devel numactl numactl-devel hwloc hwloc-devel lua lua-devel readline-devel rrdtool-devel ncurses-devel man2html libibmad libibumad munge-libs mesa-libOSMesa mesa-libOSMesa-devel nmap nc ImageMagick && yum clean all && rm -rf /var/cache/yum &
 
 
 ##texlive
@@ -136,15 +136,17 @@ cd /tmp/&& bash /tmp/Miniconda3.sh -b -p /opt/anaconda3
 rm /tmp/Miniconda3.sh
 ln -s /opt/anaconda3/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 PATH=$PATH:/usr/local/cuda/bin:/opt/anaconda3/bin
-
+PYVERSION="3.8.10=hdb3f193_7"
+echo using python $PYVERSION
 
 #conda env
 . /etc/profile.d/conda.sh
 echo "installing conda extensions"
 conda activate
-conda install -q -y -c conda-forge mamba conda
-mamba install -q -y simplejson colorama   protobuf requests "numexpr>=2.7.2" "numpy>=1.17" hdf5 scipy "jedi=0.17" numba "mkl>=2020" cython  "jupyterlab=2.2"  jupyter scikit-image appdirs mako scikit-learn "python>=3.8" seaborn pandas line_profiler black ninja colorama memory_profiler isort "mkl-include>=2020" fastrlock six setuptools cmake
-mamba install -q -y -c anaconda -c  conda-forge -c plotly gpustat colorful "h5py>3,<3.2" lmfit ipympl pathos "nodejs>=14"  ptvsd xeus-python pytools nbdime "pip>=20.1" jupyter-dash ipyvolume "jupyter-server-proxy<3" six openssl "jedi<0.18" ffmpeg
+conda install -q -y "python==${PYVERSION}"
+conda install -q -y -c conda-forge mamba conda "zstd<1.5"
+mamba install -q -y simplejson colorama   protobuf requests "numexpr>=2.7.2" "numpy>=1.17" hdf5 scipy "jedi=0.17" numba "mkl>=2020" cython  "jupyterlab<3"  jupyter scikit-image appdirs mako scikit-learn  seaborn pandas line_profiler black ninja colorama memory_profiler isort "mkl-include>=2020" fastrlock six setuptools cmake sympy pytest  scikit-learn-intelex "python==${PYVERSION}"
+mamba install -y -c "pkgs/main" -c anaconda -c  conda-forge -c plotly gpustat colorful "h5py>3,<3.2" lmfit ipympl pathos "nodejs>=14"  ptvsd xeus-python pytools nbdime "pip>=20.1" jupyter-dash ipyvolume "jupyter-server-proxy<3" six openssl "jedi<0.18" ffmpeg pytest-flake8 "python==${PYVERSION}"
 conda clean -a -y &
 
 
@@ -152,6 +154,7 @@ conda clean -a -y &
 echo "installing jlab extensions"
 jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build
 jupyter labextension install ipyvolume --no-build
+jupyter labextension install jupyter-matplotlib --no-build
 jupyter labextension install jupyter-threejs --no-build
 jupyter labextension install @krassowski/jupyterlab_go_to_definition --no-build
 jupyter labextension install @aquirdturtle/collapsible_headings --no-build
@@ -210,6 +213,7 @@ EOF3
 
 
 #pip
+echo 'installing pnumpy from pip' && pip install pnumpy
 echo "installing pycuda from pip" && CFLAGS=-std=c++11 CXXFLAGS=-std=c++11  LIBRARY_PATH=/usr/local/cuda/lib64/stubs CPATH=/usr/local/cuda/include CUDA_ROOT=/usr/local/cuda pip install pycuda
 echo 'installing cupy from pip' && pip install cupy-cuda102  &
 

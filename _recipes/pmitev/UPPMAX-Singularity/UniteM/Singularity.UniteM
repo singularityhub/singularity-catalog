@@ -1,0 +1,46 @@
+Bootstrap: docker
+From: continuumio/miniconda3
+
+%environment
+  export LC_ALL=C
+
+%files
+#  ncbi-blast-2.11.0+-x64-linux.tar.gz /
+
+%post
+  export LC_ALL=C
+  export CONDA_PKGS_DIRS=/tmp/conda_pkgs_dir
+  mkdir -p ${CONDA_PKGS_DIRS}
+
+  conda update -n base -c defaults conda
+
+  conda config --add channels defaults
+  conda config --add channels conda-forge
+  conda config --add channels bioconda
+#  conda config --add channels ursky
+
+  conda install biopython bwa htslib samtools pplacer subread prodigal maxbin2 metabat2 pip cmake make gxx_linux-64 
+
+  mkdir /installs 
+
+  cd /installs
+  git clone https://github.com/macroevolution/bamm.git
+  /bin/bash -c '. /opt/conda/etc/profile.d/conda.sh ;  conda activate; cd /installs/bamm && mkdir build && cd build && cmake .. && make -j 4 && make install'
+
+
+  pip install --no-cache-dir Binsanity 
+
+  cd /installs
+  git clone https://github.com/minillinim/GroopM.git
+  cd GroopM &&  pip install .
+
+  cd /installs
+  git clone https://github.com/dparks1134/UniteM
+  cd UniteM && pip install .
+
+  
+  # No need to clean = packages are kept otside in $CONDA_PKGS_DIRS
+  #conda clean --all --yes
+
+%runscript
+  /bin/bash "$@"

@@ -1,0 +1,61 @@
+Bootstrap:  docker
+From: ubuntu:18.04
+
+%runscript
+  export PATH=$PATH:/opt/lammps/bin
+  export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/lammps/lib
+  export LAMMPS_COMMAND=/opt/lammps/bin/lmp
+  /bin/bash $@
+
+%setup
+
+%files
+  stable_7Aug2019.tar.gz /
+  PROPhet-1.2.tar.gz /
+  
+
+%environment
+  PATH=$PATH:/opt/lammps/bin
+  LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/lammps/lib
+  LAMMPS_COMMAND=/opt/lammps/bin/lmp
+  export PATH LD_LIBRARY_PATH LAMMPS_COMMAND
+
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y gawk wget vim \
+                    python3-pip python3-dev python3-tk cython3 build-essential cmake bzip2 libopenmpi-dev openmpi-common \
+                    libxmu6 libxss1 libxft2 libquadmath0 libnuma1 \
+                    less libopenblas-dev csh openssh-client \
+                    gfortran && apt-get clean
+#------------------------
+  cd /
+  tar xvf PROPhet-1.2.tar.gz
+  tar xvf stable_7Aug2019.tar.gz
+#------------------------
+  cd /
+  cd lammps-stable_7Aug2019/src 
+  make  yes-manybody yes-user-reaxc yes-user-meamc 
+
+
+#------------------------
+  cd /
+  cd PROPhet-1.2/src && ./configure --enable-lammps=/lammps-stable_7Aug2019/src/build  && make -j $(grep -c ^processor /proc/cpuinfo) && make install
+  ln -s /PROPhet-1.2/src/PROPhet /usr/bin/PROPhet
+ 
+  cd /lammps-stable_7Aug2019/src
+  make -j $(grep -c ^processor /proc/cpuinfo) serial
+  ln -s /lammps-stable_7Aug2019/src/lmp_serial /usr/bin/lmp_serial
+
+  make -j $(grep -c ^processor /proc/cpuinfo) mpi
+  ln -s /lammps-stable_7Aug2019/src/lmp_mpi /usr/bin/lmp_mpi
+
+
+
+#------------------------
+#  cd / && rm stable_7Aug2019.tar.gz && rm -r lammps-stable_7Aug2019
+#  cd / && rm PROPhet-1.2.tar.gz && rm -r PROPhet-1.2
+#------------------------
+  python3 -m pip install --upgrade pip
+  python3 -m pip install ase pymatgen pandas

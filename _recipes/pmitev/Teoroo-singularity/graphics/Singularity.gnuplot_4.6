@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%setup
+
+%files
+
+%environment
+  export LC_ALL=C
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export LC_ALL=C
+
+  mkdir -p /tmp/apt
+  echo 'Dir::Cache /tmp/apt;'  > /etc/apt/apt.conf.d/singularity-cache.conf 
+ 
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y git wget gv gawk automake build-essential python3-numpy python3-scipy \
+                libreadline-dev libreadline8 libx11-dev libcerf-dev libcairo2-dev libpango1.0-dev
+
+  # Compile gnuplot from git stable branch
+  cd /
+  git clone -b branch-4-6-stable https://git.code.sf.net/p/gnuplot/gnuplot-main
+  cd gnuplot-main
+  ./prepare
+  ./configure --with-readline=gnu
+  make -j 4 && make install && cd / && rm -r /gnuplot-main
+
+  rm /etc/apt/apt.conf.d/singularity-cache.conf
+
+%runscript
+  /usr/local/bin/gnuplot "$@"

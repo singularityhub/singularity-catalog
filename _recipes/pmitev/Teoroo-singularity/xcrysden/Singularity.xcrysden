@@ -1,0 +1,25 @@
+Bootstrap:  docker
+From: ubuntu:18.04
+
+%runscript
+  /usr/local/xcrysden-1.6.2-bin-shared/xcrysden $@
+
+%setup
+
+%files
+  #xcrysden-1.6.2-linux_x86_64-shared.tar.gz /
+
+%environment
+  export PATH=$PATH:/usr/local/xcrysden-1.6.2-linux_x86_64-shared
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y gawk wget libxss1 libxft2 libquadmath0 bc \
+          tk libglu1-mesa libtogl2 libfftw3-3 libxmu6 imagemagick openbabel libgfortran5 && apt-get clean
+  cd /
+  
+  wget http://www.xcrysden.org/download/xcrysden-1.6.2-linux_x86_64-shared.tar.gz && \
+  ls -l / && \
+  tar -C /usr/local -xvf /xcrysden-1.6.2-linux_x86_64-shared.tar.gz && \
+  rm /xcrysden-1.6.2-linux_x86_64-shared.tar.gz 
+

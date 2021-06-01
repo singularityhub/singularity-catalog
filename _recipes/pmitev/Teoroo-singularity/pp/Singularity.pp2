@@ -1,0 +1,28 @@
+Bootstrap:  docker
+From: ubuntu:18.04
+
+%runscript
+  export PATH=/usr/local/bin:$PATH
+  export XDG_RUNTIME_DIR=/tmp/.jupyter_$(uuidgen)
+  /usr/bin/env python2 $@
+
+%environment
+  export PYTHONNOUSERSITE=True
+
+%post
+export DEBIAN_FRONTEND=noninteractive
+#  echo 'PYTHONNOUSERSITE=True' >> $SINGULARITY_ENVIRONMENT
+
+  apt-get update && apt-get install -y python-dev  python-pip  python-tk \
+                            build-essential bash-completion less uuid-runtime libopenblas-dev csh openssh-client rsh-client \
+                            gawk mc vim cython sqlite  && rm -rf /var/lib/apt/lists/*
+
+  
+/usr/bin/env python2 -m  pip install --upgrade pip
+/usr/bin/env python2 -m  pip install --upgrade ase
+/usr/bin/env python2 -m  pip install --upgrade pymatgen
+/usr/bin/env python2 -m  pip install --upgrade phonopy
+/usr/bin/env python2 -m  pip install --upgrade lxml
+/usr/bin/env python2 -m  pip install --upgrade numba
+/usr/bin/env python2 -m  pip install --upgrade pp
+

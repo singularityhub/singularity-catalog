@@ -1,0 +1,53 @@
+Bootstrap:  docker
+From: ubuntu:20.04
+
+%runscript
+  export PATH=/usr/local/bin:$PATH
+  export XDG_RUNTIME_DIR=/tmp/.run_$(uuidgen)
+  /bin/bash
+
+%setup
+
+
+%files
+
+%environment
+  export PYTHONNOUSERSITE=True
+%post
+  export DEBIAN_FRONTEND=noninteractive
+
+  apt-get update && apt-get install -y \
+    bash-completion \
+    build-essential \
+    bzip2 \
+    csh \
+    curl \
+    cmake \
+    expect \
+    gawk \
+    gfortran \
+    git \
+    libgmp3-dev \
+    libopenblas-dev \
+    libnuma1 \
+    locales \
+    lsof \
+    mc \
+    ncdu \
+    netcat-openbsd \
+    nload \
+    pbzip2 \
+    python3-dev python3-pip python3-tk python3-venv \
+    rsh-client \
+    screen \
+    openssh-client \
+    units \
+    uuid-runtime \
+    vim \
+    wget \
+    xclip \
+    libdeal.ii-9.1.1 libdeal.ii-dev \
+&& rm -rf /var/lib/apt/lists/*
+
+  locale-gen en_US.UTF-8 &&  update-locale
+

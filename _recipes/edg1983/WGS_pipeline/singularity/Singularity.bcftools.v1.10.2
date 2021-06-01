@@ -1,0 +1,46 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/resources/ROH
+
+%environment
+    SHELL=/bin/bash
+    PATH=$PATH:/usr/local/bin
+    LC_ALL=C.UTF-8
+
+%help
+    Perform ROH detection with bcftools roh
+    You will need chromosomes map files to be mounted in the container
+
+%post
+    apt-get update
+    apt-get -y install apt-transport-https \
+        build-essential \
+        cmake \
+        gcc \
+        language-pack-en-base \
+        libbz2-dev \
+        libcurl4-openssl-dev \
+        liblzma-dev \
+        libncurses5-dev \
+        libreadline-dev \
+        libssl-dev \
+        make \
+        wget \
+        zlib1g-dev \
+        autoconf
+    update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+    
+    ## Install bcftools ROH
+    cd /opt/ && wget https://github.com/samtools/bcftools/releases/download/1.10.2/bcftools-1.10.2.tar.bz2
+    tar -jxvf bcftools-1.10.2.tar.bz2
+    rm bcftools-1.10.2.tar.bz2
+    cd bcftools-1.10.2
+    ./configure
+    make
+    make install
+    cd htslib-1.10.2
+    ./configure
+    make
+    make install
