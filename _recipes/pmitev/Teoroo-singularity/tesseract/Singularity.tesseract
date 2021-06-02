@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%setup
+
+%files
+
+%environment
+  export LC_ALL=C
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export LC_ALL=C
+
+  mkdir -p /tmp/apt
+  echo 'Dir::Cache /tmp/apt;'  > /etc/apt/apt.conf.d/singularity-cache.conf 
+
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y git wget software-properties-common
+  add-apt-repository ppa:alex-p/tesseract-ocr-devel
+ 
+  #apt search tesseract
+  apt-get update && apt-get install -y tesseract-ocr tesseract-ocr-eng tesseract-ocr-swe
+
+
+%runscript
+  /usr/bin/tesseract "$@"

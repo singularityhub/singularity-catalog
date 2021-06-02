@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: danabl/meshtool:latest
+
+%post
+    ldconfig
+
+%files
+    WELCOME.Singularity /usr/local/share/WELCOME
+
+%runscript
+    cat /usr/local/share/WELCOME
+    exec /bin/bash -i
