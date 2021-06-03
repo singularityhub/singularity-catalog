@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version v1.6.2e
+
+%environment
+  export LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install locales python3-pip wget
+
+  ## Set system locale to en_US.UTF-8
+  locale-gen en_US en_US.UTF-8
+  export LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+
+  ## Build
+  cd /opt
+  wget https://github.com/Kinggerm/GetOrganelle/releases/download/v1.6.2e/v1.6.2e-linux.tar.gz
+  tar -xzf v1.6.2e-linux.tar.gz 
+  pip3 install ./GetOrganelle/
+
+  ## Cleanup
+  rm -rf *
+  apt-get -y remove wget
+  apt-get -y autoremove
+
+%runscript
+  exec get_organelle_from_reads.py "$@"

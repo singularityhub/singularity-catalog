@@ -1,0 +1,42 @@
+bootstrap: docker
+from: nvidia/cuda:9.2-devel-ubuntu16.04
+
+
+%environment
+
+export PATH=/usr/local/MATLAB/MATLAB_Runtime/v95/bin:/opt/emClarity/bin/:${PATH}
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}
+
+%post
+
+apt-get update
+apt-get install -y gcc g++ cmake build-essential mpi-default-bin mpi-default-dev libfftw3-dev libx11-dev libtiff5-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev libxext-dev libxfixes-dev libxcursor-dev x11-utils libxinerama-dev  git  curl gnuplot unzip \
+bzip2 ca-certificates libglib2.0-0 libxext6 libsm6 libxrender1 git
+#libxft-dev libssl-dev libquadmath0 libopenmpi-dev openmpi-bin libxss-dev libgsl0-dev libx11-dev gfortran libfreetype6-dev python default-jdk git  wget
+
+###
+# install matlab
+###
+#curl -L 'http://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip' > /tmp/MCR_R2018b_glnxa64_installer.zip \
+curl -L 'http://ssd.mathworks.com/supportfiles/downloads/R2017b/deployment_files/R2017b/installers/glnxa64/MCR_R2017b_glnxa64_installer.zip' >  /tmp/MCR_R2017b_glnxa64_installer.zip \
+  && mkdir -p /tmp/MCR_R2017b_glnxa64_installer.zip \
+  && cd /tmp/MCR_R2017b_glnxa64_installer \
+  && unzip /tmp/MCR_R2017b_glnxa64_installer.zip \
+  && cd /tmp/MCR_R2017b_glnxa64_installer \
+  && ./install -mode silent -agreeToLicense yes \
+  && rm -rf /tmp/MCR_R2017b_glnxa64_installer*
+
+###
+# install emClarity
+###
+#curl https://drive.google.com/open?id=1x9ZS8k6iLgi_5ACBs8hUrfSNDOu61WKc 
+curl -L 'https://drive.google.com/uc?authuser=0&id=1x9ZS8k6iLgi_5ACBs8hUrfSNDOu61WKc&export=download' > /tmp/emClarity.zip \
+  && cd /tmp/ \
+  && unzip /tmp/emClarity.zip \
+  && rm -f /tmp/emClarity.zip \
+  && mv /tmp/emClarity /opt/ \
+  && cd /opt/emClarity/bin/ \
+  && ln -sf emClarity_17b emClarity
+
+
+

@@ -1,0 +1,64 @@
+Bootstrap: docker
+From: ubuntu:xenial
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 7.9 r4047
+
+%setup
+  ## These files have been hacked so that the build actually works. We copy them to /tmp inside the container so we can fetch them during %post
+
+  ### Add CottonPassword.txt file for Cotton Model
+  cp -a files/CottonPassword.txt ${SINGULARITY_ROOTFS}/etc/CottonPassword.txt
+
+  ### Prepended ProcessDataTypesInterface.exe with "mono" instead of calling it directly
+  cp -a files/rlink-makefile files/tcllink-makefile ${SINGULARITY_ROOTFS}/tmp/
+
+  ### Disabled building unit tests (requires NUnit v3 for which there is no Debian package and installing from source feels like an overkill)
+  cp -a files/BuildAll.xml ${SINGULARITY_ROOTFS}/tmp/BuildAll.xml
+
+%post
+  ## Install dependencies
+  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+  echo "deb http://download.mono-project.com/repo/ubuntu wheezy/snapshots/4.8.0 main" | tee /etc/apt/sources.list.d/mono-official.list
+  apt-get update
+  apt-get -y install g++ gfortran libboost-all-dev libmonosgen-2.0-1 libxml2 libxml2-dev mono-devel mono-runtime mono-vbnc p7zip p7zip-full r-recommended subversion tcl8.5 tcl8.5-dev tzdata
+  ln -fs /usr/share/zoneinfo/Pacific/Auckland /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
+  Rscript -e 'install.packages(c("Rcpp", "RInside", "inline"),repos = "http://cran.us.r-project.org")'
+
+  ## Checkout latest revision
+  ### svn co sometimes fails with a "Connection reset by peer" error, so we have to force checking out the entire repo
+  svn co -r4047 https://apsrunet.apsim.info/svn/apsim/tags/Apsim79 apsim || while true; do svn cleanup apsim && svn update apsim; if [ $? -eq 0 ]; then break; fi; done
+
+  ## Hack the build files
+  cp /tmp/rlink-makefile /apsim/Model/RLink/Makefile.linux
+  cp /tmp/tcllink-makefile /apsim/Model/TclLink/Makefile
+  cp /tmp/BuildAll.xml /apsim/Model/Build/BuildAll.xml
+
+  ## Build Apsim
+  cd /apsim/Model/Build
+  chmod +x BuildAll.sh
+  ./BuildAll.sh
+  export APSIM=/apsim
+  cd /apsim/Release
+  ./Release.sh
+
+  ## Install Apsim
+  mv /apsim/Release/Apsim*.binaries.LINUX.X86_64.exe /tmp/apsim-release.exe
+  rm -rf /apsim
+  /tmp/apsim-release.exe -y -o/apsim
+  rm -f /tmp/apsim-release.exe
+  chmod 755 /apsim
+
+  ## Cleanup
+  rm -rf /tmp/rlink-makefile /tmp/tcllink-makefile /tmp/BuildAll.xml
+  apt-get -y remove --purge g++ gfortran libboost-all-dev libxml2-dev mono-devel subversion p7zip p7zip-full tcl8.5-dev
+  apt-get -y clean all
+  apt-get -y autoremove --purge
+
+%environment
+  LD_LIBRARY_PATH=/apsim/Temp/Model
+  export LD_LIBRARY_PATH
+
+%runscript
+  /usr/bin/mono /apsim/Temp/Model/Apsim.exe "$@"

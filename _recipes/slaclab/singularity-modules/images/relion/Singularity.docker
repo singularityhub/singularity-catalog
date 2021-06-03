@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: slaclab/relion:3.1.0-beta
+
+%environment
+
+export PATH=/opt/relion/bin/:${PATH}:/opt/slurm/slurm-19-05-2-1/bin
+export LD_LIBRARY_PATH=/opt/relion/lib:${LD_LIBRARY_PATH}
+
+# container-local exes
+export RELION_MOTIONCOR2_EXECUTABLE=/usr/local/bin/MotionCor2
+export RELION_CTFFIND_EXECUTABLE=/usr/local/bin/ctffind
+export RELION_GCTF_EXECUTABLE=/usr/local/bin/Gctf
+

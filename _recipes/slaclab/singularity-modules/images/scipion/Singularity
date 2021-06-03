@@ -1,0 +1,31 @@
+bootstrap: docker
+from: nvidia/cuda:8.0-devel-ubuntu16.04
+
+
+%environment
+
+export PATH=/opt/scipion:/opt/scipion/software/bin/:${PATH}
+export LD_LIBRARY_PATH=/opt/scipion/software/lib:${LD_LIBRARY_PATH}
+
+%post
+
+apt-get update
+apt-get install -y gcc g++ cmake openjdk-8-jdk libxft-dev libssl-dev libxext-dev libxml2-dev libreadline6 libquadmath0 libxslt1-dev libopenmpi-dev openmpi-bin libxss-dev libgsl0-dev libx11-dev gfortran libfreetype6-dev python default-jdk git  wget
+
+# grab scipion
+cd /opt
+git clone https://github.com/I2PC/scipion.git
+cd /opt/scipion
+git checkout v1.2.1
+
+# generate config and modify
+echo 'no' | ./scipion config
+sed -i 's:CUDA_LIB = .*:CUDA_LIB = /usr/local/cuda/lib64:g' /opt/scipion/config/scipion.conf
+sed -i 's:CUDA_BIN = .*:CUDA_BIN = /usr/local/cuda/bin:g' /opt/scipion/config/scipion.conf
+sed -i 's:CUDA = .*:CUDA = True:g' /opt/scipion/config/scipion.conf
+
+# install
+./scipion install -j 8
+
+# clean
+rm -rf sofware/tmp/*

@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: alpine:latest
+
+%post
+  apk add git python2
+  cd / ; git clone http://github.com/d-w-moore/zipit
+
+%runscript
+  python /zipit/zipit.py "$@"
+
+%apprun test
+  python /zipit/testzip.py "$@"
+

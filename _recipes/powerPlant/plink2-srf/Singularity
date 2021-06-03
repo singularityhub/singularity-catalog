@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: centos:7
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version v2.00a2LM
+
+%post
+  ## Install prerequisites
+  yum -y install unzip wget
+  
+  ## Download and install
+  wget http://s3.amazonaws.com/plink2-assets/plink2_linux_avx2_20191025.zip
+  unzip plink2_linux_avx2_20191025.zip
+  install -dm0755 /usr/local/bin
+  install -Dm0755 plink2 /usr/local/bin
+
+  ## Cleanup
+  rm -f plink2*
+  yum -y erase unzip wget
+  yum -y autoremove
+  yum clean all
+
+%runscript
+  exec plink2 "$@"

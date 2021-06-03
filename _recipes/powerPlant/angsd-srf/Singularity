@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 0.925
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install g++ gcc libbz2-dev libcurl4 libcurl4-openssl-dev libhts2 libhts-dev libssl-dev libzip4 libzip-dev make wget
+
+  cd /opt
+  wget https://github.com/ANGSD/angsd/archive/0.925.tar.gz
+  tar -xzf 0.925.tar.gz
+  cd angsd-0.925
+  make
+  make install
+
+  ## Cleanup
+  apt-get -y autoremove g++ gcc libcurl4-openssl-dev libhts-dev libssl-dev libzip-dev make wget
+  apt-get -y clean all
+  rm -rf /opt/*
+
+%runscript
+  exec angsd "$@"

@@ -1,0 +1,20 @@
+BootStrap: library
+From: fredjaya/rec-bench/base:latest
+
+%post
+    # Add 3seq
+    cd usr/src
+    wget http://mol.ax/rxiv/3seq_build_170612.zip
+    unzip 3seq_build_170612.zip
+    rm 3seq_build_170612.zip
+    mv 3seq\ build\ 170612 3seq
+    cd 3seq
+    make
+    ./3seq # test bin
+
+    # Create p-value table
+    echo "Y" |
+    ./3seq -g my3seqTable700 700 # size in manual
+
+%environment
+    export PATH=/usr/src/3seq/:$PATH

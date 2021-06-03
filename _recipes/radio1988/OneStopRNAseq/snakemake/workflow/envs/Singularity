@@ -1,0 +1,39 @@
+Bootstrap: docker
+
+From: docker://ubuntu:18.04
+
+%help
+    singularity image for OneStopRNASeq, contains conda env called osr for snakemake
+    usage: 
+    example1: singularity run env.sif snakemake -j 2 -pk  # analysis with 2 CPUs
+    example2: singularity run env.sif snakemake -j 2 -np  # dryrun
+
+%labels
+    v2 portable OneStopRNASeq, 2021-01-30
+
+%files
+    env.yaml
+
+%environment
+    export PATH="/usr/local/anaconda/bin:$PATH"
+    source activate osr
+
+%post
+    apt-get update && apt-get -y upgrade
+    apt-get -y install wget zip less 
+    apt-get clean
+
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash Miniconda3-latest-Linux-x86_64.sh -bfp /usr/local/anaconda
+    export PATH="/usr/local/anaconda/bin:$PATH" # setup conda
+    conda env create -n osr -f env.yaml 
+
+    /bin/mv /bin/sh /bin/sh.original && /bin/ln -s /bin/bash /bin/sh  # singularity exec uses dash, now change to bash
+
+    bash -c "source activate osr && Rscript -e \"install.packages(c('BiocManager', 'PoiClaClu', 'rmarkdown', 'gridExtra'), repos='https://cloud.r-project.org')\""
+    bash -c "source activate osr && Rscript -e 'install.packages(\"http://hartleys.github.io/QoRTs/QoRTs_STABLE.tar.gz\", repos=NULL, type=\"source\")'"
+
+%runscript
+    echo 'singularity image for OneStopRNASeq'
+    echo "$@"
+    exec "$@"

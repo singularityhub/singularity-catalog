@@ -1,0 +1,51 @@
+Bootstrap: docker
+From: fedora:31
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 6219d58
+
+%post
+  ## Download build prerequisites
+  dnf -y install bzip2 cmake clang gcc git libstdc++ make python3
+
+  ## Install Racon
+  cd /opt
+  curl -OL https://github.com/isovic/racon/releases/download/1.4.3/racon-v1.4.3.tar.gz
+
+  tar -xvf racon-v1.4.3.tar.gz
+  cd racon-v1.4.3
+  mkdir build
+  cd build/
+  cmake -DCMAKE_BUILD_TYPE=Release ..
+  make
+  make install
+
+  ## Install Minimap2
+  cd /opt
+  curl -OL https://github.com/lh3/minimap2/releases/download/v2.17/minimap2-2.17_x64-linux.tar.bz2
+
+  tar -xjf minimap2-2.17_x64-linux.tar.bz2
+  cd minimap2-2.17_x64-linux
+  install -dm0755 /usr/local/bin
+  install -Dm0755 k8 /usr/local/bin
+  install -Dm0755 minimap2 /usr/local/bin
+  install -Dm0755 paftools.js /usr/local/bin
+
+  ## Cleanup 1
+  cd /opt
+  rm -rf *
+
+  ## Install Mandalorion Episode II
+  cd /opt
+  git clone https://github.com/rvolden/Mandalorion-Episode-II.git mandalorion-episode-ii
+  cd mandalorion-episode-ii
+  git checkout 6219d58
+
+  ## Cleanup 2
+  dnf -y remove bzip2 cmake clang gcc git make
+  dnf -y clean all
+
+%runscript
+  cd /opt/mandalorion-episode-ii
+  exec python3 defineAndQuantifyWrapper.py "$@"

@@ -1,0 +1,22 @@
+bootstrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch/ 
+Include: yum
+
+%post
+
+  yum install -y gzip bzip2 tar \
+    mesa-libGL mesa-libGLU glx-utils libXrandr libXcursor libXinerama libXt xcb-proto qt5-qtbase qt5-qtbase-gui \
+    libgomp pulseaudio-libs xkeyboard-config 
+
+  # download from https://www.fei-software-center.com/amira/packagedownload-afe634d52/ 
+  # create --writeable sandbox and exe the .bin file - currently there is no headless install
+  # sudo singularity build -w /scratch/amira-sandbox Singularity
+  # sudo singularity shell -w /scratch/amira-sandbox
+  #   sh /tmp/Amira-6.7.0...
+  # sudo singularity build /scratch/amira@6.7.0.simg /scratch/amira-sandbox
+%environment
+
+  PATH=/usr/local/Amira/6.7.0/bin/:$PATH
+
+

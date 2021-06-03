@@ -1,0 +1,23 @@
+bootstrap: docker
+from: ubuntu:16.04
+
+%environment
+
+PATH=/opt/rosetta_src_2018.48.60516_bundle/main/source/build/src/release/linux/3.10/64/x86/gcc/5.4/mpi:${PATH}
+
+%files
+
+rosetta_src_2018.48.60516_bundle.tgz /tmp/
+
+%post
+
+apt-get update
+apt-get install -y build-essential scons zlib1g-dev openmpi-bin libopenmpi-dev sqlite3 
+
+cd /opt/
+tar xvfz /tmp/rosetta_src_2018.48.60516_bundle.tgz
+rm /tmp/rosetta_src_2018.48.60516_bundle.tgz
+
+# build
+cd rosetta_src_2018.48.60516_bundle/main/source
+./scons.py -j 24 mode=release extras=mpi bin

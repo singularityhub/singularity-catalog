@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: ml4ai/automates:opennmt
+
+%help
+  This recipe builds a singularity container from the docker image defined by the Dockerfile in this same directory.
+
+%post
+  # in-container bind points for shared filesystems
+  mkdir -p /groups /xdisk /uaopt /cm/shared /cm/local

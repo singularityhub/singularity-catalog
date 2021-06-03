@@ -1,0 +1,177 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%setup
+
+    mkdir -p ${SINGULARITY_ROOTFS}/src/augment
+    mkdir -p ${SINGULARITY_ROOTFS}/src/numcodecs
+    mkdir -p ${SINGULARITY_ROOTFS}/src/zarr
+    mkdir -p ${SINGULARITY_ROOTFS}/src/gunpowder
+    mkdir -p ${SINGULARITY_ROOTFS}/src/daisy
+    mkdir -p ${SINGULARITY_ROOTFS}/src/funlib
+    mkdir -p ${SINGULARITY_ROOTFS}/src/funlibmath
+    mkdir -p ${SINGULARITY_ROOTFS}/src/lsd
+    mkdir -p ${SINGULARITY_ROOTFS}/src/synful
+
+%files
+
+    ../synful /src/synful/synful
+    ../requirements.txt /src/synful/requirements.txt
+    ../setup.py /src/synful/setup.py
+
+%labels
+
+    Version 0.10 # synful version: 1223ba4cdd3cd2e098f3323c14ad695fb5b93967
+
+%post
+
+    # basic ubuntu packages
+    apt update
+    apt install -y --no-install-recommends \
+    build-essential \
+    ca-certificates \
+    cmake \
+    git \
+    libmlpack-dev \
+    liblzma-dev \
+    wget && \
+    rm -rf /var/lib/apt/lists/*
+
+    # install conda
+
+    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+    bash miniconda.sh -b -p /miniconda
+    PATH="/miniconda/bin:$PATH"
+    conda config --set always_yes yes --set changeps1 no
+    conda update -q conda
+    conda install python=3.6
+    conda info -a
+
+    # install tensorflow
+
+    conda install tensorflow-gpu=1.14 cudatoolkit=10.0
+    conda install pandas
+
+    # pip install git+git://github.com/schlegelp/pymaid@e95c897deca794ae928675ab73a663c773d7b360
+    # pip install git+git://github.com/schlegelp/pymaid@master
+
+    NUMCODECS_ROOT=/src/numcodecs
+    NUMCODECS_REPOSITORY=https://github.com/funkey/numcodecs
+    NUMCODECS_REVISION=f950047d7b666723f81006cbdfd82c0e6705c39c
+
+    cd ${NUMCODECS_ROOT}
+    git clone ${NUMCODECS_REPOSITORY} . && \
+    git checkout ${NUMCODECS_REVISION} && \
+    git submodule update --init --recursive
+    pip install -r requirements.txt
+    python setup.py install
+
+    pip install cython
+
+    LSD_ROOT=/src/lsd
+    LSD_REPOSITORY=https://github.com/funkelab/lsd
+    LSD_REVISION=2622db753c856a5146b35178856286d73b04055f
+
+    cd ${LSD_ROOT}
+    git clone ${LSD_REPOSITORY} . && \
+    git checkout ${LSD_REVISION}
+    pip install -r requirements.txt
+    python setup.py build_ext --inplace
+    PYTHONPATH=${LSD_ROOT}:$PYTHONPATH
+
+    # Install ZARR
+    ZARR_ROOT=/src/zarr
+    ZARR_REPOSITORY=https://github.com/funkey/zarr
+    ZARR_REVISION=9ddf849a6e3329f5ff361ebf6156712926e2fdfe
+
+    cd ${ZARR_ROOT}
+    git clone ${ZARR_REPOSITORY} . && \
+    git checkout ${ZARR_REVISION}
+    pip install -r requirements.txt
+    python setup.py install
+
+    conda install -c conda-forge z5py
+
+    GUNPOWDER_ROOT=/src/gunpowder
+    GUNPOWDER_REPOSITORY=https://github.com/funkey/gunpowder.git
+    GUNPOWDER_REVISION=2ae32374fff79d50f8f19467e0551e92aa927844 # Branch: v1.10-dev
+
+    cd ${GUNPOWDER_ROOT}
+    git clone ${GUNPOWDER_REPOSITORY} . && \
+    git checkout ${GUNPOWDER_REVISION}
+    pip install -r requirements.txt
+    python setup.py build_ext --inplace
+    PYTHONPATH=${GUNPOWDER_ROOT}:$PYTHONPATH
+
+    DAISY_ROOT=/src/daisy
+    DAISY_REPOSITORY=https://github.com/funkelab/daisy
+    DAISY_REVISION=0d5d38a17d7250979284ace369bd71b89d004c97
+
+    cd ${DAISY_ROOT}
+    git clone ${DAISY_REPOSITORY} . && \
+    git checkout ${DAISY_REVISION}
+    pip install -r requirements.txt
+    python setup.py build_ext --inplace
+    PYTHONPATH=${DAISY_ROOT}:$PYTHONPATH
+
+    FUNLIB_ROOT=/src/funlib
+    FUNLIB_REPOSITORY=https://github.com/funkelab/funlib.learn.tensorflow
+    FUNLIB_REVISION=5d6313a980b7dc6ff7aed0bec873245c125c4e0d
+
+    cd ${FUNLIB_ROOT}
+    git clone ${FUNLIB_REPOSITORY} . && \
+    git checkout ${FUNLIB_REVISION}
+    pip install -r requirements.txt
+    python setup.py build_ext --inplace
+    PYTHONPATH=${FUNLIB_ROOT}:$PYTHONPATH
+
+    FUNLIBMATH_ROOT=/src/funlibmath
+    FUNLIBMATH_REPOSITORY=https://github.com/funkelab/funlib.math
+    FUNLIBMATH_REVISION=0c623f71c083d33184cac40ef7b1b995216be8ef
+
+    cd ${FUNLIBMATH_ROOT}
+    git clone ${FUNLIBMATH_REPOSITORY} . && \
+    git checkout ${FUNLIBMATH_REVISION}
+    pip install -r requirements.txt
+    python setup.py build_ext --inplace
+    PYTHONPATH=${FUNLIBMATH_ROOT}:$PYTHONPATH
+
+
+    pip install mahotas
+    pip install pymongo
+    pip install neuroglancer
+    pip install google-auth
+    pip install sklearn
+
+
+
+
+
+
+
+    # install synful
+    cd /src/synful
+    pip install -r requirements.txt
+    python setup.py install
+
+%environment
+
+    export LSD_ROOT=/src/lsd
+    export PYTHONPATH=${LSD_ROOT}:$PYTHONPATH
+    export PYTHONPATH=/src/synful:$PYTHONPATH
+    export AUGMENT_ROOT=/src/augment
+    export PYTHONPATH=${AUGMENT_ROOT}:$PYTHONPATH
+    export GUNPOWDER_ROOT=/src/gunpowder
+    export PYTHONPATH=${GUNPOWDER_ROOT}:$PYTHONPATH
+    export DAISY_ROOT=/src/daisy
+    export PYTHONPATH=${DAISY_ROOT}:$PYTHONPATH
+    export FUNLIB_ROOT=/src/funlib
+    export PYTHONPATH=${FUNLIB_ROOT}:$PYTHONPATH
+    export FUNLIBMATH_ROOT=/src/funlibmath
+    export PYTHONPATH=${FUNLIBMATH_ROOT}:$PYTHONPATH
+    export PATH=/miniconda/bin:${PATH}
+    export OMP_NUM_THREADS=1 # prevent multithreading
+
+%runscript
+
+    exec /bin/bash "$@"

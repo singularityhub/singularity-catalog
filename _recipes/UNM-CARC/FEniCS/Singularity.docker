@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: quay.io/fenicsproject/stable:current
+
+%post
+    # Wheeler mount points
+    mkdir -p /wheeler/scratch
+    mkdir -p /nfs/scratch
+
+    # Update apt-get
+    apt-get update
+
+    # IB stuff, based on https://community.mellanox.com/docs/DOC-2431
+    apt-get install -y dkms infiniband-diags libibverbs* ibacm librdmacm* libmlx4* libmlx5* mstflint libibcm.* libibmad.* libibumad* opensm srptools libmlx4-dev librdmacm-dev rdmacm-utils ibverbs-utils perftest vlan ibutils
+    apt-get install -y libtool autoconf automake build-essential ibutils ibverbs-utils rdmacm-utils infiniband-diags perftest librdmacm-dev libibverbs-dev libmlx4-1 numactl libnuma-dev autoconf automake gcc g++ git libtool pkg-config
+    apt-get install -y libnl-3-200 libnl-route-3-200 libnl-route-3-dev libnl-utils
+    
+    # Make sure all of the libraries are indexed right
+    ldconfig
+
+#environment
+    # path to mlx IB libraries and openmpi in Ubuntu
+    export LD_LIBRARY_PATH=/usr/lib/libibverbs:/use/local/lib:$LD_LIBRARY_PATH
+    export FENICS_PREFIX=/home/fenics
+    export SLEPC_DIR=${FENICS_PREFIX}
+    export PETSC_DIR=${FENICS_PREFIX}
+    export PYBIND11_DIR=${FENICS_PREFIX}
+
+%runscript
+    exec /bin/bash -i

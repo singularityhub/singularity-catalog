@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: funkey/gunpowder:v0.3.2
+
+%help
+This container contains synful software: synaptic partner prediction related modules.
+
+%labels
+
+    Maintainer buhmannj@janelia.hhmi.org
+    Version 0.1
+
+
+%setup
+mkdir -p ${SINGULARITY_ROOTFS}/src/synful
+
+%files
+../synful /src/synful/synful
+../requirements.txt /src/synful/requirements.txt
+../setup.py /src/synful/setup.py
+
+%post
+# install synful
+cd /src/synful
+pip install -r requirements.txt
+python setup.py install
+
+
+
+%environment
+export PYTHONPATH=/src/synful:$PYTHONPATH
+
+
+%runscript
+exec /bin/bash "$@"

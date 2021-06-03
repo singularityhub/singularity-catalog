@@ -1,0 +1,52 @@
+Bootstrap: docker
+From: trlandet/fenics-dev:py3_CI
+
+# Build image from the same container that is used in the CircleCI
+# testing. This image is kept up to date with requirements etc, we
+# only need to actually install Ocellaris in the container
+#
+# To build an image run
+#   sudo singularity build ocellaris.img Singularity
+#
+# Running ocellaris from the *.sif image file
+#   singularity run ocellaris.img INPUT_FILE.inp
+#
+# Launch a shell inside the container
+#   singularity shell ocellaris.img
+#
+# Notes to the Ocellaris maintainer:
+#
+# To push this image to Sylabs Singularity Library (for new releases):
+# remember to update documentation/user_guide/install.rst with the new
+# image tag for the pull command and also change the tag at the end of
+# this push command,
+#   singularity push ocellaris.img library://trlandet/default/ocellaris:VERSION_TAG
+#
+# To pull a previously pushed image
+#   singularity pull library://trlandet/default/ocellaris:VERSION_TAG
+
+%post
+    # Update Python dependencies (same as CircleCI config.py)
+    sudo pip3 install pip --upgrade
+    sudo pip3 install pytest pytest-timeout pytest-instafail --upgrade
+    sudo pip3 install meshio raschii 'PyYAML<5.1' yschema --upgrade
+
+    # Install Ocellaris
+    mkdir /tmp/ocellarisinstall
+    cd /tmp/ocellarisinstall
+    git clone https://bitbucket.org/ocellarisproject/ocellaris.git
+    cd ocellaris
+    pip3 install .
+
+    # The Singularity file system is read only so there is no need to
+    # keep the source code around, it cannot be edited anyway
+    cd /
+    rm -r /tmp/ocellarisinstall 
+
+%environment
+    export FENICS_PREFIX=/usr/local
+    export SLEPC_DIR=${FENICS_PREFIX}
+    export PETSC_DIR=${FENICS_PREFIX}
+
+%runscript
+    exec ocellaris "$@"

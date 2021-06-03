@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: opendronemap/odm@sha256:07a17c8668397272cd85f3a9fea8756cb9b51aa0850d27e525944ec37042cc74
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 0.4.1
+
+%runscript
+  exec run.py "$@"

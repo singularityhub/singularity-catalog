@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: ubuntu:cosmic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 180922
+
+%environment
+  PATH=/opt/3d-dna:$PATH
+  export PATH
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install git make openjdk-8-jre parallel python-matplotlib python-numpy python-scipy wget
+  
+  ## Install LastZ (version 1.03.73 released 20150708)
+  wget http://www.bx.psu.edu/~rsharris/lastz/newer/lastz-1.03.73.tar.gz
+  tar -xzf lastz-1.03.73.tar.gz
+  cd lastz-distrib-1.03.73/src
+  sed -i 's/-Werror //' Makefile
+  make
+  LASTZ_INSTALL=/usr/bin/ make install
+
+  ## Install 3d-dna
+  cd /opt
+  git clone https://github.com/theaidenlab/3d-dna.git
+  cd 3d-dna
+  git checkout 3f18163
+  chmod +x run-asm-pipeline.sh run-asm-pipeline-post-review.sh
+
+  ## Cleanup
+  apt-get -y remove git make wget
+  apt-get -y clean all
+  rm -rf /lastz*
+
+%runscript
+  exec run-asm-pipeline.sh "$@"

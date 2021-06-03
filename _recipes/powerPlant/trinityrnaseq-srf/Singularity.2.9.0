@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: trinityrnaseq/trinityrnaseq:2.9.0
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 2.9.0
+
+%runscript
+  exec Trinity "$@"

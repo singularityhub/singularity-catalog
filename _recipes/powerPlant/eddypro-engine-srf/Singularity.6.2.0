@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 6.2.0
+
+%environment
+ PATH=/eddypro-engine-6.2.0/bin/linux:$PATH
+ export PATH
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install gfortran libgfortran4 make wget
+
+  wget -q https://github.com/LI-COR/eddypro-engine/archive/v6.2.0.tar.gz
+  tar -xzf v6.2.0.tar.gz
+  cd /eddypro-engine-6.2.0/prj
+  make rp
+  make fcc
+
+  ## Cleanup
+  rm -rf /eddypro-engine-6.2.0/prj /eddypro-engine-6.2.0/src /v6.2.0.tar.gz
+  apt-get -y remove --autoremove gfortran make wget
+  apt-get -y clean all
+
+%runscript
+if [ $# -eq 0 ]; then
+  /bin/echo -e 'This Singularity image cannot provide a single entrypoint. Please use `<image-name.simg> <CMD>` or `singularity exec <image-name.simg> <CMD>`, where <CMD> is one of the following:\n'
+  exec ls /eddypro-engine-6.2.0/bin/linux
+else
+  exec "$@"
+fi

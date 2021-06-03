@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: continuumio/miniconda3:4.8.2
+
+%labels
+    MAINTAINER Drew Davies
+    DESCRIPTION Singularity image containing all requirements for daviesdrew/variantcalling pipeline using nextflow
+    VERSION 1.0.0
+
+
+%environment 
+    PATH=/opt/conda/envs/variantcalling/bin:$PATH
+    export PATH
+
+%files 
+    environment.1.0.0.yml /environment.yml
+
+%post
+    export PATH=/opt/conda/bin/:$PATH
+    conda update conda 
+    conda env create -f /environment.yml
+    conda clean -a

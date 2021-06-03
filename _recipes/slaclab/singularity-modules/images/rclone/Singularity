@@ -1,0 +1,12 @@
+bootstrap: docker
+from: ubuntu:16.04
+
+%post
+
+  apt-get update
+  apt-get install -y curl
+  cd /tmp/
+  curl https://downloads.rclone.org/rclone-current-linux-amd64.deb > /tmp/rclone-current-linux-amd64.deb
+  dpkg -i /tmp/rclone-current-linux-amd64.deb
+  rm /tmp/rclone-current-linux-amd64.deb
+

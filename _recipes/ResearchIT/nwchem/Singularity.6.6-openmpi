@@ -1,0 +1,27 @@
+BootStrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch/
+Include: yum
+
+# If you want the updates (available at the bootstrap date) to be installed
+# inside the container during the bootstrap instead of the General Availability
+# point release (7.x) then uncomment the following line
+#UpdateURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/updates/$basearch/
+
+%environment
+PATH=/usr/lib64/openmpi/bin/:$PATH
+export PATH
+
+%runscript
+nwchem_openmpi "$@"
+
+%post
+ yum -y install epel-release
+ yum -y install nwchem nwchem-openmpi nwchem-common ga-openmpi
+ echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/openmpi/lib/' >> /usr/share/nwchem/nwchem.sh
+ ln -s /usr/lib64/openmpi/lib/libmpi_mpifh.so.12.0.1 /usr/lib64/openmpi/lib/libmpi_f77.so.1
+ ln -s /usr/lib64/openmpi/lib/libmpi_mpifh.so.12.0.1 /usr/lib64/openmpi/lib/libmpi_f90.so.1
+ ln -s /usr/lib64/openmpi/lib/libmpi.so.12.0.6 /usr/lib64/openmpi/lib/libmpi.so.1
+ echo "source /usr/share/nwchem/nwchem.sh" >> /environment
+ mkdir /scratch
+

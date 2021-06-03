@@ -1,0 +1,7 @@
+Bootstrap: docker
+#From: dpokidov/imagemagick:7.0.8-40
+From: ubuntu:16.04
+
+%post
+apt update
+apt install -y php php-common gcc imagemagick php-imagick

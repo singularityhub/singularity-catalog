@@ -1,0 +1,58 @@
+Bootstrap: shub
+From: shub://drneavin/SingularityBaseImages:r4_python368
+%environment
+    export PATH=/opt/DoubletDetection/:/opt/popscle/bin/:/opt:/opt/scSplit:/usr/games:/opt/bedtools2/bin:/opt/conda/envs/py36/bin:/opt/souporcell:/opt/souporcell/troublet/target/release:/opt/conda/bin:/opt/minimap2-2.7:/root/.cargo/bin:/opt/vartrix-v1.1.3-x86_64-linux/:/opt/freebayes/scripts:/opt/freebayes:/opt/vcflib/bin:/opt/vcflib/scripts:$PATH
+    export PYTHONPATH=/opt/conda/envs/py36/lib/python3.6/site-packages/
+    export LC_ALL=C 
+    alias python=python3
+
+%post 
+    #!/bin/bash
+    eval "$(command conda 'shell.bash' 'hook' 2> /dev/null)"
+    export PATH=/opt/conda/bin/:$PATH
+    apt update
+    yes | apt upgrade
+
+
+        cd /opt
+        git clone https://github.com/JonathanShor/DoubletDetection.git
+        cd DoubletDetection
+         /opt/conda/envs/py36/bin/pip install .
+
+
+        cd /opt
+        wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1QVUBY01g7NZSWpdjB6b6ubjBNEcWArcM' -O scrublet_pipeline.py
+    
+    cd /opt
+    wget http://ftp.gnu.org/gnu/parallel/parallel-latest.tar.bz2
+        tar xjf parallel-latest.tar.bz2
+        cd parallel-*
+        ./configure && make
+        yes | make install
+
+    cp /opt/conda/lib/libstdc++.so.6.0.26 /usr/lib/x86_64-linux-gnu/
+    mv /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so.6.bkp
+    ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.26 /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+
+
+    R --slave -e 'BiocManager::install(version="devel", ask = FALSE)'
+    R --slave -e 'devtools::install_github("EDePasquale/DoubletDecon")'
+    R --slave -e 'remotes::install_github("chris-mcginnis-ucsf/DoubletFinder")'
+    R --slave -e 'BiocManager::install("DeconRNASeq")'
+    R --slave -e 'BiocManager::install("clusterProfiler")'
+    R --slave -e 'install.packages("MCL", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'BiocManager::install("mygene")'
+    R --slave -e 'BiocManager::install("DropletUtils")'
+    R --slave -e 'BiocManager::install("scDblFinder")'
+
+    sed -i 's/louvain.set_rng_seed(random_state)/partition_kwargs["seed"] = random_state/g'  /opt/conda/envs/py36/lib/python3.6/site-packages/scanpy/tools/_louvain.py
+
+    yes | conda install pytorch torchvision cudatoolkit=10.2 -c pytorch
+#    /opt/conda/envs/py36/bin/pip install solo-sc
+    cd /opt
+    yes | git clone https://github.com/calico/solo.git && cd solo && /opt/conda/envs/py36/bin/pip install -e .
+    echo 'export MKL_THREADING_LAYER=GNU' >> $SINGULARITY_ENVIRONMENT
+
+
+%labels 
+    Author Drew Neavin

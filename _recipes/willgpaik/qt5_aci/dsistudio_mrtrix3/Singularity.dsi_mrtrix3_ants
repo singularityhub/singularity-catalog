@@ -1,0 +1,39 @@
+BootStrap: shub
+From: shub://willgpaik/qt5_aci:dsi_mrtrix3
+%setup
+
+%files
+
+%environment
+    export ANTSPATH=/opt/sw/ants/bin
+    PATH="$PATH:/opt/sw/dsistudio/build/:/opt/sw/mrtrix3/bin/:/opt/sw/ants/bin/"
+    export PATH
+
+%runscript
+
+
+%post
+    yum install -y mesa-libGLU-devel.i686 \
+        mesa-libGL-devel.i686 \
+        libcanberra-gtk*
+
+    source /opt/rh/devtoolset-7/enable
+    
+    mkdir -p /opt/sw/
+    
+    # Install ANTs
+    cd /opt/sw
+    mkdir ants
+    git clone https://github.com/ANTsX/ANTs.git
+    cd ants
+    git config --global url."https://".insteadOf git://
+    cmake3 /opt/sw/ANTs -DSuperBuild_ANTS_USE_GIT_PROTOCOL=off -DBUILD_TESTING=off
+    make -j 2
+    
+    cd /opt/sw
+    rm -rf ANTs
+    
+    
+
+    
+    

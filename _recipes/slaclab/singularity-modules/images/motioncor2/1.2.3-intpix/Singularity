@@ -1,0 +1,11 @@
+bootstrap: docker
+from: nvidia/cuda:9.2-runtime-centos7
+
+%files
+
+MotionCor2 /usr/local/bin/
+
+%post
+
+yum install -y unzip  libtiff
+

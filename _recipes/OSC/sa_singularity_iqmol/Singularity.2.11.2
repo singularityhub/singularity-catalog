@@ -1,0 +1,30 @@
+BootStrap: docker
+From: centos:7
+
+%labels
+    Maintainer zyou@osc.edu
+    Recipe https://github.com/OSC/sa_singularity_iqmol
+
+%environment
+    export QC=/opt/qchem
+    export QCAUX=$QC/qcaux
+    export QCPROG_S=$QC/exe/qcprog.exe_s
+    export QCMPI=mpich3
+    export QCRSH=ssh
+    export PATH=$PATH:$QC/exe:$QC/bin
+    export QCSCRATCH=$TMPDIR
+
+%post
+    yum install -y \
+        wget \
+        qt5-qtbase \
+        xkeyboard-config 
+    cd /
+    wget -nc http://iqmol.org/download.php?get=iqmol-2.11.2-1.el7.centos.x86_64.rpm -O iqmol.rpm
+    yum -y localinstall iqmol.rpm
+    rm -f iqmol.rpm
+    rm -rf /var/cache/yum/*
+
+%runscript
+    exec iqmol "$@"
+

@@ -1,0 +1,139 @@
+BootStrap: docker
+From: centos:7
+
+%startscript
+
+
+%runscript
+  /opt/kepler
+
+%environment
+
+
+%files
+ configuration.xml /tmp 
+ core_configuration.xml /tmp
+ common_configuration.xml /tmp
+
+ modules.txt /tmp
+ current-suite.txt /tmp
+
+ kepler.sh /tmp
+ install_animal_conservation_packages.sh /tmp
+
+%post
+ yum update -y
+
+ yum install -y java-1.8.0-openjdk wget git ant
+ 
+ groupadd kepler
+ useradd -g kepler kepler
+ #usermod -a -G kepler kepler
+
+ mkdir /opt/kepler
+ chown kepler:kepler /opt/kepler
+
+ cd /opt/kepler
+ wget https://code.kepler-project.org/code/kepler/releases/installers/2.4/kepler-2.4-linux.tar.gz
+
+ tar -C /opt/kepler -xvf /opt/kepler/kepler-2.4-linux.tar.gz
+
+ cp /tmp/configuration.xml /opt/kepler/kepler-2.4/module-manager-2.4.0/resources/configurations/configuration.xml
+ 
+ cp /tmp/core_configuration.xml /opt/kepler/kepler-2.4/core-2.4.0/resources/configurations/configuration.xml
+
+ cp /tmp/common_configuration.xml /opt/kepler/kepler-2.4/common-2.4.0/resources/configurations/configuration.xml
+
+ chown -R kepler:kepler /opt/kepler/kepler-2.4/
+
+ ln -s /opt/kepler/kepler-2.4/kepler.sh /usr/bin/kepler
+
+ rm /opt/kepler/*.gz
+
+ rm -f /home/kepler/.kepler
+ 
+ mkdir -p /root/.ssh/ 
+ touch /root/.ssh/config
+ chmod 0644 /root/.ssh/config
+
+ git clone https://bitbucket.org/coesra/kepler_archives.git /mnt/kepler_archives
+ 
+ cd /mnt/kepler_archives/files
+ tar -xvf kepler_coesra_builder.tar.gz
+
+ chown -R kepler:kepler ./*
+
+ cd kepler_coesra_builder
+ ant
+
+ chown -R kepler:kepler /mnt/kepler_archives/files/
+
+ cp /mnt/kepler_archives/files/kepler_coesra_utility.tar.gz /opt/kepler/kepler-2.4
+
+ chown -R kepler:kepler /opt/kepler/kepler-2.4
+
+ cd /opt/kepler/kepler-2.4/
+ tar -xvf kepler_coesra_utility.tar.gz
+
+ chown -R kepler:kepler /opt/kepler/kepler-2.4/
+
+ cp /tmp/modules.txt /opt/kepler/kepler-2.4/build-area/
+ chown kepler:kepler /opt/kepler/kepler-2.4/build-area/modules.txt
+
+ cp /tmp/current-suite.txt /opt/kepler/kepler-2.4/build-area/current-suite.txt
+ chown kepler:kepler /opt/kepler/kepler-2.4/build-area/current-suite.txt
+
+ 
+
+ git clone git@bitbucket.org:coesra/kepler-data.git /mnt/kepler-data
+ cd /mnt/kepler-data
+ tar -xvf KeplerData.tar.gz
+
+ mv /mnt/kepler-data/KeplerData/kepler.modules/reporting-2.4.0 /opt/kepler/kepler-2.4/
+ mv /mnt/kepler-data/KeplerData/kepler.modules/provenance-2.4.1 /opt/kepler/kepler-2.4/
+ mv /mnt/kepler-data/KeplerData/kepler.modules/tagging-2.4.0 /opt/kepler/kepler-2.4/
+ mv /mnt/kepler-data/KeplerData/kepler.modules/workflow-run-manager-2.4.0 /opt/kepler/kepler-2.4/
+ mv /mnt/kepler-data/KeplerData/kepler.modules/workflow-scheduler-gui-1.1.0 /opt/kepler/kepler-2.4/
+
+ chown -R kepler:kepler /opt/kepler/kepler-2.4/
+
+ mv /tmp/kepler.sh /opt/kepler/kepler-2.4/
+ chown kepler:kepler /opt/kepler/kepler-2.4/kepler.sh
+ chmod +x /opt/kepler/kepler-2.4/kepler.sh
+
+#######Animal conservation package###
+ yum install -y libpng-devel \
+		libxml2-devel \
+		libcurl-devel \
+		gdal	\
+		gdal-devel \
+		proj-devel \
+		proj-nad \
+		proj-epsg \
+		geo	\
+		geos-devel \
+		mesa-libGL \
+		mesa-libGL-devel \
+		mesa-libGLU-devel \
+
+ yum install -y R R-devel openssl openssl-devel
+
+ mkdir /mnt/animal_conservation
+ cd /mnt/animal_conservation
+ wget http://cran.r-project.org/src/contrib/Archive/multicore/multicore_0.2.tar.gz
+
+ git clone git@bitbucket.org:coesra/rpackages.git
+  
+ yum install -y epel-release 
+ yum install -y xpdf
+ 
+ cd /mnt
+ wget http://vault.centos.org/6.7/os/Source/SPackages/gthumb-2.10.11-8.el6.src.rpm
+
+ rpm -ivh /mnt/gthumb-2.10.11-8.el6.src.rpm
+
+ mv /tmp/install_animal_conservation_packages.sh /mnt/
+ chmod 0755 /mnt/install_animal_conservation_packages.sh
+ #sh /mnt/install_animal_conservation_packages.sh > /tmp/routput.log
+ 
+ 

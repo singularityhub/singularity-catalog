@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: neurodebian:non-free
+
+%labels
+    AUTHOR krause@mpib-berlin.mpg.de
+
+%post
+    apt-get update
+    apt-get -y install fsl-5.0-complete
+
+%environment
+    . ${FSLDIR}/etc/fsl/5.0/fsl.sh

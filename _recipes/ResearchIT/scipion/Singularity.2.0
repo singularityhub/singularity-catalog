@@ -1,0 +1,35 @@
+Bootstrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch/
+Include: yum
+
+%labels
+MAINTAINER baber@iastate.edu
+
+%environment
+export PATH=/scipion/software/bin:/scipion:$PATH
+
+%post
+yum install -y @"Development Tools"
+yum install -y wget gcc-c++ glibc-headers gcc gcc-g++ cmake java-1.8.0-openjdk-devel libXft-devel openssl-devel libXext-devel libxml++ libquadmath-devel libxslt openmpi-devel gsl-devel libX11 gcc-gfortran curl wget vim strace openmp mesa-libGL mesa libSM mesa-libGLU libXrender dejavu-sans-fonts mesa-dri-drivers java-1.8.0-openjdk readline libquadmath python2-scons python36-scons fftw-libs curl git openmpi
+wget http://scipion.i2pc.es/startdownload/?bundleId=5 -O scipion.tar.gz
+tar xvzf scipion.tar.gz
+pushd scipion
+./scipion config --overwrite <<<'d' &
+sleep 10
+sed -i 's/^MPI_BINDIR.*$/MPI_BINDIR = \/usr\/lib64\/openmpi\/bin/' config/scipion.conf
+sed -i 's/^MPI_LIBDIR.*$/MPI_LIBDIR = \/usr\/lib64\/openmpi\/lib/' config/scipion.conf
+sed -i 's/^MPI_INCLUDE.*$/MPI_INCLUDE = \/usr\/include\/openmpi-x86_64/' config/scipion.conf
+echo "CUDA = False" >> config/scipion.conf
+cat config/scipion.conf
+./scipion config
+cat config/scipion.conf
+setfacl -R -m o:rwX /scipion
+setfacl -R -m d:o:rwX /scipion
+chmod -R o+rwX /scipion
+getfacl /scipion
+ls -la /scipion
+./scipion install -j 12
+./scipion installp -p scipion-em-appion -j 12 -p  scipion-em-atomstructutils -j 12 -p scipion-em-atsas -j 12 -p scipion-em-bamfordlab -j 12 -p scipion-em-bsoft -j 12 -p scipion-em-ccp4 -j 12 -p scipion-em-chimera -j 12 -p scipion-em-cryoef -j 12 -p scipion-em-cryomethods -j 12 -p scipion-em-eman2 -j 12 -p scipion-em-empiar -j 12 -p scipion-em-emxlib -j 12 -p scipion-em-esrf -j 12 -p scipion-em-gautomatch -j 12 -p scipion-em-gctf -j 12 -p scipion-em-grigoriefflab -j 12 -p scipion-em-imagic -j 12 -p scipion-em-localrec -j 12 -p scipion-em-locscale -j 12 -p scipion-em-motioncorr -j 12 -p scipion-em-phenix -j 12 -p scipion-em-relion -j 12 -p scipion-em-resmap -j 12 -p scipion-em-simple -j 12 -p scipion-em-sphire -j 12 -p scipion-em-spider -j 12 -p scipion-em-xmipp -j 12
+%runscript
+exec "$@"

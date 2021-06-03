@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 1.4.7
+
+%post
+  ## Install prerequisites
+  apt-get update
+  apt-get -y install wget
+
+  wget https://github.com/clara-parabricks/racon-gpu/releases/download/1.4.7/racon-1.4.7-Linux-CUDA-10.1.deb
+  apt -y install ./racon-1.4.7-Linux-CUDA-10.1.deb
+
+  ## Cleanup
+  apt-get -y remove wget
+  apt-get -y autoremove
+  rm -rf /racon-1.4.7-Linux-CUDA-10.1.deb
+
+%runscript
+  exec racon "$@"

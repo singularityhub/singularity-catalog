@@ -1,0 +1,62 @@
+Bootstrap: docker
+From: anibali/pytorch:1.4.0-cuda10.1-ubuntu16.04
+
+%environment
+# use bash as default shell
+SHELL=/bin/bash
+export SHELL
+export HDF5_USE_FILE_LOCKING='FALSE'
+export PATH=/usr/local/cuda/bin:$PATH
+export CPATH=/usr/local/cuda/include:$CPATH
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
+%setup
+# runs on host
+# the path to the image is $SINGULARITY_ROOTFS
+
+%post
+# post-setup script
+
+# load environment variables
+. /environment
+
+# use bash as default shell
+echo 'SHELL=/bin/bash' >> /environment
+
+# make environment file executable
+chmod +x /environment
+
+# default mount paths
+mkdir /scratch
+
+# fix this issue: https://github.com/singularityware/singularity/issues/1182#issuecomment-381796545
+touch /usr/bin/nvidia-smi
+
+apt-get update && apt-get -y install locales
+apt-get update && apt-get install -y --no-install-recommends apt-utils
+locale-gen en_US.UTF-8
+apt-get install -y git wget
+apt-get update
+
+/home/user/miniconda/bin/conda install -c anaconda pip
+/home/user/miniconda/bin/conda install scikit-learn
+/home/user/miniconda/bin/conda install Pillow
+/home/user/miniconda/bin/conda install matplotlib
+/home/user/miniconda/bin/conda install tqdm
+#/home/user/miniconda/bin/conda install h5py
+
+/home/user/miniconda/bin/conda install pandas
+#/home/user/miniconda/bin/conda install -c simpleitk simpleitk
+#/home/user/miniconda/bin/conda install -c comet_ml comet_ml
+
+
+git clone https://github.com/facebookresearch/mmf.git
+cd mmf
+home/user/miniconda/bin/pip install --editable .
+
+%runscript
+# executes with the singularity run command
+# delete this section to use existing docker ENTRYPOINT command
+
+%test
+# test that script is a success

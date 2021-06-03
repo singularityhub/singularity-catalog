@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: nightseas/cuda-torch
+
+%help
+This container is designed to utilize the Torch machine learning framework (a part of the Lua programming language).
+
+This container includes the following Lua packages that are meant to enhance the experience of using Torch:
+tds, class, nn, nngraph, cunn, cudnn, cutorch
+
+%post
+  # in-container bind points for shared filesystems
+  mkdir -p /extra /rsgrps /xdisk /uaopt /cm/shared /cm/local
+
+  luarocks install tds
+  luarocks install class
+  luarocks install nn
+  luarocks install nngraph
+
+  chmod 755 /root

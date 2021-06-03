@@ -1,0 +1,14 @@
+#Bootstrap: debootstrap
+#OSVersion: xenial
+#MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+Bootstrap: localimage
+From: sng425
+
+%post
+# apt-get install -y python curl gcc autoconf python-dev libgmp3-dev
+# curl https://bootstrap.pypa.io/get-pip.py | python
+  pip install pycrypto simple-crypt
+  wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
+  chmod +x jq-linux64
+  mv jq-linux64 /usr/bin/jq
+

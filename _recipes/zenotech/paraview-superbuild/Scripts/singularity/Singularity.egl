@@ -1,0 +1,204 @@
+Bootstrap: docker
+From: nvidia/opengl:1.0-glvnd-devel-ubuntu18.04
+
+
+#
+# To build this container:
+#
+#     $ sudo /opt/singularity/bin/singularity build pv-release-egl.sif Singularity.egl
+#
+# See the various app sections for examples of running the resulting container.  Running
+# this container requires that you have NVidia graphics hardward with up-to-date drivers
+# installed.
+#
+
+
+%post
+    # Set some variables we'll need at build time
+    RENDERING=egl
+    PARAVIEW_TAG=release
+    SUPERBUILD_TAG=release
+    SUPERBUILD_REPO=https://gitlab.kitware.com/paraview/paraview-superbuild.git
+    DEV_BUILD=false
+    PYTHON_VERSION=2
+    BUILD_TYPE=Release
+
+    # First install some packages we need
+    apt-get -y update
+    apt-get install -y --no-install-recommends \
+        autoconf \
+        automake \
+        build-essential \
+        ca-certificates \
+        chrpath \
+        curl \
+        gfortran \
+        git \
+        libtool \
+        openssl \
+        python2.7-dev \
+        python-pip \
+        python-setuptools \
+        pkg-config
+    rm -rf /var/lib/apt/lists/*
+    pip install mako
+
+    # Now get CMake, clone the superbuild, and prepare to build
+    mkdir -p /home/pv-user/cmake/3.13.4 && cd /home/pv-user/cmake/3.13.4
+    curl -L https://cmake.org/files/v3.13/cmake-3.13.4-Linux-x86_64.tar.gz | tar --strip-components=1 -xzv
+    mkdir -p /home/pv-user/pvsb && cd /home/pv-user/pvsb
+    git clone --recursive ${SUPERBUILD_REPO} src
+    cd src && git checkout ${SUPERBUILD_TAG} && git submodule update && cd ..
+    mkdir build && cd build && \
+
+    # Make sure needed env vars are truly seen in the next step
+    export PARAVIEW_TAG=${PARAVIEW_TAG}
+    export RENDERING=${RENDERING}
+    export PYTHON_VERSION=${PYTHON_VERSION}
+    export BUILD_TYPE=${BUILD_TYPE}
+
+    # Configure/build/install ParaView
+    /home/pv-user/cmake/3.13.4/bin/cmake -C /home/pv-user/pvsb/src/cmake/sites/Docker-Ubuntu-18_04.cmake "-GUnix Makefiles" ../src
+    make -j"$(nproc)" install
+
+    # Clean up if it's not a development build
+    if [ "${DEV_BUILD}" != "true" ] ; then rm -rf /home/pv-user/pvsb && rm -rf /home/pv-user/cmake ; fi
+
+
+%apprun pvpython
+    exec /opt/paraview/bin/pvpython "$@"
+
+%apphelp pvpython
+    Run pvpython.  Provide any command-line arguments accepted by pvpython,
+    including the python script you want to run.  The path to the python
+    script should be bind-mounted in order for pvpython to be able to see
+    the script.
+
+    Examples:
+
+    Run pvpython in an interactive manner (note we have to run with "--nv" in order to use NVidia drivers for rendering):
+
+        $ singularity run --nv --app pvpython pv-release-egl.sif
+        Python 2.7.15rc1 (default, Apr 15 2018, 21:51:34)
+        [GCC 7.3.0] on linux2
+        Type "help", "copyright", "credits" or "license" for more information.
+        >>>
+
+    To run pvpython on a saved paraview python script file, make sure to bind-mount
+    the directory where the script lives so pvpython will be able to read it from
+    inside the container.  Also, mount any directories where output should be
+    written.  In the following example, we happen to know the script writes some
+    files into the "/work/" directory:
+
+        $ ls -al /<path-to-work-dir>/ospray-wavelet.py
+        -rw-r--r-- 1 me me 5357 Jun  7 17:27 /<path-to-work-dir>/ospray-wavelet.py
+        $ singularity run --nv --bind /<path-to-work-dir>:/work --app pvpython pv-release-egl.sif /work/ospray-wavelet.py
+
+        $ ls -alt /<path-to-work-dir>/ | head -3
+        total 868492
+        -rw-r--r--  1 scott scott   1561709 Jun 10 14:17 osprayImage.png
+        drwxr-xr-x  7 scott scott      4096 Jun 10 14:17 .
+
+
+%apprun pvbatch
+    exec /opt/paraview/bin/pvbatch "$@"
+
+%apphelp pvbatch
+    Run pvbatch.  Provide any pvbatch arguments as well as the path to a paraview
+    python script file.  Make sure to bind-mount the directory where the script
+    file is located first.
+
+    Example:
+
+        $ singularity run --nv --bind /<path-to-work-dir>:/work --app pvbatch pv-release-egl.sif -dr /work/some-batch-script.py
+
+
+%apprun pvserver
+    exec /opt/paraview/bin/pvserver "$@"
+
+%apphelp pvserver
+    Run pvserver.  Provide any pvserver arguments at the end of the command-line:
+
+    Example:
+
+        $ singularity run --nv --app pvserver pv-release-egl.sif -dr --server-port=11112
+
+
+%apprun visualizer
+    exec /opt/paraview/bin/pvpython \
+        /opt/paraview/share/paraview-5.6/web/visualizer/server/pvw-visualizer.py \
+        --content /opt/paraview/share/paraview-5.6/web/visualizer/www "$@"
+
+%apphelp visualizer
+    Run the ParaViewWeb Visualizer server.  The server python script (`pvw-visualizer.py`)
+    as well as the `--content` arguments are already provided for you, but you may still
+    want to provide other arguments such as `--data <path-to-data-dir>` (note that you
+    must bind-mount that path when running singularity for the image to see it), or
+    `--port <port-number>`.
+
+    Example:
+
+        $ singularity run --nv \
+            --bind /<path-to-data-dir>:/data \
+            --app visualizer \
+            pv-release-egl.sif --data /data --port 9091
+
+
+%apprun lite
+    exec /opt/paraview/bin/pvpython \
+        /opt/paraview/share/paraview-5.6/web/lite/server/pvw-lite.py \
+        --content /opt/paraview/share/paraview-5.6/web/lite/www "$@"
+
+%apphelp lite
+    Run the ParaView Lite server.  The server python script (`pvw-lite.py`)
+    as well as the `--content` arguments are already provided for you, but you may still
+    want to provide other arguments such as `--data <path-to-data-dir>` (note that you
+    must bind-mount that path when running singularity for the image to see it), or
+    `--port <port-number>`.
+
+    Example:
+
+        $ singularity run --nv \
+            --bind /<path-to-data-dir>:/data \
+            --app lite \
+            pv-release-egl.sif --data /data --port 9091
+
+
+%apprun divvy
+    exec /opt/paraview/bin/pvpython \
+        /opt/paraview/share/paraview-5.6/web/divvy/server/pvw-divvy.py \
+        --content /opt/paraview/share/paraview-5.6/web/divvy/www "$@"
+
+%apphelp divvy
+    Run the ParaViewWeb Divvy server.  The server python script (`pvw-divvy.py`)
+    as well as the `--content` arguments are already provided for you, but you may still
+    want to provide other arguments such as `--data <path-to-data-dir>` (note that you
+    must bind-mount that path when running singularity for the image to see it), or
+    `--port <port-number>`.
+
+    Example:
+
+        $ singularity run --nv \
+            --bind /<path-to-data-dir>:/data \
+            --app divvy \
+            pv-release-egl.sif --data /data/disk_out.exo --port 9091
+
+
+%apprun flow
+    exec /opt/paraview/bin/pvpython \
+        /opt/paraview/share/paraview-5.6/web/flow/server/pvw-flow.py \
+        --content /opt/paraview/share/paraview-5.6/web/flow/www "$@"
+
+%apphelp flow
+    Run the ParaView Flow server.  The server python script (`pvw-flow.py`)
+    as well as the `--content` arguments are already provided for you, but you may still
+    want to provide other arguments such as `--data <path-to-parflow-metadata-file>`
+    (note that you must either bind-mount that path when running singularity, or else be
+    in the directory where it lives for the image to see it), or `--port <port-number>`.
+
+    Example:
+
+        $ singularity run --nv \
+            --bind /<path-to-data-dir>:/data \
+            --app flow \
+            pv-release-egl.sif --data /data/pvmetadata --port 9091

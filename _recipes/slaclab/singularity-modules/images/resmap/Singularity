@@ -1,0 +1,21 @@
+bootstrap: docker
+from: nvidia/cuda:9.0-runtime-ubuntu16.04 
+
+%environment
+
+%post
+
+apt-get update
+apt-get install -y \
+  curl \
+  python-tk libxcb-randr0-dev libxcb-xtest0-dev libxcb-xinerama0-dev libxcb-shape0-dev libxcb-xkb-dev
+
+cd /usr/bin
+BINARY=ResMap-1.95-cuda-Linux16.04x64
+curl -L https://sourceforge.net/projects/resmap-latest/files/Releases/Executables/${BINARY}/download > ${BINARY}
+chmod ugo+x ${BINARY}
+ln -sf ${BINARY} ResMap
+
+#    libx11-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev libxext-dev libxfixes-dev libxcursor-dev x11-utils libxinerama-dev \
+
+

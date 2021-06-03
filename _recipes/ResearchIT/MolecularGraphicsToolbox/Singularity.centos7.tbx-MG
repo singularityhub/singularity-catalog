@@ -1,0 +1,161 @@
+Bootstrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch/
+Include: yum
+
+%post
+# lasst update on 2017-07-18
+
+## tbx_MG uses Python2 and tbx_RNAseq uses Python3
+ 
+Use_Python2=1
+Use_Python3=0
+
+
+###### Base system for all toolboxes###### 
+
+## File system
+## link names for apps installed by scif
+## cmd: singularity exec tbx-RNQseq.simg  bwa
+
+test -d /opt/rit/scif/bin || mkdir -p /opt/rit/scif/bin
+export PATH=/opt/rit/scif/bin:$PATH
+
+
+## Lmod: manage all applications installed by scif as well. 
+## cmd: singularity shell -s /bin/bash tbx-MD.simg  -c ' module load amber ; your-amber-cmd'
+
+test -d /opt/rit/scif/lmod/modulefiles || mkdir -p /opt/rit/scif/lmod/modulefiles
+
+## Staging area: use /tmp/singularity/, not /root while doing singularity building
+
+## For downloading, unpackging, and installing.
+test -d /tmp/singularity/stage     || mkdir /tmp/singularity/stage
+
+# For transfering files into the container after the container is built. 
+test -d /tmp/singularity/scripts.d || mkdir /tmp/singularity/scripts.d
+
+# Application build environment:
+# gcc(4.8.5 20150623), gcc-c++(4.8.5 20150623), gcc-fortran(4.8.5 20150623)
+# java(1.8.0_171), perl(v5.16.3), python(2.7.5), R(3.5.0 ), OpenMPI
+# X-window and Fonts to display PyMol properly, openGL
+
+yum -y install epel-release
+yum -y update
+
+## "Development tools" includes:  gcc, gcc-c++, gcc-gfortran, perl, python2.7, 
+## git, libtool, patch,  pathutils, subversion, getetxt, doxygen, flex ... zip/unzip
+## python2.7 is linked to python2, and python in /bin
+
+yum -y groupinstall "Development tools"
+yum -y install java
+yum -y install openmpi
+yum -y install R
+yum -y groupinstall  "X Window System"  "Fonts"
+yum -y install  libGLU 
+
+yum -y install glibc-static libstdc++-static
+yum -y install curl wget bzip2 which mlocate xclock
+
+## GNU parallel
+if [ !  -f "/bin/parallel" ]; then
+  cd /tmp/singularity/stage
+  wget http://linuxsoft.cern.ch/cern/centos/7/cern/x86_64/Packages/parallel-20150522-1.el7.cern.noarch.rpm
+  rpm -ivh parallel-20150522-1.el7.cern.noarch.rpm
+fi 
+
+## LMOD:
+## Modify /etc/profile.d/modules.sh to get  the value of shell name 
+## correctly in the container.
+if [ ! -f "/etc/profile.d/modules.sh" ]; then
+  yum -y install environment-modules
+  mv  /etc/profile.d/modules.sh  /etc/profile.d/modules.sh.bak
+  sed 's/^shell=/# shell=/'      /etc/profile.d/modules.sh.bak > /etc/profile.d/modules.sh
+  sed -i '1 i\export shell=`/bin/basename $SHELL`'               /etc/profile.d/modules.sh
+  
+  # Temp avoid the warnig from /usr/share/Modules/init/bash call
+  mv  /usr/share/Modules/init/bash_completion /usr/share/Modules/init/bash_completion.not_run
+
+  ln  -f -s  /etc/profile.d/modules.sh    /.singularity.d/env/999-zzz-modules.sh
+## MODULEPATH:
+  echo "/opt/rit/scif/lmod/modulefiles" >>  /usr/share/Modules/init/.modulespath
+fi
+
+###### End of Base System ######
+
+
+TMP_STAGE=/tmp/singularity/stage
+
+## tbx_MG: use python2 and conda2
+
+if [ ${Use_Python2} -eq 1 ]
+then 
+
+  if [ ! -f "/opt/conda2/bin/conda" ]; then
+      cd $TMP_STAGE 
+      wget https://repo.continuum.io/archive/Anaconda2-5.2.0-Linux-x86_64.sh
+      sh  ./Anaconda2-5.2.0-Linux-x86_64.sh -p /opt/conda2  -b
+#     rm  ./Anaconda2-5.2.0-Linux-x86_64.sh
+  fi
+
+  ln -s -f /opt/conda2/bin/pip /bin/pip2
+  ln -s -f /opt/conda2/bin/pip /opt/conda2/bin/pip2
+
+  # scfi: need argparse and msgpack
+
+  pip2 install msgpack
+  pip2 install argparse
+
+  pip2  install scif
+  ln -s -f /opt/conda2/bin/scif /opt/conda2/bin/scif2
+
+fi
+
+
+## tbx_RNAseq: using python3 and pip3
+
+if [ ${Use_Python3}  -eq  1 ] 
+then
+
+  yum  -y install  python36 
+
+  if [ ! -f "/opt/conda3/bin/conda" ]; then
+      cd /tmp/singularity/stage
+      wget https://repo.continuum.io/archive/Anaconda3-5.2.0-Linux-x86_64.sh
+      sh  ./Anaconda3-5.2.0-Linux-x86_64.sh -p /opt/conda3  -b
+    # rm  ./Anaconda3-5.2.0-Linux-x86_64.sh
+  fi
+
+  ln -s -f /opt/conda3/bin/pip /bin/pip3
+  ln -s -f /opt/conda3/bin/pip /opt/conda3/bin/pip3
+
+#scif:
+  pip3 install msgpack
+  pip3 install argparse
+
+  pip3 install scif 
+  ln -s -f /opt/conda3/bin/scif /opt/conda3/bin/scif3
+
+## snakemake: for python >=3.2
+  pip3 install snakemake
+ 
+fi
+    
+  
+%environment
+
+    export LANG=en_US.UTF-8
+    export LANGUAGE=en_US:en
+    export LC_ALL=en_US.UTF-8
+
+    export TMP_STAGE=/tmp/singularity/stage
+    export TMP_SCRIPTS_DIR=/tmp/singularity/scripts.d
+
+    test -d "/opt/conda2/bin" &&  export PATH=/opt/conda2/bin:$PATH
+    test -d "/opt/conda3/bin" &&  export PATH=/opt/conda3/bin:$PATH
+
+
+
+
+%runscript
+    exec scif "$@"

@@ -1,0 +1,42 @@
+Bootstrap: docker
+From: nvidia/cuda:9.1-cudnn7-runtime-ubuntu16.04
+
+%post
+  # in-container bind points for shared filesystems
+  mkdir -p /groups /xdisk /uaopt /cm/shared /cm/local
+ 
+  apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends apt-utils
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl systemd sudo iptables
+  
+  #=============================================================================
+  # Installing Docker-CE
+  curl -L https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/containerd.io_1.4.4-1_amd64.deb -o containerd.deb
+  curl -L https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/docker-ce-cli_20.10.5~3-0~ubuntu-focal_amd64.deb -o docker_ce_cli.deb
+  curl -L https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/docker-ce-rootless-extras_20.10.5~3-0~ubuntu-focal_amd64.deb -o docker_ce_rootless_extras.deb
+  curl -L https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/docker-ce_20.10.5~3-0~ubuntu-focal_amd64.deb -o docker_ce.deb
+  
+  dpkg -i containerd.deb
+  dpkg -i docker_ce_cli.deb
+  dpkg -i docker_ce.deb
+  dpkg -i docker_ce_rootless_extras.deb
+  #=============================================================================
+  
+  #=============================================================================
+  # Installing docker-compose (use the latest version possible)
+  DOC_COMP_VERSION=1.28.6
+  curl -L "https://github.com/docker/compose/releases/download/${DOC_COMP_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  chmod +x /usr/local/bin/docker-compose
+  #=============================================================================
+  
+  #=============================================================================
+  # Installing nvidia-docker
+  distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
+    && curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add - \
+    && curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list
+   
+  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nvidia-docker2
+  #=============================================================================
+  
+  sudo systemctl restart docker
+  
+  

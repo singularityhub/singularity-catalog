@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%labels
+  MAINTAINER Rion Dooley <dooley@tacc.utexas.edu>
+
+%setup
+  LD_LIBRARY_PATH /usr/local/lib
+
+%post
+  # add build tools and python to the sandbox
+  apt-get install -y --allow-unauthenticated build-essential findutils python3 python3-pip wget make git patch flex gfortran
+  cd /home
+  wget https://www.open-mpi.org/software/ompi/v2.1/downloads/openmpi-2.1.1.tar.gz
+  tar xzvf openmpi-2.1.1.tar.gz
+
+  # add openmpi 2.1.1
+  cd /home/openmpi-2.1.1
+  ./configure
+  make -j 5 install
+
+  # add demo code, funwave-tvd
+  cd $HOME
+  git clone https://github.com/fengyanshi/FUNWAVE-TVD
+
+  # build source
+  cd FUNWAVE-TVD/src
+  perl -p -i -e 's/FLAG_8 = -DCOUPLING/#$&/' Makefile
+  make
+
+%runscript
+  $HOME/FUNWAVE-TVD/src/funwave_vessel

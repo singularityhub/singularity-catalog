@@ -1,0 +1,12 @@
+BootStrap: yum
+OSVersion: 6
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch/
+UpdateURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/updates/$basearch/
+Include: yum
+%post
+  echo "Hello from inside the container"
+  rm -rf /var/lib/rpm/__*
+  touch /var/lib/rpm/*
+  rpm --rebuilddb
+  rpm -qa
+  yum -y install vim-minimal

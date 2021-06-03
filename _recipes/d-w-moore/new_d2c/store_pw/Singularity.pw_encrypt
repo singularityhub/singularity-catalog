@@ -1,0 +1,28 @@
+Bootstrap: localimage
+From: ubuntu_base.simg
+
+# Encrypt and base64-encode an irods password to store in a subsequent Singularity image
+#
+# example use - 
+# ---
+# KEY="SingleUse" PW="irods_pass" singularity run --app encrypt_pw ./this_executable > cachedpw
+
+%post
+apt-get install -y python curl gcc autoconf python-dev libgmp3-dev
+pip install pycrypto simple-crypt
+
+%apprun encrypt_pw
+python -c '
+from __future__ import print_function
+import sys,hashlib,os,simplecrypt,binascii
+key=os.environ["KEY"]
+pw=os.environ["PW"]
+encpw = simplecrypt.encrypt(key,pw)
+m = hashlib.md5() ; m.update(encpw)
+hexdigest = m.hexdigest()
+base64 = binascii.b2a_base64(encpw)
+print("  = " + hexdigest,file=sys.stderr)
+print("digest of encrypted password = " + hexdigest,file=sys.stderr)
+print("converted value of encrypted password = ",base64 ,file=sys.stderr)
+print(base64, end="")
+'

@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 2019.3
+
+%setup
+  wget -q -O ${SINGULARITY_ROOTFS}/tmp/gromacs-2019.3.tar.gz ftp://ftp.gromacs.org/pub/gromacs/gromacs-2019.3.tar.gz
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install cmake gcc g++
+  
+  ## Build gromacs 
+  cd /tmp
+  tar -xzf gromacs-2019.3.tar.gz
+  cd gromacs-2019.3
+  mkdir build
+  cd build
+  cmake .. -DGMX_BUILD_OWN_FFTW=ON
+  make -j 4
+  make install
+  
+  ## Cleanup
+  cd /tmp
+  rm -rf /tmp/gromacs*
+  apt-get -y remove --purge cmake gcc g++
+  apt-get -y clean all
+  apt-get -y autoremove --purge
+
+  ## Reinstall libogmp
+  apt-get -y install libgomp1
+
+%runscript
+  . /usr/local/gromacs/bin/GMXRC.bash
+  gmx "$@"

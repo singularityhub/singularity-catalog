@@ -1,0 +1,17 @@
+# Recipe generated from template version {{TEMPLATE_VERSION}}
+
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+    Maintainer @plantandfood.co.nz
+    Version {{SINGULARITY_RELEASE_VERSION}}
+    Template_Version {{TEMPLATE_VERSION}} 
+
+%post
+    ## Download build prerequisites
+    apt-get update
+    apt-get -y install git  
+
+%runscript
+	echo hello {{SINGULARITY_RELEASE_VERSION}} 

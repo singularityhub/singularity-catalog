@@ -1,0 +1,94 @@
+bootstrap: docker
+from: nvidia/cuda:10.0-devel-ubuntu18.04
+
+%environment
+
+export PATH=/opt/relion/bin/:${PATH}
+export LD_LIBRARY_PATH=/opt/relion/lib:${LD_LIBRARY_PATH}
+
+# container-local exes
+export RELION_MOTIONCOR2_EXECUTABLE=/usr/local/bin/MotionCor2
+export RELION_CTFFIND_EXECUTABLE=/usr/local/bin/ctffind
+export RELION_GCTF_EXECUTABLE=/usr/local/bin/Gctf
+
+
+%post
+
+apt-get update
+apt-get install -y \
+    gcc-7 cmake build-essential autoconf automake libtool flex bison \
+    libfabric-dev libibverbs-dev \
+    openssh-client \
+    libfftw3-dev \
+    libtiff5-dev \
+    libx11-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev libxext-dev libxfixes-dev libxcursor-dev x11-utils libxinerama-dev \
+    openssh-client \
+    git curl \
+    gnuplot unzip ghostscript evince csh
+
+###
+# install openmpi
+###
+TMPDIR=`mktemp -d -t` \
+  && cd ${TMPDIR} \
+  && git clone https://github.com/open-mpi/ompi.git \
+  && cd ompi \
+  && git checkout v4.0.1 \
+  && ./autogen.pl \
+  && ./configure --prefix=/usr/ --enable-mpi-cxx \
+  && make -j 16 \
+  && make install \
+  && /usr/bin/mpicc examples/ring_c.c -o /usr/bin/mpi_ring \
+  && rm -rf ${TMPDIR}
+
+###
+# install ctffind
+###
+cd /usr/local \
+  && curl http://grigoriefflab.janelia.org/sites/default/files/ctffind-4.1.10-linux64.tar.gz | tar xvfz -
+
+###
+# install gctf
+###
+cd /usr/local/bin \
+  && curl https://www.mrc-lmb.cam.ac.uk/kzhang/Gctf/Gctf_v1.18_b2/bin/Gctf_v1.18_b2_sm35_cu9.2 > Gctf \
+  && chmod ugo+x /usr/local/bin/Gctf
+
+###
+# install motioncor
+###
+cd /usr/local/bin \
+  && curl -L 'https://drive.google.com/uc?export=download&id=17dOr87lhhxGhg6xQYr4f8eo0OEo-GdUI' > MotionCor2_1.2.3.zip \
+  && unzip MotionCor2_1.2.3.zip \
+  && rm -f MotionCor2_1.2.3.zip \
+  && ln -sf MotionCor2_1.2.3-Cuda92 MotionCor2
+
+###
+# install relion
+###
+TMPDIR=`mktemp -d -t` \
+  && cd ${TMPDIR} \
+  && git clone https://github.com/3dem/relion.git \
+  && cd ${TMPDIR}/relion \
+  && git checkout 3.0.6 \
+  && sed -i 's/MPI_DOUBLE_COMPLEX/MPI_C_DOUBLE_COMPLEX/g' src/macros.h \
+  && mkdir build \
+  && cd build \
+  && CC=mpiicc CXX=mpiicpc CFLAGS="-march=haswell" CXXFLAGS="-march=haswell" \
+    cmake -DCMAKE_INSTALL_PREFIX=/opt/relion \
+    -DCMAKE_C_COMPILER=/usr/bin/mpicc -DCMAKE_CXX_COMPILER=/usr/bin/mpicxx \
+    -DMPI_C_COMPILER=/usr/bin/mpicc -DMPI_CXX_COMPILER=/usr/bin/mpicxx \
+    -DCUDA=ON -DCudaTexture=ON -DCUDA_ARCH=60 \
+    -DCMAKE_BUILD_TYPE=Release \
+    .. \
+  && make -j16 \
+  && make install \
+  && rm -rf ${TMPDIR}
+
+###
+# clan up
+### 
+apt-get clean
+rm -rf /var/lib/apt/lists/*
+rm -rf /var/tmp/*
+

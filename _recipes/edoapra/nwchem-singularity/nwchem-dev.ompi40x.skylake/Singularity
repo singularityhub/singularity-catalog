@@ -1,0 +1,126 @@
+Bootstrap: docker
+From: ubuntu:20.04
+%labels
+MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
+%post
+#
+#https://sylabs.io/guides/3.6/user-guide/mpi.html
+export DEBIAN_FRONTEND=noninteractive
+export nwchem_hash=77ba3a6e1dd6f9ba26879d0416bb93b302f1f4f7
+export ompi=4.0.5
+export ompi_prefix=ompi-$ompi
+export ucx=1.8.0
+export OMPI_DIR=/opt/ompi
+export D_OFED_VERSION="5.0-2.1.8.0"
+export D_OS="ubuntu20.04"
+export D_ARCH="x86_64"
+export D_OFED_PATH="MLNX_OFED_LINUX-${D_OFED_VERSION}-${D_OS}-${D_ARCH}"
+export D_OFED_TARBALL_NAME="MLNX_OFED_LINUX-${D_OFED_VERSION}-${D_OS}-${D_ARCH}.tgz"
+export D_OFED_URL_PATH="https://www.mellanox.com/downloads/ofed/MLNX_OFED-${D_OFED_VERSION}/${D_OFED_TARBALL_NAME}"
+export D_WITHOUT_FLAGS="--without-rshim-dkms --without-iser-dkms --without-isert-dkms --without-srp-dkms --without-kernel-mft-dkms --without-mlnx-rdma-rxe-dkms"
+export SINGULARITY_nwchem_hash=77ba3a6e1dd6f9ba26879d0416bb93b302f1f4f7
+export SINGULARITY_ompi=4.0.5
+export SINGULARITY_ompi_prefix=ompi-$ompi
+cd /tmp
+pwd
+sed -i -e 's/archive.ubuntu.com/mirror.pnl.gov/'  /etc/apt/sources.list \
+&& apt-get update \
+&& apt install -y tzdata  \
+&& apt install -y curl wget tar libnl-3-200 libnl-route-3-200 libgomp1 libnuma1 \
+ g++ gfortran   make ssh patch curl  wget unzip perl git file \
+ python3 python3-dev cmake  unzip zip perl automake libtool autoconf flex  \
+ libnuma-dev libslurm-dev libpmi2-0-dev libpmi0-dev  libnl-3-dev libnl-route-3-dev udev \
+&& apt-get clean \
+&& wget ${D_OFED_URL_PATH} \
+&& tar -xf ${D_OFED_TARBALL_NAME} \
+&& find MLNX_OFED_LINUX-${D_OFED_VERSION}-${D_OS}-${D_ARCH} -name "*ibumad*deb" \
+&& dpkg -i MLNX_OFED_LINUX-${D_OFED_VERSION}-${D_OS}-${D_ARCH}/DEBS/UPSTREAM_LIBS/hcoll_*_amd64.deb \
+ MLNX_OFED_LINUX-${D_OFED_VERSION}-${D_OS}-${D_ARCH}/DEBS/UPSTREAM_LIBS/rdma-core_*_amd64.deb \
+ MLNX_OFED_LINUX-${D_OFED_VERSION}-${D_OS}-${D_ARCH}/DEBS/UPSTREAM_LIBS/libibverbs1_*_amd64.deb \
+ MLNX_OFED_LINUX-${D_OFED_VERSION}-${D_OS}-${D_ARCH}/DEBS/UPSTREAM_LIBS/libibverbs-dev_*_amd64.deb \
+ MLNX_OFED_LINUX-${D_OFED_VERSION}-${D_OS}-${D_ARCH}/DEBS/UPSTREAM_LIBS/librdmacm1_*_amd64.deb \
+ MLNX_OFED_LINUX-${D_OFED_VERSION}-${D_OS}-${D_ARCH}/DEBS/UPSTREAM_LIBS/librdmacm-dev_*_amd64.deb \
+ MLNX_OFED_LINUX-${D_OFED_VERSION}-${D_OS}-${D_ARCH}/DEBS/UPSTREAM_LIBS/ibverbs-providers_*_amd64.deb \
+ MLNX_OFED_LINUX-${D_OFED_VERSION}-${D_OS}-${D_ARCH}/DEBS/UPSTREAM_LIBS/libibumad3_*_amd64.deb \
+ MLNX_OFED_LINUX-${D_OFED_VERSION}-${D_OS}-${D_ARCH}/DEBS/UPSTREAM_LIBS/ucx_*_amd64.deb \
+ MLNX_OFED_LINUX-${D_OFED_VERSION}-${D_OS}-${D_ARCH}/DEBS/UPSTREAM_LIBS/sharp*_amd64.deb \
+&& rm -rf MLNX_OFED_LINUX-${D_OFED_VERSION}-${D_OS}-${D_ARCH} ${D_OFED_TARBALL_NAME} \
+&& wget https://github.com/openucx/ucx/releases/download/v$ucx/ucx-$ucx.tar.gz \
+&& tar xzf  ucx-$ucx.tar.gz \
+&& cd ucx-$ucx \
+&& mkdir build && cd build \
+&& ../configure --prefix=$OMPI_DIR \
+&& make -j4 && make install \
+&& cd ../.. \
+&& wget https://github.com/open-mpi/ompi/archive/v$ompi.tar.gz -O $ompi_prefix.tar.gz && \
+tar xzf $ompi_prefix.tar.gz                                           && \
+cd $ompi_prefix                                                        && \
+./autogen.pl                                                           && \
+./configure  --prefix=$OMPI_DIR --with-ucx=$OMPI_DIR --enable-mca-no-build=btl-uct   \
+ --with-pmi --with-pmi-libdir=/usr/lib/x86_64-linux-gnu --enable-mpi1-compatibility --with-slurm --without-tm --without-lsf  \
+ --without-sge --without-alps --without-lustre --disable-memchecker \
+--disable-mpi-java --enable-dlopen --without-cuda --without-verbs \
+ --with-hcoll=/opt/mellanox/hcoll  \
+--disable-mpi-cxx --disable-cxx-exceptions && \
+make -j 6                                                               && \
+make install                                                            && \
+make clean                                                              && \
+cd /tmp && \
+rm -rf /usr/share/doc/ && \
+rm -rf /usr/share/man/
+export PATH=$OMPI_DIR/bin:$PATH
+export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+export ARMCI_NETWORK=MPI-PR
+export NWCHEM_TOP=/opt/nwchem-$nwchem_hash
+export NWCHEM_TARGET=LINUX64
+export NWCHEM_MODULES="all python"
+export BUILD_OPENBLAS=1
+export BUILD_SCALAPACK=1
+export BLAS_SIZE=8
+export SCALAPACK_SIZE=8
+export USE_64TO32=y
+export USE_MPI=y
+export USE_MPIF=y
+export USE_MPIF4=y
+#ENV         MRCC_METHODS=y
+#ENV         CCSDTQ=y
+#ENV         CCSDTLR=y
+cd /opt;curl -SL     https://github.com/nwchemgit/nwchem/archive/$nwchem_hash.tar.gz | tar xzf - 
+cd nwchem-$nwchem_hash/src \
+&& sed -i 's|-march=native||' config/makefile.h \
+&& sed -i 's|-mtune=native|-mtune=generic|' config/makefile.h \
+&& sed -i 's|-mfpmath=sse||' config/makefile.h \
+&& sed -i 's|-msse3||' config/makefile.h  \
+&& make nwchem_config && make -j6  \
+            && rm -rf tce tools nwdft NWints geom symmetry util nwxc ddscf lapack blas rism argos peigs rmdft gradients symmetry property smd lucia dplot propery hessian ccsd mp2_grad moints cafe analyz dimqm /opt/nwchem/lib
+
+
+#clean unnecessary packages
+#apt-get -y purge curl wget tar  cmake  unzip zip perl automake libtool autoconf flex  \
+#&&  apt-get -y autoremove && apt-get clean
+
+#cd /data
+%environment
+export ompi=4.0.5
+export SINGULARITY_ompi=4.0.5
+export SINGULARITY_ompi_prefix=ompi-$ompi
+export OMPI_DIR=/opt/ompi
+export SINGULARITY_OMPI_DIR=$OMPI_DIR
+export SINGULARITYENV_APPEND_PATH=$OMPI_DIR/bin
+export SINGULARITYENV_APPEND_LD_LIBRARY_PATH=$OMPI_DIR/lib
+
+export nwchem_hash=77ba3a6e1dd6f9ba26879d0416bb93b302f1f4f7
+export NWCHEM_TOP=/opt/nwchem-$nwchem_hash
+export FFIELD=amber
+export AMBER_1=$NWCHEM_TOP/src/data/amber_s/
+export AMBER_2=$NWCHEM_TOP/src/data/amber_q/
+export AMBER_3=$NWCHEM_TOP/src/data/amber_x/
+export AMBER_4=$NWCHEM_TOP/src/data/amber_u/
+export SPCE=${NWCHEM_TOP}/src/data/solvents/spce.rst
+export CHARMM_S=$NWCHEM_TOP/src/data/charmm_s/
+export CHARMM_X=$NWCHEM_TOP/src/data/charmm_x/
+export PATH=$PATH:$NWCHEM_TOP/bin/LINUX64
+export PATH=$OMPI_DIR/bin:$PATH
+export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+#%runscript
+#exec /bin/bash "$@"

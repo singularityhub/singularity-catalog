@@ -1,0 +1,45 @@
+BootStrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%post
+    # ~~~~~ BASIC SETUP ~~~~~ #
+    apt-get update && \
+    apt-get install -y wget \
+    bzip2 \
+    make \
+    rsync \
+    libcairo2-dev
+
+    # ~~~~~ MINICONDA ~~~~~ #
+    wget https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86_64.sh && \
+    bash Miniconda3-4.4.10-Linux-x86_64.sh -b -p /conda && \
+    rm -f Miniconda3-4.4.10-Linux-x86_64.sh
+    conda config --add channels defaults
+    conda config --add channels bioconda
+
+    # ~~~~~ R ~~~~~ #
+    conda install -y -c r \
+    r=3.4.3 \
+    r-base=3.4.3 \
+    pandoc=2.2.3.2 \
+    r-reshape2=1.4.3 \
+    r-knitr=1.18 \
+    r-rmarkdown=1.8 \
+    r-ggplot2=2.2.1 \
+    r-dt=0.2
+    conda install -y -c conda-forge \
+    r-plotly=4.7.1
+
+%test
+    Rscript -e 'library("reshape2")'
+    Rscript -e 'library("knitr")'
+    Rscript -e 'library("rmarkdown")'
+    Rscript -e 'library("ggplot2")'
+    Rscript -e 'library("DT")'
+    Rscript -e 'library("plotly")'
+
+%environment
+    export PATH="/conda/bin:${PATH}"
+    export LC_ALL="C.UTF-8"
+    export LANG="C.UTF-8"

@@ -1,0 +1,211 @@
+Bootstrap: docker
+From: matmu/vep:99-GRCh37
+
+%labels
+Maintainer Matthias Munz <m.munz@uni-luebeck.de>
+
+%help
+VEP 99-GRCh37. Available VEP cache: merged (VEP command --merged). 
+Available apps: 
+  vep
+  vep_tab (output format tab)
+  vep_vcf (output format tab)
+  filter_vep
+
+View app specific help section for more details (e.g. singularity run-help --app vep_tab vep.99-GRCh37.simg).
+
+%environment
+    export PATH=/opt/vep/src/ensembl-vep/:${PATH}
+    export CACHE=/opt/vep/.vep
+
+%apprun vep
+    exec vep --dir $CACHE \
+        --species homo_sapiens \
+        --assembly GRCh37 \
+        --merged \
+        --cache \
+        --offline \
+        --verbose "$@"
+    
+%apphelp vep
+    Args: [vep-parameters]
+    Command executed (For parameter explanations see http://uswest.ensembl.org/info/docs/tools/vep/script/vep_options.html) :
+    vep --dir $CACHE
+        --species homo_sapiens
+        --assembly GRCh37
+        --merged
+        --cache
+        --offline
+        --verbose [vep-parameters]
+
+%apprun vep_vcf
+    exec vep --dir $CACHE \
+        --input_file $1 \
+        --output_file $2 \
+        --species homo_sapiens \
+        --assembly GRCh37 \
+        --check_ref \
+        --vcf \
+        --merged \
+        --cache \
+        --offline \
+        --verbose \
+        --force_overwrite \
+        --sift b \
+        --polyphen b \
+        --ccds \
+        --uniprot \
+        --hgvs \
+        --symbol \
+        --numbers \
+        --domains \
+        --regulatory \
+        --canonical \
+        --protein \
+        --biotype \
+        --uniprot \
+        --tsl \
+        --appris \
+        --gene_phenotype \
+        --af \
+        --af_1kg \
+        --af_esp \
+        --af_gnomad \
+        --max_af \
+        --pubmed \
+        --variant_class \
+        --total_length \
+        --check_existing \
+        --total_length 
+    
+%apphelp vep_vcf
+    Args: input.vcf[.gz] outout.vcf
+    Output format: vcf
+    Command executed (For parameter explanations see http://uswest.ensembl.org/info/docs/tools/vep/script/vep_options.html) :
+    Runs /opt/vep/src/ensembl-vep/vep --dir $CACHE
+        --input_file INPUT_FILE
+        --output_file OUTPUT_FILE
+        --species homo_sapiens
+        --assembly GRCh37
+        --check_ref
+        --vcf
+        --merged
+        --cache
+        --offline
+        --verbose
+        --force_overwrite
+        --sift b
+        --polyphen b
+        --ccds
+        --uniprot
+        --hgvs
+        --symbol
+        --numbers
+        --domains
+        --regulatory
+        --canonical
+        --protein
+        --biotype
+        --uniprot
+        --tsl
+        --appris
+        --gene_phenotype
+        --af
+        --af_1kg
+        --af_esp
+        --af_gnomad
+        --max_af
+        --pubmed
+        --variant_class 
+        --total_length
+        --check_existing
+        --total_length
+
+%apprun vep_tab
+    exec vep --dir $CACHE \
+        --input_file $1 \
+        --output_file $2 \
+        --species homo_sapiens \
+        --assembly GRCh37 \
+        --check_ref \
+        --tab \
+        --merged \
+        --cache \
+        --offline \
+        --verbose \
+        --force_overwrite \
+        --sift b \
+        --polyphen b \
+        --ccds \
+        --uniprot \
+        --hgvs \
+        --symbol \
+        --numbers \
+        --domains \
+        --regulatory \
+        --canonical \
+        --protein \
+        --biotype \
+        --uniprot \
+        --tsl \
+        --appris \
+        --gene_phenotype \
+        --af \
+        --af_1kg \
+        --af_esp \
+        --af_gnomad \
+        --max_af \
+        --pubmed \
+        --variant_class \
+        --total_length \
+        --check_existing \
+        --total_length
+    
+%apphelp vep_tab
+    Args: input.vcf[.gz] outout.txt
+    Output format: tab-delimited
+    Command executed (For parameter explanations see http://uswest.ensembl.org/info/docs/tools/vep/script/vep_options.html) :
+    Runs /opt/vep/src/ensembl-vep/vep --dir $CACHE
+        --input_file INPUT_FILE
+        --output_file OUTPUT_FILE
+        --species homo_sapiens
+        --assembly GRCh37
+        --check_ref
+        --tab
+        --merged
+        --cache
+        --offline
+        --verbose
+        --force_overwrite
+        --sift b
+        --polyphen b
+        --ccds
+        --uniprot
+        --hgvs
+        --symbol
+        --numbers
+        --domains
+        --regulatory
+        --canonical
+        --protein
+        --biotype
+        --uniprot
+        --tsl
+        --appris
+        --gene_phenotype
+        --af
+        --af_1kg
+        --af_esp
+        --af_gnomad
+        --max_af
+        --pubmed
+        --variant_class 
+        --total_length
+        --check_existing
+        --total_length
+
+%apprun filter_vep
+    exec filter_vep
+    
+%apphelp filter_vep
+    Runs /opt/vep/src/ensembl-vep/filter_vep

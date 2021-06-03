@@ -1,0 +1,14 @@
+bootstrap: docker
+from: continuumio/anaconda:5.3.0
+
+%environment
+
+PATH=/opt/conda/bin:${PATH}
+
+
+%post
+
+apt-get update
+apt-get install -y qt5-default libgl1-mesa-glx libglu1-mesa  xcb libqt5gui5
+/opt/conda/bin/conda install -c schrodinger pymol
+

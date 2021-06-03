@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%setup
+mkdir -p ${SINGULARITY_ROOTFS}/src/test
+
+%files
+
+%labels
+maintainer ecksteinn@janelia.hhmi.org
+
+%post
+apt-get update
+apt-get install -y software-properties-common
+add-apt-repository ppa:jonathonf/python-3.6
+apt-get update
+apt-get install -y --no-install-recommends python3.6
+rm -rf /var/lib/apt/lists/*
+
+%environment
+export AM_I_IN_A_CONTAINER=yes
+
+%runscript
+exec /bin/bash "$@"

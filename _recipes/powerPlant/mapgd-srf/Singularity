@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer tejas.sevak@plantandfood.co.nz
+Version 0.4.38-d3edee2
+
+%post
+  ## Download build prerequisites
+  apt-get -y update
+  apt-get -y install g++ git gettext libgomp1 libgsl-dev libgsl23 libgslcblas0 libhts2 libhts-dev libsqlite3-0 libsqlite3-dev make zlib1g-dev
+
+  git clone https://github.com/LynchLab/MAPGD.git
+  cd /MAPGD
+  git checkout d3edee2
+  ./configure
+  make && make install
+
+  ## Cleanup
+  apt-get -y remove g++ git gettext libgsl-dev libhts-dev libsqlite3-dev make
+  apt-get -y autoremove
+  apt-get -y clean all
+  rm -rf /MAPGD*
+
+%runscript
+ exec mapgd "$@"

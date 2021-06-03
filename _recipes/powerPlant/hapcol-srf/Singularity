@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 97d4a5e
+
+%post
+  ## Download build prerequisites
+  apt-get update 
+  apt-get -y install cmake g++ git make 
+
+  ## Build
+  cd /opt/
+  git clone https://github.com/AlgoLab/HapCol.git
+  cd HapCol/
+  git checkout 97d4a5e
+  mkdir -p build
+  cd build/
+  apt-get install 
+  cmake ../src
+  make
+  make install
+
+  ## Cleanup
+  cd /opt
+  rm -rf *
+  apt-get -y remove cmake g++ git make
+  apt-get -y autoremove
+
+%runscript
+  exec hapcol "$@"

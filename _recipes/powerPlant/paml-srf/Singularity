@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 4.9i
+
+%environment
+  export PATH=/opt/paml4.9i/bin:${PATH}
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install make gcc wget
+
+  cd /opt
+  wget http://abacus.gene.ucl.ac.uk/software/paml4.9i.tgz
+  tar -xzf paml4.9i.tgz
+  cd paml4.9i
+  rm -rf bin/*.exe
+  cd src
+  make -f Makefile
+  rm -f *.o
+  mv baseml basemlg codeml pamp evolver yn00 chi2 ../bin
+
+  ## Cleanup
+  rm -f /opt/paml4.9i.tgz
+  apt-get -y remove make gcc wget
+  apt-get -y autoremove
+  apt-get -y clean all
+
+%runscript
+if [ $# -eq 0 ]; then
+  /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"$SINGULARITY_NAME <cmd>\" or \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+  cd /opt/paml4.9i/bin
+  exec ls baseml basemlg codeml pamp evolver yn00 chi2
+else
+  exec "$@"
+fi

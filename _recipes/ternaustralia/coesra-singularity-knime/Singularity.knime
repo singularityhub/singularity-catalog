@@ -1,0 +1,19 @@
+BootStrap: docker
+From: ubuntu:18.04
+
+%startscript
+
+
+%runscript
+  exec /opt/knime/knime_3.3.1/knime 
+
+%environment
+
+%post
+  apt update -y
+  apt-get install -y software-properties-common wget locales default-jre
+  locale-gen en_AU.UTF-8 
+  mkdir /opt/knime
+  cd /opt/knime
+  wget --no-check-certificate https://download.knime.org/analytics-platform/linux/knime_3.3.1.linux.gtk.x86_64.tar.gz
+  tar -xvzf /opt/knime/knime_3.3.1.linux.gtk.x86_64.tar.gz

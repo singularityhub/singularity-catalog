@@ -1,0 +1,17 @@
+bootstrap: docker
+from: nvidia/cuda:9.2-runtime-centos7
+
+%environment
+
+%post
+
+yum install -y unzip libtiff
+
+VERSION=MotionCor2_1.2.6
+cd /usr/local/bin
+curl -L 'https://drive.google.com/uc?export=download&id=1aTHT1ivaDnkuC2Z11hx9onTijhdwHKXC' > ${VERSION}.zip 
+#curl http://msg.ucsf.edu/MotionCor2/${VERSION}.zip > ${VERSION}.zip
+unzip ${VERSION}.zip
+rm -f ${VERSION}.zip
+
+ln -sf ${VERSION}-Cuda92 MotionCor2

@@ -1,0 +1,22 @@
+Bootstrap:shub
+From:ResearchIT/spack-singularity:spack
+
+%labels
+MAINTAINER baber@iastate.edu
+
+%environment
+source /etc/profile.d/modules.sh
+module load openmpi
+
+%post
+export SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+
+source $SPACK_ROOT/share/spack/setup-env.sh
+
+spack install openmpi schedulers=slurm
+
+%runscript
+exec mpirun "$@"
+

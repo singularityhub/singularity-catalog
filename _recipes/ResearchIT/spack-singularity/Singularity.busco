@@ -1,0 +1,109 @@
+Bootstrap:shub
+From:ResearchIT/spack-singularity:openmpi
+
+%labels
+MAINTAINER baber@iastate.edu
+APPLICATION busco
+
+%help
+This container provides busco v3 and the corresponding lineage profile libraries.
+Before using the container for the first time, run the 'augustus_setup' command.
+
+To run busco:
+$ ./busco.simg -in infile -out outfile...etc.
+
+%environment
+source /etc/profile.d/modules.sh
+module load busco
+
+%post
+export SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+
+yum -y install bc paste
+yum clean all
+
+export FORCE_UNSAFE_CONFIGURE=1 
+
+source $SPACK_ROOT/share/spack/setup-env.sh
+spack install busco@3.0.1
+
+#busco config
+export BUSCODIR=$(spack location -i busco)
+cp $BUSCODIR/config/config.ini.default $BUSCODIR/config/config.ini
+grep --line-number '\[tblastn\]' $BUSCODIR/config/config.ini | cut -d ':' -f 1 | (tail -n 1 && echo 2) | paste -sd+ - | bc | xargs -I linenum sed -i "linenums|/usr/bin/|$(spack location -i blast-plus)/bin|g" $BUSCODIR/config/config.ini
+grep --line-number '\[makeblastdb\]' $BUSCODIR/config/config.ini | cut -d ':' -f 1 | (tail -n 1 && echo 2) | paste -sd+ - | bc | xargs -I linenum sed -i "linenums|/usr/bin/|$(spack location -i blast-plus)/bin|g" $BUSCODIR/config/config.ini
+sed -i "s|/home/osboxes/BUSCOVM/augustus/augustus-3.2.2/bin/|$(spack location -i augustus)/bin|g" $BUSCODIR/config/config.ini
+sed -i "s|/home/osboxes/BUSCOVM/augustus/augustus-3.2.2/scripts/|$(spack location -i augustus)/scripts|g" $BUSCODIR/config/config.ini
+sed -i "s|/home/osboxes/BUSCOVM/hmmer/hmmer-3.1b2-linux-intel-ia32/binaries/|$(spack location -i hmmer)/bin|g" $BUSCODIR/config/config.ini
+
+# get lineage profile libraries
+# http://busco.ezlab.org/frame_wget.html
+
+# Bacteria
+wget http://busco.ezlab.org/v2/datasets/bacteria_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/proteobacteria_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/rhizobiales_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/betaproteobacteria_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/gammaproteobacteria_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/enterobacteriales_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/deltaepsilonsub_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/actinobacteria_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/cyanobacteria_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/firmicutes_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/clostridia_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/lactobacillales_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/bacillales_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/bacteroidetes_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/spirochaetes_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/tenericutes_odb9.tar.gz
+        
+# Eukaryota
+wget http://busco.ezlab.org/v2/datasets/eukaryota_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/fungi_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/microsporidia_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/dikarya_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/ascomycota_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/pezizomycotina_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/eurotiomycetes_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/sordariomyceta_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/saccharomyceta_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/saccharomycetales_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/basidiomycota_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/metazoa_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/nematoda_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/arthropoda_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/insecta_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/endopterygota_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/hymenoptera_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/diptera_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/vertebrata_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/actinopterygii_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/tetrapoda_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/aves_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/mammalia_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/euarchontoglires_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/laurasiatheria_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/embryophyta_odb9.tar.gz
+wget http://busco.ezlab.org/v2/datasets/protists_ensembl.tar.gz
+wget http://busco.ezlab.org/v2/datasets/alveolata_stramenophiles_ensembl.tar.gz
+    
+%runscript
+exec run_BUSCO.py "$@"
+
+#######################
+# augustus_config     #
+#######################
+
+%apphelp augustus_config
+Augustus attempts to write gene model prediction into the config directory
+which is inside the container, and read-only. This command sets up a copy of 
+the config in your home dir where you have write permissions
+
+$ singularity run --app augustus_config busco.simg
+
+This will copy the Augustus config into your homedir where you have write access.
+
+%apprun augustus_config
+mkdir ~/augsuts_config/ && cp -r $(spack -i augustus)/config ~/augstus_config

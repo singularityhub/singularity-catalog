@@ -1,0 +1,43 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+  R_Version 3.5.1
+
+%environment
+  export LANG=en_US.UTF-8
+  export LC_ALL=en_US.UTF-8
+
+%apprun R
+  exec R "--no-save --quiet --no-restore --no-environ $@"
+
+%apprun Rscript
+  exec Rscript "--no-restore --no-environ $@"
+
+%runscript
+  exec R "--no-save --quiet --no-restore --no-environ $@"
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export APT_OPTS="-y -o DPkg::Options::=--force-confdef"
+  export VERSION="3.5.1"
+  export MAKE="make -j 17"
+  apt-get update
+  apt-get install $APT_OPTS locales
+  echo "LC_ALL=en_US.UTF-8" >> /etc/environment
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  echo "LANG=en_US.UTF-8" > /etc/locale.conf
+  locale-gen en_US.UTF-8
+  
+  apt-get install $APT_OPTS wget libopenblas-dev build-essential gfortran libreadline-dev libbz2-dev zlib1g-dev libpng-dev libjpeg-dev liblzma-dev libpcre3-dev libcurl4-openssl-dev libcairo2-dev
+  
+  cd /tmp
+  wget https://cran.r-project.org/src/base/R-3/R-${VERSION}.tar.gz
+  tar zxf R-${VERSION}.tar.gz
+  cd R-${VERSION}
+  ./configure --with-cairo=yes --with-x=no --enable-R-shlib=yes --enable-memory-profiling=no --with-blas="-lopenblas" --with-lapack
+  make && make install
+  echo "options(bitmapType='cairo')" >> /usr/local/lib/R/etc/Rprofile.site
+  rm -rf /tmp/R-*
+  apt-get autoclean
+

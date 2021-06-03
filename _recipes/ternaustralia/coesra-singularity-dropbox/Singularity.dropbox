@@ -1,0 +1,17 @@
+BootStrap: docker
+From: ubuntu:16.04
+
+
+%startscript
+   /usr/bin/dropbox
+
+%runscript
+   exec /usr/bin/dropbox
+
+%post
+  apt update -y
+  apt install -y curl
+
+  curl -Lo dropbox_2019.02.14_amd64.deb https://linux.dropbox.com/packages/ubuntu/dropbox_2019.02.14_amd64.deb
+  apt install -y ./dropbox_2019.02.14_amd64.deb
+

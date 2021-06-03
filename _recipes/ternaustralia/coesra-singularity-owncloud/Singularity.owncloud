@@ -1,0 +1,17 @@
+BootStrap: docker
+From: centos:7
+IncludeCmd: yum
+
+%runscript
+   exec /opt/ownCloud/ownCloud/bin/owncloud
+   
+%startscript
+
+%post
+    yum -y update
+    yum -y install wget
+    
+    cd /etc/yum.repos.d/
+    wget https://download.opensuse.org/repositories/isv:ownCloud:desktop/CentOS_7/isv:ownCloud:desktop.repo
+
+    yum -y install owncloud-client

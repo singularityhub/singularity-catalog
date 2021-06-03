@@ -1,0 +1,107 @@
+Bootstrap: docker
+From: python:3.8.2
+
+
+%environment
+    export Author="Vivek Katial"
+    export LC_ALL=C
+    export PATH=/usr/games:$PATH
+
+    # Declare experiment environment variables
+    EXPERIMENT_NAME=qaoa_three_sat
+    # Declare mlflow environment variables
+    MLFLOW_S3_ENDPOINT_URL=https://objects.storage.unimelb.edu.au
+    MLFLOW_PYTHON_BIN=/usr/local/bin/python
+    MLFLOW_BIN=/usr/local/bin/mlflow
+    S3_BUCKET=s3://qaoa_three_sat
+
+    # Export env vars for LC_ALL
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+    # Export env vars
+    export EXPERIMENT_NAME \
+      MLFLOW_S3_ENDPOINT_URL \
+      MLFLOW_PYTHON_BIN \
+      MLFLOW_BIN \
+      S3_BUCKET
+
+%post
+  # Print image info
+  cat /etc/os-release
+  ls
+
+  # Software versions
+  # Get dependencies
+  apt-get update && apt-get install -y gnupg2
+  apt-key update
+  apt-get install -y --no-install-recommends \
+    locales \
+    ca-certificates \
+    gcc
+
+  # Configure default locale
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  locale-gen en_US.utf8
+  /usr/sbin/update-locale LANG=en_US.UTF-8
+  export LC_ALL=en_US.UTF-8
+  export LANG=en_US.UTF-8
+
+  ####################################################
+  # Python / QISKit Installation
+  ####################################################
+
+  pip install --upgrade pip
+  git clone https://github.com/vivekkatial/qaoa-three-sat.git
+  cd qaoa-three-sat
+  pip install -r requirements.txt
+
+  ####################################################
+  # AWS Installation
+  ####################################################
+
+  apt-get update
+  apt-get install -y --no-install-recommends --allow-unauthenticated \
+    awscli
+
+
+####################################################
+# APP TO RUN EXPERIMENT
+####################################################
+
+%apphelp run_experiment
+  This is the help for running experiments. To run an experiment feed the following Arguments: 
+    - ARG_1=<INSTANCE_FILENAME>
+    - ARG_2=<PARAMETER_FILE_FOR_QAOA>
+    - ARG_3=<MLFLOW_TRACKING>
+
+%applabels run_experiment
+  APP_NAME RUNNING_EXPERIMENTS
+
+%apprun run_experiment
+  # Argument Array
+  args_array="$@"
+  # Print valid arguments
+  echo $args_array
+
+  # Parse input args in Dash
+  oldIFS=$IFS
+  IFS=":"
+  set -- $args_array
+  echo "INSTANCE_FILENAME=$1"
+  echo "PARAMETER_FILE_FOR_QAOA=$2"
+  echo "MLFLOW_TRACKING=$3"      
+  export INSTANCE_FILENAME="$1"
+  export PARAMETER_FILE_FOR_QAOA="$2"
+  export MLFLOW_TRACKING="$3"
+  IFS=$oldIFS
+  
+  # Run experiment
+  python run/main_qaoa.py --instance=$INSTANCE_FILENAME --params_file=$PARAMETER_FILE_FOR_QAOA --track_mlflow=$MLFLOW_TRACKING
+
+
+%runscript
+  echo "Container was created $NOW"
+  echo "Run one of the built apps. You're not running anything!"
+
+%labels
+    Author Vivek Katial

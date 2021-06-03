@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: charade/xlibbox@sha256:04b1aca63f51cd18972b44380a7fcf2da0115c9e21e80fb9d375f39f229f686d
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 3516c2f
+
+%environment
+  SWAN_BIN=/opt/swan/bin
+  PATH=$SWAN_BIN:$PATH
+  export SWAN_BIN PATH
+
+%post
+  cd /tmp
+  git clone https://charade@bitbucket.org/charade/swan.git
+  cd swan
+  git checkout 3516c2f
+  
+  export SWAN_BIN=/opt/swan/bin
+  mkdir -p $SWAN_BIN
+  cd /tmp
+  R CMD INSTALL swan
+
+%runscript
+if [ $# -eq 0 ]; then
+  /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"$SINGULARITY_NAME <cmd>\" or \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+  exec /bin/echo "sclip_scan swan_join swan_scan swan_stat"
+else
+  exec "$@"
+fi
+

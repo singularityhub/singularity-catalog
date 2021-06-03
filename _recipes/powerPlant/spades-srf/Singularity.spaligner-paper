@@ -1,0 +1,17 @@
+# Recipe generated from template version 
+
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+    Maintainer @plantandfood.co.nz
+    Version spaligner-paper
+    Template_Version  
+
+%post
+    ## Download build prerequisites
+    apt-get update
+    apt-get -y install git  
+
+%runscript
+	echo hello spaligner-paper 

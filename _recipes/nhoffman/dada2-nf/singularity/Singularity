@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: bioconductor/release_core2:R3.5.1_Bioc3.7
+
+%files
+    ../setup.R /tmp/
+
+%post
+    DADA2_COMMIT=SHA /usr/local/bin/Rscript /tmp/setup.R
+    mkdir -p /app /fh /mnt /run/shm
+
+%runscript
+    exec /usr/local/bin/R "$@"

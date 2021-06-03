@@ -1,0 +1,20 @@
+BootStrap: docker
+From: ubuntu:18.04
+
+%startscript
+
+
+%runscript
+  /opt/panoply/PanoplyJ/panoply.sh 
+
+%environment
+
+%post
+  apt update -y
+  apt-get install -y software-properties-common wget locales default-jre
+  locale-gen en_AU.UTF-8
+ 	
+  mkdir /opt/panoply
+  cd /opt/panoply
+  wget https://www.giss.nasa.gov/tools/panoply/download/PanoplyJ-4.10.8.tgz
+  tar -xvzf /opt/panoply/PanoplyJ-4.10.8.tgz

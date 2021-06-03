@@ -1,0 +1,19 @@
+Bootstrap: shub
+From: khanlab/neuroglia-core-minc:v1.0.0
+
+
+#########
+%setup
+#########
+mkdir $SINGULARITY_ROOTFS/src
+cp -Rv . $SINGULARITY_ROOTFS/src
+
+#########
+%post
+#########
+
+#########
+%environment
+
+%runscript
+/src/7TBEAST $@

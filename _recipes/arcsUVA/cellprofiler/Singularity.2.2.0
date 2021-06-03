@@ -1,0 +1,61 @@
+BootStrap: docker
+From: ubuntu:xenial
+IncludeCmd: yes
+
+%post
+    apt-get update
+    apt-get -y upgrade
+    apt-get -y install     \
+        build-essential    \
+        cython             \
+        git                \
+        wget               \
+        libmysqlclient-dev \
+        libhdf5-dev        \
+        libxml2-dev        \
+        libxslt1-dev       \
+        openjdk-8-jdk      \
+        python-dev         \
+        python-pip         \
+        python-vigra       \
+        python-h5py        \
+        python-mysqldb     \
+        python-scipy       \
+        python-wxgtk3.0    \
+        python-zmq         \
+        python-pytest      \
+        libcanberra-gtk-module \
+        packagekit-gtk3-module
+
+    # CellProfiler
+    VERSION=2.2.0
+    TARBALL=${VERSION}.tar.gz
+    cd /opt
+    wget https://github.com/CellProfiler/CellProfiler/archive/${TARBALL}
+    tar xzvf ${TARBALL}
+    unset JAVA_TOOL_OPTIONS
+    cd CellProfiler-${VERSION}
+    # python -m pip install --upgrade pip
+    pip install \
+        numpy==1.12.0 \
+        javabridge==1.0.14 \
+        matplotlib==2.2.3 \
+        Pillow==4.3
+    pip install --editable .
+    rm /opt/${TARBALL}
+
+%runscript
+    exec cellprofiler
+
+%help
+This container provides the following applications:
+    * CellProfiler 2.2.0
+    * Python 2.7
+    * Java JDK 8
+
+%environment
+    export PATH=/opt/CellProfiler-2.2.0:$PATH
+    export JAVA_TOOL_OPTIONS="-Xss1280k $JAVA_TOOL_OPTIONS"
+
+%labels
+    AUTHOR khs3z@virginia.edu

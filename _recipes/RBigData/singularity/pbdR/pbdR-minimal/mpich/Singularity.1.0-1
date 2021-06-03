@@ -1,0 +1,51 @@
+Bootstrap: localimage
+From: ../../../R/r-minimal/r-minimal_3.5.1.simg
+
+
+%labels
+  R_Version 3.5.1
+  pbdR_Version 1.0-1
+
+%environment
+  export LANG=en_US.UTF-8
+  export LC_ALL=en_US.UTF-8
+
+%apprun R
+  exec R "--no-save --quiet --no-restore --no-environ $@"
+
+%apprun Rscript
+  exec Rscript "--no-restore --no-environ $@"
+
+%apprun pbdR
+  exec pbdR "$@"
+
+%runscript
+  exec pbdR "$@"
+
+
+
+%files
+  pbdR /usr/local/bin/pbdR
+
+%post
+  MAKE="make -j 17"
+  VERSION="1.0-1"
+  
+  apt-get update && apt-get install -y libmpich-dev
+  
+  cd /tmp \
+    && wget -q https://pbdr.org/releases/pbdR_${VERSION}.tar.gz \
+    && tar zxf pbdR_${VERSION}.tar.gz
+
+  echo "options(repos=structure(c(CRAN='https://cran.rstudio.com/'))) ; \
+    utils::rc.settings(ipck=TRUE); \
+    " > /usr/local/lib/R/etc/Rprofile.site
+  Rscript -e "install.packages('remotes')"
+
+  cd /tmp/pbdR_${VERSION} \
+    && make MPI
+
+  echo "options(bitmapType='cairo')" >> /usr/local/lib/R/etc/Rprofile.site
+
+  rm -rf /tmp/*
+

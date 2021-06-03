@@ -1,0 +1,32 @@
+BootStrap: docker
+From: centos:7
+
+%post
+    yum update -y && \
+    yum install -y wget \
+    which \
+    make \
+    cmake \
+    gcc \
+    gcc-c++ \
+    zlib-devel.x86_64 \
+    bzip2 \
+    unzip && \
+    cd /usr/local/bin && \
+    wget ftp://webdata2:webdata2@ussd-ftp.illumina.com/downloads/software/bcl2fastq/bcl2fastq2-v2.17.1.14.tar.zip && \
+    unzip bcl2fastq2-v2.17.1.14.tar.zip && \
+    gunzip bcl2fastq2-v2.17.1.14.tar.gz && \
+    tar -xf bcl2fastq2-v2.17.1.14.tar && \
+    rm -f bcl2fastq2-v2.17.1.14.tar bcl2fastq2-v2.17.1.14.tar.zip && \
+    cd bcl2fastq && \
+    mkdir build && \
+    cd build && \
+    ../src/configure --prefix=/usr/local/bin/bcl2fastq && \
+    make && \
+    make install 
+
+%environment
+    export PATH=/usr/local/bin/bcl2fastq/bin/:${PATH}
+
+%test
+    /usr/local/bin/bcl2fastq/bin/bcl2fastq --version

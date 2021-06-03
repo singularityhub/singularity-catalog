@@ -1,0 +1,25 @@
+Bootstrap: localimage
+From: ../r/r_3.5.1.simg
+
+%labels
+  Rstudio_Version 1.1.456
+
+%apprun rstudio
+  exec rstudio "$@"
+
+%runscript
+  exec rstudio "$@"
+
+
+
+%post
+  export VERSION="1.1.456"
+  cd /tmp \
+    && wget https://download1.rstudio.org/rstudio-xenial-${VERSION}-amd64.deb
+  
+  apt-get update
+  apt-get install -y libedit2 libssl-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libssl1.0.0 libxcomposite-dev libxslt1-dev libqt5core5a libqt5gui5 libqt5widgets5 libqt5network5 libqt5webkit5 libqt5printsupport5 libqt5dbus5 libjpeg62-dev
+  
+  dpkg -i /tmp/rstudio-xenial-${VERSION}-amd64.deb
+
+  echo "options(bitmapType='cairo')" >> /usr/local/lib/R/etc/Rprofile.site

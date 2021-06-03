@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: spellrun/tensorflow
+
+%post
+   # in-container bind points for shared filesystems
+   mkdir -p /extra /rsgrps /xdisk /uaopt /cm/shared /cm/local
+   pip install click
+   pip install numpy
+   pip install Pillow
+   pip install matplotlib
+   pip install keras
+   pip install scikit-image

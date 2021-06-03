@@ -1,0 +1,57 @@
+bootstrap: docker
+from: ubuntu:18.04
+
+%environment
+
+export PATH=/opt/relion/bin/:${PATH}:/opt/lsf/curr/bin
+export LD_LIBRARY_PATH=/opt/relion/lib:${LD_LIBRARY_PATH}
+
+%post
+
+apt-get update
+apt-get install -y \
+    curl wget binutils xxdiff libqt4-opengl \
+    libx11-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev libxext-dev libxfixes-dev libxcursor-dev x11-utils libxinerama-dev \
+    libgomp1
+#    gnuplot unzip ghostscript evince csh
+
+###
+# install openmpi
+###
+#TMPDIR=`mktemp -d -t` \
+#  && cd ${TMPDIR} \
+#  && git clone https://github.com/open-mpi/ompi.git \
+#  && cd ompi \
+#  && git checkout v4.0.0 \
+#  && ./autogen.pl \
+#  && ./configure --prefix=/usr/ \
+#  && make -j 16 \
+#  && make install \
+#  && /usr/bin/mpicc examples/ring_c.c -o /usr/bin/mpi_ring \
+#  && rm -rf ${TMPDIR}
+
+###
+# xds bins
+###
+mkdir -p /opt/xds/ \
+  && cd /opt/xds \
+  && curl ftp://ftp.mpimf-heidelberg.mpg.de/pub/kabsch/XDS-INTEL64_Linux_x86_64.tar.gz | tar xvfz - \
+  && cd /usr/local/bin \
+  && ln -sf /opt/xds/XDS-INTEL64_Linux_x86_64/* .
+
+###
+# gui
+###
+mkdir -p /opt/xds/ \
+  && cd /opt/xds \
+  && curl ftp://turn5.biologie.uni-konstanz.de/pub/linux_bin/get_folder.sh | sh
+
+
+###
+# clean up
+### 
+apt-get clean
+rm -rf /var/lib/apt/lists/*
+rm -rf /var/tmp/*
+
+

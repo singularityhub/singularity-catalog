@@ -1,0 +1,32 @@
+BootStrap: shub
+From: shub://willgpaik/qt5_aci:dsi_mrtrix3
+%setup
+
+%files
+
+%environment
+    #bash
+    PATH="$PATH:/opt/sw/dsistudio/build/:/opt/sw/mrtrix3/bin/"
+    export PATH
+    FSLDIR=/usr/local/fsl
+    . ${FSLDIR}/etc/fslconf/fsl.sh
+    PATH=${FSLDIR}/bin:${PATH}
+    export FSLDIR PATH
+
+%runscript
+
+
+%post
+    yum install -y mesa-libGLU-devel.i686 \
+        mesa-libGL-devel.i686 \
+        libcanberra-gtk*
+    # FSLView requirements 
+    yum -y install libpng12-devel libmng-devel
+
+    source /opt/rh/devtoolset-7/enable
+    
+    cd /tmp
+    wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py
+    python fslinstaller.py -d /usr/local/fsl
+    rm fslinstaller.py
+    

@@ -1,0 +1,26 @@
+BootStrap: docker
+From: ubuntu:16.04
+
+%post
+    apt-get update && \
+    apt-get install -y \
+    wget \
+    make \
+    gcc \
+    gettext
+
+    cd /opt/ && \
+    wget https://managedway.dl.sourceforge.net/project/dos2unix/dos2unix/7.4.0/dos2unix-7.4.0.tar.gz && \
+    tar -xzf dos2unix-7.4.0.tar.gz && \
+    rm -f dos2unix-7.4.0.tar.gz && \
+    cd dos2unix-7.4.0 && \
+    make
+
+
+%test
+    dos2unix --version
+
+%environment
+    export PATH="/opt/dos2unix-7.4.0:$PATH"
+    export LC_ALL="C.UTF-8"
+    export LANG="C.UTF-8"

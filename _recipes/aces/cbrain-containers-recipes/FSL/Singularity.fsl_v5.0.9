@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: neurodebian:artful-non-free
+
+#####################################################
+#                                                   #
+# MCIN (McGill Centre for Integrative Neuroscience) #
+#                                                   #
+# Singularity recipe for FSL to build a container   #
+# used in CBRAIN (https://github.com/aces/cbrain)   #
+#                                                   #
+#####################################################
+
+%labels
+  Maintainer Natacha Beck
+
+%help
+This container executes any fsl-core command, and it contain all the fsl data too. 
+For more information see FSL website: https://fsl.fmrib.ox.ac.uk/fsl/fslwiki
+
+%post
+  apt-get update
+  apt-get install -y fsl-complete
+
+%environment
+  export FSLDIR=/usr/share/fsl/5.0 
+  export FSLOUTPUTTYPE=NIFTI_GZ 
+  export PATH=/usr/lib/fsl/5.0:$PATH 
+  export FSLMULTIFILEQUIT=TRUE 
+  export POSSUMDIR=/usr/share/fsl/5.0 
+  export LD_LIBRARY_PATH=/usr/lib/fsl/5.0:$LD_LIBRARY_PATH 
+  export FSLTCLSH=/usr/bin/tclsh 
+  export FSLWISH=/usr/bin/wish 
+  export FSLOUTPUTTYPE=NIFTI_GZ

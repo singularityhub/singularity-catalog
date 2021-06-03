@@ -1,0 +1,86 @@
+Bootstrap: docker
+From: ubuntu:20.04
+%labels
+MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
+%post
+#
+export DEBIAN_FRONTEND=noninteractive
+export nwchem_hash=a47c6fdba472b95c5929fffc62af2200207c3fb7
+export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
+
+#SHELL ["/bin/bash", "-c"]
+export SINGULARITY_SHELL=/bin/bash
+export SHELL=/bin/bash
+
+export ARMCI_NETWORK=MPI-PR
+export NWCHEM_TOP=/opt/nwchem-$nwchem_hash
+export NWCHEM_TARGET=LINUX64
+export NWCHEM_MODULES="all python"
+export BLASOPT=" -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core  -lpthread -lm -ldl"
+export LAPACK_LIB="-lmkl_intel_ilp64 -lmkl_sequential -lmkl_core  -lpthread -lm -ldl"
+export SCALAPACK_LIB=" -lmkl_scalapack_ilp64 -lmkl_blacs_intelmpi_ilp64 -lpthread -lm -ldl"
+export BLAS_SIZE=8
+export SCALAPACK_SIZE=8
+export USE_64TO32=y
+export USE_FPICF=y
+export USE_MPI=y
+export USE_MPIF=y
+export USE_MPIF4=y
+apt-get update \
+&& apt-get -y upgrade \
+&& apt-get install -y  gfortran   make ssh patch curl subversion wget unzip perl git file python3 python3-dev gnupg2 software-properties-common \
+&& cd /tmp  \
+&& wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB \
+&& apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB  \
+&& rm GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB  \
+&& echo "deb https://apt.repos.intel.com/oneapi all main" | tee /etc/apt/sources.list.d/oneAPI.list \
+&& add-apt-repository "deb https://apt.repos.intel.com/oneapi all main" \
+&& apt-get update \
+&& apt install -y intel-oneapi-ifort intel-oneapi-mpi intel-oneapi-mpi-devel intel-oneapi-mkl intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic \
+&& apt-get clean 
+
+bash -c "source /opt/intel/oneapi/setvars.sh;  \
+cd /opt;curl -SL     https://github.com/nwchemgit/nwchem/archive/$nwchem_hash.tar.gz | tar xzf - \
+&& cd nwchem-$nwchem_hash/src \
+&& make nwchem_config && make FC=ifort -j3 \
+&& rm -rf tce tools nwdft NWints geom symmetry util nwxc ddscf lapack blas rism argos peigs rmdft gradients symmetry property smd lucia dplot propery hessian ccsd mp2_grad moints cafe analyz dimqm /opt/nwchem/lib ../../QA \
+         && apt-get -y purge  make curl subversion  unzip cmake perl tcsh intel-oneapi-ifort intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic intel-oneapi-tbb-devel intel-oneapi-tbb &&  apt-get -y autoremove && apt -y install intel-oneapi-mkl && apt-get clean"
+
+%environment
+#hybrid MPI model
+#export IMPI_DIR=/opt/impi
+#export SINGULARITY_IMPI_DIR=$IMPI_DIR
+#export SINGULARITYENV_APPEND_PATH=$IMPI_DIR/bin
+#export SINGULARITYENV_APPEND_LD_LIBRARY_PATH=$IMPI_DIR/lib
+
+export nwchem_hash=a47c6fdba472b95c5929fffc62af2200207c3fb7
+export NWCHEM_TOP=/opt/nwchem-$nwchem_hash
+export NWCHEM_TARGET=LINUX64
+export NWCHEM_MODULES="nwdft driver stepper solvation"
+export BLASOPT=" -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core  -lpthread -lm -ldl"
+export LAPACK_LIB="-lmkl_intel_ilp64 -lmkl_sequential -lmkl_core  -lpthread -lm -ldl"
+export SCALAPACK_LIB=" -lmkl_scalapack_ilp64 -lmkl_blacs_intelmpi_ilp64 -lpthread -lm -ldl "
+export BLAS_SIZE=8
+export SCALAPACK_SIZE=8
+export USE_64TO32=y
+export USE_FPICF=y
+export USE_MPI=y
+export USE_MPIF=y
+export USE_MPIF4=y
+export FFIELD=amber
+export AMBER_1=$NWCHEM_TOP/src/data/amber_s/
+export AMBER_2=$NWCHEM_TOP/src/data/amber_q/
+export AMBER_3=$NWCHEM_TOP/src/data/amber_x/
+export AMBER_4=$NWCHEM_TOP/src/data/amber_u/
+export SPCE=$NWCHEM_TOP/src/data/solvents/spce.rst
+export CHARMM_S=$NWCHEM_TOP/src/data/charmm_s/
+export CHARMM_X=$NWCHEM_TOP/src/data/charmm_x/
+export PATH=$PATH:$NWCHEM_TOP/bin/LINUX64:/opt/intel/oneapi/mpi/latest//libfabric/bin:/opt/intel/oneapi/mpi/latest//bin
+export I_MPI_ROOT=/opt/intel/oneapi/mpi/latest
+export FI_PROVIDER_PATH=/opt/intel/oneapi/mpi/latest/libfabric/lib/prov
+export LIBRARY_PATH=/opt/intel/oneapi/mpi/latest//libfabric/lib:/opt/intel/oneapi/mpi/latest//lib/release:/opt/intel/oneapi/mpi/latest/lib
+export CLASSPATH=/opt/intel/oneapi/mpi/latest//lib/mpi.jar
+export LD_LIBRARY_PATH=opt/intel/oneapi/mpi/latest/lib:/opt/intel/oneapi/mpi/latest/lib/release:/opt/intel/oneapi/mkl/latest/lib/intel64/:/opt/intel/oneapi/mpi/latest/libfabric/lib:/opt/intel/oneapi/mpi/latest/lib/
+export CPATH=/opt/intel/oneapi/mpi/latest//include
+%runscript
+exec /bin/bash "$@"

@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: gcr.io/deepvariant-docker/deepvariant_gpu:0.9.0
+
+%files
+    bootstrap_image.sh /usr/bin   
+
+%post 
+    bootstrap_image.sh
+
+%help
+    Singularity recipe for variant calling (GPU version).
+    For more information visit https://github.com/sleeepyjack/variant_calling
+
+%labels
+    Maintainer Daniel Jünger (juenger@uni-mainz.de), Cosima Caliendo (caliendo@uni-mainz.de)

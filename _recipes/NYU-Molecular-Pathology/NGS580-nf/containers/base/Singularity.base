@@ -1,0 +1,17 @@
+BootStrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%post
+    # location for misc scripts
+    mkdir -p /opt/bin
+
+    # location for misc data
+    mkdir /data
+
+    # mount point for for NYULMC phoenix (Singluarity)
+    mkdir /ifs
+
+%environment
+    export PATH="/opt/bin:${PATH}"
+    export PATH="/opt:${PATH}"

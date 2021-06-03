@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: ubuntu:trusty
+
+%labels
+Maintainer @plantandfood.co.nz
+Version 0.10.15
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get -y install automake autotools-dev build-essential cmake libhts-dev libjemalloc-dev libsparsehash-dev libz-dev python-matplotlib wget zlib1g-dev
+  
+  ## Build bamtools
+  cd /opt
+  wget https://github.com/pezmaster31/bamtools/archive/v2.4.0.tar.gz
+  tar -xzvf v2.4.0.tar.gz
+  rm -f v2.4.0.tar.gz
+  cd bamtools-2.4.0
+  mkdir build
+  cd build
+  cmake ..
+  make
+
+  ## Build SGA
+  cd /opt
+  wget https://github.com/jts/sga/archive/v0.10.15.tar.gz
+  tar -xzvf v0.10.15.tar.gz
+  rm -f v0.10.15.tar.gz
+  cd sga-0.10.15/src
+  ./autogen.sh
+  ./configure --with-bamtools=/opt/bamtools-2.4.0 --with-jemalloc=/usr --prefix=/usr/local
+  make
+  make install
+
+%runscript
+  exec sga "$@"

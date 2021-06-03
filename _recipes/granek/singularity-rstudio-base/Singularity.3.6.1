@@ -1,0 +1,59 @@
+BootStrap: library
+From: granek/default/singularity-rstudio:3.6.1
+
+%labels
+    Maintainer Josh Granek
+    Image_Name singularity-rstudio-base
+    Image_Version singularity-rstudio-base_0002
+
+%runscript
+  exec port_and_password "${@}"
+
+%apprun rstudio
+  exec rserver "${@}"
+
+%apprun default
+  exec "${@}"
+
+%apprun pp
+  exec port_and_password "${@}"
+
+%environment
+  export PATH=/usr/lib/rstudio-server/bin:${PATH}
+  export SHELL=/bin/bash
+  export LC_ALL=en_US.UTF-8
+  export LANG=en_US.UTF-8
+  export LANGUAGE=en_US.UTF-8
+  
+%setup
+  install -Dv \
+    port_and_password.sh \
+    ${SINGULARITY_ROOTFS}/usr/lib/rstudio-server/bin/port_and_password
+
+%post
+  # Install extra stuff
+  apt-get update
+  apt-get install -y --no-install-recommends \
+    bsdmainutils \
+    iproute2 \
+    libxml2-dev \
+    curl \
+    wget \
+    bzip2 \
+    ca-certificates \
+    sudo \
+    locales \
+    emacs \
+    less \
+    make \
+    git \
+    ssh \
+    htop \
+    jq \
+    && apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+#--------------------------------------------------------------------------------
+
+mkdir -p /data
+mkdir -p /workspace

@@ -1,0 +1,44 @@
+Bootstrap: docker
+From: stimong/caffe2-cuda10-python3.6:densepose-python3_v0.210.67
+
+%setup
+  #Runs on host. The path to the image is $SINGULARITY_ROOTFS
+
+%post
+  #Post setup, runs inside the image
+  APT_INSTALL="apt-get install -y --no-install-recommends" && \
+  apt-get update && \
+  DEBIAN_FRONTEND=noninteractive $APT_INSTALL git wget
+    
+  #Default mount point used in Shef Uni's ShARC cluster
+  mkdir /scratch /data /shared /fastdata
+
+  #Nvidia driver file mount paths
+  mkdir /nvlib /nvbin
+
+  #Add nvidia driver paths to the environment variables
+  echo "\n #Nvidia driver paths \n" >> /environment
+  echo 'export PATH="/nvbin:$PATH"' >> /environment
+  echo 'export LD_LIBRARY_PATH="/nvlib:$LD_LIBRARY_PATH"' >> /environment
+
+  #Add CUDA paths
+  echo "\n #Cuda paths \n" >> /environment
+  echo 'export CPATH="/usr/local/cuda/include:$CPATH"' >> /environment
+  echo 'export PATH="/usr/local/cuda/bin:$PATH"' >> /environment
+  echo 'export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"' >> /environment
+  echo 'export CUDA_HOME="/usr/local/cuda"' >> /environment
+  
+  wget http://us.download.nvidia.com/XFree86/Linux-x86_64/410.78/NVIDIA-Linux-x86_64-410.78.run
+  git clone https://github.com/klm122/w2l.git
+  cd w2l
+  chmod +x extract_nvdriver_and_moveto.sh
+  extractnvdriver.sh 410.78 ~/mynvdriver
+  cd ..
+  
+%runscript
+  #Executes when the "singularity run" command is used
+  #Useful when you want the container to run as an executable
+
+
+%test
+  #Test script to verify that the image is built and running correctly

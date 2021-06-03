@@ -1,0 +1,15 @@
+###
+# Example singularity recipe to provide lsf from within the container
+###
+
+bootstrap: docker
+from: ubuntu:18.04
+#from: centos:7
+
+%environment
+
+export PATH=$PATH:/opt/lsf/curr/bin
+
+%post
+
+ln -sf /opt/lsf/curr/conf/lsf.conf.co /etc/lsf.conf

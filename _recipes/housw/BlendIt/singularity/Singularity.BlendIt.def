@@ -1,0 +1,66 @@
+Bootstrap: docker
+From: shengwei/das_tool:latest
+
+%labels
+    Shengwei Hou <housw2010@gmail.com>
+    Version v1.1.1
+
+%help
+    # help cmd: singularity run-help BlendIt.sif
+    This singularity container encapsulates BlendIt:
+    Binning metagenomic contigs via length-dependent iterative
+    clustering and integration:
+    https://github.com/housw/BlendIt
+    
+    It can be run as follows: 
+    'singularity run BlendIt.sif blendit --help'
+
+    Reference:
+    1. Christian M. K. Sieber, Alexander J. Probst, Allison Sharrar, Brian C. Thomas, Matthias Hess, Susannah G. Tringe & Jillian F. Banfield (2018). Recovery of genomes from metagenomes via a dereplication, aggregation and scoring strategy. Nature Microbiology. https://doi.org/10.1038/s41564-018-0171-1.
+    2. Shengwei Hou, Andrew Long, Jed Fuhrman. Binning metagenomic contigs via length-dependent iterative clustering and integration (manuscript in prep)
+
+%post
+    # update and apt-get 
+    apt-get -qq update && \
+    apt-get install -y --no-install-recommends cmake python python-dev python-pip python-wheel python-setuptools \
+    libcurl3-dev prodigal mummer wget libhdf5-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+    # install miniconda and python 3.6
+    cd / && \
+    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /miniconda.sh && \
+    /bin/bash /miniconda.sh -b -p /opt/conda && rm /miniconda.sh && \
+    /opt/conda/bin/conda install conda-build python=3.6 pip && \
+    /opt/conda/bin/conda clean -tipsy && \
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+    export PATH=/opt/conda/bin:$PATH
+
+    # bamcov
+    cd / && git clone --recurse-submodules https://github.com/fbreitwieser/bamcov && \
+    cd bamcov && make && make test && cd / && \
+    export PATH=/bamcov:$PATH
+
+    # BlendIt
+    git clone https://github.com/housw/BlendIt.git && \
+    cd BlendIt && /opt/conda/bin/pip install -r requirements_dev.txt && \
+    /opt/conda/bin/python setup.py install
+
+%test
+    # test cmd: singularity test BlendIt.sif
+    blendit --help | grep -q "Blendit: Binning metagenomic contigs via length-dependent iterative"
+    if [ $? -eq 0 ]; then
+        echo "BlendIt is installed"
+    else
+        echo "It seems BlendIt is not installed"
+    fi
+
+%environment
+    # export environmental variables available at runtime
+    export LANG=C.UTF-8 
+    export LC_ALL=C.UTF-8
+    export PATH=$PATH:/DAS_Tool/current
+    export PATH=/usr/local/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+    export PATH=/opt/conda/bin:$PATH
+    export PATH=/bamcov:$PATH
+

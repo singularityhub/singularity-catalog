@@ -1,0 +1,39 @@
+#Bootstrap:docker
+#From:nvidia/cuda:8.0-cudnn5-devel-centos7
+Bootstrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch/
+Include: yum
+
+
+%labels
+MAINTAINER baber@iastate.edu
+
+%environment
+export PATH=/scipion-1.1/software/bin:/scipion-1.1:$PATH
+
+%post
+yum install -y @"Development Tools"
+yum install -y wget gcc-c++ glibc-headers gcc gcc-g++ cmake java-1.8.0-openjdk-devel libXft-devel openssl-devel libXext-devel libxml++ libquadmath-devel libxslt openmpi-devel gsl-devel libX11 gcc-gfortran curl wget vim strace openmp mesa-libGL mesa libSM mesa-libGLU libXrender dejavu-sans-fonts mesa-dri-drivers
+wget https://github.com/I2PC/scipion/archive/v1.1.tar.gz
+tar xvzf v1.1.tar.gz
+pushd scipion-1.1
+./scipion config --overwrite <<<'d' &
+sleep 10
+sed -i 's/^MPI_BINDIR.*$/MPI_BINDIR = \/usr\/lib64\/openmpi\/bin/' config/scipion.conf
+sed -i 's/^MPI_LIBDIR.*$/MPI_LIBDIR = \/usr\/lib64\/openmpi\/lib/' config/scipion.conf
+sed -i 's/^MPI_INCLUDE.*$/MPI_INCLUDE = \/usr\/include\/openmpi-x86_64/' config/scipion.conf
+sed -i 's/^CUDA.*$/CUDA = False/' config/scipion.conf
+cat /scipion-1.1/config/scipion.conf
+./scipion config
+cat /scipion-1.1/config/scipion.conf
+setfacl -R -m o:rwX /scipion-1.1
+setfacl -R -m d:o:rwX /scipion-1.1
+chmod -R o+rwX /scipion-1.1
+getfacl /scipion-1.1
+ls -la /scipion-1.1
+./scipion install -j 12
+./scipion install -j 12 Gautomatch Gctf bsoft chimera ctffind ctffind4 dogpicker eman ethan frealign gEMpicker localrec mag_distortion motioncor2 motioncorr nma relion resmap simple spider summovie unblur cryoem 
+
+%runscript
+exec "$@"

@@ -1,0 +1,29 @@
+BootStrap: docker
+From: ubuntu:16.04
+
+
+%startscript
+ python -c "import macroeco; macroeco.desktop()"
+
+%runscript
+ python -c "import macroeco; macroeco.desktop()"
+
+%post
+  apt update -y
+  apt install -y wget locales
+
+  export LC_ALL=en_AU.UTF-8
+  export LANGUAGE=en_AU.UTF-8
+  export DEBIAN_FRONTEND=noninteractive
+  echo $LC_ALL
+  echo $LANGUAGE
+  echo $DEBIAN_FRONTEND
+ 
+  export LC_ALL=C
+  apt install -y python-pip python-dev 
+
+  apt install -y python-numpy python-scipy python-pandas python-matplotlib
+  apt install -y python-wxgtk3.0
+  pip install macroeco 
+
+

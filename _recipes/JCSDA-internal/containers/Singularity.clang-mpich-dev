@@ -1,0 +1,22 @@
+BootStrap: docker
+From: jcsda/docker-clang-mpich-dev:latest
+
+%labels
+MAINTAINER Mark Miesch
+SPECIES JEDI
+
+%environment
+    TERM=xterm
+    export TERM
+    GIT_MERGE_AUTOEDIT=no
+    export GIT_MERGE_AUTOEDIT
+    export LANG=en_US.UTF-8
+    export LANGUAGE=en_US:en
+
+%post
+    echo "Hello from inside the container"
+    mkdir -p /var/go
+
+%runscript
+    bash -l
+

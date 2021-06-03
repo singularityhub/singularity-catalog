@@ -1,0 +1,57 @@
+Bootstrap: docker
+From: fedora:31
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 0.1.0
+
+%post
+  ## Download build prerequisites
+  dnf -y install bzip2 cmake clang gcc git libstdc++ make samtools
+
+  ## Install Racon
+  cd /opt
+  curl -OL https://github.com/isovic/racon/releases/download/1.4.3/racon-v1.4.3.tar.gz
+
+  tar -xvf racon-v1.4.3.tar.gz
+  cd racon-v1.4.3
+  mkdir build
+  cd build/
+  cmake -DCMAKE_BUILD_TYPE=Release ..
+  make
+  make install
+
+  ## Install Minimap2
+  cd /opt
+  curl -OL https://github.com/lh3/minimap2/releases/download/v2.17/minimap2-2.17_x64-linux.tar.bz2
+
+  tar -xjf minimap2-2.17_x64-linux.tar.bz2
+  cd minimap2-2.17_x64-linux
+  install -dm0755 /usr/local/bin
+  install -Dm0755 k8 /usr/local/bin
+  install -Dm0755 minimap2 /usr/local/bin
+  install -Dm0755 paftools.js /usr/local/bin
+
+  ## Install pinfish
+  cd /opt
+  git clone https://github.com/nanoporetech/pinfish.git
+  cd pinfish
+  git checkout 1a71688
+  install -Dm0755 cluster_gff/cluster_gff /usr/local/bin
+  install -Dm0755 collapse_partials/collapse_partials /usr/local/bin
+  install -Dm0755 polish_clusters/polish_clusters /usr/local/bin
+  install -Dm0755 spliced_bam2gff/spliced_bam2gff /usr/local/bin
+
+  ## Cleanup
+  dnf -y remove bzip2 cmake clang gcc git make
+  dnf -y clean all
+  cd /opt
+  rm -rf *
+
+%runscript
+if [ -x /usr/local/bin/$SINGULARITY_NAME ]; then
+    exec $SINGULARITY_NAME "$@"
+else
+  /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+  exec ls /usr/local/bin
+fi

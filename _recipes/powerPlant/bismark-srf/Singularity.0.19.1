@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 0.19.1
+
+%environment
+  PATH=/Bismark-0.19.1:$PATH
+  export PATH
+
+%post
+  ## Download prerequisites
+  apt-get update
+  apt-get -y install bowtie2 curl libfile-copy-recursive-perl samtools
+
+  curl -OL https://github.com/FelixKrueger/Bismark/archive/0.19.1.tar.gz
+
+  tar -xvf 0.19.1.tar.gz
+  
+  ## Cleanup
+  apt-get -y remove --purge curl
+  apt-get -y clean all
+  apt-get -y autoremove --purge
+  rm -rf /0.19.1.tar.gz
+
+%runscript
+  exec bismark "$@"

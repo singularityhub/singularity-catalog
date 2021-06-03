@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: ubuntu:cosmic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 1.9.5
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install tzdata
+  ln -fs /usr/share/zoneinfo/Pacific/Auckland /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
+  apt-get -y install cdo
+  
+  ## Cleanup
+  apt-get -y clean all
+
+%runscript
+  exec cdo "$@"

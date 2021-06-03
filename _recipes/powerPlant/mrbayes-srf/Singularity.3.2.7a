@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 3.2.7a
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install g++ libhmsbeagle1v5 libhmsbeagle-dev make wget
+
+  ## Build
+  cd /opt
+  wget https://github.com/NBISweden/MrBayes/releases/download/v3.2.7a/mrbayes-3.2.7a.tar.gz
+  tar -xzf mrbayes-3.2.7a.tar.gz
+  cd mrbayes-3.2.7a
+  ./configure
+  make -j`nproc` install
+
+  ## Cleanup
+  apt-get -y remove g++ libhmsbeagle-dev make wget
+  apt-get -y autoremove
+  rm -rf /opt/*
+
+%runscript
+  exec mb "$@"

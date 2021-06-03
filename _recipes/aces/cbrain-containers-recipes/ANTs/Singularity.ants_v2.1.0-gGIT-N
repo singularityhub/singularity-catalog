@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: neurodebian:artful-non-free
+
+#####################################################
+#                                                   #
+# MCIN (McGill Centre for Integrative Neuroscience) #
+#                                                   #
+# Singularity recipe for ANTs to build a container  #
+# used in CBRAIN (https://github.com/aces/cbrain)   #
+#                                                   #
+#####################################################
+
+%labels
+  Maintainer Natacha Beck
+
+%help
+This container provides 'ANTS' Advanced Normalization Tools (ANTS). It is an ITK-based 
+suite of normalization, segmentation and template-building tools for quantitative 
+morphometric analysis (http://stnava.github.io/ANTs/) 
+
+%post
+  apt-get update
+  apt-get install -y ants
+

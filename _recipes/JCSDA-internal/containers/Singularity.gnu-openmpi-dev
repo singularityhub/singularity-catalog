@@ -1,0 +1,38 @@
+BootStrap: docker
+From: jcsda/docker-gnu-openmpi-dev:latest
+
+%labels
+MAINTAINER Mark Miesch
+SPECIES JEDI
+
+%environment
+    TERM=xterm
+    export TERM
+    GIT_MERGE_AUTOEDIT=no
+    export GIT_MERGE_AUTOEDIT
+    export LANG=en_US.UTF-8
+    export LANGUAGE=en_US:en
+    export PATH=/usr/local/bin:/usr/local/miniconda3/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin
+    alias pip=/usr/local/miniconda3/bin/pip
+
+%post
+    echo "Hello from inside the container"
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /usr/local/miniconda3
+    export PATH=/usr/local/miniconda3/bin:$PATH
+    conda install numpy
+    conda install matplotlib
+    conda install click
+    conda install pandas
+    conda install -c conda-forge ruamel.yaml
+    conda install -c conda-forge netcdf4
+    conda install -c conda-forge xarray
+    conda install -c conda-forge cartopy
+    apt-get update
+    apt-get install -y --no-install-recommends feh
+    apt-get install -y --no-install-recommends default-jre
+    rm -rf /var/lib/apt/lists/*
+
+%runscript
+    bash -l
+

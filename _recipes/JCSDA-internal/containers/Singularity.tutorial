@@ -1,0 +1,49 @@
+BootStrap: library
+From: jcsda/public/jedi-gnu-openmpi-dev:latest
+
+%labels
+MAINTAINER Mark Miesch
+SPECIES JEDI
+
+%files
+    ssh-key/github_academy_rsa /root/github_academy_rsa
+
+%environment
+    TERM=xterm
+    export TERM
+    GIT_MERGE_AUTOEDIT=no
+    export GIT_MERGE_AUTOEDIT
+    export LANG=en_US.UTF-8
+    export LANGUAGE=en_US:en
+    export PATH=/usr/local/bin:/usr/local/miniconda3/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/jedi/build/bin:/opt/PanoplyJ
+    alias pip=/usr/local/miniconda3/bin/pip
+
+%post
+    echo "Hello from inside the container"
+    apt-get update
+    apt-get install -y --no-install-recommends mesa-utils libgl1-mesa-glx
+    mkdir -p /root/.ssh
+    mv /root/github_academy_rsa /root/.ssh/github_academy_rsa
+    eval "$(ssh-agent -s)"
+    ssh-add /root/.ssh/github_academy_rsa
+    ssh -T -o "StrictHostKeyChecking=no" git@github.com || mkdir -p /opt/jedi
+    git config --global credential.helper 'cache --timeout=3600'
+    git config --global --add credential.helper 'store'
+    git lfs install
+    cd /opt/jedi
+    git clone -b 1.0.0 git@github.com:jcsda/fv3-bundle.git
+    cd fv3-bundle
+    git clone https://github.com/jcsda/crtm.git -b v2.3-jedi --depth=1
+    git clone https://github.com/jcsda/fv3-jedi-linearmodel.git -b 1.0.0 --depth=1 fv3-jedi-lm
+    git clone https://github.com/jcsda/fv3-jedi.git -b 1.0.0 --depth=1
+    mkdir -p /opt/jedi/build
+    cd /opt/jedi/build
+    ecbuild --build=Release ../fv3-bundle
+    make -j4
+    ctest -R get_
+    rm /root/.ssh/github_academy_rsa
+    rm -rf /var/lib/apt/lists/*
+
+%runscript
+    bash -l
+

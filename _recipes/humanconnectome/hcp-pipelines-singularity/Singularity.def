@@ -1,0 +1,45 @@
+Bootstrap: library
+From: centos:7.6.1810
+
+%labels
+    author Moises Baltazar
+
+%pre
+# Before install (host)
+
+%post
+# After install (guest)
+#mkdir -p /pipeline_tools/pipelines/
+yum install -y python3 git vim
+pip3 install pip --upgrade
+pip install -r /pipeline_tools/pipelines/requirements.txt
+
+    # From prior script:
+    #   (TODO: Not sure what is still useful)
+    yum install -y zip unzip
+	mkdir -p /NRG-data/NRG/intradb/archive
+	mkdir -p /NRG-data/NRG/hcpdb/archive
+	mkdir -p /NRG-data/NRG/hcpdb/build_ssd
+	mkdir -p /usr/local/torque-6.1.2
+
+	yum clean packages
+	rm -rf /var/cache/yum/*
+
+%test
+# Test to run in order to ensure working environment
+    exit 0
+
+%runscript
+# Script to run when executing environment
+prunner --config=/pipeline_tools/pipelines/ "$@"
+
+%files
+# Files to copy from the host system.
+./hcp-pipelines /pipeline_tools/pipelines
+
+%environment
+# Environment variables
+export PATH=/usr/local/torque-6.1.2/bin:/usr/local/torque-6.1.2/sbin:$HOME/bin:$PATH
+export PIPELINES_HOME=/pipeline_tools/pipelines
+export PYTHONPATH=${PIPELINES_HOME}/lib
+

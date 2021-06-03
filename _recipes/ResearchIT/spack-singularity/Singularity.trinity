@@ -1,0 +1,29 @@
+Bootstrap:shub
+From:ResearchIT/spack-singularity:spack
+
+%labels
+MAINTAINER baber@iastate.edu
+APPLICATION trinity
+
+%help
+This container provides trinity
+
+%environment
+source /etc/profile.d/modules.sh
+module load trinity
+
+%post
+export SPACK_ROOT=/opt/spack
+export PATH=$SPACK_ROOT/bin:$PATH
+
+yum -y install bc paste
+yum clean all
+
+export FORCE_UNSAFE_CONFIGURE=1 
+
+source $SPACK_ROOT/share/spack/setup-env.sh
+spack install trinity
+
+%runscript
+exec Trinity "$@"
+

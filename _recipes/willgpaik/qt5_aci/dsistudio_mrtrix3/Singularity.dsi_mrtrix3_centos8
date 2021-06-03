@@ -1,0 +1,40 @@
+BootStrap: shub
+From: willgpaik/centos8_roar:gpu
+%setup
+
+%files
+
+%environment 
+    export PATH=$PATH:/opt/sw/dsistudio/build/:/opt/sw/mrtrix3/bin/:/opt/sw/ann-1.1.2/bin
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/sw/ann-1.1.2/lib
+
+%runscript
+
+
+%post
+    dnf -y install petsc-devel armadillo-devel opencv-devel
+    
+    dnf -y update
+    
+    export BOOST_ROOT=/usr/local/
+
+    # Install ANN
+    mkdir -p /opt/sw
+    cd /opt/sw
+    wget https://www.cs.umd.edu/~mount/ANN/Files/1.1.2/ann_1.1.2.tar.gz
+    tar -xf ann_1.1.2.tar.gz && rm ann_1.1.2.tar.gz
+    cd ann_1.1.2
+    make linux-g++
+    
+    export PATH=$PATH:/opt/sw/ann-1.1.2/bin
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/sw/ann-1.1.2/lib
+
+    # Install DSI Studio and MRtrix3
+    mkdir -p /opt/sw/
+    cd /opt
+    wget https://raw.githubusercontent.com/willgpaik/qt5_aci/master/dsistudio_mrtrix3_install.sh
+    chmod +x dsistudio_mrtrix3_install.sh
+    ./dsistudio_mrtrix3_install.sh
+    
+    rm dsistudio_mrtrix3_install.sh
+

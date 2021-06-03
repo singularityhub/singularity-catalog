@@ -1,0 +1,17 @@
+BootStrap: docker
+From: ubuntu:18.04
+
+
+%startscript
+ qgis
+%runscript
+ qgis
+
+%files
+
+%post
+  apt update -y
+  apt-get install -y software-properties-common
+  add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+  apt update -y
+  apt install -y qgis

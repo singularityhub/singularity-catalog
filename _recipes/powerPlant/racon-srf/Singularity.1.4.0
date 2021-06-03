@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: fedora:27
+
+%labels
+Maintainer tejas.sevak@plantandfood.co.nz
+Version 1.4.0
+
+%post
+  ## Download build prerequisites
+  dnf -y install cmake clang gcc libstdc++ make
+
+  curl -OL https://github.com/isovic/racon/releases/download/1.4.0/racon-v1.4.0.tar.gz
+
+  tar -xvf racon-v1.4.0.tar.gz
+  cd racon-v1.4.0
+  mkdir build
+  cd build/
+  cmake -DCMAKE_BUILD_TYPE=Release ..
+  make
+  make install
+
+  ## Cleanup
+  dnf -y remove cmake clang gcc make
+  dnf -y clean all
+  rm -rf /racon*
+
+%runscript
+  exec racon "$@"

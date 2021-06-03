@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: slaclab/xfce:ubuntu18.04
+
+%setup
+
+mkdir -p ${SINGULARITY_ROOTFS}/usr/local/MATLAB/
+cp -rpv /afs/slac/package/matlab/2020a ${SINGULARITY_ROOTFS}/usr/local/MATLAB/R2020a
+
+%environment
+
+export PATH=/usr/local/MATLAB/R2020a/bin:$PATH
+

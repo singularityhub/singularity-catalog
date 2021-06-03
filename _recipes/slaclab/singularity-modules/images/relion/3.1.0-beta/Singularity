@@ -1,0 +1,96 @@
+bootstrap: docker
+from: nvidia/cuda:9.2-devel-ubuntu18.04
+
+%environment
+
+export PATH=/opt/relion/bin/:${PATH}:/opt/lsf/curr/bin
+export LD_LIBRARY_PATH=/opt/relion/lib:${LD_LIBRARY_PATH}
+
+# container-local exes
+export RELION_MOTIONCOR2_EXECUTABLE=/usr/local/bin/MotionCor2
+export RELION_CTFFIND_EXECUTABLE=/usr/local/bin/ctffind
+export RELION_GCTF_EXECUTABLE=/usr/local/bin/Gctf
+
+
+%post
+
+MUNGEUSER=891
+SLURMUSER=16924
+SLURMGROUP=1034
+
+groupadd -g $MUNGEUSER munge \
+    && useradd  -m -c "MUNGE Uid 'N' Gid Emporium" -d /var/lib/munge -u $MUNGEUSER -g munge  -s /sbin/nologin munge \
+    && groupadd -g $SLURMGROUP slurm \
+    && useradd  -m -c "SLURM workload manager" -d /var/lib/slurm -u $SLURMUSER -g slurm  -s /bin/bash slurm
+
+apt-get update && apt-get install -y \
+    gcc-7 cmake build-essential autoconf automake libtool flex bison \
+    libfabric-dev libibverbs-dev \
+    openssh-client \
+    libfftw3-dev \
+    libtiff5-dev \
+    libx11-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev libxext-dev libxfixes-dev libxcursor-dev x11-utils libxinerama-dev \
+    git curl \
+    gnuplot unzip ghostscript evince csh \
+    munge \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /var/tmp/*
+
+###
+# install openmpi
+###
+OMPI_VERSION=v4.0.1
+TMPDIR=`mktemp -d -t` \
+  && cd ${TMPDIR} \
+  && git clone https://github.com/open-mpi/ompi.git \
+  && cd ompi \
+  && git checkout ${OMPI_VERSION} \
+  && ./autogen.pl \
+  && ./configure --prefix=/usr/ \
+  && make -j 16 \
+  && make install \
+  && /usr/bin/mpicc examples/ring_c.c -o /usr/bin/mpi_ring \
+  && rm -rf ${TMPDIR}
+
+
+RELION_VERSION="ver3.1"
+ARCH="haswell"
+TMPDIR=`mktemp -d -t` && cd ${TMPDIR} \
+  && git clone https://github.com/3dem/relion.git \
+  && cd ${TMPDIR}/relion \
+  && git checkout ${RELION_VERSION} \
+  && sed -i 's/MPI_DOUBLE_COMPLEX/MPI_C_DOUBLE_COMPLEX/g' src/macros.h \
+  && mkdir build && cd build \
+  && CFLAGS="-march=$ARCH" CXXFLAGS="-march=$ARCH" \
+    cmake -DCMAKE_INSTALL_PREFIX=/opt/relion \
+    -DCUDA=ON -DCudaTexture=ON -DCUDA_ARCH=60 \
+    -DMPI_C_COMPILER=/usr/bin/mpicc -DMPI_CXX_COMPILER=/usr/bin/mpicxx \
+    .. \
+  && make -j16 \
+  && make install \
+  && rm -rf ${TMPDIR}
+
+###
+# install ctffind
+###
+cd /usr/local \
+  && curl -L 'https://cistem.org/system/tdf/uploads/ctffind-4.1.13-linux64.tar.gz?file=1&type=cistem_details&id=44&force=&s3fs=' | tar xvfz -
+
+###
+# install gctf
+###
+cd /usr/local/bin \
+  && curl https://www.mrc-lmb.cam.ac.uk/kzhang/Gctf/Gctf_v1.18_b2/bin/Gctf_v1.18_b2_sm35_cu9.2 > Gctf \
+  && chmod ugo+x /usr/local/bin/Gctf
+
+###
+# install motioncor
+###
+cd /usr/local/bin \
+  && curl -L 'https://drive.google.com/uc?export=download&id=17dOr87lhhxGhg6xQYr4f8eo0OEo-GdUI' > MotionCor2_1.2.3.zip \
+  && unzip MotionCor2_1.2.3.zip \
+  && rm -f MotionCor2_1.2.3.zip \
+  && ln -sf MotionCor2_1.2.3-Cuda92 MotionCor2
+
+# prep for slurm
+rm -rf /var/run/munge && ln -sf /mnt /var/run/munge
+

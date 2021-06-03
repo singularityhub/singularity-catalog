@@ -1,0 +1,105 @@
+BootStrap: docker
+From: ubuntu:16.04
+
+%labels
+AUTHOR Roy "Neal" Platt
+MAINTAINER rplatt@txbiomed.org
+VERSION 0.0.8
+DATE 27 March 2018
+
+#v.0.06 - install necessary R plots
+#v.0.07 - install vcftools, vcflib, and fastq-dump
+
+%post
+    apt-get update
+    apt-get clean
+    apt-get install -qy \
+        wget \
+        bzip2 \
+        default-jre \
+        zip \
+        vim \
+        dialog \
+        nano \
+        bwa \
+        samtools \
+        git \
+        bc \
+        bedtools \
+        pigz \
+        r-base \
+        r-base-dev \
+        locales \
+        pkg-config \
+        python-dev
+
+    mkdir -p /usr/software /master/nplatt
+    cd /usr/software
+ 
+    #put java in software
+    ln -s /usr/bin/java
+
+    #Install bioconda
+    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    chmod u+x Miniconda3-latest-Linux-x86_64.sh 
+    bash ./Miniconda3-latest-Linux-x86_64.sh -b -p /usr/software/miniconda3
+    export PATH="/usr/software/miniconda3/bin:$PATH"
+    #conda install -y -c bioconda 
+    rm Miniconda3-latest-Linux-x86_64.sh
+    ln -s /usr/software/miniconda3/bin/python /usr/local/bin
+
+    #Install GATK
+    wget https://github.com/broadinstitute/gatk/releases/download/4.0.1.1/gatk-4.0.1.1.zip
+    unzip gatk-4.0.1.1.zip
+    rm gatk-4.0.1.1.zip
+    ln -s /usr/software/gatk-4.0.1.1/gatk /usr/local/bin/
+
+    #install trimmomatic
+    wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.36.zip
+    unzip Trimmomatic-0.36.zip
+    ln -s Trimmomatic-0.36/trimmomatic-0.36.jar /usr/local/bin
+    rm Trimmomatic-0.36.zip
+
+    #installing R packages
+    R --slave -e 'install.packages("ggplot2", repos="https://cloud.r-project.org/")'
+    R --slave -e 'install.packages("gplots", repos="https://cloud.r-project.org/")'
+    R --slave -e 'install.packages("reshape", repos="https://cloud.r-project.org/")'
+    R --slave -e 'install.packages("gsalib", repos="https://cloud.r-project.org/")'
+
+    #install vcftools
+    locale-gen en_US en_US.UTF-8 hu_HU hu_HU.UTF-8
+    
+    wget https://github.com/vcftools/vcftools/tarball/master
+    tar -xvzf master
+    mv vcftools* vcftools
+    cd vcftools
+    ./autogen.sh
+    ./configure
+    make
+    make install
+    cd ..
+    rm master
+
+
+    #install vcflib
+    git clone --recursive https://github.com/vcflib/vcflib.git
+    cd vcflib
+    make
+    cp bin/* /usr/local/bin    
+    cd ..
+
+    #sra toolkit
+    wget http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
+    tar -xvzf sratoolkit.current-ubuntu64.tar.gz
+    cp -r sratoolkit*/bin/* /usr/local/bin
+
+    #prog cactus
+    git clone git://github.com/glennhickey/progressiveCactus.git
+    cd progressiveCactus
+    git pull
+    git submodule update --init
+    make
+    
+
+%environment
+    export PERL5LIB=$PERL5LIB:/usr/software/vcftools/src/perl/

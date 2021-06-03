@@ -1,0 +1,34 @@
+BootStrap: shub
+From: shub://pranithavangala/singularity:r-3-4-3
+
+%labels
+
+    AUTHOR Pranitha Vangala <pranitha.vangala@gmail.com>
+    Version v1.0
+
+%environment
+    export SRC=/usr/local/src
+    export BIN=/usr/local/bin
+    export R_VERSION=R-3.4.3
+
+%post
+    	echo install.packages\(\"biclust\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+    	echo install.packages\(\"dplyr\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+    	echo install.packages\(\"reshape2\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+    	echo install.packages\(\"gplots\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+    	echo install.packages\(\"stringdist\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+    	echo install.packages\(\"stringr\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+    	echo install.packages\(\"data.table\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+    	R --slave -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("Sushi", dep = TRUE)'
+	echo install.packages\(\"readr\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+	echo install.packages\(\"purrr\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+	echo install.packages\(\"dplyr\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+	echo install.packages\(\"data.table\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+	echo install.packages\(\"caret\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+	echo install.packages\(\"h2o\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+	echo install.packages\(\"pROC\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+	echo install.packages\(\"PRROC\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+	echo install.packages\(\"parallel\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+	echo install.packages\(\"doParallel\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+	echo install.packages\(\"randomForest\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave
+	echo install.packages\(\"optparse\"\, repos\=\'https://cloud.r-project.org/\'\, Ncpus\=${NPROCS}\) | R --slave

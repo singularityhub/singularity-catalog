@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: centos:6
+
+
+%environment
+
+  PATH=/usr/local/OpenMBIR-v2.35-RHEL6-x86_64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  
+
+%post
+
+  yum update -y
+  yum install -y libpng freetype libXext libSM libXrender fontconfig freetype freetype-devel fontconfig-devel libstdc++ xorg-x11-fonts-misc xorg-x11-fonts-Type1 dejavu-sans-fonts urw-fonts curl
+  
+  cd /tmp/
+  curl https://engineering.purdue.edu/~bouman/OpenMBIR/bf-em/OpenMBIR-v2.35-RHEL6-x86_64.tar.gz | tar xvz -C /usr/local/ -f -
+
+  echo "export LD_LIBRARY_PATH=/usr/local/OpenMBIR-v2.35-RHEL6-x86_64/lib:$LD_LIBRARY_PATH"  >>$SINGULARITY_ENVIRONMENT
+  echo "export SINGULARITYENV_PREPEND_PATH=/usr/local/OpenMBIR-v2.35-RHEL6-x86_64/bin"  >>$SINGULARITY_ENVIRONMENT

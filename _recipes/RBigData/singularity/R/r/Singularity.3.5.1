@@ -1,0 +1,75 @@
+Bootstrap: localimage
+From: ../r-minimal/r-minimal_3.5.1.simg
+
+
+%labels
+  R_Version 3.5.1
+
+%environment
+  export LANG=en_US.UTF-8
+  export LC_ALL=en_US.UTF-8
+
+%apprun R
+  exec R "--no-save --quiet --no-restore --no-environ $@"
+
+%apprun Rscript
+  exec Rscript "--no-restore --no-environ $@"
+
+%runscript
+  exec R "--no-save --quiet --no-restore --no-environ $@"
+
+
+
+%files
+  install.packages /usr/bin/
+
+%post
+  echo "options(repos=structure(c(CRAN='https://cran.rstudio.com/'))) ; \
+    utils::rc.settings(ipck=TRUE); \
+    " > /usr/local/lib/R/etc/Rprofile.site
+  Rscript -e "install.packages('littler')"
+  ln -s /usr/local/lib/R/library/littler/bin/r /usr/bin/r
+  mkdir -p /usr/local/lib/R/site-library
+  
+  export MAKE="make -j 17 -s"
+  apt-get update
+  apt-get install -y libssl-dev libxml2-dev libhdf5-dev libgit2-dev
+  install.packages \
+    bit64 \
+    csvy \
+    curl \
+    data.table \
+    devtools \
+    doParallel \
+    feather \
+    foreach \
+    fst \
+    getPass \
+    hdf5r \
+    jsonlite \
+    knitr \
+    mclust \
+    memuse \
+    mlbench \
+    openssl \
+    randomForest \
+    Rcpp \
+    RcppArmadillo \
+    readODS \
+    remotes \
+    reshape2 \
+    rio \
+    rmarkdown \
+    rmatio \
+    roxygen2 \
+    scales \
+    testthat \
+    tidyverse \
+    xml2
+  
+  cd /tmp && wget https://github.com/jalvesaq/colorout/releases/download/v1.2-0/colorout_1.2-0.tar.gz
+  R CMD INSTALL /tmp/colorout_1.2-0.tar.gz
+  
+  echo "options(bitmapType='cairo')" >> /usr/local/lib/R/etc/Rprofile.site
+  rm -rf /tmp/*
+  apt-get autoclean

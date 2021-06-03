@@ -1,0 +1,24 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%environment
+  export LC_ALL=C.UTF-8
+  export LANG=C.UTF-8
+
+%post
+    apt update
+    apt install -y software-properties-common
+    apt-add-repository universe
+    apt update
+
+    apt-get -y install vim wget  python3-pip
+
+    # install pandas
+    pip3 install  jupyter numpy seaborn pandas
+
+%runscript
+    PORT="${1:-8888}"
+    echo "Starting notebook..."
+    echo "Open browser to localhost:${PORT}"
+    exec /usr/local/bin/jupyter notebook  --ip='*' --port="$PORT" --no-browser

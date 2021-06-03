@@ -1,0 +1,182 @@
+BootStrap: docker
+From: ubuntu:latest
+
+## ===========================================================
+## Instructions:
+## On a Linux (ubuntu) system that has Singularity installed
+## perform a Singularity Build command with this Singularity
+## definition file
+##
+## Build Command Sandbox Build (interact with folders):
+	# sudo singularity build --sandbox Odyssey OdysseyDefF.def
+## Remove the Sandbox Container: sudo rm -rf Odyssey
+## Build Command:
+	# sudo singularity build Odyssey.sif OdysseyDefF.def
+## Test Installation Command:
+	# singularity exec ./Odyssey snptest -help
+## ===========================================================
+
+%setup
+
+    mkdir ${SINGULARITY_ROOTFS}/scripts
+
+%files
+
+    /Users/pmonnaha/Documents/Research/ancestry/scripts/phase_map.py /scripts
+    /Users/pmonnaha/Documents/Research/ancestry/scripts/pop_map.py /scripts
+    /Users/pmonnaha/Documents/Research/ancestry/scripts/QC.py /scripts
+    /Users/pmonnaha/Documents/Research/ancestry/scripts/plot_karyograms.py /scripts
+    /Users/pmonnaha/Documents/Research/ancestry/scripts/rfmix2plink_tped.py /scripts
+
+%post
+
+
+# Install Important OS Programs
+	apt update
+	apt -y upgrade
+	apt -y install wget
+	apt -y install bzip2
+	apt -y install unzip
+		#apt -y install make
+	apt -y install gcc
+	apt -y install gnustep-base-runtime
+	apt -y install locales
+	apt -y install gzip
+	apt-get install -y git
+	apt-get install -y autoconf
+
+
+# Export language preferences
+	locale-gen en_US.UTF-8
+	export LANG=en_US.UTF-8
+	export LC_ALL=en_US.UTF-8
+	defaults write org.R-project.R force.LANG en_US.UTF-8
+
+# Install R dependencies
+
+	apt -y install libcurl4-openssl-dev
+	apt -y install libudunits2-dev
+	apt -y install libssl-dev
+	apt -y install libxml2-dev
+	apt -y install xorg
+	apt -y install libx11-dev
+	apt -y install libcairo2-dev
+	apt -y install libmagick++-dev
+
+
+
+# Install R itself
+
+	apt -y install r-base
+	apt -y install libopenblas-base
+
+
+# Install R Packages
+
+	#Rscript -e "install.packages(c('rgl', 'gdtools'), dependencies=T, repos='https://cran.cnr.berkeley.edu/')"
+	#Rscript -e "install.packages('openssl', dependencies=T, repos='https://cran.cnr.berkeley.edu/')"
+
+#Rscript -e "install.packages(c('data.table','tidyverse','qqman', 'manhattanly','scales','ggplot2','car', 'MASS','gridExtra', 'rcompanion'), dependencies=T, repos='https://cran.cnr.berkeley.edu/')"
+
+
+# Tidy Up Apt-get package manager
+
+	apt-get clean
+
+
+# Install Eagle2 (to /usr/local/bin/)
+
+	# Download from site
+	#wget --output-document=/usr/local/bin/Eagle.tar.gz https://data.broadinstitute.org/alkesgroup/Eagle/downloads/Eagle_v2.4.1.tar.gz
+
+	# Unpack
+	#tar -zxvf /usr/local/bin/Eagle.tar.gz --directory /usr/local/bin/
+
+
+	# Remove the installation Clutter
+	#rm /usr/local/bin/Eagle.tar.gz
+
+# Install Minimach4 (to /usr/local/bin/)
+
+	# Download from site
+	#wget --output-document=/usr/local/bin/Minimach4.deb https://github.com/statgen/Minimac4/releases/download/v1.0.0/minimac4-1.0.0-Linux.deb
+
+	# Install
+	#cd /usr/local/bin/
+	#dpkg -i /usr/local/bin/Minimach4.deb
+	#apt-get -y install -f
+
+# Install SNPTEST (to /usr/local/bin/)
+
+	# Download from site
+	#wget --output-document=/usr/local/bin/SNPTEST.tgz http://www.well.ox.ac.uk/~gav/resources/snptest_v2.5.4-beta3_linux_x86_64_dynamic.tgz
+
+	# Unpack
+	#tar -xvzf /usr/local/bin/SNPTEST.tgz -C /usr/local/bin/
+
+	# Set the stupid permission
+	#chmod -R 775 /usr/local/bin/snptest_v2.5.4-beta3_linux_x86_64_dynamic/
+
+	# Move executable to PATH directory
+	#mv /usr/local/bin/snptest_v2.5.4-beta3_linux_x86_64_dynamic/snptest_v2.5.4-beta3 /usr/local/bin/snptest
+
+	# Remove the installation Clutter
+	#rm /usr/local/bin/SNPTEST.tgz
+
+
+# Install Miniconda (to /usr/local/bin/)
+	# Download from site
+	wget --output-document=/usr/local/bin/MinicondaSetup.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+
+	# Congigure
+	bash /usr/local/bin/MinicondaSetup.sh -b -p -u /usr/local/bin/miniconda
+
+	# Remove the installation Clutter
+	rm /usr/local/bin/MinicondaSetup.sh
+
+# Temporary export Miniconda exec path to PATH to finish installation via miniconda
+
+	export PATH=/usr/local/bin/miniconda/bin:$PATH
+
+# Download and install RFmix
+    git clone https://github.com/slowkoni/rfmix.git /usr/local/bin/rfmix
+    cd /usr/local/bin/rfmix; autoreconf --force --install; ./configure; make
+
+# Setup Miniconda for Bioconda
+
+	conda config --add channels defaults
+	conda config --add channels bioconda
+	conda config --add channels conda-forge
+		#conda config --add channels r
+
+
+# Install Odyssey Dependencies via Bioconda
+
+	conda update conda
+	conda install -y htslib
+	conda install -y bcftools
+	conda install -y plink
+	conda install -y shapeit
+    conda install -c bioconda shapeit4
+    conda install -c bioconda plink2
+	conda install -y impute2
+		#conda install -y R
+
+
+%environment
+
+# Set Path
+PATH=$PATH:\
+/usr/local/bin/miniconda/bin:\
+/usr/local/bin/Eagle_v2.4.1:\
+/usr/local/bin/Minimach4:\
+/usr/local/bin/rfmix:\
+$HOME/.local/bin:\
+
+# Export path and other things
+	export PATH
+	export LANG=en_US.UTF-8
+	export LC_ALL=en_US.UTF-8
+
+
+

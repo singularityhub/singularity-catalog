@@ -1,0 +1,37 @@
+# This recipe has been adapted from https://github.com/virus-x-eu/tools/blob/master/checkm/1.0.12/Dockerfile. Thank you @maitai.
+
+Bootstrap: docker
+From: ubuntu:focal
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 1.1.3
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install hmmer prodigal python3 python3-pip unzip wget
+
+  ## Download dependencies
+  wget https://github.com/matsen/pplacer/releases/download/v1.1.alpha19/pplacer-linux-v1.1.alpha19.zip
+  unzip pplacer-linux-v1.1.alpha19.zip
+  cp -r pplacer-Linux-v1.1.alpha19/* /usr/local/bin/
+
+  ## Install checkm
+  pip3 install checkm-genome==1.1.3
+
+  ## Configure data location (must be bind-mounted)
+  echo '{"dataRoot": "/media", "remoteManifestURL": "https://data.ace.uq.edu.au/public/CheckM_databases/", "manifestType": "CheckM", "remoteManifestName": ".dmanifest", "localManifestName": ".dmanifest"}' > /usr/local/lib/python3.8/dist-packages/checkm/DATA_CONFIG
+
+  ## Cleanup
+  rm -rf pplacer*
+  apt-get -y remove unzip wget
+  apt-get -y autoremove
+  apt-get -y clean all
+
+%runscript
+  if [ ! -f /media/.dmanifest ]; then
+    exec /bin/echo -e "This container requires that you bind mount the location to CheckM data into /media. Please use \"singularity run -B <path_to_checkm_data>:/media $SINGULARITY_NAME\" and try again. You can download the latest version of the CheckM data files from https://data.ace.uq.edu.au/public/CheckM_databases/. See https://github.com/Ecogenomics/CheckM/wiki/Installation#how-to-install-checkm for more information."
+  else
+    exec checkm "$@"
+  fi

@@ -1,0 +1,92 @@
+#
+# EasyBuild:
+# $ eb --from-pr=6593 QuantumESPRESSO-6.3-intel-2018b.eb --robot -C --container-base shub:shahzebsiddiqui/eb-singularity:centos-7.4.1708 --experimental
+#
+# $ time singularity build QuantumESPRESSO-6.3-intel-2018b-eb.sif Singularity.QuantumESPRESSO-6.3-intel-2018b-unrrc
+#
+Bootstrap: docker
+From: centos:7.4.1708
+
+%help
+EasyBuild is a software build and installation framework
+written in Python that allows you to install software in a structured,
+repeatable and robust way.
+
+This version of Quantum Espresso was compiled using EasyBuild:
+eb --from-pr=6593 QuantumESPRESSO-6.3-intel-2018b.eb --robot
+
+Maintainer: 
+hpc@unr.edu  https://www.unr.edu/research-computing/
+
+%setup
+# <unrrc-sif>
+
+# create bind mount point for associations
+mkdir -p ${SINGULARITY_ROOTFS}/data/gpfs/assoc
+
+RCEASYBUILDSOURCES="/scratch/sources"
+mkdir -p ${SINGULARITY_ROOTFS}/$RCEASYBUILDSOURCES
+cp /apps/easybuild/sources/l_mkl_2018.3.222.tgz ${SINGULARITY_ROOTFS}/$RCEASYBUILDSOURCES
+cp /apps/easybuild/sources/l_mpi_2018.3.222.tgz ${SINGULARITY_ROOTFS}/$RCEASYBUILDSOURCES
+cp /apps/easybuild/sources/parallel_studio_xe_2018_update3_composer_edition_for_cpp.tgz ${SINGULARITY_ROOTFS}/$RCEASYBUILDSOURCES
+cp /apps/easybuild/sources/parallel_studio_xe_2018_update3_composer_edition_for_fortran.tgz ${SINGULARITY_ROOTFS}/$RCEASYBUILDSOURCES
+cp /apps/easybuild/sources/INTEL_LICENSE_FILE ${SINGULARITY_ROOTFS}/$RCEASYBUILDSOURCES
+
+# </unrrc-sif>
+
+%post
+yum update -y
+yum groupinstall -y "Development Tools"
+yum install -y which wget
+yum install -y epel-release
+yum install -y python-pip python-devel  Lmod
+
+# need this for --package to work to generate RPM
+# yum install ruby ruby-devel rubygems -y &&
+# gem install fpm &&
+
+pip install --upgrade pip
+pip install setuptools
+pip install easybuild
+
+# need this for git integration with eb
+#pip install GitPython python-graph-dot graphviz keyring keyrings.alt
+
+mkdir -p /app/modules/
+mkdir -p /app/software
+mkdir -p /scratch/tmp
+useradd easybuild
+chown easybuild:easybuild -R /app
+chown easybuild:easybuild -R /scratch
+
+# upgrade easybuild package automatically to latest version
+pip install -U easybuild
+
+# change to 'easybuild' user
+su - easybuild
+
+# <unrrc-sif>
+RCEASYBUILDSOURCES="/scratch/sources"
+source $RCEASYBUILDSOURCES/INTEL_LICENSE_FILE
+
+eb --from-pr=6593 QuantumESPRESSO-6.3-intel-2018b.eb --robot --installpath=/app/ --prefix=/scratch --tmpdir=/scratch/tmp --sourcepath=$RCEASYBUILDSOURCES
+# </unrrc-sif>
+
+# exit from 'easybuild' user
+exit
+
+# cleanup
+rm -rf /scratch/tmp/* /scratch/build /scratch/sources /scratch/ebfiles_repo
+
+%runscript
+eval "$@"
+
+%environment
+source /etc/profile
+module use /app/modules/all
+module load QuantumESPRESSO/6.3-intel-2018b
+
+# <unrrc-sif>
+%labels
+MAINTAINER  hpc@unr.edu
+# </unrrc-sif>

@@ -1,0 +1,25 @@
+bootstrap: docker
+from: nvidia/cuda:8.0-runtime-centos7
+
+%environment
+
+export PATH=/usr/local/IMOD/bin:${PATH}
+export IMOD_DIR=/usr/local/IMOD
+
+%post
+
+yum install -y which file java-1.8.0-openjdk mesa-libGL mesa-libGLU mesa-dri-drivers glx-utils libXrandr libXcursor libXinerama
+
+export IMOD_VERSION=4.10.38
+curl https://bio3d.colorado.edu/ftp/latestIMOD/RHEL7-64_CUDA8.0/imod_${IMOD_VERSION}_RHEL7-64_CUDA8.0.sh > imod_${IMOD_VERSION}_RHEL7-64_CUDA8.0.sh
+sh ./imod_${IMOD_VERSION}_RHEL7-64_CUDA8.0.sh -yes
+rm -f ./imod_${IMOD_VERSION}_RHEL7-64_CUDA8.0.sh
+
+# setup
+mkdir -p /usr/local/ImodCalib/
+cat <<EOF >> /usr/local/ImodCalib/cpu.adoc
+[Computer = localhost] 
+number = 24
+gpu.device = 1,2,3,4,5,6,7,8,9,10
+EOF
+

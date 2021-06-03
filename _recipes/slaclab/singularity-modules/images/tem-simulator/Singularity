@@ -1,0 +1,21 @@
+bootstrap: docker
+from: ubuntu:16.04
+
+%environment
+
+%post
+
+apt-get update
+apt-get install -y \
+  gcc g++ cmake build-essential curl unzip fftw3 fftw3-dev
+
+TMPFILE=`mktemp`
+TMPDIR=`mktemp -d`
+curl -L 'https://downloads.sourceforge.net/project/tem-simulator/TEM-simulator_1.3.zip' > $TMPFILE
+unzip $TMPFILE -d $TMPDIR
+rm -rf $TMPFILE
+cd $TMPDIR/TEM-simulator_1.3/src/
+make
+cp -rp $TMPDIR/TEM-simulator_1.3/src/TEM-simulator /usr/bin/
+rm -rf $TMPDIR
+

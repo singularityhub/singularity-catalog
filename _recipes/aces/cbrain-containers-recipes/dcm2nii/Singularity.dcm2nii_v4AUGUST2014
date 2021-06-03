@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: neurodebian:artful-non-free
+
+
+#######################################################
+#                                                     #
+# MCIN (McGill Centre for Integrative Neuroscience)   #
+#                                                     #
+# Singularity recipe for dcm2nii to build a container #
+# used in CBRAIN (https://github.com/aces/cbrain)     #
+#                                                     #
+#######################################################
+
+%labels
+  Maintainer Natacha Beck
+
+%help
+This container provides 'dcm2nii' from the mricron package.
+That supports converting DICOM and PAR/REC images into the NIfTI format. 
+http://people.cas.sc.edu/rorden/mricron/index.html  
+
+%post
+  apt-get update
+  apt-get install -y mricron
+

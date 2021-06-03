@@ -1,0 +1,16 @@
+Bootstrap:docker
+From:alpine
+
+%post
+    apk add --update --no-cache --virtual build-deps build-base zlib-dev
+    apk add --update --no-cache bash
+    wget https://github.com/lh3/bwa/releases/download/v0.7.17/bwa-0.7.17.tar.bz2
+    tar xf bwa-0.7.17.tar.bz2
+    cd bwa-0.7.17
+    make
+    apk del build-deps
+    mv bwa /usr/local/bin/
+    cd / ; rm -rf bwa-0.7.17
+
+%runscript
+    bwa "$@"

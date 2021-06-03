@@ -1,0 +1,28 @@
+Bootstrap: localimage
+From: ../r/r_3.5.1.simg
+
+%labels
+  Rstudio_Version 1.1.456
+
+%apprun rstudio
+  exec rserver "$@"
+
+%runscript
+  exec rserver "$@"
+
+%environment
+  export PATH=/usr/lib/rstudio-server/bin:${PATH}
+
+
+
+%post
+  export VERSION="1.1.456"
+  
+  apt-get update && apt-get install -y --no-install-recommends gdebi-core ca-certificates
+  
+  cd /tmp \
+    && wget https://download2.rstudio.org/rstudio-server-${VERSION}-amd64.deb
+  gdebi -n /tmp/rstudio-server-${VERSION}-amd64.deb
+
+  rm -rf /tmp/*
+  

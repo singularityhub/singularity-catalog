@@ -1,0 +1,47 @@
+BootStrap: shub
+From: shub://pranithavangala/singularity:r-3-4-3
+
+%labels
+
+    AUTHOR Pranitha Vangala <pranitha.vangala@gmail.com>
+    Version v1.0
+
+%environment
+    export SRC=/usr/local/src
+    export BIN=/usr/local/bin
+    export R_VERSION=R-3.4.3
+
+%post
+echo 'export PATH=$PATH:/opt/conda/bin' > /etc/profile.d/conda.sh && \
+    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.3.14-Linux-x86_64.sh -O ~/miniconda.sh && \
+    /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh
+
+##Install conda, bioconda and some tools necessary for HOMER
+ conda config --add channels conda-forge
+ conda config --add channels r
+ conda config --add channels defaults
+ conda config --add channels bioconda
+ #conda install r-essentials bioconductor-deseq2 bioconductor-edger r-seqinr rstudio
+
+##Install HOMER
+ wget http://homer.ucsd.edu/homer/configureHomer.pl
+ mkdir homer && mv configureHomer.pl homer
+ perl homer/configureHomer.pl -install
+ PATH $PATH://homer//bin/
+#Add path to bashrc
+
+##Install MMARGE
+ wget http://homer.ucsd.edu/MMARGE/MMARGE_v1.0.tar.gz
+ tar fxvz MMARGE_v1.0.tar.gz
+ chown -R root:root /MMARGE_v1.0*
+ curl -L http://cpanmin.us | perl - --self-upgrade
+ cpanm Set::IntervalTree
+ cpanm Statistics::Basic
+ cpanm Sys::CPU
+cd /MMARGE_v1.0
+ perl configure.pl
+ perl install.pl
+ PATH $PATH:/MMARGE_v1.0/bin/
+chmod -R a+x /MMARGE_v1.0/bin/
+

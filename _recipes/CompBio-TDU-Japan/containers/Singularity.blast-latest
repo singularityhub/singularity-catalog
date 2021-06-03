@@ -1,0 +1,23 @@
+Bootstrap: docker
+FROM: alpine
+
+%post
+    VERSION=2.7.1
+    apk --update --no-cache add --virtual=.build-deps ca-certificates wget
+    apk --no-cache add bash libbz2 libidn
+    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-2.28-r0.apk
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-bin-2.28-r0.apk
+    apk add --nocache glibc-2.28-r0.apk
+    apk add --nocache glibc-bin-2.28-r0.apk
+    wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/${VERSION}/ncbi-blast-${VERSION}+-x64-linux.tar.gz
+    tar xfvz ncbi-blast-${VERSION}+-x64-linux.tar.gz
+    mv ncbi-blast-${VERSION}+/bin/* /usr/local/bin/
+    rm glibc*.apk
+    rm "/root/.wget-hsts"
+    rm ncbi-blast-${VERSION}+-x64-linux.tar.gz
+    rm -r ncbi-blast-${VERSION}+
+    rm "/etc/apk/keys/sgerrand.rsa.pub"
+    apk del .build-deps
+    rm -r /usr/glibc-compat/bin
+    rm -r /usr/glibc-compat/sbin

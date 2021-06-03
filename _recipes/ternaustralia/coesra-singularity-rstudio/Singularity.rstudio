@@ -1,0 +1,43 @@
+BootStrap: docker
+From: rstudio/r-base:3.5.3-bionic
+
+
+%startscript
+ /usr/bin/rstudio
+
+%runscript
+  exec /usr/bin/rstudio "$@"
+
+%files
+ # install_ausplot.r /tmp
+ install_dependencies.r /tmp
+%environment
+  LANG=C.UTF-8
+  export LANG
+
+%post
+  apt update -y
+
+  export DEBIAN_FRONTEND=noninteractive
+  ln -fs /usr/share/zoneinfo/Australia/Brisbane /etc/localtime
+  apt-get install -y tzdata
+  dpkg-reconfigure --frontend noninteractive tzdata
+  apt-get install -y apt-transport-https software-properties-common wget
+
+  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+  add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/'
+  apt update -y
+  apt upgrade -y
+  # apt install -y r-base r-base-dev
+  apt install -y libnss3 libasound2 qt5-default libcurl4-openssl-dev libxml2-dev libmagick++-dev git libgdal-dev libgeos-dev libprotobuf-dev libprotoc-dev protobuf-compiler libudunits2-dev libjq-dev libqpdf-dev libpoppler-cpp-dev libssl-dev libssh2-1-dev openjdk-11-jdk libv8-dev libsodium-dev > /dev/null 2>&1
+  cd /tmp
+  chmod +x install_dependencies.r
+
+  ./install_dependencies.r > depedencies.log
+  # not sure why ausplot cannot be installed
+  # chmod +x /tmp/install_ausplot.r
+  #./install_ausplot.r
+
+  wget https://download1.rstudio.org/desktop/bionic/amd64/rstudio-1.2.5019-amd64.deb
+  # apt install -y libssl1.0-dev qml-module-qtquick-controls libqtwebkit-dev
+  apt install -y ./rstudio-1.2.5019-amd64.deb

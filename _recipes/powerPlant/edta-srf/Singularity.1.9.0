@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: quay.io/biocontainers/edta:1.9.0--0
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 1.9.0
+
+%environment
+  export LC_ALL=C
+
+%runscript
+  exec EDTA.pl "$@"

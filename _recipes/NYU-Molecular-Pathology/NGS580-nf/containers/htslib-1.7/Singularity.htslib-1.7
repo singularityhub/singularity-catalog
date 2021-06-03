@@ -1,0 +1,26 @@
+BootStrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%post
+    # ~~~~~ BASIC SETUP ~~~~~ #
+    apt-get update && \
+    apt-get install -y wget \
+    bzip2
+
+    # ~~~~~ MINICONDA ~~~~~ #
+    wget https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86_64.sh && \
+    bash Miniconda3-4.4.10-Linux-x86_64.sh -b -p /conda && \
+    rm -f Miniconda3-4.4.10-Linux-x86_64.sh
+    conda config --add channels defaults
+    conda config --add channels bioconda
+
+    # ~~~~~ SAMTOOLS ~~~~~ #
+    conda install -y -c bioconda htslib=1.7
+
+%test
+    which bgzip
+    which tabix
+
+%environment
+    export PATH="/conda/bin:${PATH}"

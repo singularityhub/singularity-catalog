@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 1.6
+
+%post
+  ## Download prerequisites
+  apt-get update
+  apt-get -y install --no-install-recommends libcommons-math3-java libnvidia-compute-430 ocl-icd-libopencl1 openjdk-8-jdk wget
+
+  ## Install
+  cd /opt
+  wget http://ufgb966.forst.uni-goettingen.de/GroIMP/GroIMP-1.6-all.deb
+  apt-get -y install ./GroIMP-1.6-all.deb
+  ln -s /usr/share/java /usr/share/GroIMP/ext
+
+  ## Cleanup
+  rm -f GroIMP-1.6-all.deb
+  apt-get -y remove wget
+  apt-get -y autoremove
+
+%runscript
+  exec /usr/bin/groimp "$@"
+

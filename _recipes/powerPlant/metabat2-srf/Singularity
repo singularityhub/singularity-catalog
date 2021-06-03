@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: metabat/metabat:v2.15-3-g367a7ef
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 2.15-3-g367a7e
+
+%runscript
+  exec runMetaBat.sh "$@"

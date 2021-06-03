@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: ubuntu:xenial-20190610  
+
+############################################################
+#                                                          #
+# MCIN (McGill Centre for Integrative Neuroscience)        #
+#                                                          #
+# Singularity recipe for FSL 6.0.1 to build a container    #
+# used in CBRAIN (https://github.com/aces/cbrain)          #
+#                                                          #
+############################################################
+%labels
+  Maintainer Shawn Brown 
+
+%help
+This container executes any fsl-core 6.0.1 command, and it contain all the fsl data too. 
+For more information see FSL website: https://fsl.fmrib.ox.ac.uk/fsl/fslwiki
+
+%post
+  apt-get update
+  apt-get install -y python wget curl file build-essential tcl libpng12-dev libmng-dev bzip2 sudo perl
+  curl -O https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py 
+  chmod 755 fslinstaller.py 
+  su -c "python ./fslinstaller.py -D -E -d /usr/local/fsl --fslversion 6.0.1"
+  mkdir /validation-data
+  cd /validation-data
+  wget https://fsl.fmrib.ox.ac.uk/fslcourse/downloads/preCourse.tar.gz
+  tar -xvzf preCourse.tar.gz
+  wget https://fsl.fmrib.ox.ac.uk/fslcourse/downloads/structural.tar.gz
+  tar -xvzf structural.tar.gz 
+   
+%environment
+  export FSLDIR=/usr/local/fsl
+  export FSLOUTPUTTYPE=NIFTI_GZ
+  export PATH=/usr/local/fsl/bin:$PATH
+  export FSLMULTIFILEQUIT=TRUE
+  export POSSUMDIR=/usr/local/fsl
+  export LD_LIBRARY_PATH=/usr/local/fsl/lib:$LD_LIBRARY_PATH

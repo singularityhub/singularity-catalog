@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 1.8.1
+
+%post
+  apt-get update
+  apt-get -y install pcl-tools
+  
+  ## Cleanup
+  apt-get -y clean all
+
+%runscript
+if [ $# -eq 0 ]; then
+  /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"$SINGULARITY_NAME <cmd>\" or \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+  cd /usr/bin
+  exec ls pcl_*
+else
+  exec "$@"
+fi
+

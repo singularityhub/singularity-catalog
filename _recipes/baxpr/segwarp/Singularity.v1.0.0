@@ -1,0 +1,93 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+  SPM12 warp of segmentation image to native space.
+  Info and usage:
+    /opt/segwarp/README.md
+
+
+%setup
+  mkdir -p ${SINGULARITY_ROOTFS}/opt/segwarp
+
+
+%files
+  bin                          /opt/segwarp
+  src                          /opt/segwarp
+  build                        /opt/segwarp
+  external                     /opt/segwarp
+  README.md                    /opt/segwarp
+
+ 
+%labels
+  Maintainer baxter.rogers@vanderbilt.edu
+
+
+%post
+  apt-get update
+  apt-get install -y wget unzip zip xvfb ghostscript imagemagick    # Misc tools
+  apt-get install -y openjdk-8-jre                                  # Matlab/SPM
+  
+  # FSL dependencies, h/t https://github.com/MPIB/singularity-fsl
+  #    debian vs ubuntu:
+  #            libjpeg62-turbo ->  libjpeg-turbo8
+  #            libmng1         ->  libmng2
+  apt-get -y install wget python-minimal libgomp1 ca-certificates \
+          libglu1-mesa libgl1-mesa-glx libsm6 libice6 libxt6 \
+          libjpeg-turbo8 libpng16-16 libxrender1 libxcursor1 \
+          libxinerama1 libfreetype6 libxft2 libxrandr2 libmng2 \
+          libgtk2.0-0 libpulse0 libasound2 libcaca0 libopenblas-base \
+          bzip2 dc bc
+  
+  # Fix imagemagick policy to allow PDF output. See https://usn.ubuntu.com/3785-1/
+  sed -i 's/rights="none" pattern="PDF"/rights="read | write" pattern="PDF"/' \
+    /etc/ImageMagick-6/policy.xml
+  
+  # Download the Matlab Compiled Runtime installer, install, clean up
+  mkdir /MCR
+  wget -nv -P /MCR https://ssd.mathworks.com/supportfiles/downloads/R2019b/Release/6/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2019b_Update_6_glnxa64.zip
+  unzip /MCR/MATLAB_Runtime_R2019b_Update_6_glnxa64.zip -d /MCR/MATLAB_Runtime_R2019b_Update_6_glnxa64
+  /MCR/MATLAB_Runtime_R2019b_Update_6_glnxa64/install -mode silent -agreeToLicense yes
+  rm -r /MCR/MATLAB_Runtime_R2019b_Update_6_glnxa64 /MCR/MATLAB_Runtime_R2019b_Update_6_glnxa64.zip
+  rmdir /MCR
+
+  # Get and install main FSL package
+  fsl_version=6.0.2
+  cd /usr/local
+  wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-${fsl_version}-centos7_64.tar.gz
+  tar zxf fsl-${fsl_version}-centos7_64.tar.gz
+  rm fsl-${fsl_version}-centos7_64.tar.gz
+  
+  # FSL setup
+  export FSLDIR=/usr/local/fsl
+  . ${FSLDIR}/etc/fslconf/fsl.sh
+  export PATH=${FSLDIR}/bin:${PATH}
+
+  # Run the FSL python installer
+  ${FSLDIR}/etc/fslconf/fslpython_install.sh
+
+  # Create input/output directories for binding
+  mkdir /INPUTS && mkdir /OUTPUTS
+
+  # Singularity-hub doesn't work with github LFS (it gets the pointer info instead 
+  # of the actual file) so we get the compiled matlab executable via direct download.
+  rm /opt/segwarp/bin/spm12.ctf
+  wget -nv -P /opt/segwarp/bin https://github.com/baxpr/segwarp/raw/master/bin/spm12.ctf
+
+  # Also need a dry run of SPM executable to avoid directory creation errors later.
+  /opt/segwarp/bin/run_spm12.sh /usr/local/MATLAB/MATLAB_Runtime/v97 quit
+
+
+%environment
+  # We don't need to set the Matlab library path here, because Matlab's
+  # auto-generated run_??.sh script does it for us.
+  
+  # Matlab shell
+  MATLAB_SHELL=/bin/bash
+  
+  # Path
+  export PATH=/opt/segwarp/src:/usr/local/fsl/bin:${PATH}
+
+
+%runscript
+  xwrapper.sh function segwarp "$@"

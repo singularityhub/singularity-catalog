@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: fedora:29
+
+%labels
+Maintainer tejas.sevak@plantandfood.co.nz
+Version 2.1
+
+%post
+  ## Download build prerequisites
+  dnf -y install gcc gcc-c++ libgomp make perl wget zlib-devel
+
+  wget http://catchenlab.life.illinois.edu/stacks/source/stacks-2.1.tar.gz
+
+  tar -xvf stacks-2.1.tar.gz
+  cd stacks-2.1
+  ./configure
+  make
+  make install
+  
+  ## Cleanup
+  dnf -y remove wget zlib-devel
+  dnf -y clean all
+  rm -rf /stacks*
+
+%runscript
+if [ $# -eq 0 ]; then
+  /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"$SINGULARITY_NAME <cmd>\" or \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+  exec ls /usr/local/bin
+else
+  exec "$@"
+fi

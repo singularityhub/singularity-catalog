@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/pytorch:20.03-py3
+
+%files
+    ./requirements.txt /app/
+
+%post
+    cd /app/
+    apt update
+    apt install -y software-properties-common nano less
+    add-apt-repository ppa:deadsnakes/ppa -y
+    apt update
+    apt install -y python3.8 python3-pip
+    python3.8 -m pip install pip
+    python3.8 -m pip install -r requirements.txt
+
+%environment
+    export PYTHONPATH=/app
+
+%runscript
+    echo "cd /app/entrypoints"
+    cd /app/entrypoints
+    echo "python3.8 -m pip install -r ../requirements.txt"
+    python3.8 -m pip install -r ../requirements.txt
+    echo "Running interview with arguments: $*"
+    python3.8 $@
+
+%startscript
+    echo "cd /app/entrypoints"
+    cd /app/entrypoints
+    echo "python3.8 -m pip install -r ../requirements.txt"
+    python3.8 -m pip install -r ../requirements.txt
+    echo "Running interview with arguments: $*"
+    python3.8 $@

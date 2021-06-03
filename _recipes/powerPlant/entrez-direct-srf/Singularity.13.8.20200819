@@ -1,0 +1,37 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 13.8.20200819
+
+%environment
+  export EDIRECT_DO_AUTO_ABBREV="true"
+  export PATH=/opt/edirect:$PATH
+  export LC_ALL=C
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install curl liblwp-protocol-https-perl libxml-simple-perl make
+
+  ## Build
+  cd /opt
+  curl -O https://ftp.ncbi.nlm.nih.gov/entrez/entrezdirect/versions/13.8.20200819/edirect.tar.gz
+  tar -xzf edirect.tar.gz 
+  cd edirect
+  export HOME=/opt/edirect/
+  ./setup.sh 
+
+  ## Cleanup
+  apt-get -y remove make
+  apt-get -y autoremove
+
+%runscript
+if [ -x /opt/edirect/$SINGULARITY_NAME ]; then
+    exec $SINGULARITY_NAME "$@"
+else
+  /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+  exelist=$(cd /opt/edirect; find * -maxdepth 0 -type f -executable)
+  exec echo $exelist
+fi

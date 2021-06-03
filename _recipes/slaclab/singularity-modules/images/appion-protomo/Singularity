@@ -1,0 +1,86 @@
+bootstrap: docker
+from: semc/appion-protomo:latest
+
+%environment
+
+export APPIONPATH=/sw/myami/appion
+export LEGINONPATH=/sw/myami/leginon
+export EMANDIR=/sw/eman1
+export EMAN2DIR=/sw/eman2
+#export RELIONDIR=/sw/relion
+#export XMIPPDIR=/sw/xmipp
+#export MPIPATH=/usr/lib64/openmpi
+#export GRIGPATH=/sw/grigorieff
+
+#spider
+#export SPIDERDIR=/sw/spider
+#export SPBIN_DIR=${SPIDERDIR}/bin/
+#export SPPROC_DIR=${SPIDERDIR}/proc/
+#export SPMAN_DIR=${SPIDERDIR}/man/
+
+#protomo
+export I3ROOT=/sw/protomo2
+export PROTOMO2PATH=/sw/protomo2:/sw/protomo2/bin:/sw/protomo2/lib/linux/x86-64:/sw/ffmpeg-64bit-static
+
+export PATH=/usr/sbin:/usr/bin:/bin:${APPIONPATH}/bin:${LEGINONPATH}:${EMANDIR}/bin:${XMIPPDIR}/bin:${SPIDERDIR}/bin:
+export PATH=${PATH}:${GRIGPATH}/bin:${MPIPATH}/bin:${EMAN2DIR}/bin:${RELIONDIR}/bin
+export PATH=${PATH}:${I3ROOT}/i3/bin:${PROTOMO2PATH}
+export PYTHONPATH=${EMANDIR}/lib:${EMAN2DIR}/lib:${EMAN2DIR}/bin:${PROTOMO2PATH}/lib/linux/x86-64
+export LD_LIBRARY_PATH=${EMANDIR}/lib:${XMIPPDIR}/lib:${MPIPATH}/lib:${EMAN2DIR}/lib
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${RELIONDIR}/lib:${PROTOMO2PATH}/lib/linux/x86-64
+
+#tomo3d and tomoctf
+export PATH=${PATH}:/sw/tomo3d/bin:/sw/tomoctf/bin
+
+#imod
+source /sw/IMOD/IMOD-linux.sh
+
+export EDITOR=nano
+export TERM=xterm
+export HISTSIZE=10000
+export HISTFILESIZE=200000
+
+
+%post
+
+mkdir -p /var/log/mariadb/
+sed -i 's:80:8000:g' /etc/httpd/conf/httpd.conf
+rm -f /etc/httpd/conf.d/ssl.conf
+
+
+%runscript
+
+/etc/init.d/reduxd start && echo 'reduxd' >> /var/log/startup.log
+nohup /usr/sbin/apachectl -DFOREGROUND &
+echo 'httpd' >> /var/log/startup.log
+sleep 2s && echo 'sleep' >> /var/log/startup.log
+
+if [ ! -d "/emg/data/appion" ]; then
+        echo "Creating appion data folder in /emg/data/appion..." | tee -a /var/log/startup.log
+        mkdir /emg/data/appion
+        echo "Folder created." | tee -a /var/log/startup.log
+else
+        echo "Appion data folder exists at /emg/data/appion." | tee -a /var/log/startup.log
+fi
+
+if [ -d "/var/lib/mysql/mysql" ]; then
+        echo "Database exists";
+        mysqld_safe --nowatch
+        echo 'mysqld_safe launched.' | tee -a /var/log/startup.log
+else
+        mysql_install_db --user=${USER} --ldata=/var/lib/mysql
+        mysqld_safe --nowatch
+	until nc -c exit -v 0.0.0.0 3306
+	do
+	  echo "Waiting for database connection..." | tee -a /var/log/startup.log
+	  sleep 5
+	done
+        echo 'mysqld_safe launched.' | tee -a /var/log/startup.log
+        #mysql -u root < /sw/docker.sql && echo 'mysqldump' >> /var/log/startup.log
+        mysql -u root < /sw/sql/leginondb.sql && echo 'mysql leginondb upload' >> /var/log/startup.log
+        mysql -u root < /sw/sql/projectdb.sql && echo 'mysql projectdb upload' >> /var/log/startup.log
+        echo 'Leginon and Project databases initialized.' | tee -a /var/log/startup.log
+fi
+
+chmod 777 /home/appionuser/.Xauthority
+chown -R appionuser:users /home/appionuser/.Xauthority

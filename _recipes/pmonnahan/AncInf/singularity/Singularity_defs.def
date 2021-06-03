@@ -1,0 +1,269 @@
+BootStrap: docker
+From: ubuntu:latest
+
+## ===========================================================
+## Instructions:
+## On a Linux (ubuntu) system that has Singularity installed
+## perform a Singularity Build command with this Singularity
+## definition file
+##
+## Build Command Sandbox Build (interact with folders):
+    # sudo singularity build --sandbox Odyssey OdysseyDefF.def
+## Remove the Sandbox Container: sudo rm -rf Odyssey
+## Build Command:
+    # sudo singularity build Odyssey.sif OdysseyDefF.def
+## Test Installation Command:
+    # singularity exec ./Odyssey snptest -help
+## ===========================================================
+
+%setup
+    # copy desired scripts on host to 'scripts' subdirectory which is within the virtual machine directory
+    cp -R /vagrant/scripts/ ${SINGULARITY_ROOTFS}/scripts
+    cp -R /vagrant/data/ ${SINGULARITY_ROOTFS}/data
+
+%post
+
+# Install Important OS Programs
+    apt update
+    apt -y upgrade
+    apt -y install wget
+    apt -y install bzip2
+    apt -y install unzip
+        #apt -y install make
+    apt -y install gcc
+    apt -y install gnustep-base-runtime
+    apt -y install locales
+    apt -y install gzip
+#    apt -y install libicu60
+#    apt -y install libreadline7
+    apt update
+    apt-get install -y openjdk-8-jre
+    apt-get install -y git
+    apt-get install -y autoconf
+    apt-get update -y
+    apt-get install -y gawk
+
+
+# Export language preferences
+    locale-gen en_US.UTF-8
+    export LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    defaults write org.R-project.R force.LANG en_US.UTF-8
+
+# Install R dependencies
+    apt-get update
+    apt -y install libcurl4-openssl-dev
+    apt -y install libudunits2-dev
+    apt -y install libssl-dev
+    apt -y install libxml2-dev
+    apt -y install xorg
+    apt -y install libx11-dev
+    apt -y install libcairo2-dev
+    apt -y install libmagick++-dev
+    apt -y install libgeos-dev
+    apt-get install -y software-properties-common
+    apt-get update
+    apt-get install -y libgit2-dev
+    apt-get install -y gfortran
+    apt-get install -y clang
+    apt-get install -y mesa-common-dev
+    apt-get install -y libglu1-mesa-dev
+    apt-get install -y libsodium-dev
+    apt-get install -y libmariadb-dev
+    apt-get install -y libmariadbclient-dev
+    apt-get install -y libgmp3-dev
+    apt-get install -y tabix
+    apt-get install -y libpq-dev
+    apt-get install -y libmysqlclient-dev
+    apt-get install -y default-libmysqlclient-dev
+    apt-get install -y libgdal-dev
+    apt-get install -y pandoc
+    apt-get install -y python3-pip
+    apt-get install -y bedtools
+
+    apt install -y libgd-dev
+    apt install -y fontconfig
+    apt install -y libpango1.0-dev
+    apt install -y libgts-dev
+
+    apt-get install -y texlive-latex-base
+    apt-get install -y texlive-fonts-recommended
+    apt-get install -y texlive-fonts-extra
+    apt-get install -y texlive-latex-extra
+
+
+# Install R itself
+
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+    add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/'
+    apt update
+#    apt -y install r-recommended
+#    apt -y install r-base-dev
+#    apt -y install r-doc-html
+#    apt -y install r-base-core
+#    apt -y install r-base-html
+    apt -y install r-base
+#    yum -y install R
+    apt -y install libopenblas-base
+
+
+# Install R Packages
+    Rscript -e "pgs=c('rgl', 'gdtools','openssl','StanHeaders','stringr','wrapr','dplyr','testit','doParallel','lme4','optparse','broom','data.table','tidyverse','qqman', 'manhattanly','scales','vctrs','ggplot2','car', 'MASS','gridExtra', 'rcompanion', 'DescTools', 'yaml', 'formattable', 'rtracklayer', 'knitr', 'ggridges', 'SPAtest', 'devtools')
+    for (i in 1:length(pgs)){if (!pgs[i] %in% installed.packages()) install.packages(pgs[i])}"
+    Rscript -e "if (!requireNamespace('BiocManager', quietly = TRUE)) install.packages('BiocManager')
+    BiocManager::install('BiocGenerics')
+    BiocManager::install('lfa')
+    BiocManager::install('GWASTools')
+    BiocManager::install('SNPRelate')
+    BiocManager::install('GENESIS')
+    library(devtools)
+    install_github('kegrinde/STEAM')"
+
+# Tidy Up Apt-get package manager
+
+    apt-get clean
+
+# Install GraphViz for creating PNG files of snakemake rule DAGs
+
+    wget --output-document=/usr/local/bin/graphviz.tar.gz https://graphviz.gitlab.io/pub/graphviz/stable/SOURCES/graphviz.tar.gz
+    tar -zxvf /usr/local/bin/graphviz.tar.gz --directory /usr/local/bin/
+    cd /usr/local/bin/graphviz-2.40.1; ./configure; make; make install; cd
+
+# Install Eagle2 (to /usr/local/bin/)
+
+    # Download from site
+    #wget --output-document=/usr/local/bin/Eagle.tar.gz https://data.broadinstitute.org/alkesgroup/Eagle/downloads/Eagle_v2.4.1.tar.gz
+
+    # Unpack
+    #tar -zxvf /usr/local/bin/Eagle.tar.gz --directory /usr/local/bin/
+
+
+    # Remove the installation Clutter
+    #rm /usr/local/bin/Eagle.tar.gz
+
+# Install Minimach4 (to /usr/local/bin/)
+
+    # Download from site
+    #wget --output-document=/usr/local/bin/Minimach4.deb https://github.com/statgen/Minimac4/releases/download/v1.0.0/minimac4-1.0.0-Linux.deb
+
+    # Install
+    #cd /usr/local/bin/
+    #dpkg -i /usr/local/bin/Minimach4.deb
+    #apt-get -y install -f
+
+# Install SNPTEST (to /usr/local/bin/)
+
+    # Download from site
+    #wget --output-document=/usr/local/bin/SNPTEST.tgz http://www.well.ox.ac.uk/~gav/resources/snptest_v2.5.4-beta3_linux_x86_64_dynamic.tgz
+
+    # Unpack
+    #tar -xvzf /usr/local/bin/SNPTEST.tgz -C /usr/local/bin/
+
+    # Set the stupid permission
+    #chmod -R 775 /usr/local/bin/snptest_v2.5.4-beta3_linux_x86_64_dynamic/
+
+    # Move executable to PATH directory
+    #mv /usr/local/bin/snptest_v2.5.4-beta3_linux_x86_64_dynamic/snptest_v2.5.4-beta3 /usr/local/bin/snptest
+
+    # Remove the installation Clutter
+    #rm /usr/local/bin/SNPTEST.tgz
+
+
+# Install Miniconda (to /usr/local/bin/); comment this step out if just updating an image
+    # Download from site
+    wget --output-document=/usr/local/bin/MinicondaSetup.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+
+    # Congigure
+    bash /usr/local/bin/MinicondaSetup.sh -b -p /usr/local/bin/miniconda
+
+    # Remove the installation Clutter
+    rm /usr/local/bin/MinicondaSetup.sh
+
+# Temporary export Miniconda exec path to PATH to finish installation via miniconda
+
+    export PATH=/usr/local/bin/miniconda/bin:$PATH
+#    . /usr/local/bin/miniconda/etc/profile.d/conda.sh
+
+# Download and install RFmix
+    git clone https://github.com/slowkoni/rfmix.git /usr/local/bin/rfmix
+    cd /usr/local/bin/rfmix; autoreconf --force --install; ./configure; make
+
+# Download BLINK (GWAS)
+#    git clone https://github.com/Menggg/BLINK /usr/local/bin/BLINK
+#    cd /usr/local/bin/BLINK/
+#    unzip AMDAPPSDK-3.0.zip; cd AMDAPPSDK-3.0; ./install.sh -s --acceptEULA Y
+
+# Download vawk3
+    git clone https://github.com/pmonnahan/vawk /usr/local/bin/vawk
+
+# Download KING (kinship estimation)
+    wget --output-document=/usr/local/bin/Linux-king.tar.gz http://people.virginia.edu/~wc9c/KING/Linux-king.tar.gz
+    tar -xzvf /usr/local/bin/Linux-king.tar.gz -C /usr/local/bin/
+    rm /usr/local/bin/Linux-king.tar.gz
+
+# Download snpEff (Variant Annotation)
+   wget http://sourceforge.net/projects/snpeff/files/snpEff_latest_core.zip
+   unzip snpEff_latest_core.zip
+   java -jar snpEff/snpEff.jar download GRCh37.75
+   java -jar snpEff/snpEff.jar download GRCh38.86
+
+# Setup Miniconda for Bioconda
+
+    conda config --add channels defaults
+    conda config --add channels bioconda
+    conda config --add channels conda-forge
+    conda config --add channels hcc
+    conda config --add channels r
+
+    conda create --name py27 python=2.7
+
+
+# Install dependencies via Bioconda
+
+    conda update conda
+    conda install -y libgcc
+    conda install -c bioconda shapeit4
+    conda install -c hcc plink2
+    conda install -y impute2
+    conda install -y pandas
+    conda install -c bioconda -c conda-forge snakemake
+    conda install -y htslib
+    conda install -y bcftools
+    conda install -y plink
+    conda install -y pysam
+
+    conda create --name py36 python=3.6
+    conda install -y pandas -n py36
+    conda install -y htslib -n py36
+    conda install -y bcftools -n py36
+    conda install -y plink -n py36
+
+# Install CrossMap
+    pip install -U pip
+    pip3 install Cython
+    pip install numpy
+    pip install --upgrade pip
+    pip3 install pysam
+    pip3 install --no-cache bx-python
+    pip3 install CrossMap
+    pip3 install CrossMap --upgrade
+
+%environment
+
+# Set Path
+PATH=$PATH:\
+/usr/local/bin/miniconda/bin:\
+/usr/local/bin/Eagle_v2.4.1:\
+/usr/local/bin/Minimach4:\
+/usr/local/bin/rfmix:\
+/usr/local/bin/graphviz-2.40.1:\
+/usr/local/bin/vawk:\
+$HOME/.local/bin:\
+
+# Export path and other things
+    export PATH
+    export LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+
+
+

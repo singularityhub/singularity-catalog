@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: nipype/nipype:latest
+
+%labels
+  Maintainer Sajjad
+  Version v1.0
+
+%post
+  export PATH=/opt/conda/bin:$PATH
+  pip install --upgrade pip
+  pip install jupyter
+  pip install seaborn

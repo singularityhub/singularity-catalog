@@ -1,0 +1,33 @@
+BootStrap: docker
+From: ubuntu:bionic
+
+%setup
+
+%files
+
+%environment
+
+%post
+    #------------------
+    # REQUERIMENTS
+    #------------------
+
+    REQUIREMENTS="wget \
+                  gcc \
+                  openmpi-bin \
+                  openmpi-common \
+                  openssh-client \
+                  libopenmpi-dev"
+
+    echo "Installing $REQUIREMENTS ..."
+    apt-get update
+    apt -y --allow-unauthenticated install $REQUIREMENTS
+
+    cd /tmp
+    wget https://raw.githubusercontent.com/open-mpi/ompi/master/examples/ring_c.c -O ring_c.c
+    mpicc ring_c.c -o /usr/bin/ring
+
+    apt-get clean
+    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/tmp/*
+

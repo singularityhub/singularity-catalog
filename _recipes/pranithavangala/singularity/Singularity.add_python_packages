@@ -1,0 +1,19 @@
+BootStrap: shub
+From: shub://pranithavangala/singularity:r-3-4-3
+
+%labels
+
+    AUTHOR Pranitha Vangala <pranitha.vangala@gmail.com>
+    Version v1.0
+
+%environment
+    export SRC=/usr/local/src
+    export BIN=/usr/local/bin
+    export R_VERSION=R-3.4.3
+
+%post
+pip install --upgrade pip
+pip install pysam
+pip install numpy scipy matplotlib ipython jupyter pandas sympy nose
+pip install umi_tools==0.5.5
+pip install g2gtools 

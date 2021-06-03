@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version fe4cf7a
+
+%post
+  ## Download build prerequisites
+  apt-get -y update
+  apt-get -y install git python python-pip python3 python3-pip r-base
+  pip install CPAT
+  pip3 install biopython scikit-learn pandas
+
+  cd /opt
+  git clone https://github.com/gbgolding/crema.git
+  cd crema
+  git checkout fe4cf7a
+  chmod +x bin/predict.py
+
+  ## Cleanup
+  apt-get -y remove git python-pip python3-pip
+  apt-get -y autoremove
+  apt-get -y clean all
+
+%runscript
+  exec python3 /opt/crema/bin/predict.py "$@"

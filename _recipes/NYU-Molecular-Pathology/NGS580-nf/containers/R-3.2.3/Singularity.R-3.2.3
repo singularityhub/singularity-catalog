@@ -1,0 +1,21 @@
+BootStrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%setup
+    /bin/cp install.R ${SINGULARITY_ROOTFS}/install.R
+
+%post
+    # ~~~~~ BASIC SETUP ~~~~~ #
+    apt-get update && \
+    apt-get install -y --no-install-recommends r-base=3.2.3-4
+    Rscript /install.R
+
+    # location for misc scripts
+    mkdir -p /opt/bin
+
+    # location for misc data
+    mkdir -p /data
+
+    # mount point for for NYULMC phoenix (Singluarity)
+    mkdir /ifs

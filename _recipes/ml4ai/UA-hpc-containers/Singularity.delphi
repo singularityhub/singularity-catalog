@@ -1,0 +1,14 @@
+Bootstrap: shub
+From: ml4ai/UA-hpc-containers:pytorch
+
+%help
+  Temporary container for the delphi repo with PyTorch support
+  Just testing this build again
+
+%post
+  # in-container bind points for shared filesystems
+  mkdir -p /extra /rsgrps /xdisk /uaopt /cm/shared /cm/local
+  git clone https://github.com/ml4ai/delphi.git
+  cd delphi/
+  pip install -e .
+  pip install torch==1.0.1 torchtext

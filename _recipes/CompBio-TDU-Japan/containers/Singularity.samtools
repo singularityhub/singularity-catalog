@@ -1,0 +1,17 @@
+Bootstrap: docker
+FROM: alpine
+
+%post
+    apk add --update --no-cache bash ncurses bzip2-dev xz-dev
+    apk --nocache add --virtual build-deps build-base build-base zlib-dev ncurses-dev musl-dev libcurl curl
+    wget https://github.com/samtools/samtools/releases/download/1.7/samtools-1.7.tar.bz2
+    tar xf samtools-1.7.tar.bz2
+    rm -rf samtools-1.7.tar.bz2
+    cd samtools-1.7
+    ./configure
+    make
+    make install
+    cd ;apk del build-deps
+    rm -rf /samtools-1.7
+%runscript
+    samtools "$@"

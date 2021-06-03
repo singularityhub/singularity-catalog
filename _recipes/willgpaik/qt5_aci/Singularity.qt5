@@ -1,0 +1,72 @@
+BootStrap: shub
+From: willgpaik/centos7_aci:cuda9.1
+
+%setup
+
+%files
+
+%environment
+    export PATH=/usr/local/Qt-5.12.5/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/Qt-5.12.5/lib:$LD_LIBRARY_PATH
+    export CPATH=/usr/local/Qt-5.12.5/include:$CPATH
+
+%runscript
+
+%post
+    scl enable devtoolset-8 bash
+    # required libs: https://wiki.qt.io/Building_Qt_5_from_Git
+    yum -y install libxcb libxcb-devel xcb-util xcb-util-devel mesa-libGL-devel libxkbcommon-devel
+    yum -y install mesa-libGLES-devel
+    yum -y install perl-devel
+    
+    yum -y update
+    
+    
+    # Install QtBase
+    cd /tmp/
+    git clone https://github.com/qt/qtbase.git
+    cd qtbase
+    git checkout 5.12.5
+    ./configure -opensource -confirm-license -silent -nomake examples
+    # https://www.qtcentre.org/threads/16301-Qt-installation-error
+    find /tmp/qtbase/src -iname '*.pl' -print0 | xargs -0 chmod -c -x
+    gmake -j 2
+    gmake install
+
+    export PATH=/usr/local/Qt-5.12.5/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/Qt-5.12.5:$LD_LIBRARY_PATH
+    
+    find /usr/local/Qt-5.12.5/bin -iname '*.pl' -print0 | xargs -0 chmod -c -x
+    
+    # Install QtCharts
+    cd /tmp/
+    git clone https://github.com/qt/qtcharts.git
+    cd qtcharts
+    git checkout 5.12.5
+    qmake
+    make -j 2 && make install
+    
+    # Install QtSVG
+    cd /tmp/
+    git clone https://github.com/qt/qtsvg.git
+    cd qtsvg
+    git checkout 5.12.5
+    qmake
+    make -j 2 && make install
+    
+    # Install QtX11Extras
+    cd /tmp
+    git clone https://github.com/qt/qtx11extras.git
+    cd qtx11extras
+    git checkout 5.12.5
+    qmake
+    make -j 2 && make install
+    
+    
+    cd /tmp
+    rm -rf qtbase qtcharts qtsvg qtx11extras
+
+
+    # Make symlink to qmake-qt5
+    ln -s `which qmake` /usr/local/Qt-5.12.5/bin/qmake-qt5
+    

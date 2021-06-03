@@ -1,0 +1,41 @@
+BootStrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+
+%runscript
+    #!/bin/bash
+    /jdk/bin/java -cp /software/bigstitcher.jar net.preibisch.mvrecon.fiji.plugin.resave.Resave_N5
+    echo $1
+    echo $2
+
+%files
+    /groups/scicompsoft/home/preibischs/software/jdk1.8.0_112 jdk
+
+%post
+    echo "Hello from inside the container"
+    sed -i 's/$/ universe/' /etc/apt/sources.list
+    apt-get update
+    apt-get -y install git maven
+    mkdir /software
+    cd /software
+    git clone https://github.com/PreibischLab/BigStitcher.git
+    cd BigStitcher
+    export JAVA_HOME=/jdk/
+    mvn -Pfatjar clean package
+    bs_version=`cat pom.xml | grep -A 2 "<artifactId>Big" | grep "<version>" | awk -F ">" '{print $2}' | awk -F "<" '{print $1}'`
+    cd ..
+    cp BigStitcher/target/BigStitcher-$bs_version.jar ./bigstitcher.jar
+    rm -rf BigStitcher
+    cd ~/
+    rm -rf .m2
+
+    apt-get -y remove git maven
+    apt autoremove -y
+    apt-get clean
+
+%environment
+    export PATH=/usr/games:$PATH
+    export LC_ALL=C
+    export JAVA_HOME=/jdk/    
+

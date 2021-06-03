@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: ubuntu
+
+%help
+    Please visit https://www.github.com/JoshLoecker/MAPT for more info
+
+%post
+    # Please access Oxford Nanopore Community and paste the most recent version of guppy you would lke to use here
+    DOWNLOAD_LINK=
+
+    # update the ubuntu container, install wget
+    apt update
+    apt install wget --yes
+
+    # download guppy
+    cd /
+    wget "$DOWNLOAD_LINK"
+
+    # install guppy and its dependencies
+    apt install /ont*.deb --yes
+
+    # do some cleanup on items that are no longer needed
+    rm -f /ont*.deb
+    apt purge wget --yes
+    apt clean
+    apt autoclean
+    apt autoremove --yes
+    rm -rf /var/lib/{apt,dpkg,cache,log}/
+
+%test
+    # This section will test if guppy_barcoder and guppy_basecaller are available
+    guppy_barcoder --version
+    guppy_basecaller --version

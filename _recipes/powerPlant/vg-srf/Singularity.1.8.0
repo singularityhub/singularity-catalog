@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: quay.io/vgteam/vg:v1.8.0-0-g3cb239e2-t176-run
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 1.8.0
+
+%runscript
+  exec vg "$@"

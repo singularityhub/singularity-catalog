@@ -1,0 +1,271 @@
+BootStrap: shub
+From: willgpaik/qt5_aci:dsi_mrtrix3
+%setup
+
+%files
+
+%environment
+        # Python 2 is required for FSL
+        source /opt/rh/python27/enable
+        
+#        source /opt/rh/devtoolset-8/enable
+
+        FSLDIR=/usr/local/fsl
+        source ${FSLDIR}/etc/fslconf/fsl.sh
+        PATH=${FSLDIR}/bin:${PATH}
+        export FSLDIR PATH
+
+        export ANTSPATH=/opt/sw/ants/bin
+        PATH="$PATH:/opt/sw/dsistudio/build/:/opt/sw/mrtrix3/bin/:/opt/sw/ants/bin/"
+        export PATH
+        
+        export FREESURFER_HOME=/usr/local/freesurfer/7.1.1-1
+        source $FREESURFER_HOME/SetUpFreeSurfer.sh
+        
+        export PATH=$PATH:/opt/sw/ICA-AROMA/ICA_AROMA.py
+        export AROMA_VERSION="0.4.4"
+
+        export R_LIBS=/usr/R:$R_LIBS
+        export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+        export PATH=/usr/local/bin:$PATH
+        export PATH=/usr/abin:$PATH
+        export LD_LIBRARY_PATH=/usr/lib64:$LD_LIBRARY_PATH
+        export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
+
+        export PATH=$PATH:/opt/sw/nodejs/bin:/opt/sw/workbench/bin_rh_linux64/:/usr/local/freesurfer/7.1.1-1/bin
+
+        export PATH=/usr/local/Qt-5.12.5/bin:$PATH
+        export LD_LIBRARY_PATH=/usr/local/Qt-5.12.5/lib:$LD_LIBRARY_PATH
+        export CPATH=/usr/local/Qt-5.12.5/include:$CPATH
+
+        export QTDIR=/usr/local/Qt-5.12.5
+        export QTLIB=/usr/local/Qt-5.12.5/lib
+        export QTINC=/usr/local/Qt-5.12.5/include
+
+%post
+        yum -q -y install freeglut-devel proj-devel proj-epsg proj-nad 
+        yum -y update
+
+        mkdir -p /opt/tmp
+        mkdir -p /opt/sw
+
+        source /opt/rh/python27/enable
+        
+        PATH="/usr/local/bin/:$PATH:/usr/lib64/openmpi/bin/"
+        LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib64/openmpi/lib/"
+        MPI_ROOT=/usr/lib64/openmpi/
+        export PATH
+        export LD_LIBRARY_PATH
+        export MPI_ROOT
+        export BOOST_ROOT=/usr/local/
+        
+        # Do not enable devtoolset (FreeSurfer needs GCC version 4.8)
+        # (Ref: http://freesurfer.net/fswiki/BuildRequirements)
+#        source /opt/rh/devtoolset-8/enable
+
+        export PATH=/usr/local/Qt-5.12.5/bin:$PATH
+        export LD_LIBRARY_PATH=/usr/local/Qt-5.12.5/lib:$LD_LIBRARY_PATH
+        export CPATH=/usr/local/Qt-5.12.5/include:$CPATH
+
+        export QTDIR=/usr/local/Qt-5.12.5
+        export QTLIB=/usr/local/Qt-5.12.5/lib
+        export QTINC=/usr/local/Qt-5.12.5/include
+        
+        # Install UDUNITS:
+        cd /opt/tmp
+        wget -q https://www.unidata.ucar.edu/downloads/udunits/udunits-2.2.26.tar.gz
+        tar -xf udunits-2.2.26.tar.gz
+        cd udunits-2.2.26
+        ./configure
+        make -j 2 && make install
+        
+        # Install GDAL:
+        cd /opt/tmp
+        wget -q https://github.com/OSGeo/gdal/releases/download/v2.4.4/gdal-2.4.4.tar.gz
+        tar -xf gdal-2.4.4.tar.gz
+        cd gdal-2.4.4
+        ./configure
+        make -j 2 && make install
+        
+        # Install GEOS
+        cd /opt/tmp
+        wget -q http://download.osgeo.org/geos/geos-3.8.1.tar.bz2
+        tar -xf geos-3.8.1.tar.bz2
+        cd geos-3.8.1
+        ./configure
+        make -j 2 && make install
+        
+        # Install Curl
+        cd /opt/tmp
+        wget -q https://curl.haxx.se/download/curl-7.73.0.tar.gz
+        tar -xf curl-7.73.0.tar.gz
+        cd curl-7.73.0
+        ./configure
+        make -j 2 && make install
+        
+        rm -rf /opt/sw/tmp/*
+        rm -rf /opt/tmp/*
+        
+        # Install ANTs:
+        cd /opt/sw
+        mkdir ants
+        cd /opt/tmp
+        git clone https://github.com/ANTsX/ANTs.git
+        cd /opt/sw/ants
+        git config --global url."https://".insteadOf git://
+        cmake3 /opt/tmp/ANTs -DSuperBuild_ANTS_USE_GIT_PROTOCOL=off -DBUILD_TESTING=off
+        make -j 2
+        
+        rm -rf /opt/sw/tmp/*
+        rm -rf /opt/tmp/*
+
+        # Install FSL:
+        cd /opt/tmp
+        wget -q https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py
+        python fslinstaller.py -d /usr/local/fsl
+        rm fslinstaller.py
+        
+        FSLDIR=/usr/local/fsl
+        . ${FSLDIR}/etc/fslconf/fsl.sh
+        PATH=${FSLDIR}/bin:${PATH}
+        export FSLDIR PATH
+        
+        rm -rf /opt/sw/tmp/*
+        rm -rf /opt/tmp/*
+
+        # Install afni:
+        yum install -q -y epel-release
+        yum install -q -y tcsh libXp openmotif gsl xorg-x11-fonts-misc       \
+                    PyQt4 R-devel netpbm-progs gnome-tweak-tool ed     \
+                    libpng12 xorg-x11-server-Xvfb firefox \
+                    mesa-libGLw-devel
+        yum update -q -y
+
+        mkdir -p /usr/abin
+
+        export HOME=/usr
+        export PATH=/usr/abin:$PATH
+
+        cd $HOME
+
+        curl -s -O https://afni.nimh.nih.gov/pub/dist/bin/misc/@update.afni.binaries
+        tcsh @update.afni.binaries -package linux_centos_7_64 -do_extras        
+
+        cp $HOME/abin/AFNI.afnirc $HOME/.afnirc
+        suma -update_env
+
+        export R_LIBS=$HOME/R
+        mkdir $R_LIBS
+        echo 'export R_LIBS=$HOME/R' >> ~/.bashrc
+        echo 'setenv R_LIBS ~/R'     >> ~/.cshrc
+        source ~/.bashrc
+
+        rPkgsInstall -pkgs ALL
+
+        cp $HOME/abin/AFNI.afnirc $HOME/.afnirc
+        suma -update_env
+
+        curl -s -O https://afni.nimh.nih.gov/pub/dist/edu/data/CD.tgz
+        tar xvzf CD.tgz
+        cd CD
+        tcsh s2.cp.files . ~
+        cd ..
+        # https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/steps_linux_Fed_RH.html#prepare-for-bootcamp
+        rm CD.tgz
+        rm -rf CD
+
+        afni_system_check.py -check_all
+
+        @afni_R_package_install -shiny -circos
+
+        @update.afni.binaries -d
+        
+        rm -rf /opt/sw/tmp/*
+        rm -rf /opt/tmp/*
+        
+        # Install C3D:
+        cd /opt/tmp
+        wget -q https://sourceforge.net/projects/c3d/files/c3d/1.0.0/c3d-1.0.0-Linux-x86_64.tar.gz
+        tar -xf c3d-1.0.0-Linux-x86_64.tar.gz -C /opt/sw
+        cd /opt/sw
+        mv c3d-1.0.0-Linux-x86_64 c3d
+        
+        rm -rf /opt/sw/tmp/*
+        rm -rf /opt/tmp/*
+
+        # Install FreeSurfer:
+        cd /opt/tmp
+        wget -q https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/7.1.1/freesurfer-CentOS7-7.1.1-1.x86_64.rpm
+        yum -q -y localinstall freesurfer-CentOS7-7.1.1-1.x86_64.rpm
+        export FREESURFER_HOME=/usr/local/freesurfer/7.1.1
+        source $FREESURFER_HOME/SetUpFreeSurfer.sh
+        
+        cp /usr/local/Qt-5.12.5/plugins/platforms/* /usr/local/freesurfer/7.1.1-1/lib/qt/plugins/platforms/
+        cp /usr/local/Qt-5.12.5/lib/libQt5* /usr/local/freesurfer/7.1.1-1/lib/qt/lib/
+        
+        rm -rf /opt/sw/tmp/*
+        rm -rf /opt/tmp/*
+        
+        # Install ICA-AROMA:
+        cd /opt/tmp
+        wget -q https://github.com/maartenmennes/ICA-AROMA/archive/e8d7a58.tar.gz
+        tar -xf e8d7a58.tar.gz -C /opt/sw
+        cd /opt/sw
+        mv ICA-AROMA-e8d7a5891563aff7ff71375078314c417d32d808 ICA-AROMA
+        cd ICA-AROMA
+        chmod +x ICA_AROMA.py
+#        python2.7 -m pip install -r requirements.txt
+        
+        rm -rf /opt/sw/tmp/*
+        rm -rf /opt/tmp/*
+
+        # Install bids-validator:
+        cd /opt/tmp
+        wget -q https://nodejs.org/dist/v12.19.0/node-v12.19.0-linux-x64.tar.xz
+        tar -xf node-v12.19.0-linux-x64.tar.xz -C /opt/sw/
+        cd /opt/sw
+        mv node-v12.19.0-linux-x64 nodejs
+        export PATH=$PATH:/opt/sw/nodejs/bin
+        
+        rm -rf /opt/sw/tmp/*
+        rm -rf /opt/tmp/*
+
+        cd /opt/tmp
+        wget -q https://github.com/bids-standard/bids-validator/archive/v1.5.6.tar.gz
+        tar -xf v1.5.6.tar.gz -C /opt/sw
+        cd /opt/sw
+        mv bids-validator-1.5.6 bids-validator
+        cd /opt/sw/bids-validator/bids-validator/bin
+        npm install -g bids-validator
+        
+        rm -rf /opt/sw/tmp/*
+        rm -rf /opt/tmp/*
+
+        # Install connectome-workbench
+        cd /opt/tmp
+        wget -q https://www.humanconnectome.org/storage/app/media/workbench/workbench-rh_linux64-v1.4.2.zip
+        unzip workbench-rh_linux64-v1.4.2.zip
+        mv workbench /opt/sw
+
+        rm -rf /opt/sw/tmp/*
+        rm -rf /opt/tmp/*
+        rm -rf $HOME/.npm $HOME/.conda $HOME/.empty
+
+        # Install fMRIPrep:
+        pip3 install --no-cache-dir fmriprep
+        
+        
+        # Install AFNI R packages:
+        source /opt/rh/devtoolset-8/enable
+        rPkgsInstall -pkgs ALL
+        @afni_R_package_install -shiny -circos
+        
+        # Installing R packages for 3dLME and 3dICC:
+        R --vanilla -e "install.packages('nlme', repos='http://lib.stat.cmu.edu/R/CRAN/')"
+        R --vanilla -e "install.packages('lme4', repos='http://lib.stat.cmu.edu/R/CRAN/')"
+        R --vanilla -e "install.packages('phia', repos='http://lib.stat.cmu.edu/R/CRAN/')"
+        R --vanilla -e "install.packages('snow', repos='http://lib.stat.cmu.edu/R/CRAN/')"
+        
+        # remove temp directory:
+        rm -rf /opt/sw/tmp/*
+        rm -rf /opt/tmp/*

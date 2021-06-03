@@ -1,0 +1,276 @@
+Bootstrap: docker
+From: centos:7.4.1708
+%labels
+    # A base OS image to use for building ParFlow 
+%post    
+
+    # update OS
+
+    yum -y update
+
+    #-----------------------------------------------------------------------------
+    #  Package dependencies
+    #-----------------------------------------------------------------------------
+    yum -y  install  epel-release
+    yum  install -y  \
+    autoconf \
+    automake \
+    binutils \
+    cmake3 \
+    file \
+    gcc  \
+    gcc-c++  \
+    gcc-gfortran \
+    git \
+    libtool \
+    lsof \
+    make \
+    tcl-devel \
+    tcsh \
+    time \
+    tk-devel \
+    wget \
+    which \
+    zlib \
+    zlib-devells
+
+    export CORE_COUNT=$(nproc)
+    HOME_DIR=/home/parflow
+    export PARFLOW_LIB_DIR=${HOME_DIR}/pflib
+    export DOWNLOAD_DIR=${HOME_DIR}/downloads
+    mkdir -p ${PARFLOW_LIB_DIR}
+    cd ${HOME_DIR}   
+
+    #-----------------------------------------------------------------------------
+    # Build libraries
+    #-----------------------------------------------------------------------------
+    
+    #
+    # OMPI
+    # 
+    echo "Installing Open MPI"
+    export OMPI_DIR=${PARFLOW_LIB_DIR}/ompi
+    export OMPI_VERSION=4.0.1
+    export OMPI_URL="https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-$OMPI_VERSION.tar.gz"
+    mkdir -p ${DOWNLOAD_DIR}/ompi    
+    mkdir -p $OMPI_DIR
+    # Download
+    cd ${DOWNLOAD_DIR}/ompi && wget -O openmpi-$OMPI_VERSION.tar.gz $OMPI_URL && tar -xf openmpi-$OMPI_VERSION.tar.gz
+    # Compile and install
+    cd ${DOWNLOAD_DIR}/ompi/openmpi-$OMPI_VERSION && ./configure --prefix=$OMPI_DIR && make install -j${CORE_COUNT}
+    cd ../..
+    rm -fr ompi openmpi-$OMPI_VERSION.tar.gz
+    # Set env variables so we can
+    # compile our application
+    export PATH=$OMPI_DIR/bin:$PATH
+    export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+
+        #
+    # HDF5
+    #
+    echo "Installing HDF5"
+    export HDF5_DIR=${PARFLOW_LIB_DIR}/hdf5
+    export HDF5_VERSION=1.10.5
+    export HDF5_URL="https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-${HDF5_VERSION}/src/hdf5-${HDF5_VERSION}.tar.gz"
+    mkdir -p $HDF5_DIR
+    mkdir -p ${DOWNLOAD_DIR}/hdf5
+    cd ${DOWNLOAD_DIR}/hdf5 && \
+    wget ${HDF5_URL} && \
+    tar -xf hdf5-${HDF5_VERSION}.tar.gz && \
+    cd hdf5-${HDF5_VERSION} && \
+    CC=mpicc CXX=mpicxx ./configure \
+      --prefix=$HDF5_DIR \
+      --enable-parallel && \
+    make -j${CORE_COUNT} && make install -j${CORE_COUNT} && \
+    cd .. && \
+    rm -fr hdf5-${HDF5_VERSION} hdf5-${HDF5_VERSION}.tar.gz
+    export LD_LIBRARY_PATH=$HDF5_DIR/lib:$LD_LIBRARY_PATH
+
+
+    #
+    # SILO 
+    #
+    echo "Installing SILO"
+    export SILO_DIR=${PARFLOW_LIB_DIR}/silo
+    export SILO_VERSION=4.10.2    
+    mkdir -p $SILO_DIR
+    mkdir -p ${DOWNLOAD_DIR}/silo
+    cd ${DOWNLOAD_DIR}/silo
+
+    wget -O silo-${SILO_VERSION}.tar.gz \
+        https://wci.llnl.gov/content/assets/docs/simulation/computer-codes/silo/silo-${SILO_VERSION}/silo-${SILO_VERSION}.tar.gz && \
+    tar -xf silo-${SILO_VERSION}.tar.gz && \
+    cd silo-${SILO_VERSION} && \
+    ./configure  --prefix=$SILO_DIR --disable-silex --disable-hzip --disable-fpzip FC=gfortran F90=gfortran --with-hdf5=${PARFLOW_LIB_DIR}/hdf5/include,${PARFLOW_LIB_DIR}/hdf5/lib && \
+    make install -j${CORE_COUNT} && \
+    cd .. && \
+    rm -fr silo-${SILO_VERSION} silo-${SILO_VERSION}.tar.gz
+
+
+    #
+    # Hypre
+    #
+    echo "Installing Hypre"
+    export HYPRE_DIR=${PARFLOW_LIB_DIR}/hypre
+    export HYPRE_VERSION=2.18.2
+    mkdir -p ${DOWNLOAD_DIR}/hypre
+    cd ${DOWNLOAD_DIR}/hypre
+    wget https://github.com/hypre-space/hypre/archive/v${HYPRE_VERSION}.tar.gz && \
+    tar xf v${HYPRE_VERSION}.tar.gz && \
+    cd hypre-${HYPRE_VERSION}/src && \
+    CC=mpicc cxx=mpicxx && \
+    ./configure --prefix=${HYPRE_DIR} && \
+    make install -j${CORE_COUNT} && \
+    cd .. && \
+    rm -fr hypre-${HYPRE_VERSION} v${HYPRE_VERSION}.tar.gz
+
+%labels
+    A ParFlow container to be used with ompi base
+
+%environment
+    export PARFLOW_MPIEXEC_EXTRA_FLAGS="--mca mpi_yield_when_idle 1 --oversubscribe --allow-run-as-root"
+    
+
+##############################
+
+# SequentialIO=TRUE
+
+##############################
+
+
+%apprun seq
+
+    exec tclsh "$@"
+
+%applabels seq
+
+    Parflow with sequentialIO set to true, so no need to distribute inputs or undistribute outputs
+
+%appinstall seq
+
+    cd /home/parflow
+    
+    export CORE_COUNT=1
+    export PARFLOW_DIR=/home/parflow/pfdir_seq
+    export MPI_DIR=/home/parflow/pflib/ompi
+    export HDF5_DIR=/home/parflow/pflib/hdf5
+    export NETCDF_DIR=/home/parflow/pflib/netcdf
+    export SILO_DIR=/home/parflow/pflib/silo
+    export HYPRE_DIR=/home/parflow/pflib/hypre
+    export PATH=${MPI_DIR}/bin:$PATH
+    export LD_LIBRARY_PATH=${HDF5_DIR}/lib:${MPI_DIR}/lib:$LD_LIBRARY_PATH
+    
+    #-----------------------------------------------------------------------------
+    # Parflow configure and build
+    #-----------------------------------------------------------------------------
+    
+    
+        
+    git clone -b master --single-branch https://github.com/parflow/parflow.git parflow_seq && \
+    cd parflow_seq && \
+    git checkout b1c408fcb99f1f242a3c0830517eda80515b6201 && \
+    cd .. && \
+    mkdir -p build_seq && \
+    cd build_seq && \
+    cmake3 ../parflow_seq \
+    -DPARFLOW_AMPS_LAYER=mpi1 \
+    -DPARFLOW_AMPS_SEQUENTIAL_IO=TRUE \
+    -DHYPRE_ROOT=${HYPRE_DIR} \
+    -DSILO_ROOT=${SILO_DIR} \
+    -DHDF5_ROOT=${HDF5_DIR} \
+    -DPARFLOW_ENABLE_TIMING=TRUE \
+    -DPARFLOW_HAVE_CLM=ON \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=${PARFLOW_DIR} && \
+    make install -j${CORE_COUNT}
+    #cd .. && \
+    #rm -fr parflow build
+
+
+%appenv seq
+
+    export PARFLOW_DIR=/home/parflow/pfdir_seq
+    export PARFLOW_MPIEXEC_EXTRA_FLAGS="--mca mpi_yield_when_idle 1 --oversubscribe --allow-run-as-root"
+
+
+%apphelp seq
+
+    This is the help for seq. This app runs parflow compiled with SequentialIO=TRUE
+    To run: $ singularity run --app seq <path_to_singularity_container> <tcl_file> [optional arguments passed to tcl_file]
+
+%apptest seq
+    # These tests can't be run inside the immutable container because of how parflow requires to write to disk
+    export PARFLOW_DIR=/home/parflow/pfdir_seq
+    export PARFLOW_MPIEXEC_EXTRA_FLAGS="--mca mpi_yield_when_idle 1 --oversubscribe --allow-run-as-root"
+    cd /home/parflow/build_seq
+    make test    
+
+
+##############################
+
+# SequentialIO=False
+
+##############################
+
+
+%apphelp par
+
+    This is the help for par.
+
+
+%appinstall par
+
+    cd /home/parflow    
+    
+    export CORE_COUNT=1
+    export PARFLOW_DIR=/home/parflow/pfdir_par
+    export MPI_DIR=/home/parflow/pflib/ompi
+    export HDF5_DIR=/home/parflow/pflib/hdf5
+    export NETCDF_DIR=/home/parflow/pflib/netcdf
+    export SILO_DIR=/home/parflow/pflib/silo
+    export HYPRE_DIR=/home/parflow/pflib/hypre
+    export PATH=${MPI_DIR}/bin:$PATH
+    export LD_LIBRARY_PATH=${HDF5_DIR}/lib:${MPI_DIR}/lib:$LD_LIBRARY_PATH
+    
+    #-----------------------------------------------------------------------------
+    # Parflow configure and build
+    #-----------------------------------------------------------------------------
+    
+    #PARFLOW_MPIEXEC_EXTRA_FLAGS="--mca mpi_yield_when_idle 1 --oversubscribe --allow-run-as-root"
+        
+    git clone -b master --single-branch https://github.com/parflow/parflow.git parflow_par && \
+    cd parflow_par && \
+    git checkout b1c408fcb99f1f242a3c0830517eda80515b6201 && \
+    cd .. && \
+    mkdir -p build_par && \
+    cd build_par && \
+    cmake3 ../parflow_par \
+    -DPARFLOW_AMPS_LAYER=mpi1 \
+    -DPARFLOW_AMPS_SEQUENTIAL_IO=FALSE \
+    -DHYPRE_ROOT=${HYPRE_DIR} \
+    -DSILO_ROOT=${SILO_DIR} \
+    -DHDF5_ROOT=${HDF5_DIR} \
+    -DPARFLOW_ENABLE_TIMING=TRUE \
+    -DPARFLOW_HAVE_CLM=ON \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=${PARFLOW_DIR} && \
+    make install -j${CORE_COUNT} 
+    # cd .. && \
+    # rm -fr build
+
+
+%appenv par
+
+    export PARFLOW_DIR=/home/parflow/pfdir_par
+    export PARFLOW_MPIEXEC_EXTRA_FLAGS="--mca mpi_yield_when_idle 1 --oversubscribe --allow-run-as-root"
+
+%apprun par
+
+    exec tclsh "$@"
+
+%apptest par
+    # These tests can't be run inside the immutable container because of how parflow requires to write to disk
+    export PARFLOW_DIR=/home/parflow/pfdir_par
+    export PARFLOW_MPIEXEC_EXTRA_FLAGS="--mca mpi_yield_when_idle 1 --oversubscribe --allow-run-as-root"
+    cd /home/parflow/build_par
+    make test

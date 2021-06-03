@@ -1,0 +1,30 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%post
+    apt update
+    apt install -y software-properties-common
+    apt-add-repository universe
+    apt update
+    apt-get update
+    apt-get install -y git
+    apt install -y python3-pip
+    pip3 install setuptools
+    apt-get install -y libz-dev
+    git clone https://github.com/fenderglass/Flye
+    cd Flye || exit 1
+    VERSION=2.6
+    git checkout $VERSION
+    ### instead of git clone the repo,I could do 
+    # URL=https://github.com/fenderglass/Flye/archive/"$VERSION".tar.gz
+    # wget -O - "$URL" | tar xzf - 
+    # cd Flye || exit 1
+    python3 setup.py install
+    echo "export PATH=$(realpath bin):$PATH" >> $SINGULARITY_ENVIRONMENT
+    
+%test
+    cd /Flye
+    export PATH=$(realpath bin):$PATH
+    python3 flye/tests/test_toy.py || { echo flye test failed; exit 1; }
+    echo flye test successful

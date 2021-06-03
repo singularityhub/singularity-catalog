@@ -1,0 +1,9 @@
+BootStrap: docker
+From: jncc/arcsi-base:latest
+
+%runscript
+    #!/bin/bash
+    . /opt/conda/etc/profile.d/conda.sh
+    conda activate base
+    #$@ Executes any commands passed in on the singularity run command line.
+    $@ 

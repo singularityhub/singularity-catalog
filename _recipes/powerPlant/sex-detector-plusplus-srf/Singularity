@@ -1,0 +1,44 @@
+Bootstrap: docker
+From: ubuntu:focal
+Stage: build
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install clang gcc g++ git make
+  
+  ## Build
+  git clone https://gitlab.in2p3.fr/sex-det-family/sex-detector-plusplus.git
+  cd /sex-detector-plusplus/standard_model
+  make CXX_FLAGS_EXTRA='-fopenmp'
+  
+  cd ../heterogeneous_error_model
+  make CXX_FLAGS_EXTRA='-fopenmp'
+
+  cd ../homogeneous_error_model
+  make CXX_FLAGS_EXTRA='-fopenmp'
+
+Bootstrap: docker
+From: ubuntu:focal
+Stage: final
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 00f7d723
+
+%files from build
+  /sex-detector-plusplus/standard_model/sex_detector /usr/local/bin/sex_detector
+  /sex-detector-plusplus/heterogeneous_error_model/sex_detector /usr/local/bin/sex_detector_heterogeneous_error_model
+  /sex-detector-plusplus/homogeneous_error_model/sex_detector /usr/local/bin/sex_detector_homogeneous_error_model
+
+%post
+  apt-get update
+  apt-get -y install libgomp1
+
+%runscript
+if [ -x /usr/local/bin/$SINGULARITY_NAME ]; then
+    exec $SINGULARITY_NAME "$@"
+else
+  /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+  exec ls /usr/local/bin
+fi

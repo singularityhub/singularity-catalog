@@ -1,0 +1,66 @@
+BootStrap: docker
+From: centos:6.8
+IncludeCmd: yes
+
+%setup
+    cp /tmp/supernova-2.0.0.tar.gz $SINGULARITY_ROOTFS 
+    
+%post
+    # Prerequisites
+    yum -y install wget unzip
+   
+    # bcl2fastq
+    export TMP=/tmp
+    export bcl2fastqver=2-20-0
+    export bcl2fastqfullver=2.20.0.422
+#    export srcfile=bcl2fastq/bcl2fastq2-v${bcl2fastqver}-tar.zip
+    export srcfile=bcl2fastq2-v${bcl2fastqver}-linux-x86-64.zip
+    export rpmfile=bcl2fastq2-v${bcl2fastqfullver}-Linux-x86_64.rpm
+
+    cd /tmp
+    wget https://support.illumina.com/content/dam/illumina-support/documents/downloads/software/bcl2fastq/${srcfile}
+    unzip ${srcfile}
+    ls
+    yum -y install ${rpmfile}
+    rm ${srcfile}
+    rm ${rpmfile}
+#    export sourcedir=${TMP}/bcl2fastq2
+#    export builddir=${TMP}/bcl2fastq2-${bcl2fastqver}-build
+#    export installdir=/opt/bcl2fastq2/2.20.0
+
+#    cd ${TMP}
+#    wget ftp://webdata2:webdata2@ussd-ftp.illumina.com/downloads/software/bcl2fastq/${srcfile}
+#    unzip ${srcfile}
+#    tar -xvzf bcl2fastq2-v${bcl2fastqver}.tar.gz
+#    rm ${srcfile}
+#    mkdir -p ${builddir}
+#    cd ${builddir}     
+#    chmod ugo+x ${sourcedir}/src/configure
+#    chmod ugo+x ${sourcedir}/src/cmake/bootstrap/installCmake.sh
+#    ${srcdir}/src/configure --prefix=${installdir}
+#    make
+#    make install
+#    rm -rf ${builddir}
+
+    # supernova
+    supernovaver=2.0.0
+    supernovadir=/opt/supernova
+    mkdir -p ${supernovadir}
+    supernovatarfile=supernova-${supernovaver}.tar.gz
+    cd /
+    tar xzf ${supernovatarfile}
+    mv supernova-${supernovaver} ${supernovadir}/${supernovaver}
+    rm ${supernovatarfile}
+    
+%runscript
+    exec supernova run $@
+
+%files
+
+%environment
+    export BCL2FASTQ_HOME=/usr/local
+    export SUPERNOVA_HOME=/opt/supernova/2.0.0
+    export PATH="${SUPERNOVA_HOME}:${BCL2FASTQ_HOME}/bin:/usr/local/bin:/usr/bin:/bin:" 
+
+%labels
+    AUTHOR khs3z@virginia.edu

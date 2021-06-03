@@ -1,0 +1,38 @@
+#Bootstrap: debootstrap
+#OSVersion: xenial
+#MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+Bootstrap: localimage
+From: ubuntu_pw_1
+
+#%appenv make_credentials
+#  IRODS_USER=alice
+#  IRODS_USER_HOME=/tmp/alice
+
+%appfiles decrypt_pw
+  encoded_password  /encoded_password
+
+%apprun decrypt_pw
+python -c '
+from __future__ import print_function
+import getopt,os,hashlib,sys,simplecrypt,binascii
+thingie_read = open(os.environ["SCIF_APPROOT"]+"/encoded_password","rb").read()
+d64_encpasw = binascii.a2b_base64(thingie_read)
+opt, arg = getopt.getopt(sys.argv[1:], "p")
+if dict(opt).get("-p") is not None:
+  pw = simplecrypt.decrypt(arg[0],binascii.a2b_base64(thingie_read))
+  print("decoded pw = \"{}\"".format(pw))
+m = hashlib.md5()
+m.update(d64_encpasw)
+print("getting pw from embedded data: " ,m.hexdigest(),file=sys.stderr)' \
+"$@"
+
+#mkdir $IRODS_USER_HOME/.irods
+#cat >$IRODS_USER_HOME/.irods/irods_environment.json <<EOF 
+#{
+#     "irods_zone_name": $(jq .zone_name /etc/irods/server_config.json),
+#     "irods_host": "$(hostname)",
+#     "irods_port": $(jq .zone_port /etc/irods/server_config.json),
+#     "irods_user_name": "$IRODS_USER"
+#}
+#EOF
+

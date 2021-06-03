@@ -1,0 +1,47 @@
+BootStrap: docker
+From: shub://pranithavangala/singularity:0_part1
+
+%labels
+
+    AUTHOR Pranitha Vangala <pranitha.vangala@gmail.com>
+    Version v1.0
+
+# 2. This is how to copy files for >= 2.3, each line is a pair of <source> < destination>
+#%files
+#    avocados.txt # added to the root of the image
+#    avocados.txt /opt # added to the directory opt
+
+%environment
+    export SRC=/usr/local/src
+    export BIN=/usr/local/bin
+    export R_VERSION=R-3.4.3
+    
+
+%post
+#####
+## R
+export SRC=/usr/local/src
+export BIN=/usr/local/bin
+export R_VERSION=R-3.4.3
+
+curl http://cran.r-project.org/src/base/R-3/R-3.4.3.tar.gz -o $R_VERSION.tar.gz && \
+        tar xvf $R_VERSION.tar.gz && \
+        cd $R_VERSION && \
+	./configure && make && make install
+	    
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("tidyverse", dep = TRUE)'
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("edgeR", dep = TRUE)'
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("DESeq2", dep = TRUE)'
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("ape", dep = TRUE)'
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("ctc", dep = TRUE)'
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("gplots", dep = TRUE)'
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("Biobase", dep = TRUE)'
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("qvalue", dep = TRUE)'
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("goseq", dep = TRUE)'
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("Glimma", dep = TRUE)'
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("ROTS", dep = TRUE)'
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("GOplot", dep = TRUE)'
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("argparse", dep = TRUE)'
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("sm", dep = TRUE)'
+Rscript -e 'install.packages("ggplot2")'
+Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("zinbwave", dep = TRUE)'

@@ -1,0 +1,28 @@
+bootstrap: docker
+from: centos:centos6
+
+%environment
+
+export PHENIX="/usr/local/phenix-1.14-3260"
+export PHENIX_VERSION=1.14-3260
+export LIBTBX_BUILD=${PHENIX}/build
+export PATH=${LIBTBX_BUILD}/bin:$PATH
+# source $(libtbx.find_in_repositories dials/util/autocomplete.sh) && source $LIBTBX_BUILD/dials/autocomplete/bash.sh || echo dials command line completion not available
+
+export LC_ALL=C
+
+%files
+
+phenix-installer-1.14-3260-intel-linux-2.6-x86_64-centos6.tar.gz /tmp/
+
+%post
+
+yum install -y libXdamage libXext xorg-x11-font-utils libgomp libXxf86vm libSM libXext mesa-libGLU xorg-x11-server-Xorg xorg-x11-xauth xorg-x11-apps
+
+cd /tmp/
+tar xvfz /tmp/phenix-installer-1.14-3260-intel-linux-2.6-x86_64-centos6.tar.gz
+cd phenix-installer-1.14-3260-intel-linux-2.6-x86_64-centos6
+./install --verbose
+rm -rf /tmp/phenix-installer-1.14-3260-intel-linux-2.6-x86_64-centos6.tar.gz phenix-installer-1.14-3260-intel-linux-2.6-x86_64-centos6.tar.gz
+
+

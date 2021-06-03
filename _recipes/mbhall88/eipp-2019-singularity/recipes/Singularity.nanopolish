@@ -1,0 +1,22 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%post
+    apt update
+    apt install -y software-properties-common
+    apt-add-repository universe
+    apt update
+    apt install -y build-essential python3-pip git wget libbz2-dev liblzma-dev zlib1g-dev
+    pip3 install biopython
+    pip3 install pysam
+    git clone --recursive https://github.com/jts/nanopolish.git
+    cd nanopolish || exit 1
+    VERSION="v0.11.2"
+    git checkout "$VERSION"
+    make
+    make test
+    echo "export PATH=$(pwd):$PATH" >>$SINGULARITY_ENVIRONMENT
+
+%labels
+   Author Gilberto Alvarez

@@ -1,0 +1,11 @@
+bootstrap: docker
+from: ubuntu:18.04
+
+%environment
+
+%post
+
+apt-get update
+apt-get install -y curl gnuplot
+cd /usr/local
+curl http://grigoriefflab.janelia.org/sites/default/files/ctffind-4.1.13-linux64.tar.gz | tar xvfz -

@@ -1,0 +1,30 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%environment
+  PATH=/usr/local/bin:$PATH
+
+%post
+    apt update
+    apt install -y software-properties-common
+    apt-add-repository universe
+    apt update
+    # apt install -y git wget build-essential
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    echo 'export LC_ALL=C.UTF-8' >> $SINGULARITY_ENVIRONMENT
+    echo 'export LANG=C.UTF-8' >> $SINGULARITY_ENVIRONMENT
+
+    # ========================
+    # INSTALL clustal omega
+    # ========================
+    apt install -y clustalo
+
+
+    # ========================
+    # INSTALL pip3 and dependencies
+    # ========================
+    apt install -y python3-pip
+    pip3 install biopython==1.72 numpy==1.14.5 scikit-learn==0.20.3 snakemake
+    cp /usr/bin/python3 /usr/bin/python

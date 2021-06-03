@@ -1,0 +1,33 @@
+Bootstrap: docker
+FROM: alpine
+
+%post
+    apk add --update --no-cache perl bash bzip2-dev xz-dev libstdc++
+    apk add --update --no-cache --virtual build-deps autoconf automake libtool git build-base zlib-dev
+    git clone https://github.com/vcftools/vcftools.git
+    git clone https://github.com/samtools/htslib.git
+    git clone https://github.com/biosugar0/refmaker.git
+    mv refmaker/refmaker /usr/local/bin/
+    rm -rf refmaker
+    cd /htslib
+    autoheader
+    autoconf
+    ./configure
+    make
+    make install
+    cd /vcftools
+    ./autogen.sh
+    ./configure
+    make
+    make install
+    apk del build-deps
+    cd ; rm -rf /htslib /vcftools
+
+%apprun vcf-consensus
+    vcf-consensus "$@"
+
+%apprun tabix
+    tabix "$@"
+
+%labels
+    Version v0.5

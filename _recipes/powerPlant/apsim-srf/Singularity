@@ -1,0 +1,75 @@
+Bootstrap: docker
+From: ubuntu:bionic
+Stage: build
+
+%setup
+  ### Add CottonPassword.txt file for Cotton Model
+  cp -a files/CottonPassword.txt ${SINGULARITY_ROOTFS}/etc/CottonPassword.txt
+
+%post
+  ## Install dependencies
+  apt-get update && apt-get install -y gnupg2
+  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+  echo "deb http://download.mono-project.com/repo/ubuntu wheezy/snapshots/4.8.1 main" | tee /etc/apt/sources.list.d/mono-official.list
+  apt-get update
+  #apt-get -y install g++ gfortran libboost-all-dev libmonosgen-2.0-1 libxml2 libxml2-dev mono-devel mono-runtime mono-vbnc p7zip p7zip-full r-recommended subversion tcl8.5 tcl8.5-dev tzdata
+  DEBIAN_FRONTEND=noninteractive apt-get -y install g++ git gfortran libgfortran3 libxml2 libxml2-dev tcl8.5 tcl8.5-dev tcllib curl mono-devel mono-vbnc mono-runtime p7zip p7zip-full r-base r-base-dev r-recommended
+
+  ln -fs /usr/share/zoneinfo/Pacific/Auckland /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
+  Rscript -e 'install.packages(c("Rcpp", "RInside"),repos = "http://cran.us.r-project.org")'
+
+  ## Get latest revision
+  git clone https://github.com/APSIMInitiative/APSIMClassic.git /apsim
+  cd /apsim
+  git checkout 49ace54
+
+  ## Build Apsim
+  cd /apsim/Model/Build
+  chmod +x BuildAll.sh
+  ./BuildAll.sh
+  export APSIM=/apsim
+  cd /apsim/Release
+  ./Release.sh
+
+Bootstrap: docker
+From: ubuntu:bionic
+Stage: final
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 7.10-r49ace54f9c8a670190aef9d8d0fb9d5477bb1534
+
+%setup
+  ### Add CottonPassword.txt file for Cotton Model
+  cp -a files/CottonPassword.txt ${SINGULARITY_ROOTFS}/etc/CottonPassword.txt
+
+%files from build
+  /apsim/Release/Apsim*.binaries.LINUX.X86_64.exe /apsim-release.exe
+
+%post
+  ## Install dependencies
+  apt-get update && apt-get install -y gnupg2
+  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+  echo "deb http://download.mono-project.com/repo/ubuntu wheezy/snapshots/4.8.1 main" | tee /etc/apt/sources.list.d/mono-official.list
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata mono-runtime mono-vbnc libmonosgen-2.0-1 libboost-all-dev libxml2 tcl8.5 r-recommended
+
+  ln -fs /usr/share/zoneinfo/Pacific/Auckland /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
+  Rscript -e 'install.packages(c("Rcpp", "RInside"),repos = "http://cran.us.r-project.org")'
+
+  ## Install Apsim
+  /apsim-release.exe -y -o/apsim
+  ### /apsim needs to have 755 permissions so that non-privileged users can use the container
+  chmod 755 /apsim
+
+  ## Cleanup
+  rm -f /apsim-release.exe
+  apt-get -y clean all
+  apt-get -y autoremove --purge
+
+%environment
+  LD_LIBRARY_PATH=/apsim/Temp/Model
+  export LD_LIBRARY_PATH
+
+%runscript
+  /usr/bin/mono /apsim/Temp/Model/Apsim.exe "$@"

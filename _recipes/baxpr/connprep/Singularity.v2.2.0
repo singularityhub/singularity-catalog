@@ -1,0 +1,62 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%help
+Functional MRI connectivity preprocessing pipeline. Info and usage:
+/opt/connprep/README.md
+/opt/connprep/build/test_sing_container.sh
+
+
+%setup
+  mkdir -p ${SINGULARITY_ROOTFS}/opt/connprep
+
+
+%files
+  bin                          /opt/connprep
+  src                          /opt/connprep
+  build                        /opt/connprep
+  README.md                    /opt/connprep
+
+ 
+%labels
+  Maintainer baxter.rogers@vanderbilt.edu
+
+
+%post
+  apt-get update
+  apt-get install -y wget unzip zip xvfb ghostscript openjdk-8-jre imagemagick
+  
+  # Fix imagemagick policy to allow PDF output. See https://usn.ubuntu.com/3785-1/
+  sed -i 's/rights="none" pattern="PDF"/rights="read | write" pattern="PDF"/' \
+    /etc/ImageMagick-6/policy.xml
+  
+  # Download the Matlab Compiled Runtime installer, install, clean up
+  mkdir /MCR
+  wget -nv -P /MCR http://ssd.mathworks.com/supportfiles/downloads/R2017a/deployment_files/R2017a/installers/glnxa64/MCR_R2017a_glnxa64_installer.zip
+  unzip /MCR/MCR_R2017a_glnxa64_installer.zip -d /MCR/MCR_R2017a_glnxa64_installer
+  /MCR/MCR_R2017a_glnxa64_installer/install -mode silent -agreeToLicense yes
+  rm -r /MCR/MCR_R2017a_glnxa64_installer /MCR/MCR_R2017a_glnxa64_installer.zip
+  rmdir /MCR
+
+  # Create input/output directories for binding
+  mkdir /INPUTS && mkdir /OUTPUTS
+
+  # Singularity-hub doesn't work with github LFS (it gets the pointer info instead 
+  # of the actual file) so we get the compiled matlab executable via direct download.
+  # Also need a "dry run" of SPM executable to avoid directory creation errors later.
+  rm /opt/connprep/bin/spm12.ctf
+  wget -nv -P /opt/connprep/bin https://github.com/baxpr/connprep/raw/master/bin/spm12.ctf
+  /opt/connprep/bin/run_spm12.sh /usr/local/MATLAB/MATLAB_Runtime/v92 quit
+
+
+%environment
+  # We don't need to set the Matlab library path here, because Matlab's
+  # auto-generated run_??.sh script does it for us.
+
+
+%runscript
+  xvfb-run --server-num=$(($$ + 99)) \
+  --server-args='-screen 0 1600x1200x24 -ac +extension GLX' \
+  bash /opt/connprep/bin/run_spm12.sh \
+  /usr/local/MATLAB/MATLAB_Runtime/v92 function connprep "$@"
+

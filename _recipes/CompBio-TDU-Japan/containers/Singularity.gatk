@@ -1,0 +1,15 @@
+Bootstrap: docker
+FROM: broadinstitute/gatk:gatkbase-2.0.2
+
+%post
+    apt-get clean -y
+    apt-get autoclean -y
+    apt-get autoremove -y
+    VERSION=4.0.12.0
+    export JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk
+    wget https://github.com/broadinstitute/gatk/releases/download/$VERSION/gatk-$VERSION.zip
+    unzip gatk-$VERSION.zip
+    rm -f gatk-$VERSION.zip
+    mv gatk-$VERSION /data/
+    rm -r /data/gatkdoc
+    ulimit -c unlimited

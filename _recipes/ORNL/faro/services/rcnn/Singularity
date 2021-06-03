@@ -1,0 +1,53 @@
+BootStrap: docker
+From: alantrrs/py-faster-rcnn:latest   # This is a comment
+
+%help
+	Setup a container for a rcnn face detection service.
+	
+%runscript
+	python /home/face_rcnn/detect.py "$@"
+	
+#%setup
+#	mkdir home/face_rcnn
+	
+
+# Files to copy
+%files
+    #avocados.txt
+    #avocados.txt /opt
+	#models /home/models
+	face_rcnn /home/face_rcnn
+	
+%environment
+    VADER=badguy
+    #LUKE=goodguy
+    #SOLO=someguy
+    PYTHONPATH=/home/py-faster-rcnn/lib/:/home/caffe-fast-rcnn/python:/home/pyvision/src
+
+%post
+	echo Running post install configuration...
+	
+	apt-get update --fix-missing
+	apt upgrade -y 
+	
+	# Setup Locals
+	export LANG="en_US.UTF-8"
+	export LANGUAGE="en_US"
+	apt install -y language-pack-en-base
+	
+	# Get Protoc
+	wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protoc-3.6.1-linux-x86_64.zip
+	unzip protoc-3.6.1-linux-x86_64.zip -d /usr/local/
+	rm protoc-3.6.1-linux-x86_64.zip
+	
+	git clone https://github.com/bolme/pyvision.git /home/pyvision
+	
+	pip install --upgrade pip
+	#pip install dlib
+
+	# This next line seems to fail
+	#pip install grpcio
+    
+    
+    
+    

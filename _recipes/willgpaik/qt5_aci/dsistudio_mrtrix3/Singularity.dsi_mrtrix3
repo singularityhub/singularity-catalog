@@ -1,0 +1,65 @@
+BootStrap: shub
+From: shub://willgpaik/qt5_aci:qt5
+%setup
+
+%files
+
+%environment 
+    PATH="$PATH:/opt/sw/dsistudio/build/:/opt/sw/mrtrix3/bin/"
+    export PATH
+#    LD_PRELOAD="/opt/eod/lib64/libopentextdlfaker.so.3:/opt/eod/lib64/libopentextglfaker.so.3"
+#    export LD_PRELOAD
+
+%runscript
+
+
+%post
+    yum install -y mesa-libGLU-devel.i686 \
+        mesa-libGL-devel.i686 \
+        libcanberra-gtk*
+    yum -y install devtoolset-7-gcc*
+    yum -y install tix-devel tk-devel tkinter
+    yum -y install petsc-devel armadillo-devel ann-devel opencv-devel
+    
+    yum -y update
+    
+    PATH="/opt/sw/python/bin:$PATH:/usr/lib64/openmpi/bin/"
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib64/openmpi/lib/"
+    MPI_ROOT=/usr/lib64/openmpi/
+    export PATH
+    export LD_LIBRARY_PATH
+    export MPI_ROOT
+    export BOOST_ROOT=/usr/local/
+
+    export PATH=/usr/local/Qt-5.12.5/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/Qt-5.12.5/lib:$LD_LIBRARY_PATH
+    export CPATH=/usr/local/Qt-5.12.5/include:$CPATH
+
+    source /opt/rh/devtoolset-7/enable
+
+    # Install DSI Studio and MRtrix3
+    mkdir -p /opt/sw/
+    cd /opt/
+    wget https://raw.githubusercontent.com/willgpaik/qt5_aci/master/dsistudio_mrtrix3_install.sh
+    chmod +x dsistudio_mrtrix3_install.sh
+    ./dsistudio_mrtrix3_install.sh
+    
+    rm dsistudio_mrtrix3_install.sh
+    
+    
+    # Download requires libraries for EoD:
+#    cd /opt/
+#    svn export https://github.com/willgpaik/MorphoGraphX_aci.git/trunk/eod_graphics_libraries
+#    mv eod_graphics_libraries eod
+    
+    
+#    yum -y install epel-release
+#    yum -y install dkms
+#    cd /tmp
+#    wget http://us.download.nvidia.com/tesla/390.30/nvidia-diag-driver-local-repo-rhel7-390.30-1.0-1.x86_64.rpm
+#    chmod +x nvidia-diag-driver-local-repo-rhel7-390.30-1.0-1.x86_64.rpm
+#    rpm -i nvidia-diag-driver-local-repo-rhel7-390.30-1.0-1.x86_64.rpm
+#    rm nvidia-diag-driver-local-repo-rhel7-390.30-1.0-1.x86_64.rpm
+#    yum clean all
+#    yum -y install cuda-drivers
+    

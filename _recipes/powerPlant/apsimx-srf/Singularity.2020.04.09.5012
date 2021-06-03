@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 2020.04.09.5012
+
+%setup
+  curl --silent -o ${SINGULARITY_ROOTFS}/ApsimSetup.deb http://apsimdev.apsim.info/ApsimXFiles/ApsimSetup5012.deb
+
+%post
+  ## Configure timezone
+  apt-get update
+  apt-get -y install tzdata
+  ln -fs /usr/share/zoneinfo/Pacific/Auckland /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
+  
+  ## Install from deb file
+  apt -y install /ApsimSetup.deb
+  
+  ## Create entrypoint
+  cp -a /usr/local/bin/apsim /usr/local/bin/apsimmodels
+  sed -i 's/ApsimNG/Models/' /usr/local/bin/apsimmodels
+
+  ## Cleanup
+  rm -rf /ApsimSetup.deb
+  apt-get -y clean all
+  apt-get -y autoremove --purge
+
+%runscript
+  exec /usr/local/bin/apsimmodels "$@"

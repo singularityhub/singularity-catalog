@@ -1,0 +1,12 @@
+Bootstrap: docker
+FROM: openjdk:alpine
+
+%post
+    apk --update --no-cache add bash
+    wget https://jaist.dl.sourceforge.net/project/snpeff/snpEff_latest_core.zip
+    unzip snpEff_latest_core.zip
+    rm -rf snpEff_latest_core.zip
+    sed -i "s/.\/data\/$/~\/\.snpEff\/data/g" /snpEff/snpEff.config
+
+%runscript
+    /snpEff/scripts/snpEff "$@"

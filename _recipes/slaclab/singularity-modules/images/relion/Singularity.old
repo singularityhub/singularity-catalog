@@ -1,0 +1,75 @@
+bootstrap: docker
+from: nvidia/cuda:9.2-devel-ubuntu16.04
+
+%files
+
+  lsf-batch-submission_gpu.script  /opt/
+  lsf-batch-submission_cpu.script  /opt/
+
+%environment
+
+export PATH=/opt/relion/bin/:${PATH}:/opt/lsf/curr/bin
+export LD_LIBRARY_PATH=/opt/relion/lib:${LD_LIBRARY_PATH}
+
+# default container-based exes
+export RELION_MOTIONCOR2_EXECUTABLE=/usr/local/bin/MotionCor2
+export RELION_CTFFIND_EXECUTABLE=/usr/local/bin/ctffind
+export RELION_GCTF_EXECUTABLE=/usr/local/bin/Gctf
+
+%post
+
+apt-get update
+apt-get install -y gcc g++ cmake build-essential mpi-default-bin mpi-default-dev libfftw3-dev libx11-dev libtiff5-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev libxext-dev libxfixes-dev libxcursor-dev x11-utils libxinerama-dev  git  curl gnuplot unzip ghostscript evince csh
+#libxft-dev libssl-dev libquadmath0 libopenmpi-dev openmpi-bin libxss-dev libgsl0-dev libx11-dev gfortran libfreetype6-dev python default-jdk git  wget
+
+###
+# install ctffind
+###
+cd /usr/local \
+  && curl http://grigoriefflab.janelia.org/sites/default/files/ctffind-4.1.10-linux64.tar.gz | tar xvfz -
+
+###
+# install gctf
+###
+cd /usr/local/bin \
+  && curl https://www.mrc-lmb.cam.ac.uk/kzhang/Gctf/Gctf_v1.18_b2/bin/Gctf_v1.18_b2_sm35_cu9.2 > Gctf \
+  && chmod ugo+x /usr/local/bin/Gctf
+
+###
+# install motioncor
+###
+cd /usr/local/bin \
+  && curl http://msg.ucsf.edu/MotionCor2/MotionCor2_1.2.1.zip > MotionCor2_1.2.1.zip \
+  && unzip MotionCor2_1.2.1.zip \
+  && rm -f MotionCor2_1.2.1.zip \
+  && ln -sf MotionCor2_1.2.1-Cuda92 MotionCor2
+
+###
+# install relion
+###
+## beta
+#cd /tmp \
+#  && git clone https://bitbucket.org/scheres/relion-3.0_beta.git \
+#  && cd /tmp/relion-3.0_beta \
+#  && mkdir build \
+#  && cd build \
+#  && cmake -DCMAKE_INSTALL_PREFIX=/opt/relion -DCUDA=ON -DCudaTexture=ON -DMPI_C_COMPILER=/usr/bin/mpicc -DMPI_CXX_COMPILER=/usr/bin/mpicxx .. \
+#  && make -j8 \
+#  && make install \
+#  && rm -rf /tmp/relion-3.0_beta
+## release
+cd /tmp \
+  && git clone https://github.com/3dem/relion.git \
+  && cd /tmp/relion \
+  && git checkout 3.0 \
+  && mkdir build \
+  && cd build \
+  && cmake -DCMAKE_INSTALL_PREFIX=/opt/relion -DCUDA=ON -DCudaTexture=ON -DMPI_C_COMPILER=/usr/bin/mpicc -DMPI_CXX_COMPILER=/usr/bin/mpicxx .. \
+  && make -j16 \
+  && make install \
+  && rm -rf /tmp/relion
+
+
+# configure lsf
+ln -sf /opt/lsf/curr/conf/lsf.conf.co /etc/lsf.conf
+

@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: continuumio/miniconda3:4.8.2
+
+%labels
+    MAINTAINER Peter Kruczkiewicz
+    DESCRIPTION Singularity image containing all requirements for the peterk87/nf-virontus pipeline
+    VERSION 1.0.0
+
+%environment
+    PATH=/opt/conda/envs/nf-virontus-1.0.0/bin:$PATH
+    export PATH
+
+%files
+    environment.1.0.0.yml /environment.yml
+
+%post
+    export PATH=/opt/conda/bin:$PATH
+    apt-get update && apt-get install -y procps curl && apt-get clean -y
+    conda update conda
+    conda env create -f /environment.yml
+    conda clean -a

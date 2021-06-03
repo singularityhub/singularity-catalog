@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+Maintainer tejas.sevak@plantandfood.co.nz
+Version 3.0.3
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install make g++ zlib1g-dev python python-pip python-numpy python-scipy python-tk wget
+
+  cd /opt
+  wget https://github.com/biocore/sortmerna/releases/download/v3.0.3/sortmerna-3.0.3-Linux_U18.tar.gz
+  tar -xvf sortmerna-3.0.3-Linux_U18.tar.gz
+  pip install scikit-bio==0.2.3
+
+## Cleanup
+  rm -rf /opt/sortmerna-3.0.3-Linux_U18.tar.gz
+  apt-get -y remove wget
+  apt-get -y autoremove
+  apt-get -y clean all
+
+%runscript
+  exec /opt/sortmerna-3.0.3-Linux/bin/sortmerna "$@"

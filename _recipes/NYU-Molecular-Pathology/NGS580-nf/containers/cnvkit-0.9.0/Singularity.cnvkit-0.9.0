@@ -1,0 +1,32 @@
+BootStrap: docker
+From: ubuntu:16.04
+
+%post
+
+    apt-get update && apt-get install -y r-base-core
+    Rscript -e "source('http://bioconductor.org/biocLite.R'); biocLite('PSCBS', 'cghFLasso')"
+
+    apt-get install -y \
+        liblzma-dev \
+        python-biopython \
+        python-dev \
+        python-matplotlib \
+        python-numpy \
+        python-pip \
+        python-reportlab \
+        python-scipy \
+        python-tk \
+        zlib1g-dev
+
+        pip install \
+        future==0.17.1 \
+        futures==3.2.0 \
+        pyfaidx==0.5.5.2 \
+        pysam==0.15.2 \
+        pandas==0.20.3 \
+        cnvkit==0.9.0
+        
+        cnvkit.py version
+
+%test
+    cnvkit.py version

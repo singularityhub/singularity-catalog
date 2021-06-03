@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: centos:latest
+
+%environment
+
+  PATH=/opt/UCSF/Chimera/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+%files
+chimera-1.13.1-linux_x86_64.bin /tmp/chimera-1.13.1-linux_x86_64.bin
+
+%post
+yum install -y mesa-libGL libXft libXScrnSaver mesa-libGLU*.i686 mesa-libGLU*.x86_64 mesa-dri-drivers glx-utils xauth xterm xorg-x11-drv-nouveau
+
+chmod ugo+x /tmp/chimera-1.13.1-linux_x86_64.bin
+echo /opt/UCSF/Chimera | /tmp/chimera-1.13.1-linux_x86_64.bin
+rm /tmp/chimera-1.13.1-linux_x86_64.bin
+
+

@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 2.4.39
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install wget
+  
+  ## Get
+  cd /opt
+  wget https://github.com/bedops/bedops/releases/download/v2.4.39/bedops_linux_x86_64-v2.4.39.tar.bz2
+  tar -xjf bedops_linux_x86_64-v2.4.39.tar.bz2
+  cp -p bin/* /usr/local/bin
+
+  ## Cleanup
+  apt-get -y remove wget
+  rm -rf /opt/*
+
+%runscript
+if [ -x /usr/local/bin/$SINGULARITY_NAME ]; then
+    exec $SINGULARITY_NAME "$@"
+else
+  /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+  cmds=$(cd /usr/local/bin; ls *-typical | sed 's/-typical//g')
+  exec echo $cmds
+fi

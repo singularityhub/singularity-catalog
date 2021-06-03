@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: fedora:29
+
+%labels
+Maintainer tejas.sevak@plantandfood.co.nz
+Version 1.9.0
+
+%post
+  ## Download build prerequisites
+  dnf -y install boost boost-devel eigen3 eigen3-devel flann flann-devel gcc gcc-c++ make mlpack-bin mlpack-devel qhull qhull-devel vtk vtk-devel wget zlib zlib-devel
+
+  cd /opt
+  wget https://github.com/PointCloudLibrary/pcl/archive/pcl-1.9.0.tar.gz
+  tar -xvf pcl-1.9.0.tar.gz
+  cd /opt/pcl-pcl-1.9.0 && mkdir build && cd build
+  cmake -DCMAKE_BUILD_TYPE=Release ..
+  make -j$(nproc)
+  make -j$(nproc) install
+
+  ## Cleanup
+  dnf -y erase eigen3-devel flann-devel gcc gcc-c++ make mlpack-devel qhull-devel wget zlib-devel
+  dnf -y clean all
+  rm -rf /opt/pcl*
+
+%runscript
+if [ $# -eq 0 ]; then
+  echo -e 'This Singularity image cannot provide a single entrypoint. Please use `<image-name.simg> <CMD>` or `singularity exec <image-name.simg> <CMD>`, where <CMD> is one of the following:\n'
+  exec ls /usr/local/bin
+else
+  exec "$@"
+fi
