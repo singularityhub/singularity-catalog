@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: debian:buster
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE http://www.andrew.cmu.edu/~icaoberg
+    VERSION 2.1.5
+
+%post
+    apt-get update && apt-get install -y --no-install-recommends apt-utils
+    apt-get update --fix-missing
+    apt-get install -y abyss
+
+####################################################################################
+%apphelp abyss-fixmate
+  abyss-fixmate --help
+
+%apprun abyss-fixmate
+  abyss-fixmate "$@"
+
+####################################################################################
+%apphelp abyss-pe
+  abyss-pe --help
+
+%apprun abyss-pe
+  abyss-pe "$@"

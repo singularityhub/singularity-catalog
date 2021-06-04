@@ -133,7 +133,7 @@ From: ubuntu:20.04
     export PATH=$PATH:/opt/FastQC
     export PATH=$PATH:/opt/sratoolkit.2.10.7-ubuntu64/bin
     export PATH=$PATH:/opt/TrimGalore-0.6.3
-    export PATH=$PATH:/opt/meme/bin
+    export PATH=$PATH:/opt/meme/bin:/opt/meme/libexec/meme-5.3.3
     export PATH=$PATH:/opt/BWASP/bin
     export PATH=$PATH:/opt/aspera/cli/bin
 

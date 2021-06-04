@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: alpine
+
+%labels
+    AUTHOR icaoberg
+    MAINTAINER icaoberg@psc.edu
+    WEBSITE https://graphviz.org/
+    VERSION 2.44.0
+
+%post
+    apk update
+    apk add graphviz
+
+####################################################################################

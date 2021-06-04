@@ -17,10 +17,6 @@ From: osrf/ros:melodic-desktop-full
     export ROS_DISTRO=melodic
     export ROBOT_IP="172.16.0.2"
 %post
-    # Fix ros key
-    # NOTE: Needed because of this bug https://github.com/osrf/docker_images/issues/535
-    apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-
     # Install system package dependencies
     apt update --fix-missing
     apt install -q -y \
