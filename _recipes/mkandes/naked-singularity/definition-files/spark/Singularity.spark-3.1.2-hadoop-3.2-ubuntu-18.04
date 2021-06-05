@@ -4,7 +4,7 @@ From: mkandes/naked-singularity:ubuntu-18.04
 %labels
 
     APPLICATION_NAME spark + hadoop
-    APPLICATION_VERSION 2.3.1 + 2.7
+    APPLICATION_VERSION 3.1.2 + 3.2
     APPLICATION_URL https://spark.apache.org
 
     AUTHOR_NAME Marty Kandes
@@ -19,8 +19,8 @@ From: mkandes/naked-singularity:ubuntu-18.04
     # Set the Spark version number, the Hadoop version number, the root
     # and install directories where Spark will be installed within the 
     # container, and the URLs to the pre-packaged Spark builds
-    export SPARK_VERSION='2.3.1'
-    export SPARK_HADOOP_VERSION='2.7'
+    export SPARK_VERSION='3.1.2'
+    export SPARK_HADOOP_VERSION='3.2'
     export SPARK_ROOT_DIR='/opt/spark'
     export SPARK_INSTALL_DIR="${SPARK_ROOT_DIR}/${SPARK_VERSION}/hadoop/${SPARK_HADOOP_VERSION}"
     export SPARK_ROOT_URL='https://archive.apache.org/dist/spark'
@@ -54,9 +54,12 @@ From: mkandes/naked-singularity:ubuntu-18.04
     apt-get -y update && apt-get -y upgrade
 
     # Install Spark dependencies
-    apt-get -y install python
-    apt-get -y install python-dev
+    apt-get -y install python3
+    apt-get -y install python3-dev
     apt-get -y install openjdk-8-jre
+
+    # Use symbolic link for python2/3-compatability
+    ln -s /usr/bin/python3 /usr/bin/python
 
     # Install OpenSSH and Dropbear to provide SSH communication 
     # between Spark cluster nodes.
@@ -69,8 +72,8 @@ From: mkandes/naked-singularity:ubuntu-18.04
     # Set the Spark version number, the Hadoop version, the root and
     # install directories where Spark will be installed within the
     # container, and the URLs to the pre-packaged Spark buildi
-    export SPARK_VERSION='2.3.1'
-    export SPARK_HADOOP_VERSION='2.7'
+    export SPARK_VERSION='3.1.2'
+    export SPARK_HADOOP_VERSION='3.2'
     export SPARK_ROOT_DIR='/opt/spark'
     export SPARK_INSTALL_DIR="${SPARK_ROOT_DIR}/${SPARK_VERSION}/hadoop/${SPARK_HADOOP_VERSION}"
     export SPARK_ROOT_URL='https://archive.apache.org/dist/spark'

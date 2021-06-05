@@ -145,9 +145,9 @@ echo "installing conda extensions"
 conda activate
 conda install -q -y "python==${PYVERSION}"
 conda install -q -y -c "pkgs/main" -c anaconda -c conda-forge mamba conda "zstd<1.5"
-mamba install -q -y simplejson colorama   protobuf requests "numexpr>=2.7.2" "numpy>=1.17" hdf5 scipy "jedi=0.17" numba "mkl>=2020" cython  "jupyterlab<3"  jupyter scikit-image appdirs mako scikit-learn  seaborn pandas line_profiler black ninja colorama memory_profiler isort "mkl-include>=2020" fastrlock six setuptools cmake sympy pytest  scikit-learn-intelex "python==${PYVERSION}"
+mamba install -q -y simplejson colorama   protobuf requests "numexpr>=2.7.2" "numpy>=1.17" hdf5 scipy "jedi=0.17" numba "mkl>=2020" "tbb<=2021" cython  "jupyterlab<3"  jupyter scikit-image appdirs mako scikit-learn  seaborn pandas line_profiler black ninja colorama memory_profiler isort "mkl-include>=2020" fastrlock six setuptools cmake sympy pytest   "python==${PYVERSION}"
 mamba install -q -y -c "pkgs/main" -c anaconda -c  conda-forge -c plotly gpustat colorful "h5py>3,<3.2" lmfit ipympl pathos "nodejs>=14"  ptvsd xeus-python pytools nbdime "pip>=20.1" jupyter-dash ipyvolume "jupyter-server-proxy<3" six openssl "jedi<0.18" ffmpeg pytest-flake8 "python==${PYVERSION}"
-mamba install -q -y -c -c "pkgs/main" -c anaconda  -c intel "python==${PYVERSION}" dpcpp_cpp_rt
+mamba install -q -y -c numba icc_rt
 conda clean -a -y &
 
 
@@ -217,7 +217,7 @@ EOF3
 echo 'installing pnumpy from pip' && pip install pnumpy
 echo "installing pycuda from pip" && CFLAGS=-std=c++11 CXXFLAGS=-std=c++11  LIBRARY_PATH=/usr/local/cuda/lib64/stubs CPATH=/usr/local/cuda/include CUDA_ROOT=/usr/local/cuda pip install pycuda
 echo 'installing cupy from pip' && pip install cupy-cuda102  &
-echo 'installing mkl_umath from pip' && pip install mkl_umath &
+echo 'installing mkl_umath wheel' && pip install https://zimf.de/mkl_umath-0.1.1-cp38-cp38-linux_x86_64.whl --no-deps &
 
 #conda config
 conda config  --file /opt/anaconda3/.condarc --set changeps1 False

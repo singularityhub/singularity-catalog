@@ -1,0 +1,82 @@
+Bootstrap:docker
+From:centos:7.4.1708
+
+%environment
+export PATH=/sw/apps/miniconda/bin:$PATH
+
+%labels
+AUTHOR jisoolily_jeong@harvard.edu
+AUTHOR timothy_okeefe@harvard.edu
+AUTHOR hhoke@fas.harvard.edu
+
+%post
+## Set data path
+mkdir -p /data/dpdash
+
+## set web proxies if necessary
+#export http_proxy=""
+#export https_proxy=""
+#export no_proxy="localhost"
+    
+## update yum and install some useful things
+yum -y update
+yum clean all
+yum -y groupinstall "Development tools"
+yum -y install net-tools telnet wget git tar which whereis bzip2 p7zip vim vi vixie-cron cronie sudo 
+
+## install the RabbitMQ message queue
+wget https://github.com/rabbitmq/erlang-rpm/releases/download/v19.3.6.13/erlang-19.3.6.13-1.el7.centos.x86_64.rpm
+yum -y install erlang-19.3.6.13-1.el7.centos.x86_64.rpm
+wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.9/rabbitmq-server-3.6.9-1.el6.noarch.rpm
+rpm --import https://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+yum -y install rabbitmq-server-3.6.9-1.el6.noarch.rpm
+
+## install the Miniconda Python distribution
+curl https://repo.continuum.io/miniconda/Miniconda2-4.3.21-Linux-x86_64.sh -o /tmp/conda.sh
+bash /tmp/conda.sh -p /sw/apps/miniconda -b && rm /tmp/conda.sh
+export PATH=/sw/apps/miniconda/bin:$PATH
+
+## install the Node.js run-time
+curl --silent --location https://rpm.nodesource.com/setup_9.x | bash -
+yum -y install nodejs
+
+# set npm proxy if necessary
+#npm config set proxy ""
+#npm config set https-proxy ""
+
+## set npm version
+npm cache clean -f
+npm install -g n
+n 9.11.2
+
+## install the MongoDB document database
+mkdir -p /etc/yum.repos.d
+cat >> /etc/yum.repos.d/mongodb-org-3.4.repo <<- 'EOF'
+[mongodb-org-3.4]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.4/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
+EOF
+yum install -y mongodb-org
+
+## install the Celery asyncronous task queue
+pip install celery
+
+## install the DPdash digital phenotyping dashboard
+mkdir -p /sw/apps/dpdash && cd /sw/apps/dpdash
+git clone https://ncfcode.rc.fas.harvard.edu/dpdash/dpdash.git . 
+rm -rf ./node_modules
+npm install --save .
+npm run build
+rm -rf ./.git
+
+## install the DPPY DPdash file scanner/importer
+mkdir -p /sw/apps/dppy && cd /sw/apps/dppy
+git clone https://ncfcode.rc.fas.harvard.edu/dpdash/dppy.git . 
+pip install -r requirements.txt
+rm -rf ./.git
+
+## install Supervisord process control system
+easy_install supervisor

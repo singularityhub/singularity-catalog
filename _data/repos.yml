@@ -565,7 +565,7 @@ Malindrie/scShapes:
     >=</span><span class=\"pl-smi\">ifnb.lib.size</span><span class=\"pl-k\">$</span><span\
     \ class=\"pl-smi\">CTRL</span>, <span class=\"pl-v\">BPPARAM</span><span class=\"\
     pl-k\">=</span>SnowParam(<span class=\"pl-v\">workers</span><span class=\"pl-k\"\
-    >=</span><span class=\"pl-c1\">4</span>,<span class=\"pl-v\">type</span><span\
+    >=</span><span class=\"pl-c1\">8</span>,<span class=\"pl-v\">type</span><span\
     \ class=\"pl-k\">=</span><span class=\"pl-s\"><span class=\"pl-pds\">\"</span>SOCK<span\
     \ class=\"pl-pds\">\"</span></span>))\n<span class=\"pl-smi\">ifnb.stim.KS</span>\
     \ <span class=\"pl-k\">&lt;-</span> ks_test(<span class=\"pl-smi\">ifnb.subset</span><span\
@@ -575,7 +575,7 @@ Malindrie/scShapes:
     >lib.size</span><span class=\"pl-k\">=</span><span class=\"pl-smi\">ifnb.lib.size</span><span\
     \ class=\"pl-k\">$</span><span class=\"pl-smi\">STIM</span>, <span class=\"pl-v\"\
     >BPPARAM</span><span class=\"pl-k\">=</span>SnowParam(<span class=\"pl-v\">workers</span><span\
-    \ class=\"pl-k\">=</span><span class=\"pl-c1\">4</span>,<span class=\"pl-v\">type</span><span\
+    \ class=\"pl-k\">=</span><span class=\"pl-c1\">8</span>,<span class=\"pl-v\">type</span><span\
     \ class=\"pl-k\">=</span><span class=\"pl-s\"><span class=\"pl-pds\">\"</span>SOCK<span\
     \ class=\"pl-pds\">\"</span></span>))\n\n<span class=\"pl-c\"><span class=\"pl-c\"\
     >#</span>Select genes significant from the KS test.</span>\n<span class=\"pl-c\"\
@@ -615,7 +615,7 @@ Malindrie/scShapes:
     \ class=\"pl-k\">=</span><span class=\"pl-smi\">ifnb.lib.size</span><span class=\"\
     pl-k\">$</span><span class=\"pl-smi\">CTRL</span>, <span class=\"pl-v\">BPPARAM</span><span\
     \ class=\"pl-k\">=</span>SnowParam(<span class=\"pl-v\">workers</span><span class=\"\
-    pl-k\">=</span><span class=\"pl-c1\">4</span>,<span class=\"pl-v\">type</span><span\
+    pl-k\">=</span><span class=\"pl-c1\">2</span>,<span class=\"pl-v\">type</span><span\
     \ class=\"pl-k\">=</span><span class=\"pl-s\"><span class=\"pl-pds\">\"</span>SOCK<span\
     \ class=\"pl-pds\">\"</span></span>))\n<span class=\"pl-smi\">ifnb.stim.fit</span>\
     \ <span class=\"pl-k\">&lt;-</span> fit_models(<span class=\"pl-v\">counts</span><span\
@@ -625,7 +625,7 @@ Malindrie/scShapes:
     >lib.size</span><span class=\"pl-k\">=</span><span class=\"pl-smi\">ifnb.lib.size</span><span\
     \ class=\"pl-k\">$</span><span class=\"pl-smi\">STIM</span>, <span class=\"pl-v\"\
     >BPPARAM</span><span class=\"pl-k\">=</span>SnowParam(<span class=\"pl-v\">workers</span><span\
-    \ class=\"pl-k\">=</span><span class=\"pl-c1\">4</span>,<span class=\"pl-v\">type</span><span\
+    \ class=\"pl-k\">=</span><span class=\"pl-c1\">2</span>,<span class=\"pl-v\">type</span><span\
     \ class=\"pl-k\">=</span><span class=\"pl-s\"><span class=\"pl-pds\">\"</span>SOCK<span\
     \ class=\"pl-pds\">\"</span></span>))</pre></div>\n<p>Once the 4 distributions\
     \ are fitted, we next calculate the BIC value for\neach model and select the model\
@@ -750,7 +750,7 @@ Malindrie/scShapes:
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1622787226.0
+  updated_at: 1622806325.0
 NIH-HPC/singularity-def-files:
   data_format: 2
   description: definition files and wrapper scripts used by NIH HPC staff to install
@@ -1228,6 +1228,238 @@ Nahuel-Mk2/def-space:
   subscribers_count: 1
   topics: []
   updated_at: 1606189900.0
+bioexcel/biobb_structure_utils:
+  data_format: 2
+  description: Biobb_structure_utils is the Biobb module collection to modify or extract
+    information from a PDB structure file, such as pulling out a particular model
+    or chain, removing water molecules or ligands, or renumbering or sorting atoms
+    or residues.
+  filenames:
+  - Singularity.latest
+  full_name: bioexcel/biobb_structure_utils
+  latest_release: null
+  readme: '<p><a href="https://biobb-structure-utils.readthedocs.io/en/latest/?badge=latest"
+    rel="nofollow"><img src="https://camo.githubusercontent.com/d7c1b5de86a2921c1f759b175820fb443eba3f18bbf45e56e42f2cee72844627/68747470733a2f2f72656164746865646f63732e6f72672f70726f6a656374732f62696f62622d7374727563747572652d7574696c732f62616467652f3f76657273696f6e3d6c6174657374"
+    alt="" data-canonical-src="https://readthedocs.org/projects/biobb-structure-utils/badge/?version=latest"
+    style="max-width:100%;"></a>
+
+    <a href="https://anaconda.org/bioconda/biobb_structure_utils" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/a477fdb1fd9bc9eb7ffa6cae6a019c6d4c3902fd468b3126f1b78e56c7dcff83/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f696e7374616c6c253230776974682d62696f636f6e64612d627269676874677265656e2e7376673f7374796c653d666c6174"
+    alt="" data-canonical-src="https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat"
+    style="max-width:100%;"></a>
+
+    <a href="https://quay.io/repository/biocontainers/biobb_structure_utils" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/ca418e4db0b3de91a09a5df4a59446da015b6164598a8bc255918e911484f84f/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f646f636b65722d517561792e696f2d626c7565"
+    alt="" data-canonical-src="https://img.shields.io/badge/docker-Quay.io-blue" style="max-width:100%;"></a>
+
+    <a href="https://singularity-hub.org/collections/3836" rel="nofollow"><img src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
+    alt="" data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    style="max-width:100%;"></a>
+
+    <a href="https://opensource.org/licenses/Apache-2.0" rel="nofollow"><img src="https://camo.githubusercontent.com/2a2157c971b7ae1deb8eb095799440551c33dcf61ea3d965d86b496a5a65df55/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d417061636865253230322e302d626c75652e737667"
+    alt="" data-canonical-src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"
+    style="max-width:100%;"></a></p>
+
+    <h1>
+
+    <a id="user-content-biobb_structure_utils" class="anchor" href="#biobb_structure_utils"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>biobb_structure_utils</h1>
+
+    <h3>
+
+    <a id="user-content-introduction" class="anchor" href="#introduction" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h3>
+
+    <p>Biobb_structure_utils is the Biobb module collection to modify or extract information
+    from a PDB structure file, such as pulling out a particular model or chain, removing
+    water molecules or ligands, or renumbering or sorting atoms or residues. Biobb
+    (BioExcel building blocks) packages are Python building blocks that create new
+    layer of compatibility and interoperability over popular bioinformatics tools.
+    The latest documentation of this package can be found in our readthedocs site:
+
+    <a href="https://biobb-structure-utils.readthedocs.io/en/latest/" rel="nofollow">latest
+    API documentation</a>.</p>
+
+    <h3>
+
+    <a id="user-content-version" class="anchor" href="#version" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Version</h3>
+
+    <p>v3.5.3 2021.2</p>
+
+    <h3>
+
+    <a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h3>
+
+    <p>Using PIP:</p>
+
+    <blockquote>
+
+    <p><strong>Important:</strong> PIP only installs the package. All the dependencies
+    must be installed separately. To perform a complete installation, please use ANACONDA,
+    DOCKER or SINGULARITY.</p>
+
+    </blockquote>
+
+    <ul>
+
+    <li>
+
+    <p>Installation:</p>
+
+    <pre><code>  pip install "biobb_structure_utils&gt;=3.5.3"
+
+    </code></pre>
+
+    </li>
+
+    <li>
+
+    <p>Usage: <a href="https://biobb-structure-utils.readthedocs.io/en/latest/modules.html"
+    rel="nofollow">Python API documentation</a></p>
+
+    </li>
+
+    </ul>
+
+    <p>Using ANACONDA:</p>
+
+    <ul>
+
+    <li>
+
+    <p>Installation:</p>
+
+    <pre><code>  conda install -c bioconda "biobb_structure_utils&gt;=3.5.3"
+
+    </code></pre>
+
+    </li>
+
+    <li>
+
+    <p>Usage: With conda installation BioBBs can be used with the <a href="https://biobb-structure-utils.readthedocs.io/en/latest/modules.html"
+    rel="nofollow">Python API documentation</a> and the <a href="https://biobb-structure-utils.readthedocs.io/en/latest/command_line.html"
+    rel="nofollow">Command Line documentation</a></p>
+
+    </li>
+
+    </ul>
+
+    <p>Using DOCKER:</p>
+
+    <ul>
+
+    <li>
+
+    <p>Installation:</p>
+
+    <pre><code>  docker pull quay.io/biocontainers/biobb_structure_utils:3.5.3--py_0
+
+    </code></pre>
+
+    </li>
+
+    <li>
+
+    <p>Usage:</p>
+
+    <pre><code>  docker run quay.io/biocontainers/biobb_structure_utils:3.5.3--py_0
+    &lt;command&gt;
+
+    </code></pre>
+
+    </li>
+
+    </ul>
+
+    <p>Using SINGULARITY:</p>
+
+    <p><strong>MacOS users</strong>: it''s strongly recommended to avoid Singularity
+    and use <strong>Docker</strong> as containerization system.</p>
+
+    <ul>
+
+    <li>
+
+    <p>Installation:</p>
+
+    <pre><code>  singularity pull --name biobb_structure_utils.sif shub://bioexcel/biobb_structure_utils
+
+    </code></pre>
+
+    </li>
+
+    <li>
+
+    <p>Usage:</p>
+
+    <pre><code>  singularity exec biobb_structure_utils.sif &lt;command&gt;
+
+    </code></pre>
+
+    </li>
+
+    </ul>
+
+    <p>The command list and specification can be found at the <a href="https://biobb-structure-utils.readthedocs.io/en/latest/command_line.html"
+    rel="nofollow">Command Line documentation</a>.</p>
+
+    <h3>
+
+    <a id="user-content-copyright--licensing" class="anchor" href="#copyright--licensing"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Copyright
+    &amp; Licensing</h3>
+
+    <p>This software has been developed in the <a href="http://mmb.irbbarcelona.org"
+    rel="nofollow">MMB group</a> at the <a href="http://www.bsc.es/" rel="nofollow">BSC</a>
+    &amp; <a href="https://www.irbbarcelona.org/" rel="nofollow">IRB</a> for the <a
+    href="http://bioexcel.eu/" rel="nofollow">European BioExcel</a>, funded by the
+    European Commission (EU H2020 <a href="http://cordis.europa.eu/projects/823830"
+    rel="nofollow">823830</a>, EU H2020 <a href="http://cordis.europa.eu/projects/675728"
+    rel="nofollow">675728</a>).</p>
+
+    <ul>
+
+    <li>(c) 2015-2020 <a href="https://www.bsc.es/" rel="nofollow">Barcelona Supercomputing
+    Center</a>
+
+    </li>
+
+    <li>(c) 2015-2020 <a href="https://www.irbbarcelona.org/" rel="nofollow">Institute
+    for Research in Biomedicine</a>
+
+    </li>
+
+    </ul>
+
+    <p>Licensed under the
+
+    <a href="https://www.apache.org/licenses/LICENSE-2.0" rel="nofollow">Apache License
+    2.0</a>, see the file LICENSE for details.</p>
+
+    <h3>
+
+    <a id="user-content-acknolegements" class="anchor" href="#acknolegements" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Acknolegements</h3>
+
+    <p>This software uses functions to read and modify GRO files based in the <a href="https://github.com/caizkun/gropy">GROPY</a>
+    library created by Zhikun Cai (<a href="mailto:caizkun@gmail.com">caizkun@gmail.com</a>)
+    under the <a href="https://github.com/caizkun/gropy/blob/master/LICENSE">MIT</a>.
+    In this project <a href="https://github.com/caizkun/gropy">GROPY</a> has been
+    adapted to Python 3 and our own needs.</p>
+
+    <p><a href="https://camo.githubusercontent.com/39c04282e694d49ea0d56c716a27845cd25b9931f791484540f625dcecf68af2/68747470733a2f2f62696f657863656c2e65752f77702d636f6e74656e742f75706c6f6164732f323031392f30342f42696f657863656c6c5f6c6f676f5f3130383070785f7472616e73702e706e67"
+    target="_blank" rel="nofollow"><img src="https://camo.githubusercontent.com/39c04282e694d49ea0d56c716a27845cd25b9931f791484540f625dcecf68af2/68747470733a2f2f62696f657863656c2e65752f77702d636f6e74656e742f75706c6f6164732f323031392f30342f42696f657863656c6c5f6c6f676f5f3130383070785f7472616e73702e706e67"
+    alt="" title="Bioexcel" data-canonical-src="https://bioexcel.eu/wp-content/uploads/2019/04/Bioexcell_logo_1080px_transp.png"
+    style="max-width:100%;"></a></p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 8
+  topics: []
+  updated_at: 1622813374.0
 clemsonciti/singularity-images:
   data_format: 2
   description: Scripts for building Singularity images
@@ -1255,28 +1487,21 @@ clemsonciti/singularity-images:
   subscribers_count: 5
   topics: []
   updated_at: 1597386388.0
-danielabler/dockerfiles:
+dptools/dpdash:
   data_format: 2
-  description: Collection of dockerfile/singularity setups
+  description: Deep phenotyping dashboard
   filenames:
-  - ants/Singularity.libadjoint-2017-2_ants
-  - meshtool/Singularity.meshtool
-  - fenics/2017.2.0_libadjoint_ants/Singularity.libadjoint-2017-2_ants
-  - fenics/2017.2.0_libadjoint/Singularity.libadjoint-2017-2
-  - fenics/2017.2.0_libadjoint_ants_meshtool/Singularity.libadjoint-2017-2_ants_meshtool
-  full_name: danielabler/dockerfiles
+  - singularity/Singularity
+  full_name: dptools/dpdash
   latest_release: null
-  readme: '<p><a href="https://singularity-hub.org/collections/2950" rel="nofollow"><img
-    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
-    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    style="max-width:100%;"></a></p>
+  readme: '<p>Read the documentation <a href="http://docs.neuroinfo.org/dpdash/en/latest/"
+    rel="nofollow">here</a>!</p>
 
     '
-  stargazers_count: 0
-  subscribers_count: 0
+  stargazers_count: 1
+  subscribers_count: 2
   topics: []
-  updated_at: 1622531520.0
+  updated_at: 1622821974.0
 dt-np/raser:
   data_format: 2
   description: 'RAdiation SEmiconductoR '
@@ -1324,6 +1549,58 @@ dt-np/raser:
   subscribers_count: 2
   topics: []
   updated_at: 1622686281.0
+federatedcloud/pulsar-pipeline-container:
+  data_format: 2
+  description: A Docker/Singularity container for packaging pulsar searching software
+  filenames:
+  - Singularity
+  full_name: federatedcloud/pulsar-pipeline-container
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-docker-pulsar-pipeline" class="anchor" href="#docker-pulsar-pipeline"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>docker-pulsar-pipeline</h1>
+
+    <p>A Docker/Singularity container for packaging pulsar searching software</p>
+
+    <p><a href="https://singularity-hub.org/collections/4541" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
+    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    style="max-width:100%;"></a></p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 0
+  topics: []
+  updated_at: 1622819898.0
+federatedcloud/singularity-PRESTO:
+  data_format: 2
+  description: A base Singularity container for PRESTO, including dependencies and
+    environment, converted from docker-PRESTO
+  filenames:
+  - Singularity
+  full_name: federatedcloud/singularity-PRESTO
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-singularity-presto" class="anchor" href="#singularity-presto"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>singularity-PRESTO</h1>
+
+    <p>A base Singularity container for PRESTO, including dependencies and environment,
+    converted from docker-PRESTO</p>
+
+    <p><a href="https://singularity-hub.org/collections/4510" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
+    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    style="max-width:100%;"></a></p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 5
+  topics: []
+  updated_at: 1622819998.0
 fzimmermann89/idi:
   data_format: 2
   description: Simulating, Reconstructing and Analysing Data for FEL IDI Experiments
@@ -1433,7 +1710,7 @@ fzimmermann89/idi:
   - xray
   - incoherent-images
   - fel
-  updated_at: 1622773595.0
+  updated_at: 1622856009.0
 gipert/Singularity.def:
   data_format: 2
   description: My Singularity recipe files
@@ -1617,6 +1894,51 @@ icaoberg/singularity-abyss:
   subscribers_count: 1
   topics: []
   updated_at: 1622730467.0
+icaoberg/singularity-bat:
+  data_format: 2
+  description: Singularity recipe for bat
+  filenames:
+  - 0.17.1/Singularity
+  full_name: icaoberg/singularity-bat
+  latest_release: v0.17.1
+  readme: "<h1>\n<a id=\"user-content-singularity-bat\" class=\"anchor\" href=\"#singularity-bat\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>singularity-bat</h1>\n<p><a href=\"https://camo.githubusercontent.com/7b7c397acc5b91b4c4cf7756015185fe3c5f700f70d256a212de51294a0cf673/68747470733a2f2f696d6775722e636f6d2f724773646e44652e706e67\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/7b7c397acc5b91b4c4cf7756015185fe3c5f700f70d256a212de51294a0cf673/68747470733a2f2f696d6775722e636f6d2f724773646e44652e706e67\"\
+    \ alt=\"Example\" style=\"max-width:100%;\"></a></p>\n<p>Singularity recipe for\
+    \ <a href=\"https://github.com/sharkdp/bat\">bat</a>.</p>\n<h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\"\
+    \ class=\"anchor\" href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installing\
+    \ the container on Bridges 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code>\
+    \ file</li>\n<li>and the <code>bat</code> script</li>\n</ul>\n<p>to <code>/opt/packages/bat/0.17.1</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modules/bat</code>\
+    \ as <code>0.17.1</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p><a href=\"http://www.andrew.cmu.edu/~icaoberg\" rel=\"nofollow\"\
+    >icaoberg</a> at the <a href=\"http://www.psc.edu\" rel=\"nofollow\">Pittsburgh\
+    \ Supercomputing Center</a> in the <a href=\"https://www.cmu.edu/mcs/\" rel=\"\
+    nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\" rel=\"\
+    nofollow\">Carnegie Mellon University</a>.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 1
+  topics:
+  - singularity
+  - utilities
+  updated_at: 1622870361.0
 icaoberg/singularity-dust:
   data_format: 2
   description: Singularity recipe for dust
@@ -1624,286 +1946,44 @@ icaoberg/singularity-dust:
   - 0.5.4/Singularity
   full_name: icaoberg/singularity-dust
   latest_release: null
-  readme: '<p><a href="https://codedocs.xyz/jintonic/gears/annotated.html" rel="nofollow"><img
-    src="https://camo.githubusercontent.com/69e499a9ac348bd92b62e3eac1391967c594141c2855f42783e17f07527553c4/68747470733a2f2f636f6465646f63732e78797a2f6a696e746f6e69632f67656172732e737667"
-    alt="Doxygen" data-canonical-src="https://codedocs.xyz/jintonic/gears.svg" style="max-width:100%;"></a>
-
-    <a href="https://opensource.org/licenses/MIT" rel="nofollow"><img src="https://camo.githubusercontent.com/78f47a09877ba9d28da1887a93e5c3bc2efb309c1e910eb21135becd2998238a/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d79656c6c6f772e737667"
-    alt="License" data-canonical-src="https://img.shields.io/badge/License-MIT-yellow.svg"
-    style="max-width:100%;"></a>
-
-    <a href="examples"><img src="https://camo.githubusercontent.com/11e2b1b7847229fdbb3430cf4a5d908964287c64b59e0119936bce5359e4efb9/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f67656172732d6578616d706c65732d626c75653f7374796c653d666c6174"
-    alt="Examples" data-canonical-src="https://img.shields.io/badge/gears-examples-blue?style=flat"
-    style="max-width:100%;"></a>
-
-    <a href="INSTALL"><img src="https://camo.githubusercontent.com/04a8d93a22dbf7fc5499c5c388432c900fac24a8e4061f7794fa5c2260199c46/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6765742d737461727465642d6f72616e67653f7374796c653d666c6174"
-    alt="Get Started" data-canonical-src="https://img.shields.io/badge/get-started-orange?style=flat"
-    style="max-width:100%;"></a>
-
-    <a href="#how-to-contribute"><img src="https://camo.githubusercontent.com/b02b9d3708d187a71e102cc95c8a8ad5fcdffb8241ba9b4a102a4272862f1216/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6765742d696e766f6c7665642d6666363962343f7374796c653d666c6174"
-    alt="Get Involved" data-canonical-src="https://img.shields.io/badge/get-involved-ff69b4?style=flat"
-    style="max-width:100%;"></a></p>
-
-    <p><a href="examples/detector/visualization/gearsX3D.html"><img align="right"
-    width="120px" src="examples/detector/visualization/gears.png" style="max-width:100%;"></a></p>
-
-    <p><a href="https://github.com/jintonic/gears">GEARS</a> is a <a href="http://geant4.cern.ch"
-    rel="nofollow">Geant4</a> <a href="http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForApplicationDeveloper/html/Examples/examples.html"
-    rel="nofollow">Example</a> Application with <a href="#features">Rich features</a>
-    yet Small footprint. The entire C++ coding is minimized down to a single file
-    with about 550 <a href="https://en.wikipedia.org/wiki/Source_lines_of_code" rel="nofollow">SLOC</a>.
-    This is achieved mainly by utilizing <a href="http://geant4.cern.ch" rel="nofollow">Geant4</a>
-    plain <a href="http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForApplicationDeveloper/html/Detector/Geometry/geomASCII.html"
-    rel="nofollow">text geometry description</a>, <a href="http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForApplicationDeveloper/html/Control/commands.html"
-    rel="nofollow">built-in UI commands</a> (macros), and C++ inheritance. It is ideal
-    for student training and fast implementation of small to medium-sized experiments.</p>
-
-    <h2>
-
-    <a id="user-content-features" class="anchor" href="#features" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Features</h2>
-
-    <ul>
-
-    <li>
-
-    <a href="gears.cc">Single small C++ file</a>, easy to manage, fast to <a href="INSTALL#compile-gears">compile</a>
-    (a few second on a regular PC)</li>
-
-    <li>
-
-    <a href="examples/physics">Easy switching between well maintained Geant4 reference
-    physics lists without recompilation</a>
-
-    <ul>
-
-    <li><a href="examples/physics#physics-processes">Individual processes can be turned
-    on/off without recompilation</a></li>
-
-    <li><a href="examples/physics#optical-properties-of-materials-and-surfaces">Fast
-    implementation of optical properties without recompilation</a></li>
-
-    <li>
-
-    <a href="examples/physics#radioactive-decay">Optional radioactive decay simulation</a>
-    with the possibility to <a href="examples/physics#split-decay-chain">save the
-    parent and daughter decays into different events if the later happens after a
-    user specified time interval</a>
-
-    </li>
-
-    </ul>
-
-    </li>
-
-    <li>
-
-    <a href="examples/sources#common-sources">Frequently used source spectra (AmBe,
-    Am-241, etc.)</a> in addition to <a href="examples/sources">GPS</a>
-
-    </li>
-
-    <li>
-
-    <a href="examples/output">Output in multiple data format</a>
-
-    <ul>
-
-    <li>
-
-    <a href="examples/output#root">ROOT</a> TTree format (default, no <a href="https://root.cern.ch"
-    rel="nofollow">ROOT</a> installation is needed)
-
-    <ul>
-
-    <li>Build-in data compression, well suitable for large data processing</li>
-
-    <li>Fast access to independent data members</li>
-
-    <li>Flat tree (no nested branches or arrays) with short leaf names
-
-    <ul>
-
-    <li>Easy to use in TTree::Draw</li>
-
-    <li>No need to load extra library to open</li>
-
-    <li>Can be easily analyzed in <a href="https://www.python.org/" rel="nofollow">Python</a>
-    through <a href="https://github.com/scikit-hep/uproot4">Uproot</a>.</li>
-
-    </ul>
-
-    </li>
-
-    </ul>
-
-    </li>
-
-    <li>
-
-    <a href="https://www.hdfgroup.org/downloads/hdf5/" rel="nofollow">HDF5</a>, universal
-    data format, easy to read by different tools</li>
-
-    <li>CSV or XML, Human readable ASCII file, capable of dealing with multiple dimensional
-    arrays</li>
-
-    </ul>
-
-    </li>
-
-    <li>
-
-    <a href="examples/output#record-information-of-step-0">Record information of step
-    0</a> (initStep), which is not available through <a href="http://www-geant4.kek.jp/lxr/source/tracking/include/G4UserSteppingAction.hh"
-    rel="nofollow">G4UserSteppingAction</a>
-
-    </li>
-
-    <li>
-
-    <a href="http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForApplicationDeveloper/html/Detector/Geometry/geomASCII.html"
-    rel="nofollow">simple text</a> or <a href="https://gdml.web.cern.ch/GDML/" rel="nofollow">GDML</a>
-    geometry I/O
-
-    <ul>
-
-    <li>
-
-    <a href="examples/detector">Fast implementation of detector geometry</a> without
-    C++ programming</li>
-
-    <li>Create/Change geometry without re-compilation</li>
-
-    <li>Turn off data saving in a volume by assigning it a non-positive copy number</li>
-
-    <li>Turn any volume to a <a href="examples/detector#sensitive-volume">sensitive
-    detector</a> by adding "(S)" in its name</li>
-
-    <li>
-
-    <a href="examples/detector/optical">Assign optical properties in Geant4 plain
-    text geometry description</a>, which is not available in the official <a href="http://geant4.cern.ch"
-    rel="nofollow">Geant4</a> release</li>
-
-    <li>
-
-    <a href="examples/detector/syntax">Syntax highlighting of the simple text geometry
-    description files</a> in <a href="examples/detector/syntax#emacs">Emacs</a>, <a
-    href="examples/detector/syntax#vim">Vim</a>, <a href="examples/detector/syntax#micro">Micro</a>,
-    and <a href="examples/detector/syntax#sublime-text">Sublime Text</a>
-
-    </li>
-
-    </ul>
-
-    </li>
-
-    <li><a href="http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForApplicationDeveloper/html/Detector/commandScore.html"
-    rel="nofollow">Creating 3D mesh to record and visualize physical variables in
-    it without any change of the C++ code</a></li>
-
-    <li><a href="https://codedocs.xyz/jintonic/gears/" rel="nofollow">Doxygen documentation</a></li>
-
-    <li>Many <a href="examples">sample macros</a> and <a href="examples/detector">geometry
-    descriptions</a> for feature demonstration</li>
-
-    </ul>
-
-    <h2>
-
-    <a id="user-content-how-to-contribute" class="anchor" href="#how-to-contribute"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How
-    to contribute</h2>
-
-    <p>Please <a href="https://help.github.com/en/github/getting-started-with-github/fork-a-repo">fork
-    GEARS on GitHub</a>. Run the following to get a local copy of the forked repository
-    and link it to the <a href="https://github.com/jintonic/gears">original GEARS
-    repository</a>:</p>
-
-    <div class="highlight highlight-source-shell"><pre>$ git clone git@github.com:yourGitHubAccount/gears.git
-    <span class="pl-c"><span class="pl-c">#</span> get forked repository</span>
-
-    $ git remote add upstream git@github.com:jintonic/gears.git <span class="pl-c"><span
-    class="pl-c">#</span> link to original repository</span>
-
-    $ git remote -v <span class="pl-c"><span class="pl-c">#</span> run a check</span></pre></div>
-
-    <p>Run the following to keep your local repository updated with the <a href="https://github.com/jintonic/gears">original
-    GEARS repository</a>:</p>
-
-    <div class="highlight highlight-source-shell"><pre>$ git fetch upstream <span
-    class="pl-c"><span class="pl-c">#</span> updates are saved in a new branch upstream/master</span>
-
-    $ git merge upstream/master <span class="pl-c"><span class="pl-c">#</span> merge
-    2 branches: upstream/master and master</span></pre></div>
-
-    <p>If the merge is successful, run <code>git push</code> to update your forked
-    GEARS repository on GitHub.</p>
-
-    <p>You can initiate a <a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests">pull
-    request on GitHub</a> if you''d like to have your update being absorbed in <a
-    href="https://github.com/jintonic/gears">the original GEARS repository</a>.</p>
-
-    <h3>
-
-    <a id="user-content-coding-convention" class="anchor" href="#coding-convention"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Coding
-    convention</h3>
-
-    <h4>
-
-    <a id="user-content-g4cout-vs-stdcout" class="anchor" href="#g4cout-vs-stdcout"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>G4cout
-    VS std::cout</h4>
-
-    <p><code>G4cout</code> and <code>G4endl</code> is preferred over <code>std:cout</code>
-    and <code>std:endl</code> because the former handle the output in <a href="http://geant4.cern.ch"
-    rel="nofollow">Geant4</a> GUI correctly, while the later can only output to terminal.</p>
-
-    <h4>
-
-    <a id="user-content-indentation" class="anchor" href="#indentation" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Indentation</h4>
-
-    <p>Two spaces instead of a tab are used to indent a line in <a href="gears.cc">gears.cc</a>
-    to insure a consistent appearance in different text editors, and to avoid wasting
-    space in front of deeply nested code blocks. The following mode lines are added
-    to the end of <a href="gears.cc">gears.cc</a> to insure that in <a href="https://www.vim.org/"
-    rel="nofollow">Vim</a> and <a href="https://www.gnu.org/software/emacs/" rel="nofollow">Emacs</a>:</p>
-
-    <div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">//</span>
-    -*- C++; indent-tabs-mode:nil; tab-width:2 -*-</span>
-
-    <span class="pl-c"><span class="pl-c">//</span> vim: ft=cpp:ts=2:sts=2:sw=2:et</span></pre></div>
-
-    <h3>
-
-    <a id="user-content-to-dos" class="anchor" href="#to-dos" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>To-do''s</h3>
-
-    <ul>
-
-    <li>examples
-
-    <ul>
-
-    <li>add an example to show how QE can be implemented</li>
-
-    <li>add examples to show how one can distribute source in a volume or surface</li>
-
-    </ul>
-
-    </li>
-
-    </ul>
-
-    '
+  readme: "<h1>\n<a id=\"user-content-singularity-dust\" class=\"anchor\" href=\"\
+    #singularity-dust\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>singularity-dust</h1>\n<p><a href=\"https://github.com/bootandy/dust/raw/master/media/snap.png\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/bootandy/dust/raw/master/media/snap.png\"\
+    \ alt=\"Example\" style=\"max-width:100%;\"></a></p>\n<p>Singularity recipe for\
+    \ <a href=\"https://github.com/bootandy/dust\">dust</a>.</p>\n<h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\"\
+    \ class=\"anchor\" href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installing\
+    \ the container on Bridges 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code>\
+    \ file</li>\n<li>and the <code>dust</code> script</li>\n</ul>\n<p>to <code>/opt/packages/dust/0.5.4</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/dust</code>\
+    \ as <code>0.5.4</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p><a href=\"http://www.andrew.cmu.edu/~icaoberg\" rel=\"nofollow\"\
+    >icaoberg</a> at the <a href=\"http://www.psc.edu\" rel=\"nofollow\">Pittsburgh\
+    \ Supercomputing Center</a> in the <a href=\"https://www.cmu.edu/mcs/\" rel=\"\
+    nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\" rel=\"\
+    nofollow\">Carnegie Mellon University</a>.</p>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics:
   - singularity
   - utilities
-  updated_at: 1622759175.0
+  updated_at: 1622860644.0
 icaoberg/singularity-gatk:
   data_format: 2
   description: Singularity recipe for GATK
@@ -1956,307 +2036,92 @@ icaoberg/singularity-graphviz:
   filenames:
   - 2.44.0/Singularity
   full_name: icaoberg/singularity-graphviz
-  latest_release: null
-  readme: '<p>SIF file
-
-    and the hyperfine  script
-
-    to /opt/packages/hyperfine /1.11.0.</p>
-
-    <p>Copy the file modulefile.lua to /opt/modules/hyperfine  as 1.11.0.</p>
-
-    '
+  latest_release: v2.44.0
+  readme: "<h1>\n<a id=\"user-content-singularity-graphviz\" class=\"anchor\" href=\"\
+    #singularity-graphviz\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>singularity-graphviz</h1>\n<p><a href=\"https://camo.githubusercontent.com/960789693fa68a8f442f9c6cc7d6a117639f1a792ec84c96648ad4764c385fcf/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f656e2f342f34382f477261706876697a4c6f676f2e706e67\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/960789693fa68a8f442f9c6cc7d6a117639f1a792ec84c96648ad4764c385fcf/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f656e2f342f34382f477261706876697a4c6f676f2e706e67\"\
+    \ alt=\"Logo\" data-canonical-src=\"https://upload.wikimedia.org/wikipedia/en/4/48/GraphvizLogo.png\"\
+    \ style=\"max-width:100%;\"></a></p>\n<p>Singularity recipe for <a href=\"https://graphviz.org/\"\
+    \ rel=\"nofollow\">graphviz </a>.</p>\n<h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\"\
+    \ class=\"anchor\" href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installing\
+    \ the container on Bridges 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code>\
+    \ file</li>\n<li>and the <code>graphviz </code> script</li>\n</ul>\n<p>to <code>/opt/packages/graphviz/2.44.0</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modules/graphviz </code>\
+    \ as <code> 2.44.0</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p><a href=\"http://www.andrew.cmu.edu/~icaoberg\" rel=\"nofollow\"\
+    >icaoberg</a> at the <a href=\"http://www.psc.edu\" rel=\"nofollow\">Pittsburgh\
+    \ Supercomputing Center</a> in the <a href=\"https://www.cmu.edu/mcs/\" rel=\"\
+    nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\" rel=\"\
+    nofollow\">Carnegie Mellon University</a>.</p>\n"
   stargazers_count: 0
   subscribers_count: 1
-  topics: []
-  updated_at: 1622755226.0
+  topics:
+  - singularity
+  - utilities
+  updated_at: 1622859227.0
 icaoberg/singularity-hyperfine:
   data_format: 2
   description: Singularity recipe for hyperfine
   filenames:
   - 1.11.0/Singularity
   full_name: icaoberg/singularity-hyperfine
-  latest_release: null
-  readme: '<p><a href="https://codedocs.xyz/jintonic/gears/annotated.html" rel="nofollow"><img
-    src="https://camo.githubusercontent.com/69e499a9ac348bd92b62e3eac1391967c594141c2855f42783e17f07527553c4/68747470733a2f2f636f6465646f63732e78797a2f6a696e746f6e69632f67656172732e737667"
-    alt="Doxygen" data-canonical-src="https://codedocs.xyz/jintonic/gears.svg" style="max-width:100%;"></a>
-
-    <a href="https://opensource.org/licenses/MIT" rel="nofollow"><img src="https://camo.githubusercontent.com/78f47a09877ba9d28da1887a93e5c3bc2efb309c1e910eb21135becd2998238a/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d79656c6c6f772e737667"
-    alt="License" data-canonical-src="https://img.shields.io/badge/License-MIT-yellow.svg"
-    style="max-width:100%;"></a>
-
-    <a href="examples"><img src="https://camo.githubusercontent.com/11e2b1b7847229fdbb3430cf4a5d908964287c64b59e0119936bce5359e4efb9/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f67656172732d6578616d706c65732d626c75653f7374796c653d666c6174"
-    alt="Examples" data-canonical-src="https://img.shields.io/badge/gears-examples-blue?style=flat"
-    style="max-width:100%;"></a>
-
-    <a href="INSTALL"><img src="https://camo.githubusercontent.com/04a8d93a22dbf7fc5499c5c388432c900fac24a8e4061f7794fa5c2260199c46/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6765742d737461727465642d6f72616e67653f7374796c653d666c6174"
-    alt="Get Started" data-canonical-src="https://img.shields.io/badge/get-started-orange?style=flat"
-    style="max-width:100%;"></a>
-
-    <a href="#how-to-contribute"><img src="https://camo.githubusercontent.com/b02b9d3708d187a71e102cc95c8a8ad5fcdffb8241ba9b4a102a4272862f1216/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6765742d696e766f6c7665642d6666363962343f7374796c653d666c6174"
-    alt="Get Involved" data-canonical-src="https://img.shields.io/badge/get-involved-ff69b4?style=flat"
-    style="max-width:100%;"></a></p>
-
-    <p><a href="examples/detector/visualization/gearsX3D.html"><img align="right"
-    width="120px" src="examples/detector/visualization/gears.png" style="max-width:100%;"></a></p>
-
-    <p><a href="https://github.com/jintonic/gears">GEARS</a> is a <a href="http://geant4.cern.ch"
-    rel="nofollow">Geant4</a> <a href="http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForApplicationDeveloper/html/Examples/examples.html"
-    rel="nofollow">Example</a> Application with <a href="#features">Rich features</a>
-    yet Small footprint. The entire C++ coding is minimized down to a single file
-    with about 550 <a href="https://en.wikipedia.org/wiki/Source_lines_of_code" rel="nofollow">SLOC</a>.
-    This is achieved mainly by utilizing <a href="http://geant4.cern.ch" rel="nofollow">Geant4</a>
-    plain <a href="http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForApplicationDeveloper/html/Detector/Geometry/geomASCII.html"
-    rel="nofollow">text geometry description</a>, <a href="http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForApplicationDeveloper/html/Control/commands.html"
-    rel="nofollow">built-in UI commands</a> (macros), and C++ inheritance. It is ideal
-    for student training and fast implementation of small to medium-sized experiments.</p>
-
-    <h2>
-
-    <a id="user-content-features" class="anchor" href="#features" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Features</h2>
-
-    <ul>
-
-    <li>
-
-    <a href="gears.cc">Single small C++ file</a>, easy to manage, fast to <a href="INSTALL#compile-gears">compile</a>
-    (a few second on a regular PC)</li>
-
-    <li>
-
-    <a href="examples/physics">Easy switching between well maintained Geant4 reference
-    physics lists without recompilation</a>
-
-    <ul>
-
-    <li><a href="examples/physics#physics-processes">Individual processes can be turned
-    on/off without recompilation</a></li>
-
-    <li><a href="examples/physics#optical-properties-of-materials-and-surfaces">Fast
-    implementation of optical properties without recompilation</a></li>
-
-    <li>
-
-    <a href="examples/physics#radioactive-decay">Optional radioactive decay simulation</a>
-    with the possibility to <a href="examples/physics#split-decay-chain">save the
-    parent and daughter decays into different events if the later happens after a
-    user specified time interval</a>
-
-    </li>
-
-    </ul>
-
-    </li>
-
-    <li>
-
-    <a href="examples/sources#common-sources">Frequently used source spectra (AmBe,
-    Am-241, etc.)</a> in addition to <a href="examples/sources">GPS</a>
-
-    </li>
-
-    <li>
-
-    <a href="examples/output">Output in multiple data format</a>
-
-    <ul>
-
-    <li>
-
-    <a href="examples/output#root">ROOT</a> TTree format (default, no <a href="https://root.cern.ch"
-    rel="nofollow">ROOT</a> installation is needed)
-
-    <ul>
-
-    <li>Build-in data compression, well suitable for large data processing</li>
-
-    <li>Fast access to independent data members</li>
-
-    <li>Flat tree (no nested branches or arrays) with short leaf names
-
-    <ul>
-
-    <li>Easy to use in TTree::Draw</li>
-
-    <li>No need to load extra library to open</li>
-
-    <li>Can be easily analyzed in <a href="https://www.python.org/" rel="nofollow">Python</a>
-    through <a href="https://github.com/scikit-hep/uproot4">Uproot</a>.</li>
-
-    </ul>
-
-    </li>
-
-    </ul>
-
-    </li>
-
-    <li>
-
-    <a href="https://www.hdfgroup.org/downloads/hdf5/" rel="nofollow">HDF5</a>, universal
-    data format, easy to read by different tools</li>
-
-    <li>CSV or XML, Human readable ASCII file, capable of dealing with multiple dimensional
-    arrays</li>
-
-    </ul>
-
-    </li>
-
-    <li>
-
-    <a href="examples/output#record-information-of-step-0">Record information of step
-    0</a> (initStep), which is not available through <a href="http://www-geant4.kek.jp/lxr/source/tracking/include/G4UserSteppingAction.hh"
-    rel="nofollow">G4UserSteppingAction</a>
-
-    </li>
-
-    <li>
-
-    <a href="http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForApplicationDeveloper/html/Detector/Geometry/geomASCII.html"
-    rel="nofollow">simple text</a> or <a href="https://gdml.web.cern.ch/GDML/" rel="nofollow">GDML</a>
-    geometry I/O
-
-    <ul>
-
-    <li>
-
-    <a href="examples/detector">Fast implementation of detector geometry</a> without
-    C++ programming</li>
-
-    <li>Create/Change geometry without re-compilation</li>
-
-    <li>Turn off data saving in a volume by assigning it a non-positive copy number</li>
-
-    <li>Turn any volume to a <a href="examples/detector#sensitive-volume">sensitive
-    detector</a> by adding "(S)" in its name</li>
-
-    <li>
-
-    <a href="examples/detector/optical">Assign optical properties in Geant4 plain
-    text geometry description</a>, which is not available in the official <a href="http://geant4.cern.ch"
-    rel="nofollow">Geant4</a> release</li>
-
-    <li>
-
-    <a href="examples/detector/syntax">Syntax highlighting of the simple text geometry
-    description files</a> in <a href="examples/detector/syntax#emacs">Emacs</a>, <a
-    href="examples/detector/syntax#vim">Vim</a>, <a href="examples/detector/syntax#micro">Micro</a>,
-    and <a href="examples/detector/syntax#sublime-text">Sublime Text</a>
-
-    </li>
-
-    </ul>
-
-    </li>
-
-    <li><a href="http://geant4-userdoc.web.cern.ch/geant4-userdoc/UsersGuides/ForApplicationDeveloper/html/Detector/commandScore.html"
-    rel="nofollow">Creating 3D mesh to record and visualize physical variables in
-    it without any change of the C++ code</a></li>
-
-    <li><a href="https://codedocs.xyz/jintonic/gears/" rel="nofollow">Doxygen documentation</a></li>
-
-    <li>Many <a href="examples">sample macros</a> and <a href="examples/detector">geometry
-    descriptions</a> for feature demonstration</li>
-
-    </ul>
-
-    <h2>
-
-    <a id="user-content-how-to-contribute" class="anchor" href="#how-to-contribute"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How
-    to contribute</h2>
-
-    <p>Please <a href="https://help.github.com/en/github/getting-started-with-github/fork-a-repo">fork
-    GEARS on GitHub</a>. Run the following to get a local copy of the forked repository
-    and link it to the <a href="https://github.com/jintonic/gears">original GEARS
-    repository</a>:</p>
-
-    <div class="highlight highlight-source-shell"><pre>$ git clone git@github.com:yourGitHubAccount/gears.git
-    <span class="pl-c"><span class="pl-c">#</span> get forked repository</span>
-
-    $ git remote add upstream git@github.com:jintonic/gears.git <span class="pl-c"><span
-    class="pl-c">#</span> link to original repository</span>
-
-    $ git remote -v <span class="pl-c"><span class="pl-c">#</span> run a check</span></pre></div>
-
-    <p>Run the following to keep your local repository updated with the <a href="https://github.com/jintonic/gears">original
-    GEARS repository</a>:</p>
-
-    <div class="highlight highlight-source-shell"><pre>$ git fetch upstream <span
-    class="pl-c"><span class="pl-c">#</span> updates are saved in a new branch upstream/master</span>
-
-    $ git merge upstream/master <span class="pl-c"><span class="pl-c">#</span> merge
-    2 branches: upstream/master and master</span></pre></div>
-
-    <p>If the merge is successful, run <code>git push</code> to update your forked
-    GEARS repository on GitHub.</p>
-
-    <p>You can initiate a <a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests">pull
-    request on GitHub</a> if you''d like to have your update being absorbed in <a
-    href="https://github.com/jintonic/gears">the original GEARS repository</a>.</p>
-
-    <h3>
-
-    <a id="user-content-coding-convention" class="anchor" href="#coding-convention"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Coding
-    convention</h3>
-
-    <h4>
-
-    <a id="user-content-g4cout-vs-stdcout" class="anchor" href="#g4cout-vs-stdcout"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>G4cout
-    VS std::cout</h4>
-
-    <p><code>G4cout</code> and <code>G4endl</code> is preferred over <code>std:cout</code>
-    and <code>std:endl</code> because the former handle the output in <a href="http://geant4.cern.ch"
-    rel="nofollow">Geant4</a> GUI correctly, while the later can only output to terminal.</p>
-
-    <h4>
-
-    <a id="user-content-indentation" class="anchor" href="#indentation" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Indentation</h4>
-
-    <p>Two spaces instead of a tab are used to indent a line in <a href="gears.cc">gears.cc</a>
-    to insure a consistent appearance in different text editors, and to avoid wasting
-    space in front of deeply nested code blocks. The following mode lines are added
-    to the end of <a href="gears.cc">gears.cc</a> to insure that in <a href="https://www.vim.org/"
-    rel="nofollow">Vim</a> and <a href="https://www.gnu.org/software/emacs/" rel="nofollow">Emacs</a>:</p>
-
-    <div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">//</span>
-    -*- C++; indent-tabs-mode:nil; tab-width:2 -*-</span>
-
-    <span class="pl-c"><span class="pl-c">//</span> vim: ft=cpp:ts=2:sts=2:sw=2:et</span></pre></div>
-
-    <h3>
-
-    <a id="user-content-to-dos" class="anchor" href="#to-dos" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>To-do''s</h3>
-
-    <ul>
-
-    <li>examples
-
-    <ul>
-
-    <li>add an example to show how QE can be implemented</li>
-
-    <li>add examples to show how one can distribute source in a volume or surface</li>
-
-    </ul>
-
-    </li>
-
-    </ul>
-
-    '
+  latest_release: v1.11.0
+  readme: "<h1>\n<a id=\"user-content-singularity-hyperfine\" class=\"anchor\" href=\"\
+    #singularity-hyperfine\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>singularity-hyperfine</h1>\n<p><a href=\"https://camo.githubusercontent.com/88a0cb35f42e02e28b0433d4b5e0029e52e723d8feb8df753e1ed06a5161db56/68747470733a2f2f692e696d6775722e636f6d2f7a31394f5978452e676966\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/88a0cb35f42e02e28b0433d4b5e0029e52e723d8feb8df753e1ed06a5161db56/68747470733a2f2f692e696d6775722e636f6d2f7a31394f5978452e676966\"\
+    \ alt=\"Example\" style=\"max-width:100%;\"></a></p>\n<p>Singularity recipe for\
+    \ <a href=\"https://github.com/sharkdp/hyperfine\">hyperfine</a>.</p>\n<h2>\n\
+    <a id=\"user-content-installing-the-container-on-bridges-2\" class=\"anchor\"\
+    \ href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Installing the container on Bridges\
+    \ 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code> file</li>\n<li>and the\
+    \ <code>hyperfine</code> script</li>\n</ul>\n<p>to <code>/opt/packages/hyperfine/1.11.0</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/hyperfine</code>\
+    \ as <code>1.11.0</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p><a href=\"http://www.andrew.cmu.edu/~icaoberg\" rel=\"nofollow\"\
+    >icaoberg</a> at the <a href=\"http://www.psc.edu\" rel=\"nofollow\">Pittsburgh\
+    \ Supercomputing Center</a> in the <a href=\"https://www.cmu.edu/mcs/\" rel=\"\
+    nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\" rel=\"\
+    nofollow\">Carnegie Mellon University</a>.</p>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics:
   - singularity
   - utilities
-  updated_at: 1622759006.0
+  updated_at: 1622860679.0
 icaoberg/singularity-methylpy:
   data_format: 2
   description: Singularity recipe for methylpy
@@ -2384,6 +2249,133 @@ icaoberg/singularity-methylpy:
   subscribers_count: 1
   topics: []
   updated_at: 1622730662.0
+icaoberg/singularity-shellcheck:
+  data_format: 2
+  description: Singularity recipe for shellcheck
+  filenames:
+  - 0.5.0/Singularity
+  full_name: icaoberg/singularity-shellcheck
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-naked-singularity" class="anchor" href="#naked-singularity"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>naked-singularity</h1>
+
+    <p>A repository of definition files for building
+
+    <a href="https://sylabs.io/guides/latest/user-guide" rel="nofollow">Singularity</a>
+    containers
+
+    around the software applications, frameworks, and libraries you need to
+
+    run on high-performance computing systems.</p>
+
+    <h2>
+
+    <a id="user-content-install-singularity" class="anchor" href="#install-singularity"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install
+    Singularity</h2>
+
+    <p>Install Singularity on your Linux desktop, laptop, or virtual machine.</p>
+
+    <div class="highlight highlight-source-shell"><pre>./naked-singularity.sh install</pre></div>
+
+    <h2>
+
+    <a id="user-content-build-a-singularity-container-from-a-definition-file" class="anchor"
+    href="#build-a-singularity-container-from-a-definition-file" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Build a Singularity
+    container from a definition file</h2>
+
+    <p>Build an Ubuntu Singularity container from one of the definition files
+
+    available in this repository.</p>
+
+    <div class="highlight highlight-source-shell"><pre>sudo singularity build ubuntu.sif
+    definition-files/ubuntu/Singularity.ubuntu-18.04</pre></div>
+
+    <h2>
+
+    <a id="user-content-download-an-existing-singularity-container" class="anchor"
+    href="#download-an-existing-singularity-container" aria-hidden="true"><span aria-hidden="true"
+    class="octicon octicon-link"></span></a>Download an existing Singularity container</h2>
+
+    <p>A number of pre-built containers from this repository are also now
+
+    hosted at Singularity Hub.</p>
+
+    <div class="highlight highlight-source-shell"><pre>singularity pull shub://mkandes/naked-singularity:ubuntu-18.04</pre></div>
+
+    <h2>
+
+    <a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Status</h2>
+
+    <p>A work in progress. But an important note on the immediate future ...</p>
+
+    <p>The future availablity of Singularity Hub is currently unknown and
+
+    may be slated for retirement as early as April 2021. If and when
+
+    Singularity Hub is retired, the current set of naked-sinularity
+
+    definition files will be affected due to the recent move in the past
+
+    year to using a layered dependency chain of multiple containers built
+
+    and hosted on Singularity Hub. Alternative container build and hosting
+
+    options are currently under consideration. This upcoming change will
+
+    likely affect how a given container''s dependency chain is rebuilt and
+
+    supported long-term.</p>
+
+    <h2>
+
+    <a id="user-content-contribute" class="anchor" href="#contribute" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Contribute</h2>
+
+    <p>If you would like to contribute one of your own Singularity container
+
+    definition files for a specific application OR request a modification to
+
+    an existing container definition, then please submit a pull request.</p>
+
+    <h2>
+
+    <a id="user-content-author" class="anchor" href="#author" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Author</h2>
+
+    <p>Marty Kandes, Ph.D.<br>
+
+    Computational &amp; Data Science Research Specialist<br>
+
+    High-Performance Computing User Services Group<br>
+
+    San Diego Supercomputer Center<br>
+
+    University of California, San Diego</p>
+
+    <h2>
+
+    <a id="user-content-version" class="anchor" href="#version" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Version</h2>
+
+    <p>1.3.3</p>
+
+    <h2>
+
+    <a id="user-content-last-updated" class="anchor" href="#last-updated" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Last Updated</h2>
+
+    <p>Saturday, March 13th, 2021</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1622859451.0
 ifurther/flair-def:
   data_format: 2
   description: singularity def file for flair(fluka)
@@ -2744,176 +2736,6 @@ jintonic/gears:
   - physics
   - monte-carlo-simulation
   updated_at: 1622745498.0
-kb2623/singularity-builds:
-  data_format: 2
-  description: Singlularity containers
-  filenames:
-  - singularity/Singularity
-  full_name: kb2623/singularity-builds
-  latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-singularity-builds" class="anchor" href="#singularity-builds"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>singularity-builds</h1>
-
-    <p>Singlularity containers</p>
-
-    '
-  stargazers_count: 0
-  subscribers_count: 1
-  topics: []
-  updated_at: 1622472468.0
-manuel-munoz-aguirre/singularity-pytorch-gpu:
-  data_format: 2
-  description: Singularity image for a deep learning (pytorch) environment + GPU support
-  filenames:
-  - Singularity.1.0.0
-  full_name: manuel-munoz-aguirre/singularity-pytorch-gpu
-  latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-singularity-pytorch-gpu" class="anchor" href="#singularity-pytorch-gpu"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>singularity-pytorch-gpu</h1>
-
-    <p><a href="https://singularity-hub.org/collections/4969" rel="nofollow"><img
-    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
-    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    style="max-width:100%;"></a></p>
-
-    <p>Singularity image for a deep learning (pytorch) environment + GPU support (cuda-10.2).
-    Contains libraries to perform common ML tasks. <code>Openslide</code> is included
-    to manipulate whole-slide histology images, <code>imagemagick</code> for general
-    image manipulation. <code>JupyterLab</code> and <code>code-server</code> (VS Code)
-    are also included in the image. This image has been tested in an HPC (SGE) with
-    distributed pytorch applications.</p>
-
-    <h2>
-
-    <a id="user-content-installing-singularity" class="anchor" href="#installing-singularity"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installing
-    singularity</h2>
-
-    <p>To install singularity, see the <a href="https://sylabs.io/guides/3.6/admin-guide/installation.html#installation-on-linux"
-    rel="nofollow">official docs</a>.</p>
-
-    <h2>
-
-    <a id="user-content-buildingdownloading-the-image" class="anchor" href="#buildingdownloading-the-image"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building/downloading
-    the image</h2>
-
-    <p>To build an image called <code>torchenv.sif</code> based on the definition
-    file <code>Singularity.1.0.0</code>, an NVIDIA GPU and <code>cuda-10.2</code>
-    drivers must be available on the host system. Clone this repository, move into
-    it and run the singularity build command.</p>
-
-    <pre><code>git clone https://github.com/manuel-munoz-aguirre/singularity-pytorch-gpu.git
-    &amp;&amp; \
-
-    cd singularity-pytorch-gpu &amp;&amp; \
-
-    sudo singularity build torchenv.sif Singularity.1.0.0
-
-    </code></pre>
-
-    <p>Otherwise, the image can be pulled directly from singularity hub:</p>
-
-    <pre><code>singularity pull torchenv.sif shub://manuel-munoz-aguirre/singularity-pytorch-gpu:1.0.0
-
-    </code></pre>
-
-    <h2>
-
-    <a id="user-content-using-the-container" class="anchor" href="#using-the-container"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using
-    the container</h2>
-
-    <p>To spawn an interactive shell within the container, use the command below.
-    The <code>--nv</code> flag setups the container to use NVIDIA GPUs (read more
-    <a href="https://sylabs.io/guides/3.6/user-guide/gpu.html" rel="nofollow">here</a>).</p>
-
-    <pre><code>singularity shell --nv torchenv.sif
-
-    </code></pre>
-
-    <p>To run a script (for example, <code>script.py</code>) using the container without
-    starting an interactive shell:</p>
-
-    <pre><code>singularity exec --nv torchenv.sif python3 script.py
-
-    </code></pre>
-
-    <p>The container can also be launched and used on a system without a GPU, but
-    upon startup it will display a warning about missing NVIDIA binaries on the host.</p>
-
-    '
-  stargazers_count: 0
-  subscribers_count: 1
-  topics:
-  - singularity
-  - pytorch
-  - deep-learning
-  - machine-learning
-  - environment
-  updated_at: 1622471136.0
-maxemil/ALE-pipeline:
-  data_format: 2
-  description: nextflow pipeline to automate analysis using ALE (https://github.com/ssolo/ALE)
-  filenames:
-  - Singularity
-  full_name: maxemil/ALE-pipeline
-  latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-ale-pipeline" class="anchor" href="#ale-pipeline" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>ALE-pipeline</h1>
-
-    <ul>
-
-    <li>this is supposed to be a nice pipeline for running ALE on several gene clusters
-    and collecting the results</li>
-
-    <li>it can also test several species trees at the same time</li>
-
-    <li>all parameters in the nextflow.config file can be changed on the command line,
-    e.g. the name of the outgroup taxa</li>
-
-    <li>you need to add the Python_lib repo to your Pythonpath</li>
-
-    <li>For typical usage and a small tutorial, see TUTORIAL.md</li>
-
-    <li>I use to code the names for species both in the species and in the gene tree
-    to avoid that source of errors</li>
-
-    </ul>
-
-    <h1>
-
-    <a id="user-content-troubleshooting" class="anchor" href="#troubleshooting" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Troubleshooting</h1>
-
-    <ul>
-
-    <li>If you get an Error ''Can''t root with myself'' or similar, this usually means
-    that the outgroup you specified for the species tree is not monophyletic in that
-    tree. Try rerooting by hand first...</li>
-
-    <li>ALE sometime simply crashes, then the pipeline can be resumed by adding <code>-resume</code>
-    to the invocation</li>
-
-    </ul>
-
-    '
-  stargazers_count: 0
-  subscribers_count: 4
-  topics:
-  - nextflow
-  - evolution
-  - bioinformatics
-  - singularity-container
-  - pipeline
-  updated_at: 1622468753.0
 miguelcarcamov/container_docker:
   data_format: 2
   description: null
@@ -2935,6 +2757,186 @@ miguelcarcamov/container_docker:
   subscribers_count: 1
   topics: []
   updated_at: 1622662631.0
+mkandes/naked-singularity:
+  data_format: 2
+  description: A repository of definition files for bootstrapping Singularity containers
+    around the software applications, frameworks, and libraries you need to run on
+    high-performance computing systems.
+  filenames:
+  - definition-files/tensorflow/Singularity.tensorflow-2.3.0
+  - definition-files/ciml/Singularity.tape-0.4
+  - definition-files/ciml/Singularity.esm-0.3.1
+  - definition-files/omb/Singularity.omb-5.6.3-ubuntu-18.04-openmpi-3.1.6
+  - definition-files/omb/Singularity.omb-5.7-ubuntu-18.04-cuda-11.2-openmpi-4.0.5
+  - definition-files/omb/Singularity.omb-5.7-ubuntu-18.04-openmpi-4.0.5
+  - definition-files/omb/Singularity.omb-5.6.3-ubuntu-18.04-cuda-10.1.168-openmpi-3.1.4
+  - definition-files/omb/Singularity.omb-5.6.3-ubuntu-18.04-mvapich-2.3.2
+  - definition-files/omb/Singularity.omb-5.6.3-ubuntu-18.04-openmpi-3.1.4
+  - definition-files/omb/Singularity.omb-5.6.3-centos-7.9.2009-openmpi-3.1.4
+  - definition-files/omb/Singularity.omb-5.6.3-centos-7.9.2009-mvapich-2.3.2
+  - definition-files/mxnet/Singularity.mxnet-1.7.0
+  - definition-files/xcrysden/Singularity.xcrysden-1.6.2
+  - definition-files/gromacs/Singularity.gromacs-2020.3-ubuntu-18.04-cuda-10.1.168-tmpi-avx-512-cuda-70
+  - definition-files/fenics/Singularity.fenics-2019.1.0
+  - definition-files/paraview/Singularity.paraview-5.8.1-ubuntu-18.04-openmpi-3.1.6-osmesa-20.1.5
+  - definition-files/paraview/Singularity.paraview-5.9.0-ubuntu-18.04-openmpi-3.1.6-osmesa-20.1.5
+  - definition-files/paraview/Singularity.paraview-5.8.1-ubuntu-18.04-openmpi-3.1.4-osmesa-20.1.5
+  - definition-files/miniconda/Singularity.miniconda2-py27-4.8.3-ubuntu-18.04
+  - definition-files/miniconda/Singularity.miniconda3-py37-4.9.2-ubuntu-18.04
+  - definition-files/ior/Singularity.ior-3.3.0rc1-ubuntu-18.04-openmpi-3.1.6
+  - definition-files/ior/Singularity.ior-3.3.0rc1-ubuntu-18.04-openmpi-3.1.4
+  - definition-files/ior/Singularity.ior-3.3.0-ubuntu-18.04-openmpi-4.0.5
+  - definition-files/pytorch/Singularity.pytorch-1.5.0
+  - definition-files/spark/Singularity.spark-3.1.2-hadoop-3.2-ubuntu-18.04
+  - definition-files/spark/Singularity.spark-2.3.1-hadoop-2.7-ubuntu-18.04
+  - definition-files/hpl/Singularity.hpl-2.3-ubuntu-18.04-openmpi-3.1.4-openblas-0.3.10
+  - definition-files/hpl/Singularity.hpl-2.3-ubuntu-18.04-openmpi-4.0.5-openblas-0.3.14
+  - definition-files/hpl/Singularity.hpl-2.3-ubuntu-18.04-openmpi-3.1.6-openblas-0.3.10
+  - definition-files/ubuntu/Singularity.ubuntu-18.04-cuda-10.1.168
+  - definition-files/ubuntu/Singularity.ubuntu-18.04-mvapich-2.3.2
+  - definition-files/ubuntu/Singularity.ubuntu-18.04-openmpi-4.0.5
+  - definition-files/ubuntu/Singularity.ubuntu-18.04-openmpi-3.1.4
+  - definition-files/ubuntu/Singularity.ubuntu-20.04
+  - definition-files/ubuntu/Singularity.ubuntu-18.04-cuda-10.1.168-openmpi-3.1.4
+  - definition-files/ubuntu/Singularity.ubuntu-18.04-cuda-11.2
+  - definition-files/ubuntu/Singularity.ubuntu-18.04-cuda-10.2
+  - definition-files/ubuntu/Singularity.ubuntu-18.04-cuda-10.2-openmpi-3.1.6
+  - definition-files/ubuntu/Singularity.ubuntu-18.04-openmpi-3.1.6
+  - definition-files/ubuntu/Singularity.ubuntu-18.04
+  - definition-files/ubuntu/Singularity.ubuntu-18.04-cuda-11.2-openmpi-4.0.5
+  - definition-files/visit/Singularity.visit-3.1.4-ubuntu-18.04-openmpi-3.1.6
+  - definition-files/centos/Singularity.centos-7.9.2009-cuda-10.1.168
+  - definition-files/centos/Singularity.centos-7.9.2009-openmpi-3.1.4
+  - definition-files/centos/Singularity.centos-7.9.2009-mvapich-2.3.2
+  - definition-files/centos/Singularity.centos-7.9.2009
+  - definition-files/beast/Singularity.beast-2.6.1
+  - definition-files/beast/Singularity.beast-1.10.4
+  - definition-files/anaconda/Singularity.anaconda3-py38-2020.11-ubuntu-18.04
+  - definition-files/anaconda/Singularity.anaconda2-py27-2019.10-ubuntu-18.04
+  - definition-files/stream/Singularity.stream-5.10-ubuntu-18.04
+  - definition-files/singularity/Singularity.singularity-3.5.3
+  full_name: mkandes/naked-singularity
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-naked-singularity" class="anchor" href="#naked-singularity"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>naked-singularity</h1>
+
+    <p>A repository of definition files for building
+
+    <a href="https://sylabs.io/guides/latest/user-guide" rel="nofollow">Singularity</a>
+    containers
+
+    around the software applications, frameworks, and libraries you need to
+
+    run on high-performance computing systems.</p>
+
+    <h2>
+
+    <a id="user-content-install-singularity" class="anchor" href="#install-singularity"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install
+    Singularity</h2>
+
+    <p>Install Singularity on your Linux desktop, laptop, or virtual machine.</p>
+
+    <div class="highlight highlight-source-shell"><pre>./naked-singularity.sh install</pre></div>
+
+    <h2>
+
+    <a id="user-content-build-a-singularity-container-from-a-definition-file" class="anchor"
+    href="#build-a-singularity-container-from-a-definition-file" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Build a Singularity
+    container from a definition file</h2>
+
+    <p>Build an Ubuntu Singularity container from one of the definition files
+
+    available in this repository.</p>
+
+    <div class="highlight highlight-source-shell"><pre>sudo singularity build ubuntu.sif
+    definition-files/ubuntu/Singularity.ubuntu-18.04</pre></div>
+
+    <h2>
+
+    <a id="user-content-download-an-existing-singularity-container" class="anchor"
+    href="#download-an-existing-singularity-container" aria-hidden="true"><span aria-hidden="true"
+    class="octicon octicon-link"></span></a>Download an existing Singularity container</h2>
+
+    <p>A number of pre-built containers from this repository are also now
+
+    hosted at Singularity Hub.</p>
+
+    <div class="highlight highlight-source-shell"><pre>singularity pull shub://mkandes/naked-singularity:ubuntu-18.04</pre></div>
+
+    <h2>
+
+    <a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Status</h2>
+
+    <p>A work in progress. But an important note on the immediate future ...</p>
+
+    <p>The future availablity of Singularity Hub is currently unknown and
+
+    may be slated for retirement as early as April 2021. If and when
+
+    Singularity Hub is retired, the current set of naked-sinularity
+
+    definition files will be affected due to the recent move in the past
+
+    year to using a layered dependency chain of multiple containers built
+
+    and hosted on Singularity Hub. Alternative container build and hosting
+
+    options are currently under consideration. This upcoming change will
+
+    likely affect how a given container''s dependency chain is rebuilt and
+
+    supported long-term.</p>
+
+    <h2>
+
+    <a id="user-content-contribute" class="anchor" href="#contribute" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Contribute</h2>
+
+    <p>If you would like to contribute one of your own Singularity container
+
+    definition files for a specific application OR request a modification to
+
+    an existing container definition, then please submit a pull request.</p>
+
+    <h2>
+
+    <a id="user-content-author" class="anchor" href="#author" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Author</h2>
+
+    <p>Marty Kandes, Ph.D.<br>
+
+    Computational &amp; Data Science Research Specialist<br>
+
+    High-Performance Computing User Services Group<br>
+
+    San Diego Supercomputer Center<br>
+
+    University of California, San Diego</p>
+
+    <h2>
+
+    <a id="user-content-version" class="anchor" href="#version" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Version</h2>
+
+    <p>1.3.3</p>
+
+    <h2>
+
+    <a id="user-content-last-updated" class="anchor" href="#last-updated" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Last Updated</h2>
+
+    <p>Saturday, March 13th, 2021</p>
+
+    '
+  stargazers_count: 31
+  subscribers_count: 2
+  topics: []
+  updated_at: 1622849740.0
 mvdoc/singularity-def:
   data_format: 2
   description: Singularity definition files for various projects
@@ -3004,11 +3006,17 @@ perminaa/SingularityHPC:
     <p>This repository will hold: the build script to install singularity and other
     dependencies for it, and a definition file for the singularity container for HPC.</p>
 
+    <p>To install, run <code>git clone https://github.com/perminaa/SingularityHPC.git
+    &amp;&amp; cd SingularityHPC &amp;&amp; bash buildscript.sh</code>. This will
+    install and configure singularity
+
+    and build a container called <code>vmdContainer.sif</code></p>
+
     '
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1622736911.0
+  updated_at: 1622857772.0
 pmitev/Teoroo-singularity:
   data_format: 2
   description: Singularity images and recipes
@@ -3074,50 +3082,6 @@ pmitev/Teoroo-singularity:
   - singularity
   - singularity-containers
   updated_at: 1622723523.0
-pmitev/UPPMAX-Singularity:
-  data_format: 2
-  description: UPPMAX Singularity builds
-  filenames:
-  - MitoZ/Singularity.v2.3-pm
-  - gapseq/Singularity.gapseq
-  - UniteM/Singularity.UniteM
-  - bonito/Singularity.bonito
-  - metaWRAP/Singularity.metaWRAP-deps-only-ubuntu
-  - metaWRAP/Singularity.metaWRAP
-  - metaWRAP/Singularity.metaWRAP-deps-only
-  full_name: pmitev/UPPMAX-Singularity
-  latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-uppmax-singularity" class="anchor" href="#uppmax-singularity"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>UPPMAX-Singularity</h1>
-
-    <p>UPPMAX Singularity builds</p>
-
-    '
-  stargazers_count: 0
-  subscribers_count: 1
-  topics: []
-  updated_at: 1622469290.0
-powerPlant/bonito-srf:
-  data_format: 2
-  description: Singularity recipe files for bonito (https://github.com/nanoporetech/bonito)
-  filenames:
-  - Singularity.0.4.0
-  - Singularity
-  - Singularity.0.3.6
-  full_name: powerPlant/bonito-srf
-  latest_release: null
-  readme: '<p>Singularity recipe files for bonito, a PyTorch Basecaller for Oxford
-    Nanopore Reads
-
-    <a href="https://github.com/nanoporetech/bonito">https://github.com/nanoporetech/bonito</a></p>
-
-    '
-  stargazers_count: 0
-  subscribers_count: 0
-  topics: []
-  updated_at: 1622585462.0
 rickstaa/COR-robotics-lab-reference:
   data_format: 2
   description: A quick reference repository for using the robots in the COR lab
@@ -3150,7 +3114,7 @@ rickstaa/COR-robotics-lab-reference:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1622793201.0
+  updated_at: 1622816661.0
 rohitfarmer/singularity-defs:
   data_format: 2
   description: Definition (recipe) files for singularity containers.
@@ -3363,53 +3327,6 @@ rohitfarmer/singularity-defs:
   subscribers_count: 0
   topics: []
   updated_at: 1598393438.0
-sbutcher/container-R:
-  data_format: 2
-  description: singularity container for use with singularity hub
-  filenames:
-  - Singularity
-  full_name: sbutcher/container-R
-  latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-container-r" class="anchor" href="#container-r" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>container-R</h1>
-
-    <p>singularity container for use with singularity hub</p>
-
-    '
-  stargazers_count: 0
-  subscribers_count: 2
-  topics: []
-  updated_at: 1525440620.0
-sc-eQTLgen-consortium/WG1-pipeline-QC:
-  data_format: 2
-  description: Part of the sc-eQTLgen consortium pipeline. Step 1, where the QC is
-    done.
-  filenames:
-  - Singularity.Imputation
-  - Singularity.WGpipeline
-  full_name: sc-eQTLgen-consortium/WG1-pipeline-QC
-  latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-wg1-pipeline-qc" class="anchor" href="#wg1-pipeline-qc" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>WG1-pipeline-QC</h1>
-
-    <p><a href="https://user-images.githubusercontent.com/44268007/89252548-35b96f80-d659-11ea-97e9-4b4176df5f08.png"
-    target="_blank" rel="nofollow"><img src="https://user-images.githubusercontent.com/44268007/89252548-35b96f80-d659-11ea-97e9-4b4176df5f08.png"
-    width="300" height="140" style="max-width:100%;"></a></p>
-
-    <p>Part of the sceQTL-Gen consortium pipeline. Step 1, where the QC is done.</p>
-
-    <p>Please see the <a href="https://github.com/sc-eQTLgen-consortium/WG1-pipeline-QC/wiki">Wiki</a>
-    for information on running the QC pipeline.</p>
-
-    '
-  stargazers_count: 2
-  subscribers_count: 1
-  topics: []
-  updated_at: 1622436472.0
 slhogle/singularity_def_files:
   data_format: 2
   description: Singularity definition files for building various software to run on
@@ -3732,6 +3649,23 @@ sylabs/singularity:
   - hpc
   - linux
   updated_at: 1622788883.0
+timo-singularity/rivet:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: timo-singularity/rivet
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-recipes" class="anchor" href="#recipes" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>recipes</h1>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1622810530.0
 uf-icbr-bioinformatics/biocontainers:
   data_format: 2
   description: null
