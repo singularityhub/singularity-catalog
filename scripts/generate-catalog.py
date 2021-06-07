@@ -188,6 +188,13 @@ def recursive_find(base, pattern="Singularity*"):
         for filename in fnmatch.filter(filenames, pattern):
             yield os.path.join(root, filename)
 
+@call_rate_limit_aware_decorator
+def clone(repo, tmp, depth=1)
+    """
+    Rate limit aware clone
+    """
+    git.Repo.clone_from(repo.clone_url, tmp, depth=depth)
+
 
 def main():
     """
@@ -241,7 +248,7 @@ def main():
 
             # clone main branch
             try:
-                git.Repo.clone_from(repo.clone_url, str(tmp), depth=1)
+                clone(repo, str(tmp))
             except git.GitCommandError:
                 continue
 
