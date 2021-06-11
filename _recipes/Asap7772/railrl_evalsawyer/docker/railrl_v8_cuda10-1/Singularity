@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: vitchyr/railrl-v8-cuda10-1:latest
+
+%post
+    mkdir -p /global/scratch
+    mkdir -p /global/home/users
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/root/.mujoco/mujoco200/bin
+    chmod -R 777 /opt/conda/envs/railrl
+    chmod -R 777 /root

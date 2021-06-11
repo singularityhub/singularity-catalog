@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: debian:latest
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE http://github.com/icaoberg/singularity-fastani
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved. 
+    VERSION 1.33
+
+%post
+    apt update && apt install -y wget unzip gcc g++
+    wget https://github.com/ParBLiSS/FastANI/releases/download/v1.33/fastANI-Linux64-v1.33.zip
+    unzip fastANI-Linux64-v1.33.zip && rm -f fastANI-Linux64-v1.33.zip
+    mv -v fastANI /usr/local/bin/

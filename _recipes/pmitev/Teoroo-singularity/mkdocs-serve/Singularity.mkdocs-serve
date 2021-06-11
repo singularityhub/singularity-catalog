@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: python:3.9-alpine
+
+%environment
+  export LC_ALL=C
+  export PYTHONNOUSERSITE=True
+
+%post
+  export LC_ALL=C
+  
+  apk --update --no-cache add git gawk
+
+  apk --no-cache --virtual build add alpine-sdk
+  pip install --no-cache-dir mkdocs-material
+  apk del build
+
+%runscript
+  /usr/local/bin/mkdocs serve 

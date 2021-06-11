@@ -1,0 +1,67 @@
+Bootstrap: docker
+From:nvcr.io/nvidia/hpc-benchmarks:21.4-hpl
+#%environment
+#    export OMPI_DIR=/opt/ompi
+#    export SINGULARITY_OMPI_DIR=$OMPI_DIR
+#    export SINGULARITYENV_APPEND_PATH=$OMPI_DIR/bin
+#    export SINGULAIRTYENV_APPEND_LD_LIBRARY_PATH=$OMPI_DIR/lib
+%post
+apt-get -y update
+apt-get -y install openssh-client
+apt-get -y install nano
+apt-get -y install wget bash gcc gfortran g++ make file
+#echo "Installing Open MPI"
+#    export OMPI_DIR=/opt/ompi
+#    export OMPI_VERSION=4.0.1
+#    export OMPI_URL="https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-$OMPI_VERSION.tar.bz2"
+#    mkdir -p /tmp/ompi
+#    mkdir -p /opt
+    # Download
+#    cd /tmp/ompi && wget -O openmpi-$OMPI_VERSION.tar.bz2 $OMPI_URL && tar -xjf openmpi-$OMPI_VERSION.tar.bz2
+    # Compile and install
+#    cd /tmp/ompi/openmpi-$OMPI_VERSION && ./configure --prefix=$OMPI_DIR --with-cuda && make install
+    # Set env variables so we can compile our application
+#    export PATH=$OMPI_DIR/bin:$PATH
+#    export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+#    export MANPATH=$OMPI_DIR/share/man:$MANPATH
+   
+#wget https://repo.continuum.io/archive/Anaconda3-2018.12-Linux-x86_64.sh
+#bash Anac* -b -p /anaconda3
+#/anaconda3/bin/conda install -y git
+#/anaconda3/bin/conda install -y -c anaconda redis
+#/anaconda3/bin/conda install -y -c conda-forge numactl-cos6-x86_64
+#/anaconda3/bin/conda install -y -c conda-forge numactl-cos6-x86_64
+#/anaconda3/bin/conda install -y -c conda-forge blas
+#/anaconda3/bin/conda install -y -c conda-forge openssh
+#/anaconda3/bin/conda install -y -c conda-forge openmpi
+#/anaconda3/bin/conda install -y numpy ninja pyyaml mkl mkl-include setuptools cmake cffi
+#/anaconda3/bin/conda install -y -c pytorch magma-cuda101
+#/anaconda3/bin/conda install -y -c conda-forge vim
+apt-get -y install libomp-dev
+#echo 'export CUDA_NVCC_EXECUTABLE="/usr/local/cuda-10.0/bin/nvcc"' >>$SINGULARITY_ENVIRONMENT
+#echo 'export CUDA_HOME="/usr/local/cuda-10.0"' >>$SINGULARITY_ENVIRONMENT
+#echo 'export CUDNN_INCLUDE_PATH="/usr/local/cuda-10.0/include/"' >>$SINGULARITY_ENVIRONMENT
+#echo 'export CUDNN_LIBRARY_PATH="/usr/local/cuda-10.0/lib64/"' >>$SINGULARITY_ENVIRONMENT
+#echo 'export LIBRARY_PATH="/usr/local/cuda-10.0/lib64"' >>$SINGULARITY_ENVIRONMENT
+#echo 'export USE_CUDA=ON USE_CUDNN=ON USE_MKLDNN=ON USE_MKLDNN_CBLAS=ON USE_MPI=ON USE_CUDNN=ON USE_SYSTEM_NCCL=ON' >>$SINGULARITY_ENVIRONMENT
+
+#echo 'export CMAKE_PREFIX_PATH=${CONDA_PREFIX:-"$(dirname $(which conda))/../"}' >>$SINGULARITY_ENVIRONMENT
+#/anaconda3/bin/git clone --branch v1.5.0 https://github.com/pytorch/pytorch.git /pytorch-1.5.0
+#export USE_CUDA=1 USE_CUDNN=1 USE_MKLDNN=1
+#cd /pytorch-1.5.0
+#/anaconda3/bin/git submodule update --init --recursive
+#/anaconda3/bin/python setup.py install
+#/anaconda3/bin/git clone https://github.com/pytorch/vision.git /vision
+#cd /vision
+
+#/anaconda3/bin/python setup.py install
+#/anaconda3/bin/git clone https://github.com/NVIDIA/apex /apex
+#cd /apex
+#/anaconda3/bin/pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./
+#cd ..
+%environment
+bash Start.sh
+#export PATH="/anaconda3/bin:$PATH"
+#CMAKE_PREFIX_PATH=${CONDA_PREFIX:-"$(dirname $(which conda))/../"}
+XDG_RUNTIME_DIR=""
+PATH=${PATH}:${LSF_BINDIR}

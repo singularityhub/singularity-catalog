@@ -1,0 +1,44 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using the program ipyrad
+
+Bootstrap: docker
+From: continuumio/miniconda3
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM ipyrad
+	VERSION latest
+
+%post
+	# install ipyrad with conda
+	conda install ipyrad -c conda-forge -c bioconda
+
+
+%test
+	# test that the program works
+	ipyrad --version
+
+
+%environment
+	# Set up environmental variables within the container
+
+
+%runscript
+	# This will be executed when the container is run (singularity run [container])
+
+	ipyrad "$@"
+
+
+%help
+	# This message is displayed when called as: singularity run-help [container]
+
+	******************************************************************************
+
+	This container is for running ipyrad
+
+	To run, use: singularity run [container] [args]
+	or: singularity exec [container] ipyrad [args]
+
+	Check contents by entering it as: singularity shell [container]
+
+	******************************************************************************

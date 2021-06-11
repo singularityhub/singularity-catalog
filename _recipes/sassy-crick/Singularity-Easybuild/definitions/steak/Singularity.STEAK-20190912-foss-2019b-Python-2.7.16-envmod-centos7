@@ -1,0 +1,118 @@
+Bootstrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/x86_64/
+Include: yum
+
+%post
+yum --assumeyes update
+yum install --quiet --assumeyes epel-release
+yum install --quiet --assumeyes python setuptools environment-modules 
+yum install --quiet --assumeyes python-pip
+yum install --quiet --assumeyes bzip2 gzip tar zip unzip xz
+yum install --quiet --assumeyes curl wget
+yum install --quiet --assumeyes patch make
+yum install --quiet --assumeyes file git which
+yum install --quiet --assumeyes gcc-c++
+yum install --quiet --assumeyes perl-Data-Dumper
+yum install --quiet --assumeyes perl-Thread-Queue
+yum install --quiet --assumeyes libibverbs-dev libibverbs-devel rdma-core-devel
+yum install --quiet --assumeyes openssl-devel libssl-dev libopenssl-devel openssl
+
+# install EasyBuild using pip
+pip install -U pip
+pip install wheel
+pip install -U setuptools
+pip install 'vsc-install<0.11.4' 'vsc-base<2.9.0'
+pip install easybuild
+
+# create 'easybuild' user (if missing)
+id easybuild || useradd easybuild
+
+# create /app software installation prefix + /scratch sandbox directory
+if [ ! -d /app ]; then mkdir -p /app; chown easybuild:easybuild -R /app; fi
+if [ ! -d /scratch ]; then mkdir -p /scratch; chown easybuild:easybuild -R /scratch; fi
+if [ ! -d /home/easybuild ]; then mkdir -p /home/easybuild; chown easybuild:easybuild -R /home/easybuild;fi
+
+# verbose commands, exit on first error
+set -ve
+set -o noclobber
+cat > /home/easybuild/STEAK-20190912-foss-2019b-Python-2.7.16.eb << EOD
+# Contribution from the NIHR Biomedical Research Centre
+# Guy's and St Thomas' NHS Foundation Trust and King's College London
+# uploaded by J. Sassmannshausen
+
+easyblock = 'MakeCp'
+
+name = 'STEAK'
+version = '2019.09.12'
+versionsuffix = "-Python-%(pyver)s"
+
+homepage = 'https://omictools.com/steak-tool'
+description = """Detects integrations of any sort in high-throughput 
+sequencing (HTS) data. STEAK was built for validating and discovering 
+transposable element (TE) and retroviral integrations in a variety of 
+HTS data. The software performs on both single-end (SE) and paired-end (
+PE) libraries and on a variety of HTS sequencing strategies. It can 
+be applied to a broad range of research interests and clinical uses 
+such as population genetic studies and detecting polymorphic integrations."""
+
+toolchain = {'name': 'foss', 'version': '2019b'}
+
+source_urls = ['https://github.com/applevir/STEAK/archive/']
+sources = [
+    {'download_filename': '43f079da8bbc37a34efd7b3a0a6955a13f6d4137.tar.gz',
+     'filename': 'steak-20190912.tar.gz'}
+]
+checksums = ['f200865e2588c2a037527ad4cf8d2b6539217d7e9bf8f515b99e4288eb682b37']
+
+dependencies = [
+    ('Boost', '1.71.0'),
+    ('Python', '2.7.16'),
+]
+
+files_to_copy = [(['steak'], 'bin'), "README.md", "GPLv3.txt"]
+
+sanity_check_paths = {
+    'files': ['bin/steak'],
+    'dirs': [],
+}
+
+moduleclass = 'bio'
+EOD
+# configure EasyBuild
+cat > /home/easybuild/eb-install.sh << 'EOD'
+#!/bin/bash  
+export EASYBUILD_PREFIX=/scratch 
+export EASYBUILD_TMPDIR=/scratch/tmp 
+export EASYBUILD_SOURCEPATH=/scratch/sources:/tmp/easybuild/sources 
+export EASYBUILD_INSTALLPATH=/app 
+export EASYBUILD_PARALLEL=4
+EOD
+echo "eb /home/easybuild/STEAK-20190912-foss-2019b-Python-2.7.16.eb --robot --modules-tool=EnvironmentModulesC --module-syntax=Tcl" >>  /home/easybuild/eb-install.sh 
+
+chmod a+x /home/easybuild/eb-install.sh
+
+su -l easybuild -c /home/easybuild/eb-install.sh
+
+# cleanup, everything in /scratch is assumed to be temporary
+rm -rf /scratch/*
+
+%runscript
+eval "$@"
+
+%environment
+# make sure that 'module' is defined
+source /etc/profile
+# purge any modules that may be loaded outside container
+unset LOADEDMODULES
+unset _LMFILES_
+# avoid picking up modules from outside of container
+module unuse $MODULEPATH
+# pick up modules installed in /app
+module use /app/modules/all
+# load module(s) corresponding to installed software
+module load STEAK/2019.09.12-foss-2019b-Python-2.7.16 
+ 
+%labels
+Author  J. Sassmannshausen <rosalind-support@kcl.ac.uk>
+STEAK-20190912-foss-2019b-Python-2.7.16

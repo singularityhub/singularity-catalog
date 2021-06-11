@@ -1,0 +1,41 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using the program IGV
+
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM IGV
+	VERSION 2.4.16
+
+%post
+	# install java and needed packages
+	apt update
+	apt upgrade -y
+	export DEBIAN_FRONTEND=noninteractive
+	apt install -y glib-networking-common libcanberra-gtk-module locales openjdk-8-jre unzip wget
+
+	# set locale
+	locale-gen en_US.UTF-8
+	dpkg-reconfigure locales -f noninteractive
+	update-locale en_US.UTF-8
+
+	# download IGV
+	VERSION=2.4.16
+	URL=http://data.broadinstitute.org/igv/projects/downloads/2.4/IGV_"$VERSION".zip
+	wget "$URL"
+	unzip IGV_"$VERSION".zip
+	echo "export PATH=$PATH:/IGV_$VERSION" >> $SINGULARITY_ENVIRONMENT
+
+%environment
+	# set locale
+	export LC_ALL=en_US.UTF-8
+
+%help
+	******************************************************************************
+	This message is displayed when called as  >singularity run-help igv.img
+	This container is meant to be used for running IGV
+	Execute it as >singularity exec igv.img igv.sh
+	Check contents by entering it as >singularity shell igv.img
+	******************************************************************************

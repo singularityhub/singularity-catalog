@@ -1,0 +1,95 @@
+Bootstrap: debootstrap
+OSVersion: stretch 
+MirrorURL: http://httpredir.debian.org/debian
+
+%post
+apt update 
+apt dist-upgrade -y 
+apt install -y python python-setuptools environment-modules tcl
+apt install -y python-pip
+apt install -y bzip2 gzip tar zip unzip xz-utils 
+apt install -y curl wget
+apt install -y patch make
+apt install -y file git debianutils
+apt install -y gcc 
+apt install -y libibverbs-dev 
+apt install -y libssl-dev
+apt install -y binutils
+
+# install EasyBuild using pip3
+pip install -U pip
+pip install wheel
+pip install -U setuptools
+pip install 'vsc-install<0.11.4' 'vsc-base<2.9.0'
+pip install easybuild
+
+# create 'easybuild' user (if missing)
+id easybuild || useradd easybuild
+
+# create /app software installation prefix + /scratch sandbox directory
+if [ ! -d /app ]; then mkdir -p /app; chown easybuild:easybuild -R /app; fi
+if [ ! -d /scratch ]; then mkdir -p /scratch; chown easybuild:easybuild -R /scratch; fi
+if [ ! -d /home/easybuild ]; then mkdir -p /home/easybuild; chown easybuild:easybuild -R /home/easybuild;fi
+
+# verbose commands, exit on first error
+set -ve
+set -o noclobber
+cat > /home/easybuild/PLINK-2.00a2.3LM-x86_64.eb << EOD
+easyblock = 'PackedBinary'
+
+name = 'PLINK'
+version = '2.00a2.3LM-x86_64'
+
+homepage = 'https://www.cog-genomics.org/plink/2.0/'
+description = 'Whole-genome association analysis toolset'
+
+toolchain = SYSTEM
+
+source_urls = ['https://s3.amazonaws.com/plink2-assets/alpha2']
+sources = ['plink2_linux_x86_64.zip']
+checksums = ['3fa20a2058df542e928b11d715cc314c01d7c5961525b55fd17a088e6caa9cc9']
+
+sanity_check_paths = {
+    'files': ['plink2'],
+    'dirs': [],
+}
+
+moduleclass = 'bio'
+EOD
+# configure EasyBuild
+cat > /home/easybuild/eb-install.sh << 'EOD'
+#!/bin/bash  
+export EASYBUILD_PREFIX=/scratch 
+export EASYBUILD_TMPDIR=/scratch/tmp 
+export EASYBUILD_SOURCEPATH=/scratch/sources:/tmp/easybuild/sources 
+export EASYBUILD_INSTALLPATH=/app 
+export EASYBUILD_PARALLEL=4
+EOD
+echo "eb /home/easybuild/PLINK-2.00a2.3LM-x86_64.eb --robot --modules-tool=EnvironmentModulesC --module-syntax=Tcl" >>  /home/easybuild/eb-install.sh 
+
+chmod a+x /home/easybuild/eb-install.sh
+
+su -l easybuild -c /home/easybuild/eb-install.sh
+
+# cleanup, everything in /scratch is assumed to be temporary
+rm -rf /scratch/*
+
+%runscript
+eval "$@"
+
+%environment
+# make sure that 'module' is defined
+. /etc/profile
+# purge any modules that may be loaded outside container
+unset LOADEDMODULES
+unset _LMFILES_
+# avoid picking up modules from outside of container
+module unuse $MODULEPATH
+# pick up modules installed in /app
+module use /app/modules/all
+# load module(s) corresponding to installed software
+module load PLINK/2.00a2.3LM-x86_64 
+ 
+%labels
+Author  J. Sassmannshausen <rosalind-support@kcl.ac.uk>
+PLINK-2.00a2.3LM-x86_64

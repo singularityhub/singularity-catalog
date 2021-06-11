@@ -1,0 +1,136 @@
+BootStrap: docker
+From: ubuntu:xenial
+
+%labels
+    APPLICATION_NAME CITE-seq Workflow (COVID19)
+    AUTHOR_NAME Rohit Farmer
+    AUTHOR_EMAIL rohit.farmer@gmail.com
+    YEAR 2021
+
+%help
+    This container conatins:
+        R 3.6.1
+
+%environment
+    # Set system locale
+    PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+    LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+%post
+    # Change to tmp directory to download temporary files
+    cd /tmp
+
+    apt-get -qq -y update --fix-missing
+    apt-get -qq install -y --no-install-recommends apt-utils 
+    apt-get -qq -y update --fix-missing
+    apt-get -qq install -y --no-install-recommends \
+        autoconf \
+        automake \
+        build-essential \
+        bzip2 \
+        ca-certificates \
+        cmake \
+        gcc \
+        g++ \
+        gfortran \
+        git \
+        git-extras \
+        gdebi-core \
+        libhdf5-dev \
+        libtool \
+        libjpeg-dev \
+        libpng-dev \
+        libtiff-dev \
+        libatlas-base-dev \
+        libxml2-dev \
+        zlib1g-dev \
+        libcairo2-dev \
+        libeigen3-dev \
+        libcupti-dev \
+        libpcre3-dev \
+        libssl-dev \
+        libcurl4-openssl-dev \
+        libboost-dev \
+        libboost-system-dev \
+        libboost-thread-dev \
+        libboost-serialization-dev \
+        libboost-regex-dev \
+        libgtk2.0-dev \
+        libreadline-dev \
+        libbz2-dev \
+        libglu1-mesa-dev \
+        liblzma-dev \
+        libpcre++-dev \
+        libpango1.0-dev \
+        libmariadb-client-lgpl-dev \
+        libncurses5-dev \
+        libopenblas-dev \
+        liblapack-dev \
+        libxt-dev \
+        openjdk-8-jdk \
+        python3-dev \
+        python3-pip \
+        python3-setuptools \
+        python-software-properties \
+        python3-software-properties \
+        software-properties-common \
+        texlive \
+        texlive-fonts-extra \
+        texinfo \
+        wget \
+        xvfb \
+        xauth \
+        xfonts-base \
+        zip
+        
+        #add-apt-repository -y ppa:neovim-ppa/unstable
+        #apt-get -qq -y update --fix-missing
+        #apt-get -qq install -y --no-install-recommends neovim
+
+    export LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+# Install libgit2
+        wget -q https://github.com/libgit2/libgit2/releases/download/v1.1.0/libgit2-1.1.0.tar.gz
+        tar -zxf libgit2-1.1.0.tar.gz
+        cd libgit2-1.1.0
+        mkdir build && cd build
+        cmake ..
+        cmake --build . --target install
+        cd /tmp
+
+# Install R 3.6.1
+        wget -q https://cran.r-project.org/src/base/R-3/R-3.6.1.tar.gz
+        tar -zxf R-3.6.1.tar.gz
+        cd R-3.6.1
+        ./configure 
+        make
+        make install
+
+# Install R packages
+        # CRAN Packages
+        R --quiet --slave -e 'install.packages("devtools", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'library(devtools); install_version("tidyverse", version = "1.2.1", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'library(devtools); install_version("parallelDist", version = "0.2.4", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'library(devtools); install_version("ggridges", version = "0.5.1", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("pheatmap", version = "1.0.12", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("dplyr", version = "0.8.0.1", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'library(devtools); install_version("Seurat", version = "3.2.2", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'library(devtools); install_version("matrixStats", version = "0.54.0", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'library(devtools); install_version("stringr", version = "1.4.0", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'library(devtools); install_version("DescTools", version = "0.99.29", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'library(devtools); install_version("viridis", version = "0.5.1", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("magrittr", version = "1.5", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("scico", version = "1.1.0", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("plyr", version = "1.8.4", repos="https://cloud.r-project.org/")' 
+        R --quiet --slave -e 'library(devtools); install_version("circlize", version = "0.4.8", repos="https://cloud.r-project.org/")' 
+
+        # Bioconductor Packages
+#        R --silent --slave -e 'install.packages("BiocManager", repos="https://cloud.r-project.org/")'
+#        R --silent --slave -e 'BiocManager::install(version = "3.9")'
+#        R --silent --slave -e 'BiocManager::install(c("genefilter", "ComplexHeatmap"))'
+         
+               
+# Cleanup
+    echo "Cleaning"
+    apt-get -qq clean
+    rm -rf /var/lib/apt/lists/*

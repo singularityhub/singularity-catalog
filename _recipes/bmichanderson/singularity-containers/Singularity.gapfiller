@@ -1,0 +1,36 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using the program GapFiller
+
+Bootstrap: docker
+From: debian:7
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM GapFiller
+	VERSION 2.1.1
+
+%post
+	# install dependencies
+	apt-get update
+	apt-get upgrade -y
+	export DEBIAN_FRONTEND=noninteractive
+	apt-get install -y build-essential gzip make libboost-all-dev tar wget zlib1g zlib1g-dev
+
+	# download GapFiller and compile and make
+	URL=https://sourceforge.net/projects/gapfiller/files/latest/download
+	wget --no-check-certificate "$URL"
+	tar -xzf download
+	rm download
+	cd gapfiller-2.1.1
+	./configure; make; make install
+	cd ..
+	rm -r gapfiller-2.1.1
+	#echo "export PATH=$PATH:/gapfiller-2.1.1/src" >> $SINGULARITY_ENVIRONMENT
+
+%help
+	******************************************************************************
+	This message is displayed when called as  >singularity run-help gapfiller.img
+	This container is meant to be used for running GapFiller
+	Execute it as >singularity exec gapfiller.img GapFiller
+	Check contents by entering it as >singularity shell gapfiller.img
+	******************************************************************************

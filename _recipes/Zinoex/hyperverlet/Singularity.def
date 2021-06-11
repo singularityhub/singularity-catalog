@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: nvidia/cuda:11.1.1-devel-ubuntu20.04
+Registry: nvcr.io
+IncludeCmd: yes
+
+%files
+    requirements.txt requirements.txt
+
+%post
+    apt update -y
+    apt install -y git python3 python3-pip ffmpeg
+
+    pip3 install numpy
+    pip3 install --find-links https://download.pytorch.org/whl/torch_stable.html --requirement requirements.txt
+
+
+%runscript
+    #!/bin/bash
+    pwd
+    if [[ -v $PYTHON_PATH ]]; then
+        export PYTHONPATH=$HOME/glassy_dynamics:$PYTHONPATH
+    else
+        export PYTHONPATH=$HOME/glassy_dynamics
+    fi
+
+    mkdir -p utilization
+    nvidia-smi --query-gpu=index,timestamp,utilization.gpu,utilization.memory,memory.total,memory.used,memory.free --format=csv --loop=5 > utilization/$(date "+%Y.%m.%d-%H.%M.%S").csv &
+    $*

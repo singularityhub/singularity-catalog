@@ -1,0 +1,19 @@
+Bootstrap: docker-daemon
+From: railrl_v9p5_cuda10-1_mj1-50-1-59_torch1-1-0_gym0-10-5_py3-5-2_local:latest
+
+# see https://sylabs.io/guides/3.5/user-guide/singularity_and_docker.html#mandatory-header-keywords-locally-boostrapped
+
+%post
+    mkdir -p /global/scratch
+    mkdir -p /global/home/users/vitchyr
+    chmod -R 777 /opt
+    chmod -R 777 /root
+    touch /bin/nvidia-smi
+    touch /usr/bin/nvidia-smi
+    touch /usr/bin/nvidia-debugdump
+    touch /usr/bin/nvidia-persistenced
+    touch /usr/bin/nvidia-cuda-mps-control
+    touch /usr/bin/nvidia-cuda-mps-server
+    mkdir /etc/dcv
+    mkdir /var/lib/dcv-gl
+    mkdir /usr/lib64

@@ -1,0 +1,50 @@
+Bootstrap: docker
+From: nvidia/cuda:9.2-cudnn7-runtime
+
+%post
+apt-get -y update
+apt-get -y install cuda
+apt-get -y install python3-pip
+apt-get -y install nano
+
+pip3 install --upgrade pip
+pip3 install tensorflow-gpu
+pip3 install torch==1.2.0+cu92 torchvision==0.4.0+cu92 -f https://download.pytorch.org/whl/torch_stable.html
+
+pip3 install keras
+
+apt-get -y update
+apt-get -y install python3-pip net-tools
+apt-get -y install graphviz libgraphviz-dev
+apt-get -y update
+# its wise to keep the system up to date!
+# you can skip the following line if you not
+# want to update all your software
+apt-get -y upgrade
+# installing python 2.7 and pip for it
+apt-get -y install python2.7 python-pip
+# installing python-pip for 3.6
+apt-get -y install python3-pip
+
+pip3 install --upgrade pip
+pip3 install jupyter
+pip3 install numpy scipy matplotlib
+pip3 install ipyparallel
+apt-get -y upgrade
+apt-get -y install git
+
+git clone https://github.com/NVIDIA/apex
+ipcluster nbextension enable
+
+%environment
+XDG_RUNTIME_DIR=""
+PATH=${PATH}:${LSF_BINDIR}
+
+PATH=${PATH}:${LSF_BINDIR}:/cm/local/apps/cuda/libs/current/bin
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda-9.2/lib64:/cm/local/apps/cuda-driver/libs/current/lib64
+export PATH=/usr/local/cuda-9.2/bin${PATH:+:${PATH}}
+LD_LIBRARY_PATH=/usr/local/cuda-9.2/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+
+cd /apex
+pip3 install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./
+cd $HOME

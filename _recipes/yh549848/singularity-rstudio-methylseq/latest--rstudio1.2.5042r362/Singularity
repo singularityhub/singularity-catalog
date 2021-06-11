@@ -27,10 +27,12 @@ From: nickjer/singularity-rstudio:3.6.2
   R -e 'install.packages("here")' && \
   R -e 'install.packages("docopt")' && \
   R -e 'install.packages("ggpubr")' && \
+  R -e 'install.packages("ggplotify")' && \
   R -e 'install.packages("ggrepel")' && \
   R -e 'install.packages("ggedit")' && \
   R -e 'install.packages("ggcorrplot")' && \
   R -e 'install.packages("UpSetR")' && \
+  R -e 'install.packages("plotly")' && \
   # NOTE: Latest version of XML package does not work in R 3.6.2
   wget https://cran.r-project.org/src/contrib/Archive/XML/XML_3.99-0.3.tar.gz && \
   R CMD INSTALL XML_3.99-0.3.tar.gz && \

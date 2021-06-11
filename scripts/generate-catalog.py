@@ -12,6 +12,7 @@ import time
 import shutil
 import yaml
 import random
+from copy import deepcopy
 
 from github import Github
 from github.GithubException import UnknownObjectException, RateLimitExceededException
@@ -30,7 +31,6 @@ env = Environment(
 # do not clone LFS files
 os.environ["GIT_LFS_SKIP_SMUDGE"] = "1"
 g = Github(os.environ["GITHUB_TOKEN"])
-repos = []
 
 core_rate_limit = g.get_rate_limit().core
 
@@ -39,6 +39,14 @@ def read_file(filename):
     with open(filename, "r") as fd:
         content = fd.read()
     return content
+
+
+# If we already have an existing file, load it.
+repos_file = os.path.join(here, "assets", "js", "repos.js")
+repos = []
+if os.path.exists(repos_file):
+    content = read_file(repos_file)
+    repos = json.loads("\n".join(content.split("\n")[1:]))
 
 
 class Repo:
@@ -97,31 +105,37 @@ def call_rate_limit_aware_decorator(func):
 
 
 def store_data():
-    repos.sort(key=lambda repo: repo["stargazers_count"])
+
+    # Create a copy to work with
+    copied = deepcopy(repos)
+
+    # Reverse so the newer are at the front
+    copied.reverse()
+
+    # Go through and get newest entries (added first)
+    results = {}
+    for result in copied:
+        if result["full_name"] not in results:
+            results[result["full_name"]] = result
+
+    # Save to yaml in data folder
+    datapath = os.path.join(here, "_data", "repos.yml")
+    with open(datapath, "w") as out:
+        yaml.dump(results, out)
+
+    # This should be unique, only newer repos found
+    results = list(results.values())
+    print("Saving total of %s results." % len(results))
+    results.sort(key=lambda repo: repo["stargazers_count"])
 
     # Save the js data ready to go, and data for jekyll
     datapath = os.path.join(here, "assets", "js", "repos.js")
     with open(datapath, "w") as out:
-        print(env.get_template("repos.js").render(data=repos), file=out)
-
-    # Also save to yaml in data folder
-    datapath = os.path.join(here, "_data", "repos.yml")
-    results = {}
-    for repo in repos:
-        results[repo["full_name"]] = repo
-    with open(datapath, "w") as out:
-        yaml.dump(results, out)
+        print(env.get_template("repos.js").render(data=results), file=out)
 
 
 @call_rate_limit_aware_decorator
-def add_existing_repos(byrepo, lookup):
-
-    # If we already have an existing file, load it.
-    repos_file = os.path.join(here, "assets", "js", "repos.js")
-    old_repos = []
-    if os.path.exists(repos_file):
-        content = read_file(repos_file)
-        old_repos = json.loads("\n".join(content.split("\n")[1:]))
+def add_named_repos(byrepo, lookup):
 
     # Add repos that are from file
     with open("repos.txt", "r") as fd:
@@ -132,19 +146,7 @@ def add_existing_repos(byrepo, lookup):
                 byrepo[repo] = g.get_repo(repo)
                 lookup[repo] = search
 
-    for entry in old_repos:
-        # If a repo doesn't exist, skip it!
-        try:
-            if entry["full_name"] not in byrepo:
-                byrepo[entry["full_name"]] = g.get_repo(entry["full_name"])
-                lookup[entry["full_name"]] = "Singularity*"
-        except UnknownObjectException:
-            print(
-                "%s does not exist anymore, will not be added back."
-                % entry["full_name"]
-            )
-
-        return byrepo, lookup
+    return byrepo, lookup
 
 
 @call_rate_limit_aware_decorator
@@ -188,8 +190,9 @@ def recursive_find(base, pattern="Singularity*"):
         for filename in fnmatch.filter(filenames, pattern):
             yield os.path.join(root, filename)
 
+
 @call_rate_limit_aware_decorator
-def clone(repo, tmp, depth=1)
+def clone(repo, tmp, depth=1):
     """
     Rate limit aware clone
     """
@@ -200,7 +203,7 @@ def main():
     """
     Entrypoint to catalog generation
     """
-    blacklist = set(l.strip() for l in open("blacklist.txt", "r"))
+    skiplist = set(l.strip() for l in open("skiplist.txt", "r"))
 
     # This search seems to return the best results! We search by indexed,
     # and it only returns top 10, and we can hope that over time we get closed
@@ -210,7 +213,7 @@ def main():
         sort="indexed",
         order=random.choice(["asc", "desc"]),
     )
-    print(code_search.totalCount)
+    print("Found %s results from code search" % code_search.totalCount)
 
     # Create a directory structure with Singularity recipes
     data_dir = os.path.join(here, "_recipes")
@@ -221,9 +224,9 @@ def main():
     print("Found %s search results!" % len(byrepo))
 
     # Add old repos to be indexed
-    byrepo, lookup = add_existing_repos(byrepo, lookup)
+    byrepo, lookup = add_named_repos(byrepo, lookup)
 
-    print("%s total repos with previous added!" % len(byrepo))
+    print("%s total repos to parse" % len(byrepo))
 
     for i, reponame in enumerate(byrepo):
 
@@ -236,7 +239,7 @@ def main():
         repo_dir = os.path.join(data_dir, repo.full_name)
 
         logging.info(f"Processing {repo.full_name}.")
-        if repo.full_name in blacklist:
+        if repo.full_name in skiplist:
             continue
 
         with tempfile.TemporaryDirectory() as tmp:

@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: ubuntu:focal
+From: nvcr.io/nvidia/cuda:10.2-devel-ubuntu18.04
 
 %labels
 Maintainer marty.hickman@plantandfood.co.nz
@@ -8,10 +8,10 @@ Version 0.4.0
 %post
   ## Download build prerequisites
   apt-get update
-  apt-get -y install python3-pip
-  
+  apt-get -y install python3-pip zlib1g-dev
   ## Install
-  pip3 install ont-bonito==0.4.0
+  pip3 install ont-bonito==0.4.0 || true
+  rm -rf /root/.cache
 
 %runscript
   exec bonito "$@"

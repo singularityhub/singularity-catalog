@@ -1,0 +1,43 @@
+Bootstrap: docker
+From: nvidia/cuda:10.1-cudnn7-runtime
+%environment
+XDG_RUNTIME_DIR=""
+PATH=${PATH}:${LSF_BINDIR}
+
+PATH=${PATH}:${LSF_BINDIR}:/cm/local/apps/cuda/libs/current/bin
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda-10.1/lib64:/cm/local/apps/cuda-driver/libs/current/lib64
+CUDA_PATH=/usr/local/cuda-10.1
+CUDA_ROOT=/usr/local/cuda-10.1
+%post
+apt-get -y update
+apt-get -y install wget
+wget https://repo.continuum.io/archive/Anaconda3-2018.12-Linux-x86_64.sh
+bash Anaconda3-2018.12-Linux-x86_64.sh
+apt-get -y update
+apt-get -y install python3-pip
+
+apt-get install gcc
+
+pip3 install --upgrade pip
+pip3 install tensorflow-gpu
+
+apt-get -y update
+apt-get -y install python3-pip net-tools
+apt-get -y install graphviz libgraphviz-dev
+
+pip3 install --upgrade pip
+pip3 install jupyter
+pip3 install numpy scipy matplotlib
+pip3 install ipyparallel
+
+ipcluster nbextension enable
+
+%environment
+XDG_RUNTIME_DIR=""
+PATH=${PATH}:${LSF_BINDIR}
+
+PATH=${PATH}:${LSF_BINDIR}:/cm/local/apps/cuda/libs/current/bin
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda-10.1/lib64:/cm/local/apps/cuda-driver/libs/current/lib64
+CUDA_PATH=/usr/local/cuda-10.1
+CUDA_ROOT=/usr/local/cuda-10.1
+

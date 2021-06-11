@@ -1,0 +1,15 @@
+Bootstrap: docker
+From:nvcr.io/nvidia/tensorflow:20.03-tf2-py3
+
+%post
+apt-get -y update
+apt-get -y install wget bash gcc gfortran g++ make file
+apt-get -y install libibverbs-dev
+apt-get -y install libomp-dev
+
+%environment
+echo "slurmadmin:x:300:300::/opt/slurm/slurm:/bin/false" >> /etc/passwd
+echo "slurmadmin:x:300:" >> /etc/group
+export PATH="/opt/slurm/bin:$PATH"
+XDG_RUNTIME_DIR=""
+PATH=${PATH}:${LSF_BINDIR}

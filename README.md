@@ -19,7 +19,7 @@ A Singularity recipe is a definition file to build a Singularity container. It c
 - Your file must be named following the Singularity published convention. If Singularity is in the name of the .def file it might be discovered, but since *.def is not specific enough to Singularity, we cannot search for these files.
 - The recipe is contained in a public Github repository.
 - The repository is small enough to be cloned into a Github actions job.
-- The repository is not [blacklisted](blacklist.txt).
+- The repository is not on the [skiplist](skiplist.txt).
 
 Additionally, we now support adding repos and search expressions to [repos.txt](repos.txt),
 so a repository with *.def files (which are not specific to Singularity and would not be

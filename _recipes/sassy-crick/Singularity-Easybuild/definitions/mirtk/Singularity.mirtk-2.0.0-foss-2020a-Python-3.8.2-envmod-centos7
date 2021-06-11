@@ -1,0 +1,156 @@
+Bootstrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/x86_64/
+Include: yum
+
+%post
+yum --assumeyes update
+yum install --quiet --assumeyes epel-release
+yum install --quiet --assumeyes python setuptools environment-modules 
+yum install --quiet --assumeyes python-pip
+yum install --quiet --assumeyes bzip2 gzip tar zip unzip xz
+yum install --quiet --assumeyes curl wget
+yum install --quiet --assumeyes patch make
+yum install --quiet --assumeyes file git which
+yum install --quiet --assumeyes gcc-c++
+yum install --quiet --assumeyes perl-Data-Dumper
+yum install --quiet --assumeyes perl-Thread-Queue
+yum install --quiet --assumeyes libibverbs-dev libibverbs-devel rdma-core-devel
+yum install --quiet --assumeyes openssl-devel libssl-dev libopenssl-devel openssl
+
+# This is only needed due to a current bug in SuiteSparse-5.7.1-foss-2020a-METIS-5.1.0.eb 
+yum install --quiet --assumeyes m4
+
+# install EasyBuild using pip
+pip install -U pip
+pip install wheel
+pip install -U setuptools
+pip install 'vsc-install<0.11.4' 'vsc-base<2.9.0'
+pip install easybuild
+
+# create 'easybuild' user (if missing)
+id easybuild || useradd easybuild
+
+# create /app software installation prefix + /scratch sandbox directory
+if [ ! -d /app ]; then mkdir -p /app; chown easybuild:easybuild -R /app; fi
+if [ ! -d /scratch ]; then mkdir -p /scratch; chown easybuild:easybuild -R /scratch; fi
+if [ ! -d /home/easybuild ]; then mkdir -p /home/easybuild; chown easybuild:easybuild -R /home/easybuild;fi
+
+# verbose commands, exit on first error
+set -ve
+set -o noclobber
+cat > /home/easybuild/mitk-2.0.0-foss-2020a-Python-3.8.2.eb << 'EOD'
+easyblock = 'CMakeMake'
+name = 'MIRTK'
+version = '2.0.0'
+versionsuffix = '-Python-3.8.2'
+homepage = 'https://mirtk.github.io'
+description = """The MIRTK is a research-focused image processing toolkit, 
+developed at the BioMedIA research group. It provides a collection of libraries 
+and command-line tools to assist in processing and analyzing imaging data. The 
+main application of the MIRTK is in adult and neonatal brain MR image 
+registration as well as the reconstruction of cortical surface meshes. 
+The modular project organization of the MIRTK enables the installation of selected modules."""
+toolchain = {'name': 'foss', 'version': '2020a'}
+source_urls = ['https://github.com/BioMedIA/MIRTK/archive/']
+sources = ['v%(version)s.tar.gz']
+checksums = [
+    '98a27bc8d1b9ee1bab6c1aea21932b2c29b838d97de3bc9536cccabb27c2f8e5',  # v2.0.0.tar.gz
+    'c8ca975d181e8a06e5ad2cd5947086eb8a7d1c53e52e017d7ae277b48b0914f1',  # arpack.patch for this file only
+]
+builddependencies = [
+    ('CMake', '3.16.4'),
+    ('Eigen', '3.3.7', '', True),
+    ('Boost', '1.72.0'),
+    ('Perl', '5.30.2'),
+]
+dependencies = [
+    ('VTK', '8.2.0', '-Python-3.8.2'),
+    ('tbb', '2020.2'),
+    ('arpack-ng', '3.7.0'),
+    ('METIS', '5.1.0'),
+    ('SuiteSparse', '5.7.1', '-METIS-5.1.0'),
+]
+patches = ['arpack.patch']
+parallel = 1
+build_type = 'Release'
+separate_build_dir = True
+configopts = '-DWITH_VTK=ON  -DWITH_PNG=ON -DWITH_ARPACK=ON \
+ -DWITH_ZLIB=ON -DWITH_PNG=ON -DWITH_PROFILING=ON -DWITH_NiftiCLib=ON \
+ -DWITH_FLANN=ON -DWITH_ARPACK=ON -DWITH_TBB=ON \
+ -DCMAKE_SYSTEM_LIBRARY_PATH="${LIBRARY_PATH//:/;}"'
+build_cmd = 'cd %(builddir)s/easybuild_obj/Applications/src/CMakeFiles && \
+ for i in $(find ./ -iname link.txt); do sed -E -i.bac \
+ "s/easybuild_obj\/lib:/easybuild_obj\/lib: -lcholmod/" $i; done && \
+ cd %(builddir)s/easybuild_obj/ && make '
+sanity_check_paths = {
+    'files': ['bin/mirtk', 'bin/uninstall-mirtk'],
+    'dirs': ['bin', 'include', 'lib', 'share'],
+}
+moduleclass = 'bio'
+EOD
+cat > /home/easybuild/arpack.patch << 'EOD'
+diff -Nru MIRTK-2.0.0.orig/CMake/Modules/FindARPACK.cmake MIRTK-2.0.0/CMake/Modules/FindARPACK.cmake
+--- MIRTK-2.0.0.orig/CMake/Modules/FindARPACK.cmake     2018-04-08 21:57:47.000000000 +0000
++++ MIRTK-2.0.0/CMake/Modules/FindARPACK.cmake  2020-06-12 10:26:39.694996672 +0000
+@@ -1,5 +1,5 @@
+ find_library(ARPACK_LIBRARY
+-  NAMES parpack arpack
++  NAMES arpack parpack
+   PATHS ${ARPACK_DIR}/lib
+ )
+EOD
+
+# We set this so if we need to open the container again, we got the environment set up correctly
+cat >> /home/easybuild/.bashrc << 'EOG'
+export EASYBUILD_PREFIX=/scratch 
+export EASYBUILD_TMPDIR=/scratch/tmp
+export EASYBUILD_SOURCEPATH=/scratch/sources:/tmp/easybuild/sources
+export EASYBUILD_INSTALLPATH=/app
+export EASYBUILD_PARALLEL=4
+export MODULEPATH=/app/modules/all
+alias eb="eb --robot --modules-tool=EnvironmentModulesC --module-syntax=Tcl --download-timeout=1000"
+EOG
+
+# configure EasyBuild
+cat > /home/easybuild/eb-install.sh << 'EOD'
+#!/bin/bash  
+shopt -s expand_aliases
+export EASYBUILD_PREFIX=/scratch 
+export EASYBUILD_TMPDIR=/scratch/tmp 
+export EASYBUILD_SOURCEPATH=/scratch/sources:/tmp/easybuild/sources 
+export EASYBUILD_INSTALLPATH=/app 
+export EASYBUILD_PARALLEL=4
+alias eb="eb --robot --modules-tool=EnvironmentModulesC --module-syntax=Tcl --download-timeout=1000"
+EOD
+echo "eb --try-toolchain=GCCcore,9.3.0 tbb-2020.2-GCCcore-8.3.0.eb" >>  /home/easybuild/eb-install.sh 
+echo "eb --try-toolchain=foss,2020a arpack-ng-3.7.0-foss-2019b.eb" >>  /home/easybuild/eb-install.sh 
+echo "eb --fetch /home/easybuild/mitk-2.0.0-foss-2020a-Python-3.8.2.eb" >>  /home/easybuild/eb-install.sh 
+echo "eb /home/easybuild/mitk-2.0.0-foss-2020a-Python-3.8.2.eb" >>  /home/easybuild/eb-install.sh 
+
+chmod a+x /home/easybuild/eb-install.sh
+
+# su -l easybuild -c /home/easybuild/eb-install.sh
+
+# cleanup, everything in /scratch is assumed to be temporary
+# rm -rf /scratch/*
+
+%runscript
+eval "$@"
+
+%environment
+# make sure that 'module' is defined
+source /etc/profile
+# purge any modules that may be loaded outside container
+unset LOADEDMODULES
+unset _LMFILES_
+# avoid picking up modules from outside of container
+module unuse $MODULEPATH
+# pick up modules installed in /app
+module use /app/modules/all
+# load module(s) corresponding to installed software
+module load MIRTK/2.0.0-foss-2020a-Python-3.8.2 
+ 
+%labels
+Author  J. Sassmannshausen <rosalind-support@kcl.ac.uk>
+MIRTK-2.0.0-foss-2020a-Python-3.8.2

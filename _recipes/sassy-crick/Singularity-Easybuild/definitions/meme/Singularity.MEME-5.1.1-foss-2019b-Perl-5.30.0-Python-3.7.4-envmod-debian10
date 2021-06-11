@@ -1,0 +1,114 @@
+Bootstrap: debootstrap
+OSVersion: buster
+MirrorURL: http://ftp.tu-graz.ac.at/mirror/debian/ 
+
+%post
+apt update 
+apt dist-upgrade -y 
+apt install -y python3 python3-setuptools environment-modules tcl
+apt install -y python3-pip
+apt install -y bzip2 gzip tar zip unzip xz-utils 
+apt install -y curl wget
+apt install -y patch make
+apt install -y file git debianutils
+apt install -y gcc-8 
+apt install -y libibverbs-dev 
+apt install -y libssl-dev
+apt install -y binutils libx11-dev
+
+# install EasyBuild using pip3
+pip3 install -U pip
+pip3 install wheel
+pip3 install -U setuptools
+pip3 install 'vsc-install<0.11.4' 'vsc-base<2.9.0'
+pip3 install easybuild
+
+# create 'easybuild' user (if missing)
+id easybuild || useradd easybuild
+
+# create /app software installation prefix + /scratch sandbox directory
+if [ ! -d /app ]; then mkdir -p /app; chown easybuild:easybuild -R /app; fi
+if [ ! -d /scratch ]; then mkdir -p /scratch; chown easybuild:easybuild -R /scratch; fi
+if [ ! -d /home/easybuild ]; then mkdir -p /home/easybuild; chown easybuild:easybuild -R /home/easybuild;fi
+
+# verbose commands, exit on first error
+set -ve
+set -o noclobber
+cat > /home/easybuild/MEME-5.1.1-foss-2019b-Perl-5.30.0-Python-3.7.4.eb << EOD
+# Contribution from the NIHR Biomedical Research Centre
+# Guy's and St Thomas' NHS Foundation Trust and King's College London
+# uploaded by J. Sassmannshausen
+
+easyblock = 'ConfigureMake'
+
+name = 'MEME'
+version = '5.1.1'
+versionsuffix = '-Perl-%(perlver)s-Python-%(pyver)s'
+
+homepage = 'http://meme-suite.org'
+description = """The MEME Suite allows you to: * discover motifs using MEME, DREME (DNA only) or
+ GLAM2 on groups of related DNA or protein sequences, * search sequence databases with motifs using
+ MAST, FIMO, MCAST or GLAM2SCAN, * compare a motif to all motifs in a database of motifs, * associate
+ motifs with Gene Ontology terms via their putative target genes, and * analyse motif enrichment
+ using SpaMo or CentriMo."""
+
+toolchain = {'name': 'foss', 'version': '2019b'}
+
+source_urls = ['http://meme-suite.org/meme-software/%(version)s/']
+sources = ['%(namelower)s-%(version)s.tar.gz']
+checksums = ['38d73d256d431ad4eb7da2c817ce56ff2b4e26c39387ff0d6ada088938b38eb5']
+
+dependencies = [
+    ('libxml2', '2.9.9'),
+    ('libxslt', '1.1.34'),
+    ('zlib', '1.2.11'),
+    ('Perl', '5.30.0'),
+    ('Python', '3.7.4')
+]
+
+configopts = '--with-perl=${EBROOTPERL}/bin/perl --with-python3=${EBROOTPYTHON}/bin/python '
+
+sanity_check_paths = {
+    'files': ["bin/meme", "bin/dreme", "bin/meme-chip"],
+    'dirs': ["lib"],
+}
+
+moduleclass = 'bio'
+EOD
+# configure EasyBuild
+cat > /home/easybuild/eb-install.sh << 'EOD'
+#!/bin/bash  
+export EASYBUILD_PREFIX=/scratch 
+export EASYBUILD_TMPDIR=/scratch/tmp 
+export EASYBUILD_SOURCEPATH=/scratch/sources:/tmp/easybuild/sources 
+export EASYBUILD_INSTALLPATH=/app 
+export EASYBUILD_PARALLEL=4
+EOD
+echo "eb /home/easybuild/MEME-5.1.1-foss-2019b-Perl-5.30.0-Python-3.7.4.eb --robot --modules-tool=EnvironmentModulesC --module-syntax=Tcl" >>  /home/easybuild/eb-install.sh 
+
+chmod a+x /home/easybuild/eb-install.sh
+
+su -l easybuild -c /home/easybuild/eb-install.sh
+
+# cleanup, everything in /scratch is assumed to be temporary
+rm -rf /scratch/*
+
+%runscript
+eval "$@"
+
+%environment
+# make sure that 'module' is defined
+. /etc/profile
+# purge any modules that may be loaded outside container
+unset LOADEDMODULES
+unset _LMFILES_
+# avoid picking up modules from outside of container
+module unuse $MODULEPATH
+# pick up modules installed in /app
+module use /app/modules/all
+# load module(s) corresponding to installed software
+module load MEME/5.1.1-foss-2019b-Perl-5.30.0-Python-3.7.4 
+ 
+%labels
+Author  J. Sassmannshausen <rosalind-support@kcl.ac.uk>
+MEME-5.1.1-foss-2019b-Perl-5.30.0-Python-3.7.4
