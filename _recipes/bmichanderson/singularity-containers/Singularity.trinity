@@ -1,0 +1,124 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using the program Trinity
+
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM Trinity
+	VERSION 2.8.5
+
+%post
+
+	# install essentials for obtaining and building software and set up the environment
+
+	apt update && apt upgrade -y
+
+	apt install -y autoconf automake build-essential cmake default-jre g++ gcc locales make python-dev python-numpy rsync wget
+
+	export DEBIAN_FRONTEND=noninteractive
+
+	locale-gen en_US.UTF-8
+	dpkg-reconfigure locales -f noninteractive
+	update-locale en_US.UTF-8
+
+
+	# install additional dependencies (following the docker file from Brian Haas)
+
+		# blast
+
+		apt install -y ncbi-blast+
+
+
+		# bowtie and bowtie2
+
+		apt install -y bowtie bowtie2 
+
+
+		# jellyfish
+
+		wget https://github.com/gmarcais/Jellyfish/releases/download/v2.2.10/jellyfish-2.2.10.tar.gz && \
+		tar -xvf jellyfish-2.2.10.tar.gz && \
+		cd jellyfish-2.2.10/ && \
+		./configure && make && make install && cd ../ \
+		rm -r jellyfish-2.2.10/ jellyfish-2.2.10.tar.gz
+		
+
+		# kallisto
+
+		wget https://github.com/pachterlab/kallisto/releases/download/v0.43.1/kallisto_linux-v0.43.1.tar.gz && \
+		tar -xvf kallisto_linux-v0.43.1.tar.gz && \
+		cp kallisto_linux-v0.43.1/kallisto /usr/local/bin/ && \
+		rm -r kallisto_linux-v0.43.1*
+
+
+		# R
+
+		echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" >> /etc/apt/sources.list
+		apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+		apt install -y r-base-core
+
+
+		# rsem
+
+		wget https://github.com/deweylab/RSEM/archive/v1.3.1.tar.gz && \
+		tar -xvf v1.3.1.tar.gz && \
+		cd RSEM-1.3.1 && \
+		make && make install && cd ../ && \
+		rm -r RSEM-1.3.1 v1.3.1.tar.gz
+
+
+		# salmon
+
+		cd /usr/local/src
+		wget https://github.com/COMBINE-lab/salmon/releases/download/v0.9.1/Salmon-0.9.1_linux_x86_64.tar.gz && \
+		tar -xvf Salmon-0.9.1_linux_x86_64.tar.gz && \
+		ln -s /usr/local/src/Salmon-latest_linux_x86_64/bin/salmon /usr/local/bin/. && cd ../
+
+
+		# samtools
+
+		apt install -y samtools
+
+
+	# clean-up
+
+	apt update && apt upgrade -y &&	apt autoremove -y && apt clean
+		
+
+	# install Trinity
+
+	wget https://github.com/trinityrnaseq/trinityrnaseq/archive/Trinity-v2.8.5.tar.gz && \
+	tar -xvf Trinity-v2.8.5.tar.gz && \
+	cd trinityrnaseq-Trinity-v2.8.5 && \
+	make && make plugins && make install && cd ../ && \
+	rm -r trinityrnaseq-Trinity-v2.8.5 Trinity-v2.8.5.tar.gz
+
+
+%environment
+
+	# Set up environmental variables within the container
+	
+	TRINITY_HOME=/usr/local/bin/trinityrnaseq-Trinity-v2.8.5
+	export TRINITY_HOME
+
+	export LC_ALL=en_US.UTF-8
+
+
+%runscript
+
+	# This will be executed when the container is run (singularity run [container])
+
+	$TRINITY_HOME/Trinity "$@"
+
+
+%help
+
+	# This message is displayed when called as: singularity run-help [container]
+
+	******************************************************************************
+	This container is for running Trinity
+	To run, use: singularity run [container] [args]
+	Check contents by entering it as: singularity shell [container]
+	******************************************************************************

@@ -1,0 +1,8 @@
+Bootstrap: docker
+From: vitchyr/railrl_v12_cuda10-1_mj2-0-2-2_torch1-1-0_gym0-12-5_py3-6-5:latest
+
+%post
+    mkdir -p /global/scratch
+    mkdir -p /global/home/users/vitchyr
+    chmod -R 777 /opt
+    chmod -R 777 /root

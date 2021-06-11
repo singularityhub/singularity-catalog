@@ -1,0 +1,6 @@
+BootStrap: docker
+From:nvidia/container-toolkit:1.0.0-alpha1
+%post
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+

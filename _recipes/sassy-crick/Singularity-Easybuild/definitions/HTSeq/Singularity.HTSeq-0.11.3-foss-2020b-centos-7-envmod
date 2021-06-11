@@ -1,0 +1,115 @@
+Bootstrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/x86_64/
+Include: yum
+
+%post
+yum --assumeyes update
+yum install --quiet --assumeyes epel-release
+yum install --quiet --assumeyes python3 environment-modules
+yum install --quiet --assumeyes python3-pip
+yum install --quiet --assumeyes bzip2 gzip tar zip unzip xz
+yum install --quiet --assumeyes curl wget
+yum install --quiet --assumeyes patch make
+yum install --quiet --assumeyes file git which
+yum install --quiet --assumeyes gcc-c++
+yum install --quiet --assumeyes perl-Data-Dumper
+yum install --quiet --assumeyes perl-Thread-Queue
+yum install --quiet --assumeyes libibverbs-devel rdma-core-devel
+yum install --quiet --assumeyes openssl-devel openssl
+yum clean all
+# install EasyBuild using pip3
+pip3 install -U pip
+pip3 install wheel
+pip3 install -U setuptools
+pip3 install 'vsc-install<0.11.4' 'vsc-base<2.9.0'
+pip3 install easybuild
+
+# create 'easybuild' user (if missing)
+id easybuild || useradd easybuild
+
+# create /app software installation prefix + /scratch sandbox directory
+if [ ! -d /app ]; then mkdir -p /app; chown easybuild:easybuild -R /app; fi
+if [ ! -d /scratch ]; then mkdir -p /scratch; chown easybuild:easybuild -R /scratch; fi
+if [ ! -d /home/easybuild ]; then mkdir -p /home/easybuild; chown easybuild:easybuild -R /home/easybuild;fi
+
+mkdir /root/bin
+cat >> /root/bin/uid-change.sh << 'EOD'
+#!/usr/bin/env bash
+# script to correct the UID/GID of easybuild user
+# in case fakeroot was used
+chown -R easybuild:easybuild /app/
+chown -R easybuild:easybuild /home/easybuild/
+chown -R easybuild:easybuild /scratch/
+EOD
+chmod u+x /root/bin/uid-change.sh 
+cat >> /root/eb-envmod.path << 'EOD'
+--- modules.py.orig      2020-06-09 14:06:45.709906123 +0100
++++ modules.py   2020-06-09 14:04:19.239060817 +0100
+@@ -1260,6 +1260,8 @@
+     """Interface to environment modules 4.0+"""
+     NAME = "Environment Modules v4"
+     COMMAND = os.path.join(os.getenv('MODULESHOME', 'MODULESHOME_NOT_DEFINED'), 'libexec', 'modulecmd.tcl')
++    if not os.path.exists(COMMAND):
++        COMMAND = os.getenv('MODULES_CMD', 'MODULES_CMD_NOT_DEFINED')
+     REQ_VERSION = '4.0.0'
+     MAX_VERSION = None
+     VERSION_REGEXP = r'^Modules\s+Release\s+(?P<version>\d\S*)\s'
+EOD
+# verbose commands, exit on first error
+set -ve
+set -o noclobber
+
+# We set this so if we need to open the container again, we got the environment set up correctly
+cat >> /home/easybuild/.bashrc << 'EOG'
+export EASYBUILD_PREFIX=/scratch
+export EASYBUILD_TMPDIR=/scratch/tmp
+export EASYBUILD_SOURCEPATH=/scratch/sources:/tmp/easybuild/sources
+export EASYBUILD_INSTALLPATH=/app
+export EASYBUILD_PARALLEL=4
+export EB_PYTHON=python3
+export MODULEPATH=/app/modules/all
+alias eb="eb --robot --download-timeout=1000 --modules-tool=EnvironmentModulesC --module-syntax=Tcl"
+EOG
+
+# configure EasyBuild
+cat > /home/easybuild/eb-install.sh << 'EOD'
+#!/bin/bash  
+shopt -s expand_aliases
+export EASYBUILD_PREFIX=/scratch 
+export EASYBUILD_TMPDIR=/scratch/tmp 
+export EASYBUILD_SOURCEPATH=/scratch/sources:/tmp/easybuild/sources 
+export EASYBUILD_INSTALLPATH=/app 
+export EASYBUILD_PARALLEL=4
+export EB_PYTHON=python3
+alias eb="eb --robot --download-timeout=1000 --modules-tool=EnvironmentModulesC --module-syntax=Tcl"
+EOD
+
+echo "eb --fetch --from-pr 12379 HTSeq-0.11.3-foss-2020b.eb" >>  /home/easybuild/eb-install.sh 
+echo "eb --from-pr 12379 HTSeq-0.11.3-foss-2020b.eb" >>  /home/easybuild/eb-install.sh 
+chmod a+x /home/easybuild/eb-install.sh
+
+su -l easybuild -c /home/easybuild/eb-install.sh
+
+# cleanup, everything in /scratch is assumed to be temporary
+rm -rf /scratch/*
+
+%runscript
+eval "$@"
+
+%environment
+# make sure that 'module' and 'ml' commands are defined
+source /etc/profile
+# purge any modules that may be loaded outside container
+unset LOADEDMODULES
+unset _LMFILES_
+# avoid picking up modules from outside of container
+module unuse $MODULEPATH
+# pick up modules installed in /app
+module use /app/modules/all
+# load module(s) corresponding to installed software
+module load HTSeq/0.11.3-foss-2020b 
+ 
+%labels
+Author J. Sassmannshausen <jorg.sassmannshausen@kcl.ac.uk>
+HTSeq-0.11.3-foss-2020b

@@ -2,13 +2,25 @@ bootstrap: docker
 From: debian:buster
 
 %environment
-    PATH="/opt/namd:/opt/vmd/bin:$PATH"
+    PATH="/opt/namd_gpu:/opt/charmm/bin:/opt/namd:/opt/vmd/bin:$PATH"
     LD_LIBRARY_PATH="/opt/vmd/lib"
 
 %post
     apt update
-    apt install -y wget make
+    apt install -y xz-utils wget gcc g++ gfortran build-essential make openssh-client
 
+    # Download and install charmm
+    cd /opt/
+    wget -O /opt/charmm.tar.gz https://raw.githubusercontent.com/perminaa/SingularityHPC/main/charmm.tar.gz
+    tar xvzf charmm.tar.gz
+    cd /opt/charmm
+    ./configure
+    cd build/cmake
+    make -j16
+    make install
+    cd /opt
+    rm charmm.tar.gz
+    
     #Download and install R
     apt install -y r-base
 
@@ -21,9 +33,19 @@ From: debian:buster
     mv NAMD_2.14_Linux-x86_64-multicore/* ./
     rmdir NAMD_2.14_Linux-x86_64-multicore
 
+    # Download and install namd_gpu
+    mkdir -p /opt/namd_gpu
+    wget -O /opt/namd_gpu/namd_gpu.tar.gz https://www.ks.uiuc.edu/Research/namd/cvs/download/741376/NAMD_Git-2021-06-08_Linux-x86_64-multicore-CUDA.tar.gz
+    cd /opt/namd_gpu
+    tar xvzf namd_gpu.tar.gz
+    rm namd_gpu.tar.gz
+    mv NAMD_Git-2021-06-08_Linux-x86_64-multicore-CUDA/* ./
+    rmdir NAMD_Git-2021-06-08_Linux-x86_64-multicore-CUDA
+    mv namd2 namd2_gpu
+
     # Download and install vmd
     mkdir -p /opt/vmd
-    wget -O /opt/vmd/vmd.tar.gz https://www.ks.uiuc.edu/Research/vmd/vmd-1.9.3/files/final/vmd-1.9.3.bin.LINUXAMD64.text.tar.gz
+    wget -O /opt/vmd/vmd.tar.gz https://www.ks.uiuc.edu/Research/vmd/vmd-1.9.3/files/final/vmd-1.9.3.bin.LINUXAMD64-CUDA8-OptiX4-OSPRay111p1.opengl.tar.gz
     cd /opt/vmd
     tar xvzf vmd.tar.gz
     cd vmd-1.9.3
@@ -35,3 +57,27 @@ From: debian:buster
     make install
     cd ../../
     rm -rf vmd-1.9.3
+
+    # Download and install propka
+    apt install -y python3 python3-pip
+    pip3 install propka
+    apt purge -y python3-pip
+
+    # Download and install GNU Parallel
+    cd /opt/
+    wget http://ftp.gnu.org/gnu/parallel/parallel-latest.tar.bz2
+    tar xvjf parallel-latest.tar.bz2
+    cd parallel*
+    ./configure && make
+    make install
+    cd /opt
+    rm parallel-latest.tar.bz2
+
+    # Download and prepare IUPred2 redox
+    cd /opt/
+    wget https://raw.githubusercontent.com/perminaa/SingularityHPC/main/iupred2_redox.tar.gz
+    tar xvzf iupred2_redox.tar.gz
+    rm iupred2_redox.tar.gz
+
+    # Remove all the packages we won't need anymore to try and keep the container size down
+    apt purge -y xz-utils wget gcc g++ gfortran make

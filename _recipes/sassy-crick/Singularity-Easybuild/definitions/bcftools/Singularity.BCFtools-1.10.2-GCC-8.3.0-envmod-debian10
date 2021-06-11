@@ -1,0 +1,83 @@
+Bootstrap: debootstrap
+OSVersion: buster 
+MirrorURL: http://ftp.tu-graz.ac.at/mirror/debian/ 
+
+%post
+apt update 
+apt dist-upgrade -y 
+apt install -y python python-setuptools environment-modules tcl
+apt install -y python-pip
+apt install -y bzip2 gzip tar zip unzip xz-utils 
+apt install -y curl wget
+apt install -y patch make
+apt install -y file git debianutils
+apt install -y gcc 
+apt install -y libibverbs-dev 
+apt install -y libssl-dev
+apt install -y binutils libthread-queue-any-perl
+
+# install EasyBuild using pip
+pip install -U pip
+pip install wheel
+pip install -U setuptools
+pip install 'vsc-install<0.11.4' 'vsc-base<2.9.0'
+pip install easybuild
+
+# create 'easybuild' user (if missing)
+id easybuild || useradd easybuild
+
+# create /app software installation prefix + /scratch sandbox directory
+if [ ! -d /app ]; then mkdir -p /app; chown easybuild:easybuild -R /app; fi
+if [ ! -d /scratch ]; then mkdir -p /scratch; chown easybuild:easybuild -R /scratch; fi
+if [ ! -d /home/easybuild ]; then mkdir -p /home/easybuild; chown easybuild:easybuild -R /home/easybuild;fi
+
+# verbose commands, exit on first error
+set -ve
+set -o noclobber
+# configure EasyBuild
+cat > /home/easybuild/eb-install.sh << 'EOD'
+#!/bin/bash  
+export EASYBUILD_PREFIX=/scratch 
+export EASYBUILD_TMPDIR=/scratch/tmp 
+export EASYBUILD_SOURCEPATH=/scratch/sources:/tmp/easybuild/sources 
+export EASYBUILD_INSTALLPATH=/app 
+export EASYBUILD_PARALLEL=4
+EOD
+# We set this so if we need to open the container again, we got the environment set up correctly
+
+echo "export EASYBUILD_PREFIX=/scratch" >> /home/easybuild/.bashrc 
+echo "export EASYBUILD_TMPDIR=/scratch/tmp" >> /home/easybuild/.bashrc 
+echo "export EASYBUILD_SOURCEPATH=/scratch/sources:/tmp/easybuild/sources" >> /home/easybuild/.bashrc 
+echo "export EASYBUILD_INSTALLPATH=/app2" >> /home/easybuild/.bashrc 
+echo "export EASYBUILD_PARALLEL=42" >> /home/easybuild/.bashrc 
+echo "alias eb=eb --robot --modules-tool=EnvironmentModulesC --module-syntax=Tcl" >> /home/easybuild/.bashrc 
+echo "eb BCFtools-1.10.2-GCC-8.3.0.eb --robot --modules-tool=EnvironmentModulesC --module-syntax=Tcl" >>  /home/easybuild/eb-install.sh 
+
+chmod a+x /home/easybuild/eb-install.sh
+
+su -l easybuild -c /home/easybuild/eb-install.sh
+
+# cleanup, everything in /scratch is assumed to be temporary
+rm -rf /scratch/*
+
+%runscript
+eval "$@"
+
+%environment
+# make sure that 'module' is defined
+. /etc/profile
+# purge any modules that may be loaded outside container
+unset LOADEDMODULES
+unset _LMFILES_
+# avoid picking up modules from outside of container
+module unuse $MODULEPATH
+# pick up modules installed in /app
+module use /app/modules/all
+# load module(s) corresponding to installed software
+module load BCFtools/1.10.2-GCC-8.3.0 
+# we need to make sure the BCFtools are found
+export BCFTOOLS_PLUGINS=/app/software/BCFtools/1.10.2-GCC-8.3.0/libexec/bcftools
+ 
+%labels
+Author  J. Sassmannshausen <rosalind-support@kcl.ac.uk>
+BCFtools-1.10.2-GCC-8.3.0

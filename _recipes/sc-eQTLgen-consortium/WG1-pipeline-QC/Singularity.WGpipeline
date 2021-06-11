@@ -14,8 +14,22 @@ From: shub://drneavin/SingularityBaseImages:r363_python368
     yes | apt upgrade
 
 	ldconfig
-	yes | apt-get install -y python3-tk
 
+    mkdir -p /usr/share/man/man1
+	yes | apt-get install -y python3-tk
+    apt-get install -y openjdk-11-jdk
+    java -version
+
+    cd /opt
+        mkdir liftover_refs
+        cd liftover_refs
+            wget http://hgdownload.cse.ucsc.edu/goldenpath/hg19/liftOver/hg19ToHg38.over.chain.gz
+            gunzip hg19ToHg38.over.chain.gz
+
+    cd /opt
+        git clone https://github.com/broadinstitute/picard.git
+        cd picard/
+        ./gradlew shadowJar
 
     cd /opt
         wget https://www.dropbox.com/s/m8u61jn4i1mcktp/TestData4PipelineSmall.tar.gz

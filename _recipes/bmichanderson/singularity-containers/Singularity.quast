@@ -1,0 +1,49 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using the program QUAST
+
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+	MAINTAINER bmichanderson
+
+%post
+	# install essentials for obtaining and building software, and dependencies
+	apt update
+	apt upgrade -y
+	export DEBIAN_FRONTEND=noninteractive
+	apt install -y build-essential libfreetype6-dev libpng-dev locales make pkg-config python-matplotlib python-setuptools wget zlib1g-dev
+
+	# set locale 
+	# from https://github.com/ablab/quast/issues/70
+	# and https://serverfault.com/questions/362903/how-do-you-set-a-locale-non-interactively-on-debian-ubuntu
+	locale-gen en_US.UTF-8
+	dpkg-reconfigure tzdata -f noninteractive
+	dpkg-reconfigure locales -f noninteractive
+	update-locale en_US.UTF-8
+
+	# download and extract QUAST
+	VERSION=5.0.2
+	URL=https://downloads.sourceforge.net/project/quast/quast-"$VERSION".tar.gz
+	wget "$URL"
+	tar -xzf quast-"$VERSION".tar.gz
+	rm quast*.tar.gz
+
+	# install
+	cd quast-"$VERSION"
+	python setup.py install
+
+	# remove quast download and folder
+	cd ..
+	rm -r quast-"$VERSION"/
+
+	# test that the program works
+	quast.py --version
+
+%help
+	******************************************************************************
+	This message is displayed when called as  >singularity run-help quast.img
+	This container is meant to be used for running QUAST
+	Execute it as >singularity exec quast.img quast.py [args]
+	Check contents by entering it as >singularity shell quast.img
+	******************************************************************************

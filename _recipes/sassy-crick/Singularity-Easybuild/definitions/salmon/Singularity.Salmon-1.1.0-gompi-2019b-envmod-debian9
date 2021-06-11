@@ -1,0 +1,152 @@
+Bootstrap: debootstrap
+OSVersion: stretch 
+MirrorURL: http://httpredir.debian.org/debian
+
+%post
+apt update 
+apt dist-upgrade -y 
+apt install -y python python-setuptools environment-modules tcl
+apt install -y python-pip
+apt install -y bzip2 gzip tar zip unzip xz-utils 
+apt install -y curl wget
+apt install -y patch make
+apt install -y file git debianutils
+apt install -y gcc 
+apt install -y libibverbs-dev 
+apt install -y libssl-dev
+apt install -y binutils
+
+# install EasyBuild using pip3
+pip install -U pip
+pip install wheel
+pip install -U setuptools
+pip install 'vsc-install<0.11.4' 'vsc-base<2.9.0'
+pip install easybuild
+
+# create 'easybuild' user (if missing)
+id easybuild || useradd easybuild
+
+# create /app software installation prefix + /scratch sandbox directory
+if [ ! -d /app ]; then mkdir -p /app; chown easybuild:easybuild -R /app; fi
+if [ ! -d /scratch ]; then mkdir -p /scratch; chown easybuild:easybuild -R /scratch; fi
+if [ ! -d /home/easybuild ]; then mkdir -p /home/easybuild; chown easybuild:easybuild -R /home/easybuild;fi
+
+# verbose commands, exit on first error
+set -ve
+set -o noclobber
+
+cat > /home/easybuild/tbb-2019_U9-GCCcore-8.3.0.eb << 'EOF'
+name = 'tbb'
+version = '2019_U9'
+homepage = 'https://github.com/oneapi-src/oneTBB'
+description = """Intel(R) Threading Building Blocks (Intel(R) TBB) lets you easily write parallel C++ programs that
+ take full advantage of multicore performance, that are portable, composable and have future-proof scalability."""
+toolchain = {'name': 'GCCcore', 'version': '8.3.0'}
+source_urls = ['https://github.com/01org/tbb/archive/']
+sources = ['%(version)s.tar.gz']
+checksums = [
+    ('15652f5328cf00c576f065e5cd3eaf3317422fe82afb67a9bcec0dc065bd2abe',
+     '3f5ea81b9caa195f1967a599036b473b2e7c347117330cda99b79cfcf5b77c84'),
+]
+builddependencies = [
+    ('binutils', '2.32')
+]
+moduleclass = 'lib'
+EOF
+
+cat > /home/easybuild/Salmon-1.1.0-gompi-2019b.eb << EOD
+##
+# This is a contribution from DeepThought HPC Service, Flinders University, Adelaide, Australia
+# Homepage:     https://staff.flinders.edu.au/research/deep-thought
+#
+# Authors::     Robert Qiao <rob.qiao@flinders.edu.au>
+# License::     GLPv2
+#
+# Notes::
+##
+
+easyblock = 'CMakeMake'
+
+name = 'Salmon'
+version = '1.1.0'
+
+homepage = 'https://github.com/COMBINE-lab/salmon'
+description = """Salmon is a wicked-fast program to produce a highly-accurate,
+ transcript-level quantification estimates from RNA-seq data."""
+
+toolchain = {'name': 'gompi', 'version': '2019b'}
+toolchainopts = {'pic': True, 'openmp': True}
+
+github_account = 'COMBINE-lab'
+source_urls = [GITHUB_LOWER_SOURCE]
+sources = ['v%(version)s.tar.gz']
+checksums = ['550bbdc18970b015f467d418385a5779cd0d6f642cb710766c66761c12c9bc50']
+
+builddependencies = [
+    ('CMake', '3.15.3'),
+    ('pkg-config', '0.29.2'),
+    ('jemalloc', '5.2.1'),
+]
+
+dependencies = [
+    ('Boost', '1.71.0'),
+    ('tbb', '2019_U9'),
+]
+
+configopts = '-DJEMALLOC_ROOT=$EBROOTJEMALLOC'
+
+# need to unset the $LD_PRELOAD set be jemalloc to avoid hanging 'make test'
+# since jemalloc is statically linked in Salmon (and hence only a build dep),
+# this only affects the tests
+pretestopts = "unset LD_PRELOAD && "
+runtest = 'test'
+
+sanity_check_paths = {
+    'files': ['bin/%(namelower)s'] + ['lib/lib%s.a' % x for x in ['graphdump', 'ntcard', 'salmon_core', 'twopaco']],
+    'dirs': [],
+}
+
+sanity_check_commands = ["salmon --help"]
+
+moduleclass = 'bio'
+EOD
+# configure EasyBuild
+cat > /home/easybuild/eb-install.sh << 'EOD'
+#!/bin/bash  
+export EASYBUILD_PREFIX=/scratch 
+export EASYBUILD_TMPDIR=/scratch/tmp 
+export EASYBUILD_SOURCEPATH=/scratch/sources:/tmp/easybuild/sources 
+export EASYBUILD_INSTALLPATH=/app 
+export EASYBUILD_PARALLEL=12
+mkdir -p /scratch/sources/g/GCCcore
+wget -O  /scratch/sources/g/GCCcore/isl-0.20.tar.bz2 http://isl.gforge.inria.fr/isl-0.20.tar.bz2
+eb /home/easybuild/tbb-2019_U9-GCCcore-8.3.0.eb --robot --modules-tool=EnvironmentModulesC --module-syntax=Tcl
+EOD
+echo "eb /home/easybuild/Salmon-1.1.0-gompi-2019b.eb --robot --modules-tool=EnvironmentModulesC --module-syntax=Tcl" >>  /home/easybuild/eb-install.sh 
+
+chmod a+x /home/easybuild/eb-install.sh
+
+su -l easybuild -c /home/easybuild/eb-install.sh
+
+# cleanup, everything in /scratch is assumed to be temporary
+rm -rf /scratch/*
+
+%runscript
+eval "$@"
+
+%environment
+# make sure that 'module' is defined
+. /etc/profile
+# purge any modules that may be loaded outside container
+unset LOADEDMODULES
+unset _LMFILES_
+# avoid picking up modules from outside of container
+module unuse $MODULEPATH
+# pick up modules installed in /app
+module use /app/modules/all
+# load module(s) corresponding to installed software
+module load Salmon/1.1.0-gompi-2019b 
+ 
+%labels
+Author  J. Sassmannshausen <rosalind-support@kcl.ac.uk>
+Salmon-1.1.0-gompi-2019b

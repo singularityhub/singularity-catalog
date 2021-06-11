@@ -1,0 +1,60 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/pytorch:20.03-py3
+
+%post
+apt-get -y update
+apt-get -y install python3-pip
+apt-get -y install nano
+
+pip3 install --upgrade pip
+python3 -m pip install tensorflow-gpu
+python3 -m pip install keras
+pip3 install jupyter
+pip3 install ipyparallel
+ipcluster nbextension enable
+
+apt-get -y update
+apt-get -y install python3-pip net-tools
+apt-get -y install graphviz libgraphviz-dev
+apt-get -y update
+# its wise to keep the system up to date!
+# you can skip the following line if you not
+# want to update all your software
+apt-get -y upgrade
+# installing python 2.7 and pip for it
+apt-get -y install python2.7 python-pip
+# installing python-pip for 3.6
+apt-get -y install python3-pip
+
+pip3 install --upgrade pip
+pip3 install numpy scipy matplotlib
+apt-get -y upgrade
+#pip3 install jupyter
+#pip3 install ipyparallel
+#conda install ipyparallel
+apt-get -y install git
+#apt-get -y install cuda
+#ipcluster nbextension enable
+#apt-get -y install openmpi-bin
+#pip install pytorch-lightning
+#apt-get -y install libmlx5-1
+/opt/conda/bin/conda install numpy ninja pyyaml mkl mkl-include setuptools cmake cffi -y
+/opt/conda/bin/conda install -c pytorch magma-cuda102 -y
+#pip3 install mpi4py
+git clone --recursive https://github.com/pytorch/pytorch
+cd pytorch
+# if you are updating an existing checkout
+git submodule sync
+git submodule update --init --recursive
+export CMAKE_PREFIX_PATH=${CONDA_PREFIX:-"$(dirname $(which conda))/../"}
+#python3 setup.py install
+
+%environment
+XDG_RUNTIME_DIR=""
+PATH=${PATH}:${LSF_BINDIR}
+
+#LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda-10.2/lib64
+#export PATH=/usr/local/cuda-10.2/bin${PATH:+:${PATH}}
+#LD_LIBRARY_PATH=/usr/local/cuda-10.2/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+#CUDA_PATH=/usr/local/cuda-10.2
+#CUDA_ROOT=/usr/local/cuda-10.2

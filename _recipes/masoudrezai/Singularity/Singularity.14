@@ -1,0 +1,111 @@
+BootStrap: docker
+From:nvidia/cuda:10.1-cudnn7-devel-ubuntu16.04
+
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+# GNU compiler
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++ \
+        gcc \
+        gfortran
+    rm -rf /var/lib/apt/lists/*
+
+# Mellanox OFED version 4.2-1.0.0.0
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        gnupg \
+        vnstat\
+        net-tools\
+        bmon\
+        iptraf\
+        cbm\
+        iperf3\
+        nload\
+        tcptrack\
+        nethogs\
+        wireshark\
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    wget -qO - https://www.mellanox.com/downloads/ofed/RPM-GPG-KEY-Mellanox | apt-key add -
+    mkdir -p /etc/apt/sources.list.d && wget -q -nc --no-check-certificate -P /etc/apt/sources.list.d https://linux.mellanox.com/public/repo/mlnx_ofed/4.2-1.0.0.0/ubuntu16.04/mellanox_mlnx_ofed.list
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ibverbs-utils \
+        libibmad \
+        libibmad-devel \
+        libibumad \
+        libibumad-devel \
+        libibverbs-dev \
+        libibverbs1 \
+        libmlx4-1 \
+        libmlx4-dev \
+        libmlx5-1 \
+        libmlx5-dev \
+        librdmacm-dev \
+        librdmacm1
+    rm -rf /var/lib/apt/lists/*
+
+# OpenMPI version 4.0.3
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bzip2 \
+        file \
+        hwloc \
+        libnuma-dev \
+        make \
+        openssh-client \
+        perl \
+        tar \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.open-mpi.org/software/ompi/v4.0/downloads/openmpi-4.0.3.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/openmpi-4.0.3.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/openmpi-4.0.3 &&  CC=gcc CXX=g++ F77=gfortran F90=gfortran FC=gfortran ./configure --prefix=/usr/local/openmpi --with-cuda --with-verbs
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/openmpi-4.0.3 /var/tmp/openmpi-4.0.3.tar.bz2
+    
+%post
+    mkdir -p /var/local/ && wget -q -nc --no-check-certificate -O /var/local/anaconda3.tar.gz https://owncloud.gwdg.de/index.php/s/X2Qr4lkhJig9IBn/download
+%environment
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+    dpkg-reconfigure wireshark-common
+    adduser $USER wireshark
+    Directory=$HOME/anaconda_env_pytorch_apex_1
+    if [ -d "$Directory" ]; then
+        echo "$Directory already exist."
+    else 
+        mkdir -p $HOME/anaconda_env_pytorch_apex_1
+        tar -xzf /var/local/anaconda3.tar.gz -C $HOME/anaconda_env_pytorch_apex_1
+    fi
+    
+    export PATH=$HOME/anaconda_env_pytorch_apex_1/bin:$PATH
+    echo "slurmadmin:x:300:300::/opt/slurm/slurm:/bin/false" >> /etc/passwd
+    echo "slurmadmin:x:300:" >> /etc/group
+    export PATH="/opt/slurm/bin:$PATH"
+    
+    File_test=$HOME/test_torch_1241.py
+    if [ -f "$File_test" ]; then
+        echo "Testing NCCL and MPI"
+    else 
+        echo 'import torch' >> $HOME/test_torch_1241.py
+        echo 'import torchvision' >> $HOME/test_torch_1241.py
+        echo 'print("MPI:" + str(torch.distributed.is_mpi_available()))' >> $HOME/test_torch_1241.py
+        echo 'print("NCCL:" + str(torch.distributed.is_nccl_available()))' >> $HOME/test_torch_1241.py
+        echo "Testing NCCL and MPI"
+    fi
+    python $HOME/test_torch_1241.py
+%post
+    chmod 777 /var/lib/
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
