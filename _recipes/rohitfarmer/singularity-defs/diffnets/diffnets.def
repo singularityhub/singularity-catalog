@@ -12,7 +12,7 @@ From: ubuntu:bionic
 
 %environment
     # Set system locale
-    PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+    PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/gromacs/bin/
     LANG=C.UTF-8 LC_ALL=C.UTF-8
     
 %post
@@ -72,6 +72,7 @@ From: ubuntu:bionic
         libxt-dev \
         neovim \
         openjdk-8-jdk \
+        openssh-server \
         python3-dev \
         python3-pip \
         python3-wheel \
@@ -79,6 +80,7 @@ From: ubuntu:bionic
         texlive \
         texlive-fonts-extra \
         texinfo \
+	unzip \
         vim \
         wget \
         xvfb \
@@ -88,26 +90,65 @@ From: ubuntu:bionic
 
     export LANG=C.UTF-8 LC_ALL=C.UTF-8
 
+# Install MPI (match the version with the cluster).
+    mkdir -p /tmp/mpi
+    cd /tmp/mpi
+    wget -O openmpi-1.8.4.tar.bz2 https://www.open-mpi.org/software/ompi/v1.8/downloads/openmpi-1.8.4.tar.bz2
+    tar -xjf openmpi-1.8.4.tar.bz2
+    cd openmpi-1.8.4
+    ./configure --prefix=/usr/local
+    make -j $(nproc)
+    make install
+    ldconfig
+
+# Add NVIDIA package repositories.
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.1.243-1_amd64.deb
+    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+    dpkg -i cuda-repo-ubuntu1804_10.1.243-1_amd64.deb
+    apt-get update
+    wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
+    apt-get -qq install -y --no-install-recommends ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
+    apt-get update
+
+# Install NVIDIA driver (optional)
+    # apt-get install --no-install-recommends nvidia-driver-430
+
+# Install development and runtime libraries.
+    apt-get install -y --no-install-recommends \
+        cuda-10-1 \
+        libcudnn7=7.6.4.38-1+cuda10.1  \
+        libcudnn7-dev=7.6.4.38-1+cuda10.1
+
+# Install TensorRT. Requires that libcudnn7 is installed above.
+    apt-get install -y --no-install-recommends libnvinfer6=6.0.1-1+cuda10.1 \
+        libnvinfer-dev=6.0.1-1+cuda10.1 \
+        libnvinfer-plugin6=6.0.1-1+cuda10.1
+
 # Install Python Packages
         python3 -m pip --no-cache-dir install --upgrade pip
         python3 -m pip --no-cache-dir install setuptools --upgrade
 
-        python3 -m pip install numpy==1.14 cython
-        python3 -m pip install mdtraj==1.8.0
+        python3 -m pip --no-cache-dir install numpy cython mpi4py
+        python3 -m pip --no-cache-dir install mdtraj==1.8.0
+        
+        python3 -m pip --no-cache-dir install https://github.com/bowman-lab/enspara/archive/master.zip
 
-        wget -O enspara.zip https://github.com/bowman-lab/enspara/archive/master.zip
-        unzip enspara.zip
-        cd enspara-master
-        python3 -m pip install -e .
+        python3 -m pip --no-cache-dir install torch torchvision
+        
+        python3 -m pip --no-cache-dir install https://github.com/bowman-lab/diffnets/archive/master.zip
 
-        python3 -m pip install torch torchvision
-
-        wget -O diffnets.zip https://github.com/bowman-lab/diffnets/archive/master.zip
-        unzip diffnets.zip
-        cd diffnets-master
-        python3 -m pip install -e .
+# Install Gromacs
+        wget -q ftp://ftp.gromacs.org/pub/gromacs/gromacs-4.6.5.tar.gz
+        tar xfz gromacs-4.6.5.tar.gz
+        cd gromacs-4.6.5
+        mkdir -p  build
+        cd build
+        cmake .. -DGMX_BUILD_OWN_FFTW=ON -DGMX_GPU=OFF
+        make
+        make install
 
 # Cleanup
     apt-get -qq clean
+    rm -rf /tmp/mpi/*
     rm -rf /var/lib/apt/lists/*
-    rm -rf /tmp/enspara-master
+    rm -rf /tmp/gromacs-4.6.5*
