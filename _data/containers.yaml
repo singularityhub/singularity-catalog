@@ -46,6 +46,8 @@ bases:
 - count: 12
   name: khanlab/heudiconv
 - count: 12
+  name: aibasel/downward
+- count: 12
   name: pawsey/openfoam
 - count: 11
   name: conda/miniconda2
@@ -64,15 +66,13 @@ bases:
 - count: 9
   name: continuumio/miniconda
 - count: 9
+  name: rocker/r-ver
+- count: 9
   name: nvcr.io/nvidia/tensorflow
 - count: 8
   name: quay.io/vgteam/vg
 - count: 8
   name: slaclab/relion
-- count: 8
-  name: rocker/r-ver
-- count: 8
-  name: aibasel/downward
 - count: 7
   name: jekriske/r-base
 - count: 7
@@ -127,6 +127,8 @@ bases:
   name: willgpaik/qt5_aci
 - count: 4
   name: matmu/vep
+- count: 4
+  name: letaylor/sc_qc_cluster
 - count: 4
   name: slaclab/slac-jupyterlab
 - count: 4
@@ -518,8 +520,6 @@ bases:
 - count: 1
   name: pangeo/pangeo-notebook
 - count: 1
-  name: letaylor/sc_qc_cluster
-- count: 1
   name: faustus123/hddeps
 - count: 1
   name: kulhanek/deep-rl-pytorch
@@ -898,7 +898,7 @@ bases:
 - count: 1
   name: nipype/nipype
 bootstraps:
-- count: 2101
+- count: 2109
   name: docker
 - count: 243
   name: debootstrap
@@ -1164,8 +1164,6 @@ orgs:
 - count: 1
   name: pangeo
 - count: 1
-  name: letaylor
-- count: 1
   name: faustus123
 - count: 1
   name: shreyaskamathkm
@@ -1271,6 +1269,8 @@ orgs:
   name: '{{ cookiecutter.dockerhub_username }}'
 - count: 1
   name: quay.io/fenicsproject
+- count: 1
+  name: letaylor
 - count: 1
   name: semc
 - count: 1
@@ -1424,8 +1424,8 @@ orgs:
 - count: 1
   name: nipype
 tags:
-  latest: 218
-  other: 1918
+  latest: 221
+  other: 1923
 versions:
   APPIAN-PET/APPIAN:
     ants: 1
@@ -1448,9 +1448,9 @@ versions:
   adigenova/nf-gene-fusions:
     v1.0: 1
   aibasel/downward:
-    '19.06': 2
-    '19.12': 2
-    '20.06': 4
+    '19.06': 3
+    '19.12': 3
+    '20.06': 6
   airl_lab/default/airl_env:
     base_ci: 1
   alantrrs/py-faster-rcnn:
@@ -1838,7 +1838,7 @@ versions:
   kulhanek/target-driven-visual-navigation:
     latest: 1
   letaylor/sc_qc_cluster:
-    latest: 1
+    latest: 4
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2280,7 +2280,7 @@ versions:
   rocker/r-ver:
     3.5.3: 1
     4.0.0: 1
-    4.0.3: 1
+    4.0.3: 2
     4.0.4: 3
     4.0.5: 1
     4.1.0: 1

@@ -31,6 +31,103 @@
   subscribers_count: 0
   topics: []
   updated_at: 1546985098.0
+AAIR-lab/AIA-AAAI21:
+  data_format: 2
+  description: 'Code for Asking the Right Questions: Learning Interpretable Action
+    Models Through Query Answering. AAAI 2021.'
+  filenames:
+  - dependencies/FD/misc/releases/20.06/Singularity.20.06
+  - dependencies/FD/misc/releases/19.12/Singularity.19.12
+  - dependencies/FD/misc/releases/19.06/Singularity.19.06
+  - dependencies/FD/misc/releases/latest/Singularity
+  full_name: AAIR-lab/AIA-AAAI21
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-agent-interrogation-algorithm-aia\" class=\"\
+    anchor\" href=\"#agent-interrogation-algorithm-aia\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Agent Interrogation\
+    \ Algorithm (AIA)</h1>\n<p>This repository contains the code for the paper:</p>\n\
+    <p>Asking the Right Questions: Learning Interpretable Action Models through Query\
+    \ Answering.<br>\n<a href=\"https://pulkitverma.net\" rel=\"nofollow\">Pulkit\
+    \ Verma</a>,\n<a href=\"https://marpally-raoshashank.netlify.app/\" rel=\"nofollow\"\
+    >Shashank Rao Marpally</a>, and\n<a href=\"http://siddharthsrivastava.net/\" rel=\"\
+    nofollow\">Siddharth Srivastava</a>. <br>\n35th AAAI Conference on Artificial\
+    \ Intelligence, 2021.</p>\n<p><a href=\"https://aair-lab.github.io/Publications/vms_aaai21.pdf\"\
+    \ rel=\"nofollow\">Paper</a> | <a href=\"https://pulkitverma.net/assets/pdf/vms_aaai21/vms_aaai21_slides.pdf\"\
+    \ rel=\"nofollow\">Slides</a> | <a href=\"https://pulkitverma.net/assets/pdf/vms_aaai21/vms_aaai21_poster.pdf\"\
+    \ rel=\"nofollow\">Poster</a></p>\n<h2>\n<a id=\"user-content-directory-structure\"\
+    \ class=\"anchor\" href=\"#directory-structure\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Directory Structure</h2>\n<pre><code>|--\
+    \ dependencies/\n|   |-- FD/\n|   |-- FF/\n|   |-- pddlgym/\n|   |-- VAL/\n|--\
+    \ domains/\n|-- random_states/\n|-- results/\n|-- src/\n|   |-- agent.py\n|  \
+    \ |-- config.py\n|   |-- generate_random_states.py\n|   |-- main.py\n|   |-- interrogation/\n\
+    |   |-- lattice/\n|   |-- query/\n|   |-- sim/\n|   |-- utils/\n|-- README.md\n\
+    |-- LICENSE\n</code></pre>\n<ul>\n<li>\n<p>dependencies: This directory includes\
+    \ the external software used to run the code. This includes FF, FD, VAL, and PDDLGym.</p>\n\
+    <ul>\n<li>FF: <a href=\"https://fai.cs.uni-saarland.de/hoffmann/ff/FF-v2.3.tgz\"\
+    \ rel=\"nofollow\">https://fai.cs.uni-saarland.de/hoffmann/ff/FF-v2.3.tgz</a>\n\
+    </li>\n<li>FD: <a href=\"https://github.com/aibasel/downward\">https://github.com/aibasel/downward</a>\n\
+    </li>\n<li>PDDLGym: <a href=\"https://github.com/tomsilver/pddlgym\">https://github.com/tomsilver/pddlgym</a>\n\
+    </li>\n<li>VAL: <a href=\"https://github.com/KCL-Planning/VAL\">https://github.com/KCL-Planning/VAL</a>\n\
+    </li>\n</ul>\n</li>\n<li>\n<p>dependencies: Place all the domains in this directory.\
+    \ There must be a directory for each domain containing:</p>\n<ul>\n<li>domain.pddl\
+    \ (domain file for that domain), and</li>\n<li>instances directory containing\
+    \ the problem files for that domain.</li>\n</ul>\n</li>\n<li>\n<p>random_states:\
+    \ This directory stores the set of states in serialized form. For each domain,\
+    \ there is a .pkl file containing 60 states approximately. These are generated\
+    \ using src/generate_random_states.py.</p>\n</li>\n<li>\n<p>src: This directory\
+    \ stores the source code for AIA. It contains 4 files:</p>\n<ul>\n<li>agent.py:\
+    \ Contains the agent code.</li>\n<li>config.py: Declares the configuration parameters.</li>\n\
+    <li>generate_random_states.py: Generates the random states for each domain.</li>\n\
+    <li>main.py : Contains the main driver code which runs the code end-to-end.</li>\n\
+    </ul>\n<p>src also contains code structured into following sub-directories:</p>\n\
+    <ul>\n<li>interrogation: Contains the AIA code.</li>\n<li>lattice: Contains the\
+    \ model and lattice classes.</li>\n<li>query: Contains the plan outcome query\
+    \ code.</li>\n<li>sim: Simulator specific code. Contains a separate agent file\
+    \ for each simulator domain.</li>\n<li>utils: Contains general utilities.\n<ul>\n\
+    <li>utils/parser: Code based on <a href=\"https://github.com/tomsilver/pddlgym\"\
+    >PDDLGym</a>.</li>\n<li>utils/translate: Code based on <a href=\"https://github.com/aibasel/downward\"\
+    >FD</a>.</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n<h2>\n<a id=\"user-content-configuration\"\
+    \ class=\"anchor\" href=\"#configuration\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Configuration</h2>\n<p>Configuration\
+    \ parameters are set in src/config.py</p>\n<ul>\n<li>FF_PATH, FD_PATH, and VAL_PATH\
+    \ stores the relative path of FF, FD, and VAL respectively.</li>\n<li>NUM_PER_DOMAIN\
+    \ denotes how many instances per domain must be run. Keep minimum 2 for symbolic\
+    \ agent.</li>\n<li>PLANNER specifies which planner to use. Set it to either FF\
+    \ or FD.</li>\n<li>Comment out either Symbolic Agent Settings or Simulator Agent\
+    \ Settings.</li>\n</ul>\n<h2>\n<a id=\"user-content-how-to-run\" class=\"anchor\"\
+    \ href=\"#how-to-run\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>How to Run</h2>\n<ol>\n<li>Install the required\
+    \ software</li>\n</ol>\n<pre><code>pip3 install -r requirements.txt \n</code></pre>\n\
+    <ol start=\"2\">\n<li>\n<p>Adjust variables/paramters as needed in src/config.py.</p>\n\
+    </li>\n<li>\n<p>Run main.py</p>\n</li>\n</ol>\n<pre><code>cd src\npython3 main.py\n\
+    </code></pre>\n<h2>\n<a id=\"user-content-common-installation-issues\" class=\"\
+    anchor\" href=\"#common-installation-issues\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Common Installation Issues</h2>\n\
+    <ol>\n<li>\n<p>OpenCV (Tested on Ubuntu 18.04)</p>\n<p>Refer to <a href=\"https://linuxize.com/post/how-to-install-opencv-on-ubuntu-18-04/\"\
+    \ rel=\"nofollow\">https://linuxize.com/post/how-to-install-opencv-on-ubuntu-18-04/</a></p>\n\
+    </li>\n<li>\n<p>FF:</p>\n<ul>\n<li>\n<p>Please install flex and bison for FF to\
+    \ compile.</p>\n</li>\n<li>\n<p>On newer versions of gcc (tested on gcc 10.2.0)\
+    \ please make the following changes:</p>\n<ul>\n<li>main.c:150 : Comment out the\
+    \ gbracket_count definition\n<pre><code>int gbracket_count; --&gt; /* int gbracket_count;\
+    \ */\n</code></pre>\n</li>\n<li>relax.c:111 : Define lcurrent_goals as static\n\
+    <pre><code>State lcurrent_goals; --&gt; static State lcurrent_goals;\n</code></pre>\n\
+    </li>\n<li>search.c:110 : Define lcurrent_goals as static\n<pre><code>State lcurrent_goals;\
+    \ --&gt; static State lcurrent_goals;\n</code></pre>\n</li>\n</ul>\n</li>\n</ul>\n\
+    </li>\n</ol>\n<p>Please note that this is research code and not yet ready for\
+    \ public delivery,\nhence most parts are not documented.</p>\n<p>In case of any\
+    \ queries, please contact <a href=\"mailto:verma.pulkit@asu.edu\">verma.pulkit@asu.edu</a>,\n\
+    or <a href=\"mailto:smarpall@asu.edu\">smarpall@asu.edu</a>.</p>\n<h1>\n<a id=\"\
+    user-content-citation\" class=\"anchor\" href=\"#citation\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Citation</h1>\n\
+    <pre><code>@inproceedings{verma_2021_asking,\n    author = {Verma, Pulkit and\
+    \ Rao Marpally, Shashank and Srivastava, Siddharth},\n    title = {{Asking the\
+    \ Right Questions: Learning Interpretable Action Models Through Query Answering}},\n\
+    \    booktitle = {Thirty-Fifth AAAI Conference on Artificial Intelligence (AAAI-21)},\n\
+    \    year={2021}\n}\n</code></pre>\n"
+  stargazers_count: 3
+  subscribers_count: 3
+  topics: []
+  updated_at: 1623121132.0
 APSIMInitiative/APSIMClassic:
   data_format: 2
   description: APSIM
@@ -707,7 +804,7 @@ Betterton-Lab/C-GLASS:
   stargazers_count: 2
   subscribers_count: 1
   topics: []
-  updated_at: 1613508797.0
+  updated_at: 1623112376.0
 BiomedicalMachineLearning/HEMnet:
   data_format: 2
   description: 'A neural network software for using Molecular labelling to improve
@@ -1132,99 +1229,99 @@ Characterisation-Virtual-Laboratory/CharacterisationVL-Software:
   data_format: 2
   description: null
   filenames:
-  - caffe/Singularity.caffe_1.0
-  - argos/Singularity.argos_3.0.0-beta53
-  - argos/Singularity.argos_3.0.0-beta52
-  - meshlab/Singularity.meshlab-2019.03-cuda-9.0
-  - ilastik/Singularity.ilastik_1.3.3post3
-  - ubuntu-base-image/Singularity.2004-cuda11.0
-  - ubuntu-base-image/Singularity.1804-cuda10.1
-  - ubuntu-base-image/Singularity.1804
-  - ubuntu-base-image/Singularity.1804-cuda9
-  - ubuntu-base-image/Singularity.2004
-  - bidscoin/Singularity.bidscoin_3
-  - cryolo/Singularity.cryolo_v1_0_4
-  - cryolo/Singularity.cryolo_v1_5_6
-  - cryolo/Singularity.cryolo_v1_6_1
-  - cryolo/Singularity.cryolo_v1_0_0
   - colmap/Singularity.colmap_3.6-dev.3
   - colmap/Singularity.colmap_3.5
-  - mrtrix3tissue/Singularity.mrtrix3tissue-5.2.8
-  - ants/Singularity.ants_2.3.1
+  - cryolo/Singularity.cryolo_v1_0_4
+  - cryolo/Singularity.cryolo_v1_0_0
+  - cryolo/Singularity.cryolo_v1_6_1
+  - cryolo/Singularity.cryolo_v1_5_6
+  - mydata-python/Singularity.mydata-python_20200603
+  - jupyter-ml/Singularity.jupyter-ml_20201120
+  - jupyter-ml/Singularity.jupyter-ml_20210415
   - ants/Singularity.ants_2.3.4
-  - eman/Singularity.eman_2.3
-  - eman/Singularity.eman_2.91
-  - eman/Singularity.eman_2.22
-  - eman/Singularity.eman_2.9
-  - eman/Singularity.eman_2.3.1
-  - quit/Singularity.quit_2.0.2
-  - mango/Singularity.mango_4.0.1
-  - R/Singularity.R_4.0.5
-  - omero-insight/Singularity.1804
-  - octave/Singularity.octave-4.2.2
-  - globus-cli/Singularity.globus-cli-v2.0.0
-  - deeplabcut/Singularity.latest
+  - ants/Singularity.ants_2.3.1
+  - apex/Singularity.apex_master
+  - pyprismatic/Singularity.pyprismatic_1_2_1-cuda-11.0
+  - openrefine/Singularity.openrefine-3.1
+  - ubuntu-base-image/Singularity.2004
+  - ubuntu-base-image/Singularity.1804
+  - ubuntu-base-image/Singularity.1804-cuda10.1
+  - ubuntu-base-image/Singularity.2004-cuda11.0
+  - ubuntu-base-image/Singularity.1804-cuda9
   - darknet/Singularity.darknet_yolo_v3-cuda-9.0
   - mrtrix/Singularity.mrtrix_3_beta
-  - omero.insight/Singularity.omero_5.5.10
-  - bids-validator/Singularity.bids-validator-1.2.2
-  - bids-validator/Singularity.bids-validator-1.3.1
-  - ashs/Singularity.ashs_2.0.0
-  - fiji/Singularity.fiji
-  - gimp/Singularity.gimp_2.8
-  - gimp/Singularity.gimp_2.8.22
-  - apex/Singularity.apex_master
-  - openmodelica/Singularity.openmodelica_1.14.2-cuda-10.1
-  - cytoscape/Singularity.cytoscape_3.8.0
-  - volview/Singularity.VolView_3.4-cuda-9.0
-  - pyprismatic/Singularity.pyprismatic_1_2_1-cuda-11.0
-  - atom/Singularity.atom_1.39.1
-  - atom/Singularity.atom_1.45.0
-  - amide/Singularity.amide-1.0.5
-  - paraview/Singularity.paraview_5.6.0-cuda-9.0
+  - bidscoin/Singularity.bidscoin_3
   - mantid/Singularity.mantid_v_3_13_0
-  - openrefine/Singularity.openrefine-3.1
-  - datalad/Singularity.datalad_0.13.3
+  - R/Singularity.R_4.0.5
+  - dragondisk/Singularity.dragondisk_v1_0_5
+  - omero-insight/Singularity.1804
+  - dristhi/Singularity.dristhi_2.6.4
+  - fiji/Singularity.fiji
+  - paraview/Singularity.paraview_5.6.0-cuda-9.0
+  - imagemagick/Singularity.imagemagick-7.0.8-68
+  - anaconda3/Singularity.anaconda3_5.3.0-cuda-11.0.3
+  - anaconda3/Singularity.anaconda3_5.3.0
+  - cvmfs-client/Singularity.cvmfs-client
   - cloudstor/Singularity.cloudstor-2.4.1
   - imblproc/Singularity.imblproc
-  - octopus/Singularity.octopus_8.4
-  - octopus/Singularity.octopus_8.4_parallel
-  - haystack/Singularity.haystack_bio_v0_5_0
-  - anaconda3/Singularity.anaconda3_5.3.0
-  - anaconda3/Singularity.anaconda3_5.3.0-cuda-11.0.3
-  - caffe-unet/Singularity.caffe-unet_1.0
-  - crisprcas/Singularity.crisprcas
-  - cvmfs-client/Singularity.cvmfs-client
-  - libertem/Singularity.libertem-v0.6.0
-  - libertem/Singularity.libertem-v0.2.2
+  - quit/Singularity.quit_2.0.2
+  - gimp/Singularity.gimp_2.8.22
+  - gimp/Singularity.gimp_2.8
   - libertem/Singularity.libertem-v0.5.1
+  - libertem/Singularity.libertem-v0.7.0
+  - libertem/Singularity.libertem-v0.2.2
+  - libertem/Singularity.libertem-v0.6.0
+  - libertem/Singularity.libertem-21-May-2019
   - libertem/Singularity.libertem-v0.4.1
   - libertem/Singularity.libertem-v0.4.0
   - libertem/Singularity.libertem-v0.5.0
-  - libertem/Singularity.libertem-v0.7.0
-  - libertem/Singularity.libertem-21-May-2019
-  - cistem/Singularity.cisTEM-1.0.0-beta
-  - dristhi/Singularity.dristhi_2.6.4
-  - imod/Singularity.imod_v4_9_9
-  - fsl/Singularity.fsl
+  - globus-cli/Singularity.globus-cli-v2.0.0
+  - meshlab/Singularity.meshlab-2019.03-cuda-9.0
+  - amide/Singularity.amide-1.0.5
   - cellprofiler/Singularity.cellprofiler_3.1.9
   - cellprofiler/Singularity.cellprofiler_3.1.5
-  - jupyter-ml/Singularity.jupyter-ml_20210415
-  - jupyter-ml/Singularity.jupyter-ml_20201120
-  - imagemagick/Singularity.imagemagick-7.0.8-68
-  - ariba/Singularity.ariba_2.14.4
-  - ariba/Singularity.ariba_2.12.1
-  - dragondisk/Singularity.dragondisk_v1_0_5
-  - globus-connect-personal/Singularity.globus-connect-personal_latest
-  - mydata-python/Singularity.mydata-python_20200603
-  - 3dslicer/Singularity.3dslicer_4.10.2
-  - 3dslicer/Singularity.3dslicer_4.8.1
-  - imagej/Singularity.imagej_1.50e
   - mydata/Singularity.mydata_0.9.2-1
+  - datalad/Singularity.datalad_0.13.3
+  - openmodelica/Singularity.openmodelica_1.14.2-cuda-10.1
+  - bids-validator/Singularity.bids-validator-1.2.2
+  - bids-validator/Singularity.bids-validator-1.3.1
+  - caffe-unet/Singularity.caffe-unet_1.0
+  - imagej/Singularity.imagej_1.50e
+  - fsl/Singularity.fsl
+  - globus-connect-personal/Singularity.globus-connect-personal_latest
+  - ariba/Singularity.ariba_2.12.1
+  - ariba/Singularity.ariba_2.14.4
+  - atom/Singularity.atom_1.45.0
+  - atom/Singularity.atom_1.39.1
+  - ashs/Singularity.ashs_2.0.0
+  - mango/Singularity.mango_4.0.1
+  - eman/Singularity.eman_2.3.1
+  - eman/Singularity.eman_2.91
+  - eman/Singularity.eman_2.3
+  - eman/Singularity.eman_2.9
+  - eman/Singularity.eman_2.22
+  - 3dslicer/Singularity.3dslicer_4.8.1
+  - 3dslicer/Singularity.3dslicer_4.10.2
+  - haystack/Singularity.haystack_bio_v0_5_0
+  - cistem/Singularity.cisTEM-1.0.0-beta
+  - deeplabcut/Singularity.latest
   - git-annex/Singularity.git-annex.6.20180227
-  - matlab/Singularity.MATLAB_SAMPLE
-  - graphviz/Singularity.graphviz-2.40.1
+  - mrtrix3tissue/Singularity.mrtrix3tissue-5.2.8
+  - volview/Singularity.VolView_3.4-cuda-9.0
+  - imod/Singularity.imod_v4_9_9
+  - octopus/Singularity.octopus_8.4
+  - octopus/Singularity.octopus_8.4_parallel
+  - octave/Singularity.octave-4.2.2
+  - caffe/Singularity.caffe_1.0
+  - omero.insight/Singularity.omero_5.5.10
   - connectome-workbench/Singularity.connectome-workbench_1.4.2
+  - ilastik/Singularity.ilastik_1.3.3post3
+  - graphviz/Singularity.graphviz-2.40.1
+  - crisprcas/Singularity.crisprcas
+  - matlab/Singularity.MATLAB_SAMPLE
+  - argos/Singularity.argos_3.0.0-beta53
+  - argos/Singularity.argos_3.0.0-beta52
+  - cytoscape/Singularity.cytoscape_3.8.0
   full_name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
   latest_release: null
   readme: "<h1>\n<a id=\"user-content-characterisationvl-software\" class=\"anchor\"\
@@ -1316,7 +1413,7 @@ Characterisation-Virtual-Laboratory/CharacterisationVL-Software:
   stargazers_count: 6
   subscribers_count: 4
   topics: []
-  updated_at: 1623387354.0
+  updated_at: 1623365754.0
 ChunCun/container:
   data_format: 2
   description: null
@@ -2167,7 +2264,7 @@ ComputationalRadiationPhysics/picongpu:
     our strong scaling" title="Strong Scaling" style="max-width:100%;"></a></p>
 
     '
-  stargazers_count: 466
+  stargazers_count: 467
   subscribers_count: 45
   topics:
   - laser
@@ -2180,7 +2277,7 @@ ComputationalRadiationPhysics/picongpu:
   - particle-in-cell
   - pic
   - research
-  updated_at: 1623246427.0
+  updated_at: 1623487338.0
 D-Lo/bambi:
   data_format: 2
   description: R wrapper for bamdb
@@ -6157,10 +6254,10 @@ ORNL/faro:
     <p><a href=\"https://github.com/ORNL/faro/issues\">https://github.com/ORNL/faro/issues</a></p>\n\
     <p>We would also like to see new features or fixes submitted as pull requests.</p>\n\
     <p><a href=\"https://github.com/ORNL/faro/pulls\">https://github.com/ORNL/faro/pulls</a></p>\n"
-  stargazers_count: 3
+  stargazers_count: 4
   subscribers_count: 9
   topics: []
-  updated_at: 1622848391.0
+  updated_at: 1623426961.0
 OSC/bc_osc_example_shiny:
   data_format: 2
   description: Batch Connect - Example Shiny App that runs on OSC OnDemand
@@ -6653,7 +6750,7 @@ OSC/bc_osc_rstudio_server_quick:
 
     '
   stargazers_count: 0
-  subscribers_count: 11
+  subscribers_count: 10
   topics: []
   updated_at: 1570733859.0
 OSC/centos7-launcher:
@@ -6777,7 +6874,7 @@ OSC/sa_singularity_iqmol:
 
     '
   stargazers_count: 0
-  subscribers_count: 8
+  subscribers_count: 7
   topics: []
   updated_at: 1599018735.0
 OSC/sa_singularity_molgfx:
@@ -6862,7 +6959,7 @@ OSC/sa_singularity_molgfx:
 
     '
   stargazers_count: 0
-  subscribers_count: 7
+  subscribers_count: 6
   topics: []
   updated_at: 1588619360.0
 OSC/sa_singularity_openexr:
@@ -6945,7 +7042,7 @@ OSC/sa_singularity_openexr:
 
     '
   stargazers_count: 0
-  subscribers_count: 8
+  subscribers_count: 7
   topics: []
   updated_at: 1569951214.0
 OSC/sa_singularity_qgis:
@@ -7024,7 +7121,7 @@ OSC/sa_singularity_qgis:
 
     '
   stargazers_count: 0
-  subscribers_count: 8
+  subscribers_count: 7
   topics: []
   updated_at: 1569951156.0
 OSC/sa_singularity_winehq:
@@ -7116,7 +7213,7 @@ OSC/sa_singularity_winehq:
 
     '
   stargazers_count: 0
-  subscribers_count: 8
+  subscribers_count: 7
   topics: []
   updated_at: 1581361908.0
 OSC/sa_singularity_xcrysden:
@@ -7196,7 +7293,7 @@ OSC/sa_singularity_xcrysden:
 
     '
   stargazers_count: 0
-  subscribers_count: 7
+  subscribers_count: 6
   topics: []
   updated_at: 1592244254.0
 OSC/shiny_launcher:
@@ -9061,7 +9158,7 @@ UNM-CARC/heudiconv:
 
     '
   stargazers_count: 0
-  subscribers_count: 2
+  subscribers_count: 3
   topics: []
   updated_at: 1536784012.0
 UNM-CARC/singularity-test:
@@ -9562,7 +9659,7 @@ UniversalDataTool/universal-data-tool:
     </g-emoji></a>\n</td>\n  </tr>\n</table>\n\n\n\n<p>This project follows the <a\
     \ href=\"https://github.com/all-contributors/all-contributors\">all-contributors</a>\
     \ specification. Contributions of any kind welcome!</p>\n"
-  stargazers_count: 1429
+  stargazers_count: 1434
   subscribers_count: 31
   topics:
   - computer-vision
@@ -9585,7 +9682,7 @@ UniversalDataTool/universal-data-tool:
   - labeling
   - labeling-tool
   - hacktoberfest
-  updated_at: 1622825881.0
+  updated_at: 1623509234.0
 VIB-CBD/scanpy-images:
   data_format: 2
   description: Docker and Singularity images for Scanpy
@@ -10502,14 +10599,14 @@ aertslab/pySCENIC:
     <p>Please be aware of FSL''s strict license regarding non-commercial use.</p>
 
     '
-  stargazers_count: 152
+  stargazers_count: 153
   subscribers_count: 13
   topics:
   - single-cell
   - transcriptomics
   - gene-regulatory-network
   - transcription-factors
-  updated_at: 1622839776.0
+  updated_at: 1623029804.0
 agaveplatform/SC17-container-tutorial:
   data_format: 2
   description: 'SC17 tutorial - "HPC via HTTP: Portable, Scalable Computing using
@@ -12687,7 +12784,7 @@ bbodi/rustarok:
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Thanks</h2>\n\
     <ul>\n<li>\n<a href=\"https://github.com/vthibault/roBrowser/\">roBrowser</a>:\
     \ Its source code was useful for decoding the game asset files</li>\n</ul>\n"
-  stargazers_count: 224
+  stargazers_count: 225
   subscribers_count: 13
   topics:
   - rust
@@ -12698,7 +12795,7 @@ bbodi/rustarok:
   - multiplayer
   - 2d
   - 3d
-  updated_at: 1620891423.0
+  updated_at: 1623498993.0
 bioexcel/biobb_structure_utils:
   data_format: 2
   description: Biobb_structure_utils is the Biobb module collection to modify or extract
@@ -18161,7 +18258,7 @@ geoschem/Singularity_GC:
 
     '
   stargazers_count: 0
-  subscribers_count: 3
+  subscribers_count: 4
   topics:
   - geos-chem
   - singularity-container
@@ -18193,7 +18290,7 @@ geoschem/Singularity_GCHP:
 
     '
   stargazers_count: 0
-  subscribers_count: 3
+  subscribers_count: 4
   topics: []
   updated_at: 1531155094.0
 gipert/Singularity.def:
@@ -18290,15 +18387,15 @@ gpuhackathons-org/gpubootcamp:
   data_format: 2
   description: This repository consists for gpu bootcamp material for HPC and AI
   filenames:
-  - hpc/openacc/Singularity
-  - hpc/miniprofiler/Singularity
   - hpc/nways/Singularity
+  - hpc/miniprofiler/Singularity
+  - hpc/openacc/Singularity
+  - misc/jupyter_lab_template/appName/Singularity
   - ai/DeepStream/Singularity
-  - ai/RAPIDS/Singularity
   - ai/DeepStream_Perf_Lab/Singularity
+  - ai/RAPIDS/Singularity
   - hpc_ai/ai_science_cfd/Singularity
   - hpc_ai/ai_science_climate/Singularity
-  - misc/jupyter_lab_template/appName/Singularity
   full_name: gpuhackathons-org/gpubootcamp
   latest_release: null
   readme: '<h1>
@@ -18389,7 +18486,7 @@ gpuhackathons-org/gpubootcamp:
   stargazers_count: 63
   subscribers_count: 6
   topics: []
-  updated_at: 1623327034.0
+  updated_at: 1623305434.0
 granek/singularity-rstudio-base:
   data_format: 2
   description: 'Singularity image to serve as base for all project images.  Defaults
@@ -19742,7 +19839,7 @@ housw/BlendIt:
   stargazers_count: 0
   subscribers_count: 0
   topics: []
-  updated_at: 1594543109.0
+  updated_at: 1623019661.0
 humanconnectome/hcp-pipelines-singularity:
   data_format: 2
   description: The definition files for creating singularity containers that can run
@@ -23117,7 +23214,7 @@ lehtiolab/nf-deqms:
 
     '
   stargazers_count: 0
-  subscribers_count: 1
+  subscribers_count: 2
   topics: []
   updated_at: 1605692054.0
 letaylor/docker-letaylor:
@@ -23381,6 +23478,31 @@ maplesond/portcullis:
   - bam-files
   - filter
   updated_at: 1620067152.0
+marcjwilliams1/rstudio_julia:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: marcjwilliams1/rstudio_julia
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-singularity" class="anchor" href="#singularity" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Singularity</h1>
+
+    <p><a href="https://singularity-hub.org/collections/5054" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
+    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    style="max-width:100%;"></a></p>
+
+    <p>Singularity image for R studio server with Rv4.0 + julia v1.5.3</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1611507934.0
 marcjwilliams1/rstudiosrvrV4:
   data_format: 2
   description: null
@@ -25362,7 +25484,7 @@ ml4ai/automates:
   stargazers_count: 17
   subscribers_count: 10
   topics: []
-  updated_at: 1620238275.0
+  updated_at: 1623446833.0
 mmirko/singularitytest:
   data_format: 2
   description: null
@@ -26588,7 +26710,7 @@ openPMD/openPMD-api:
   - meta-data
   - opendata
   - cpp14
-  updated_at: 1623444213.0
+  updated_at: 1623530326.0
 openhpc/ohpc:
   data_format: 2
   description: OpenHPC Integration, Packaging, and Test Repo
@@ -27682,48 +27804,48 @@ pmitev/Teoroo-singularity:
   data_format: 2
   description: Singularity images and recipes
   filenames:
-  - VESTA/Singularity.vesta
-  - rstudio-server/Singularity.rstudio-server
-  - pp/Singularity.pp2
-  - kmos/Singularity.kmos
-  - kmos/Singularity.kmos3_9
-  - lammps/Singularity.lammps
-  - lammps/Singularity.lammps_prophet
-  - lammps/Singularity.lammps_ase
-  - lammps/Singularity.lammps_ase_kim
   - clease/Singularity.clease
-  - tesseract/Singularity.tesseract
-  - texlive/Singularity.texlive
-  - mongodb/Singularity.mongodb
-  - AMPE/Singularity.ampe
-  - gdis/Singularity.gdis
-  - emacs/Singularity.emacs
-  - acroread/Singularity.acroread
   - deal.II/Singularity.deal
-  - jupyter/Singularity.jupyter
-  - Atom/Singularity.atom
-  - obabel/Singularity.obabel
-  - xcrysden/Singularity.xcrysden
-  - xcrysden/Singularity.xcrysden_1.5.60
-  - MD2-lab/Singularity.md2-lab
-  - mkdocs-serve/Singularity.mkdocs-serve
-  - jmol/Singularity.jmol
-  - ubuntu/Singularity.1804
-  - ubuntu/Singularity.2004
-  - graphics/Singularity.gnuplot_alpine
   - graphics/Singularity.gnuplot_5.4a
+  - graphics/Singularity.gnuplot_4.6a
   - graphics/Singularity.gnuplot_5.4
   - graphics/Singularity.gnuplot_4.6
   - graphics/Singularity.graphics
-  - graphics/Singularity.gnuplot_4.6a
-  - cuda/Singularity.u18.04_cuda9.2
+  - graphics/Singularity.gnuplot_alpine
+  - Atom/Singularity.atom
+  - xcrysden/Singularity.xcrysden_1.5.60
+  - xcrysden/Singularity.xcrysden
   - ase-twistd/Singularity.ase-twistd
-  - tools/Singularity.gnuplot
+  - tesseract/Singularity.tesseract
+  - gromacs/Singularity.gromacs
+  - jupyter/Singularity.jupyter
+  - gdis/Singularity.gdis
+  - rstudio-server/Singularity.rstudio-server
+  - mongodb/Singularity.mongodb
+  - MD2-lab/Singularity.md2-lab
+  - pp/Singularity.pp2
   - tools/Singularity.vim
-  - tools/Singularity.meld
   - tools/Singularity.mc
   - tools/Singularity.gawk
-  - gromacs/Singularity.gromacs
+  - tools/Singularity.gnuplot
+  - tools/Singularity.meld
+  - mkdocs-serve/Singularity.mkdocs-serve
+  - jmol/Singularity.jmol
+  - ubuntu/Singularity.2004
+  - ubuntu/Singularity.1804
+  - texlive/Singularity.texlive
+  - AMPE/Singularity.ampe
+  - kmos/Singularity.kmos
+  - kmos/Singularity.kmos3_9
+  - emacs/Singularity.emacs
+  - lammps/Singularity.lammps
+  - lammps/Singularity.lammps_ase
+  - lammps/Singularity.lammps_prophet
+  - lammps/Singularity.lammps_ase_kim
+  - cuda/Singularity.u18.04_cuda9.2
+  - VESTA/Singularity.vesta
+  - obabel/Singularity.obabel
+  - acroread/Singularity.acroread
   full_name: pmitev/Teoroo-singularity
   latest_release: null
   readme: '<p><a href="https://singularity-hub.org/collections/2338" rel="nofollow"><img
@@ -27743,7 +27865,7 @@ pmitev/Teoroo-singularity:
   topics:
   - singularity
   - singularity-containers
-  updated_at: 1623096118.0
+  updated_at: 1623074518.0
 pmitev/UPPMAX-Singularity:
   data_format: 2
   description: UPPMAX Singularity builds
@@ -28718,10 +28840,10 @@ powerPlant/bismark-srf:
   data_format: 2
   description: Singularity recipe files for Bismark (https://github.com/FelixKrueger/Bismark)
   filenames:
+  - Singularity.0.20.0
   - Singularity
   - Singularity.0.23.0
   - Singularity.0.19.1
-  - Singularity.0.20.0
   full_name: powerPlant/bismark-srf
   latest_release: null
   readme: '<p><a href="https://singularity-hub.org/collections/2263" rel="nofollow"><img
@@ -28737,7 +28859,7 @@ powerPlant/bismark-srf:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1623144085.0
+  updated_at: 1623122485.0
 powerPlant/bonito-srf:
   data_format: 2
   description: Singularity recipe files for bonito (https://github.com/nanoporetech/bonito)
@@ -29076,10 +29198,7 @@ powerPlant/metabat2-srf:
   - Singularity.2.15
   full_name: powerPlant/metabat2-srf
   latest_release: null
-  readme: '<p>Singularity recipe files for MetaBAT: A robust statistical framework
-    for reconstructing genomes from metagenomic data</p>
-
-    '
+  readme: '{"message":"API rate limit exceeded for installation ID 633759.","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}'
   stargazers_count: 1
   subscribers_count: 0
   topics: []
@@ -29927,7 +30046,7 @@ radio1988/OneStopRNAseq:
   stargazers_count: 2
   subscribers_count: 1
   topics: []
-  updated_at: 1619146376.0
+  updated_at: 1623367053.0
 rickstaa/COR-robotics-lab-reference:
   data_format: 2
   description: A quick reference repository for using the robots in the COR lab
@@ -29964,23 +30083,19 @@ rohitfarmer/singularity-defs:
   data_format: 2
   description: Definition (recipe) files for singularity containers.
   filenames:
-  - diffnets/diffnets.def
   - H5N1/Singularity.def
   - H5N1/Singularity_R_3.6.def
-  - H5N1/h5n1day100.def
   - cite-seq/Singularity_AJM_COVID.def
   - cite-seq/Singularity_xenial.def
   - cite-seq/Singularity_publish.def
   - cite-seq/Singularity_rocker.def
   - cite-seq/Singularity_3.def
-  - r-dev/r_4.0.3.def
-  - r-dev/r_3.6.1.def
+  - tf-gpu-chemistry/Singularity
   - generic/Singularity.def
   - bittersweet/Singularity.def
   - cytof-workflow-v3/Singularity.def
   - cytof-workflow-v3/Singularity_SCS.def
   - comet/Singularity.def
-  - comet/chemlab-comet.def
   - cytof-deep-cnn/Singularity.def
   full_name: rohitfarmer/singularity-defs
   latest_release: null
@@ -30903,7 +31018,7 @@ seasite-project/CGO21_YaskSite_AD:
     \ obtained using:</p>\n<pre><code>singularity run-help --app Fig4 YS_CGO.sif\n\
     </code></pre>\n"
   stargazers_count: 0
-  subscribers_count: 1
+  subscribers_count: 2
   topics: []
   updated_at: 1609764345.0
 seb-mueller/singularity_dropSeqPipe:
@@ -33466,10 +33581,10 @@ tgac-vumc/BLADE:
     \ objects from the Empirical Bayes step.</li>\n</ul>\n</li>\n</ul>\n</li>\n<li>\n\
     <p><code>BLADE_job</code>/<code>Optimize</code>: Internal functions used by <code>Framework</code>.</p>\n\
     </li>\n</ul>\n"
-  stargazers_count: 4
+  stargazers_count: 5
   subscribers_count: 7
   topics: []
-  updated_at: 1620139641.0
+  updated_at: 1623031718.0
 tgac-vumc/QDNAseq.snakemake:
   data_format: 2
   description: null
