@@ -1,0 +1,177 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%files
+    license.txt
+
+%post
+    # Links
+    MAIN_DIR=$PWD
+    MESA=https://mesa.freedesktop.org/archive/mesa-18.3.2.tar.gz
+    VTK=https://gitlab.kitware.com/vtk/vtk/-/archive/v8.2.0.rc2/vtk-v8.2.0.rc2.tar.gz
+    CUDA5=http://developer.download.nvidia.com/compute/cuda/5_0/rel-update-1/installers/cuda_5.0.35_linux_64_ubuntu11.10-1.run
+    CUDA8=https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda_8.0.61_375.26_linux-run
+    FREESURFER=ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz
+    BEDPOSTX_GPU=http://users.fmrib.ox.ac.uk/~moisesf/Bedpostx_GPU/CUDA_8.0/bedpostx_gpu.zip
+    PROBTRACKX_GPU=http://users.fmrib.ox.ac.uk/~moisesf/Probtrackx_GPU/CUDA_8.0/probtrackx2_gpu.zip
+
+    mkdir /share
+    apt-get -y update
+    apt-get install -y apt-transport-https ca-certificates
+    apt-get install -y software-properties-common
+    add-apt-repository -y universe
+    sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
+    apt-get -y update
+    apt-get -y install wget tcsh build-essential curl libtool unzip kmod initramfs-tools locales vim-tiny dkms mricron debhelper dh-autoreconf
+    locale-gen en_US.UTF-8
+    rm /bin/sh
+    ln -s /bin/bash /bin/sh
+
+    # FSL
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get install -y tzdata
+    ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+    dpkg-reconfigure --frontend noninteractive tzdata
+    gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv 9BDB3D89CE49EC21
+    wget -O- http://neuro.debian.net/lists/xenial.us-nh.full | tee /etc/apt/sources.list.d/neurodebian.sources.list
+    apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
+    apt-get -y update
+    apt-get -y install fsl-5.0-complete
+
+    # VTK
+    ### LLVM
+    wget --no-check-certificate -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
+    apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main"
+    apt-get -y -o Acquire::AllowInsecureRepositories=true update
+    apt-get -y install libllvm8 llvm-8 llvm-8-dev llvm-8-runtime
+
+    ### Mesa3D
+    MESA_ZIP=$(basename $MESA)
+    MESA_DIR=/opt/mesa
+    apt-get -y install libxrandr-dev cmake
+    apt-get -y build-dep mesa
+    apt-get -y install freeglut3 freeglut3-dev
+    wget --no-check-certificate $MESA
+    tar -xzf $MESA_ZIP
+    cd mesa-*
+    ./configure                                           \
+        --prefix=$MESA_DIR                                \
+        --enable-opengl --disable-gles1 --disable-gles2   \
+        --disable-va --disable-xvmc --disable-vdpau       \
+        --enable-shared-glapi                             \
+        --disable-texture-float                           \
+        --enable-gallium-llvm --enable-llvm-shared-libs   \
+        --with-gallium-drivers=swrast                     \
+        --disable-dri --with-dri-drivers=                 \
+        --disable-egl --with-egl-platforms= --disable-gbm \
+        --disable-glx                                     \
+        --disable-osmesa --enable-gallium-osmesa          \
+        ac_cv_path_LLVM_CONFIG=llvm-config-8
+    make -j12
+    make install
+    cd $MAIN_DIR
+
+    ### VTK
+    apt-get -y install python3.5 python3.5-dev python3-pip
+    VTK_ZIP=$(basename $VTK)
+    wget --no-check-certificate $VTK
+    tar -xzf $VTK_ZIP
+    VTK_SRC=$PWD/"${VTK_ZIP%.tar.gz}"
+    mkdir /opt/vtk
+    cd /opt/vtk
+    cmake \
+    -DVTK_OPENGL_HAS_OSMESA=ON \
+    -DVTK_DEFAULT_RENDER_WINDOW_OFFSCREEN=ON \
+    -DVTK_WRAP_PYTHON=ON \
+    -DVTK_PYTHON_VERSION=3 \
+    -DPYTHON_EXECUTABLE=/usr/bin/python3 \
+    -DPYTHON_INCLUDE_PATH=/usr/include/python3.5 \
+    -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.5m.so \
+    -DOSMESA_INCLUDE_DIR=$MESA_DIR/include \
+    -DOSMESA_LIBRARY=$MESA_DIR/lib/libOSMesa.so \
+    -DVTK_USE_X=OFF \
+    -DBUILD_SHARED_LIBS=ON \
+    -DBUILD_TESTING=OFF \
+    $VTK_SRC
+    make -j12
+    cd $MAIN_DIR
+    python3.5 -m pip install nibabel pyevtk numpy==1.18.5
+
+    # CUDA 5.0
+    CUDA5_RUN=$(basename $CUDA5)
+    wget --no-check-certificate $CUDA5
+    sh $CUDA5_RUN -silent -override -toolkit
+
+    # CUDA 8.0
+    CUDA8_RUN=$(basename $CUDA8)
+    wget --no-check-certificate $CUDA8
+    sh $CUDA8_RUN -silent -override -toolkit
+
+    # Bedpostx GPU
+    BEDPOSTX_GPU_ZIP=$(basename $BEDPOSTX_GPU)
+    wget --no-check-certificate $BEDPOSTX_GPU
+    unzip -o -d /usr/share/fsl/5.0 $BEDPOSTX_GPU_ZIP
+    cp /usr/share/fsl/5.0/bin/*.so /usr/share/fsl/5.0/lib/
+
+    # Probtrackx GPU
+    PROBTRACKX_GPU_ZIP=$(basename $PROBTRACKX_GPU)
+    wget --no-check-certificate $PROBTRACKX_GPU
+    unzip -o -d /usr/share/fsl/5.0/bin $PROBTRACKX_GPU_ZIP
+
+    # Freesurfer
+    FREESURFER_GZ=$(basename $FREESURFER)
+    wget --no-check-certificate $FREESURFER
+    tar -xzf $FREESURFER_GZ -C /opt
+    cp license.txt /opt/freesurfer/license.txt
+    chmod a+r /opt/freesurfer/license.txt
+
+    # Cleanup
+    rm -rf $CUDA5_RUN
+    rm -rf $CUDA8_RUN
+    rm -rf $FREESURFER_GZ
+    rm -rf $BEDPOSTX_GPU_ZIP
+    rm -rf /license.txt
+    rm -rf $MESA_ZIP
+    rm -rf $VTK_ZIP
+    apt-get -y clean
+
+%environment
+    export FSLDIR=/usr/share/fsl/5.0
+    FSL_DIR=$FSLDIR
+    FSLOUTPUTTYPE=NIFTI_GZ
+    FSLMULTIFILEQUIT=TRUE
+    FSLTCLSH=${FSLDIR}/bin/fsltclsh
+    FSLWISH=${FSLDIR}/bin/fslwish
+    FSLGECUDAQ="cuda.q"
+    FSL_BIN=${FSLDIR}/bin
+    FS_OVERRIDE=0
+    COMPILE_GPU=1
+    export FSL_DIR FSLOUTPUTTYPE FSLMULTIFILEQUIT FSLTCLSH FSLWISH FSLGECUDAQ FSL_BIN FS_OVERRIDE COMPILE_GPU
+
+    export FREESURFER_HOME=/opt/freesurfer
+    LOCAL_DIR=${FREESURFER_HOME}/local
+    PERL5LIB=${FREESURFER_HOME}/mni/share/perl5
+    FSFAST_HOME=${FREESURFER_HOME}/fsfast
+    FMRI_ANALYSIS_DIR=${FREESURFER_HOME}/fsfast
+    FSF_OUTPUT_FORMAT="nii.gz"
+    MNI_DIR=${FREESURFER_HOME}/mni
+    MNI_DATAPATH=${FREESURFER_HOME}/mni/data
+    MNI_PERL5LIB=${FREESURFER_HOME}/mni/share/perl5
+    MINC_BIN_DIR=${FREESURFER_HOME}/mni/bin
+    MINC_LIB_DIR=${FREESURFER_HOME}/mni/lib
+    SUBJECTS_DIR=/share
+    FUNCTIONALS_DIR=${FREESURFER_HOME}/sessions
+
+    export LOCAL_DIR PERL5LIB FSFAST_HOME FMRI_ANALYSIS_DIR FSF_OUTPUT_FORMAT MNI_DIR MNI_DATAPATH MNI_PERL5LIB MINC_BIN_DIR MINC_LIB_DIR SUBJECTS_DIR FUNCTIONALS_DIR
+
+    export VTK_DIR=/opt/vtk
+    export MESA_DIR=/opt/mesa
+    export PYTHONPATH=$VTK_DIR/bin:$VTK_DIR/Wrapping/Python``
+
+    export CUDA_5_LIB_DIR=/usr/local/cuda-5.0/lib64
+    export CUDA_8_LIB_DIR=/usr/local/cuda-8.0/lib64
+
+    export PATH="${FREESURFER_HOME}/bin:${MNI_DIR}/bin:${FSLDIR}/bin:$PATH"
+    export LD_LIBRARY_PATH="${VTK_DIR}/bin:$MESA_DIR/lib:${FSLDIR}/lib:$LD_LIBRARY_PATH"
+    export OS=LINUX
+

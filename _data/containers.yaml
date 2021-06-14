@@ -1,5 +1,5 @@
 bases:
-- count: 646
+- count: 647
   name: ubuntu
 - count: 212
   name: nvidia/cuda
@@ -11,7 +11,7 @@ bases:
   name: continuumio/miniconda3
 - count: 58
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 52
+- count: 54
   name: mkandes/naked-singularity
 - count: 51
   name: alpine
@@ -35,6 +35,8 @@ bases:
   name: neurodebian
 - count: 17
   name: cokelaer/damona/conda
+- count: 16
+  name: aibasel/downward
 - count: 15
   name: ezlabgva/busco
 - count: 13
@@ -45,8 +47,6 @@ bases:
   name: qiime2/core
 - count: 12
   name: khanlab/heudiconv
-- count: 12
-  name: aibasel/downward
 - count: 12
   name: pawsey/openfoam
 - count: 11
@@ -127,8 +127,6 @@ bases:
   name: willgpaik/qt5_aci
 - count: 4
   name: matmu/vep
-- count: 4
-  name: letaylor/sc_qc_cluster
 - count: 4
   name: slaclab/slac-jupyterlab
 - count: 4
@@ -520,6 +518,8 @@ bases:
 - count: 1
   name: pangeo/pangeo-notebook
 - count: 1
+  name: letaylor/sc_qc_cluster
+- count: 1
   name: faustus123/hddeps
 - count: 1
   name: kulhanek/deep-rl-pytorch
@@ -898,11 +898,11 @@ bases:
 - count: 1
   name: nipype/nipype
 bootstraps:
-- count: 2109
+- count: 2111
   name: docker
 - count: 243
   name: debootstrap
-- count: 208
+- count: 210
   name: shub
 - count: 143
   name: library
@@ -1164,6 +1164,8 @@ orgs:
 - count: 1
   name: pangeo
 - count: 1
+  name: letaylor
+- count: 1
   name: faustus123
 - count: 1
   name: shreyaskamathkm
@@ -1269,8 +1271,6 @@ orgs:
   name: '{{ cookiecutter.dockerhub_username }}'
 - count: 1
   name: quay.io/fenicsproject
-- count: 1
-  name: letaylor
 - count: 1
   name: semc
 - count: 1
@@ -1424,8 +1424,8 @@ orgs:
 - count: 1
   name: nipype
 tags:
-  latest: 221
-  other: 1923
+  latest: 218
+  other: 1930
 versions:
   APPIAN-PET/APPIAN:
     ants: 1
@@ -1448,9 +1448,9 @@ versions:
   adigenova/nf-gene-fusions:
     v1.0: 1
   aibasel/downward:
-    '19.06': 3
-    '19.12': 3
-    '20.06': 6
+    '19.06': 4
+    '19.12': 4
+    '20.06': 8
   airl_lab/default/airl_env:
     base_ci: 1
   alantrrs/py-faster-rcnn:
@@ -1838,7 +1838,7 @@ versions:
   kulhanek/target-driven-visual-navigation:
     latest: 1
   letaylor/sc_qc_cluster:
-    latest: 4
+    latest: 1
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -1889,10 +1889,10 @@ versions:
     centos-7.9.2009-openmpi-3.1.4: 1
     ubuntu-18.04: 19
     ubuntu-18.04-cuda-10.1.168: 4
-    ubuntu-18.04-cuda-10.1.168-openmpi-3.1.4: 4
+    ubuntu-18.04-cuda-10.1.168-openmpi-3.1.4: 5
     ubuntu-18.04-cuda-10.2: 1
     ubuntu-18.04-cuda-11.2: 1
-    ubuntu-18.04-cuda-11.2-openmpi-4.0.5: 3
+    ubuntu-18.04-cuda-11.2-openmpi-4.0.5: 4
     ubuntu-18.04-mvapich-2.3.2: 1
     ubuntu-18.04-openmpi-3.1.4: 5
     ubuntu-18.04-openmpi-3.1.6: 6
@@ -2411,7 +2411,7 @@ versions:
     pytorch-1.3.0: 1
   ubuntu:
     '14.04': 7
-    '16.04': 97
+    '16.04': 98
     '17.04': 6
     '18.04': 138
     '19.04': 4

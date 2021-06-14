@@ -5,7 +5,8 @@ From: continuumio/miniconda3
   export LC_ALL=C
 
 %files
-  ncbi-blast-2.11.0+-x64-linux.tar.gz /
+#  ncbi-blast-2.11.0+-x64-linux.tar.gz /
+  ncbi-blast-2.9.0+-x64-linux.tar.gz /
 
 %post
   export LC_ALL=C
@@ -23,9 +24,9 @@ From: continuumio/miniconda3
 
   # Install new version of blast
   cd / && \
-  tar xf /ncbi-blast-2.11.0+-x64-linux.tar.gz &&
-  cp -a /ncbi-blast-2.11.0+/bin/* /opt/conda/envs/metawrap-env/bin/ &&
-  rm -r /ncbi-blast-2.11.0+ /ncbi-blast-2.11.0+-x64-linux.tar.gz
+  tar xf /ncbi-blast-2.9.0+-x64-linux.tar.gz &&
+  cp -a /ncbi-blast-2.9.0+/bin/* /opt/conda/envs/metawrap-env/bin/ &&
+  rm -r /ncbi-blast-2.9.0+ /ncbi-blast-2.9.0+-x64-linux.tar.gz
   
   # No need to clean = packages are kept otside in $CONDA_PKGS_DIRS
   #conda clean --all --yes

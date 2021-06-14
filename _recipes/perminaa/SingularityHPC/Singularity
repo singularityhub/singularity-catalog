@@ -22,6 +22,9 @@ From: debian:buster
     rm charmm.tar.gz
     
     #Download and install R
+    ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+    DEBIAN_FRONTEND=noninteractive apt install -y tzdata
+    dpkg-reconfigure --frontend noninteractive tzdata
     apt install -y r-base
 
     # Download and install namd

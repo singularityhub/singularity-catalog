@@ -17,6 +17,9 @@ From: ubuntu:20.04
     # Make sure "python" is found:
     ln -s /usr/bin/python3 /usr/bin/python
 
+    apt -y install bedops
+    apt -y install ncbi-blast+
+
 
     echo 'Installing HTSLIB from http://www.htslib.org/ '
     ######

@@ -26,14 +26,6 @@ From: nistmni/minc-toolkit-min:1.9.16
 
     chmod +x /usr/local/bin/deformation.pl
     
-%test
-    grep -q NAME=\"Ubuntu\" /etc/os-release
-    if [ $? -eq 0 ]; then
-        echo "Container base is Ubuntu as expected."
-    else
-        echo "Container base is not Ubuntu."
-    fi
-
 %labels
     Author Naj Nurani
     Version v0.0.1
