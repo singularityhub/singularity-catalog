@@ -1,5 +1,5 @@
 bases:
-- count: 647
+- count: 648
   name: ubuntu
 - count: 212
   name: nvidia/cuda
@@ -19,10 +19,10 @@ bases:
   name: tensorflow/tensorflow
 - count: 40
   name: nfcore/base
+- count: 36
+  name: python
 - count: 35
   name: conda/miniconda3
-- count: 35
-  name: python
 - count: 31
   name: godloved/secure/ubuntu-bionic
 - count: 29
@@ -127,6 +127,8 @@ bases:
   name: willgpaik/qt5_aci
 - count: 4
   name: matmu/vep
+- count: 4
+  name: letaylor/sc_qc_cluster
 - count: 4
   name: slaclab/slac-jupyterlab
 - count: 4
@@ -518,8 +520,6 @@ bases:
 - count: 1
   name: pangeo/pangeo-notebook
 - count: 1
-  name: letaylor/sc_qc_cluster
-- count: 1
   name: faustus123/hddeps
 - count: 1
   name: kulhanek/deep-rl-pytorch
@@ -898,7 +898,7 @@ bases:
 - count: 1
   name: nipype/nipype
 bootstraps:
-- count: 2111
+- count: 2116
   name: docker
 - count: 243
   name: debootstrap
@@ -1164,8 +1164,6 @@ orgs:
 - count: 1
   name: pangeo
 - count: 1
-  name: letaylor
-- count: 1
   name: faustus123
 - count: 1
   name: shreyaskamathkm
@@ -1271,6 +1269,8 @@ orgs:
   name: '{{ cookiecutter.dockerhub_username }}'
 - count: 1
   name: quay.io/fenicsproject
+- count: 1
+  name: letaylor
 - count: 1
   name: semc
 - count: 1
@@ -1424,7 +1424,7 @@ orgs:
 - count: 1
   name: nipype
 tags:
-  latest: 218
+  latest: 221
   other: 1930
 versions:
   APPIAN-PET/APPIAN:
@@ -1838,7 +1838,7 @@ versions:
   kulhanek/target-driven-visual-navigation:
     latest: 1
   letaylor/sc_qc_cluster:
-    latest: 1
+    latest: 4
   libatomsquip/quip-base:
     latest: 1
   library/centos:

@@ -1,0 +1,105 @@
+Bootstrap: docker
+#From: python
+#rom: yangyangfu/fncs:modelica
+#From:ubuntu 
+From: michaelwetter/ubuntu-1804_jmodelica_trunk
+
+
+%environment
+ #export PATH="/home/aallen/rcnetworks:"
+ export JMODELICA_HOME="/usr/local/JModelica"
+ #export PATH="jm_ipython.sh:"
+# export PYTHONPATH="/usr/local/JModelica/Python:/usr/local/JModelica/Python/pymodelica:/usr/bin/python:"
+export PYTHONPATH=":/usr/local/JModelica/Python:/usr/local/JModelica/Python/pymodelica" 
+export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+ export MODELICAPATH="/usr/local/JModelica/ThirdParty/MSL"
+ export SUNDIALS_HOME="/usr/local/JModelica/ThirdParty/Sundials/lib"
+ export IPOPT_HOME="/usr/local/Ipopt-3.12.4"
+ export LIBRARY_PATH="/usr/local/JModelica/ThirdParty/Sundials/lib"
+ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/JModelica/ThirdParty/Sundials/lib"
+ export LDFLAGS="/usr/local/JModelica/ThirdParty/Sundials/lib"
+
+ #export SINGULARITY_BINDPATH="/home/aallen/rcnetworks/tmp:/tmp"
+#%files
+%setup
+   #touch ${SINGULARITY_ROOTFS}/RCNetworks
+   #touch ${SINGULARITY_ROOTFS}/simulate_fmu.py
+   #touch ${SINGULARITY_ROOTFS}/compile_fmu.py
+  # touch ${SINGULARITY_ROOTFS}/RCNetworks_Examples_HighThermalMassWall.fmuA
+ #ouch ${SINGULARITY_ROOTFS}/Topology_Analysis_5GDHC_DymolaModel_Automated_5GDHC_Test_Building_HeatPump_WSHP_5.fmu##AA commented out 5/25
+   #touch ${SINGULARITY_ROOTFS}/RCNetworks
+  # touch ${SINGULARITY_ROOTFS}/RCNetworks_Examples_HighThermalMassWalls.fmu
+  # touch ${SINGULARITY_ROOTFS}/jmodelica.py
+  # touch ${SINGULARITY_ROOTFS}/jm_ipython.sh
+   #touch ${SINGULARITY_ROOTFS}/usr/local/JModelica/ThirdParty/MSL/RCNetworks
+  # touch ${MODELICAPATH}/Topology_Analysis_5GDHC_DymolaModel
+  # touch ${MODELICAPATH}/Buildings
+ #touch ${MODELICAPATH}/compile_fmu.py
+ #touch ${SINGULARITY_ROOTFS}/Topology_Analysis_5GDHC_DymolaModel
+ #touch ${SINGULARITY_ROOTFS}/Buildings
+ # cp ${SINGULARITY_ROOTFS}/simulate_fmu.py ${SINGULARITY_ROOTFS}/usr
+#p -R     
+   #cmod a+rwx RCNetworks
+  #cd rcnetworks
+ # cp - R /RCNetworks ${SINGULARITY_ROOTFS}/${MODELICAPATH}
+ # cp - R RCNetworks ${SINGULARITY_ROOTFS}/${MODELICAPATH}
+
+ 
+  #
+  #cp -R ${SINGULARITY_ROOTFS}/RCNetworks ${SINGULARITY_ROOTFS}/usr
+   #cp -vr RCNetworks  ${SINGULARITY_ROOTFS}/usr/local/JModelica/ThirdParty/MSL/RCNetworks
+   #cp -R RCNetworks ${SINGULARITY_ROOTFS}/tmp/RCNetworks
+   #cp -vr FMUs  ${SINGULARITY_ROOTFS}/usr/local/JModelica/ThirdParty/MSL/FMUs
+   #cp -R RCNetworks ${SINGULARITY_ROOTFS}/usr/local/JModelica/ThirdParty/MSL/RCNetworks
+   #cp -R RCNetworks ${SINGULARITY_ROOTFS}/usr/RCNetworks
+  # cp -R /Topology_Analysis_5GDHC_DymolaModel ${SINGULARITY_ROOTFS}/usr/local/JModelica/ThirdParty/MSL
+  # cp -R /Buildings ${SINGULARITY_ROOTFS}/usr/local/JModelica/ThirdParty/MSL
+   #cp -R /Topology_Analysis_5GDHC_DymolaModel ${SINGULARITY_ROOTFS}/usr/local/JModelica/ThirdParty/MSL
+   #TOUCh /usr/local/JModelica/ThirdParty/MSL/compile_fmu.py
+%files
+  #compile_fmu.py /usr/local/JModelica/ThirdParty/MSL
+ #Buildings /usr/local/JModelica/ThirdParty/MSL
+ #Topology_Analysis_5GDHC_DymolaModel  /usr/local/JModelica/ThirdParty/MSL
+   #RCNetworks  /usr/local/JModelica/ThirdParty/MSL 
+%post 
+#usr/local/bin/pip install buildingspy
+usr/local/bin/pip install geopy
+usr/local/bin/pip install numpy
+usr/local/bin/pip install datetime
+usr/local/bin/pip install pathos
+python -m pip install -U https://github.com/lbl-srg/BuildingsPy/archive/master.zip
+#usr/local/bin/pip install dask
+#usr/local/bin/pip install dask[bag] --upgrade
+#apt-get install -y gfortran-5
+#pip install pandas
+ # #pip install sklearn
+# chmod a+x /usr/local/JModelica
+#export PATH="${SINGULARITY_ROOTFS}/jm_ipython.sh:"
+#export SINGULARITY_BINDPATH="/tmp"
+#/bin/chmod +x ${SINGULARITY_ROOTFS}/jm_ipython.sh
+%runscript
+   exec "$@"
+   echo "$PATH"
+   echo "$JAVA_HOME"
+   echo "$PYTHONPATH"
+   echo "$JMODELICA_HOME"
+   echo  "$MODELICAPATH" 
+   echo "ls -al /usr/local/JModelica" 
+   #$JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+  echo "$JAVA_HOME"
+  echo "$LD_LIBRARY_PATH"
+  echo "python --version"
+ #s python compile_fmu.py
+# python simulate_fmu.py
+
+#python compile_fmu.py
+ipython "Run_Rev_v4e.py"
+ #python simulate_fmu.py   
+#python simulate_fmu.py
+#jm_ipython.sh simulate_fmu.p#y  
+##./jm_ipython.sh jmodelica.py RCNetworks.Examples.HighThermalMassWall
+#python compile_fmu.py 
+#python from pymodelica import compile_fmu
+#exec /usr/bin/python
+ 
+ 

@@ -1,0 +1,39 @@
+Bootstrap: docker
+From:ubuntu 
+#From: michaelwetter/ubuntu-1804_jmodelica_trunk
+
+#From: phygitalism/omfmi:1.0
+#From: phygitalism/omfmi:1.0
+#From: fnndsc/ubuntu-python3
+From: jmodelica/ubuntu_py3_base:1.2
+
+
+%environment
+export OCT_HOME='/home/aallen/rcnetworks/OCT'
+#export SINGULARITY_BINDPATH='/home/aallen/rcnetworks'
+
+%setup
+touch ${SINGULARITY_ROOTFS}/RCNetworks
+
+
+%post 
+apt-get -y update
+apt-get -y install python3-pip
+#usr/local/bin/pip install pyswarms
+usr/bin/pip3 install pyswarms
+usr/bin/pip3 install pyyaml
+
+python3 -m venv --system-site-packages ${OCT_HOME}/pyenv 
+chmod +x ${OCT_HOME}/pyenv/bin/activate
+. ${OCT_HOME}/pyenv/bin/activate
+%runscript
+#ipython Set_up.py
+ipython PSO_Test_v6.py 
+
+#/bin/bash conda install pyswarms
+#usr/local/bin/conda install pyswarms
+
+#sudo add-apt-repository ppa:jonathonf/gcc-7.1
+#apt-get -y update
+#apt-get -y install gcc-7 g++-7
+#apt-get -y install gfortran-7
