@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: quay.io/biocontainers/blast:2.9.0--h20b68b9_1
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE https://gitlab.psc.edu/icaoberg/singularity-blast
+    VERSION 2.9.0
+
+%post
+   rm /etc/resolv.conf
+
+####################################################################################

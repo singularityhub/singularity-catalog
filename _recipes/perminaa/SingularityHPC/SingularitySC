@@ -2,12 +2,12 @@ bootstrap: docker
 From: nvidia/cudagl:10.1-devel-ubuntu18.04
 
 %environment
-    PATH="/opt/namd_gpu:/opt/charmm/bin:/opt/namd:/opt/vmd/bin:$PATH"
+    PATH="/opt/NCBI-Blast/bin:/opt/I-TASSER5.1/I-TASSERmod/:/opt/medusa/bin:/opt/autodock_vina/bin:/opt/namd_gpu:/opt/charmm/bin:/opt/namd:/opt/vmd/bin:$PATH"
     LD_LIBRARY_PATH="/opt/vmd/lib"
 
 %post
     apt update
-    apt install -y xz-utils wget gcc g++ gfortran build-essential make openssh-client
+    apt install -y xz-utils wget gcc g++ gfortran build-essential make openssh-client git
 
     # Download and install charmm
     cd /opt/
@@ -83,5 +83,33 @@ From: nvidia/cudagl:10.1-devel-ubuntu18.04
     tar xvzf iupred2_redox.tar.gz
     rm iupred2_redox.tar.gz
 
+    # Download and prepare I-TASSER
+    cd /opt/
+    wget https://raw.githubusercontent.com/perminaa/SingularityHPC/main/I-TASSER5.1.tar.bz2
+    tar -xvf I-TASSER5.1.tar.bz2
+    rm I-TASSER5.1.tar.bz2
+
+    # Download Autodock Vina
+    mkdir -p /opt/autodock_vina
+    wget -O /opt/autodock_vina/autodock_vina.tgz http://vina.scripps.edu/download/autodock_vina_1_1_2_linux_x86.tgz
+    cd /opt/autodock_vina
+    tar xzvf autodock_vina.tgz
+    rm autodock_vina.tgz
+    mv autodock_vina_1_1_2_linux_x86/* ./
+    rmdir autodock_vina_1_1_2_linux_x86
+
+    # Install Medusa
+    cd /opt/
+    git clone https://github.com/DSIMB/medusa.git
+
+    # Download and install NCBI-Blast
+    mkdir -p /opt/NCBI-Blast
+    wget -O /opt/NCBI-Blast/ncbi-blast.tar.gz https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.11.0+-x64-linux.tar.gz
+    cd /opt/NCBI-Blast
+    tar xzvf ncbi-blast.tar.gz
+    rm ncbi-blast.tar.gz
+    mv ncbi-blast-2.11.0+/* ./
+    rmdir ncbi-blast-2.11.0+
+
     # Remove all the packages we won't need anymore to try and keep the container size down
-    apt purge -y xz-utils wget gcc g++ gfortran make
+    apt purge -y xz-utils wget gcc g++ gfortran make git

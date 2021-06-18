@@ -1,0 +1,79 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using the program fastStructure
+
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM fastStructure
+	VERSION 1.0
+
+%post
+	# update packages and install tools for building
+	apt update && apt upgrade -y && apt install -y autoconf automake build-essential git make wget python-pip
+
+	# install dependencies
+		# install packages
+		pip install numpy==1.16.5 scipy==1.2.1 cython==0.27.3
+
+		# get GNU Scientific Library
+		wget https://mirror.ibcp.fr/pub/gnu/gsl/gsl-1.16.tar.gz
+		tar -zxvf gsl-1.16.tar.gz
+		cd gsl-1.16
+		./configure
+		make
+		make check
+		make install
+		cd ..
+		rm -r gsl-*
+
+	# clean-up
+	apt update && apt upgrade -y &&	apt autoremove -y && apt clean
+
+	# install fastStructure
+		# get code
+		git clone https://github.com/rajanil/fastStructure
+		cd fastStructure
+		git fetch && git merge origin/master
+
+		# build extensions
+		cd vars && python setup.py build_ext --inplace
+
+		# compile cython scripts
+		cd .. && python setup.py build_ext --inplace
+
+
+%test
+	# test that the program works
+	# note: not easy with this one
+
+
+%environment
+	# Set up environmental variables within the container
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+	export CFLAGS="-I/usr/local/include"
+	export LDFLAGS="-L/usr/local/lib"
+
+
+%runscript
+	# This will be executed when the container is run (singularity run [container])
+	python /fastStructure/"$@"
+
+
+%help
+	# This message is displayed when called as: singularity run-help [container]
+
+	******************************************************************************
+
+	This container is for running fastStructure
+
+	To run, use: singularity run fastStructure.sif [args]
+	So, in this case, to run a script (e.g. structure.py), use: singularity run fastStructure.sif structure.py [other args]
+
+	Scripts available: structure.py, chooseK.py
+	NOTE: distruct.py doesn't work as it depends on matplotlib and that was too complicated to set up with old python dependencies
+
+	Check contents by entering it as: (sudo) singularity shell [container]
+
+	******************************************************************************

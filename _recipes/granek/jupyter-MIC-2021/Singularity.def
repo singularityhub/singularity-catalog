@@ -1,0 +1,11 @@
+BootStrap: docker
+From: miccourse/jupyter-mic-2021:latest
+
+%post -c /bin/bash
+     # https://stackoverflow.com/questions/61116965/how-to-change-the-default-prompt-in-a-singularity-container
+    CUSTOM_ENV=/.singularity.d/env/99-zz_custom_env.sh
+    cat >$CUSTOM_ENV <<EOF
+#!/bin/bash
+PS1="\h:\w \$"
+EOF
+    chmod 755 $CUSTOM_ENV

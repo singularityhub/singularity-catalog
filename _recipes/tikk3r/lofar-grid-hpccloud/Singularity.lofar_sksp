@@ -2,7 +2,7 @@
 #From: tikk3r/lofar-grid-hpccloud:lofar_sksp_base
 # If building from a base image locally enable this instead.
 Bootstrap: localimage
-From: lofar-grid-hpccloud_lofar_sksp_base.sif
+From: lofar_sksp_base.sif
 
 %environment
     export PYTHONPATH=
@@ -122,7 +122,8 @@ From: lofar-grid-hpccloud_lofar_sksp_base.sif
     #
     mkdir -p $INSTALLDIR/difmap
     cd $INSTALLDIR/difmap
-    wget ftp://ftp.astro.caltech.edu/pub/difmap/difmap2.5e.tar.gz
+    #wget ftp://ftp.astro.caltech.edu/pub/difmap/difmap2.5e.tar.gz
+    wget https://github.com/tikk3r/lofar-grid-hpccloud/blob/master/misc/difmap2.5e.tar.gz?raw=true -O difmap2.5e.tar.gz
     tar xf difmap2.5e.tar.gz
     cd uvf_difmap
     wget https://raw.githubusercontent.com/nealjackson/loop3_difmap/master/corplt.c -O difmap_src/corplt.c
@@ -172,19 +173,6 @@ From: lofar-grid-hpccloud_lofar_sksp_base.sif
     rm -rf $INSTALLDIR/casacore/src
 
 	#
-	# Install Dysco
-	#
-	mkdir -p $INSTALLDIR/dysco/build
-	cd $INSTALLDIR/dysco && git clone https://github.com/aroffringa/dysco.git src
-    if [ "$DYDSCO_VERSION" != "latest" ]; then cd src && git checkout $DYSCO_VERSION; fi
-	cd $INSTALLDIR/dysco/build && cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/dysco -DCASACORE_ROOT_DIR=$INSTALLDIR/casacore -DPORTABLE=True ../src && $make -s -j $J && $make install
-    cd $INSTALLDIR
-    rm -rf $INSTALLDIR/dysco/build
-    rm -rf $INSTALLDIR/dysco/src
-
-    export LD_LIBRARY_PATH=$INSTALLDIR/dysco/lib:$LD_LIBRARY_PATH
-
-	#
 	# Install Python-CASAcore
 	#
 	mkdir ${INSTALLDIR}/python-casacore
@@ -199,6 +187,17 @@ From: lofar-grid-hpccloud_lofar_sksp_base.sif
     # and then reset the flags again if needed
     #export CFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
     #export CXXFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
+    
+	#
+	# Install Dysco
+	#
+	mkdir -p $INSTALLDIR/dysco/build
+	cd $INSTALLDIR/dysco && git clone https://github.com/aroffringa/dysco.git src
+    if [ "$DYDSCO_VERSION" != "latest" ]; then cd src && git checkout $DYSCO_VERSION; fi
+	cd $INSTALLDIR/dysco/build && cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/dysco -DCASACORE_ROOT_DIR=$INSTALLDIR/casacore -DPORTABLE=True ../src && $make -s -j $J && $make install
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/dysco/build
+    rm -rf $INSTALLDIR/dysco/src
 
 	#
 	# Install AOFlagger
@@ -223,9 +222,15 @@ From: lofar-grid-hpccloud_lofar_sksp_base.sif
 	cd $INSTALLDIR/lofar && svn update --depth=infinity $INSTALLDIR/lofar/src/CMake
 	wget https://raw.githubusercontent.com/tikk3r/lofar-grid-hpccloud/master/patches/lofar.patch
 	patch $INSTALLDIR/lofar/src/CMake/variants/GNUCXX11.cmake $PATCH_LOFAR
+    # makesourcedb and showsourcedb are covered by DPPP already.
+    rm ${INSTALLDIR}/lofar/src/CEP/ParmDB/src/makesourcedb.cc
+    #rm ${INSTALLDIR}/lofar/src/CEP/ParmDB/src/showsourcedb.cc
+    sed -i '/makesourcedb/d' $INSTALLDIR/lofar/src/CEP/ParmDB/src/CMakeLists.txt
+    sed -i '/makesourcedb/d' $INSTALLDIR/lofar/src/CEP/ParmDB/test/CMakeLists.txt
+    #sed '/showsourcedb/d' $INSTALLDIR/lofar/src/CEP/ParmDB/src/CMakeLists.txt > ${INSTALLDIR}/lofar/src/CEP/ParmDB/src/CMakeLists.txt
 	cd ${INSTALLDIR}/lofar/build/gnucxx11_opt
     #cmake -DCMAKE_PREFIX_PATH=$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:$INSTALLDIR/dysco -DBUILD_PACKAGES="StationResponse pystationresponse ParmDB pyparmdb Pipeline MS" -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/lofar/ -DUSE_LOG4CPLUS=OFF -DUSE_OPENMP=True ${INSTALLDIR}/lofar/src/
-    cmake -DCMAKE_PREFIX_PATH=$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:$INSTALLDIR/dysco -DBUILD_PACKAGES="Pipeline" -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/lofar/ -DUSE_LOG4CPLUS=OFF -DUSE_OPENMP=True -DBUILD_PYTHON3=OFF ${INSTALLDIR}/lofar/src/
+    cmake -DBUILD_PACKAGES="Pipeline ParmDB pyparmdb" -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/lofar/ -DUSE_LOG4CPLUS=OFF -DUSE_OPENMP=True -DBUILD_PYTHON3=OFF ${INSTALLDIR}/lofar/src/
 	$make -s -j $J
 	$make install
     cd $INSTALLDIR
@@ -240,7 +245,7 @@ From: lofar-grid-hpccloud_lofar_sksp_base.sif
     git clone https://github.com/lofar-astron/LofarStMan.git
     cd LofarStMan
     mkdir build && cd build
-    cmake -DCASACORE_ROOT_DIR=$INSTALLDIR/casacore -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/lofarstman
+    cmake -DCASACORE_ROOT_DIR=$INSTALLDIR/casacore -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/lofarstman ..
     make -j$J
     make install
     cd $INSTALLDIR
@@ -429,7 +434,8 @@ From: lofar-grid-hpccloud_lofar_sksp_base.sif
 	echo export LD_LIBRARY_PATH=\$INSTALLDIR/aoflagger/lib:\$INSTALLDIR/casacore/lib:\$INSTALLDIR/DPPP/lib:\$INSTALLDIR/dysco/lib:\$INSTALLDIR/EveryBeam/lib:\$INSTALLDIR/idg/lib:\$INSTALLDIR/lofar/lib:\$INSTALLDIR/lofar/lib64:\$INSTALLDIR/LOFARBeam/lib:\$LD_LIBRARY_PATH  >> $INSTALLDIR/init.sh
     echo export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
     echo export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
-	echo export OPENBLAS_NUM_THREADS=64 >> $INSTALLDIR/init.sh
+    # OPENBLAS_NUM_THREADS=1 is required for WSClean
+	echo export OPENBLAS_NUM_THREADS=1 >> $INSTALLDIR/init.sh
 	echo export OPENBLAS_MAX_THREADS=64 >> $INSTALLDIR/init.sh
 	echo export OMP_NUM_THREADS=64 >> $INSTALLDIR/init.sh
 	echo export OMP_MAX_THREADS=64 >> $INSTALLDIR/init.sh

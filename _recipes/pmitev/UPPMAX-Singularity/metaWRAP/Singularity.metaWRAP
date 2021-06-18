@@ -4,6 +4,13 @@ From: continuumio/miniconda3
 %environment
   export LC_ALL=C
 
+%help
+  If you run "singularity shell ...", you need to:
+
+  $ source /opt/conda/etc/profile.d/conda.sh 
+  $ conda activate metawrap-env
+  
+
 %files
 #  ncbi-blast-2.11.0+-x64-linux.tar.gz /
   ncbi-blast-2.9.0+-x64-linux.tar.gz /
@@ -32,7 +39,7 @@ From: continuumio/miniconda3
   #conda clean --all --yes
 
 %runscript
-  params=$@
-  /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh; \
-  conda activate metawrap-env; \
-  exec /bin/bash $params"
+#!/bin/bash
+  source /opt/conda/etc/profile.d/conda.sh 
+  conda activate metawrap-env
+  metawrap "$@"

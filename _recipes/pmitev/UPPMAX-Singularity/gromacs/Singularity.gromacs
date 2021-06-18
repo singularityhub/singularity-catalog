@@ -1,0 +1,45 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%setup
+
+%files
+
+%environment
+  export LC_ALL=C
+
+%post
+  export LC_ALL=C
+  export DEBIAN_FRONTEND=noninteractive
+  export NCPU=$(grep -c ^processor /proc/cpuinfo)
+
+  mkdir -p /tmp/apt
+  echo 'Dir::Cache /tmp/apt;'  > /etc/apt/apt.conf.d/singularity-cache.conf 
+ 
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y git wget gawk cmake build-essential libopenmpi-dev openssh-client
+                
+  mkdir -p installs
+
+  # Gromacs
+  mkdir -p /tmp/downloads && cd /tmp/downloads
+  test -f gromacs-2021.2.tar.gz || wget https://ftp.gromacs.org/gromacs/gromacs-2021.2.tar.gz
+  tar xf gromacs-2021.2.tar.gz -C /installs
+
+  cd /installs/gromacs-2021.2
+  mkdir build-normal && cd build-normal
+  cmake .. -DCMAKE_INSTALL_PREFIX=/opt/gromacs-2021.2 -DGMX_GPU=OFF -DGMX_MPI=ON -DGMX_THREAD_MPI=ON -DGMX_BUILD_OWN_FFTW=ON -DGMX_DOUBLE=OFF -DGMX_PREFER_STATIC_LIBS=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=RELEASE
+  make -j $NCPU && make install
+
+  cd /installs/gromacs-2021.2
+  mkdir build-mdrun-only && cd build-mdrun-only
+  cmake .. -DCMAKE_INSTALL_PREFIX=/opt/gromacs-2021.2 -DGMX_GPU=OFF -DGMX_MPI=ON -DGMX_THREAD_MPI=ON -DGMX_BUILD_OWN_FFTW=ON -DGMX_DOUBLE=OFF -DGMX_PREFER_STATIC_LIBS=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=RELEASE -DGMX_BUILD_MDRUN_ONLY=ON
+  make -j $NCPU && make install
+
+  cd /
+  rm -r /installs
+  rm /etc/apt/apt.conf.d/singularity-cache.conf
+
+%runscript
+#!/bin/bash
+  source /opt/gromacs-2021.2/bin/GMXRC
+  exec gmx_mpi "$@"

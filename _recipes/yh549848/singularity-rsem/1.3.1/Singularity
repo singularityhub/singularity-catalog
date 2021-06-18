@@ -106,4 +106,5 @@ From: continuumio/miniconda3:4.7.12
   make && \
   make ebseq && \
   make install && \
-  cp rsem-* /usr/local/bin
+  find . -name "rsem-*" | xargs -i cp {} /usr/local/bin && \
+  cp -r EBSeq /usr/local/bin

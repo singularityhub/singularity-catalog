@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: quay.io/biocontainers/bwa:0.7.3a--hed695b0_5
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE http://www.andrew.cmu.edu/~icaoberg
+    VERSION 0.7.3a
+
+%post
+   rm /etc/resolv.conf
+
+####################################################################################

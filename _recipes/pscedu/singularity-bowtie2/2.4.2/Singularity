@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: quay.io/biocontainers/bowtie2:2.4.2--py38h1c8e9b9_0
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE http://www.andrew.cmu.edu/~icaoberg
+    VERSION 2.4.2
+
+%post
+   rm /etc/resolv.conf
+
+####################################################################################

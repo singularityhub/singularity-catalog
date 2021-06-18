@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: spack/ubuntu-bionic
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE http://github.com/pscedu/singularity-flac
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.
+    VERSION 1.3.3
+
+%environment
+    export PATH=/opt/spack/bin/:$PATH
+    . /opt/spack/share/spack/setup-env.sh
+    spack load flac
+
+%post
+   export PATH=/opt/spack/bin/:$PATH
+   apt-get update
+   spack install flac@1.3.3

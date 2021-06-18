@@ -28,6 +28,7 @@ etc/zshrc.local /opt/home/.zshrc.local
         libcurl4-openssl-dev \
         libgit2-dev \
         libxml2-dev \
+        jq \
         zsh
 
     # Fix locale
@@ -85,6 +86,9 @@ etc/zshrc.local /opt/home/.zshrc.local
     library('remotes')
     remotes::install_github("rstudio/renv")
     '
+
+    jq '.github_sha = "'$GITHUB_SHA'"' /.singularity.d/labels.json > /.singularity.d/labels.json.tmp
+    mv /.singularity.d/labels.json.tmp /.singularity.d/labels.json
 
     rm /etc/apt/sources.list.d/debian-unstable.list
     rm /etc/apt/apt.conf.d/default
