@@ -927,17 +927,37 @@ Betterton-Lab/C-GLASS:
     \ position files\nn_posit\n    how often to output position files\nspec_flag\n\
     \    whether to output species files\nn_spec\n    how often to output species\
     \ files\ncheckpoint_flag\n    whether to output checkpoint files\nn_checkpoint\n\
-    \    how often to output checkpoint files\n</code></pre>\n<h2>\n<a id=\"user-content-advanced-usage\"\
-    \ class=\"anchor\" href=\"#advanced-usage\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Advanced usage</h2>\n<h3>\n<a\
-    \ id=\"user-content-running-unit-tests\" class=\"anchor\" href=\"#running-unit-tests\"\
+    \    how often to output checkpoint files\n</code></pre>\n<h3>\n<a id=\"user-content-anchor-parameters\"\
+    \ class=\"anchor\" href=\"#anchor-parameters\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Anchor parameters</h3>\n<p>C-GLASS\
+    \ has the capability to independently control crosslinker and motor protein anchor\
+    \ parameters. Anchor parameters are controlled within the Crosslink map in the\
+    \ input Yaml file:</p>\n<div class=\"highlight highlight-source-yaml\"><pre><span\
+    \ class=\"pl-ent\">Crosslink</span>:\n  <span class=\"pl-c\"><span class=\"pl-c\"\
+    >#</span> other crosslink params here</span>\n  <span class=\"pl-ent\">Anchors</span>:\n\
+    \     - <span class=\"pl-ent\">velocity_s</span>: <span class=\"pl-c1\">50</span>\n\
+    \       <span class=\"pl-ent\">color</span>: <span class=\"pl-c1\">3.5</span>\n\
+    \     - <span class=\"pl-ent\">color</span>: <span class=\"pl-c1\">4.5</span></pre></div>\n\
+    <p>Only two anchors are permitted per crosslinker or motor protein. The anchor\
+    \ parameters obey the following rules when parameters are left blank:</p>\n<ul>\n\
+    <li>If no anchors are listed, the anchor parameters will both be set to default.</li>\n\
+    <li>If one anchor is listed, the other anchor will copy its parameters. Any unlisted\
+    \ parameters will be set to default.</li>\n<li>If two anchors are listed, and\
+    \ one anchor has a parameter that the other doesn't, the one that doesn't have\
+    \ the parameter will copy the parameter from the other.</li>\n</ul>\n<p>In the\
+    \ above example, Anchor 1 will have velocity_s=50, velocity_d=0 (default), color=3.5,\
+    \ and Anchor 2 will have velocity_s=50 (copied), velocity_d=0 (default), color=4.5.</p>\n\
+    <h2>\n<a id=\"user-content-advanced-usage\" class=\"anchor\" href=\"#advanced-usage\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Running unit tests</h3>\n<p>One may run C-GLASS's unit tests by passing\
-    \ <code>-DTESTS=TRUE</code> to CMake</p>\n<div class=\"highlight highlight-source-shell\"\
-    ><pre>mkdir build\n<span class=\"pl-c1\">cd</span> build\ncmake -DTESTS=TRUE ..\n\
-    make\nmake <span class=\"pl-c1\">test</span></pre></div>\n<h3>\n<a id=\"user-content-adding-new-parameters\"\
-    \ class=\"anchor\" href=\"#adding-new-parameters\" aria-hidden=\"true\"><span\
-    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Adding new parameters</h3>\n\
+    ></span></a>Advanced usage</h2>\n<h3>\n<a id=\"user-content-running-unit-tests\"\
+    \ class=\"anchor\" href=\"#running-unit-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Running unit tests</h3>\n<p>One\
+    \ may run C-GLASS's unit tests by passing <code>-DTESTS=TRUE</code> to CMake</p>\n\
+    <div class=\"highlight highlight-source-shell\"><pre>mkdir build\n<span class=\"\
+    pl-c1\">cd</span> build\ncmake -DTESTS=TRUE ..\nmake\nmake <span class=\"pl-c1\"\
+    >test</span></pre></div>\n<h3>\n<a id=\"user-content-adding-new-parameters\" class=\"\
+    anchor\" href=\"#adding-new-parameters\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Adding new parameters</h3>\n\
     <p>C-GLASS comes with it's own parameter initialization tool, <code>configure_C-GLASS.exe</code>,\
     \ which is installed automatically along with the C-GLASS binary using CMake.\
     \ The configurator makes it easy to add new parameters to the simulation without\
@@ -1094,7 +1114,7 @@ Betterton-Lab/C-GLASS:
   stargazers_count: 2
   subscribers_count: 1
   topics: []
-  updated_at: 1623112376.0
+  updated_at: 1624041463.0
 BiomedicalMachineLearning/HEMnet:
   data_format: 2
   description: 'A neural network software for using Molecular labelling to improve
@@ -2549,7 +2569,7 @@ ComputationalRadiationPhysics/picongpu:
     our strong scaling" title="Strong Scaling" style="max-width:100%;"></a></p>
 
     '
-  stargazers_count: 470
+  stargazers_count: 471
   subscribers_count: 46
   topics:
   - laser
@@ -2562,7 +2582,7 @@ ComputationalRadiationPhysics/picongpu:
   - particle-in-cell
   - pic
   - research
-  updated_at: 1623865514.0
+  updated_at: 1623956614.0
 D-Lo/bambi:
   data_format: 2
   description: R wrapper for bamdb
@@ -3744,7 +3764,7 @@ DiamondLightSource/Savu:
   stargazers_count: 28
   subscribers_count: 14
   topics: []
-  updated_at: 1623145096.0
+  updated_at: 1624031372.0
 DoaneAS/atacflow:
   data_format: 2
   description: Analysis pipeline for ATACseq data using Nextflow
@@ -10867,7 +10887,7 @@ UniversalDataTool/universal-data-tool:
     </g-emoji></a>\n</td>\n  </tr>\n</table>\n\n\n\n<p>This project follows the <a\
     \ href=\"https://github.com/all-contributors/all-contributors\">all-contributors</a>\
     \ specification. Contributions of any kind welcome!</p>\n"
-  stargazers_count: 1436
+  stargazers_count: 1440
   subscribers_count: 32
   topics:
   - computer-vision
@@ -10890,7 +10910,7 @@ UniversalDataTool/universal-data-tool:
   - labeling
   - labeling-tool
   - hacktoberfest
-  updated_at: 1623878742.0
+  updated_at: 1624017211.0
 VIB-CBD/scanpy-images:
   data_format: 2
   description: Docker and Singularity images for Scanpy
@@ -11802,14 +11822,14 @@ aertslab/pySCENIC:
     <p>Please be aware of FSL''s strict license regarding non-commercial use.</p>
 
     '
-  stargazers_count: 153
+  stargazers_count: 154
   subscribers_count: 13
   topics:
   - single-cell
   - transcriptomics
   - gene-regulatory-network
   - transcription-factors
-  updated_at: 1623029804.0
+  updated_at: 1623940973.0
 agaveplatform/SC17-container-tutorial:
   data_format: 2
   description: 'SC17 tutorial - "HPC via HTTP: Portable, Scalable Computing using
@@ -18605,54 +18625,650 @@ funkelab/lsd:
   - singularity/Singularity
   full_name: funkelab/lsd
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-local-shape-descriptors-for-neuron-segmentation" class="anchor"
-    href="#local-shape-descriptors-for-neuron-segmentation" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Local Shape Descriptors
-    (for Neuron Segmentation)</h1>
-
-    <p><a href="https://camo.githubusercontent.com/616be86b75e53c18d0a1ca705fb3f62e97caa07dee7a7caa77cb26f3fd9bbefc/68747470733a2f2f6c6f63616c736861706564657363726970746f72732e6769746875622e696f2f6173736574732f696d672f33645f6d6573685f766563742e6a706567"
-    target="_blank" rel="nofollow"><img src="https://camo.githubusercontent.com/616be86b75e53c18d0a1ca705fb3f62e97caa07dee7a7caa77cb26f3fd9bbefc/68747470733a2f2f6c6f63616c736861706564657363726970746f72732e6769746875622e696f2f6173736574732f696d672f33645f6d6573685f766563742e6a706567"
-    alt="" data-canonical-src="https://localshapedescriptors.github.io/assets/img/3d_mesh_vect.jpeg"
-    style="max-width:100%;"></a></p>
-
-    <p>This repository contains code to compute Local Shape Descriptors (LSDs) from
-    an instance segmentation. Those LSDs can then be used during training as an auxiliary
-    target, which we found to improve boundary prediction and therefore segmentation
-    quality. Read more about it in our <a href="https://www.biorxiv.org/content/10.1101/2021.01.18.427039v1"
-    rel="nofollow">paper</a>.</p>
-
-    <p>Here you find:</p>
-
-    <ul>
-
-    <li>LSD calculation from <code>numpy</code> arrays: <code>lsd/local_shape_descriptor.py</code>
-
-    </li>
-
-    <li>LSD <a href="http://funkey.science/gunpowder" rel="nofollow"><code>gunpowder</code></a>
-    node: <code>lsd/gp/add_local_shape_descriptor.py</code>
-
-    </li>
-
-    </ul>
-
-    <p>Soon (ETA February 1st), you will also find here:</p>
-
-    <ul>
-
-    <li>links to all training and testing data, as well as results</li>
-
-    <li>scripts, examples, and tutorials for parallel inference and post-processing</li>
-
-    </ul>
-
-    '
+  readme: "<h2>\n<a id=\"user-content-local-shape-descriptors-for-neuron-segmentation\"\
+    \ class=\"anchor\" href=\"#local-shape-descriptors-for-neuron-segmentation\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Local\
+    \ Shape Descriptors (for Neuron Segmentation)</h2>\n<p><a href=\"https://github.com/LocalShapeDescriptors/LocalShapeDescriptors.github.io/blob/master/assets/gifs/lsd_particles.gif\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/LocalShapeDescriptors/LocalShapeDescriptors.github.io/raw/master/assets/gifs/lsd_particles.gif\"\
+    \ alt=\"\" style=\"max-width:100%;\"></a></p>\n<p>This repository contains code\
+    \ to compute Local Shape Descriptors (LSDs) from an instance segmentation. LSDs\
+    \ can then be used during training as an auxiliary target, which we found to improve\
+    \ boundary prediction and therefore segmentation quality. Read more about it in\
+    \ our <a href=\"https://www.biorxiv.org/content/10.1101/2021.01.18.427039v1\"\
+    \ rel=\"nofollow\">paper</a> and/or <a href=\"https://localshapedescriptors.github.io/\"\
+    \ rel=\"nofollow\">blog post</a>.</p>\n<hr>\n<p><a href=\"#example\">Quick 2d\
+    \ Examples</a></p>\n<p><a href=\"#nbook\">Notebooks</a></p>\n<p><a href=\"#networks\"\
+    >Example networks &amp; pipelines</a></p>\n<p><a href=\"#parallel\">Parallel processing</a></p>\n\
+    <hr>\n<p><strong>Cite:</strong></p>\n<div class=\"highlight highlight-text-bibtex\"\
+    ><pre><span class=\"pl-k\">@article</span>{<span class=\"pl-en\">sheridan_local_2021</span>,\n\
+    \t<span class=\"pl-s\">title</span> = <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >{</span>Local Shape Descriptors for Neuron Segmentation<span class=\"pl-pds\"\
+    >}</span></span>,\n\t<span class=\"pl-s\">url</span> = <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">{</span>https://www.biorxiv.org/content/10.1101/2021.01.18.427039v1<span\
+    \ class=\"pl-pds\">}</span></span>,\n\t<span class=\"pl-s\">urldate</span> = <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">{</span>2021-01-20<span class=\"pl-pds\"\
+    >}</span></span>,\n\t<span class=\"pl-s\">journal</span> = <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">{</span>bioRxiv<span class=\"pl-pds\">}</span></span>,\n\
+    \t<span class=\"pl-s\">author</span> = <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >{</span>Sheridan, Arlo and Nguyen, Tri and Deb, Diptodip and Lee, Wei-Chung Allen\
+    \ and Saalfeld, Stephan and Turaga, Srinivas and Manor, Uri and Funke, Jan<span\
+    \ class=\"pl-pds\">}</span></span>,\n\t<span class=\"pl-s\">year</span> = <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">{</span>2021<span class=\"pl-pds\">}</span></span>\n\
+    }</pre></div>\n<p><strong>Notes:</strong></p>\n<ul>\n<li>\n<p>This is not production\
+    \ level software and was developed in a pure research environment. Therefore some\
+    \ scripts may not work out of the box. For example, all paper networks were originally\
+    \ written using now deprecated tensorflow/cudnn versions and rely on an outdated\
+    \ singularity container. Because of this, the singularity image will not build\
+    \ from the current recipe - if replicating with the current implementations, please\
+    \ reach out for the singularity container (it is too large to upload here). Alternatively,\
+    \ consider reimplementing networks in pytorch (there are examples below).</p>\n\
+    </li>\n<li>\n<p>Post-proccesing steps were designed for use with a specific cluster\
+    \ and will need to be tweaked for individual use cases. If the need / use increases\
+    \ then we will look into refactoring, packaging and distributing.</p>\n</li>\n\
+    <li>\n<p>Currently, post-processing scripts (e.g <a href=\"https://github.com/funkelab/lsd/blob/master/lsd/fragments.py\"\
+    >watershed</a>) are located inside this repo which creates more dependencies than\
+    \ needed for using the lsds. One forseeable issue is that agglomeration requires\
+    \ networkx==2.2 for the MergeTree. These scripts will be migrated to another repository\
+    \ in the future...</p>\n</li>\n<li>\n<p>Tested on Ubuntu 18.04 with Python 3.</p>\n\
+    </li>\n</ul>\n<hr>\n<p><a name=\"user-content-example\"></a></p>\n<h2>\n<a id=\"\
+    user-content-quick-2d-examples\" class=\"anchor\" href=\"#quick-2d-examples\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Quick 2d Examples</h2>\n<details>\n  <summary>Required packages/repos</summary>\n\
+    <ul>\n<li>run in conda env or colab notebook with appropriate packages/repos installed</li>\n\
+    <li>since some required post-processing scripts are located in this repo, there\
+    \ are various packages required along with the lsds.</li>\n<li>if confused, see\
+    \ notebook tutorials for further details</li>\n</ul>\n<pre><code>packages (i.e\
+    \ pip install {package})\n\ndaisy\ngunpowder\nmahotas\nmatplotlib\nscikit-image\n\
+    \nrepos (i.e pip install git+git://github.com/{repo})\n\nfunkelab/funlib.segment.git\n\
+    funkelab/lsd.git\nfunkey/waterz.git\n</code></pre>\n</details>\n<details>\n  <summary>Coins\
+    \ example</summary>\n<ul>\n<li>logic to create labels borrowed from this <a href=\"\
+    https://scikit-image.org/docs/dev/auto_examples/segmentation/plot_expand_labels.html#sphx-glr-auto-examples-segmentation-plot-expand-labels-py\"\
+    \ rel=\"nofollow\">tutorial</a>\n</li>\n</ul>\n<div class=\"highlight highlight-source-python\"\
+    ><pre><span class=\"pl-k\">import</span> <span class=\"pl-s1\">matplotlib</span>.<span\
+    \ class=\"pl-s1\">pyplot</span> <span class=\"pl-k\">as</span> <span class=\"\
+    pl-s1\">plt</span>\n<span class=\"pl-k\">import</span> <span class=\"pl-s1\">numpy</span>\
+    \ <span class=\"pl-k\">as</span> <span class=\"pl-s1\">np</span>\n<span class=\"\
+    pl-k\">import</span> <span class=\"pl-s1\">skimage</span>\n\n<span class=\"pl-k\"\
+    >from</span> <span class=\"pl-s1\">lsd</span> <span class=\"pl-k\">import</span>\
+    \ <span class=\"pl-s1\">local_shape_descriptor</span>\n<span class=\"pl-k\">from</span>\
+    \ <span class=\"pl-s1\">skimage</span>.<span class=\"pl-s1\">filters</span> <span\
+    \ class=\"pl-k\">import</span> <span class=\"pl-s1\">sobel</span>\n<span class=\"\
+    pl-k\">from</span> <span class=\"pl-s1\">skimage</span>.<span class=\"pl-s1\"\
+    >measure</span> <span class=\"pl-k\">import</span> <span class=\"pl-s1\">label</span>\n\
+    <span class=\"pl-k\">from</span> <span class=\"pl-s1\">skimage</span>.<span class=\"\
+    pl-s1\">segmentation</span> <span class=\"pl-k\">import</span> <span class=\"\
+    pl-s1\">watershed</span>\n\n<span class=\"pl-c1\">%</span><span class=\"pl-s1\"\
+    >matplotlib</span> <span class=\"pl-s1\">inline</span>\n\n<span class=\"pl-c\"\
+    ># get coins dataset</span>\n<span class=\"pl-s1\">data</span> <span class=\"\
+    pl-c1\">=</span> <span class=\"pl-s1\">skimage</span>.<span class=\"pl-s1\">data</span>.<span\
+    \ class=\"pl-en\">coins</span>()\n\n<span class=\"pl-c\"># create edges</span>\n\
+    <span class=\"pl-s1\">edges</span> <span class=\"pl-c1\">=</span> <span class=\"\
+    pl-en\">sobel</span>(<span class=\"pl-s1\">data</span>)\n\n<span class=\"pl-c\"\
+    ># generate markers for watershed</span>\n<span class=\"pl-s1\">markers</span>\
+    \ <span class=\"pl-c1\">=</span> <span class=\"pl-s1\">np</span>.<span class=\"\
+    pl-en\">zeros_like</span>(<span class=\"pl-s1\">data</span>)\n<span class=\"pl-s1\"\
+    >foreground</span>, <span class=\"pl-s1\">background</span> <span class=\"pl-c1\"\
+    >=</span> <span class=\"pl-c1\">1</span>, <span class=\"pl-c1\">2</span>\n<span\
+    \ class=\"pl-s1\">markers</span>[<span class=\"pl-s1\">data</span> <span class=\"\
+    pl-c1\">&lt;</span> <span class=\"pl-c1\">30.0</span>] <span class=\"pl-c1\">=</span>\
+    \ <span class=\"pl-s1\">background</span>\n<span class=\"pl-s1\">markers</span>[<span\
+    \ class=\"pl-s1\">data</span> <span class=\"pl-c1\">&gt;</span> <span class=\"\
+    pl-c1\">150.0</span>] <span class=\"pl-c1\">=</span> <span class=\"pl-s1\">foreground</span>\n\
+    \n<span class=\"pl-c\"># get unique labels</span>\n<span class=\"pl-s1\">ws</span>\
+    \ <span class=\"pl-c1\">=</span> <span class=\"pl-en\">watershed</span>(<span\
+    \ class=\"pl-s1\">edges</span>, <span class=\"pl-s1\">markers</span>)\n<span class=\"\
+    pl-s1\">labels</span> <span class=\"pl-c1\">=</span> <span class=\"pl-en\">label</span>(<span\
+    \ class=\"pl-s1\">ws</span> <span class=\"pl-c1\">==</span> <span class=\"pl-s1\"\
+    >foreground</span>).<span class=\"pl-en\">astype</span>(<span class=\"pl-s1\"\
+    >np</span>.<span class=\"pl-s1\">uint64</span>)\n\n<span class=\"pl-c\"># calculate\
+    \ lsds</span>\n<span class=\"pl-s1\">lsds</span> <span class=\"pl-c1\">=</span>\
+    \ <span class=\"pl-s1\">local_shape_descriptor</span>.<span class=\"pl-en\">get_local_shape_descriptors</span>(\n\
+    \              <span class=\"pl-s1\">segmentation</span><span class=\"pl-c1\"\
+    >=</span><span class=\"pl-s1\">labels</span>,\n              <span class=\"pl-s1\"\
+    >sigma</span><span class=\"pl-c1\">=</span>(<span class=\"pl-c1\">15</span>,)<span\
+    \ class=\"pl-c1\">*</span><span class=\"pl-c1\">2</span>,\n              <span\
+    \ class=\"pl-s1\">voxel_size</span><span class=\"pl-c1\">=</span>(<span class=\"\
+    pl-c1\">1</span>,)<span class=\"pl-c1\">*</span><span class=\"pl-c1\">2</span>)\n\
+    \n<span class=\"pl-c\"># view lsds</span>\n<span class=\"pl-s1\">fig</span>, <span\
+    \ class=\"pl-s1\">axes</span> <span class=\"pl-c1\">=</span> <span class=\"pl-s1\"\
+    >plt</span>.<span class=\"pl-en\">subplots</span>(\n            <span class=\"\
+    pl-c1\">1</span>,\n            <span class=\"pl-c1\">6</span>,\n            <span\
+    \ class=\"pl-s1\">figsize</span><span class=\"pl-c1\">=</span>(<span class=\"\
+    pl-c1\">25</span>, <span class=\"pl-c1\">10</span>),\n            <span class=\"\
+    pl-s1\">sharex</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\">True</span>,\n\
+    \            <span class=\"pl-s1\">sharey</span><span class=\"pl-c1\">=</span><span\
+    \ class=\"pl-c1\">True</span>,\n            <span class=\"pl-s1\">squeeze</span><span\
+    \ class=\"pl-c1\">=</span><span class=\"pl-c1\">False</span>)\n\n<span class=\"\
+    pl-k\">def</span> <span class=\"pl-en\">view_channel</span>(<span class=\"pl-s1\"\
+    >ax</span>, <span class=\"pl-s1\">data</span>, <span class=\"pl-s1\">channel</span>):\n\
+    \  <span class=\"pl-s1\">ax</span>[<span class=\"pl-c1\">0</span>][<span class=\"\
+    pl-s1\">channel</span>].<span class=\"pl-en\">imshow</span>(<span class=\"pl-s1\"\
+    >np</span>.<span class=\"pl-en\">squeeze</span>(<span class=\"pl-s1\">data</span>[<span\
+    \ class=\"pl-s1\">channel</span>:<span class=\"pl-s1\">channel</span><span class=\"\
+    pl-c1\">+</span><span class=\"pl-c1\">1</span>,:,:]), <span class=\"pl-s1\">cmap</span><span\
+    \ class=\"pl-c1\">=</span><span class=\"pl-s\">'jet'</span>)\n\n<span class=\"\
+    pl-k\">for</span> <span class=\"pl-s1\">i</span> <span class=\"pl-c1\">in</span>\
+    \ <span class=\"pl-en\">range</span>(<span class=\"pl-c1\">6</span>):\n  <span\
+    \ class=\"pl-en\">view_channel</span>(<span class=\"pl-s1\">axes</span>,<span\
+    \ class=\"pl-s1\">lsds</span>,<span class=\"pl-s1\">channel</span><span class=\"\
+    pl-c1\">=</span><span class=\"pl-s1\">i</span>)\n  \n  <span class=\"pl-c\">#from\
+    \ left to right: mean offset y, mean offset x, orientation y, orientation x, change\
+    \ (y-x), voxel count</span></pre></div>\n<p><a href=\"https://github.com/LocalShapeDescriptors/LocalShapeDescriptors.github.io/blob/master/assets/img/coins.png\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/LocalShapeDescriptors/LocalShapeDescriptors.github.io/raw/master/assets/img/coins.png\"\
+    \ alt=\"\" style=\"max-width:100%;\"></a></p>\n </details>\n<details>\n  <summary>Neurons\
+    \ example</summary>\n<div class=\"highlight highlight-source-python\"><pre><span\
+    \ class=\"pl-k\">import</span> <span class=\"pl-s1\">h5py</span>\n<span class=\"\
+    pl-k\">import</span> <span class=\"pl-s1\">io</span>\n<span class=\"pl-k\">import</span>\
+    \ <span class=\"pl-s1\">matplotlib</span>.<span class=\"pl-s1\">pyplot</span>\
+    \ <span class=\"pl-k\">as</span> <span class=\"pl-s1\">plt</span>\n<span class=\"\
+    pl-k\">import</span> <span class=\"pl-s1\">numpy</span> <span class=\"pl-k\">as</span>\
+    \ <span class=\"pl-s1\">np</span>\n<span class=\"pl-k\">import</span> <span class=\"\
+    pl-s1\">requests</span>\n<span class=\"pl-k\">from</span> <span class=\"pl-s1\"\
+    >lsd</span> <span class=\"pl-k\">import</span> <span class=\"pl-s1\">local_shape_descriptor</span>\n\
+    \ \n<span class=\"pl-c1\">%</span><span class=\"pl-s1\">matplotlib</span> <span\
+    \ class=\"pl-s1\">inline</span>\n\n<span class=\"pl-c\"># example data</span>\n\
+    <span class=\"pl-s1\">url</span> <span class=\"pl-c1\">=</span> <span class=\"\
+    pl-s\">'https://cremi.org/static/data/sample_A_20160501.hdf'</span>\n\n<span class=\"\
+    pl-c\"># convert from binary</span>\n<span class=\"pl-s1\">f</span> <span class=\"\
+    pl-c1\">=</span> <span class=\"pl-s1\">h5py</span>.<span class=\"pl-v\">File</span>(<span\
+    \ class=\"pl-s1\">io</span>.<span class=\"pl-v\">BytesIO</span>(<span class=\"\
+    pl-s1\">requests</span>.<span class=\"pl-en\">get</span>(<span class=\"pl-s1\"\
+    >url</span>).<span class=\"pl-s1\">content</span>), <span class=\"pl-s\">'r'</span>)\n\
+    \n<span class=\"pl-c\"># get corner patch</span>\n<span class=\"pl-s1\">labels</span>\
+    \ <span class=\"pl-c1\">=</span> <span class=\"pl-s1\">np</span>.<span class=\"\
+    pl-en\">squeeze</span>(<span class=\"pl-s1\">f</span>[<span class=\"pl-s\">'volumes/labels/neuron_ids'</span>][<span\
+    \ class=\"pl-c1\">0</span>:<span class=\"pl-c1\">1</span>,<span class=\"pl-c1\"\
+    >0</span>:<span class=\"pl-c1\">250</span>,<span class=\"pl-c1\">0</span>:<span\
+    \ class=\"pl-c1\">250</span>])\n\n<span class=\"pl-c\"># calc lsds</span>\n<span\
+    \ class=\"pl-s1\">lsds</span> <span class=\"pl-c1\">=</span> <span class=\"pl-s1\"\
+    >local_shape_descriptor</span>.<span class=\"pl-en\">get_local_shape_descriptors</span>(\n\
+    \              <span class=\"pl-s1\">segmentation</span><span class=\"pl-c1\"\
+    >=</span><span class=\"pl-s1\">labels</span>,\n              <span class=\"pl-s1\"\
+    >sigma</span><span class=\"pl-c1\">=</span>(<span class=\"pl-c1\">100</span>,)<span\
+    \ class=\"pl-c1\">*</span><span class=\"pl-c1\">2</span>,\n              <span\
+    \ class=\"pl-s1\">voxel_size</span><span class=\"pl-c1\">=</span>[<span class=\"\
+    pl-c1\">4</span>,<span class=\"pl-c1\">4</span>])\n\n<span class=\"pl-c\"># view</span>\n\
+    <span class=\"pl-s1\">fig</span>, <span class=\"pl-s1\">axes</span> <span class=\"\
+    pl-c1\">=</span> <span class=\"pl-s1\">plt</span>.<span class=\"pl-en\">subplots</span>(\n\
+    \            <span class=\"pl-c1\">1</span>,\n            <span class=\"pl-c1\"\
+    >6</span>,\n            <span class=\"pl-s1\">figsize</span><span class=\"pl-c1\"\
+    >=</span>(<span class=\"pl-c1\">15</span>, <span class=\"pl-c1\">10</span>),\n\
+    \            <span class=\"pl-s1\">sharex</span><span class=\"pl-c1\">=</span><span\
+    \ class=\"pl-c1\">True</span>,\n            <span class=\"pl-s1\">sharey</span><span\
+    \ class=\"pl-c1\">=</span><span class=\"pl-c1\">True</span>,\n            <span\
+    \ class=\"pl-s1\">squeeze</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\"\
+    >False</span>)\n\n<span class=\"pl-k\">def</span> <span class=\"pl-en\">view_channel</span>(<span\
+    \ class=\"pl-s1\">ax</span>, <span class=\"pl-s1\">data</span>, <span class=\"\
+    pl-s1\">channel</span>):\n\n  <span class=\"pl-s1\">ax</span>[<span class=\"pl-c1\"\
+    >0</span>][<span class=\"pl-s1\">channel</span>].<span class=\"pl-en\">imshow</span>(<span\
+    \ class=\"pl-s1\">np</span>.<span class=\"pl-en\">squeeze</span>(<span class=\"\
+    pl-s1\">data</span>[<span class=\"pl-s1\">channel</span>:<span class=\"pl-s1\"\
+    >channel</span><span class=\"pl-c1\">+</span><span class=\"pl-c1\">1</span>,:,:]),\
+    \ <span class=\"pl-s1\">cmap</span><span class=\"pl-c1\">=</span><span class=\"\
+    pl-s\">'jet'</span>)\n\n<span class=\"pl-k\">for</span> <span class=\"pl-s1\"\
+    >i</span> <span class=\"pl-c1\">in</span> <span class=\"pl-en\">range</span>(<span\
+    \ class=\"pl-c1\">6</span>):\n  <span class=\"pl-en\">view_channel</span>(<span\
+    \ class=\"pl-s1\">axes</span>,<span class=\"pl-s1\">lsds</span>,<span class=\"\
+    pl-s1\">channel</span><span class=\"pl-c1\">=</span><span class=\"pl-s1\">i</span>)\n\
+    \  \n<span class=\"pl-c\">#from left to right: mean offset y, mean offset x, orientation\
+    \ y, orientation x, change (y-x), voxel count</span></pre></div>\n<p><a href=\"\
+    https://github.com/LocalShapeDescriptors/LocalShapeDescriptors.github.io/blob/master/assets/img/2d_lsds.png\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/LocalShapeDescriptors/LocalShapeDescriptors.github.io/raw/master/assets/img/2d_lsds.png\"\
+    \ alt=\"\" style=\"max-width:100%;\"></a></p>\n </details>\n<hr>\n<p><a name=\"\
+    user-content-nbook\"></a></p>\n<h2>\n<a id=\"user-content-notebooks\" class=\"\
+    anchor\" href=\"#notebooks\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Notebooks</h2>\n<ul>\n<li>\n<p>Examble colab\
+    \ notebooks are located <a href=\"https://github.com/funkelab/lsd/tree/tutorial/lsd/tutorial/notebooks\"\
+    >here</a>. You can download or run below (control + click open in colab). When\
+    \ running a notebook, you will probably get the message: \"Warning: This notebook\
+    \ was not authored by Google\". This can be ignored, you can run anyway.</p>\n\
+    </li>\n<li>\n<p>We uploaded ~1.7 tb of data (raw/labels/masks/rags etc.) to an\
+    \ s3 bucket. The following tutorial shows some examples for accessing and visualizing\
+    \ the data.</p>\n<ul>\n<li>Data download: <a href=\"https://colab.research.google.com/github/funkelab/lsd/blob/master/lsd/tutorial/notebooks/lsd_data_download.ipynb\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/84f0493939e0c4de4e6dbe113251b4bfb5353e57134ffd9fcab6b8714514d4d1/68747470733a2f2f636f6c61622e72657365617263682e676f6f676c652e636f6d2f6173736574732f636f6c61622d62616467652e737667\"\
+    \ alt=\"Open In Colab\" data-canonical-src=\"https://colab.research.google.com/assets/colab-badge.svg\"\
+    \ style=\"max-width:100%;\"></a>\n</li>\n</ul>\n</li>\n<li>\n<p>If implementing\
+    \ the LSDs in your own training pipeline (i.e pure pytorch/tensorflow), calculate\
+    \ the LSDs on a label array of unique objects and use them as the target for your\
+    \ network (see quick 2d examples above for calculating).</p>\n</li>\n<li>\n<p>The\
+    \ following tutorials show how to set up 2D training/prediction pipelines using\
+    \ <a href=\"http://funkey.science/gunpowder/\" rel=\"nofollow\">Gunpowder</a>.\
+    \ It is recommended to follow them in order (skip the basic tutorial if familiar\
+    \ with gunpowder).</p>\n<ul>\n<li>\n<p>Basic Gunpowder tutorial: <a href=\"https://colab.research.google.com/github/funkelab/lsd/blob/tutorial/lsd/tutorial/notebooks/basic_gp_tutorial.ipynb\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/84f0493939e0c4de4e6dbe113251b4bfb5353e57134ffd9fcab6b8714514d4d1/68747470733a2f2f636f6c61622e72657365617263682e676f6f676c652e636f6d2f6173736574732f636f6c61622d62616467652e737667\"\
+    \ alt=\"Open In Colab\" data-canonical-src=\"https://colab.research.google.com/assets/colab-badge.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n</li>\n<li>\n<p>Train Affinities: <a href=\"\
+    https://colab.research.google.com/github/funkelab/lsd/blob/tutorial/lsd/tutorial/notebooks/train_affinities.ipynb\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/84f0493939e0c4de4e6dbe113251b4bfb5353e57134ffd9fcab6b8714514d4d1/68747470733a2f2f636f6c61622e72657365617263682e676f6f676c652e636f6d2f6173736574732f636f6c61622d62616467652e737667\"\
+    \ alt=\"Open In Colab\" data-canonical-src=\"https://colab.research.google.com/assets/colab-badge.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n</li>\n<li>\n<p>Train LSDs: <a href=\"https://colab.research.google.com/github/funkelab/lsd/blob/tutorial/lsd/tutorial/notebooks/train_lsds.ipynb\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/84f0493939e0c4de4e6dbe113251b4bfb5353e57134ffd9fcab6b8714514d4d1/68747470733a2f2f636f6c61622e72657365617263682e676f6f676c652e636f6d2f6173736574732f636f6c61622d62616467652e737667\"\
+    \ alt=\"Open In Colab\" data-canonical-src=\"https://colab.research.google.com/assets/colab-badge.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n</li>\n<li>\n<p>Train MTLSD: <a href=\"\
+    https://colab.research.google.com/github/funkelab/lsd/blob/tutorial/lsd/tutorial/notebooks/train_mtlsd.ipynb\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/84f0493939e0c4de4e6dbe113251b4bfb5353e57134ffd9fcab6b8714514d4d1/68747470733a2f2f636f6c61622e72657365617263682e676f6f676c652e636f6d2f6173736574732f636f6c61622d62616467652e737667\"\
+    \ alt=\"Open In Colab\" data-canonical-src=\"https://colab.research.google.com/assets/colab-badge.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n</li>\n<li>\n<p>Inference (using pretrained\
+    \ MTLSD checkpoint): <a href=\"https://colab.research.google.com/github/funkelab/lsd/blob/tutorial/lsd/tutorial/notebooks/inference.ipynb\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/84f0493939e0c4de4e6dbe113251b4bfb5353e57134ffd9fcab6b8714514d4d1/68747470733a2f2f636f6c61622e72657365617263682e676f6f676c652e636f6d2f6173736574732f636f6c61622d62616467652e737667\"\
+    \ alt=\"Open In Colab\" data-canonical-src=\"https://colab.research.google.com/assets/colab-badge.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n</li>\n<li>\n<p>Watershed, agglomeration,\
+    \ segmentation: <a href=\"https://colab.research.google.com/github/funkelab/lsd/blob/tutorial/lsd/tutorial/notebooks/segment.ipynb\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/84f0493939e0c4de4e6dbe113251b4bfb5353e57134ffd9fcab6b8714514d4d1/68747470733a2f2f636f6c61622e72657365617263682e676f6f676c652e636f6d2f6173736574732f636f6c61622d62616467652e737667\"\
+    \ alt=\"Open In Colab\" data-canonical-src=\"https://colab.research.google.com/assets/colab-badge.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n</li>\n</ul>\n</li>\n</ul>\n<hr>\n<p><a\
+    \ name=\"user-content-networks\"></a></p>\n<h2>\n<a id=\"user-content-example-networks--pipelines\"\
+    \ class=\"anchor\" href=\"#example-networks--pipelines\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Example\
+    \ networks &amp; pipelines</h2>\n<ul>\n<li>There are some example networks and\
+    \ training/prediction pipelines from the fib25 dataset <a href=\"https://github.com/funkelab/lsd/tree/tutorial/lsd/tutorial/example_nets/fib25\"\
+    >here</a>.</li>\n</ul>\n<h3>\n<a id=\"user-content-training\" class=\"anchor\"\
+    \ href=\"#training\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Training</h3>\n<ul>\n<li>\n<p>Since networks\
+    \ in this paper were implemented in Tensorflow, there was a two step process for\
+    \ training. First the networks were created using the <code>mknet.py</code> files.\
+    \ This saved tensor placeholders and meta data in config files that were then\
+    \ used for both training and prediction. The mknet files used the now deprecated\
+    \ mala repository to create the networks. If reimplementing in Tensorflow, consider\
+    \ migrating to <a href=\"https://github.com/funkelab/funlib.learn.tensorflow\"\
+    >funlib.learn.tensorflow</a>.</p>\n</li>\n<li>\n<p>If using Pytorch, the networks\
+    \ can just be created directly inside the train scripts since placeholders aren't\
+    \ required. For example, the logic from this <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/example_nets/fib25/vanilla/mknet.py\"\
+    >mknet script</a> and this <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/example_nets/fib25/vanilla/train.py\"\
+    >train script</a> can be condensed to <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/example_nets/fib25/vanilla/train_pytorch.py\"\
+    >this</a>.</p>\n</li>\n<li>\n<p>For training an autocontext network (e.g <code>acrlsd</code>),\
+    \ the current implementation learns the LSDs in a <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/example_nets/fib25/lsd/train.py\"\
+    >first pass</a>. A saved checkpoint is then used when creating the <a href=\"\
+    https://github.com/funkelab/lsd/blob/4397779ea4702eb3d593898d6240819e761fd41a/lsd/tutorial/example_nets/fib25/acrlsd/mknet.py#L122\"\
+    >second pass</a> in order to <a href=\"https://github.com/funkelab/lsd/blob/4397779ea4702eb3d593898d6240819e761fd41a/lsd/tutorial/example_nets/fib25/acrlsd/train.py#L158\"\
+    >predict LSDs</a> prior to learning the Affinities. One could modify this to use\
+    \ a single setup and remove the need for writing the LSDs to disk.</p>\n</li>\n\
+    </ul>\n<h3>\n<a id=\"user-content-inference\" class=\"anchor\" href=\"#inference\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Inference</h3>\n<ul>\n<li>\n<p>By default, the predict scripts (<a\
+    \ href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/example_nets/fib25/mtlsd/predict.py\"\
+    >example</a>) contain the worker logic to be distributed by the scheduler during\
+    \ parallel processing (see below).</p>\n</li>\n<li>\n<p>If you just need to process\
+    \ a relatively small volume, it is sometimes not necessary to use blockwise processing.\
+    \ In this case, it is recommended to use a <a href=\"http://funkey.science/gunpowder/api.html#scan\"\
+    \ rel=\"nofollow\">scan node</a>, and specify input/output shapes + context. An\
+    \ example can be found in the inference colab notebook above.</p>\n</li>\n<li>\n\
+    <p>Similar to training, the current autocontext implementations assume the predicted\
+    \ LSDs are written to a zarr/n5 container and then used as input to the second\
+    \ pass to predict affinities. This can also be changed to predict on the fly if\
+    \ needed.</p>\n</li>\n</ul>\n<details>\n  <summary>Visualizations of example training/prediction\
+    \ pipelines</summary>\n<br><br>\n<details>\n  <summary>Color key</summary>\n<p><a\
+    \ href=\"https://camo.githubusercontent.com/a9a97d0a679c3df8d1f607b3d2ae316d26bd7948b9675cdb5252a412ff681153/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6161663265332f3030303030303f746578743d2b\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/a9a97d0a679c3df8d1f607b3d2ae316d26bd7948b9675cdb5252a412ff681153/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6161663265332f3030303030303f746578743d2b\"\
+    \ alt=\"#aaf2e3\" data-canonical-src=\"https://via.placeholder.com/15/aaf2e3/000000?text=+\"\
+    \ style=\"max-width:100%;\"></a> <a href=\"http://funkey.science/gunpowder/api.html#source-nodes\"\
+    \ rel=\"nofollow\">Source nodes</a></p>\n<p><a href=\"https://camo.githubusercontent.com/9b7f598e884ee96fac5fea23d7f82d05ae741e128c6e145d32107d6c4fd48074/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6666623865372f3030303030303f746578743d2b\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/9b7f598e884ee96fac5fea23d7f82d05ae741e128c6e145d32107d6c4fd48074/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6666623865372f3030303030303f746578743d2b\"\
+    \ alt=\"#ffb8e7\" data-canonical-src=\"https://via.placeholder.com/15/ffb8e7/000000?text=+\"\
+    \ style=\"max-width:100%;\"></a> <a href=\"http://funkey.science/gunpowder/api.html#image-processing-nodes\"\
+    \ rel=\"nofollow\">Image processing nodes</a></p>\n<p><a href=\"https://camo.githubusercontent.com/d3834c08d34f2ed79d1f788c1d35ce9dcbef13a8c1b813bf3b5df7f2373c9261/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6666646561642f3030303030303f746578743d2b\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/d3834c08d34f2ed79d1f788c1d35ce9dcbef13a8c1b813bf3b5df7f2373c9261/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6666646561642f3030303030303f746578743d2b\"\
+    \ alt=\"#ffdead\" data-canonical-src=\"https://via.placeholder.com/15/ffdead/000000?text=+\"\
+    \ style=\"max-width:100%;\"></a> <a href=\"http://funkey.science/gunpowder/api.html#location-manipulation-nodes\"\
+    \ rel=\"nofollow\">Location manipulation nodes</a></p>\n<p><a href=\"https://camo.githubusercontent.com/77fc07fd556a8867418042a7732acddec36d245ac5fa8e6fa3982225d7a71488/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6235623362332f3030303030303f746578743d2b\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/77fc07fd556a8867418042a7732acddec36d245ac5fa8e6fa3982225d7a71488/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6235623362332f3030303030303f746578743d2b\"\
+    \ alt=\"#b5b3b3\" data-canonical-src=\"https://via.placeholder.com/15/b5b3b3/000000?text=+\"\
+    \ style=\"max-width:100%;\"></a> <a href=\"http://funkey.science/gunpowder/api.html#provider-combination-nodes\"\
+    \ rel=\"nofollow\">Provider combination nodes</a></p>\n<p><a href=\"https://camo.githubusercontent.com/3f6d952b0f7fce1c2d4f92090f5309333ad278b248ddfd36e34828d88c06e829/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6262662f3030303030303f746578743d2b\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/3f6d952b0f7fce1c2d4f92090f5309333ad278b248ddfd36e34828d88c06e829/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6262662f3030303030303f746578743d2b\"\
+    \ alt=\"#bbf\" data-canonical-src=\"https://via.placeholder.com/15/bbf/000000?text=+\"\
+    \ style=\"max-width:100%;\"></a> <a href=\"http://funkey.science/gunpowder/api.html#augmentation-nodes\"\
+    \ rel=\"nofollow\">Augmentation nodes</a></p>\n<p><a href=\"https://camo.githubusercontent.com/f147e3fe453aeaf74231447a042a7a78bd8b94b08cfb80416885830c159eabaa/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6666666339312f3030303030303f746578743d2b\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/f147e3fe453aeaf74231447a042a7a78bd8b94b08cfb80416885830c159eabaa/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6666666339312f3030303030303f746578743d2b\"\
+    \ alt=\"#fffc91\" data-canonical-src=\"https://via.placeholder.com/15/fffc91/000000?text=+\"\
+    \ style=\"max-width:100%;\"></a> <a href=\"http://funkey.science/gunpowder/api.html#label-manipulation-nodes\"\
+    \ rel=\"nofollow\">Label manipulation nodes</a></p>\n<p><a href=\"https://camo.githubusercontent.com/baf49106c9e6e1fc1f75052028413c99f3a2edf219275a9cdcf116683ca6ced2/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6233653766662f3030303030303f746578743d2b\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/baf49106c9e6e1fc1f75052028413c99f3a2edf219275a9cdcf116683ca6ced2/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6233653766662f3030303030303f746578743d2b\"\
+    \ alt=\"#b3e7ff\" data-canonical-src=\"https://via.placeholder.com/15/b3e7ff/000000?text=+\"\
+    \ style=\"max-width:100%;\"></a> <a href=\"http://funkey.science/gunpowder/api.html#performance-nodes\"\
+    \ rel=\"nofollow\">Performance nodes</a></p>\n<p><a href=\"https://camo.githubusercontent.com/0af57b13aab71a8b0b0ed524d4b9addd087127e3c1bb76ac794951fad093f83b/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6666393136392f3030303030303f746578743d2b\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/0af57b13aab71a8b0b0ed524d4b9addd087127e3c1bb76ac794951fad093f83b/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6666393136392f3030303030303f746578743d2b\"\
+    \ alt=\"#ff9169\" data-canonical-src=\"https://via.placeholder.com/15/ff9169/000000?text=+\"\
+    \ style=\"max-width:100%;\"></a> <a href=\"http://funkey.science/gunpowder/api.html#training-and-prediction-nodes\"\
+    \ rel=\"nofollow\">Training and prediction nodes</a></p>\n<p><a href=\"https://camo.githubusercontent.com/82f697552844f276b2ef97711385a6dc558248eed718c239ce971f11d2aadcbc/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f3732626636392f3030303030303f746578743d2b\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/82f697552844f276b2ef97711385a6dc558248eed718c239ce971f11d2aadcbc/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f3732626636392f3030303030303f746578743d2b\"\
+    \ alt=\"#72bf69\" data-canonical-src=\"https://via.placeholder.com/15/72bf69/000000?text=+\"\
+    \ style=\"max-width:100%;\"></a> <a href=\"http://funkey.science/gunpowder/api.html#module-gunpowder\"\
+    \ rel=\"nofollow\">Output nodes</a></p>\n<p><a href=\"https://camo.githubusercontent.com/6ee7cadb933bf945d53b440b486621eef6ad7a4ed604f0846c4767ac9efe475d/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6132393166662f3030303030303f746578743d2b\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/6ee7cadb933bf945d53b440b486621eef6ad7a4ed604f0846c4767ac9efe475d/68747470733a2f2f7669612e706c616365686f6c6465722e636f6d2f31352f6132393166662f3030303030303f746578743d2b\"\
+    \ alt=\"#a291ff\" data-canonical-src=\"https://via.placeholder.com/15/a291ff/000000?text=+\"\
+    \ style=\"max-width:100%;\"></a> <a href=\"http://funkey.science/gunpowder/api.html#iterative-processing-nodes\"\
+    \ rel=\"nofollow\">Iterative processing nodes</a></p>\n </details>\n<p>Vanilla\
+    \ affinities <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/example_nets/fib25/vanilla/train.py\"\
+    >training</a>:</p>\n<p><a href=\"https://github.com/LocalShapeDescriptors/LocalShapeDescriptors.github.io/blob/master/assets/img/train_nodes.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/LocalShapeDescriptors/LocalShapeDescriptors.github.io/raw/master/assets/img/train_nodes.svg\"\
+    \ alt=\"\" style=\"max-width:100%;\"></a>\n<br><br>\nAutocontext <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/example_nets/fib25/lsd/predict.py\"\
+    >LSD</a> and <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/example_nets/fib25/acrlsd/predict.py\"\
+    >affinities</a> prediction:</p>\n<p><a href=\"https://github.com/LocalShapeDescriptors/LocalShapeDescriptors.github.io/blob/master/assets/img/predict_nodes.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/LocalShapeDescriptors/LocalShapeDescriptors.github.io/raw/master/assets/img/predict_nodes.svg\"\
+    \ alt=\"\" style=\"max-width:100%;\"></a></p>\n</details>\n<hr>\n<p><a name=\"\
+    user-content-parallel\"></a></p>\n<h2>\n<a id=\"user-content-parallel-processing\"\
+    \ class=\"anchor\" href=\"#parallel-processing\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Parallel processing</h2>\n<ul>\n\
+    <li>\n<p>If you are running on small data then this section may be irrelevant.\
+    \ See the <code>Watershed, agglomeration, segmentation</code> notebook above if\
+    \ you just want to get a sense of obtaining a segmentation from affinities.</p>\n\
+    </li>\n<li>\n<p>Example processing scripts can be found <a href=\"https://github.com/funkelab/lsd/tree/tutorial/lsd/tutorial/scripts\"\
+    >here</a></p>\n</li>\n<li>\n<p>We create segmentations following the approach\
+    \ in <a href=\"https://ieeexplore.ieee.org/document/8364622\" rel=\"nofollow\"\
+    >this paper</a>. Generally speaking, after training a network there are five steps\
+    \ to obtain a segmentation:</p>\n</li>\n</ul>\n<ol>\n<li>Predict boundaries (this\
+    \ can involve the use of LSDs as an auxiliary task)</li>\n<li>Generate supervoxels\
+    \ (fragments) using seeded watershed. The fragment centers of mass are stored\
+    \ as region adjacency graph nodes.</li>\n<li>Generate edges between nodes using\
+    \ hierarchical agglomeration. The edges are weighted by the underlying affinities.\
+    \ Edges with lower scores are merged earlier.</li>\n<li>Cut the graph at a predefined\
+    \ threshold and relabel connected components. Store the node - component lookup\
+    \ tables.</li>\n<li>Use the lookup tables to relabel supervoxels and generate\
+    \ a segmentation.</li>\n</ol>\n<p><a href=\"https://github.com/LocalShapeDescriptors/LocalShapeDescriptors.github.io/blob/master/assets/img/pipeline.jpeg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/LocalShapeDescriptors/LocalShapeDescriptors.github.io/raw/master/assets/img/pipeline.jpeg\"\
+    \ alt=\"\" style=\"max-width:100%;\"></a></p>\n<ul>\n<li>\n<p>Everything was done\
+    \ in parallel using <a href=\"https://github.com/funkelab/daisy\">daisy</a>, but\
+    \ one could use multiprocessing or dask instead.</p>\n</li>\n<li>\n<p>For our\
+    \ experiments we used <a href=\"https://www.mongodb.com/\" rel=\"nofollow\">MongoDB</a>\
+    \ for all storage (block checks, rags, scores, etc) due to the size of the data.\
+    \ Depending on use case, it might be better to read/write to file rather than\
+    \ mongo. See watershed for further info.</p>\n</li>\n<li>\n<p>The following examples\
+    \ were written for use with the Janelia LSF cluster and are just meant to be used\
+    \ as a guide. Users will likely need to customize for their own specs (for example\
+    \ if using a SLURM cluster).</p>\n</li>\n<li>\n<p>Need to install <a href=\"https://github.com/funkelab/funlib.segment\"\
+    >funlib.segment</a> and <a href=\"https://github.com/funkelab/funlib.evaluate\"\
+    >funlib.evaluate</a> if using/adapting segmentation/evaluation scripts.</p>\n\
+    </li>\n</ul>\n<h3>\n<a id=\"user-content-inference-1\" class=\"anchor\" href=\"\
+    #inference-1\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>Inference</h3>\n<p>The worker logic is located in\
+    \ individual <code>predict.py</code> scripts (<a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/example_nets/fib25/vanilla/predict.py\"\
+    >example</a>). The <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/01_predict_blockwise.py\"\
+    >master script</a> distributes using <code>daisy.run_blockwise</code>. The only\
+    \ need for MongoDb here is for the block check function (to check which blocks\
+    \ have successfully completed). To remove the need for mongo, one could remove\
+    \ the check function (remember to also remove <code>block_done_callback</code>\
+    \ in <code>predict.py</code>) or replace with custom function (e.g check chunk\
+    \ completion directly in output container).</p>\n<details>\n <summary>Example\
+    \ roi config</summary>\n<div class=\"highlight highlight-source-json\"><pre>{\n\
+    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>container<span class=\"\
+    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>hemi_roi_1.zarr<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>offset<span class=\"pl-pds\">\"</span></span>: [<span class=\"pl-c1\"\
+    >140800</span>, <span class=\"pl-c1\">205120</span>, <span class=\"pl-c1\">198400</span>],\n\
+    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>size<span class=\"pl-pds\"\
+    >\"</span></span>: [<span class=\"pl-c1\">3000</span>, <span class=\"pl-c1\">3000</span>,\
+    \ <span class=\"pl-c1\">3000</span>]\n}</pre></div>\n</details>\n<details>\n <summary>Example\
+    \ predict config</summary>\n<pre><code> {\n  \"base_dir\": \"/path/to/base/directory\"\
+    ,\n  \"experiment\": \"hemi\",\n  \"setup\": \"setup01\",\n  \"iteration\": 400000,\n\
+    \  \"raw_file\": \"predict_roi.json\",\n  \"raw_dataset\" : \"volumes/raw\",\n\
+    \  \"out_base\" : \"output\",\n  \"file_name\": \"foo.zarr\",\n  \"num_workers\"\
+    : 5,\n  \"db_host\": \"mongodb client\",\n  \"db_name\": \"foo\",\n  \"queue\"\
+    : \"gpu_rtx\",\n  \"singularity_image\": \"/path/to/singularity/image\"\n}\n</code></pre>\n\
+    </details>\n<h3>\n<a id=\"user-content-watershed\" class=\"anchor\" href=\"#watershed\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Watershed</h3>\n<p>The worker logic is located in a single <a href=\"\
+    https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/workers/extract_fragments_worker.py\"\
+    >script</a> which is then distributed by the <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/02_extract_fragments_blockwise.py\"\
+    >master script</a>. By default the nodes are stored in mongo using a <a href=\"\
+    https://github.com/funkelab/daisy/blob/master/daisy/persistence/mongodb_graph_provider.py\"\
+    >MongoDbGraphProvider</a>. To write to file (i.e compressed numpy arrays), you\
+    \ can use the <a href=\"https://github.com/funkelab/daisy/blob/master/daisy/persistence/file_graph_provider.py\"\
+    >FileGraphProvider</a> instead (inside the worker script).</p>\n<details>\n <summary>Example\
+    \ watershed config</summary>\n<div class=\"highlight highlight-source-json\"><pre>{\n\
+    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>experiment<span class=\"\
+    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>hemi<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>setup<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>setup01<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>iteration<span class=\"\
+    pl-pds\">\"</span></span>: <span class=\"pl-c1\">400000</span>,\n  <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>affs_file<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo.zarr<span class=\"\
+    pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>affs_dataset<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>/volumes/affs<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>fragments_file<span class=\"pl-pds\">\"\
+    </span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo.zarr<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>fragments_dataset<span class=\"pl-pds\">\"</span></span>: <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>/volumes/fragments<span class=\"pl-pds\"\
+    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>block_size<span\
+    \ class=\"pl-pds\">\"</span></span>: [<span class=\"pl-c1\">1000</span>, <span\
+    \ class=\"pl-c1\">1000</span>, <span class=\"pl-c1\">1000</span>],\n  <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>context<span class=\"pl-pds\">\"</span></span>:\
+    \ [<span class=\"pl-c1\">248</span>, <span class=\"pl-c1\">248</span>, <span class=\"\
+    pl-c1\">248</span>],\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>db_host<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>mongodb client<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>db_name<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo<span class=\"pl-pds\"\
+    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>num_workers<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-c1\">6</span>,\n  <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>fragments_in_xy<span class=\"\
+    pl-pds\">\"</span></span>: <span class=\"pl-c1\">false</span>,\n  <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>epsilon_agglomerate<span class=\"pl-pds\"\
+    >\"</span></span>: <span class=\"pl-c1\">0</span>,\n  <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>queue<span class=\"pl-pds\">\"</span></span>: <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>local<span class=\"pl-pds\">\"\
+    </span></span>\n}</pre></div>\n</details>\n<h3>\n<a id=\"user-content-agglomerate\"\
+    \ class=\"anchor\" href=\"#agglomerate\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Agglomerate</h3>\n<p>Same as\
+    \ watershed. <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/workers/agglomerate_worker.py\"\
+    >Worker script</a>, <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/03_agglomerate_blockwise.py\"\
+    >master script</a>. Change to FileGraphProvider if needed.</p>\n<details>\n <summary>Example\
+    \ agglomerate config</summary>\n<div class=\"highlight highlight-source-json\"\
+    ><pre>{\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>experiment<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>hemi<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>setup<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>setup01<span class=\"pl-pds\"\
+    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>iteration<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-c1\">400000</span>,\n  <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>affs_file<span class=\"pl-pds\"\
+    >\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo.zarr<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>affs_dataset<span class=\"pl-pds\">\"</span></span>: <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>/volumes/affs<span class=\"pl-pds\">\"\
+    </span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>fragments_file<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>foo.zarr<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>fragments_dataset<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>/volumes/fragments<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>block_size<span class=\"pl-pds\">\"</span></span>: [<span class=\"pl-c1\"\
+    >1000</span>, <span class=\"pl-c1\">1000</span>, <span class=\"pl-c1\">1000</span>],\n\
+    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>context<span class=\"\
+    pl-pds\">\"</span></span>: [<span class=\"pl-c1\">248</span>, <span class=\"pl-c1\"\
+    >248</span>, <span class=\"pl-c1\">248</span>],\n  <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>db_host<span class=\"pl-pds\">\"</span></span>: <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>mongodb client<span class=\"\
+    pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>db_name<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>foo<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>num_workers<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-c1\">4</span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>queue<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>local<span class=\"pl-pds\">\"</span></span>,\n  <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>merge_function<span class=\"\
+    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>hist_quant_75<span\
+    \ class=\"pl-pds\">\"</span></span>\n}</pre></div>\n</details>\n<h3>\n<a id=\"\
+    user-content-find-segments\" class=\"anchor\" href=\"#find-segments\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Find\
+    \ segments</h3>\n<p>In contrast to the above three methods, when <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/04_find_segments.py\"\
+    >creating LUTs</a> there just needs to be enough RAM to hold the RAG in memory.\
+    \ The only thing done in parallel is reading the graph (<code>graph_provider.read_blockwise()</code>).\
+    \ It could be adapted to use multiprocessing/dask for distributing the connected\
+    \ components for each threshold, but if the rag is too large there will be pickling\
+    \ errors when passing the nodes/edges. Daisy doesn't need to be used for scheduling\
+    \ here since nothing is written to containers.</p>\n<details>\n <summary>Example\
+    \ find segments config</summary>\n<div class=\"highlight highlight-source-json\"\
+    ><pre>{\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>db_host<span class=\"\
+    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>mongodb\
+    \ client<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>db_name<span class=\"pl-pds\">\"</span></span>: <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo<span class=\"pl-pds\">\"\
+    </span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>fragments_file<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>foo.zarr<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>edges_collection<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>edges_hist_quant_75<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>thresholds_minmax<span class=\"pl-pds\">\"</span></span>: [<span class=\"\
+    pl-c1\">0</span>, <span class=\"pl-c1\">1</span>],\n  <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>thresholds_step<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-c1\">0.02</span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>block_size<span class=\"pl-pds\">\"</span></span>: [<span class=\"pl-c1\"\
+    >1000</span>, <span class=\"pl-c1\">1000</span>, <span class=\"pl-c1\">1000</span>],\n\
+    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>num_workers<span class=\"\
+    pl-pds\">\"</span></span>: <span class=\"pl-c1\">5</span>,\n  <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>fragments_dataset<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>/volumes/fragments<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>run_type<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>test<span class=\"pl-pds\">\"</span></span>\n\
+    }</pre></div>\n</details>\n<h3>\n<a id=\"user-content-extract-segmentation\" class=\"\
+    anchor\" href=\"#extract-segmentation\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Extract segmentation</h3>\n<p>This\
+    \ <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/05_extract_segmentation_from_lut.py\"\
+    >script</a> does use daisy to write the segmentation to file, but doesn't necessarily\
+    \ require bsub/sbatch to distribute (you can run locally).</p>\n<details>\n <summary>Example\
+    \ extract segmentation config</summary> \n<div class=\"highlight highlight-source-json\"\
+    ><pre>{\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>fragments_file<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>foo.zarr<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>fragments_dataset<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>/volumes/fragments<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>edges_collection<span class=\"pl-pds\">\"</span></span>: <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>edges_hist_quant_75<span class=\"pl-pds\"\
+    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>threshold<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-c1\">0.4</span>,\n  <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>block_size<span class=\"pl-pds\"\
+    >\"</span></span>: [<span class=\"pl-c1\">1000</span>, <span class=\"pl-c1\">1000</span>,\
+    \ <span class=\"pl-c1\">1000</span>],\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>out_file<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>foo.zarr<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>out_dataset<span class=\"\
+    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>volumes/segmentation_40<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>num_workers<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-c1\"\
+    >3</span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>run_type<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>test<span class=\"pl-pds\">\"</span></span>\n}</pre></div>\n</details>\n\
+    <h3>\n<a id=\"user-content-evaluate-volumes\" class=\"anchor\" href=\"#evaluate-volumes\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Evaluate volumes</h3>\n<p><a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/05_evaluate_volumes.py\"\
+    >Evaluate</a> Voi scores. Assumes dense voxel ground truth (not skeletons). This\
+    \ also assumes the ground truth (and segmentation) can fit into memory, which\
+    \ was fine for hemi and fib25 volumes assuming ~750 GB of RAM. The script should\
+    \ probably be refactored to run blockwise.</p>\n<details>\n <summary>Example evaluate\
+    \ volumes config</summary>\n<div class=\"highlight highlight-source-json\"><pre>{\n\
+    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>experiment<span class=\"\
+    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>hemi<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>setup<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>setup01<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>iteration<span class=\"\
+    pl-pds\">\"</span></span>: <span class=\"pl-c1\">400000</span>,\n  <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>gt_file<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>hemi_roi_1.zarr<span class=\"\
+    pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>gt_dataset<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>volumes/labels/neuron_ids<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>fragments_file<span class=\"\
+    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo.zarr<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>fragments_dataset<span class=\"pl-pds\">\"</span></span>: <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>/volumes/fragments<span class=\"pl-pds\"\
+    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>db_host<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>mongodb client<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>rag_db_name<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo<span class=\"pl-pds\"\
+    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>edges_collection<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>edges_hist_quant_75<span class=\"pl-pds\">\"</span></span>,\n  <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>scores_db_name<span class=\"\
+    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>scores<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>thresholds_minmax<span class=\"pl-pds\">\"</span></span>: [<span class=\"\
+    pl-c1\">0</span>, <span class=\"pl-c1\">1</span>],\n  <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>thresholds_step<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-c1\">0.02</span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>num_workers<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-c1\"\
+    >4</span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>method<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>vanilla<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>run_type<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>test<span class=\"pl-pds\"\
+    >\"</span></span>\n}</pre></div>\n</details>\n<h3>\n<a id=\"user-content-evaluate-annotations\"\
+    \ class=\"anchor\" href=\"#evaluate-annotations\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Evaluate annotations</h3>\n<p>For\
+    \ the zebrafinch, ground truth skeletons were used due to the size of the dataset.\
+    \ These skeletons were cropped, masked, and relabelled for the sub Rois that were\
+    \ tested in the paper. We <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/05_evaluate_annotations.py\"\
+    >evaluated</a> voi, erl, and the mincut metric on the consolidated skeletons.\
+    \ The current implementation could be refactored / made more modular. It also\
+    \ uses <code>node_collections</code> which are now deprecated in daisy. To use\
+    \ with the current implementation, you should checkout daisy commit <code>39723ca</code>.</p>\n\
+    <details>\n <summary>Example evaluate annotations config</summary>\n<div class=\"\
+    highlight highlight-source-json\"><pre>{\n  <span class=\"pl-s\"><span class=\"\
+    pl-pds\">\"</span>experiment<span class=\"pl-pds\">\"</span></span>: <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>zebrafinch<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>setup<span class=\"pl-pds\"\
+    >\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>setup01<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>iteration<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-c1\"\
+    >400000</span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>config_slab<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>mtlsd<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>fragments_file<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo.zarr<span class=\"\
+    pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>fragments_dataset<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>/volumes/fragments<span class=\"pl-pds\">\"</span></span>,\n  <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>edges_db_host<span class=\"pl-pds\"\
+    >\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>mongodb\
+    \ client<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>edges_db_name<span class=\"pl-pds\">\"</span></span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo<span class=\"pl-pds\"\
+    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>edges_collection<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>edges_hist_quant_75<span class=\"pl-pds\">\"</span></span>,\n  <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>scores_db_name<span class=\"\
+    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>scores<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>annotations_db_host<span class=\"pl-pds\">\"</span></span>: <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>mongo client<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>annotations_db_name<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>foo<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>annotations_skeletons_collection_name<span class=\"\
+    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>zebrafinch<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>node_components<span class=\"pl-pds\">\"</span></span>: <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>zebrafinch_components<span class=\"pl-pds\"\
+    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>node_mask<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>zebrafinch_mask<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>roi_offset<span class=\"pl-pds\">\"</span></span>:\
+    \ [<span class=\"pl-c1\">50800</span>, <span class=\"pl-c1\">43200</span>, <span\
+    \ class=\"pl-c1\">44100</span>],\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>roi_shape<span class=\"pl-pds\">\"</span></span>: [<span class=\"pl-c1\"\
+    >10800</span>, <span class=\"pl-c1\">10800</span>, <span class=\"pl-c1\">10800</span>],\n\
+    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>thresholds_minmax<span\
+    \ class=\"pl-pds\">\"</span></span>: [<span class=\"pl-c1\">0.5</span>, <span\
+    \ class=\"pl-c1\">1</span>],\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"\
+    </span>thresholds_step<span class=\"pl-pds\">\"</span></span>: <span class=\"\
+    pl-c1\">1</span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>run_type<span\
+    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>11_micron_roi_masked<span class=\"pl-pds\">\"</span></span>\n}</pre></div>\n\
+    \ </details>\n"
   stargazers_count: 7
   subscribers_count: 5
   topics: []
-  updated_at: 1617541983.0
+  updated_at: 1624047889.0
 funkelab/synful:
   data_format: 2
   description: Synaptic Partner Detection in 3D Microscopy Volumes
@@ -24120,10 +24736,10 @@ kalibera/rchk:
     style="max-width:100%;"></a></p>
 
     '
-  stargazers_count: 94
+  stargazers_count: 95
   subscribers_count: 10
   topics: []
-  updated_at: 1616664726.0
+  updated_at: 1623916426.0
 kapsakcj/singularities:
   data_format: 2
   description: Singularity recipes for bioinformatics software
@@ -26067,7 +26683,7 @@ mbhall88/head_to_head_pipeline:
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1623904973.0
+  updated_at: 1623971301.0
 mbhall88/pandora_analysis_pipeline:
   data_format: 2
   description: null
@@ -27082,7 +27698,7 @@ ml4ai/automates:
   stargazers_count: 17
   subscribers_count: 10
   topics: []
-  updated_at: 1623446833.0
+  updated_at: 1623935131.0
 mmirko/singularitytest:
   data_format: 2
   description: null
@@ -27542,7 +28158,7 @@ nhoffman/dada2-nf:
   stargazers_count: 0
   subscribers_count: 5
   topics: []
-  updated_at: 1622759244.0
+  updated_at: 1623959326.0
 nicspalla/openmpi_centos_x86_64:
   data_format: 2
   description: null
@@ -28327,7 +28943,7 @@ openPMD/openPMD-api:
   - meta-data
   - opendata
   - cpp14
-  updated_at: 1623690568.0
+  updated_at: 1623944352.0
 openhpc/ohpc:
   data_format: 2
   description: OpenHPC Integration, Packaging, and Test Repo
@@ -28652,10 +29268,140 @@ pbranson/pangeo-hpc-singularity:
     </ol>
 
     '
-  stargazers_count: 6
+  stargazers_count: 7
   subscribers_count: 2
   topics: []
-  updated_at: 1613348612.0
+  updated_at: 1623993491.0
+pchengi/cmorfixer_env:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: pchengi/cmorfixer_env
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-environment-for-cmor-fixer" class="anchor" href="#environment-for-cmor-fixer"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Environment
+    for cmor-fixer</h1>
+
+    <ul>
+
+    <li>
+
+    <p>A tool to create an environment to allow easy use of the <a href="https://github.com/EC-Earth/cmor-fixer">cmor-fixer
+    tool</a></p>
+
+    </li>
+
+    <li>
+
+    <p>cmorfixer_env is a singularity container which comes with preinstalled miniconda3</p>
+
+    </li>
+
+    </ul>
+
+    <h1>
+
+    <a id="user-content-prerequisites" class="anchor" href="#prerequisites" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Prerequisites</h1>
+
+    <p>You need the singularity program installed. Follow the instructions here, to
+    install singularity on your machine.</p>
+
+    <p><a href="https://singularity.lbl.gov/install-linux" rel="nofollow">https://singularity.lbl.gov/install-linux</a></p>
+
+    <h1>
+
+    <a id="user-content-to-download-a-prebuilt-singularity-image" class="anchor" href="#to-download-a-prebuilt-singularity-image"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>To
+    download a prebuilt singularity image:</h1>
+
+    <ul>
+
+    <li>If you''d like to use a prebuilt image, you could download from the link below;
+    if you''d rather build the container yourself, follow the build instructing in
+    the To build section.</li>
+
+    <li><a href="https://esg-dn2.nsc.liu.se/virtualtestbed/cmorfixerenv.simg" rel="nofollow">Link
+    to prebuilt image</a></li>
+
+    </ul>
+
+    <h1>
+
+    <a id="user-content-to-build" class="anchor" href="#to-build" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>To build</h1>
+
+    <pre><code>sudo singularity build cmorfixerenv.simg Singularity
+
+    </code></pre>
+
+    <h1>
+
+    <a id="user-content-to-initialize-container-and-optionally-mount-external-filesystems"
+    class="anchor" href="#to-initialize-container-and-optionally-mount-external-filesystems"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>To
+    initialize container (and optionally mount external filesystems)</h1>
+
+    <ul>
+
+    <li>If you don''t have to mount any non-root filesystems, you could start the
+    container like this:</li>
+
+    </ul>
+
+    <pre><code> singularity shell cmorfixerenv.simg
+
+    </code></pre>
+
+    <ul>
+
+    <li>If you don''t see on the container the filesystem which is accessible on the
+    host machine, you could try this, and once inside the container, you''ll be able
+    to see the filesystem mounted on /mnt.</li>
+
+    </ul>
+
+    <pre><code> singularity shell --bind &lt;path to filesystem you want mounted on
+    the container&gt;:/mnt cmorfixerenv.simg
+
+    </code></pre>
+
+    <ul>
+
+    <li>Inside the container, do the following</li>
+
+    </ul>
+
+    <pre><code>source /etc/bashrc
+
+    activateminiconda3
+
+    conda activate cmorfixer
+
+    </code></pre>
+
+    <ul>
+
+    <li>Execute cmorfixer (present in /opt/cmor_fixer/cmor-fixer/cmor-fixer.py, in
+    the container)</li>
+
+    </ul>
+
+    <pre><code>cd /root
+
+    script -c ''/opt/cmor_fixer/cmor-fixer/cmor-fixer.py --verbose --forceid --olist
+    --npp 1 --dry /mnt/CMIP6/ScenarioMIP/EC-Earth-Consortium/EC-Earth3/ssp126/'' scriptout_cmorfix_dryrun
+
+    </code></pre>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1611252471.0
 perambluate/singularity-definition-files-for-HPC:
   data_format: 2
   description: To build hpc benchmark and mpi with cuda support sif
@@ -31225,7 +31971,9 @@ powerPlant/spades-srf:
   - templates/Singularity.template
   full_name: powerPlant/spades-srf
   latest_release: null
-  readme: '{"message":"API rate limit exceeded for installation ID 633759.","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}'
+  readme: '<p>Singularity recipe files for spades</p>
+
+    '
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -35527,13 +36275,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 40
+  stargazers_count: 41
   subscribers_count: 8
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1623923421.0
+  updated_at: 1624058447.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
