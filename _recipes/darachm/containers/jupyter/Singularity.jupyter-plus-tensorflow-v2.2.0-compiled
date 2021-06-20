@@ -24,7 +24,10 @@ From: /home/zed/.singularity/darachm-containers-tensorflow-v2.2.0-compiled.simg
     python3 -m pip install -U pip jupyter jupyterlab \
         pandas numpy sklearn matplotlib pydot \
         regex jellyfish networkx biopython \
+        papermill \
         'shap==0.36.0'
+
+    python3 -m pip install nbformat --upgrade
 
     apt autoremove -y
     apt clean
