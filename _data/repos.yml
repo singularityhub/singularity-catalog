@@ -1663,7 +1663,7 @@ Characterisation-Virtual-Laboratory/CharacterisationVL-Software:
     \ data-canonical-src=\"https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg\"\
     \ style=\"max-width:100%;\"></a></p>\n"
   stargazers_count: 6
-  subscribers_count: 4
+  subscribers_count: 5
   topics: []
   updated_at: 1623365754.0
 ChunCun/container:
@@ -3706,7 +3706,7 @@ DiamondLightSource/Savu:
   stargazers_count: 28
   subscribers_count: 14
   topics: []
-  updated_at: 1624269601.0
+  updated_at: 1624357549.0
 DoaneAS/atacflow:
   data_format: 2
   description: Analysis pipeline for ATACseq data using Nextflow
@@ -4711,7 +4711,7 @@ Lizhen0909/LSHVec:
   - locality-sensitive-hashing
   - sequence-vector
   - classfication
-  updated_at: 1610550474.0
+  updated_at: 1624367592.0
 Lizhen0909/PyLSHvec:
   data_format: 2
   description: LSHVec pre-trained models and its Python bindings
@@ -9921,7 +9921,7 @@ Sarah145/batch_correct:
   topics:
   - scrna-seq-analysis
   - batch-correction
-  updated_at: 1602016843.0
+  updated_at: 1624369420.0
 TormodLandet/Ocellaris:
   data_format: 2
   description: This is a github MIRROR of the main ocellaris repo on bitbucket (https://bitbucket.org/ocellarisproject/ocellaris).
@@ -21237,7 +21237,7 @@ gpuhackathons-org/gpubootcamp:
   stargazers_count: 65
   subscribers_count: 6
   topics: []
-  updated_at: 1624339891.0
+  updated_at: 1624358872.0
 granek/jupyter-MIC-2021:
   data_format: 2
   description: null
@@ -22390,10 +22390,10 @@ heathsc/gemBS:
     </li>\n</ul>\n<p>bisulfite caller and filtering:</p>\n<ul>\n<li>Simon Heath -\
     \ <a href=\"mailto:simon.heath@gmail.com\">simon.heath@gmail.com</a>\n</li>\n\
     </ul>\n"
-  stargazers_count: 25
+  stargazers_count: 24
   subscribers_count: 4
   topics: []
-  updated_at: 1618985852.0
+  updated_at: 1624379756.0
 heathsc/gemBS-rs:
   data_format: 2
   description: A re-write of the gemBS pipeline framework in Rust
@@ -25413,7 +25413,7 @@ kalibera/rchk:
   stargazers_count: 95
   subscribers_count: 10
   topics: []
-  updated_at: 1623916426.0
+  updated_at: 1624351878.0
 kapsakcj/singularities:
   data_format: 2
   description: Singularity recipes for bioinformatics software
@@ -29070,10 +29070,10 @@ nservant/HiC-Pro:
     Logs: logs/dixon_2M/ice_1000000.log\nLogs: logs/dixon_2M_2/ice_500000.log\nLogs:\
     \ logs/dixon_2M_2/ice_1000000.log\n\nreal\t2m15,736s\nuser\t4m3,277s\nsys\t0m24,423s\n\
     \n</code></pre>\n"
-  stargazers_count: 244
+  stargazers_count: 245
   subscribers_count: 20
   topics: []
-  updated_at: 1623846305.0
+  updated_at: 1624371447.0
 onuryukselen/singularity:
   data_format: 2
   description: null
@@ -31231,304 +31231,7 @@ pmonnahan/DataPrep:
   - workflow/Singularity_defs.def
   full_name: pmonnahan/DataPrep
   latest_release: null
-  readme: "<h1>\n<a id=\"user-content-pre-imputation-qc-pipeline\" class=\"anchor\"\
-    \ href=\"#pre-imputation-qc-pipeline\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Pre-imputation QC pipeline</h1>\n\
-    <p>The purpose of this pipeline is to perform the following for a set of input\
-    \ PLINK datasets:</p>\n<ul>\n<li>basic QC (genotype/variant missingness, HWE,\
-    \ and minor allele frequency)</li>\n<li>harmonize allele specifications with the\
-    \ GRCh37 reference genome</li>\n<li>produce a set of VCF files (separated by chromosome)\
-    \ for imputation</li>\n<li>merge filtered datasets into a single dataset consisting\
-    \ only of overlapping sites.</li>\n</ul>\n<p>A companion pipeline, which performs\
-    \ post-imputation QC, will download alongside the pre-imputation pipeline.  To\
-    \ use the post-imputation pipeline, see the README in the postImpute directory.</p>\n\
-    \n\n<p><strong>Table of Contents</strong></p>\n<ul>\n<li>\n<a href=\"#requirements\"\
-    >Requirements</a>\n<ul>\n<li><a href=\"#snakemake\">Snakemake</a></li>\n<li><a\
-    \ href=\"#singularity\">Singularity</a></li>\n</ul>\n</li>\n<li>\n<a href=\"#running-the-workflow\"\
-    >Running the workflow</a>\n<ul>\n<li><a href=\"#other-notes\">Other Notes</a></li>\n\
-    <li><a href=\"#debugging-and-error-reports\">Debugging and error reports</a></li>\n\
-    </ul>\n</li>\n<li>\n<a href=\"#pipeline-overview\">Pipeline Overview</a>\n<ul>\n\
-    <li><a href=\"#input-data\">Input Data</a></li>\n<li><a href=\"#output\">Output</a></li>\n\
-    <li><a href=\"#dataset-harmonization\">Data Harmonization</a></li>\n<li><a href=\"\
-    #reference-allele-fixing\">Reference allele fixing</a></li>\n<li><a href=\"#basic-qc\"\
-    >Basic QC</a></li>\n<li><a href=\"#merging-inputs-optional\">Merging Inputs (Optional)</a></li>\n\
-    <li><a href=\"#imputaton-preparation\">Imputation Preparation</a></li>\n</ul>\n\
-    </li>\n</ul>\n\n<p><a href=\"https://github.com/pmonnahan/DataPrep/blob/master/Pipeline_DAG.png\"\
-    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pmonnahan/DataPrep/raw/master/Pipeline_DAG.png\"\
-    \ alt=\"Pipeline DAG\" style=\"max-width:100%;\"></a></p>\n<h2>\n<a id=\"user-content-requirements\"\
-    \ class=\"anchor\" href=\"#requirements\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Requirements</h2>\n<h3>\n<a id=\"\
-    user-content-snakemake\" class=\"anchor\" href=\"#snakemake\" aria-hidden=\"true\"\
-    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Snakemake</h3>\n\
-    <p>The pipeline is coordinated and run on an HPC (or locally) using <em>Snakemake</em>.\
-    \  To install snakemake, first create a virtual environment via:</p>\n<pre><code>module\
-    \ load python3/3.6.3_anaconda5.0.1\nconda install -c conda-forge mamba\nmamba\
-    \ create -c conda-forge -c bioconda -n &lt;your_environment_name&gt; snakemake\n\
-    </code></pre>\n<p>This will create a new virtual environment and install <code>snakemake</code>.\
-    \  Then, activate this environment and perform following installations:</p>\n\
-    <pre><code>conda activate &lt;your_environment_name&gt;\nconda install numpy yaml\
-    \ pandas\n</code></pre>\n<p>Anytime you need to run the pipeline, activate this\
-    \ environment beforehand via:</p>\n<pre><code>conda activate &lt;environment_name&gt;\n\
-    </code></pre>\n<p>If you choose not to create an environment, you must ensure\
-    \ that these packages are installed and available for your python installation.</p>\n\
-    <h3>\n<a id=\"user-content-singularity\" class=\"anchor\" href=\"#singularity\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Singularity</h3>\n<p>The installation of the individual programs \
-    \ used throughout this pipeline can be completely avoid by utilizing a Singularity\
-    \ image.  This image is too large to be hosted on Github, although you can find\
-    \ the definitions file used to create the image <a href=\"https://github.com/pmonnahan/AncInf/blob/master/singularity/Singularity_defs.def\"\
-    >here</a>.  Building of images is still not currently supported at MSI, so I used\
-    \ a Vagrant virtual machine, which comes with Singularity pre-configured/installed\
-    \ (<a href=\"https://app.vagrantup.com/singularityware/boxes/singularity-2.4/versions/2.4\"\
-    \ rel=\"nofollow\">https://app.vagrantup.com/singularityware/boxes/singularity-2.4/versions/2.4</a>).\
-    \  I can also share the img file directly upon request.</p>\n<p>However, in order\
-    \ to utilize the singularity image, <em>Singularity</em> must be installed on\
-    \ the HPC.  Currently, the pipeline assumes that <em>Singularity</em> will be\
-    \ available as a module and can be loaded into the environment via the command\
-    \ specified in the config.yml file, where it says 'singularity_module'.  The default\
-    \ setting will work for MSI at UMN.</p>\n<p>Singularity settings in config.yml</p>\n\
-    <pre><code>singularity:\n  use_singularity: 'true'\n  image: '/home/pmonnaha/pmonnaha/singularity/AncestryInference.sif\n\
-    </code></pre>\n<h2>\n<a id=\"user-content-running-the-workflow\" class=\"anchor\"\
-    \ href=\"#running-the-workflow\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>Running the workflow</h2>\n<p>First,\
-    \ activate the virtual environment into which snakemake was installed:</p>\n<pre><code>conda\
-    \ activate &lt;environment_name&gt;\n</code></pre>\n<p>Clone the parent repository\
-    \ to the location where you want to store the output of the pipeline.</p>\n<pre><code>git\
-    \ clone https://github.com/pmonnahan/DataPrep.git preImputeQC\ncd preImputeQC\n\
-    </code></pre>\n<p>The critical files responsible for executing the pipeline are\
-    \ contained in the <em>./workflow</em> subdirectory contained within the cloned\
-    \ repo.  They are:</p>\n<ul>\n<li>Snakefile</li>\n<li>config.yml</li>\n<li>cluster.yaml</li>\n\
-    </ul>\n<p>The <em>Snakefile</em> is the primary workhouse of snakemake, which\
-    \ specifies the dependencies of various parts of the pipeline and coordinates\
-    \ execution.  No modifications to the <em>Snakefile</em> are necessary.</p>\n\
-    <p>In order for the <em>Snakefile</em> to locate all of the necessary input and\
-    \ correctly submit jobs to the cluster, <strong>both</strong> the <em>config.yaml</em>\
-    \ and <em>cluster.yaml</em> need to be modified. Open these files and change the\
-    \ required entries that are indicated with 'MODIFY'.  Other fields do not require\
-    \ modification, although this may be desired given the particulars of the run\
-    \ you wish to implement.  Details on each entry in the config file (e.g. what\
-    \ the program expects in each entry as well as the purpose of the entry) are provided\
-    \ in the <em>Pipeline Overview</em> at the bottom.  Note: Only use letters and\
-    \ numbers when naming output files or datasets as this may cause issues with the\
-    \ report creation.</p>\n<p>The entire pipeline can be executed on a local machine\
-    \ (not recommended) or on an HPC, and the <em>cluster.yaml</em> file is required\
-    \ only for the latter.  For a local run, change the <code>local_run</code> entry\
-    \ to <code>true</code> under the <code>run_settings</code> section of the config\
-    \ file, and launch snakemake from within the parent directory by the simple command:</p>\n\
-    <pre><code>snakemake\n</code></pre>\n<p>However, multiple steps in the pipeline\
-    \ have high resource demands, and so are unlikely to be able to be run locally.\
-    \  This option exists primarily for testing and troubleshooting, so the remainder\
-    \ of the  documentation assumes that the pipeline will be executed on an HPC.\
-    \  In order to coordinate the use of the HPC, the following modifications to the\
-    \ snakemake command are required:</p>\n<pre><code>snakemake --cluster \"sbatch\
-    \ --no-requeue --partition={cluster.p} --time={cluster.time} --mem={cluster.mem}\
-    \ --ntasks={threads} --nodes={cluster.nodes} --mail-user={cluster.mail-user} --mail-type={cluster.mail-type}\
-    \ -o {cluster.o} -e {cluster.e} -A {cluster.A}\" --cluster-config workflow/cluster_yale.yaml\
-    \ -j 32\n</code></pre>\n<p>where -j specifies the number of jobs that can be submitted\
-    \ at once.</p>\n<p>One additional setting in the <em>config.yml</em> is needed\
-    \ in order to correctly submit jobs to the HPC.  The relevant entries are under\
-    \ the <code>run_settings</code> section of the config file:</p>\n<pre><code>run_settings:\n\
-    \  local_run: 'false'\n  cluster_config: 'workflow/cluster_slurm.yaml'\n  scheduler:\
-    \ 'slurm'\n</code></pre>\n<p>Here, it is necessary that the <code>cluster_config</code>\
-    \ entry is set to the path of the cluster_slurm.yaml file that will be used in\
-    \ the snakemake command.  Also, the scheduler must correspond to the syntax used\
-    \ in the snakemake command and cluster.yaml file.  I should point out that these\
-    \ additional changes are needed for responsibly using PLINK within a snakemake\
-    \ framework, and are not directly needed for snakemake.  PLINK will attempt to\
-    \ auto-detect available resources upon running regardless of the resources that\
-    \ were requested when the job was submitted.  Therefore, we have to read and parse\
-    \ the requested resources in the cluster config file in order for them to be communicated\
-    \ to PLINK from within the Snakefile.</p>\n<h3>\n<a id=\"user-content-other-notes\"\
-    \ class=\"anchor\" href=\"#other-notes\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Other notes</h3>\n<p>It is recommended\
-    \ that <em>snakemake</em> is run as an interactive session on an HPC.  <em>Snakemake</em>\
-    \ will launch the specified number (via the -j flag) of jobs, and then will hang\
-    \ and wait for them to finish.  As jobs finish (and assuming no errors), <em>snakemake</em>\
-    \ will launch additional jobs keeping the total running jobs at whatever -j is\
-    \ set for.  Although <em>snakemake</em> should not use a lot of memory, it could\
-    \ have long run times, which is generally not advisable on login nodes.</p>\n\
-    <p>One attractive feature of <em>snakemake</em> is its ability to keep track of\
-    \ the progress and dependencies of the different stages of the pipeline.  Specifically,\
-    \ if an error is encountered or the pipeline otherwise stops before the final\
-    \ step, <em>snakemake</em> can resume the pipeline where it left off, avoiding\
-    \ redundant computation for previously completed tasks.  To do so, simply resubmit\
-    \ the original <em>snakemake</em> command.</p>\n<p>To run a specific part of the\
-    \ pipeline, do:</p>\n<pre><code>snakemake -R &lt;rule_name&gt; --cluster \"sbatch\
-    \ --no-requeue --partition={cluster.p} --time={cluster.time} --mem={cluster.mem}\
-    \ --ntasks={threads} --nodes={cluster.nodes} --mail-user={cluster.mail-user} --mail-type={cluster.mail-type}\
-    \ -o {cluster.o} -e {cluster.e} -A {cluster.A}\" --cluster-config workflow/cluster_yale.yaml\
-    \ -j 20 --rerun-incomplete\n</code></pre>\n<p>where <em>rule_name</em> indicates\
-    \ the 'rule' (i.e. job) in the Snakefile that you wish to run.  Or, you can request\
-    \ a specific file by providing the filename at the end of the command.  You may\
-    \ need to include the -F (i.e. force) if the output file already exists and you\
-    \ want to overwrite it.</p>\n<p>Also, it is often very helpful to do a 'dry-run'\
-    \ of the pipeline in which the different steps and dependencies are printed to\
-    \ screen, but no actual jobs are executed.  This can be helpful to ensure that\
-    \ config entries are correct, etc.  To perform a dry-run, do:</p>\n<pre><code>snakemake\
-    \ -nrp\n</code></pre>\n<p>NOTE: It is convenient to make an alias in your ~/.bashrc\
-    \ file to run snakemake on the cluster without having to type the --cluster...\
-    \ part of the command every time.  For me, it looked like this:</p>\n<pre><code>alias\
-    \ snakeslurm=\"snakemake -k --cluster 'sbatch --no-requeue --partition={cluster.p}\
-    \ --time={cluster.time} --mem={cluster.mem} --ntasks={threads} --job-name={cluster.job-name}\
-    \ --nodes={cluster.nodes} --mail-user={cluster.mail-user} --mail-type={cluster.mail-type}\
-    \ -o {cluster.o} -e {cluster.e} -A {cluster.A}' --cluster-config workflow/cluster_slurm.yaml\"\
-    \n</code></pre>\n<p>This way, I can just do:</p>\n<pre><code>snakeslurm -j 25\n\
-    </code></pre>\n<p>To launch snakemake on the cluster.</p>\n<h4>\n<a id=\"user-content-debugging-and-error-reports\"\
-    \ class=\"anchor\" href=\"#debugging-and-error-reports\" aria-hidden=\"true\"\
-    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Debugging\
-    \ and error reports</h4>\n<p>Should an error be encountered in a job, snakemake\
-    \ will halt the pipeline and indicate in the terminal that an error has occurred.\
-    \  The offending job will also be printed in red in the terminal window.  More\
-    \ information on why the job failed can be found in the 'stdout' and 'stderr'\
-    \ files that are output to the <em>'OandE'</em> directory and will be labelled\
-    \ with the jobname.</p>\n<h2>\n<a id=\"user-content-pipeline-overview\" class=\"\
-    anchor\" href=\"#pipeline-overview\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Pipeline Overview</h2>\n<h3>\n\
-    <a id=\"user-content-input-data\" class=\"anchor\" href=\"#input-data\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Input\
-    \ Data</h3>\n<p>Under the 'query' section, you can specify the inputs for one\
-    \ or more datasets.  Each dataset should be uniquely named (Note: avoid using\
-    \ periods or underscores when naming output files or datasets as this may cause\
-    \ issues with the report creation.) with values specified for the following \"\
-    keys\":</p>\n<ul>\n<li>\n<strong>data</strong>: path to the PLINK files (just\
-    \ the PLINK prefix).</li>\n<li>\n<strong>chrom_key</strong>: tab-delimited text\
-    \ file with 2 columns (no header).  The first column contains the old chromosome\
-    \ names, and the second column contains the new names.\n<ul>\n<li>Used for converting\
-    \ to numeric names. e.g chr10 to 10.</li>\n</ul>\n</li>\n<li>\n<strong>allele_key</strong>:\
-    \ tab-delimited text file with 5 columns (no header).  First column is snpID and\
-    \ following columns are: old_allele1 old_allele2 new_allele1 new_allele2.\n<ul>\n\
-    <li>Used for converting alleles with A/B specification to ACGT.  Oftentimes provided\
-    \ in the dbGaP download.  If alleles are already specified in ACGT format, this\
-    \ field can be set to 'none'</li>\n</ul>\n</li>\n<li>\n<strong>ID_key</strong>:\
-    \ tab-delimited text file with 2 columns (no header).  First column is old SNP\
-    \ ID and second column is new SNP ID.\n<ul>\n<li>Used for converting to rsID format.\
-    \  If SNP IDs are already in rs-format, this field can be set to 'none'</li>\n\
-    </ul>\n</li>\n<li>\n<strong>flip_key</strong>: text file with single column containing\
-    \ SNP rsIDs that need to be flipped in order to align strand to the hg19 reference\
-    \ genome.\n<ul>\n<li>Used to harmonize strand across datasets to the hg19 reference\
-    \ genome.  Set this field to 'none' if all alleles are already on the same strand\
-    \ as the target reference genome.</li>\n</ul>\n</li>\n</ul>\n<p>Each of these\
-    \ fields are optional and providing 'none' as the entry will disable the steps\
-    \ associated with each key.  However, these fields should only be set to 'none'\
-    \ if you are sure that they are not necessary (e.g. you have already fixed any\
-    \ existing strand issues across datasets).</p>\n<p>Example of input specifications\
-    \ in the config file:</p>\n<pre><code>query:\n  \"dataset1\":\n    data: \"PATH/TO/PLINK/PREFIX/FOR/DATASET1\"\
-    \n    chrom_key: \"PATH/TO/PLINK/PREFIX/FOR/DATASET1\"\n    allele_key: \"PATH/TO/PLINK/PREFIX/FOR/DATASET1\"\
-    \n    ID_key: \"PATH/TO/PLINK/PREFIX/FOR/DATASET1\"\n    flip_key: \"PATH/TO/PLINK/PREFIX/FOR/DATASET1\"\
-    \n  \"dataset2\":\n    data: \"PATH/TO/PLINK/PREFIX/FOR/DATASET2\"\n    chrom_key:\
-    \ \"none\"\n    allele_key: \"none\"\n    ID_key: \"none\"\n    flip_key: \"none\"\
-    \n</code></pre>\n<p>Phenotypes of the samples must be specified by a tab-delimited\
-    \ text file where the first column contains the sample IDs (as they appear in\
-    \ the imputed VCF file) and the second column contains the phenotype. The path\
-    \ to this file can be provided in the field labelled 'phenotype_file' under the\
-    \ 'phenotype_data' field in the config.yml file.</p>\n<p>Sex of the samples must\
-    \ also be specified in a tab-delimited text file where the first column is sample\
-    \ ID and the second column is the sex specification according to PLINK.  The path\
-    \ to this file can be provided in the field labelled 'sex_file' under the 'phenotype_data'\
-    \ field in the config.yml file.</p>\n<pre><code>phenotype_data: \n  pheno_file:\
-    \ \"none\"\n  sex_file: \"/path/to/sex/file\"\n</code></pre>\n<h3>\n<a id=\"user-content-output\"\
-    \ class=\"anchor\" href=\"#output\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Output</h3>\n<p>The output is\
-    \ a set of PLINK files in the parent directory labelled with the value provided\
-    \ in the 'outname' entry of the config file.  However, if 'merge' is set to 'false'\
-    \ in the config file, this final merge step is skipped, and the final output would\
-    \ be the set of QC'ed plink files within each subdirectory labelled with the dataset\
-    \ names.  Within each of these subdirectories, there will also be a set of VCF\
-    \ files, which are suitable for use in either the Michigan or TOPMed imputation\
-    \ servers.</p>\n<p>The other primary output is a PDF report containing a summary\
-    \ of various steps in the pipeline.  It is <strong>highly recommended</strong>\
-    \ that the user carefully review this report to confirm that everything seems\
-    \ in order.  Particular attention should be paid to whether specific steps have\
-    \ resulted in major loss of markers as well as whether there is a positive correlation\
-    \ between allele frequencies in the 1000Genomes dataset and allele frequencies\
-    \ in each of the query datasets.  These scatter plots are provided towards the\
-    \ end of the report, and if a substantial subset of the points exhibit an anti-correlation,\
-    \ this is indicative of a preponderance of strand errors that ought to be corrected\
-    \ (via the 'flip_key') prior to proceeding.</p>\n<h3>\n<a id=\"user-content-dataset-harmonization\"\
-    \ class=\"anchor\" href=\"#dataset-harmonization\" aria-hidden=\"true\"><span\
-    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Dataset harmonization</h3>\n\
-    <p>The first step(s) in the pipeline aims to harmonize the naming of chromosomes,\
-    \ alleles, and variant IDs.  This is accomplished via the 4 keys described above.\
-    \  While this pipeline generally attempts to simplify the QC process, it is extremely\
-    \ important that the user is acquainted well enough with each individual dataset\
-    \ to ensure that the appropriate keys are specified (or not specified).</p>\n\
-    <h3>\n<a id=\"user-content-reference-allele-fixing\" class=\"anchor\" href=\"\
-    #reference-allele-fixing\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>Reference allele fixing</h3>\n<p>In contrast\
-    \ to a VCF, where alleles are specified with respect to a specified reference\
-    \ genome (reference versus alternative alleles), PLINK-formatted files often specify\
-    \ alleles as major/minor alleles based on the frequency in the dataset.  Furthermore,\
-    \ many commonly used arrays will contain a mixture of SNPs genotyped on either\
-    \ the + or - strand.  Lastly, the default behavior of PLINK is to automatically\
-    \ set the minor to A1 and the major allele to A2, which can unintentionally generate\
-    \ inconsistencies in allele specifications across datasets.</p>\n<p>With respect\
-    \ to a reference genome, two possible types of errors can occur:</p>\n<ul>\n<li>Flipped\
-    \ strand:  The genotype is specified with respect to the opposite strand relative\
-    \ to the reference genome.</li>\n<li>Swapped allele:  The genotype is specified\
-    \ on the same strand as the reference genome, but the A1 (minor) allele has been\
-    \ set to equal the 'reference' allele when it ought to be set to equal the non-reference/'alternative'\
-    \ allele</li>\n</ul>\n<p>To identify these errors, we use the bcftools plugin\
-    \ '+fixref', which requires not only the reference sequence (fasta) file, but\
-    \ also a VCF file containing variant sites that are used to identify mismatching\
-    \ alleles in the query dataset.  Importantly, if the program determines that no\
-    \ strand issues exist and that the reference/alternative alleles have simply been\
-    \ swapped, then program will swap the major/minor alleles to match the reference.\
-    \  It will not perform any strand flipping, where it converts genotypes to be\
-    \ specified with respect to the nucleotide on the opposite strand.  Although the\
-    \ program will attempt to identify these strand flips, it doesn't make the correction\
-    \ as the authors consider this a risky move that should not be handled in an automated\
-    \ fashion.  Thus, flip-strand mismatches are ultimately removed.  If there are\
-    \ a large number of these, the user should attempt to understand and resolve the\
-    \ source of the issue and rerun this pipeline.</p>\n<p>By default, the pipeline\
-    \ will download the following files for the hg19 reference genome:</p>\n<p>Reference\
-    \ fasta:\n<a href=\"ftp://ftp.ncbi.nlm.nih.gov/1000genomes/ftp/technical/reference/human_g1k_v37.fasta.gz\"\
-    \ rel=\"nofollow\">ftp://ftp.ncbi.nlm.nih.gov/1000genomes/ftp/technical/reference/human_g1k_v37.fasta.gz</a></p>\n\
-    <p>Reference VCF (1000Genomes):\n<a href=\"ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh37p13/VCF/All_20170710.vcf.gz\"\
-    \ rel=\"nofollow\">ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh37p13/VCF/All_20170710.vcf.gz</a></p>\n\
-    <p>An indication of whether alleles are now specified correctly is to plot frequency\
-    \ of an allele in the query population against the frequency in the reference\
-    \ population and look for an obviously positive correlation.  Such plots are automatically\
-    \ produced in the PDF report as the final step in the pipeline.</p>\n<h3>\n<a\
-    \ id=\"user-content-basic-qc\" class=\"anchor\" href=\"#basic-qc\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Basic\
-    \ QC</h3>\n<p>After alleles have been fixed as described above, a series of basic\
-    \ QC steps are performed on each dataset by the script <em>'scripts/QC.py'</em>,\
-    \ with the filtering thresholds specified in the config file (see below).</p>\n\
-    <pre><code>perform_QC: 'true'\nQC:\n  vm1: \"0.2\" # Initial variant missingness\
-    \ filter\n  gm: \"0.1\" # Individual missingness filter\n  vm2: \"0.05\"  # Ultimate\
-    \ call rate for variants after removing low-callrate samples\n  maf: \"0.01\"\
-    \  # mimimum Minor allele frequency\n  hwe: \"0.0000001\"  # p-value threshold\
-    \ for whether site follows hardy-weinberg\n  mbs: \"0.0000001\"  # p-value treshold\
-    \ for test of whether missingness varies by sex\n</code></pre>\n<p>We first wish\
-    \ to identify and remove individual samples that show high missingess across markers\
-    \ (specified by 'gm').  However, to identify these individuals, we first need\
-    \ to remove variants that imputed poorly across all individuals (specified by\
-    \ 'vm1').  After removing these individuals, we then remove variants with high\
-    \ missingness (specified by 'vm2').  Since poor imputation will result in missing\
-    \ genotypes, this missingness filter indirectly filters for low quality imputation\
-    \ sites.  Variants are also filtered based whether or not they show significant\
-    \ departures from Hardy-Weinberg Equilibrium ('hwe' entry) and whether there is\
-    \ a significant association between missingness and sex ('mbs' entry).  We also\
-    \ remove rare variants based on the 'maf' value.  Lastly, we remove indels, duplicate\
-    \ SNPs, and multi-allelic variants.</p>\n<p>Note that testing for missigness by\
-    \ case/control status is generally recommended as well if the user wishes to proceed\
-    \ straight to SNP-based analyses such as GWAS.  However, if the data is to be\
-    \ used for ancestry inference, it may make more sense to retain these SNPs.</p>\n\
-    <h3>\n<a id=\"user-content-merging-inputs-optional\" class=\"anchor\" href=\"\
-    #merging-inputs-optional\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>Merging inputs (Optional)</h3>\n<p>If multiple\
-    \ input datasets were provided, an optional final step is to create a single merged\
-    \ dataset consisting of only the sites that overlap (i.e. passed filters) across\
-    \ all component datasets.  This behavior is controlled by the 'merge' entry in\
-    \ the config file.  To enable the merging behavior, set this to:</p>\n<pre><code>merge:\
-    \ 'true'\n</code></pre>\n<h3>\n<a id=\"user-content-imputaton-preparation\" class=\"\
-    anchor\" href=\"#imputaton-preparation\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Imputaton preparation</h3>\n\
-    <p>Another optional, final feature is to create a set of of VCF files (parsed\
-    \ by chromosome) for each of the input datasets.  These VCFs can be used directly\
-    \ as input into either the Michigan Imputation Server or the TOPMed Imputation\
-    \ Server.  The output of the imputation servers can then be used as input into\
-    \ the post-imputation QC pipeline (see README.md in the 'postImpute' directory).</p>\n"
+  readme: '{"message":"API rate limit exceeded for installation ID 633759.","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}'
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -36949,13 +36652,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 43
+  stargazers_count: 45
   subscribers_count: 8
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1624302919.0
+  updated_at: 1624428754.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
