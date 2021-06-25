@@ -1676,45 +1676,56 @@ ChunCun/container:
   latest_release: null
   readme: '<h1>
 
-    <a id="user-content-chamois-singularity" class="anchor" href="#chamois-singularity"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>chamois-singularity</h1>
+    <a id="user-content-centos8_roar" class="anchor" href="#centos8_roar" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>centos8_roar</h1>
 
-    <p>A recipe file for a singularity containerized version of <a href="https://github.com/idaholab/moose">Moose</a>
-    and <a href="https://github.com/matthiasneuner/chamois">Chamois</a>.
+    <p>Centos 8 base image for Roar</p>
 
-    Chamois requires the constitutive model library <a href="">Marmot</a>.
+    <h3>
 
-    The container environment is based either on Centos 8, GCC-9, CMake 3.18, and
-    OpenMPI 4.0.2 or alternatively Debian 11, gcc-10, CMake 3.18, and OpenMPI 4.0.2.
-
-    Note that libMesh is built only in <code>opt</code> mode.</p>
-
-    <p>Instructions:</p>
+    <a id="user-content-note" class="anchor" href="#note" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>NOTE</h3>
 
     <ul>
 
-    <li>Ensure that <code>moose</code>, <code>chamois</code> and <code>Marmot</code>
-    repositories are available</li>
+    <li>This recipe may include unnecessary packages for certain software installation</li>
 
-    <li>Build: <code>MOOSE_DIR=/moose/repo/dir MARMOT_DIR=/marmot/repo/dir CHAMOIS_DIR=/chamois/repo/dir
-    sudo singularity build chamois-singularity.simg chamois-singularity-XXX.def</code>
+    <li>More packages will be added in the future</li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-updates" class="anchor" href="#updates" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Updates</h2>
+
+    <ul>
+
+    <li>
+
+    <p>2020/11/13</p>
+
+    <ul>
+
+    <li>Initial recipe added</li>
+
+    </ul>
 
     </li>
 
-    <li>Optional: Pass <code>SINGULARITYENV_MAKE_JOBS=XX</code> to set the number
-    <code>XX</code> of make jobs during building</li>
+    <li>
 
-    <li>Optional: Pass <code>SINGULARITYENV_DELETE_GIT=TRUE</code> to delete all Moose,
-    PETSc and libMesh (and submodule) .git repositories in order to reduce container
-    size</li>
+    <p>2021/03/22</p>
 
-    <li>Execute: <code>singularity exec chamois-singularity.simg /projects/chamois/chamois-opt
-    -i inputfile.i</code>
+    <ul>
 
-    </li>
+    <li>Default Python3 is updated to Python 3.8</li>
 
-    <li>Execute with MPI: <code>mpiexec -np XX singularity exec chamois-singularity.simg
-    /projects/chamois/chamois-opt -i inputfile.i</code>
+    <li>Lapack, BLAS, OpenBLAS, ATLAS, and NetCDF are added</li>
+
+    <li>CMake 3.19.7, Boost 1.75.0, and R 4.0.4 are added</li>
+
+    </ul>
 
     </li>
 
@@ -2500,7 +2511,7 @@ ComputationalRadiationPhysics/picongpu:
     our strong scaling" title="Strong Scaling" style="max-width:100%;"></a></p>
 
     '
-  stargazers_count: 471
+  stargazers_count: 472
   subscribers_count: 46
   topics:
   - laser
@@ -2513,7 +2524,7 @@ ComputationalRadiationPhysics/picongpu:
   - particle-in-cell
   - pic
   - research
-  updated_at: 1623956614.0
+  updated_at: 1624521667.0
 D-Lo/bambi:
   data_format: 2
   description: R wrapper for bamdb
@@ -10955,7 +10966,7 @@ UniversalDataTool/universal-data-tool:
     </g-emoji></a>\n</td>\n  </tr>\n</table>\n\n\n\n<p>This project follows the <a\
     \ href=\"https://github.com/all-contributors/all-contributors\">all-contributors</a>\
     \ specification. Contributions of any kind welcome!</p>\n"
-  stargazers_count: 1444
+  stargazers_count: 1443
   subscribers_count: 32
   topics:
   - computer-vision
@@ -10978,7 +10989,7 @@ UniversalDataTool/universal-data-tool:
   - labeling
   - labeling-tool
   - hacktoberfest
-  updated_at: 1624273011.0
+  updated_at: 1624529252.0
 VIB-CBD/scanpy-images:
   data_format: 2
   description: Docker and Singularity images for Scanpy
@@ -11618,10 +11629,10 @@ abs-tudelft/ArrowSAM:
     \ clone https://github.com/tahashmi/bwa.git\n</code></pre>\n</li>\n<li>\n<p>Go\
     \ into bwa dir and compile BWA-MEM:</p>\n<pre><code> cd bwa\n make\n</code></pre>\n\
     </li>\n<li>\n<p>Now you can run BWA-MEM.</p>\n</li>\n</ol>\n"
-  stargazers_count: 14
+  stargazers_count: 15
   subscribers_count: 3
   topics: []
-  updated_at: 1619243360.0
+  updated_at: 1624522487.0
 aces/cbrain-containers-recipes:
   data_format: 2
   description: Recipes for singularity and docker containers used in CBRAIN
@@ -21452,11 +21463,11 @@ granek/singularity-rstudio-base:
   description: 'Singularity image to serve as base for all project images.  Defaults
     to starting up RStudio with an auto-selected port and password '
   filenames:
-  - Singularity.3.6.1
-  - Singularity.4.0.2
-  - Singularity.3.6.0
-  - Singularity.4.0.3
   - Singularity.mro.4.0.3
+  - Singularity.3.6.1
+  - Singularity.3.6.0
+  - Singularity.4.0.2
+  - Singularity.4.0.3
   full_name: granek/singularity-rstudio-base
   latest_release: null
   readme: '<p><a href="https://singularity-hub.org/collections/3197" rel="nofollow"><img
@@ -29725,7 +29736,7 @@ openhpc/ohpc:
     Form</a>.</p>
 
     '
-  stargazers_count: 565
+  stargazers_count: 569
   subscribers_count: 93
   topics:
   - hpc
@@ -29735,7 +29746,7 @@ openhpc/ohpc:
   - devtools
   - mpi
   - linuxfoundation
-  updated_at: 1624484551.0
+  updated_at: 1624598562.0
 pbranson/pangeo-hpc-singularity:
   data_format: 2
   description: Scripts to run dask and jupyter lab on Singularity using the pangeo-notebook
@@ -31220,7 +31231,304 @@ pmonnahan/DataPrep:
   - workflow/Singularity_defs.def
   full_name: pmonnahan/DataPrep
   latest_release: null
-  readme: '{"message":"API rate limit exceeded for installation ID 633759.","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}'
+  readme: "<h1>\n<a id=\"user-content-pre-imputation-qc-pipeline\" class=\"anchor\"\
+    \ href=\"#pre-imputation-qc-pipeline\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Pre-imputation QC pipeline</h1>\n\
+    <p>The purpose of this pipeline is to perform the following for a set of input\
+    \ PLINK datasets:</p>\n<ul>\n<li>basic QC (genotype/variant missingness, HWE,\
+    \ and minor allele frequency)</li>\n<li>harmonize allele specifications with the\
+    \ GRCh37 reference genome</li>\n<li>produce a set of VCF files (separated by chromosome)\
+    \ for imputation</li>\n<li>merge filtered datasets into a single dataset consisting\
+    \ only of overlapping sites.</li>\n</ul>\n<p>A companion pipeline, which performs\
+    \ post-imputation QC, will download alongside the pre-imputation pipeline.  To\
+    \ use the post-imputation pipeline, see the README in the postImpute directory.</p>\n\
+    \n\n<p><strong>Table of Contents</strong></p>\n<ul>\n<li>\n<a href=\"#requirements\"\
+    >Requirements</a>\n<ul>\n<li><a href=\"#snakemake\">Snakemake</a></li>\n<li><a\
+    \ href=\"#singularity\">Singularity</a></li>\n</ul>\n</li>\n<li>\n<a href=\"#running-the-workflow\"\
+    >Running the workflow</a>\n<ul>\n<li><a href=\"#other-notes\">Other Notes</a></li>\n\
+    <li><a href=\"#debugging-and-error-reports\">Debugging and error reports</a></li>\n\
+    </ul>\n</li>\n<li>\n<a href=\"#pipeline-overview\">Pipeline Overview</a>\n<ul>\n\
+    <li><a href=\"#input-data\">Input Data</a></li>\n<li><a href=\"#output\">Output</a></li>\n\
+    <li><a href=\"#dataset-harmonization\">Data Harmonization</a></li>\n<li><a href=\"\
+    #reference-allele-fixing\">Reference allele fixing</a></li>\n<li><a href=\"#basic-qc\"\
+    >Basic QC</a></li>\n<li><a href=\"#merging-inputs-optional\">Merging Inputs (Optional)</a></li>\n\
+    <li><a href=\"#imputaton-preparation\">Imputation Preparation</a></li>\n</ul>\n\
+    </li>\n</ul>\n\n<p><a href=\"https://github.com/pmonnahan/DataPrep/blob/master/Pipeline_DAG.png\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pmonnahan/DataPrep/raw/master/Pipeline_DAG.png\"\
+    \ alt=\"Pipeline DAG\" style=\"max-width:100%;\"></a></p>\n<h2>\n<a id=\"user-content-requirements\"\
+    \ class=\"anchor\" href=\"#requirements\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Requirements</h2>\n<h3>\n<a id=\"\
+    user-content-snakemake\" class=\"anchor\" href=\"#snakemake\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Snakemake</h3>\n\
+    <p>The pipeline is coordinated and run on an HPC (or locally) using <em>Snakemake</em>.\
+    \  To install snakemake, first create a virtual environment via:</p>\n<pre><code>module\
+    \ load python3/3.6.3_anaconda5.0.1\nconda install -c conda-forge mamba\nmamba\
+    \ create -c conda-forge -c bioconda -n &lt;your_environment_name&gt; snakemake\n\
+    </code></pre>\n<p>This will create a new virtual environment and install <code>snakemake</code>.\
+    \  Then, activate this environment and perform following installations:</p>\n\
+    <pre><code>conda activate &lt;your_environment_name&gt;\nconda install numpy yaml\
+    \ pandas\n</code></pre>\n<p>Anytime you need to run the pipeline, activate this\
+    \ environment beforehand via:</p>\n<pre><code>conda activate &lt;environment_name&gt;\n\
+    </code></pre>\n<p>If you choose not to create an environment, you must ensure\
+    \ that these packages are installed and available for your python installation.</p>\n\
+    <h3>\n<a id=\"user-content-singularity\" class=\"anchor\" href=\"#singularity\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Singularity</h3>\n<p>The installation of the individual programs \
+    \ used throughout this pipeline can be completely avoid by utilizing a Singularity\
+    \ image.  This image is too large to be hosted on Github, although you can find\
+    \ the definitions file used to create the image <a href=\"https://github.com/pmonnahan/AncInf/blob/master/singularity/Singularity_defs.def\"\
+    >here</a>.  Building of images is still not currently supported at MSI, so I used\
+    \ a Vagrant virtual machine, which comes with Singularity pre-configured/installed\
+    \ (<a href=\"https://app.vagrantup.com/singularityware/boxes/singularity-2.4/versions/2.4\"\
+    \ rel=\"nofollow\">https://app.vagrantup.com/singularityware/boxes/singularity-2.4/versions/2.4</a>).\
+    \  I can also share the img file directly upon request.</p>\n<p>However, in order\
+    \ to utilize the singularity image, <em>Singularity</em> must be installed on\
+    \ the HPC.  Currently, the pipeline assumes that <em>Singularity</em> will be\
+    \ available as a module and can be loaded into the environment via the command\
+    \ specified in the config.yml file, where it says 'singularity_module'.  The default\
+    \ setting will work for MSI at UMN.</p>\n<p>Singularity settings in config.yml</p>\n\
+    <pre><code>singularity:\n  use_singularity: 'true'\n  image: '/home/pmonnaha/pmonnaha/singularity/AncestryInference.sif\n\
+    </code></pre>\n<h2>\n<a id=\"user-content-running-the-workflow\" class=\"anchor\"\
+    \ href=\"#running-the-workflow\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Running the workflow</h2>\n<p>First,\
+    \ activate the virtual environment into which snakemake was installed:</p>\n<pre><code>conda\
+    \ activate &lt;environment_name&gt;\n</code></pre>\n<p>Clone the parent repository\
+    \ to the location where you want to store the output of the pipeline.</p>\n<pre><code>git\
+    \ clone https://github.com/pmonnahan/DataPrep.git preImputeQC\ncd preImputeQC\n\
+    </code></pre>\n<p>The critical files responsible for executing the pipeline are\
+    \ contained in the <em>./workflow</em> subdirectory contained within the cloned\
+    \ repo.  They are:</p>\n<ul>\n<li>Snakefile</li>\n<li>config.yml</li>\n<li>cluster.yaml</li>\n\
+    </ul>\n<p>The <em>Snakefile</em> is the primary workhouse of snakemake, which\
+    \ specifies the dependencies of various parts of the pipeline and coordinates\
+    \ execution.  No modifications to the <em>Snakefile</em> are necessary.</p>\n\
+    <p>In order for the <em>Snakefile</em> to locate all of the necessary input and\
+    \ correctly submit jobs to the cluster, <strong>both</strong> the <em>config.yaml</em>\
+    \ and <em>cluster.yaml</em> need to be modified. Open these files and change the\
+    \ required entries that are indicated with 'MODIFY'.  Other fields do not require\
+    \ modification, although this may be desired given the particulars of the run\
+    \ you wish to implement.  Details on each entry in the config file (e.g. what\
+    \ the program expects in each entry as well as the purpose of the entry) are provided\
+    \ in the <em>Pipeline Overview</em> at the bottom.  Note: Only use letters and\
+    \ numbers when naming output files or datasets as this may cause issues with the\
+    \ report creation.</p>\n<p>The entire pipeline can be executed on a local machine\
+    \ (not recommended) or on an HPC, and the <em>cluster.yaml</em> file is required\
+    \ only for the latter.  For a local run, change the <code>local_run</code> entry\
+    \ to <code>true</code> under the <code>run_settings</code> section of the config\
+    \ file, and launch snakemake from within the parent directory by the simple command:</p>\n\
+    <pre><code>snakemake\n</code></pre>\n<p>However, multiple steps in the pipeline\
+    \ have high resource demands, and so are unlikely to be able to be run locally.\
+    \  This option exists primarily for testing and troubleshooting, so the remainder\
+    \ of the  documentation assumes that the pipeline will be executed on an HPC.\
+    \  In order to coordinate the use of the HPC, the following modifications to the\
+    \ snakemake command are required:</p>\n<pre><code>snakemake --cluster \"sbatch\
+    \ --no-requeue --partition={cluster.p} --time={cluster.time} --mem={cluster.mem}\
+    \ --ntasks={threads} --nodes={cluster.nodes} --mail-user={cluster.mail-user} --mail-type={cluster.mail-type}\
+    \ -o {cluster.o} -e {cluster.e} -A {cluster.A}\" --cluster-config workflow/cluster_yale.yaml\
+    \ -j 32\n</code></pre>\n<p>where -j specifies the number of jobs that can be submitted\
+    \ at once.</p>\n<p>One additional setting in the <em>config.yml</em> is needed\
+    \ in order to correctly submit jobs to the HPC.  The relevant entries are under\
+    \ the <code>run_settings</code> section of the config file:</p>\n<pre><code>run_settings:\n\
+    \  local_run: 'false'\n  cluster_config: 'workflow/cluster_slurm.yaml'\n  scheduler:\
+    \ 'slurm'\n</code></pre>\n<p>Here, it is necessary that the <code>cluster_config</code>\
+    \ entry is set to the path of the cluster_slurm.yaml file that will be used in\
+    \ the snakemake command.  Also, the scheduler must correspond to the syntax used\
+    \ in the snakemake command and cluster.yaml file.  I should point out that these\
+    \ additional changes are needed for responsibly using PLINK within a snakemake\
+    \ framework, and are not directly needed for snakemake.  PLINK will attempt to\
+    \ auto-detect available resources upon running regardless of the resources that\
+    \ were requested when the job was submitted.  Therefore, we have to read and parse\
+    \ the requested resources in the cluster config file in order for them to be communicated\
+    \ to PLINK from within the Snakefile.</p>\n<h3>\n<a id=\"user-content-other-notes\"\
+    \ class=\"anchor\" href=\"#other-notes\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Other notes</h3>\n<p>It is recommended\
+    \ that <em>snakemake</em> is run as an interactive session on an HPC.  <em>Snakemake</em>\
+    \ will launch the specified number (via the -j flag) of jobs, and then will hang\
+    \ and wait for them to finish.  As jobs finish (and assuming no errors), <em>snakemake</em>\
+    \ will launch additional jobs keeping the total running jobs at whatever -j is\
+    \ set for.  Although <em>snakemake</em> should not use a lot of memory, it could\
+    \ have long run times, which is generally not advisable on login nodes.</p>\n\
+    <p>One attractive feature of <em>snakemake</em> is its ability to keep track of\
+    \ the progress and dependencies of the different stages of the pipeline.  Specifically,\
+    \ if an error is encountered or the pipeline otherwise stops before the final\
+    \ step, <em>snakemake</em> can resume the pipeline where it left off, avoiding\
+    \ redundant computation for previously completed tasks.  To do so, simply resubmit\
+    \ the original <em>snakemake</em> command.</p>\n<p>To run a specific part of the\
+    \ pipeline, do:</p>\n<pre><code>snakemake -R &lt;rule_name&gt; --cluster \"sbatch\
+    \ --no-requeue --partition={cluster.p} --time={cluster.time} --mem={cluster.mem}\
+    \ --ntasks={threads} --nodes={cluster.nodes} --mail-user={cluster.mail-user} --mail-type={cluster.mail-type}\
+    \ -o {cluster.o} -e {cluster.e} -A {cluster.A}\" --cluster-config workflow/cluster_yale.yaml\
+    \ -j 20 --rerun-incomplete\n</code></pre>\n<p>where <em>rule_name</em> indicates\
+    \ the 'rule' (i.e. job) in the Snakefile that you wish to run.  Or, you can request\
+    \ a specific file by providing the filename at the end of the command.  You may\
+    \ need to include the -F (i.e. force) if the output file already exists and you\
+    \ want to overwrite it.</p>\n<p>Also, it is often very helpful to do a 'dry-run'\
+    \ of the pipeline in which the different steps and dependencies are printed to\
+    \ screen, but no actual jobs are executed.  This can be helpful to ensure that\
+    \ config entries are correct, etc.  To perform a dry-run, do:</p>\n<pre><code>snakemake\
+    \ -nrp\n</code></pre>\n<p>NOTE: It is convenient to make an alias in your ~/.bashrc\
+    \ file to run snakemake on the cluster without having to type the --cluster...\
+    \ part of the command every time.  For me, it looked like this:</p>\n<pre><code>alias\
+    \ snakeslurm=\"snakemake -k --cluster 'sbatch --no-requeue --partition={cluster.p}\
+    \ --time={cluster.time} --mem={cluster.mem} --ntasks={threads} --job-name={cluster.job-name}\
+    \ --nodes={cluster.nodes} --mail-user={cluster.mail-user} --mail-type={cluster.mail-type}\
+    \ -o {cluster.o} -e {cluster.e} -A {cluster.A}' --cluster-config workflow/cluster_slurm.yaml\"\
+    \n</code></pre>\n<p>This way, I can just do:</p>\n<pre><code>snakeslurm -j 25\n\
+    </code></pre>\n<p>To launch snakemake on the cluster.</p>\n<h4>\n<a id=\"user-content-debugging-and-error-reports\"\
+    \ class=\"anchor\" href=\"#debugging-and-error-reports\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Debugging\
+    \ and error reports</h4>\n<p>Should an error be encountered in a job, snakemake\
+    \ will halt the pipeline and indicate in the terminal that an error has occurred.\
+    \  The offending job will also be printed in red in the terminal window.  More\
+    \ information on why the job failed can be found in the 'stdout' and 'stderr'\
+    \ files that are output to the <em>'OandE'</em> directory and will be labelled\
+    \ with the jobname.</p>\n<h2>\n<a id=\"user-content-pipeline-overview\" class=\"\
+    anchor\" href=\"#pipeline-overview\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Pipeline Overview</h2>\n<h3>\n\
+    <a id=\"user-content-input-data\" class=\"anchor\" href=\"#input-data\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Input\
+    \ Data</h3>\n<p>Under the 'query' section, you can specify the inputs for one\
+    \ or more datasets.  Each dataset should be uniquely named (Note: avoid using\
+    \ periods or underscores when naming output files or datasets as this may cause\
+    \ issues with the report creation.) with values specified for the following \"\
+    keys\":</p>\n<ul>\n<li>\n<strong>data</strong>: path to the PLINK files (just\
+    \ the PLINK prefix).</li>\n<li>\n<strong>chrom_key</strong>: tab-delimited text\
+    \ file with 2 columns (no header).  The first column contains the old chromosome\
+    \ names, and the second column contains the new names.\n<ul>\n<li>Used for converting\
+    \ to numeric names. e.g chr10 to 10.</li>\n</ul>\n</li>\n<li>\n<strong>allele_key</strong>:\
+    \ tab-delimited text file with 5 columns (no header).  First column is snpID and\
+    \ following columns are: old_allele1 old_allele2 new_allele1 new_allele2.\n<ul>\n\
+    <li>Used for converting alleles with A/B specification to ACGT.  Oftentimes provided\
+    \ in the dbGaP download.  If alleles are already specified in ACGT format, this\
+    \ field can be set to 'none'</li>\n</ul>\n</li>\n<li>\n<strong>ID_key</strong>:\
+    \ tab-delimited text file with 2 columns (no header).  First column is old SNP\
+    \ ID and second column is new SNP ID.\n<ul>\n<li>Used for converting to rsID format.\
+    \  If SNP IDs are already in rs-format, this field can be set to 'none'</li>\n\
+    </ul>\n</li>\n<li>\n<strong>flip_key</strong>: text file with single column containing\
+    \ SNP rsIDs that need to be flipped in order to align strand to the hg19 reference\
+    \ genome.\n<ul>\n<li>Used to harmonize strand across datasets to the hg19 reference\
+    \ genome.  Set this field to 'none' if all alleles are already on the same strand\
+    \ as the target reference genome.</li>\n</ul>\n</li>\n</ul>\n<p>Each of these\
+    \ fields are optional and providing 'none' as the entry will disable the steps\
+    \ associated with each key.  However, these fields should only be set to 'none'\
+    \ if you are sure that they are not necessary (e.g. you have already fixed any\
+    \ existing strand issues across datasets).</p>\n<p>Example of input specifications\
+    \ in the config file:</p>\n<pre><code>query:\n  \"dataset1\":\n    data: \"PATH/TO/PLINK/PREFIX/FOR/DATASET1\"\
+    \n    chrom_key: \"PATH/TO/PLINK/PREFIX/FOR/DATASET1\"\n    allele_key: \"PATH/TO/PLINK/PREFIX/FOR/DATASET1\"\
+    \n    ID_key: \"PATH/TO/PLINK/PREFIX/FOR/DATASET1\"\n    flip_key: \"PATH/TO/PLINK/PREFIX/FOR/DATASET1\"\
+    \n  \"dataset2\":\n    data: \"PATH/TO/PLINK/PREFIX/FOR/DATASET2\"\n    chrom_key:\
+    \ \"none\"\n    allele_key: \"none\"\n    ID_key: \"none\"\n    flip_key: \"none\"\
+    \n</code></pre>\n<p>Phenotypes of the samples must be specified by a tab-delimited\
+    \ text file where the first column contains the sample IDs (as they appear in\
+    \ the imputed VCF file) and the second column contains the phenotype. The path\
+    \ to this file can be provided in the field labelled 'phenotype_file' under the\
+    \ 'phenotype_data' field in the config.yml file.</p>\n<p>Sex of the samples must\
+    \ also be specified in a tab-delimited text file where the first column is sample\
+    \ ID and the second column is the sex specification according to PLINK.  The path\
+    \ to this file can be provided in the field labelled 'sex_file' under the 'phenotype_data'\
+    \ field in the config.yml file.</p>\n<pre><code>phenotype_data: \n  pheno_file:\
+    \ \"none\"\n  sex_file: \"/path/to/sex/file\"\n</code></pre>\n<h3>\n<a id=\"user-content-output\"\
+    \ class=\"anchor\" href=\"#output\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Output</h3>\n<p>The output is\
+    \ a set of PLINK files in the parent directory labelled with the value provided\
+    \ in the 'outname' entry of the config file.  However, if 'merge' is set to 'false'\
+    \ in the config file, this final merge step is skipped, and the final output would\
+    \ be the set of QC'ed plink files within each subdirectory labelled with the dataset\
+    \ names.  Within each of these subdirectories, there will also be a set of VCF\
+    \ files, which are suitable for use in either the Michigan or TOPMed imputation\
+    \ servers.</p>\n<p>The other primary output is a PDF report containing a summary\
+    \ of various steps in the pipeline.  It is <strong>highly recommended</strong>\
+    \ that the user carefully review this report to confirm that everything seems\
+    \ in order.  Particular attention should be paid to whether specific steps have\
+    \ resulted in major loss of markers as well as whether there is a positive correlation\
+    \ between allele frequencies in the 1000Genomes dataset and allele frequencies\
+    \ in each of the query datasets.  These scatter plots are provided towards the\
+    \ end of the report, and if a substantial subset of the points exhibit an anti-correlation,\
+    \ this is indicative of a preponderance of strand errors that ought to be corrected\
+    \ (via the 'flip_key') prior to proceeding.</p>\n<h3>\n<a id=\"user-content-dataset-harmonization\"\
+    \ class=\"anchor\" href=\"#dataset-harmonization\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Dataset harmonization</h3>\n\
+    <p>The first step(s) in the pipeline aims to harmonize the naming of chromosomes,\
+    \ alleles, and variant IDs.  This is accomplished via the 4 keys described above.\
+    \  While this pipeline generally attempts to simplify the QC process, it is extremely\
+    \ important that the user is acquainted well enough with each individual dataset\
+    \ to ensure that the appropriate keys are specified (or not specified).</p>\n\
+    <h3>\n<a id=\"user-content-reference-allele-fixing\" class=\"anchor\" href=\"\
+    #reference-allele-fixing\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Reference allele fixing</h3>\n<p>In contrast\
+    \ to a VCF, where alleles are specified with respect to a specified reference\
+    \ genome (reference versus alternative alleles), PLINK-formatted files often specify\
+    \ alleles as major/minor alleles based on the frequency in the dataset.  Furthermore,\
+    \ many commonly used arrays will contain a mixture of SNPs genotyped on either\
+    \ the + or - strand.  Lastly, the default behavior of PLINK is to automatically\
+    \ set the minor to A1 and the major allele to A2, which can unintentionally generate\
+    \ inconsistencies in allele specifications across datasets.</p>\n<p>With respect\
+    \ to a reference genome, two possible types of errors can occur:</p>\n<ul>\n<li>Flipped\
+    \ strand:  The genotype is specified with respect to the opposite strand relative\
+    \ to the reference genome.</li>\n<li>Swapped allele:  The genotype is specified\
+    \ on the same strand as the reference genome, but the A1 (minor) allele has been\
+    \ set to equal the 'reference' allele when it ought to be set to equal the non-reference/'alternative'\
+    \ allele</li>\n</ul>\n<p>To identify these errors, we use the bcftools plugin\
+    \ '+fixref', which requires not only the reference sequence (fasta) file, but\
+    \ also a VCF file containing variant sites that are used to identify mismatching\
+    \ alleles in the query dataset.  Importantly, if the program determines that no\
+    \ strand issues exist and that the reference/alternative alleles have simply been\
+    \ swapped, then program will swap the major/minor alleles to match the reference.\
+    \  It will not perform any strand flipping, where it converts genotypes to be\
+    \ specified with respect to the nucleotide on the opposite strand.  Although the\
+    \ program will attempt to identify these strand flips, it doesn't make the correction\
+    \ as the authors consider this a risky move that should not be handled in an automated\
+    \ fashion.  Thus, flip-strand mismatches are ultimately removed.  If there are\
+    \ a large number of these, the user should attempt to understand and resolve the\
+    \ source of the issue and rerun this pipeline.</p>\n<p>By default, the pipeline\
+    \ will download the following files for the hg19 reference genome:</p>\n<p>Reference\
+    \ fasta:\n<a href=\"ftp://ftp.ncbi.nlm.nih.gov/1000genomes/ftp/technical/reference/human_g1k_v37.fasta.gz\"\
+    \ rel=\"nofollow\">ftp://ftp.ncbi.nlm.nih.gov/1000genomes/ftp/technical/reference/human_g1k_v37.fasta.gz</a></p>\n\
+    <p>Reference VCF (1000Genomes):\n<a href=\"ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh37p13/VCF/All_20170710.vcf.gz\"\
+    \ rel=\"nofollow\">ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh37p13/VCF/All_20170710.vcf.gz</a></p>\n\
+    <p>An indication of whether alleles are now specified correctly is to plot frequency\
+    \ of an allele in the query population against the frequency in the reference\
+    \ population and look for an obviously positive correlation.  Such plots are automatically\
+    \ produced in the PDF report as the final step in the pipeline.</p>\n<h3>\n<a\
+    \ id=\"user-content-basic-qc\" class=\"anchor\" href=\"#basic-qc\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Basic\
+    \ QC</h3>\n<p>After alleles have been fixed as described above, a series of basic\
+    \ QC steps are performed on each dataset by the script <em>'scripts/QC.py'</em>,\
+    \ with the filtering thresholds specified in the config file (see below).</p>\n\
+    <pre><code>perform_QC: 'true'\nQC:\n  vm1: \"0.2\" # Initial variant missingness\
+    \ filter\n  gm: \"0.1\" # Individual missingness filter\n  vm2: \"0.05\"  # Ultimate\
+    \ call rate for variants after removing low-callrate samples\n  maf: \"0.01\"\
+    \  # mimimum Minor allele frequency\n  hwe: \"0.0000001\"  # p-value threshold\
+    \ for whether site follows hardy-weinberg\n  mbs: \"0.0000001\"  # p-value treshold\
+    \ for test of whether missingness varies by sex\n</code></pre>\n<p>We first wish\
+    \ to identify and remove individual samples that show high missingess across markers\
+    \ (specified by 'gm').  However, to identify these individuals, we first need\
+    \ to remove variants that imputed poorly across all individuals (specified by\
+    \ 'vm1').  After removing these individuals, we then remove variants with high\
+    \ missingness (specified by 'vm2').  Since poor imputation will result in missing\
+    \ genotypes, this missingness filter indirectly filters for low quality imputation\
+    \ sites.  Variants are also filtered based whether or not they show significant\
+    \ departures from Hardy-Weinberg Equilibrium ('hwe' entry) and whether there is\
+    \ a significant association between missingness and sex ('mbs' entry).  We also\
+    \ remove rare variants based on the 'maf' value.  Lastly, we remove indels, duplicate\
+    \ SNPs, and multi-allelic variants.</p>\n<p>Note that testing for missigness by\
+    \ case/control status is generally recommended as well if the user wishes to proceed\
+    \ straight to SNP-based analyses such as GWAS.  However, if the data is to be\
+    \ used for ancestry inference, it may make more sense to retain these SNPs.</p>\n\
+    <h3>\n<a id=\"user-content-merging-inputs-optional\" class=\"anchor\" href=\"\
+    #merging-inputs-optional\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Merging inputs (Optional)</h3>\n<p>If multiple\
+    \ input datasets were provided, an optional final step is to create a single merged\
+    \ dataset consisting of only the sites that overlap (i.e. passed filters) across\
+    \ all component datasets.  This behavior is controlled by the 'merge' entry in\
+    \ the config file.  To enable the merging behavior, set this to:</p>\n<pre><code>merge:\
+    \ 'true'\n</code></pre>\n<h3>\n<a id=\"user-content-imputaton-preparation\" class=\"\
+    anchor\" href=\"#imputaton-preparation\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Imputaton preparation</h3>\n\
+    <p>Another optional, final feature is to create a set of of VCF files (parsed\
+    \ by chromosome) for each of the input datasets.  These VCFs can be used directly\
+    \ as input into either the Michigan Imputation Server or the TOPMed Imputation\
+    \ Server.  The output of the imputation servers can then be used as input into\
+    \ the post-imputation QC pipeline (see README.md in the 'postImpute' directory).</p>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -31786,8 +32094,8 @@ powerPlant/entrez-direct-srf:
   data_format: 2
   description: Singularity recipe files for entrez-direct (https://ftp.ncbi.nlm.nih.gov/entrez/entrezdirect/)
   filenames:
-  - Singularity
   - Singularity.13.8.20200819
+  - Singularity
   full_name: powerPlant/entrez-direct-srf
   latest_release: null
   readme: '<p>Singularity recipe files for Entrez Direct: E-utilities on the Unix
@@ -34186,304 +34494,161 @@ shreyaskamathkm/Cluster_Images:
   latest_release: null
   readme: '<h1>
 
-    <a id="user-content-description" class="anchor" href="#description" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Description</h1>
+    <a id="user-content-examples-with-drake-and-ros-2" class="anchor" href="#examples-with-drake-and-ros-2"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples
+    with Drake and ROS 2</h1>
 
-    <p>This README is pulled from a default template for workflows.</p>
+    <p>This repo shows examples of using <a href="https://drake.mit.edu/" rel="nofollow">Drake</a>
+    and <a href="https://www.ros.org/" rel="nofollow">ROS 2</a> together.
 
-    <h1>
+    It uses the pydrake API and is of prototype quality.
 
-    <a id="user-content-workflow-template-setup" class="anchor" href="#workflow-template-setup"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Workflow
-    template setup</h1>
-
-    <h2>
-
-    <a id="user-content-lib" class="anchor" href="#lib" aria-hidden="true"><span aria-hidden="true"
-    class="octicon octicon-link"></span></a>lib</h2>
-
-    <ul>
-
-    <li>The <code>lib</code> directory contains general libraries that may be referenced
-    by multiple workflows, for instance cromwell configs and python configs. Currently
-    nothing in this directory is used.</li>
-
-    </ul>
+    For a similar effort in ROS 1, see <a href="https://github.com/EricCousineau-TRI/repro/tree/master/ros/drake_ros1_hacks">EricCousineau-TRI/repro
+    <code>drake_ros1_hacks</code></a>.</p>
 
     <h2>
 
-    <a id="user-content-pipelines" class="anchor" href="#pipelines" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>pipelines</h2>
+    <a id="user-content-prerequisites" class="anchor" href="#prerequisites" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Prerequisites</h2>
 
     <ul>
 
-    <li>
+    <li>Ubuntu Focal (20.04)</li>
 
-    <p>Each pipeline is a full analysis. Think of it like the heading of a methods
-    section in a paper. For instance if this were genetic summary statistics workflow,
-    a pipeline might be "fine-mapping" that does both conditional and credible set
-    analysis. Another pipeline may be "colocalization".</p>
+    <li><a href="https://index.ros.org/doc/ros2/Installation/Rolling/" rel="nofollow">ROS
+    2 Rolling</a></li>
 
-    </li>
-
-    <li>
-
-    <p>Pipelines may have numbers prior to their name (e.g., <code>example_pipeline_1</code>
-    to <code>0025-example_pipeline_1</code>). These numbers do not mean anything,
-    but merely used to keep pipelines in their general order of execution. These are
-    optional.</p>
-
-    </li>
-
-    <li>
-
-    <p>A pipeline consists of :</p>
-
-    </li>
+    <li><a href="https://drake.mit.edu/from_binary.html" rel="nofollow">Some Drake
+    binary installation from October 2020</a></li>
 
     </ul>
 
-    <ol>
+    <p>Install ROS 2 Rolling using the <a href="https://index.ros.org/doc/ros2/Installation/Rolling/Linux-Install-Debians/"
+    rel="nofollow">Linux binary instructions</a> and <a href="https://index.ros.org/doc/ros2/Installation/Prerelease-Testing/"
+    rel="nofollow">enable the ROS 2 testing apt repo</a>.
 
-    <li>A workflow.</li>
+    Install the apt packages <code>ros-rolling-desktop</code> and <code>ros-rolling-sdformat-urdf</code>.
 
-    <li>A <code>scripts</code> directory with <em>all</em> scripts referenced by that
-    workflow (unless a general lib script is called). Scripts may have numbers prior
-    to their name. These numbers do not mean anything, but merely used to keep scripts
-    in their general order of execution. These are optional.</li>
-
-    <li>A <code>docs</code> directory that contains a documentation of the default
-    parameters written in a style that is publishable as methods in a paper (including
-    citations). Within the <code>docs</code> directory there may be a <code>reference</code>
-    with any additional reference materials.</li>
-
-    <li>An <code>example_runtime_setup</code> directory contains files that give an
-    example of actual config files and any other files used to run the pipeline.</li>
-
-    </ol>
+    Extract the Drake binary installation, install it''s prerequisites, and <a href="https://drake.mit.edu/python_bindings.html#inside-virtualenv"
+    rel="nofollow">use this Python virutalenv trick</a>.</p>
 
     <h2>
 
-    <a id="user-content-studies" class="anchor" href="#studies" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>studies</h2>
+    <a id="user-content-setup" class="anchor" href="#setup" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Setup</h2>
 
-    <ul>
+    <p>Once the prerequisites are met, install <code>drake_ros</code> into the Drake
+    virtualenv.</p>
 
-    <li>A studies directory should either exist within the workflow repo or be a separate
-    repo that has the same name as the workflow repo, but with <code>studies</code>
-    appended to it (e.g. <code>template-workflow</code> becomes <code>template-workflow-studies</code>).</li>
+    <pre><code>. path/to/drake/bin/activate
 
-    <li>If there is a standard set of plots that will always look the same way, a
-    pipeline should generate such plots. Otherwise, all code to analyze the results
-    of a pipeline run should be in the <code>studies</code> directory. For instance
-    if this were genetic summary statistics workflow, <code>studies</code> may contain
-    a <code>t2d</code> directory and a <code>weight</code> directory.</li>
+    cd path/to/this/repo
 
-    <li>Within a study is either an Jupyter notebook (either python or R kernel) or
-    an R markdown file. Nearly all plots / analysis of the results of running the
-    various pipelines should be done in the notebook / markdown file.</li>
+    cd drake_ros/
 
-    <li>A study may also contain a scripts directory with scripts to aggregate data
-    for a one off analysis (if the analysis is going to be repeated, consider making
-    a new pipeline or adding it to an existing pipeline) or for special plots that
-    cannot be done in the notebook / markdown file.</li>
+    python setup.py develop
 
-    </ul>
+    </code></pre>
 
-    <h1>
+    <h2>
 
-    <a id="user-content-new-workflow-reminders" class="anchor" href="#new-workflow-reminders"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>New
-    workflow reminders</h1>
+    <a id="user-content-ros-2-tf-and-robot-model-demo" class="anchor" href="#ros-2-tf-and-robot-model-demo"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ROS
+    2 tf and Robot Model Demo</h2>
 
-    <ul>
+    <p>This demo shows RViz visualizing a single UR10 robot being simulated by Drake.
 
-    <li>[ ] Documentation</li>
+    Set up two terminals: one for launching RViz, and another for launching the Drake
+    simulation.</p>
 
-    <li>[ ] Environment version control</li>
+    <pre><code>. /opt/ros/rolling/setup.bash
 
-    <li>[ ] Pipeline version control</li>
+    cd path/to/this/repo
 
-    <li>[ ] Git branches</li>
+    AMENT_PREFIX_PATH="$AMENT_PREFIX_PATH:$(pwd)" rviz2 -d view.rviz
 
-    <li>[ ] Code review</li>
+    </code></pre>
 
-    </ul>
+    <pre><code>. /opt/ros/rolling/setup.bash
 
-    <h1>
+    . path/to/drake/bin/activate
 
-    <a id="user-content-documentation" class="anchor" href="#documentation" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h1>
+    cd path/to/this/repo
 
-    <p>Be sure to document your code!</p>
+    AMENT_PREFIX_PATH="$AMENT_PREFIX_PATH:$(pwd)" ./ros2_demo.py
 
-    <h1>
+    </code></pre>
 
-    <a id="user-content-environment-version-control" class="anchor" href="#environment-version-control"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Environment
-    version control</h1>
+    <p><a href="https://user-images.githubusercontent.com/4175662/90415417-e7976980-e065-11ea-9564-96c820f51680.gif"
+    target="_blank" rel="nofollow"><img src="https://user-images.githubusercontent.com/4175662/90415417-e7976980-e065-11ea-9564-96c820f51680.gif"
+    alt="ur10_rviz_drake" style="max-width:100%;"></a></p>
 
-    <p>Analysis environment is controlled using conda. Each pipeline should have an
-    <code>environment.yml</code> file with all of the packages used. If a required
-    package or library is missing from conda (and therefore not in the <code>environment.yml</code>),
-    it should be noted in the <code>README.md</code> of the pipeline.</p>
+    <h2>
 
-    <div class="highlight highlight-source-shell"><pre>conda env <span class="pl-k">export</span>
-    --no-builds <span class="pl-k">|</span> grep -v prefix <span class="pl-k">|</span>
-    grep -v name <span class="pl-k">&gt;</span> environment.yml</pre></div>
+    <a id="user-content-interactive-markers-demo" class="anchor" href="#interactive-markers-demo"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Interactive
+    Markers Demo</h2>
 
-    <h1>
+    <p>This demonstrates using interactive markers to control an iiwa14 being simulated
+    by Drake.
 
-    <a id="user-content-pipeline-version-control" class="anchor" href="#pipeline-version-control"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pipeline
-    version control</h1>
+    Set up two terminals: one for launching RViz, and another for launching the Drake
+    simulation.</p>
 
-    <p>Each pipeline within this workflow uses <a href="https://pypi.org/project/bumpversion"
-    rel="nofollow">bumpversion</a> for automatic <a href="https://semver.org" rel="nofollow">semantic
-    versioning</a>.</p>
+    <pre><code>. /opt/ros/rolling/setup.bash
 
-    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
-    bump the appropriate increment</span>
+    cd path/to/this/repo
 
-    bumpversion patch --verbose --dry-run
+    AMENT_PREFIX_PATH="$AMENT_PREFIX_PATH:$(pwd)" rviz2 -d interactive_demo.rviz
 
-    bumpversion minor --verbose --dry-run
+    </code></pre>
 
-    bumpversion major --verbose --dry-run
+    <pre><code>. /opt/ros/rolling/setup.bash
 
+    . path/to/drake/bin/activate
 
-    <span class="pl-c"><span class="pl-c">#</span> commit with tags</span>
+    cd path/to/this/repo
 
-    git push --tags</pre></div>
+    AMENT_PREFIX_PATH="$AMENT_PREFIX_PATH:$(pwd)" ./interactive_demo.py
 
-    <h1>
+    </code></pre>
 
-    <a id="user-content-github-forks" class="anchor" href="#github-forks" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>GitHub forks</h1>
+    <p><a href="https://user-images.githubusercontent.com/4175662/96510753-dcea8380-1212-11eb-89ca-4a9019a8a9cd.gif"
+    target="_blank" rel="nofollow"><img src="https://user-images.githubusercontent.com/4175662/96510753-dcea8380-1212-11eb-89ca-4a9019a8a9cd.gif"
+    alt="iiwa14_interactive_drake" style="max-width:100%;"></a></p>
 
-    <p>Forking the repository allows developers to work independently while retaining
-    well-maintained code on the master fork. For instructions on how to fork, follow
-    the <a href="https://help.github.com/en/articles/fork-a-repo">Fork a repo</a>
-    instructions.</p>
+    <h2>
 
-    <p>After forking the repo, clone the repo to your local desktop:</p>
+    <a id="user-content-using-a-container" class="anchor" href="#using-a-container"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using
+    a Container</h2>
 
-    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
-    to use SSH</span>
+    <p>There is a definition file for a <a href="https://sylabs.io/singularity/" rel="nofollow">Singularity</a>
+    container.</p>
 
-    git clone git@github.com:<span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>/template-workflow.git
+    <p>First <a href="https://sylabs.io/guides/3.7/user-guide/quick_start.html#quick-installation-steps"
+    rel="nofollow">build and install Singularity</a>.
 
+    Afterwards, build a Singularity sandbox from the definition file.</p>
 
-    <span class="pl-c"><span class="pl-c">#</span> to use Https</span>
+    <pre><code>singularity build --fakeroot --sandbox ~/drake-ros2-demos.sandbox demos.singularity.def
 
-    git clone https://github.com/<span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>/template-workflow.git</pre></div>
+    </code></pre>
 
-    <p>This creates a replica of the remote repository on your local desktop. <em>Note</em>:
-    When you create your local repository, it will also make a local clone of the
-    remote repository (typically as <code>origin</code>). So, your local master branch
-    would simply be <code>master</code>. But, your remote master branch will be <code>origin/master</code>.
-    You can also add multiple remote repositories. For instance, let us say our main
-    repository is under the remote repository <code>my_repo</code>. We will want to
-    add it as a remote repository, so we can fetch the most up-to-date code. You could
-    add it by:</p>
+    <p>Create a shell with access to an NVidia graphics card and run one of the RViz
+    configs for your chosen demo.</p>
 
-    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
-    Add the my_repo remote repo to your local desktop -- this will allow you to pull
-    and push to branches on the my_repo repository</span>
+    <div class="highlight highlight-text-shell-session"><pre>$ <span class="pl-s1">singularity
+    shell --nv --writable-tmpfs <span class="pl-k">~</span>/drake-ros2-demos.sandbox</span>
 
-    git remote add my_repo git@github.com:my_repo/template-workflow.git</pre></div>
+    <span class="pl-c1">Singularity&gt; rviz2 -d view.rviz</span></pre></div>
 
-    <h1>
+    <p>Create a shell into the sandbox and run one of the demos.</p>
 
-    <a id="user-content-git-branches" class="anchor" href="#git-branches" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Git branches</h1>
+    <div class="highlight highlight-text-shell-session"><pre>$ <span class="pl-s1">singularity
+    shell --writable <span class="pl-k">~</span>/drake-ros2-demos.sandbox</span>
 
-    <p>Branching is how git actually tracks code development. For more information,
-    see the <a href="https://www.atlassian.com/git/tutorials/using-branches" rel="nofollow">Git
-    Branch Tutorial</a> on Atlassian. If you want to add a new feature, pipeline,
-    or fix a bug, a common work flow would look like this:</p>
-
-    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
-    Update your local copy of the master branch to make sure you are getting the most
-    up-to-date code</span>
-
-    git pull
-
-
-    <span class="pl-c"><span class="pl-c">#</span> Create the branch on your local
-    machine and switch in this branch </span>
-
-    git checkout -b [name_of_your_new_branch]
-
-
-    <span class="pl-c"><span class="pl-c">#</span> Push the branch on github</span>
-
-    git push origin [name_of_your_new_branch]</pre></div>
-
-    <p>As you develop, you want to commit your work to your branch, so you don''t
-    lose it all if something happens!</p>
-
-    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
-    Confirm we''re on the right branch</span>
-
-    git branch -a
-
-
-    <span class="pl-c"><span class="pl-c">#</span> Add all your work to be tracked
-    (Note: there are many ways to add specific files, etc. See https://git-scm.com/docs/git-add
-    for more information). The following command adds everything in your currently
-    directory.</span>
-
-    git add <span class="pl-c1">.</span>
-
-
-    <span class="pl-c"><span class="pl-c">#</span> Commit your work to the branch
-    with a message describing what''s in the commit</span>
-
-    git commit -m <span class="pl-s"><span class="pl-pds">"</span>Created the scATAC-seq
-    pipeline!<span class="pl-pds">"</span></span>
-
-
-    <span class="pl-c"><span class="pl-c">#</span> You can add a -u parameter to set-upstream
-    for a push</span>
-
-    <span class="pl-c"><span class="pl-c">#</span> Alternatively, git will also automatically
-    query you when you do your first push.</span>
-
-    <span class="pl-c"><span class="pl-c">#</span> You can also set this manually
-    by adding a new remote for your branch:</span>
-
-    <span class="pl-c"><span class="pl-c">#</span>git remote add [name_of_your_remote]
-    [name_of_your_new_branch]</span>
-
-
-    <span class="pl-c"><span class="pl-c">#</span> Here is another push where we specify
-    HEAD</span>
-
-    <span class="pl-c"><span class="pl-c">#</span>git push origin HEAD # HEAD pushes
-    everything up to the most recent commit</span></pre></div>
-
-    <h1>
-
-    <a id="user-content-code-review" class="anchor" href="#code-review" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Code review</h1>
-
-    <p>Create a <a href="https://help.github.com/en/articles/creating-a-pull-request">GitHub
-    Pull Request</a>. A PR allows other developers a chance to go through and comment
-    on lines of code they believe can be improved. In addition, it will tell you if
-    the code you are trying to merge into the <code>my_repo</code> branch actually
-    conflicts with code that already exists in the branch, so you don''t overwrite
-    someone else''s work.</p>
-
-    <p>Once another developer approves the PR, you have the go-ahead to merge your
-    code! Congrats, you finished your feature!</p>
-
-    <p><em>Note</em>: There are some cases where you may just want to push directly
-    to the my_repo fork, thereby avoiding code reviews. For instance, if you''re working
-    on a one-off project that you want people to be able to see, but no one else is
-    necessarily working on, you can always push directly to the branches on my_repo
-    fork. Or, you could also still go through the steps of a PR, but simply merge
-    your own code without CR.</p>
+    <span class="pl-c1">Singularity&gt; ./ros2_demo.py</span></pre></div>
 
     '
   stargazers_count: 0
@@ -37905,7 +38070,7 @@ uri-ai-lab/singularity-images:
 
     '
   stargazers_count: 0
-  subscribers_count: 2
+  subscribers_count: 3
   topics: []
   updated_at: 1573772605.0
 vardigroup/DPMC:
