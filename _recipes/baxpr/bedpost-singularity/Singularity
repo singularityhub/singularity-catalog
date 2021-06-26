@@ -8,15 +8,18 @@ From: ubuntu:20.04
 
 %files
 
-  src        /opt
-  README.md  /opt
-  
+  src                      /opt
+  README.md                /opt
+  ImageMagick-policy.xml   /opt  
 
 %post
 
   apt-get update > /dev/null 2>&1
   apt-get install -y wget unzip zip xvfb ghostscript imagemagick bc > /dev/null 2>&1   # Misc tools
   apt-get install -y libopenblas-base language-pack-en              > /dev/null 2>&1   # FSL
+
+  # Fix imagemagick policy to allow PDF output. See https://usn.ubuntu.com/3785-1/
+  cp /opt/ImageMagick-policy.xml /etc/ImageMagick-6/policy.xml
 
   # Install python3 with pip and use by default
   # https://stackoverflow.com/a/61878185
@@ -38,11 +41,7 @@ From: ubuntu:20.04
   
   # Run the FSL python installer. A clue that we forgot this is an imglob error at runtime
   ${FSLDIR}/etc/fslconf/fslpython_install.sh
-  
-  # Fix imagemagick policy to allow PDF output. See https://usn.ubuntu.com/3785-1/
-  sed -i 's/rights="none" pattern="PDF"/rights="read | write" pattern="PDF"/' \
-    /etc/ImageMagick-6/policy.xml
-  
+    
   # Create input/output directories for binding
   mkdir /INPUTS && mkdir /OUTPUTS && mkdir /wkdir
   
@@ -58,6 +57,8 @@ From: ubuntu:20.04
   # Pipeline
   export PATH=/opt/src:${PATH}
 
+
 %runscript
+
   wrapper.sh "$@"
 

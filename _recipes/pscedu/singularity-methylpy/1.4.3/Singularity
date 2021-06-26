@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: quay.io/biocontainers/methylpy:1.4.3--py37h41a55b7_0
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE 
+    VERSION 1.4.3
+
+%post
+   rm /etc/resolv.conf
+
+####################################################################################

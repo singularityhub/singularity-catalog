@@ -1,5 +1,5 @@
 BootStrap: docker
-From: debian
+From: julia
 
 %labels
 MAINTAINER Jesus Murga Moreno
@@ -10,12 +10,11 @@ MAINTAINER Jesus Murga Moreno
 	export LANG=C.UTF-8
 	export PATH=/ABCreg/src/:$PATH
 
-	export PATH=/julia-1.5.3/bin/:$PATH
-	export JULIA_DEPOT_PATH=:/opt/.julia
+	export JULIA_DEPOT_PATH=:/root/.julia
 	
 %post
 	
-	export JULIA_DEPOT_PATH=/opt/.julia
+	export JULIA_DEPOT_PATH=/root/.julia
 
 	apt-get update && apt-get install -y --no-install-recommends apt-utils
 	apt-get install -y libglib2.0-0 libxext6 wget bzip2 ca-certificates curl git vim make build-essential libgsl-dev libz-dev gzip r-base
@@ -24,16 +23,14 @@ MAINTAINER Jesus Murga Moreno
 
 	wget https://raw.githubusercontent.com/jmurga/Analytical.jl/master/scripts/precompile_mktest.jl
 	wget https://raw.githubusercontent.com/jmurga/Analytical.jl/master/scripts/abcmk_cli.jl
-
-	wget https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.3-linux-x86_64.tar.gz
-	tar -zxf julia-1.5.3-linux-x86_64.tar.gz
+		
 	git clone https://github.com/molpopgen/ABCreg.git /ABCreg
 	make -C /ABCreg/src/
 
-	/julia-1.5.3/bin/julia -e 'using Pkg;Pkg.add(["Fire","PackageCompiler" ,"Parameters", "NLsolve", "SpecialFunctions", "Distributions", "Roots", "ArbNumerics", "StatsBase", "LsqFit", "PoissonRandom", "SparseArrays", "Distributed", "CSV", "SharedArrays", "JLD2","DataFrames","GZip","Parsers","OrderedCollections","FastaIO","RCall","ClusterManagers"])'
+	/usr/local/julia/bin/julia -e 'using Pkg;Pkg.add(["Fire","PackageCompiler" ,"Parameters", "NLsolve", "SpecialFunctions", "Distributions", "Roots", "ArbNumerics", "StatsBase", "LsqFit", "PoissonRandom", "SparseArrays", "Distributed", "CSV", "SharedArrays", "JLD2","DataFrames","GZip","Parsers","OrderedCollections","FastaIO","RCall","ClusterManagers"])'
 
-	/julia-1.5.3/bin/julia -e 'using Pkg;Pkg.add(PackageSpec(path="https://github.com/jmurga/Analytical.jl"))'
+	/usr/local/julia/bin/julia -e 'using Pkg;Pkg.add(PackageSpec(path="https://github.com/jmurga/Analytical.jl"))'
 
-	/julia-1.5.3/bin/julia -e 'using PackageCompiler;PackageCompiler.create_sysimage(:Analytical, sysimage_path="/mktest.so", precompile_execution_file="/precompile_mktest.jl")'
+	/usr/local/julia/bin/julia -e 'using PackageCompiler;PackageCompiler.create_sysimage(:Analytical, sysimage_path="/mktest.so", precompile_execution_file="/precompile_mktest.jl")'
 
 	R -e "install.packages(c('data.table','abc'),repos ='https://cloud.r-project.org')"
