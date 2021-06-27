@@ -16,6 +16,9 @@ From: osrf/ros:melodic-desktop-full
     # Set ROS vars
     export ROS_DISTRO=melodic
     export ROBOT_IP="172.16.0.2"
+    export ROS_MASTER_URI="http://${ROBOT_IP}:11311"
+    machine_ip=(`hostname -I | grep ${ROBOT_IP%.*}`)
+    export ROS_IP=${machine_ip[0]}
 %post
     # Install system package dependencies
     apt update --fix-missing

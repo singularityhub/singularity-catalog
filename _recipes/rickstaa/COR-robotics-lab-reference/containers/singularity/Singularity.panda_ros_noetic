@@ -16,6 +16,9 @@ From: osrf/ros:noetic-desktop-full
     # Set ROS vars
     export ROS_DISTRO=noetic
     export ROBOT_IP="172.16.0.2"
+    export ROS_MASTER_URI="http://${ROBOT_IP}:11311"
+    machine_ip=(`hostname -I | grep ${ROBOT_IP%.*}`)
+    export ROS_IP=${machine_ip[0]}
 %post
     # Install system package dependencies
     apt update --fix-missing
@@ -81,7 +84,7 @@ From: osrf/ros:noetic-desktop-full
 
     # Install extra ROS packages
     apt install -y ros-noetic-ros-controllers
-    
+
     # Add container resources to the container
     bash -c "cd / \
         && git clone https://github.com/rickstaa/COR-robot-lab-reference.git \

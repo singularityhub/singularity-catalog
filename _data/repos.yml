@@ -1293,7 +1293,7 @@ BrendelGroup/BWASP:
   stargazers_count: 2
   subscribers_count: 5
   topics: []
-  updated_at: 1623612685.0
+  updated_at: 1624742255.0
 CAIsr/qsm:
   data_format: 2
   description: This docker and singularity image bundles the tgv-qsm algorithm with
@@ -4281,7 +4281,7 @@ Irfanwustl/Research_code:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1624224288.0
+  updated_at: 1624721934.0
 JCSDA-internal/containers:
   data_format: 2
   description: Contains tools for building and distributing the JEDI/JCSDA Containers
@@ -13546,6 +13546,216 @@ aseetharam/gatk:
   subscribers_count: 2
   topics: []
   updated_at: 1623344768.0
+bananaeat/Cinnamon_assembly:
+  data_format: 2
+  description: null
+  filenames:
+  - containers/Singularity
+  full_name: bananaeat/Cinnamon_assembly
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-cinnamon" class="anchor" href="#cinnamon" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Cinnamon</h1>
+
+    <p>This directory contains the code for the Cinnamon language compiler.  This
+    compiler is described in the paper:</p>
+
+    <p>Cinnamon: A Domain-Specific Language for Binary Profiling and Monitoring,
+
+    Mahwish Arif, Ruoyu Zhou, Hsi-Ming Ho and Timothy M. Jones,
+
+    CGO 2021</p>
+
+    <p>Please cite this paper if you produce any work that builds upon this code and
+    / or data.</p>
+
+    <h2>
+
+    <a id="user-content-licence" class="anchor" href="#licence" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Licence</h2>
+
+    <p>Cinnamon is released under an Apache licence.</p>
+
+    <h2>
+
+    <a id="user-content-building-cinnamon" class="anchor" href="#building-cinnamon"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building
+    Cinnamon</h2>
+
+    <p>Cinnamon can currently target three different binary frameworks; Janus, Pin
+    and Dyninst.  To build the compiler:</p>
+
+    <pre lang="shell-session"><code>export CINNAMON_ROOT = /path/to/cinnamon-source
+
+    cd $(CINNAMON_ROOT)
+
+    </code></pre>
+
+    <p>To build the Cinnamon backend for Janus:</p>
+
+    <pre lang="shell-session"><code>make TARGET=janus
+
+    </code></pre>
+
+    <p>To build the Cinnamon backend for Pin:</p>
+
+    <pre lang="shell-session"><code>make TARGET=pin
+
+    </code></pre>
+
+    <p>To build the Cinnamon backend for Dyninst:</p>
+
+    <pre lang="shell-session"><code>make TARGET=dyninst
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-compiling-a-sample-program" class="anchor" href="#compiling-a-sample-program"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Compiling
+    a sample program</h2>
+
+    <p>Cinnamon sample programs are available in the  <code>tests</code> directory.  The
+    following commands will compile the Cinnamon program <code>ins.dsl</code> and
+    integrate the resulting code into one of the target frameworks. You will need
+    to set the path to your target framework installation in the respective scripts:</p>
+
+    <pre lang="shell-session"><code>$(CINNAMON_ROOT)/Scripts/compileToJanus.py $CINNAMON_ROOT/tests/ins.dsl
+
+    $(CINNAMON_ROOT)/Scripts/compileToPin.py $CINNAMON_ROOT/tests/ins.dsl
+
+    $(CINNAMON_ROOT)/Scripts/compileToDyn.py $CINNAMON_ROOT/tests/ins.dsl
+
+    </code></pre>
+
+    <p>After this, the final tool can be built and run using the target framework''s
+    build instructions.</p>
+
+    <p>If you just want to compile the Cinnamon DSL code and not yet integrate it
+    into a target framework, run the following command.  This will generate a number
+    of different files containing relevant code for the cinnamon program:</p>
+
+    <pre lang="shell-session"><code>cd $CINNAMON_ROOT
+
+    ./bdc $CINNAMON_ROOT/tests/ins.dsl
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-target-frameworks" class="anchor" href="#target-frameworks"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Target
+    frameworks</h2>
+
+    <h3>
+
+    <a id="user-content-janus" class="anchor" href="#janus" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Janus</h3>
+
+    <p>You can get the Janus implementation with placeholders, templates and utility
+    libraries for Cinnamon from the main Janus repository at <a href="https://github.com/timothymjones/Janus.git">https://github.com/timothymjones/Janus.git</a>,
+    then switch to the <code>cinnamon</code> branch.</p>
+
+    <pre lang="shell-session"><code>git clone https://github.com/timothymjones/Janus.git
+
+    cd Janus
+
+    git checkout -b cinnamon origin/cinnamon
+
+    </code></pre>
+
+    <p>Next set <code>JanusPATH</code> in <code>compileToJanus.py</code> to be the
+    location that you have cloned Janus.</p>
+
+    <p>Once the code for Janus has been generated and integrated (after running the
+    <code>compileToJanus.py</code> script from above), you can build the final tool
+    using the following commands:</p>
+
+    <pre lang="shell-session"><code>(cd build; cmake ..; make -j8)
+
+    </code></pre>
+
+    <p>To run the final tool on the target binary:</p>
+
+    <pre lang="shell-session"><code>./janus/jdsl_run &lt;target_binary&gt;
+
+    </code></pre>
+
+    <h3>
+
+    <a id="user-content-pin" class="anchor" href="#pin" aria-hidden="true"><span aria-hidden="true"
+    class="octicon octicon-link"></span></a>Pin</h3>
+
+    <p>Everything required for Pin is contained within the <code>targets/Pin</code>
+    directory.  Copy the <code>MyDSLTool</code> directory to <code>path-to-your-pin-root-dir/source/tools</code>,
+    where <code>path-to-your-pin-root</code> should be self-explanatory.</p>
+
+    <p>Next set <code>PinPATH=your-pin-root-dir/source/tools/MyDSLTool</code> in <code>compileToPin.py</code>.</p>
+
+    <p>Once the code for Pin has been generated and integrated (after running the
+    <code>compileToPin.py</code> script from above), you can build the final tool
+    using the following commands:</p>
+
+    <pre lang="shell-session"><code>cd your-pin-root-dir/source/tools/MyDSLTool
+
+    make obj-intel64/MyDSLTool.so
+
+    </code></pre>
+
+    <p>To run the final tool on the target binary:</p>
+
+    <pre lang="shell-session"><code>your-pin-root-dir/pin -t obj-intel64/MyDSLTool.so
+    -- &lt;target_binary&gt;
+
+    </code></pre>
+
+    <h3>
+
+    <a id="user-content-dyninst" class="anchor" href="#dyninst" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Dyninst</h3>
+
+    <p>You can obtain Dyninst version 10.1.0 as follows:</p>
+
+    <pre lang="shell-session"><code>wget https://github.com/dyninst/dyninst/archive/v10.1.0.tar.gz``
+
+    tar xzvf v10.1.0.tar.gz
+
+    </code></pre>
+
+    <p>Once extracted, add <code>c_LoadInsn</code> and <code>c_StoreInsn</code> into
+    <code>enum InsnCategory</code> in <code>dyninst-10.1.0/instructionAPI/h/InstructionCategories.h</code>
+    and then build by following the Dyninst build instructions.</p>
+
+    <p>Everything else required for Dyninst is contained within the <code>targets/Dyninst</code>
+    directory.  Copy the <code>MyDSLTool</code> directory to <code>path-to-your-dyn-root-dir/examples</code>,
+    where <code>path-to-your-dyn-root-dir</code> should be self-explanatory.</p>
+
+    <p>Next set <code>DynPATH=path-to-your-dyn-root-dir/examples/MyDSLTool</code>
+    in <code>compileToDyn.py</code>.</p>
+
+    <p>Once the code for Dyninst has been generated and integrated (after running
+    the <code>compileToDyn.py</code> script from above), you can build the final tool
+    using the following commands:</p>
+
+    <pre lang="shell-session"><code>cd path-to-your-dyn-root-dir/examples/MyDSLTool
+
+    make
+
+    </code></pre>
+
+    <p>To run the final tool on the target binary:</p>
+
+    <pre lang="shell-session"><code>path-to-your-dyn-root-dir/examples/MyDSLTool/DSLtool
+    -m static -o &lt;output_binary&gt; &lt;input_binary&gt;
+
+    </code></pre>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1624454250.0
 barbagroup/geoclaw-landspill:
   data_format: 2
   description: An oil land-spill and overland flow simulator for pipeline rupture
@@ -22844,10 +23054,10 @@ grst/rstudio-server-conda:
     \ as a command line parameter.</p>\n<pre><code>uuid &gt; /tmp/rstudio-server/${USER}_secure-cookie-key\n\
     rserver # ...\n  --secure-cookie-key-file /tmp/rstudio-server/${USER}_secure-cookie-key\n\
     </code></pre>\n</li>\n</ul>\n"
-  stargazers_count: 75
+  stargazers_count: 76
   subscribers_count: 3
   topics: []
-  updated_at: 1624347371.0
+  updated_at: 1624696322.0
 gwastro/pycbc_bench:
   data_format: 2
   description: Some benchmark singularity images for pycbc / pycbc inference
@@ -24001,7 +24211,7 @@ hpcng/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 2123
+  stargazers_count: 2124
   subscribers_count: 94
   topics:
   - containers
@@ -24018,7 +24228,7 @@ hpcng/singularity:
   - portability
   - rootless-containers
   - cloud-native
-  updated_at: 1624687039.0
+  updated_at: 1624725016.0
 humanconnectome/hcp-pipelines-singularity:
   data_format: 2
   description: The definition files for creating singularity containers that can run
@@ -35439,7 +35649,7 @@ rickstaa/COR-robotics-lab-reference:
   stargazers_count: 1
   subscribers_count: 1
   topics: []
-  updated_at: 1624628294.0
+  updated_at: 1624697768.0
 rohitfarmer/singularity-defs:
   data_format: 2
   description: Definition (recipe) files for singularity containers.
@@ -39272,13 +39482,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 46
+  stargazers_count: 47
   subscribers_count: 8
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1624476540.0
+  updated_at: 1624765003.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '

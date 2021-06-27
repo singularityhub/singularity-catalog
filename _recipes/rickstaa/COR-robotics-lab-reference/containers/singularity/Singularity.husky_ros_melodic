@@ -18,7 +18,7 @@ From: osrf/ros:melodic-desktop-full
     export ROS_DISTRO=melodic
     export ROBOT_IP="192.168.131.1"
     export ROS_MASTER_URI="http://${ROBOT_IP}:11311"
-    machine_ip=(`hostname -I | grep 192.168.131.`)
+    machine_ip=(`hostname -I | grep ${ROBOT_IP%.*}`)
     export ROS_IP=${machine_ip[0]}
 %post
     # Install extra system package dependencies

@@ -17,7 +17,7 @@ From: osrf/ros:kinetic-desktop-full
     export ROS_DISTRO=noetic
     export ROBOT_IP="172.16.0.2"
     export ROS_MASTER_URI="http://${ROBOT_IP}:11311"
-    machine_ip=(`hostname -I | grep 192.168.131.`)
+    machine_ip=(`hostname -I | grep ${ROBOT_IP%.*}`)
     export ROS_IP=${machine_ip[0]}
 %post
     # Install system package dependencies
