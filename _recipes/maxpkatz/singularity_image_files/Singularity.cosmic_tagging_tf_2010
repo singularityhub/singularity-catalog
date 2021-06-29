@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/tensorflow:20.10-tf2-py3
+
+%post
+    apt-get update
+    apt-get install -y cmake libhdf5-serial-dev
+    pip install numpy scikit-build pytest
+    env MPICC=/usr/local/mpi/bin/mpicc pip install mpi4py
+    git clone https://github.com/DeepLearnPhysics/larcv3.git
+    cd larcv3
+    git checkout v3.3.3
+    git submodule update --init
+    python setup.py build
+    python setup.py install
