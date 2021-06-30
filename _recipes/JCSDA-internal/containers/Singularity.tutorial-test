@@ -1,0 +1,62 @@
+BootStrap: library
+From: jcsda/public/jedi-gnu-openmpi-dev:latest
+
+%labels
+MAINTAINER Mark Miesch
+SPECIES JEDI
+
+%files
+    ssh-key/github_academy_rsa /root/github_academy_rsa
+
+%environment
+    TERM=xterm
+    export TERM
+    GIT_MERGE_AUTOEDIT=no
+    export GIT_MERGE_AUTOEDIT
+    export LANG=en_US.UTF-8
+    export LANGUAGE=en_US:en
+    export PATH=/usr/local/bin:/usr/local/miniconda3/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/jedi/build/bin:/opt/PanoplyJ
+    alias pip=/usr/local/miniconda3/bin/pip
+
+%post
+    echo "Hello from inside the container"
+    apt-get update
+    apt-get install -y --no-install-recommends mesa-utils libgl1-mesa-glx
+    mkdir -p /root/.ssh
+    mv /root/github_academy_rsa /root/.ssh/github_academy_rsa
+    eval "$(ssh-agent -s)"
+    ssh-add /root/.ssh/github_academy_rsa
+    ssh -T -o "StrictHostKeyChecking=no" git@github.com || mkdir -p /opt/jedi
+    git config --global credential.helper 'cache --timeout=3600'
+    git config --global --add credential.helper 'store'
+    git config --global url.ssh://git@github.com/.insteadOf https://github.com/
+    git lfs install --skip-repo
+    cd /opt/jedi
+    git clone -b release/1.1.0 git@github.com:jcsda/fv3-bundle.git
+    cd fv3-bundle
+    git clone git@github.com:JCSDA-internal/jedi-cmake.git -b release/1.1.0 --depth=1 
+    git clone git@github.com:JCSDA-internal/oops.git -b release/1.1.0 --depth=1 
+    git clone git@github.com:JCSDA-internal/saber.git -b release/1.1.0 --depth=1 
+    git clone git@github.com:JCSDA-internal/ioda.git -b release/2.0.0 --depth=1 
+    git clone git@github.com:JCSDA-internal/ufo.git -b release/1.1.0 --depth=1 
+    git clone git@github.com:JCSDA-internal/femps.git -b release/1.1.0 --depth=1 
+    git clone git@github.com:jcsda/crtm.git -b v2.3-jedi.0 --depth=1
+    git clone git@github.com:JCSDA-internal/fv3-jedi-linearmodel.git -b release/1.1.0 --depth=1 fv3-jedi-lm
+    git clone git@github.com:JCSDA-internal/fv3-jedi.git -b release/1.1.0 --depth=1
+    mkdir -p /opt/jedi/build
+    cd /opt/jedi/build
+    ecbuild --build=Release -DBUILD_PYTHON_BINDINGS=ON ../fv3-bundle
+    chmod a+rx /opt/jedi/fv3-bundle/ioda/src/engines/Examples/Python/*
+    make -j4
+    ctest -R get_
+    cd /opt/jedi
+    git clone https://github.com/jcsda-internal/fv3-jedi-tools
+    cd fv3-jedi-tools
+    git checkout release/1.1.0
+    /usr/local/miniconda3/bin/pip install .
+    rm /root/.ssh/github_academy_rsa
+    rm -rf /var/lib/apt/lists/*
+
+%runscript
+    bash -l
+
