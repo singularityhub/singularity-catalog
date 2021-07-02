@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: debian:latest
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE http://gitlab.psc.edu/icaoberg/singularity-aspera-connect
+    VERSION 3.11.0.5
+
+%files
+    /home/icaoberg/.aspera /opt/aspera
+
+%post
+    ln -s /opt/aspera/connect/bin/ascp /usr/bin/ascp
+    ln -s /opt/aspera/connect/bin/asperaconnect /usr/bin/asperaconnect
+    ln -s /opt/aspera/connect/bin/asperacrypt /usr/bin/asperacrypt
+
+####################################################################################

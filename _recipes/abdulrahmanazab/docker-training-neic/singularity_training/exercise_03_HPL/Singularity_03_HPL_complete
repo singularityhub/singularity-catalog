@@ -1,0 +1,60 @@
+Bootstrap: docker
+From: debian:jessie 
+
+%labels
+AUTHOR g.muscianisi@cineca.it,f.cola@cineca.it
+VERSION 2.0
+Event HPC Workshop on Containers and Unikernels 
+Date July 5th-9th, 2021
+ContainerName Exercise 03 HPL complete solution
+
+
+%files
+  Make.Linux_blas /workdir/Make.Linux_blas
+  make.inc /workdir/make.inc
+
+%post
+  
+  ####### Install software #######
+  apt-get update
+  apt-get install -y file g++ gcc gfortran make gdb strace realpath wget ca-certificates --no-install-recommends
+ 
+  ####### Create a work directory #######
+  mkdir -p /workdir && cd /workdir
+  wget -q http://www.mpich.org/static/downloads/3.4.2/mpich-3.4.2tar.gz
+  wget http://www.netlib.org/blas/blas-3.8.0.tgz
+  wget https://www.netlib.org/benchmark/hpl/hpl-2.3.tar.gz
+  
+  ## build mpich-3.4.2
+  cd /workdir
+  tar -xvf /workdir/mpich-3.4.2.tar.gz
+  cd mpich-3.4.2
+  ./configure --enable-fast=all,O3 --prefix=/usr --with-device=ch3 
+  make -j$(nproc)
+  make install
+  ldconfig
+
+  ## build blas-3.8.0
+  cd /workdir
+  tar -xvf  blas-3.8.0.tgz 
+  cd BLAS-3.8.0
+##  sed -i 's/OPTS     = -O3/OPTS     = -O3' make.inc
+##  sed -i 's/BLASLIB      = blas$(PLAT).a/BLASLIB      = libblas.a/g' make.inc
+  cp /workdir/make.inc .
+  make all 
+  gfortran -shared -fPIC -O3 *.f -o libblas.so
+  ldconfig
+  mkdir -p /workdir/BLAS-3.8.0/lib
+  cp libblas.so libblas.a /workdir/BLAS-3.8.0/lib/
+
+  export LD_LIBRARY_PATH=/workdir/BLAS-3.8.0/lib:${LD_LIBRARY_PATH}
+
+  ## build hpl-2.3
+  cd /workdir
+  tar -xvf hpl-2.3.tar.gz
+  cd hpl-2.3
+  cp /workdir/Make.Linux_blas .
+  make arch=Linux_blas
+
+%runscript
+  /workdir/hpl-2.3/bin/Linux_blas/xhpl  

@@ -55,7 +55,8 @@ From: ubuntu:20.04
     libproj-dev \
     libbz2-dev \
     liblzma-dev \
-    zlib1g-dev
+    zlib1g-dev \
+    libfribidi-dev
 
   # Disable session timeout
   # echo "session-timeout-minutes=0" > /etc/rstudio/rsession.conf

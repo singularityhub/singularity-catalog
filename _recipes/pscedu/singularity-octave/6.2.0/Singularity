@@ -1,0 +1,47 @@
+Bootstrap:docker
+From:centos:8
+
+%labels
+MAINTAINER baber@iastate.edu
+spack
+
+%environment
+SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+source /etc/profile.d/modules.sh
+source $SPACK_ROOT/share/spack/setup-env.sh
+
+%post
+export SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+
+#spack dependencies
+yum -y install git python3 \
+gcc gcc-c++ gcc-gfortran curl \
+gnupg2 sed patch \
+unzip gzip bzip2 \
+findutils make vim \
+environment-modules
+
+yum clean all
+
+#get spack
+git clone https://github.com/spack/spack.git $SPACK_ROOT
+
+#setup compilers.yaml
+spack compiler find --scope system $(which gcc)
+spack compiler find --scope system $(which g++)
+spack compiler find --scope system $(which gfortran)
+
+#setup modules config file
+echo "modules:" >> /opt/spack/etc/spack/modules.yaml
+echo "  tcl:" >> /opt/spack/etc/spack/modules.yaml
+echo "    naming_scheme: '\${PACKAGE}/\${VERSION}'" >> /opt/spack/etc/spack/modules.yaml
+
+source $SPACK_ROOT/share/spack/setup-env.sh
+spack install gnuplot@5.2.8
+
+%runscript
+spack help

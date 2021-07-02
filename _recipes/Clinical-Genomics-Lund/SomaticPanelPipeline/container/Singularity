@@ -4,21 +4,23 @@ From:nfcore/base:1.8
 %labels
 	MAINTAINER Björn Hallström <bjorn.hallstrom@skane.se>
 	DESCRIPTION Singularity container for CMD myeloid twist pipeline
-	VERSION 0.0.3
+	VERSION 0.0.4
 
 %environment
-	PATH=/opt/conda/envs/CMD-twist/bin:/opt/sentieon-genomics-201911/bin/:$PATH
-	PICARD_HOME=/opt/conda/envs/CMD-twist/share/picard-2.18.26-0/
-	PERL5LIB=$PERL5LIB:/opt/conda/envs/CMD-twist/lib/site_perl/5.26.2/
-	export JAVA_HOME=/opt/conda/envs/CMD-twist
+	PATH=/opt/conda/envs/main-env/bin:/opt/sentieon-genomics-202010.01/bin/:$PATH
+	PICARD_HOME=/opt/conda/envs/main-env/share/picard-2.25.2-0/
+	PERL5LIB=$PERL5LIB:/opt/conda/envs/main-env/lib/site_perl/5.26.2/
+	export JAVA_HOME=/opt/conda/envs/main-env
 	umask 0002
 %files
 	environment.yml /
-	environment_samtools.yml /
-	environment_py3.yml /
+	environment_py2.yml /
 	environment_java8.yml /
+	environment_sambamba.yml /
+	environment_old-cnvkit.yml
+
 	/data/bnf/scripts/postaln_qc.pl /usr/local/bin
-	/data/bnf/sw/sentieon/sentieon-genomics-201911 /opt
+	/data/bnf/sw/sentieon/sentieon-genomics-202010.01 /opt
 	/data/bnf/sw/melt/MELTv2.1.5/MELT.jar /opt/
 	
 %post
@@ -27,17 +29,18 @@ From:nfcore/base:1.8
 	apt -y clean
 	apt -y update
 	apt -y install build-essential make
-	#apt -y install montage
-	apt -y install graphicsmagick-imagemagick-compat
-	
+	apt -y install graphicsmagick-imagemagick-compat libtbb2
 
-	/opt/conda/bin/conda env create -f /environment.yml
-	/opt/conda/bin/conda env create -f /environment_java8.yml
-	/opt/conda/bin/conda env create -f /environment_samtools.yml
-	/opt/conda/bin/conda env create -f /environment_py3.yml python=3
+	/opt/conda/bin/conda install mamba -n base -c conda-forge
+
+	/opt/conda/bin/mamba env create -n main-env --file /environment.yml
+	/opt/conda/bin/mamba env create -n java8 --file /environment_java8.yml
+	/opt/conda/bin/mamba env create -n py2 --file /environment_py2.yml
+	/opt/conda/bin/mamba env create -n sambamba --file /environment_sambamba.yml
+	/opt/conda/bin/mamba env create -n old-cnvkit --file /environment_old-cnvkit.yml
 	/opt/conda/bin/conda clean -a
 	
-	/opt/conda/envs/CMD-twist/bin/cpanm JSON
+	/opt/conda/envs/main-env/bin/cpanm JSON
 
 	git clone https://github.com/Clinical-Genomics-Lund/qc_sentieon.git
 	cd qc_sentieon
@@ -46,5 +49,5 @@ From:nfcore/base:1.8
 
 	cd / && git clone https://github.com/J35P312/SVDB
 	cd SVDB && git checkout 2.2.0
-	/opt/conda/envs/CMD-twist/bin/pip install --editable .
+	/opt/conda/envs/main-env/bin/pip install --editable .
 

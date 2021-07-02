@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: debian:bullseye
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE http://gitub.com/pscedu/singularity-blast
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    VERSION 2.11.0
+
+%post
+    apt update
+    apt install -y ncbi-blast+
