@@ -1,0 +1,42 @@
+Bootstrap: docker
+From: biocorecrg/debian-perlbrew-pyenv3-java:buster
+
+%runscript
+    echo "Welcome to BiocoreCRG Interproscan Image"
+
+%post
+	
+	IPSCAN_VERSION=5.48-83.0
+	IPSCAN_DATA=/nfs/db/iprscan/5.48-83.0
+	
+	# Install InterPro
+	
+	cd /usr/local; curl --fail --silent --show-error --location --remote-name ftp://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/${IPSCAN_VERSION}/interproscan-${IPSCAN_VERSION}-64-bit.tar.gz && \
+		curl --fail --silent --show-error --location --remote-name ftp://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/${IPSCAN_VERSION}/interproscan-${IPSCAN_VERSION}-64-bit.tar.gz.md5 && \
+		md5sum -c interproscan-${IPSCAN_VERSION}-64-bit.tar.gz.md5
+	
+	cd /usr/local; tar zxf interproscan-${IPSCAN_VERSION}-64-bit.tar.gz --exclude "interproscan-${IPSCAN_VERSION}/data" && rm interproscan-${IPSCAN_VERSION}-64-bit.tar.gz interproscan-${IPSCAN_VERSION}-64-bit.tar.gz.md5
+	
+	PATH="/usr/local/interproscan-${IPSCAN_VERSION}:${PATH}"
+	
+	# Replace interproscan.properties
+	
+	ln -s /usr/local/interproscan-${IPSCAN_VERSION} /usr/local/interproscan
+	cp /usr/local/interproscan.properties /usr/local/interproscan
+	
+	# Hardcoded Data
+	cd /usr/local/interproscan; rm -rf data; ln -s ${IPSCAN_DATA} data
+	chmod -R a+rx /usr/local/interproscan/bin
+	cd /usr/local/bin; ln -s /usr/local/interproscan/interproscan.sh
+
+	# Extra library
+	apt-get update; apt-get install -y libdw1; apt-get clean; rm -rf /var/lib/apt/lists/*
+
+%files
+
+	interproscan.open.properties /usr/local/interproscan.properties
+
+
+%labels
+    Maintainer Toni Hermoso Pulido
+    Version 0.1.0

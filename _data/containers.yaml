@@ -1,25 +1,25 @@
 bases:
-- count: 670
+- count: 672
   name: ubuntu
-- count: 216
+- count: 218
   name: nvidia/cuda
-- count: 161
+- count: 164
   name: debian
 - count: 115
   name: centos
 - count: 64
   name: continuumio/miniconda3
+- count: 63
+  name: alpine
 - count: 61
   name: mkandes/naked-singularity
 - count: 58
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 57
-  name: alpine
 - count: 45
   name: tensorflow/tensorflow
 - count: 40
   name: nfcore/base
-- count: 37
+- count: 38
   name: python
 - count: 35
   name: conda/miniconda3
@@ -27,7 +27,7 @@ bases:
   name: godloved/secure/ubuntu-bionic
 - count: 29
   name: fedora
-- count: 20
+- count: 24
   name: aibasel/downward
 - count: 19
   name: neurodebian
@@ -94,6 +94,8 @@ bases:
 - count: 6
   name: continuumio/miniconda2
 - count: 6
+  name: julia
+- count: 6
   name: vitchyr/railrl-torch4cuda9
 - count: 6
   name: trinityrnaseq/trinityrnaseq
@@ -111,8 +113,6 @@ bases:
   name: drneavin/SingularityBaseImages
 - count: 5
   name: poldracklab/mriqc
-- count: 5
-  name: julia
 - count: 5
   name: metabat/metabat
 - count: 4
@@ -141,8 +141,6 @@ bases:
   name: slaclab/slac-jupyterlab
 - count: 4
   name: provarepro/mlperf_inference
-- count: 4
-  name: letaylor/sc_qc_cluster
 - count: 4
   name: node
 - count: 4
@@ -195,6 +193,8 @@ bases:
   name: mongo
 - count: 3
   name: nvcr.io/nvidia/deepstream
+- count: 3
+  name: biocorecrg/debian-perlbrew-pyenv3-java
 - count: 3
   name: quay.io/biocontainers/edta
 - count: 2
@@ -388,6 +388,8 @@ bases:
 - count: 1
   name: mustxyk/fsl
 - count: 1
+  name: letaylor/sc_qc_cluster
+- count: 1
   name: caffe2ai/caffe2
 - count: 1
   name: Tensorflow_v1.10_gpu_WORKS.sqsh
@@ -567,8 +569,6 @@ bases:
   name: weatherhub/metview
 - count: 1
   name: nvidia/opengl
-- count: 1
-  name: biocorecrg/debian-perlbrew-pyenv3-java
 - count: 1
   name: dota
 - count: 1
@@ -926,7 +926,7 @@ bases:
 - count: 1
   name: charade/xlibbox@sha256
 bootstraps:
-- count: 2199
+- count: 2217
   name: docker
 - count: 248
   name: debootstrap
@@ -1088,6 +1088,8 @@ orgs:
 - count: 1
   name: mustxyk
 - count: 1
+  name: letaylor
+- count: 1
   name: thomasrobinson
 - count: 1
   name: caffe2ai
@@ -1209,8 +1211,6 @@ orgs:
   name: arcsUVA
 - count: 1
   name: weatherhub
-- count: 1
-  name: biocorecrg
 - count: 1
   name: tyson-swetnam
 - count: 1
@@ -1394,8 +1394,6 @@ orgs:
 - count: 1
   name: nipy
 - count: 1
-  name: letaylor
-- count: 1
   name: ncbi
 - count: 1
   name: multiphenics
@@ -1421,6 +1419,8 @@ orgs:
   name: pytorch
 - count: 1
   name: build
+- count: 1
+  name: biocorecrg
 - count: 1
   name: nextgenusfs
 - count: 1
@@ -1463,7 +1463,7 @@ orgs:
   name: quay.io/vgteam
 tags:
   latest: 231
-  other: 2011
+  other: 2029
 versions:
   APPIAN-PET/APPIAN:
     ants: 1
@@ -1486,9 +1486,9 @@ versions:
   adigenova/nf-gene-fusions:
     v1.0: 1
   aibasel/downward:
-    '19.06': 5
-    '19.12': 5
-    '20.06': 10
+    '19.06': 6
+    '19.12': 6
+    '20.06': 12
   airl_lab/default/airl_env:
     base_ci: 1
   alantrrs/py-faster-rcnn:
@@ -1506,8 +1506,8 @@ versions:
     '3.6': 2
     '3.7': 2
     '3.8': 2
-    edge: 11
-    latest: 11
+    edge: 16
+    latest: 12
   alpine/git:
     1.0.4: 1
   amazon/aws-cli:
@@ -1567,7 +1567,7 @@ versions:
   bioconductor/release_core2:
     R3.5.1_Bioc3.7: 1
   biocorecrg/debian-perlbrew-pyenv3-java:
-    buster: 1
+    buster: 3
   bitnami/minideb:
     jessie: 1
   brentp/smoove:
@@ -1692,11 +1692,11 @@ versions:
     9-slim: 5
     bullseye: 1
     bullseye-slim: 1
-    buster: 54
+    buster: 55
     buster-slim: 15
     jessie: 7
     jessie-slim: 4
-    latest: 10
+    latest: 12
     stretch: 42
     stretch-slim: 6
     testing: 1
@@ -1849,6 +1849,7 @@ versions:
     '1.4': 1
     1.4.0: 1
     1.4.1: 1
+    1.6.1: 1
     latest: 1
   jupyter/datascience-notebook:
     latest: 1
@@ -1883,7 +1884,7 @@ versions:
   kulhanek/target-driven-visual-navigation:
     latest: 1
   letaylor/sc_qc_cluster:
-    latest: 4
+    latest: 1
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2064,8 +2065,9 @@ versions:
     '10.2-devel ': 2
     10.2-devel-centos7: 3
     10.2-runtime-centos7: 3
-    11.0-cudnn8-devel-ubuntu18.04: 1
+    11.0-cudnn8-devel-ubuntu18.04: 2
     11.0-cudnn8-runtime-centos7: 1
+    11.0-devel-centos7: 1
     11.1-cudnn8-devel-centos8: 1
     11.1-cudnn8-devel-ubuntu18.04: 1
     11.1.1-devel-ubuntu20.04: 1
@@ -2209,6 +2211,7 @@ versions:
     3.8-slim: 2
     3.8.2: 1
     3.9-alpine: 1
+    3.9-slim: 1
     3.9.5: 1
     alpine3.6: 3
   pytorch/pytorch:
@@ -2488,7 +2491,7 @@ versions:
     '18.04': 141
     '19.04': 4
     '19.10': 4
-    '20.04': 102
+    '20.04': 104
     '20.10': 1
     '21.04': 1
     artful: 1
