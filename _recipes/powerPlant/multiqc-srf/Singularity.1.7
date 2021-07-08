@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: ewels/multiqc:v1.7
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version v1.7
+
+%runscript
+  exec multiqc "$@"

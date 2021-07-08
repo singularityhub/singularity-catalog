@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: larbys/geant4:10.02.p03
+
+%post
+  #apt-get update -y
+  #apt-get install -y voms-clients krb5-user jacksum emacs vim  
+  mkdir -p /cluster/home
+  mkdir -p /cluster/kappa
+  mkdir -p /cluster/shared
+  mkdir -p /opt/shared
+
+%environment

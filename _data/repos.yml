@@ -624,7 +624,7 @@ AvciRecep/chaste_nesi:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1625458754.0
+  updated_at: 1625528992.0
 BU-ISCIII/bacterial_wgs_training:
   data_format: 2
   description: In this training course you will find theory and practice material
@@ -4738,7 +4738,7 @@ Irfanwustl/Research_code:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1625440711.0
+  updated_at: 1625703717.0
 JCSDA-internal/containers:
   data_format: 2
   description: Contains tools for building and distributing the JEDI/JCSDA Containers
@@ -5021,27 +5021,28 @@ LLNL/MaPPeRTrac:
     <li>If you are having trouble building the container, try branch <code>no_viz</code>.\
     \ This will disable render functionality.</li>\n<li>Alternatively, download the\
     \ image <a href=\"https://drive.google.com/file/d/1lh0_5GO6-7qIznjvIcSMY-Ua8iBpZ4DJ/view?usp=sharing\"\
-    \ rel=\"nofollow\">here</a>.\n<br>\n</li>\n</ul>\n<h3>\n<a id=\"user-content-launch\"\
-    \ class=\"anchor\" href=\"#launch\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Launch</h3>\n<p><code>./s_run_all.py\
-    \ &lt;config_json&gt;</code></p>\n<p><strong>OR</strong></p>\n<p><code>./s_run_all.py\
-    \ &lt;arg1&gt;=val1 &lt;arg2&gt;=val2 etc...</code>\n<br>\nSpecify parameters\
-    \ either in a config JSON file or as command line arguments. See <code>examples/dummy_config.json</code>\
-    \ for an example.</p>\n<h3>\n<a id=\"user-content-file-overview\" class=\"anchor\"\
-    \ href=\"#file-overview\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>File Overview</h3>\n<pre><code>TracktographyScripts/\n\
-    +- container/\n|  +- build.sh\n|  +- Singularity               # Singularity build\
-    \ recipe\n|\n+- examples\n|  +- dataset_description.json  # Example of the BIDS\
-    \ dataset description\n|  +- dummy_config.json         # Example of the config\
-    \ JSON\n|  +- dummy_dicom/\n|  +- dummy_nifti/\n|  +- dummy_subjects.json    \
-    \   # Example of the subjects JSON\n|\n+- license.txt                  # Freesurfer\
-    \ license. NOTE: not included, required to build Singularity container\n+- LICENSE\
-    \                      # MaPPeRTrac license.\n|\n+- lists/\n|  +- connectome_idxs.txt\
-    \       # Brain region indices for .mat connectome files\n|  +- list_edges_reduced.txt\
-    \    # Default edges to compute with Probtrackx and EDI (930 edges)\n|  +- list_edges_all.txt\
-    \        # All possible edges (6643 edges)\n|  +- render_targets.txt        #\
-    \ NiFTI files to visualize with s4_render\n|\n+- README.md\n|\n+- s_run_all.py\
-    \                 # Main script\n|\n+- subscripts/\n   +- __init__.py\n   +- maskseeds.py\
+    \ rel=\"nofollow\">here</a>.\n<br>\n</li>\n</ul>\n<p><b>4. Specify your DICOM\
+    \ or NIfTI data</b></p>\n<p>Place your data in the same filesystem as the repository.</p>\n\
+    <p>You can download the example data <a href=\"https://drive.google.com/file/d/1YC0QzWNohq173_zJaqZfnI5d6EPb9On2/view?usp=sharing\"\
+    \ rel=\"nofollow\">here</a>.</p>\n<h3>\n<a id=\"user-content-launch\" class=\"\
+    anchor\" href=\"#launch\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Launch</h3>\n<p><code>./s_run_all.py &lt;config_json&gt;</code>\n\
+    <br>\nSee <code>examples/dummy_config.json</code> for example parameters.</p>\n\
+    <h3>\n<a id=\"user-content-file-overview\" class=\"anchor\" href=\"#file-overview\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>File Overview</h3>\n<pre><code>TracktographyScripts/\n+- container/\n\
+    |  +- build.sh\n|  +- Singularity               # Singularity build recipe\n|\n\
+    +- examples\n|  +- dataset_description.json  # Example of the BIDS dataset description\n\
+    |  +- dummy_config.json         # Example of the config JSON\n|  +- dummy_dicom/\n\
+    |  +- dummy_nifti/\n|  +- dummy_subjects.json       # Example of the subjects\
+    \ JSON\n|\n+- license.txt                  # Freesurfer license. NOTE: not included,\
+    \ required to build Singularity container\n+- LICENSE                      # MaPPeRTrac\
+    \ license.\n|\n+- lists/\n|  +- connectome_idxs.txt       # Brain region indices\
+    \ for .mat connectome files\n|  +- list_edges_reduced.txt    # Default edges to\
+    \ compute with Probtrackx and EDI (930 edges)\n|  +- list_edges_all.txt      \
+    \  # All possible edges (6643 edges)\n|  +- render_targets.txt        # NiFTI\
+    \ files to visualize with s4_render\n|\n+- README.md\n|\n+- s_run_all.py     \
+    \            # Main script\n|\n+- subscripts/\n   +- __init__.py\n   +- maskseeds.py\
     \              # Helper functions for s2b_freesurfer.py\n   +- run_vtk.py    \
     \            # Helper script for s4_render.py\n   +- s_debug.py              \
     \  # For debugging\n   +- s1_dti_preproc.py\n   +- s2a_bedpostx.py\n   +- s2b_freesurfer.py\n\
@@ -5191,7 +5192,7 @@ LLNL/MaPPeRTrac:
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1624378985.0
+  updated_at: 1625714639.0
 Lizhen0909/LSHVec:
   data_format: 2
   description: null
@@ -6804,10 +6805,10 @@ Mykrobe-tools/mykrobe:
     \ \\\n  --species tb \\\n  --output out.json \\\n  --format json \\\n  --seq reads.fq.gz\n\
     </code></pre>\n<p>Test reads can be obtained by running:</p>\n<pre><code>wget\
     \ -O reads.fq.gz https://ndownloader.figshare.com/files/21059229\n</code></pre>\n"
-  stargazers_count: 44
+  stargazers_count: 45
   subscribers_count: 6
   topics: []
-  updated_at: 1624532770.0
+  updated_at: 1625665948.0
 NIH-HPC/singularity-def-files:
   data_format: 2
   description: definition files and wrapper scripts used by NIH HPC staff to install
@@ -8010,6 +8011,23 @@ Nahuel-Mk2/def-space:
   subscribers_count: 1
   topics: []
   updated_at: 1606189900.0
+NuTufts/coherent-containers:
+  data_format: 2
+  description: Recipes for docker and singularity containers for COHERENT projects
+  filenames:
+  - geant4/Singularity
+  full_name: NuTufts/coherent-containers
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-coherent-containers" class="anchor" href="#coherent-containers"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>coherent-containers</h1>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 2
+  topics: []
+  updated_at: 1625680251.0
 ORNL/faro:
   data_format: 2
   description: 'Face Recognition from Oak Ridge (FaRO) provides a well-defined server-client
@@ -12188,6 +12206,209 @@ VUIIS/Temporal_Lobe_app:
   subscribers_count: 1
   topics: []
   updated_at: 1592512741.0
+VUIIS/demo-singularity-matlab-fsl:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: VUIIS/demo-singularity-matlab-fsl
+  latest_release: v1.0.0
+  readme: "<h1>\n<a id=\"user-content-demo-singularity-container-for-matlab-plus-fsl\"\
+    \ class=\"anchor\" href=\"#demo-singularity-container-for-matlab-plus-fsl\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Demo\
+    \ singularity container for Matlab plus FSL</h1>\n<p>This example container takes\
+    \ a Nifti image as input, zeroes out a hole in it of\nthe specified diameter,\
+    \ and saves the result to a new Nifti file. Quick,\npointless, and easy to tell\
+    \ whether it worked right.</p>\n<p>This is one way to organize a Matlab-based\
+    \ Singularity container -\nperhaps most easily conceived of as a series of wrappers\
+    \ around the main\ncodebase. Done this way, it's fairly easy to work on each piece\
+    \ in isolation,\nproblem-solving from the inside out.</p>\n<p>This container also\
+    \ includes an installation of FSL, which has a lot of handy\ntools including fsleyes\
+    \ to make the QA PDF. The FSL parts could be removed from\nthe Singularity file\
+    \ if FSL isn't used, to end up with a smaller container.\nContrariwise, all the\
+    \ Matlab parts could be removed to end up with an FSL-only\ncontainer.</p>\n<pre><code>Singularity\
+    \ container\n|   Primary entrypoint (shell script)\n|   |   X11 wrapper\n|   |\
+    \   |   Shell script preprocessing\n|   |   |   Matlab processing (compiled)\n\
+    |   |   |   |   Matlab entrypoint\n|   |   |   |       Matlab main function\n\
+    |   |   |   \\           Matlab sub-functions / codebase\n\\   \\   \\   Shell\
+    \ script postprocessing\n</code></pre>\n<p>Dependencies in terms of the actual\
+    \ files:</p>\n<pre><code>Singularity\n    src/pipeline_entrypoint.sh\n       \
+    \ src/pipeline_main.sh\n            src/copy_inputs.sh\n            src/preprocessing.sh\n\
+    \            matlab/bin/run_matlab_entrypoint.sh\n                matlab/bin/matlab_entrypoint\n\
+    \                    / matlab/src/matlab_entrypoint.m \\  Used for compilation,\n\
+    \                    |     matlab/src/matlab_main.m   |  but not at container\n\
+    \                    \\         matlab/src/*           /  runtime\n          \
+    \  src/postprocessing.sh\n            src/make_pdf.sh\n            src/finalize.sh\n\
+    </code></pre>\n<p>The process of putting it together is described below. The scripts\
+    \ and code in\nthis repository are extensively commented, so if something isn't\
+    \ clear here,\nit's probably explained in the Singularity file or the example\
+    \ code.</p>\n<h2>\n<a id=\"user-content-building-this-container-before-editing-anything\"\
+    \ class=\"anchor\" href=\"#building-this-container-before-editing-anything\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ this container before editing anything</h2>\n<p>Try building this from scratch,\
+    \ to find any immediate issues:</p>\n<ol>\n<li>\n<p>Get the installers for Matlab\
+    \ Compiled Runtime and FSL and place them in the\n<code>external</code> directory.\
+    \ URLs for these are in the <code>Singularity</code> file. Alternatively,\ncomment\
+    \ out the installer files in the '%files' section and uncomment the download\n\
+    lines ('wget') later - this way they will be downloaded as part of the build.</p>\n\
+    </li>\n<li>\n<p>Build the container, following the instructions below\n<a href=\"\
+    https://github.com/baxpr/demo-singularity-matlab-fsl#building-the-container\"\
+    >https://github.com/baxpr/demo-singularity-matlab-fsl#building-the-container</a></p>\n\
+    </li>\n</ol>\n<h2>\n<a id=\"user-content-matlab-part\" class=\"anchor\" href=\"\
+    #matlab-part\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>Matlab part</h2>\n<h3>\n<a id=\"user-content-write-the-basic-matlab-code\"\
+    \ class=\"anchor\" href=\"#write-the-basic-matlab-code\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Write the\
+    \ basic Matlab code</h3>\n<p>Write Matlab code that does what's needed. Put it\
+    \ in <code>matlab/src</code>.</p>\n<p>A popular toolbox for reading and writing\
+    \ Nifti files that's available on Matlab\nCentral has a lot of insidious bugs\
+    \ and is not being maintained. Matlab's own\nfunctions for Nifti files are quite\
+    \ limited. Here is an alternative, which is\nused in this example:\n<a href=\"\
+    https://github.com/VUIIS/spm_readwrite_nii\">https://github.com/VUIIS/spm_readwrite_nii</a></p>\n\
+    <h3>\n<a id=\"user-content-write-the-matlab-entrypoint\" class=\"anchor\" href=\"\
+    #write-the-matlab-entrypoint\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Write the Matlab entrypoint</h3>\n\
+    <p><code>matlab/src/matlab_entrypoint.m</code> exists to take command line arguments,\
+    \ parse\nthem, and call the main code. A convenient way to set things up is to\
+    \ write a\nmain function that takes a structure as its sole input, with the structure\n\
+    containing whatever inputs are needed. See <code>matlab/src/matlab_main.m</code>\
+    \ for an\nexample of this.</p>\n<p>Couple of things to note in the entrypoint\
+    \ code are the quit/exit sections at\nbeginning and end. The bit at the beginning\
+    \ allows the executable to run during\nthe container build, without actually doing\
+    \ anything - this is needed to extract\nthe CTF archive into the container at\
+    \ the only time the container is writeable\n(h/t <a href=\"https://twitter.com/annash128\"\
+    \ rel=\"nofollow\">https://twitter.com/annash128</a> for figuring that one out).\
+    \ The bit at the\nend exits matlab when the function is finished. Without it,\
+    \ the running Matlab\nprocess won't release execution back to the calling script\
+    \ when it's done.</p>\n<h3>\n<a id=\"user-content-test-the-matlab-entrypoint\"\
+    \ class=\"anchor\" href=\"#test-the-matlab-entrypoint\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Test the Matlab\
+    \ entrypoint</h3>\n<p>The script <code>matlab/src/test_matlab_entrypoint.m</code>\
+    \ is an example of how to do\nthis. The appropriate Matlab must be installed on\
+    \ the testing computer.</p>\n<h3>\n<a id=\"user-content-compile-the-matlab-code\"\
+    \ class=\"anchor\" href=\"#compile-the-matlab-code\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Compile the Matlab\
+    \ code</h3>\n<p><code>matlab/compile_matlab.sh</code> shows how. Many compiled\
+    \ executables are likely to be\ntoo large to store on github. Git LFS may be a\
+    \ solution.\n<a href=\"https://docs.github.com/en/github/managing-large-files/working-with-large-files\"\
+    >https://docs.github.com/en/github/managing-large-files/working-with-large-files</a></p>\n\
+    <h3>\n<a id=\"user-content-test-the-compiled-matlab-code\" class=\"anchor\" href=\"\
+    #test-the-compiled-matlab-code\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Test the compiled Matlab code</h3>\n\
+    <p><code>matlab/test_compiled_matlab.sh</code>. The appropriate Matlab Runtime\
+    \ must be\ninstalled on the testing computer.</p>\n<h2>\n<a id=\"user-content-shell-script-part\"\
+    \ class=\"anchor\" href=\"#shell-script-part\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Shell script part</h2>\n<p>All\
+    \ of the below procedures could be done in the matlab part, if desired,\ninstead\
+    \ of in shell script. If so, parsing inputs should be done following the\nexample\
+    \ in <code>matlab/src/matlab_entrypoint.m</code>. But it's often easier to move\n\
+    files, create the QA PDF, etc using shell script and FSL. So that's what we are\n\
+    doing in this example. All this code is in the <code>src</code> directory.</p>\n\
+    <p>All the shell scripts called from <code>src/pipeline_entrypoint.sh</code> \"\
+    know\" the\nenvironment variables that are exported there. This is a very convenient\
+    \ way to\npass along the input arguments, although it isn't entirely transparent,\
+    \ because\nthere's no hint in the shell scripts where the variables' values are\
+    \ coming from\nunless we explain it in the comments.</p>\n<h3>\n<a id=\"user-content-main-entrypoint\"\
+    \ class=\"anchor\" href=\"#main-entrypoint\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Main entrypoint</h3>\n<p>This\
+    \ is <code>src/pipeline_entrypoint.sh</code>. It uses bash to parse the command\
+    \ line\ninputs and export them to environment variables so they're accessible.\
+    \ Then it\ncalls the primary shell script <code>src/pipeline_main.sh</code> which\
+    \ in turn calls\neverything else. The main script is run in xvfb to provide a\
+    \ virtual display,\noften needed by matlab and required for fsleyes.</p>\n<h3>\n\
+    <a id=\"user-content-copy-inputs\" class=\"anchor\" href=\"#copy-inputs\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Copy\
+    \ inputs</h3>\n<p>We copy input files to the output/working directory so we don't\
+    \ mess them up.\nThis also is an opportunity to rename them to something consistent.\
+    \ It's very\nconvenient to hard-code the filenames so we don't have to store and\
+    \ manipulate\nfilenames in environment variables or the like. Also, this makes\
+    \ it easy to\nproduce output files with consistent names - outputs of one pipeline\
+    \ may serve\nas inputs to another, and it's much easier to manage this if filenames\
+    \ are the\nsame for every run, or at least consistent.</p>\n<p>We generally assume\
+    \ the output directory starts out empty and will not be\ninterfered with by any\
+    \ other processes - this is true for XNAT/DAX, but\nimportant to be aware of in\
+    \ other contexts.</p>\n<h3>\n<a id=\"user-content-preprocessing\" class=\"anchor\"\
+    \ href=\"#preprocessing\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Preprocessing</h3>\n<p>For this example, there\
+    \ is no preprocessing before the matlab part. But initial\nFSL steps or similar\
+    \ could be put here: <code>src/preprocessing.sh</code>.</p>\n<h3>\n<a id=\"user-content-postprocessing\"\
+    \ class=\"anchor\" href=\"#postprocessing\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Postprocessing</h3>\n<p>There\
+    \ isn't any postprocessing for this example either, but there could be:\n<code>src/postprocessing.sh</code>.</p>\n\
+    <h3>\n<a id=\"user-content-pdf-creation\" class=\"anchor\" href=\"#pdf-creation\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>PDF creation</h3>\n<p>All assessors on VUIIS XNAT require a PDF QA\
+    \ report of some sort. For this\nexample, a display of the segmented ROIs overlaid\
+    \ on the T1 is created using\nfsleyes and ImageMagick, <code>src/make_pdf.sh</code>.</p>\n\
+    <p>PDF creation can be done in Matlab instead. It's hard to make these look good.\n\
+    An example with some tricks, including a <code>.fig</code> file painstakingly\
+    \ made with\nMatlab's GUIDE, is\n<a href=\"https://github.com/baxpr/connprep/blob/855dadc/src/connectivity_filter.m#L271\"\
+    >https://github.com/baxpr/connprep/blob/855dadc/src/connectivity_filter.m#L271</a>\n\
+    A way to show slices of functional images with a nice red/blue colormap is\n<a\
+    \ href=\"https://github.com/baxpr/connprep/blob/855dadc/src/make_network_maps.m\"\
+    >https://github.com/baxpr/connprep/blob/855dadc/src/make_network_maps.m</a></p>\n\
+    <h3>\n<a id=\"user-content-finalizing-the-output\" class=\"anchor\" href=\"#finalizing-the-output\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Finalizing the output</h3>\n<p>All Niftis must be compressed for storage\
+    \ on XNAT, and outputs can be organized\nin an easily understandable way: <code>src/finalize.sh</code>.</p>\n\
+    <h2>\n<a id=\"user-content-documentation\" class=\"anchor\" href=\"#documentation\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Documentation</h2>\n<p>Write an informative README - so tedious, yet\
+    \ so helpful. Include the\nappropriate citations for all the methods and software\
+    \ you have used. Even\nessentially write the methods section for a paper that\
+    \ uses the pipeline. Here's\nan excellent example: <a href=\"https://github.com/MASILab/PreQual\"\
+    >https://github.com/MASILab/PreQual</a></p>\n<p>Alternatively, git-ify some documentation\
+    \ like this:\n<a href=\"https://github.com/VUIIS/dax/tree/main/docs\">https://github.com/VUIIS/dax/tree/main/docs</a></p>\n\
+    <p>to get something like this:\n<a href=\"https://dax.readthedocs.io/en/latest/\"\
+    \ rel=\"nofollow\">https://dax.readthedocs.io/en/latest/</a></p>\n<h2>\n<a id=\"\
+    user-content-building-the-container\" class=\"anchor\" href=\"#building-the-container\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Building the container</h2>\n<p>Be sure the Matlab code is newly compiled,\
+    \ see above. You can run\n<code>matlab/check_for_compilation.sh</code> first to\
+    \ make sure there's no source code\nnewer than the compiled executable.</p>\n\
+    <p>Then from the root directory of the working copy of the repo, run</p>\n<pre><code>singularity\
+    \ build &lt;container_name&gt;.simg Singularity\n</code></pre>\n<p>Good practice:\
+    \ before you build, create a release on github (if using github) or\nat least\
+    \ tag the commit you are about to build. Give the container a versioned\nname\
+    \ like <code>demo-singularity-matlab-fsl_v1.0.0.simg</code> that matches the repository\n\
+    name and release version/tag.</p>\n<p>External binaries such as Matlab Runtime\
+    \ and FSL can be included by copying\nlocal copies into the container in the Singularity\
+    \ file's <code>%files</code> section. This\ntends to be a little faster when multiple\
+    \ builds are needed during debugging,\nor necessary for files that are not available\
+    \ to download, and this is what's\nbeing done in the example Singularity file.\
+    \ Alternatively, binaries or install\nfiles can be downloaded from their source\
+    \ at build time - there are some\ncommented-out sections in the Singularity file\
+    \ showing how that is done. (Thanks\n<a href=\"https://github.com/praitayini\"\
+    >https://github.com/praitayini</a> for exploring this in detail)</p>\n<h2>\n<a\
+    \ id=\"user-content-running-the-container\" class=\"anchor\" href=\"#running-the-container\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Running the container</h2>\n<p>See <code>test_singularity_container.sh</code>\
+    \ for an example run command and some\nimportant info.</p>\n<h3>\n<a id=\"user-content-inputs\"\
+    \ class=\"anchor\" href=\"#inputs\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Inputs</h3>\n<p>Paths to files\
+    \ are relative to the container.</p>\n<pre><code>--t1_niigz        A T1 image\n\
+    --seg_niigz       Its corresponding segmentation from e.g. slant pipeline\n--diameter_mm\
+    \     Diameter of the hole to zero out, in mm (default 30)\n\n--project      \
+    \   Labels from XNAT, used only to annotate the QA PDF\n--subject         (default\
+    \ UNK_*)\n--session\n--scan\n\n--out_dir         Where outputs will be stored\
+    \ (default /OUTPUTS)\n</code></pre>\n<h3>\n<a id=\"user-content-outputs\" class=\"\
+    anchor\" href=\"#outputs\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Outputs</h3>\n<pre><code>PDF/holed_image.pdf\
+    \           QA report\nHOLED_T1/holed_t1.nii.gz      T1 image with a hole in it\n\
+    HOLED_SEG/holed_seg.nii.gz    Segmentation with a hole in it\n</code></pre>\n\
+    <h2>\n<a id=\"user-content-running-the-container-with-dax\" class=\"anchor\" href=\"\
+    #running-the-container-with-dax\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Running the container with DAX</h2>\n\
+    <p>With a suitable configuration file, DAX (<a href=\"https://github.com/VUIIS/dax\"\
+    >https://github.com/VUIIS/dax</a>) can run this on a cluster.</p>\n<p>Instructions\
+    \ are here: <a href=\"https://dax.readthedocs.io/en/latest/processors.html\" rel=\"\
+    nofollow\">https://dax.readthedocs.io/en/latest/processors.html</a></p>\n<p>An\
+    \ example is here:\n<a href=\"https://github.com/VUIIS/dax_yaml_processor_examples/blob/master/demo-matfsl_v1.0.0_processor.yaml\"\
+    >https://github.com/VUIIS/dax_yaml_processor_examples/blob/master/demo-matfsl_v1.0.0_processor.yaml</a></p>\n"
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1625683788.0
 XSEDE/nix-container-perfzero:
   data_format: 2
   description: A container for running the perfzero benchmark in an XSEDE environment
@@ -12527,30 +12748,28 @@ abdulrahmanazab/docker-training-neic:
     \ class=\"anchor\" href=\"#containers-tutorial---prace-training-2021\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Containers\
     \ Tutorial - PRACE training, 2021</h1>\n<p>The training infrastructure is offered\
-    \ by <a href=\"https://www.cscs.ch/computers/piz-daint/\" rel=\"nofollow\">Piz\
-    \ Daint</a> at CSCS, Switserland.</p>\n<h2>\n<a id=\"user-content-connect-to-your-vm\"\
-    \ class=\"anchor\" href=\"#connect-to-your-vm\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Connect to your VM</h2>\n<ul>\n\
-    <li>You will get the key file <code>docker-tutorial.pem</code> from your instructor</li>\n\
-    <li>Now use it to connect to your VM:</li>\n</ul>\n<div class=\"highlight highlight-source-shell\"\
-    ><pre>chmod 600 docker-tutorial.pem \nssh -i docker-tutorial.pem cloud-user@<span\
-    \ class=\"pl-k\">&lt;</span>Terminal-IP-Address<span class=\"pl-k\">&gt;</span>\n\
-    [cloud-user@docker-tutorial-terminal <span class=\"pl-k\">~</span>]$ ssh -i docker-tutorial.pem\
-    \ cloud-user@container-tutorial-[1-22]</pre></div>\n<h2>\n<a id=\"user-content-tutorial-contents\"\
+    \ by</p>\n<ul>\n<li>\n<a href=\"https://www.cscs.ch/computers/piz-daint/\" rel=\"\
+    nofollow\">Piz Daint</a> at CSCS, Switserland.</li>\n<li><a href=\"https://www.nrec.no/\"\
+    \ rel=\"nofollow\">Norwegian Research and Education cloud</a></li>\n</ul>\n<h2>\n\
+    <a id=\"user-content-connect-to-your-vm\" class=\"anchor\" href=\"#connect-to-your-vm\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Connect to your VM</h2>\n<ul>\n<li>You will get the key file <code>nrec.pem</code>\
+    \ from your instructor</li>\n<li>Now use it to connect to your VM:</li>\n</ul>\n\
+    <div class=\"highlight highlight-source-shell\"><pre>chmod 600 nrec.pem \nssh\
+    \ -i nrec.pem debian@<span class=\"pl-k\">&lt;</span>Terminal-IP-Address<span\
+    \ class=\"pl-k\">&gt;</span></pre></div>\n<h2>\n<a id=\"user-content-tutorial-contents\"\
     \ class=\"anchor\" href=\"#tutorial-contents\" aria-hidden=\"true\"><span aria-hidden=\"\
     true\" class=\"octicon octicon-link\"></span></a>Tutorial contents</h2>\n<ul>\n\
-    <li><a href=\"https://github.com/abdulrahmanazab/docker-training-neic/blob/research-bazaar-2020/docker.md\"\
-    >Docker</a></li>\n<li><a href=\"https://github.com/abdulrahmanazab/docker-training-neic/blob/research-bazaar-2020/singularity.md\"\
+    <li><a href=\"https://github.com/abdulrahmanazab/docker-training-neic/blob/prace-training-2021/docker.md\"\
+    >Docker</a></li>\n<li><a href=\"https://github.com/abdulrahmanazab/docker-training-neic/tree/prace-training-2021/singularity_training\"\
     >Singularity</a></li>\n<li><a href=\"https://github.com/abdulrahmanazab/docker-training-neic/blob/prace-training-2021/sarus.md\"\
-    >SARUS</a></li>\n<li><a href=\"https://github.com/abdulrahmanazab/docker-training-neic/blob/research-bazaar-2020/docker-htcondor.md\"\
-    >Docker on HTCondor</a></li>\n<li><a href=\"https://github.com/abdulrahmanazab/docker-training-neic/blob/research-bazaar-2020/singularity-openmpi.md\"\
-    >Singularity MPI</a></li>\n<li><a href=\"https://github.com/abdulrahmanazab/docker-training-neic/blob/prace-training-2021/singularity-gpu.md\"\
-    >Singularity GPU support</a></li>\n<li><a href=\"https://github.com/abdulrahmanazab/docker-training-neic/blob/prace-training-2021/unikernels.md\"\
+    >Sarus</a></li>\n<li><a href=\"https://github.com/abdulrahmanazab/docker-training-neic/blob/prace-training-2021/Charliecloud/Charliecloud.md\"\
+    >Charliecloud</a></li>\n<li><a href=\"https://github.com/abdulrahmanazab/docker-training-neic/blob/prace-training-2021/unikernels.md\"\
     >Unikernels</a></li>\n</ul>\n"
-  stargazers_count: 16
-  subscribers_count: 4
+  stargazers_count: 17
+  subscribers_count: 5
   topics: []
-  updated_at: 1625415242.0
+  updated_at: 1625652278.0
 abs-tudelft/ArrowSAM:
   data_format: 2
   description: Genomics datastructures using Apache Arrow
@@ -14269,6 +14488,177 @@ aseetharam/gatk:
   subscribers_count: 2
   topics: []
   updated_at: 1623344768.0
+ashokdahal/FrameFieldLearning_Anaconda_Windows:
+  data_format: 2
+  description: null
+  filenames:
+  - singularity/Singularity
+  full_name: ashokdahal/FrameFieldLearning_Anaconda_Windows
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-polygonal-building-segmentation-by-frame-field-learning-modified-from-lydorn-to-work-on-anaconda-and-windows-device-without-docker-installation\"\
+    \ class=\"anchor\" href=\"#polygonal-building-segmentation-by-frame-field-learning-modified-from-lydorn-to-work-on-anaconda-and-windows-device-without-docker-installation\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Polygonal Building Segmentation by Frame Field Learning Modified from\
+    \ LYDORN to work on anaconda and windows device without docker installation.</h1>\n\
+    <p>We add a frame field output to an image segmentation neural network to improve\
+    \ segmentation quality\nand provide structural information for the subsequent\
+    \ polygonization step.</p>\n<p align=\"center\">\n    <a href=\"images/frame_field_sample.png\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"images/frame_field_sample.png\"\
+    \ width=\"512\" style=\"max-width:100%;\"></a>\n    <br>\n    Figure 1: Close-up\
+    \ of our additional frame field output on a test image.\n    <br>\n    <br>\n\
+    \    <br>\n    <a href=\"images/model_training.png\" target=\"_blank\" rel=\"\
+    noopener noreferrer\"><img src=\"images/model_training.png\" width=\"768\" style=\"\
+    max-width:100%;\"></a>\n    <br>\n    Figure 2: Given an overhead image, the model\
+    \ outputs an edge mask, an interior mask,\n    and a frame field for buildings.\
+    \ The total loss includes terms that align the masks and\n    frame field to ground\
+    \ truth data as well as regularizers to enforce smoothness of the\n    frame field\
+    \ and consistency between the outputs.\n    <br>\n    <br>\n    <br>\n    <a href=\"\
+    images/schematic_polygonization.png\" target=\"_blank\" rel=\"noopener noreferrer\"\
+    ><img src=\"images/schematic_polygonization.png\" width=\"768\" style=\"max-width:100%;\"\
+    ></a>\n    <br>\n    Figure 3: Given classification maps and a frame field as\
+    \ input, we optimize skeleton polylines to\n    align to the frame field using\
+    \ an Active Skeleton Model (ASM) and detect corners using\n    the frame field,\
+    \ simplifying non-corner vertices.\n</p>\n<p>This repository contains the official\
+    \ code for the paper:</p>\n<p><strong>Polygonal Building Segmentation by Frame\
+    \ Field Learning</strong><br>\n<a href=\"https://www-sop.inria.fr/members/Nicolas.Girard/\"\
+    \ rel=\"nofollow\">Nicolas Girard</a>,\n<a href=\"https://people.csail.mit.edu/smirnov/\"\
+    \ rel=\"nofollow\">Dmitriy Smirnov</a>,\n<a href=\"https://people.csail.mit.edu/jsolomon/\"\
+    \ rel=\"nofollow\">Justin Solomon</a>,\n<a href=\"https://www-sop.inria.fr/members/Yuliya.Tarabalka/\"\
+    \ rel=\"nofollow\">Yuliya Tarabalka</a><br>\nPre-print<br>\n<strong>[<a href=\"\
+    https://arxiv.org/pdf/2004.14875.pdf\" rel=\"nofollow\">paper</a>, <a href=\"\
+    https://www.youtube.com/watch?v=XdQMD3HTYCU&amp;t=5s\" rel=\"nofollow\">video</a>]</strong></p>\n\
+    <p>Whose short version has been published as:</p>\n<p><strong>Regularized Building\
+    \ Segmentation by Frame Field Learning</strong><br>\n<a href=\"https://www-sop.inria.fr/members/Nicolas.Girard/\"\
+    \ rel=\"nofollow\">Nicolas Girard</a>,\n<a href=\"https://people.csail.mit.edu/smirnov/\"\
+    \ rel=\"nofollow\">Dmitriy Smirnov</a>,\n<a href=\"https://people.csail.mit.edu/jsolomon/\"\
+    \ rel=\"nofollow\">Justin Solomon</a>,\n<a href=\"https://www-sop.inria.fr/members/Yuliya.Tarabalka/\"\
+    \ rel=\"nofollow\">Yuliya Tarabalka</a><br>\nIGARSS 2020</p>\n<h1>\n<a id=\"user-content-setup\"\
+    \ class=\"anchor\" href=\"#setup\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Setup</h1>\n<h2>\n<a id=\"user-content-git-submodules\"\
+    \ class=\"anchor\" href=\"#git-submodules\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Git submodules</h2>\n<p>This\
+    \ project uses various git submodules that should be cloned too.</p>\n<p>To clone\
+    \ a repository including its submodules execute:</p>\n<pre><code>git clone --recursive\
+    \ --jobs 8 &lt;URL to Git repo&gt;\n</code></pre>\n<p>If you already have cloned\
+    \ the repository and now want to load it\u2019s submodules execute:</p>\n<pre><code>git\
+    \ submodule update --init --recursive --jobs 8\n</code></pre>\n<p>or:</p>\n<pre><code>git\
+    \ submodule update --recursive\n</code></pre>\n<p>For more about explanations\
+    \ about using submodules and git, see <a href=\"SUBMODULES.md\">SUBMODULES.md</a>.</p>\n\
+    <h2>\n<a id=\"user-content-docker\" class=\"anchor\" href=\"#docker\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Docker</h2>\n\
+    <p>The easiest way to setup environment is to use the Docker image provided in\
+    \ the <a href=\"docker\">docker</a> (see README inside the folder).</p>\n<p>Once\
+    \ the docker container is built and launched, execute the <a href=\"setup.sh\"\
+    >setup.sh</a> script inside to install required packages.</p>\n<p>The environment\
+    \ in the container is now ready for use.</p>\n<h2>\n<a id=\"user-content-conda-environment\"\
+    \ class=\"anchor\" href=\"#conda-environment\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Conda environment</h2>\n<p>Alternatively\
+    \ you can install all dependencies in a conda environment.\nI provide my environment\
+    \ specifications in the  <a href=\"environment.yml\">environment.yml</a> which\
+    \ you can use to create your environment own with:</p>\n<pre><code>conda env create\
+    \ -f environment.yml\n</code></pre>\n<h1>\n<a id=\"user-content-data\" class=\"\
+    anchor\" href=\"#data\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Data</h1>\n<p>Several datasets are used in this\
+    \ work.\nWe typically put all datasets in a \"data\" folder which we link to the\
+    \ \"/data\" folder in the container (with the <code>-v</code> argument when running\
+    \ the container).\nEach dataset has it's own sub-folder, usually named with a\
+    \ short version of that dataset's name.\nEach dataset sub-folder should have a\
+    \ \"raw\" folder inside containing all the original folders and files fo the datset.\n\
+    When pre-processing data, \"processed\" folders will be created alongside the\
+    \ \"raw\" folder.</p>\n<p>For example, here is an example working file structure\
+    \ inside the container:</p>\n<pre><code>/data \n|-- AerialImageDataset\n     |--\
+    \ raw\n         |-- train\n         |   |-- aligned_gt_polygons_2\n         |\
+    \   |-- gt\n         |   |-- gt_polygonized\n         |   |-- images\n       \
+    \  `-- test\n             |-- aligned_gt_polygons_2\n             |-- images\n\
+    `-- mapping_challenge_dataset\n     |-- raw\n         |-- train\n         |  \
+    \ |-- images\n         |   |-- annotation.json\n         |   `-- annotation-small.json\n\
+    \         `-- val\n              `-- ...\n</code></pre>\n<p>If however you would\
+    \ like to use a different folder for the datasets (for example while not using\
+    \ Docker),\nyou can change the path to datasets in config files.\nYou can modify\
+    \ the \"data_dir_candidates\" list in the config to only include your path.\n\
+    The training script checks this list of paths one at a time and picks the first\
+    \ one that exists.\nIt then appends the \"data_root_partial_dirpath\" directory\
+    \ to get to the dataset.</p>\n<p>You can find some of the data we used in this\
+    \ shared \"data\" folder: <a href=\"https://drive.google.com/drive/folders/19yqseUsggPEwLFTBl04CmGmzCZAIOYhy?usp=sharing\"\
+    \ rel=\"nofollow\">https://drive.google.com/drive/folders/19yqseUsggPEwLFTBl04CmGmzCZAIOYhy?usp=sharing</a>.</p>\n\
+    <h2>\n<a id=\"user-content-inria-aerial-image-labeling-dataset\" class=\"anchor\"\
+    \ href=\"#inria-aerial-image-labeling-dataset\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Inria Aerial Image Labeling Dataset</h2>\n\
+    <p>Link to the dataset: <a href=\"https://project.inria.fr/aerialimagelabeling/\"\
+    \ rel=\"nofollow\">https://project.inria.fr/aerialimagelabeling/</a></p>\n<p>For\
+    \ the Inria dataset, the original ground truth is just a collection of raster\
+    \ masks.\nAs our method requires annotations to be polygons in order to compute\
+    \ the ground truth angle for the frame field, we made 2 versions of the dataset:</p>\n\
+    <p>The <em>Inria OSM dataset</em> has aligned annotations pulled from OpenStreetMap.</p>\n\
+    <p>The <em>Inria Polygonized dataset</em> has polygon annotations obtained from\
+    \ using our frame field polygonization algorithm on the original raster masks.\n\
+    This was done by running the <code>polygonize_mask.py</code> script like so:\n\
+    <code>python polygonize_mask.py --run_name inria_dataset_osm_mask_only.unet16\
+    \ --filepath ~/data/AerialImageDataset/raw/train/gt/*.tif</code></p>\n<p>You can\
+    \ find this new ground truth for both cases in the shared \"data\" folder (<a\
+    \ href=\"https://drive.google.com/drive/folders/19yqseUsggPEwLFTBl04CmGmzCZAIOYhy?usp=sharing\"\
+    \ rel=\"nofollow\">https://drive.google.com/drive/folders/19yqseUsggPEwLFTBl04CmGmzCZAIOYhy?usp=sharing</a>.).</p>\n\
+    <h1>\n<a id=\"user-content-running-the-mainpy-script\" class=\"anchor\" href=\"\
+    #running-the-mainpy-script\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Running the main.py script</h1>\n<p>Execute\
+    \ <a href=\"main.py\">main.py</a> script to train a model, test a model or use\
+    \ a model on your own image.\nSee the help of the main script with:</p>\n<p><code>python\
+    \ main.py --help</code></p>\n<p>The script can be launched on multiple GPUs for\
+    \ multi-GPU training and evaluation.\nSimply set the <code>--gpus</code> argument\
+    \ to the number of gpus you want to use.\nHowever, for the first launch of the\
+    \ script on a particular dataset (when it will pre-process the data),\nit is best\
+    \ to leave it at 1 as I did not implement multi-GPU synchronization when pre-processing\
+    \ datasets.</p>\n<p>An example use is for training a model with a certain config\
+    \ file, like so:\n<code>python main.py --config configs/config.mapping_dataset.unet_resnet101_pretrained</code>\n\
+    which will train the Unet-Resnet101 on the CrowdAI Mapping Challenge dataset.\n\
+    The batch size can be adjusted like so:\n<code>python main.py --config configs/config.mapping_dataset.unet_resnet101_pretrained\
+    \ -b &lt;new batch size&gt;</code></p>\n<p>When training is done, the script can\
+    \ be launched in eval mode, to evaluate the trained model:\n<code>python main.py\
+    \ --config configs/config.mapping_dataset.unet_resnet101_pretrained --mode eval</code>.\n\
+    Depending on the eval parameters of the config file, running this will output\
+    \ results on the test dataset.</p>\n<p>Finally, if you wish to compute AP and\
+    \ AR metrics with the COCO API, you can run:\n<code>python main.py --config configs/config.mapping_dataset.unet_resnet101_pretrained\
+    \ --mode eval_coco</code>.</p>\n<h2>\n<a id=\"user-content-launch-inference-on-one-image\"\
+    \ class=\"anchor\" href=\"#launch-inference-on-one-image\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Launch inference\
+    \ on one image</h2>\n<p>Make sure the run folder has the correct structure:</p>\n\
+    <pre><code>Polygonization-by-Frame-Field-Learning\n|-- frame_field_learning\n\
+    |   |-- runs\n|   |   |-- &lt;run_name&gt; | &lt;yyyy-mm-dd hh:mm:ss&gt;\n|  \
+    \ |   `-- ...\n|   |-- inference.py\n|   `-- ...\n|-- main.py\n|-- README.md (this\
+    \ file)\n`-- ...\n</code></pre>\n<p>Execute the [main.py] script like so (filling\
+    \ values for arguments run_name and in_filepath):\n<code>python main.py --run_name\
+    \ &lt;run_name&gt; --in_filepath &lt;your_image_filepath&gt;</code></p>\n<p>The\
+    \ outputs will be saved next to the input image</p>\n<h2>\n<a id=\"user-content-download-trained-models\"\
+    \ class=\"anchor\" href=\"#download-trained-models\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Download trained\
+    \ models</h2>\n<p>We provide already-trained models so you can run inference right\
+    \ away.\nDownload here: <a href=\"https://drive.google.com/drive/folders/1poTQbpCz12ra22CsucF_hd_8dSQ1T3eT?usp=sharing\"\
+    \ rel=\"nofollow\">https://drive.google.com/drive/folders/1poTQbpCz12ra22CsucF_hd_8dSQ1T3eT?usp=sharing</a>.\n\
+    Each model was trained in a \"run\", whose folder (named with the format <code>&lt;run_name&gt;\
+    \ | &lt;yyyy-mm-dd hh:mm:ss&gt;</code>) you can download at the provided link.\n\
+    You should then place those runs in a folder named \"runs\" inside the \"frame_field_learning\"\
+    \ folder like so:</p>\n<pre><code>Polygonization-by-Frame-Field-Learning\n|--\
+    \ frame_field_learning\n|   |-- runs\n|   |   |-- inria_dataset_polygonized.unet_resnet101_pretrained.leaderboard\
+    \ | 2020-06-02 07:57:31\n|   |   |-- mapping_dataset.unet_resnet101_pretrained.field_off.train_val\
+    \ | 2020-09-07 11:54:48\n|   |   |-- mapping_dataset.unet_resnet101_pretrained.train_val\
+    \ | 2020-09-07 11:28:51\n|   |   `-- ...\n|   |-- inference.py\n|   `-- ...\n\
+    |-- main.py\n|-- README.md (this file)\n`-- ...\n</code></pre>\n<p>Because Google\
+    \ Drive reformats folder names, you have to rename the run folders as above.</p>\n\
+    <h1>\n<a id=\"user-content-cite\" class=\"anchor\" href=\"#cite\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Cite:</h1>\n\
+    <p>If you use this code for your own research, please cite</p>\n<pre><code>@InProceedings{Girard_2020_IGARSS,\n\
+    \  title = {{Regularized Building Segmentation by Frame Field Learning}},\n  author\
+    \ = {Girard, Nicolas and Smirnov, Dmitriy and Solomon, Justin and Tarabalka, Yuliya},\n\
+    \  booktitle = {IEEE International Geoscience and Remote Sensing Symposium (IGARSS)},\n\
+    \  ADDRESS = {Waikoloa, Hawaii},\n  year = {2020},\n  month = Jul,\n}\n\n@misc{girard2020polygonal,\n\
+    \    title={Polygonal Building Segmentation by Frame Field Learning},\n    author={Nicolas\
+    \ Girard and Dmitriy Smirnov and Justin Solomon and Yuliya Tarabalka},\n    year={2020},\n\
+    \    eprint={2004.14875},\n    archivePrefix={arXiv},\n    primaryClass={cs.CV}\n\
+    }\n</code></pre>\n"
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1625572221.0
 bananaeat/Cinnamon_assembly:
   data_format: 2
   description: null
@@ -14478,7 +14868,7 @@ bananaeat/Cinnamon_assembly:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1625272208.0
+  updated_at: 1625671641.0
 barbagroup/geoclaw-landspill:
   data_format: 2
   description: An oil land-spill and overland flow simulator for pipeline rupture
@@ -14715,7 +15105,7 @@ baxpr/conncalc:
   filenames:
   - Singularity
   full_name: baxpr/conncalc
-  latest_release: null
+  latest_release: v1.0.3-beta
   readme: '<h1>
 
     <a id="user-content-conncalc" class="anchor" href="#conncalc" aria-hidden="true"><span
@@ -14733,19 +15123,35 @@ baxpr/conncalc:
     <li>
 
     <p><code>removegm_niigz</code>, <code>keepgm_niigz</code>, <code>meanfmri_niigz</code>.
-    Preprocessed fMRI data from <a href="https://github.com/baxpr/connprep">connprep</a>.
-    This may be supplied in atlas space or subject native space, as long as the ROI
-    image is in the same space.</p>
+    Preprocessed fMRI data from
+
+    <a href="https://github.com/baxpr/connprep">connprep</a>. This may be supplied
+    in atlas space or
+
+    subject native space. The first two are 4D time series, the last a single 3D image.</p>
 
     </li>
 
     <li>
 
     <p><code>roi_niigz</code>.  ROI image. This may be an image existing within the
-    container (e.g. the MNI space ''AABHHIP_LR.nii.gz'', see src/rois/README.md).
-    Or, it may be any supplied image. In the latter case, <code>roilabel_csv</code>
-    must also be supplied; this file must contain Label and Region columns, or may
-    be the STATS output of a slant assessor.</p>
+    container (e.g. the
+
+    MNI space ''AABHHIP_LR.nii.gz'', see src/rois/README.md). Or, it may be any supplied
+
+    image. In the latter case, <code>roilabel_csv</code> must also be supplied; this
+    file must contain
+
+    Label and Region columns, or may be the STATS output of a slant assessor. The
+    ROI
+
+    image must be already be aligned with the T1 and the fMRI (though needn''t be
+    sampled to
+
+    the same voxel grid or field of view) - no coregistration or warp is performed
+    on any
+
+    of the images.</p>
 
     </li>
 
@@ -14758,8 +15164,21 @@ baxpr/conncalc:
     <li>
 
     <p><code>mask_niigz</code>. Brain mask - will be binarized and dilated and used
-    to exclude any clearly ex-brain voxels in the stored connectivity maps. Optional
-    - if not supplied, no masking will be done.</p>
+    to exclude any clearly
+
+    ex-brain voxels in the stored connectivity maps. Supply ''none'' to mask to the
+    entire
+
+    volume (i.e. no masking).</p>
+
+    </li>
+
+    <li>
+
+    <p><code>connmaps_out</code>. ''yes'' or ''no'' to choose whether to additionally
+    store voxelwise
+
+    connectivity images for each ROI in the ROI image.</p>
 
     </li>
 
@@ -14772,18 +15191,55 @@ baxpr/conncalc:
 
     <ul>
 
-    <li>Resample the ROI image to match the fMRI. It''s assumed both are already aligned
-    and in the same space as the ROI image.</li>
+    <li>
 
-    <li>Extract mean time series from the supplied fMRI for each ROI in the ROI image.</li>
+    <p>Resample the ROI image to match the fMRI voxel sampling. It''s assumed both
+    are already
 
-    <li>Compute functional connectivity: <code>R</code>, the correlation coefficient;
-    and <code>Z</code>, the Fisher transformed correlation, <code>atanh(R) * sqrt(N-3)</code>
-    where <code>N</code> is number of time points. Also <code>Vdf</code>, <code>Pdf</code>,
-    <code>Zdf</code> autocorrelation-adjusted connectivity metrics from <a href="https://github.com/asoroosh/xDF">https://github.com/asoroosh/xDF</a>.
-    The ROI-to_ROI matrix is computed, and also voxelwise connectivity maps if requested.</li>
+    aligned.</p>
 
-    <li>Generate a PDF report and organize outputs for XNAT.</li>
+    </li>
+
+    <li>
+
+    <p>Extract mean time series from the supplied fMRI for each ROI in the ROI image.</p>
+
+    </li>
+
+    <li>
+
+    <p>Compute functional connectivity. The ROI-to-ROI connectivity matrix is computed,
+    and also
+
+    voxelwise connectivity Z maps if requested.</p>
+
+    <ul>
+
+    <li>
+
+    <code>R</code>, the correlation coefficient</li>
+
+    <li>
+
+    <code>Z</code>, the Fisher transformed correlation, <code>atanh(R) * sqrt(N-3)</code>
+    where <code>N</code> is number of time points</li>
+
+    <li>
+
+    <code>Vdf</code>, <code>Pdf</code>, <code>Zdf</code> autocorrelation-adjusted
+    connectivity metrics from <a href="https://github.com/asoroosh/xDF">https://github.com/asoroosh/xDF</a>
+
+    </li>
+
+    </ul>
+
+    </li>
+
+    <li>
+
+    <p>Generate a PDF report and organize outputs for XNAT.</p>
+
+    </li>
 
     </ul>
 
@@ -14791,7 +15247,7 @@ baxpr/conncalc:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1625456258.0
+  updated_at: 1625708277.0
 baxpr/connprep:
   data_format: 2
   description: null
@@ -15038,6 +15494,102 @@ baxpr/demo-singularity-matlab-fsl:
   subscribers_count: 1
   topics: []
   updated_at: 1625430481.0
+baxpr/demo-singularity-spm-freeview:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: baxpr/demo-singularity-spm-freeview
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-demo-singularity-container-with-spm12-and-freeview" class="anchor"
+    href="#demo-singularity-container-with-spm12-and-freeview" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Demo singularity container
+    with SPM12 and Freeview</h1>
+
+    <p>SPM12-based pipelines require a little extra work to get them compiled and
+    working in a
+
+    container. Freesurfer''s Freeview is also included here, as it''s very handy for
+    creating
+
+    the PDF QA report.</p>
+
+    <p>See <a href="https://github.com/baxpr/demo-singularity-matlab-fsl">https://github.com/baxpr/demo-singularity-matlab-fsl</a>
+    for a lot of detailed info about
+
+    putting Matlab code into singularity containers. This example uses the same structure.</p>
+
+    <p>A licensed Matlab installation is required to compile the Matlab code, but
+    is not needed
+
+    to run the compiled executable in the container.</p>
+
+    <p>SPM12 (<a href="https://www.fil.ion.ucl.ac.uk/spm/software/spm12/" rel="nofollow">https://www.fil.ion.ucl.ac.uk/spm/software/spm12/</a>)
+    is not in this repository and must
+
+    be installed separately on the compilation host. Edit <code>matlab/compile_matlab.sh</code>
+    to point
+
+    to it.</p>
+
+    <p>SPM requires jumping an extra hurdle at the compilation step - we use a modified
+    version
+
+    of SPM''s own compiler function <code>spm_make_standalone.m</code>, found at
+
+    <code>matlab/spm_make_standalone_local.m</code>. This process captures a lot of
+    dependencies that
+
+    could otherwise easily be left out of the executable, with the resulting symptom
+    that it
+
+    compiles just fine but fails at run time with various cryptic error messages.
+    In addition
+
+    to SPM12, everything in the <code>matlab/src</code> directory is included in the
+    path at compile time.
+
+    If Matlab toolboxes are used, they will need to be added to the list of included
+    toolboxes
+
+    in <code>matlab/spm_make_standalone_local.m</code>.</p>
+
+    <p>The compiled Matlab executable is stored on github using git LFS. A regular
+    git clone will
+
+    download a pointer text file instead of the executable binary. The result of building
+    a
+
+    container from that will be a cryptic error message - so, compile it yourself.
+    Or, if
+
+    storing on github, download it manually and replace the pointer text file, or
+    include this
+
+    step in the Singularity file if helpful - example here:
+
+    <a href="https://github.com/baxpr/gf-fmri/blob/master/Singularity.v1.3.4#L65">https://github.com/baxpr/gf-fmri/blob/master/Singularity.v1.3.4#L65</a></p>
+
+    <p>Freesurfer requires a license to run:
+
+    <a href="https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall#License"
+    rel="nofollow">https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall#License</a>
+
+    Best practice is to store your license file on the host that will run the container,
+    and
+
+    bind it to the container at runtime - NOT to include your own license file in
+    the
+
+    container itself.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1625615789.0
 baxpr/fmri_conncalc:
   data_format: 2
   description: null
@@ -15827,11 +16379,15 @@ biocorecrg/interproscan_docker:
   - Singularity
   - Singularity.open
   full_name: biocorecrg/interproscan_docker
-  latest_release: null
+  latest_release: 5.48-83.0
   readme: '<h1>
 
     <a id="user-content-interproscan_docker" class="anchor" href="#interproscan_docker"
     aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>interproscan_docker</h1>
+
+    <p><a href="https://zenodo.org/badge/latestdoi/150708687" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/5867fa2b54b675356b6c4b17144ce558f6902bee46de35012c7bdafc38d90f88/68747470733a2f2f7a656e6f646f2e6f72672f62616467652f3135303730383638372e737667"
+    alt="DOI" data-canonical-src="https://zenodo.org/badge/150708687.svg" style="max-width:100%;"></a></p>
 
     <p>Container recipes for building <a href="https://interproscan-docs.readthedocs.io"
     rel="nofollow">Interproscan</a>. Both <a href="https://www.docker.com/" rel="nofollow">Docker</a>
@@ -15944,7 +16500,58 @@ biocorecrg/interproscan_docker:
   stargazers_count: 0
   subscribers_count: 4
   topics: []
-  updated_at: 1625249249.0
+  updated_at: 1625498263.0
+biocorecrg/sigtarp_docker:
+  data_format: 2
+  description: Container image with signalp and targetp programs for functional analysis
+    pipelines
+  filenames:
+  - Singularity
+  full_name: biocorecrg/sigtarp_docker
+  latest_release: 4.1.0
+  readme: '<h1>
+
+    <a id="user-content-sigtarp_docker" class="anchor" href="#sigtarp_docker" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>sigtarp_docker</h1>
+
+    <p><a href="https://zenodo.org/badge/latestdoi/152766566" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/a13c48f1c8cd76a173ca24646a80c645c4e34bb76466d0f7b12e355f471ede0e/68747470733a2f2f7a656e6f646f2e6f72672f62616467652f3135323736363536362e737667"
+    alt="DOI" data-canonical-src="https://zenodo.org/badge/152766566.svg" style="max-width:100%;"></a></p>
+
+    <p>Container image with <a href="http://www.cbs.dtu.dk/services/SignalP/" rel="nofollow">signalP</a>,
+    <a href="http://www.cbs.dtu.dk/services/TargetP/" rel="nofollow">targetP</a> and
+    <a href="http://www.cbs.dtu.dk/services/ChloroP/" rel="nofollow">chloroP</a> programs
+    for functional analysis pipelines.</p>
+
+    <p>Create a directory named <code>external</code> and place 3 directories with
+    its associated files and binaries as downloaded from the links above. You need
+    to be granted an academic license permission first.</p>
+
+    <ul>
+
+    <li>signalp (4.1)</li>
+
+    <li>targetp (1.1)</li>
+
+    <li>chlorop (1.1)</li>
+
+    </ul>
+
+    <p>Container recipes will grab the necessary files from these directories.</p>
+
+    <p>Building with <a href="https://singularity.hpcng.org/" rel="nofollow">Singularity</a>:</p>
+
+    <pre><code>sudo singularity build sigtarp.sif Singularity
+
+    </code></pre>
+
+    <p>You can avoid using sudo with <code>--fakeroot</code> Singularity build option.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 4
+  topics: []
+  updated_at: 1625498174.0
 bioexcel/biobb_structure_utils:
   data_format: 2
   description: Biobb_structure_utils is the Biobb module collection to modify or extract
@@ -16541,7 +17148,7 @@ cfe-lab/MiCall:
   - python
   - resistance
   - genotype
-  updated_at: 1624902405.0
+  updated_at: 1625675038.0
 chaotic-aur/toolbox:
   data_format: 2
   description: Unified kit with all the scripts required for maintaining the repository.
@@ -16898,7 +17505,7 @@ chaotic-aur/toolbox:
     yarn run lint</pre></div>
 
     '
-  stargazers_count: 25
+  stargazers_count: 26
   subscribers_count: 10
   topics:
   - archlinux
@@ -16907,7 +17514,7 @@ chaotic-aur/toolbox:
   - continuous-deployment
   - pkgbuild
   - aur
-  updated_at: 1625444662.0
+  updated_at: 1625656842.0
 chenhongluo/horovord:
   data_format: 2
   description: null
@@ -17705,6 +18312,67 @@ cschu/dada2_container:
   subscribers_count: 1
   topics: []
   updated_at: 1618484418.0
+csf-ngs/forskalle-api:
+  data_format: 2
+  description: Command Line Interface and Python API for Forskalle
+  filenames:
+  - Singularity
+  full_name: csf-ngs/forskalle-api
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-fsk-api--cli\" class=\"anchor\" href=\"#fsk-api--cli\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>FSK API + cli</h1>\n<p>Python library for Fsk3 API. Will add functionality\
+    \ as needed.</p>\n<h2>\n<a id=\"user-content-installation\" class=\"anchor\" href=\"\
+    #installation\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>Installation</h2>\n<p>Install from the VBCF.NGS repository:</p>\n\
+    <div class=\"highlight highlight-source-shell\"><pre>pip3 install git+https://ngs.vbcf.ac.at/repo/software/forskalle-api.git\n\
+    <span class=\"pl-c\"><span class=\"pl-c\">#</span> or github</span>\npip3 install\
+    \ git+https://github.com/csf-ngs/forskalle-api.git</pre></div>\n<h2>\n<a id=\"\
+    user-content-usage\" class=\"anchor\" href=\"#usage\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Usage</h2>\n\
+    <h3>\n<a id=\"user-content-cli\" class=\"anchor\" href=\"#cli\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>CLI</h3>\n\
+    <pre><code>fsk-cli [command] [options] etc\n</code></pre>\n<p>Point it at your\
+    \ favorite Forskalle instance either by</p>\n<ul>\n<li>setting environment variables:\
+    \ <code>FSK_API_BASE</code> and <code>FSK_API_KEY</code>\n</li>\n<li>using a config\
+    \ file in <code>~/.fsk_api.yml</code>, please see <a href=\"doc/\">doc/</a> for\
+    \ an example</li>\n<li>providing <code>--base</code> and <code>--key</code>\n\
+    </li>\n</ul>\n<p>Try <code>fsk-cli --help</code> for some hints!</p>\n<h4>\n<a\
+    \ id=\"user-content-examples\" class=\"anchor\" href=\"#examples\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Examples</h4>\n\
+    <p>Set all sequenced samples of a multiplex to Ok:</p>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre>fsk-cli multi get M4711 <span class=\"pl-k\">|</span>\
+    \ jq <span class=\"pl-s\"><span class=\"pl-pds\">'</span>.multiplex_samples[].sample_id<span\
+    \ class=\"pl-pds\">'</span></span> <span class=\"pl-k\">|</span> \\\n  <span class=\"\
+    pl-k\">while</span> <span class=\"pl-c1\">read</span> sample_id<span class=\"\
+    pl-k\">;</span> <span class=\"pl-k\">do</span> \n    fsk-cli set-sequencing-status\
+    \ <span class=\"pl-smi\">$sample_id</span> --status Ok\n  <span class=\"pl-k\"\
+    >done</span></pre></div>\n<p>In place editing with jq and updating:</p>\n<div\
+    \ class=\"highlight highlight-source-shell\"><pre><span class=\"pl-c\"><span class=\"\
+    pl-c\">#</span> update all request lanes to status Ready</span>\nfsk-cli request\
+    \ get R4711 <span class=\"pl-k\">|</span> \\\n  jq <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">'</span>.request_lanes[].status=\"Ready\"<span class=\"pl-pds\"\
+    >'</span></span> <span class=\"pl-k\">|</span> \\\n  fsk-cli request update R4711</pre></div>\n\
+    <h3>\n<a id=\"user-content-library\" class=\"anchor\" href=\"#library\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Library</h3>\n\
+    <pre><code>from forskalle_api import FskApi\n\nfsk_api = FskApi()\nsample_json\
+    \ = fsk_api.get_sample(54321)\n</code></pre>\n<pre><code>from forskalle_api import\
+    \ FskApi\nfrom forskalle_api.auto.queryparams import IlluminaRunFilters\nfrom\
+    \ forskalle_api.fsk_query import FskQuery\n\nfsk_api = FskApi()\nirf = IlluminaRunFilters(sequenced_after=\"\
+    2020-05-01\")\nq = FskQuery(filters=irf)\nruns = fsk_api.get_runs_illumina(q)\n\
+    </code></pre>\n<p>There is no API-doc or similar, but we all love reading python\
+    \ source code!</p>\n<h3>\n<a id=\"user-content-models\" class=\"anchor\" href=\"\
+    #models\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Models</h3>\n<p>Models and Query Parameters are autogenerated from\
+    \ forskalle. Return values of most api calls are thin class layers with type hints,\
+    \ e.g. forskalle_api.auto.models.Sample with all properties and relationships\
+    \ to allow easy navigation in your source code editor.</p>\n<p>You can also find\
+    \ de/serialization helpers (serializeSample from Class to dict, plainToSample\
+    \ from dict to Class).</p>\n"
+  stargazers_count: 0
+  subscribers_count: 2
+  topics: []
+  updated_at: 1625599328.0
 csf-ngs/hinkskalle-api:
   data_format: 2
   description: Talking to Hinkskalle
@@ -17783,7 +18451,7 @@ csf-ngs/hinkskalle-api:
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1624793425.0
+  updated_at: 1625599337.0
 csiro-crop-informatics/nextflow-embl-abr-webinar:
   data_format: 2
   description: null
@@ -19703,7 +20371,7 @@ devitocodes/devito:
     jupyterhub.</p>
 
     '
-  stargazers_count: 309
+  stargazers_count: 310
   subscribers_count: 36
   topics:
   - compilers
@@ -19714,7 +20382,7 @@ devitocodes/devito:
   - performance
   - fwi
   - rtm
-  updated_at: 1625156192.0
+  updated_at: 1625554939.0
 dfornika/nf-core-cpo:
   data_format: 2
   description: null
@@ -21091,6 +21759,154 @@ emilydolson/force-cover:
   - llvm-cov
   - libtooling
   updated_at: 1625146655.0
+enasequence/ena-bulk-webincli:
+  data_format: 2
+  description: Validate and submit reads using Webin-CLI in batch.
+  filenames:
+  - Singularity
+  full_name: enasequence/ena-bulk-webincli
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-ena-webin-cli-bulk-submission-tool" class="anchor" href="#ena-webin-cli-bulk-submission-tool"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ENA
+    Webin-CLI Bulk Submission Tool</h1>
+
+    <h3>
+
+    <a id="user-content-introduction" class="anchor" href="#introduction" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h3>
+
+    <p>This tool is a wrapper to bulk submit read, un-annotated genome, targeted sequence
+    or taxonomic reference data to the ENA using Webin-CLI.</p>
+
+    <p>The tool requires an appropriate metadata spreadsheet which it uses to generate
+    manifest files for the user and validate or submit their submission. The tool
+    does not handle study and sample registration, therefore visit <a href="https://ena-docs.readthedocs.io/en/latest/submit/general-guide.html"
+    rel="nofollow">ENA Submissions Documentation</a> for more information on this.
+    The documentation also provides information on manifest file fields for your type
+    of submission (which correlate to the headers in the spreadsheet file).</p>
+
+    <p>An example template spreadsheet has been provided (example_template_input.txt).
+    This file is a tab-delimited text file, however the script also consumes spreadsheets
+    in native MS Excel formats (e.g. .xslx) or comma-separated (.csv).</p>
+
+    <h3>
+
+    <a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h3>
+
+    <h4>
+
+    <a id="user-content-docker" class="anchor" href="#docker" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Docker</h4>
+
+    <p>To ease in usage, the tool has been containerised using <a href="https://www.docker.com/"
+    rel="nofollow">Docker</a>. The only requirement is to have Docker <a href="https://docs.docker.com/get-docker/"
+    rel="nofollow">installed</a>. Once installed, run the following commands to setup:</p>
+
+    <ol>
+
+    <li>Clone the repository:
+
+    <code>git clone https://github.com/nadimm-rahman/ena-bulk-webincli.git &amp;&amp;
+    cd ena-bulk-webincli</code>
+
+    </li>
+
+    <li>Build the docker image:
+
+    <code>docker build --tag ena-bulk-webincli .</code>
+
+    </li>
+
+    <li>Ready to go! Run the tool using docker using the following command:
+
+    <code>docker run --rm -v &lt;LOCAL_DATA_DIRECTORY&gt;:/data ena-bulk-webincli
+    -h</code> (for help)</li>
+
+    </ol>
+
+    <p>&lt;LOCAL_DATA_DIRECTORY&gt; is recommended to be the directory or parent directory
+    on your machine containing your data files to submit. Below is an example command
+    which would submit read data to the test server:
+
+    <code>docker run --rm -v pathto/data:/data ena-bulk-webincli -u Webin-XXXX -p
+    XXXX -g reads -s example_template_read.txt -d /data -m submit -t</code></p>
+
+    <p>Note: For data files to be submitted, relative file paths in accordance to
+    <code>&lt;LOCAL_DATA_DIRECTORY&gt;</code> must be provided within the input spreadsheet.</p>
+
+    <h4>
+
+    <a id="user-content-other" class="anchor" href="#other" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Other</h4>
+
+    <p>To use the tool without Docker:</p>
+
+    <ol>
+
+    <li>Clone the repository:
+
+    <code>git clone https://github.com/nadimm-rahman/ena-bulk-webincli.git &amp;&amp;
+    cd ena-bulk-webincli</code>
+
+    </li>
+
+    <li>Download the latest version of <a href="https://github.com/enasequence/webin-cli/releases">Webin-CLI</a>
+    installed.</li>
+
+    <li>Download tool dependencies listed below.</li>
+
+    <li>Edit the ''Configuration'' section at the top of bulk_webincli.py to include
+    the full path to the Webin-CLI jar file and whether parallel processing should
+    be carried out.</li>
+
+    <li>Run the tool using <code>python bulk_webincli.py --help</code>(for help)</li>
+
+    </ol>
+
+    <p>The script accepts full paths to files (to be submitted e.g. fastq/fasta) within
+    the input spreadsheet. To control location of outputs, a specific directory can
+    be provided using the <code>--directory/-d</code> parameter, where the folders
+    listed below will be generated.</p>
+
+    <h3>
+
+    <a id="user-content-usage" class="anchor" href="#usage" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h3>
+
+    <p>Mandatory arguments include Webin submission account username and password,
+    genetic context and metadata spreadsheet. Note that the <code>--test/-t</code>
+    flag can be specified to use Webin test submission services.</p>
+
+    <p>By default, the script utilises two additional directories:</p>
+
+    <ol>
+
+    <li>''manifests'' - which houses all generated manifest files and report files.</li>
+
+    <li>''submissions'' - housing all validation and submission related reports and
+    files, includes analysis and receipt XMLs of submissions.</li>
+
+    </ol>
+
+    <h3>
+
+    <a id="user-content-dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Dependencies</h3>
+
+    <p>The tool runs using <a href="https://www.python.org/downloads/" rel="nofollow">Python3.6+</a>
+    and requires installation of <a href="https://pandas.pydata.org/" rel="nofollow">Python
+    Pandas</a> and <a href="https://joblib.readthedocs.io/en/latest/" rel="nofollow">joblib</a>.
+    This can be installed in a <a href="https://docs.python.org/3/tutorial/venv.html"
+    rel="nofollow">virtual environment</a>.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 3
+  topics: []
+  updated_at: 1625669617.0
 evanfloden/dpa-analysis:
   data_format: 2
   description: Nextflow Pipeline for the analysis of Double Progressive Alignment
@@ -24054,10 +24870,10 @@ gpuhackathons-org/gpubootcamp:
     rel="nofollow">OpenACC Slack Channel</a> for questions.</p>
 
     '
-  stargazers_count: 70
+  stargazers_count: 71
   subscribers_count: 6
   topics: []
-  updated_at: 1625466056.0
+  updated_at: 1625671495.0
 granek/jupyter-MIC-2021:
   data_format: 2
   description: null
@@ -25786,7 +26602,7 @@ hpcng/singularity:
 
     '
   stargazers_count: 2134
-  subscribers_count: 94
+  subscribers_count: 93
   topics:
   - containers
   - container
@@ -25802,7 +26618,7 @@ hpcng/singularity:
   - portability
   - rootless-containers
   - cloud-native
-  updated_at: 1625455675.0
+  updated_at: 1625674326.0
 humanconnectome/hcp-pipelines-singularity:
   data_format: 2
   description: The definition files for creating singularity containers that can run
@@ -25975,7 +26791,7 @@ huynhngoc/head-neck-analysis:
   stargazers_count: 1
   subscribers_count: 1
   topics: []
-  updated_at: 1624968650.0
+  updated_at: 1625647816.0
 ianjamesx/DeepCAM_Singularity:
   data_format: 2
   description: Experimental Singularity container for MLCommons DeepCAM Climate Segmentation
@@ -27683,7 +28499,7 @@ jintonic/gears:
   filenames:
   - INSTALL/Singularity
   full_name: jintonic/gears
-  latest_release: v1.4.2
+  latest_release: v1.5.0
   readme: '<p><a href="https://codedocs.xyz/jintonic/gears/annotated.html" rel="nofollow"><img
     src="https://camo.githubusercontent.com/69e499a9ac348bd92b62e3eac1391967c594141c2855f42783e17f07527553c4/68747470733a2f2f636f6465646f63732e78797a2f6a696e746f6e69632f67656172732e737667"
     alt="Doxygen" data-canonical-src="https://codedocs.xyz/jintonic/gears.svg" style="max-width:100%;"></a>
@@ -27958,14 +28774,14 @@ jintonic/gears:
     </ul>
 
     '
-  stargazers_count: 23
+  stargazers_count: 24
   subscribers_count: 11
   topics:
   - geant4
   - detector
   - physics
   - monte-carlo-simulation
-  updated_at: 1623916729.0
+  updated_at: 1625584233.0
 jkulhanek/a2cat-vn-pytorch:
   data_format: 2
   description: Target driven visual navigation using deep reinforcement learning implemented
@@ -30024,6 +30840,25 @@ matmu/vep:
   subscribers_count: 1
   topics: []
   updated_at: 1614861605.0
+matt-sd-watson/nextflow_for_bioinformatics:
+  data_format: 2
+  description: Nextflow pipelines for routine bioinformatics analyses
+  filenames:
+  - nextstrain/environments/Singularity
+  full_name: matt-sd-watson/nextflow_for_bioinformatics
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-nextflow_for_bioinformatics" class="anchor" href="#nextflow_for_bioinformatics"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>nextflow_for_bioinformatics</h1>
+
+    <p>Nextflow pipelines for routine bioinformatics analyses</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1625685437.0
 maxpkatz/singularity_image_files:
   data_format: 2
   description: null
@@ -35853,6 +36688,27 @@ powerPlant/mrbayes-srf:
   subscribers_count: 1
   topics: []
   updated_at: 1574325488.0
+powerPlant/multiqc-srf:
+  data_format: 2
+  description: Singularity recipe files for multiqc (https://github.com/ewels/MultiQC)
+  filenames:
+  - Singularity
+  - Singularity.1.11
+  - Singularity.1.6
+  - Singularity.1.7
+  - Singularity.1.8
+  - Singularity.1.9
+  - Singularity.1.5
+  full_name: powerPlant/multiqc-srf
+  latest_release: null
+  readme: '<p>Singularity recipe files for the MultiQC tool to aggregate results from
+    bioinformatics analyses across many samples into a single report.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1625703839.0
 powerPlant/novograph-srf:
   data_format: 2
   description: Singularity recipe files for NovoGraph (https://github.com/NCBI-Hackathons/NovoGraph)
@@ -37127,7 +37983,7 @@ pscedu/singularity-dust:
   filenames:
   - 0.5.4/Singularity
   full_name: pscedu/singularity-dust
-  latest_release: null
+  latest_release: v0.6.0
   readme: "<p><a href=\"https://github.com/icaoberg/singularity-dust/actions/workflows/main.yml/badge.svg\"\
     \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/icaoberg/singularity-dust/actions/workflows/main.yml/badge.svg\"\
     \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/5c03a3a0c39c4bcd2fd882586df6b4c94ef095b690cc8918ff9c7f7121b699f5/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f6963616f626572672f73696e67756c61726974792d64757374\"\
@@ -37602,11 +38458,12 @@ pscedu/singularity-hyperfine:
   updated_at: 1625242788.0
 pscedu/singularity-imagemagick:
   data_format: 2
-  description: null
+  description: "Use ImageMagick\xAE to create, edit, compose, or convert digital images."
   filenames:
+  - 7.1.0-2/Singularity
   - 7.0.10-48/Singularity
   full_name: pscedu/singularity-imagemagick
-  latest_release: null
+  latest_release: v7.1.0-2
   readme: "<p><a href=\"https://github.com/pscedu/singularity-imagemagick/actions/workflows/main.yml/badge.svg\"\
     \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-imagemagick/actions/workflows/main.yml/badge.svg\"\
     \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/bffbdc414c9ed8c423a6d7872563464afb2c8b09a20904e6f94fd5680fa7f35d/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d696d6167656d616769636b\"\
@@ -37626,41 +38483,44 @@ pscedu/singularity-imagemagick:
     true\" class=\"octicon octicon-link\"></span></a>ImageMagick</h1>\n<p><a href=\"\
     /images/wizard.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"\
     /images/wizard.jpg\" alt=\"Logo\" style=\"max-width:100%;\"></a></p>\n<p>Singularity\
-    \ recipe for <a href=\"https://imagemagick.org/index.php\" rel=\"nofollow\">ImageMagick</a>\
-    \ v6.9.10-23.</p>\n<p>Use ImageMagick\xAE to create, edit, compose, or convert\
-    \ bitmap images. It can read and write images in a variety of formats (over 200)\
-    \ including PNG, JPEG, GIF, HEIC, TIFF, DPX, EXR, WebP, Postscript, PDF, and SVG.\
-    \ Use ImageMagick to resize, flip, mirror, rotate, distort, shear and transform\
-    \ images, adjust image colors, apply various special effects, or draw text, lines,\
-    \ polygons, ellipses and B\xE9zier curves.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ recipe for <a href=\"https://imagemagick.org/index.php\" rel=\"nofollow\">ImageMagick</a>.</p>\n\
+    <p>Use ImageMagick\xAE to create, edit, compose, or convert bitmap images. It\
+    \ can read and write images in a variety of formats (over 200) including PNG,\
+    \ JPEG, GIF, HEIC, TIFF, DPX, EXR, WebP, Postscript, PDF, and SVG. Use ImageMagick\
+    \ to resize, flip, mirror, rotate, distort, shear and transform images, adjust\
+    \ image colors, apply various special effects, or draw text, lines, polygons,\
+    \ ellipses and B\xE9zier curves.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
     \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
     \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
     \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
     \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
-    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.\
-    \ As of today, Does not work on MacOSX.</p>\n<pre><code>bash ./build.sh\n</code></pre>\n\
-    <h3>\n<a id=\"user-content-to-build-the-image-remotely\" class=\"anchor\" href=\"\
-    #to-build-the-image-remotely\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>To build the image remotely</h3>\n\
-    <p>Run the script <code>rbuild.sh</code> to build image remotely.</p>\n<pre><code>bash\
-    \ ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\" class=\"\
-    anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run the available\
-    \ tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n<hr>\n\
-    <p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights Reserved.</p>\n\
-    <p>The <a href=\"https://www.psc.edu/biomedical-applications/\" rel=\"nofollow\"\
-    >Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\" rel=\"\
-    nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
+    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
     \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
     \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
   stargazers_count: 0
   subscribers_count: 3
-  topics: []
-  updated_at: 1625246122.0
+  topics:
+  - singularity
+  - utilities
+  - image-processing
+  updated_at: 1625689788.0
 pscedu/singularity-mc:
   data_format: 2
-  description: Singularity recipe for Midnight Commander
+  description: GNU Midnight Commander is a visual file manager, licensed under GNU
+    General Public License and therefore qualifies as Free Software.
   filenames:
   - 4.8.25/Singularity
   full_name: pscedu/singularity-mc
@@ -37683,7 +38543,7 @@ pscedu/singularity-mc:
     \ class=\"anchor\" href=\"#singularity-mc\" aria-hidden=\"true\"><span aria-hidden=\"\
     true\" class=\"octicon octicon-link\"></span></a>singularity-mc</h1>\n<p><a href=\"\
     images/screenshot.png\" target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"\
-    images/screenshot.png\" alt=\"Image\" style=\"max-width:100%;\"></a>\nSingularity\
+    images/screenshot.png\" alt=\"Image\" style=\"max-width:100%;\"></a></p>\n<p>Singularity\
     \ recipe for <a href=\"https://github.com/sandialabs/mc\">mc</a>.</p>\n<h2>\n\
     <a id=\"user-content-installing-the-container-on-bridges-2\" class=\"anchor\"\
     \ href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"true\"><span aria-hidden=\"\
@@ -37716,8 +38576,8 @@ pscedu/singularity-mc:
   subscribers_count: 1
   topics:
   - singularity
-  - mc
-  updated_at: 1625275436.0
+  - utilities
+  updated_at: 1625674768.0
 pscedu/singularity-methylpy:
   data_format: 2
   description: METHYLPY, is an analysis pipeline for DNA methylation data.
@@ -38502,53 +39362,28 @@ pscedu/singularity-shellcheck:
   - 0.5.0/Singularity
   full_name: pscedu/singularity-shellcheck
   latest_release: null
-  readme: "<p><a href=\"https://github.com/pscedu/singularity-imagemagick/actions/workflows/main.yml/badge.svg\"\
-    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-imagemagick/actions/workflows/main.yml/badge.svg\"\
-    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/bffbdc414c9ed8c423a6d7872563464afb2c8b09a20904e6f94fd5680fa7f35d/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d696d6167656d616769636b\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/bffbdc414c9ed8c423a6d7872563464afb2c8b09a20904e6f94fd5680fa7f35d/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d696d6167656d616769636b\"\
-    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-imagemagick\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/35b84b7c162ce5ebe06e76f87b697a035224e0c24abedf842c651c84f2e9b813/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d696d6167656d616769636b\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/35b84b7c162ce5ebe06e76f87b697a035224e0c24abedf842c651c84f2e9b813/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d696d6167656d616769636b\"\
-    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-imagemagick\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/fdf01b52f0de8a81d8c325c33baa4ceae4bcc52b77776e85246c13305d72a428/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d696d6167656d616769636b\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/fdf01b52f0de8a81d8c325c33baa4ceae4bcc52b77776e85246c13305d72a428/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d696d6167656d616769636b\"\
-    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-imagemagick\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/21aa44f17b0246428f16808d167f9cc3d1d229437bf99468ce80bc4fff7dba95/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d696d6167656d616769636b\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/21aa44f17b0246428f16808d167f9cc3d1d229437bf99468ce80bc4fff7dba95/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d696d6167656d616769636b\"\
-    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-imagemagick\"\
-    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-imagemagick\"\
-    \ class=\"anchor\" href=\"#imagemagick\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>ImageMagick</h1>\n<p><a href=\"\
-    /images/wizard.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"\
-    /images/wizard.jpg\" alt=\"Logo\" style=\"max-width:100%;\"></a></p>\n<p>Singularity\
-    \ recipe for <a href=\"https://imagemagick.org/index.php\" rel=\"nofollow\">ImageMagick</a>\
-    \ v6.9.10-23.</p>\n<p>Use ImageMagick\xAE to create, edit, compose, or convert\
-    \ bitmap images. It can read and write images in a variety of formats (over 200)\
-    \ including PNG, JPEG, GIF, HEIC, TIFF, DPX, EXR, WebP, Postscript, PDF, and SVG.\
-    \ Use ImageMagick to resize, flip, mirror, rotate, distort, shear and transform\
-    \ images, adjust image colors, apply various special effects, or draw text, lines,\
-    \ polygons, ellipses and B\xE9zier curves.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
-    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
-    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
-    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
-    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
-    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.\
-    \ As of today, Does not work on MacOSX.</p>\n<pre><code>bash ./build.sh\n</code></pre>\n\
-    <h3>\n<a id=\"user-content-to-build-the-image-remotely\" class=\"anchor\" href=\"\
-    #to-build-the-image-remotely\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>To build the image remotely</h3>\n\
-    <p>Run the script <code>rbuild.sh</code> to build image remotely.</p>\n<pre><code>bash\
-    \ ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\" class=\"\
-    anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run the available\
-    \ tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n<hr>\n\
-    <p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights Reserved.</p>\n\
-    <p>The <a href=\"https://www.psc.edu/biomedical-applications/\" rel=\"nofollow\"\
-    >Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\" rel=\"\
-    nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
-    \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
-    \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
+  readme: "<h1>\n<a id=\"user-content-singularity-pandoc\" class=\"anchor\" href=\"\
+    #singularity-pandoc\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>singularity-pandoc</h1>\n<p>Singularity recipe\
+    \ for <a href=\"https://pandoc.org/\" rel=\"nofollow\">pandoc</a>.</p>\n<h2>\n\
+    <a id=\"user-content-building-the-image-using-the-recipe\" class=\"anchor\" href=\"\
+    #building-the-image-using-the-recipe\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Building the image using the\
+    \ recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\" class=\"\
+    anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To build the image locally</h3>\n\
+    <p>Run the script <code>build.sh</code> to build image locally.</p>\n<pre><code>bash\
+    \ ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ locally.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<hr>\n<p>Copyright\
+    \ \xA9 2021 Pittsburgh Supercomputing Center. All Rights Reserved.</p>\n<p><a\
+    \ href=\"http://www.andrew.cmu.edu/~icaoberg\" rel=\"nofollow\">icaoberg</a> at\
+    \ the <a href=\"http://www.psc.edu\" rel=\"nofollow\">Pittsburgh Supercomputing\n\
+    Center</a> in the <a href=\"https://www.cmu.edu/mcs/\" rel=\"nofollow\">Mellon\
+    \ College of Science</a> at <a href=\"http://www.cmu.edu\" rel=\"nofollow\">Carnegie\
+    \ Mellon University</a>.</p>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -38560,31 +39395,32 @@ pscedu/singularity-tiger:
   - 5.32.1/Singularity
   full_name: pscedu/singularity-tiger
   latest_release: v5.32.1
-  readme: "<p><a href=\"https://github.com/pscedu/singularity-mc/actions/workflows/main.yml/badge.svg\"\
-    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-mc/actions/workflows/main.yml/badge.svg\"\
-    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/20f9b62353e523d3ab71a141bef01e7c6c9b266b5d21ca495fec6bcf5149a691/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d6d63\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/20f9b62353e523d3ab71a141bef01e7c6c9b266b5d21ca495fec6bcf5149a691/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d6d63\"\
-    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-mc\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/197b32bc5699c413928a8dc98e7fc7ba78e4232c6d05026a53625842fe00f633/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d6d63\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/197b32bc5699c413928a8dc98e7fc7ba78e4232c6d05026a53625842fe00f633/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d6d63\"\
-    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-mc\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/d972290aeff699a37c55f27a4af658b413ceba5d7bc7697189e546d9cc80fa22/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d6d63\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/d972290aeff699a37c55f27a4af658b413ceba5d7bc7697189e546d9cc80fa22/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d6d63\"\
-    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-mc\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/3210b070126fcd60c3222ffb78e07d55b8223b3eb1c9f4e7e8cb2b33fb54931c/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d6d63\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/3210b070126fcd60c3222ffb78e07d55b8223b3eb1c9f4e7e8cb2b33fb54931c/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d6d63\"\
-    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-mc\"\
-    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-singularity-mc\"\
-    \ class=\"anchor\" href=\"#singularity-mc\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>singularity-mc</h1>\n<p>Singularity\
-    \ recipe for <a href=\"https://github.com/sandialabs/mc\">mc</a>.</p>\n<h2>\n\
-    <a id=\"user-content-installing-the-container-on-bridges-2\" class=\"anchor\"\
+  readme: "<p><a href=\"https://github.com/pscedu/singularity-tiger/actions/workflows/main.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-tiger/actions/workflows/main.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/45b51fb9658ca6d66b992d887a9258c238463b14dc9fb58c4ed17ba4e75f2efc/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d7469676572\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/45b51fb9658ca6d66b992d887a9258c238463b14dc9fb58c4ed17ba4e75f2efc/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d7469676572\"\
+    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-tiger\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/266d33a01bfbc88af8ef713b4ab3f12e4207aea6a693420544c401bcc4687384/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d7469676572\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/266d33a01bfbc88af8ef713b4ab3f12e4207aea6a693420544c401bcc4687384/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d7469676572\"\
+    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-tiger\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/cd42640e858ab21849faf7ea1ae7b80b386fea232400bb8666ab226125727f09/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d7469676572\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/cd42640e858ab21849faf7ea1ae7b80b386fea232400bb8666ab226125727f09/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d7469676572\"\
+    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-tiger\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/049f66af13d64dfd0fc9fb6af0dd2b62c6d9f524419d096508747447c1c661ac/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d7469676572\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/049f66af13d64dfd0fc9fb6af0dd2b62c6d9f524419d096508747447c1c661ac/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d7469676572\"\
+    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-tiger\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-singularity-tiger\"\
+    \ class=\"anchor\" href=\"#singularity-tiger\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>singularity-tiger</h1>\n<p>Singularity\
+    \ recipe for <a href=\"https://github.com/sandialabs/tiger\">tiger</a>.</p>\n\
+    <h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\" class=\"anchor\"\
     \ href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"true\"><span aria-hidden=\"\
     true\" class=\"octicon octicon-link\"></span></a>Installing the container on Bridges\
     \ 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code> file</li>\n<li>and the\
-    \ scripts</li>\n</ul>\n<p>to <code>/opt/packages/mc/4.8.25</code>.</p>\n<p>Copy\
-    \ the file <code>modulefile.lua</code> to <code>/opt/modulefiles/mc</code> as\
-    \ <code>4.8.25.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ <code>dnaStats.pl</code>, <code>islander.pl</code>, <code>resolve.pl</code>,\
+    \ <code>tater.pl</code> and <code>tiger.pl</code> scripts</li>\n</ul>\n<p>to <code>/opt/packages/tiger/4.8.25</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/tiger</code>\
+    \ as <code>4.8.25.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
     \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
     \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
@@ -38602,7 +39438,7 @@ pscedu/singularity-tiger:
     <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
     \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
     \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
-    \ rel=\"nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/tigers/\"\
     \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
     \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
   stargazers_count: 0
@@ -38610,7 +39446,7 @@ pscedu/singularity-tiger:
   topics:
   - singularity
   - tiger
-  updated_at: 1625258793.0
+  updated_at: 1625677448.0
 pscedu/singularity-trimmomatic:
   data_format: 2
   description: Trimmomatic performs a variety of useful trimming tasks for illumina
@@ -38677,7 +39513,7 @@ pscedu/singularity-xxhash:
   filenames:
   - 0.8.0/Singularity
   full_name: pscedu/singularity-xxhash
-  latest_release: null
+  latest_release: v0.8.0
   readme: "<p><a href=\"https://github.com/pscedu/singularity-xxhash/actions/workflows/main.yml/badge.svg\"\
     \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-xxhash/actions/workflows/main.yml/badge.svg\"\
     \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/ad181fa59c33840ef53b20079ac66d4da64ed5e3a7c55bffc35110217f7a8315/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d787868617368\"\
@@ -38877,6 +39713,39 @@ radio1988/OneStopRNAseq:
   subscribers_count: 1
   topics: []
   updated_at: 1623730067.0
+refitt/refitt:
+  data_format: 2
+  description: The Recommender Engine for Intelligent Transient Tracking
+  filenames:
+  - Singularity
+  full_name: refitt/refitt
+  latest_release: 0.18.2
+  readme: '<h1>
+
+    <a id="user-content-pytorch-singularity" class="anchor" href="#pytorch-singularity"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>pytorch-singularity</h1>
+
+    <p><a href="https://singularity-hub.org/collections/4939" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
+    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    style="max-width:100%;"></a></p>
+
+    <p>This repository contains Singularity definition files used for PyTorch development
+    in the Sinzlab.</p>
+
+    '
+  stargazers_count: 4
+  subscribers_count: 1
+  topics:
+  - science
+  - astronomy
+  - distributed-systems
+  - machine-learning
+  - citizen-science
+  - open-source
+  - python
+  updated_at: 1625632115.0
 rickstaa/COR-robotics-lab-reference:
   data_format: 2
   description: A quick reference repository for using the robots in the COR lab
@@ -41189,6 +42058,34 @@ singularityhub/github-ci:
   - singularity
   - container
   updated_at: 1615502996.0
+sinzlab/pytorch-singularity:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity.v3.8-torch1.5.0-dj0.12.4
+  - Singularity.v3.8-torch1.9.0-dj0.12.7
+  - Singularity.v3.8-torch1.7.0-dj0.12.7
+  full_name: sinzlab/pytorch-singularity
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-pytorch-singularity" class="anchor" href="#pytorch-singularity"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>pytorch-singularity</h1>
+
+    <p><a href="https://singularity-hub.org/collections/4939" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
+    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    style="max-width:100%;"></a></p>
+
+    <p>This repository contains Singularity definition files used for PyTorch development
+    in the Sinzlab.</p>
+
+    '
+  stargazers_count: 2
+  subscribers_count: 5
+  topics: []
+  updated_at: 1625646389.0
 slaclab/folding-at-home-gpu:
   data_format: 2
   description: gpu image for folding at home
@@ -42828,13 +43725,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 51
+  stargazers_count: 52
   subscribers_count: 9
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1625585150.0
+  updated_at: 1625672964.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
@@ -44288,6 +45185,175 @@ vincent-noel/pc4ecm:
   subscribers_count: 1
   topics: []
   updated_at: 1588946949.0
+vivekkatial/HAQC:
+  data_format: 2
+  description: Heuristic Algorithms for Quantum Computers
+  filenames:
+  - SingularityFile.def
+  full_name: vivekkatial/HAQC
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-haqc----heuristic-algorithms-for-quantum-computing-research-group-"
+    class="anchor" href="#haqc----heuristic-algorithms-for-quantum-computing-research-group-"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>HAQC
+    -- Heuristic Algorithms for Quantum Computing Research Group <a href="https://travis-ci.com/vivekkatial/HAQC"
+    rel="nofollow"><img src="https://camo.githubusercontent.com/52d2ffbcfa48e5c6383ca1dc80ae58c3bd5a5b55cfdd65a8f3a2dd02d5368160/68747470733a2f2f7472617669732d63692e636f6d2f766976656b6b617469616c2f484151432e7376673f746f6b656e3d7679627a68504d65666e56714a42667079344570266272616e63683d6d61696e"
+    alt="Build Status" data-canonical-src="https://travis-ci.com/vivekkatial/HAQC.svg?token=vybzhPMefnVqJBfpy4Ep&amp;branch=main"
+    style="max-width:100%;"></a>
+
+    </h1>
+
+    <p>Research group to run optimisation algorithms on Quantum Computers at the University
+    of Melbourne</p>
+
+    <h2>
+
+    <a id="user-content-getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started</h2>
+
+    <p>Before getting started, ensure you have Python 3.7+. We use <a href="https://pipenv-fork.readthedocs.io/en/latest/"
+    rel="nofollow">pipenv</a> to manage the python environment (the .gitignore file
+    should already ignore it).</p>
+
+    <pre lang="{shell}"><code>$ pipenv install
+
+    </code></pre>
+
+    <p>To add a package to your new project:</p>
+
+    <pre lang="{shell}"><code>$ pipenv install &lt;package&gt;
+
+    </code></pre>
+
+    <p>This will automatically edit your pipfile with the new package you provided.</p>
+
+    <p>Next, activate the Pipenv shell:</p>
+
+    <pre lang="{shell}"><code>$ pipenv shell
+
+    $ python --version
+
+    </code></pre>
+
+    <p>This will spawn a new shell subprocess, which can be deactivated by using exit.</p>
+
+    <h2>
+
+    <a id="user-content-contributing" class="anchor" href="#contributing" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Contributing</h2>
+
+    <h3>
+
+    <a id="user-content-testing" class="anchor" href="#testing" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h3>
+
+    <p>For testing, we use <code>pytest</code>. To run the tests, just type the command
+    <code>pytest</code>, or you can specify a file e.g. <code>pytest tests/test_graph_generator.py</code>.</p>
+
+    <p>We will use <code>black</code> as our code formatter. Simply run <code>black
+    -S .</code> to run black over all the files before committing. The <code>-S</code>
+    is to skip string normalisation, because we prefer single quotes/don''t really
+    care (<a href="https://github.com/psf/black/issues/118">flame war, I know</a>).</p>
+
+    <h3>
+
+    <a id="user-content-before-making-a-pr" class="anchor" href="#before-making-a-pr"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Before
+    making a PR</h3>
+
+    <p>In summary, before merging a PR, you should:</p>
+
+    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
+    Make sure all tests pass</span>
+
+    <span class="pl-c1">cd</span> src
+
+    pipenv run python -m pytest tests/<span class="pl-k">*</span>
+
+
+    <span class="pl-c"><span class="pl-c">#</span> Format with black</span>
+
+    pipenv run python -m black -S <span class="pl-c1">.</span></pre></div>
+
+    <h2>
+
+    <a id="user-content-mlflow-tracking" class="anchor" href="#mlflow-tracking" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>MLFlow Tracking</h2>
+
+    <p>To get the MLFlow tracking functionality to work you will need to setup <code>awscli</code>
+    credentials, so MLFlow can properly log artifacts.</p>
+
+    <p>If you''re keen to do this then please follow the instructions <a href="https://wiki-rcs.unimelb.edu.au/display/RCS/AWS+CLI"
+    rel="nofollow">here</a></p>
+
+    <p>You can request the credentials for this experiment from Vivek at <a href="mailto:vkatial@student.unimelb.edu.au">vkatial@student.unimelb.edu.au</a></p>
+
+    <h2>
+
+    <a id="user-content-running-a-test-instance" class="anchor" href="#running-a-test-instance"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running
+    a test instance</h2>
+
+    <p>To run a test instance try out the steps below:</p>
+
+    <div class="highlight highlight-source-shell"><pre>python qaoa_vrp/main.py -f
+    <span class="pl-c1">test</span> -T False <span class="pl-c"><span class="pl-c">#</span>
+    -T tracking for MLFlow</span></pre></div>
+
+    <h3>
+
+    <a id="user-content-jupyter-notebooks" class="anchor" href="#jupyter-notebooks"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Jupyter
+    Notebooks</h3>
+
+    <p>First ensure that your Python is <em>not</em> aliased in your <code>.bashrc</code>
+    or <code>.zshrc</code> file.</p>
+
+    <p>After this launch your <code>pipenv</code> by</p>
+
+    <pre lang="{shell}"><code>pipenv shell
+
+    </code></pre>
+
+    <p>Then do:</p>
+
+    <pre lang="{shell}"><code>python -m ipykernel install --user --name=qaoa-vrp
+
+    </code></pre>
+
+    <p>Then launch the notebook</p>
+
+    <pre lang="{shell}"><code>jupyter notebook
+
+    </code></pre>
+
+    <p>In your notebook, Kernel -&gt; Change Kernel. Your kernel should now be an
+    option.</p>
+
+    <p><a href="images/jupyter-install.png" target="_blank" rel="noopener noreferrer"><img
+    src="images/jupyter-install.png" style="max-width:100%;"></a></p>
+
+    <h2>
+
+    <a id="user-content-authors" class="anchor" href="#authors" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Authors</h2>
+
+    <ul>
+
+    <li>Vivek Katial</li>
+
+    <li>Floyd Creevey</li>
+
+    <li>Jedwin Villareal Villanueva</li>
+
+    </ul>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1625479792.0
 vivekkatial/qaoa-three-sat:
   data_format: 2
   description: An implementation for solving 3SAT (Exact Cover) using the Quantum

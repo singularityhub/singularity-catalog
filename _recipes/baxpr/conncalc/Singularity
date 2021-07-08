@@ -16,9 +16,9 @@ From: ubuntu:20.04
   src                          /opt/conncalc
   build                        /opt/conncalc
   README.md                    /opt/conncalc
+  ImageMagick-policy.xml       /opt
   
   # If we have a local copy of these packages, we can use them instead of downloading
-  external/fsl-6.0.4-centos7_64.tar.gz                    /opt
   external/freesurfer-linux-centos7_x86_64-7.1.1.tar.gz   /opt
   external/MATLAB_Runtime_R2019b_Update_6_glnxa64.zip     /opt
  
@@ -27,12 +27,15 @@ From: ubuntu:20.04
 
 
 %post
-  apt-get update
-  apt-get install -y wget unzip zip xvfb ghostscript imagemagick bc   # Misc tools
-  apt-get install -y openjdk-8-jre                                    # Matlab
-  apt-get install -y libopenblas-base language-pack-en                # FSL
-  apt-get install -y libglu1-mesa                                     # Freeview
+  apt update
+  apt install -y wget unzip zip xvfb ghostscript imagemagick bc   # Misc tools
+  apt install -y openjdk-8-jre                                    # Matlab
+  apt install -y libglu1-mesa language-pack-en                    # Freeview
   
+  # We need to make the ImageMagick security policy more permissive
+  # https://www.kb.cert.org/vuls/id/332928
+  mv /opt/ImageMagick-policy.xml /etc/ImageMagick-6/policy.xml
+
   # Download the Matlab Compiled Runtime installer, install, clean up
   matpfx=MATLAB_Runtime_R2019b_Update_6_glnxa64
   #wget -nv -P /opt https://ssd.mathworks.com/supportfiles/downloads/R2019b/Release/6/deployment_files/installer/complete/glnxa64/${matpfx}.zip
@@ -59,14 +62,6 @@ From: ubuntu:20.04
   # Freeview needs a machine id here
   dbus-uuidgen > /etc/machine-id
 
-  # We need a piece of FSL (fslstats, fslmaths)
-  fslfile=fsl-6.0.4-centos7_64.tar.gz
-  #wget -nv -P /opt https://fsl.fmrib.ox.ac.uk/fsldownloads/${fslfile}
-  mkdir -p /usr/local/fsl/bin
-  tar -zxf /opt/${fslfile} -C /usr/local fsl/bin/fslstats
-  tar -zxf /opt/${fslfile} -C /usr/local fsl/bin/fslmaths
-  rm /opt/${fslfile}
-
   # Create input/output directories for binding
   mkdir /INPUTS && mkdir /OUTPUTS && mkdir /wkdir
 
@@ -83,19 +78,12 @@ From: ubuntu:20.04
   
   # Freesurfer
   export FREESURFER_HOME=/usr/local/freesurfer
-
-  # FSL (we only use fslstats so no need for the full setup)
-  export FSLDIR=/usr/local/fsl
-  export FSLOUTPUTTYPE=NIFTI_GZ
   
   # Path
-  export PATH=/opt/conncalc/src:${FSLDIR}/bin:${PATH}
+  export PATH=/opt/conncalc/src:/opt/conncalc/bin:${PATH}
 
 
 %runscript
 
-  xvfb-run --server-num=$(($$ + 99)) \
-  --server-args='-screen 0 1600x1200x24 -ac +extension GLX' \
-  /opt/conncalc/bin/run_spm12.sh /usr/local/MATLAB/MATLAB_Runtime/v97 \
-  function conncalc "$@"
+  xwrapper.sh "$@"
 

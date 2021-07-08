@@ -1,0 +1,103 @@
+ 
+Bootstrap: docker
+From: python:3.9.2
+
+
+%environment
+    export Author="Vivek Katial"
+    export LC_ALL=C
+    export PATH=/usr/games:$PATH
+
+    # Declare experiment environment variables
+    EXPERIMENT_NAME=vrp-qaoa
+    # Declare mlflow environment variables
+    MLFLOW_S3_ENDPOINT_URL=https://objects.storage.unimelb.edu.au
+    MLFLOW_PYTHON_BIN=/usr/local/bin/python
+    MLFLOW_BIN=/usr/local/bin/mlflow
+    S3_BUCKET=s3://vrp-qaoa
+
+    # Export env vars for LC_ALL
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+    # Export env vars
+    export EXPERIMENT_NAME \
+      MLFLOW_S3_ENDPOINT_URL \
+      MLFLOW_PYTHON_BIN \
+      MLFLOW_BIN \
+      S3_BUCKET
+
+%post
+  # Print image info
+  cat /etc/os-release
+
+  # Software versions
+  # Get dependencies
+  apt-get update && apt-get install -y gnupg2
+  apt-key update
+  apt-get install -y --no-install-recommends \
+    locales \
+    ca-certificates \
+    gcc
+
+  # Configure default locale
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  locale-gen en_US.utf8
+  /usr/sbin/update-locale LANG=en_US.UTF-8
+  export LC_ALL=en_US.UTF-8
+  export LANG=en_US.UTF-8
+
+  ####################################################
+  # Python / QISKit Installation
+  ####################################################
+  pip install --upgrade pip
+  git clone https://github.com/vivekkatial/HAQC.git
+  cd HAQC
+  pip install pipenv
+  pipenv install --system --deploy --ignore-pipfile
+
+  ####################################################
+  # AWS Installation
+  ####################################################
+  apt-get update
+  apt-get install -y --no-install-recommends --allow-unauthenticated \
+    awscli
+
+####################################################
+# APP TO RUN EXPERIMENT
+####################################################
+%apphelp run_experiment
+  This is the help for running experiments. To run an experiment feed the following Arguments: 
+    - ARG_1=<INSTANCE_FILENAME>
+
+%applabels run_experiment
+  APP_NAME RUNNING_EXPERIMENTS
+
+%apprun run_experiment
+  # Argument Array
+  instance="$@"
+  # Print valid arguments
+  echo $instance
+  # Run experiment
+  python qaoa_vrp/main.py -f $instance --track_mlflow=True
+
+####################################################
+# APP TO BUILD EXPERIMENTS
+####################################################
+%apphelp build_instances
+  This is the help for building our instances.
+
+%applabels build_instances
+  APP_NAME BUILD_INSTANCES
+
+%apprun build_instances
+  # Run experiment
+  python run/build_instances.py
+
+
+%runscript
+  pipenv shell
+  echo "Container was created $NOW"
+  echo "Run one of the built apps. You're not running anything!"
+
+%labels
+    Author Vivek Katial
