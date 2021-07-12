@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: alpine:edge
+Includecmd: no
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE https://gitlab.psc.edu/icaoberg/singularity-ffmpeg
+    VERSION 4.3.1
+
+####################################################################################
+%appinstall ffmpeg
+    apk add --update ffmpeg
+
+%apphelp ffmpeg
+    ffmpeg --help
+
+%apprun ffmpeg
+    ffmpeg "$@"

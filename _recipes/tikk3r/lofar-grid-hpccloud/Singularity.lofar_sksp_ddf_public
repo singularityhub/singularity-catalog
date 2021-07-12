@@ -1,0 +1,149 @@
+#Bootstrap: shub
+#From: tikk3r/lofar-grid-hpccloud:lofar_sksp
+Bootstrap: localimage
+#From: lofar-grid-hpccloud_lofar_sksp.sif
+From: lofar_sksp_x86-64_generic_cuda_fedora31.sif
+
+
+
+%environment
+    export INSTALLDIR=/opt/lofar
+    . $INSTALLDIR/init.sh
+    source $INSTALLDIR/pyenv-py2/bin/activate
+
+%post
+	# General environment settings.
+	export J=4
+	export INSTALLDIR=/opt/lofar
+	export PYTHON_VERSION=2.7
+	export PYTHON_CASACORE_VERSION=v3.3.0
+    export make=/opt/lofar/make/bin/make
+    export cmake=/opt/lofar/cmake/bin/cmake
+    alias make=$make
+    alias cmake=$cmake
+
+	# Path to where the patch for python-casacore's setup is stored.
+    export PATCH_KILLMS_MAKEFILE_PREDICT=$INSTALLDIR/patches/patch_killms_predict.patch
+    export PATCH_KILLMS_MAKEFILE_ARRAY=$INSTALLDIR/patches/patch_killms_array.patch
+    export PATCH_KILLMS_MAKEFILE_GRIDDER=$INSTALLDIR/patches/patch_killms_gridder.patch
+    export PATCH_DDFACET_CPUS=$INSTALLDIR/patches/DDFacet_cpus.patch
+
+    # Update GCC to enable the use of -std=c++14.
+    dnf -y install dnf-plugins-core patch yum-utils git svn wget automake autoconf cmake make
+    dnf -y install patch lzma xz-devel fpack mariadb-devel git automake autoconf cmake make gcc gcc-c++ gcc-gfortran redhat-rpm-config python-devel python3-devel wget postgresql-devel
+
+    mkdir -p $INSTALLDIR/patches
+    cd $INSTALLDIR && git clone --single-branch -b fedora https://github.com/tikk3r/lofar-grid-hpccloud.git
+    mv $INSTALLDIR/lofar-grid-hpccloud/patches/* $INSTALLDIR/patches
+    # Order is important here. owlcat tries to install python-casacore, which will fail (and is already in the lofar image anyway). Therefor install its dependencies first, then owlcat..
+    #
+    # Setup the Python environment.
+    #
+    wget https://raw.githubusercontent.com/tikk3r/lofar-grid-hpccloud/fedora/requirements.txt -O $INSTALLDIR/requirements.txt
+    wget https://raw.githubusercontent.com/tikk3r/lofar-grid-hpccloud/fedora/requirements3.txt -O $INSTALLDIR/requirements3.txt
+    #pip --no-cache-dir install --upgrade six
+    # virtualenv 20 is broken and will result in "No module named posixpath"
+    #pip --no-cache-dir install "virtualenv<20"
+    #virtualenv $INSTALLDIR/pyenv-ddf
+    source $INSTALLDIR/pyenv-py2/bin/activate
+    pip --no-cache-dir install -r $INSTALLDIR/requirements.txt
+    
+    pip --no-cache-dir install --upgrade wheel
+    pip --no-cache-dir install future
+    pip --no-cache-dir install --upgrade setuptools
+    pip --no-cache-dir install --prefer-binary SharedArray
+    # Python 2 packages
+    pip --no-cache-dir install aplpy astropy astroquery cython deap emcee lxml nose mysqlclient numpy ipdb Polygon2 pyFFTW SharedArray pyephem numexpr astro-kittens astLib psutil py-cpuinfo "tables<3.6" prettytable pybind11 pyregion sshtunnel PyMySQL
+    # Python 3 packages
+    #pip --no-cache-dir install aplpy astropy astroquery cython deap emcee lxml nose mysqlclient numpy ipdb Polygon3 pyFFTW SharedArray pyephem numexpr astro-kittens astLib psutil py-cpuinfo "tables<3.6" prettytable pybind11 pyregion sshtunnel PyMySQL posixpath
+    pip --no-cache-dir install "astropy-healpix==0.2"
+    pip --no-cache-dir install --no-deps "reproject==0.5.1"
+    pip --no-cache-dir install matplotlib pyfits
+    pip --no-cache-dir install meqtrees-cattery
+    pip --no-cache-dir install owlcat --no-deps
+
+    export CC=`which gcc`
+	export CXX=`which g++`
+    export CFLAGS="-mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+    export CXXFLAGS="-std=c++11 -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+    export make=`which make`
+    export CFLAGS="-mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+    export CXXFLAGS="-std=c++11 -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+    export CPLUS_INCLUDE_PATH="/usr/include/c++/9:$CPLUS_INCLUDE_PATH:/usr/include/python2.7:$INSTALLDIR/casacore/include:/usr/include/boost:/usr/include/cfitsio"
+    export CPATH=/opt/intel/mkl/include:${INSTALLDIR}/casacore/include:$INSTALLDIR/LOFARBeam/include:$INSTALLDIR/idg/include:$INSTALLDIR/aoflagger/include:$CPATH
+    export CMAKE_PREFIX_PATH=$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:$INSTALLDIR/lofar:$INSTALLDIR/LOFARBeam
+    export LD_LIBRARY_PATH=$INSTALLDIR/aoflagger/lib:$INSTALLDIR/casacore/lib:$INSTALLDIR/idg/lib:$INSTALLDIR/LOFARBeam/lib:LD_LIBRARY_PATH
+
+    #
+    # Install killMS
+    #
+    mkdir -p $INSTALLDIR
+    cd $INSTALLDIR && git clone --single-branch -b v2.6 https://github.com/saopicc/killMS.git
+    cd killMS
+    patch $INSTALLDIR/killMS/Predict/Makefile $PATCH_KILLMS_MAKEFILE_PREDICT
+    patch $INSTALLDIR/killMS/Array/Dot/Makefile $PATCH_KILLMS_MAKEFILE_ARRAY
+    patch $INSTALLDIR/killMS/Gridder/Makefile $PATCH_KILLMS_MAKEFILE_GRIDDER
+    cd $INSTALLDIR/killMS/Predict && $make
+    cd $INSTALLDIR/killMS/Array/Dot && $make
+    cd $INSTALLDIR/killMS/Gridder && $make
+
+    #
+    # Install DDFacet
+    #
+    export PATH=$INSTALLDIR/casacore/bin:$PATH
+    export PYTHONPATH=$INSTALLDIR/python-casacore2/lib/python2.7/site-packages:$INSTALLDIR/python-casacore2/lib64/python2.7/site-packages:$PYTHONPATH
+    export LD_LIBRARY_PATH=$INSTALLDIR/casacore/lib:$LD_LIBRARY_PATH
+    mkdir -p $INSTALLDIR/DDFacet
+    cd $INSTALLDIR/DDFacet
+    git clone --single-branch -b v0.5.3.1 https://github.com/saopicc/DDFacet.git src
+    #find . -type f -exec sed -i 's/c++14/c++11/g' {} \;
+    # Figure out how to adapt this patch
+    #patch $INSTALLDIR/DDFacet/src/DDFacet/Other/AsyncProcessPool.py $PATCH_DDFACET_CPUS
+    wget https://raw.githubusercontent.com/saopicc/DDFacet/729e52675cf0dc4684881bef0c9e60e0a0b3677e/setup.py -O $INSTALLDIR/DDFacet/src/setup.py
+    cd src && python setup.py install --prefix=$INSTALLDIR/DDFacet
+    
+    #   
+    # Install DynSpecMS
+    #   
+    cd $INSTALLDIR && git clone https://github.com/cyriltasse/DynSpecMS.git
+    cd $INSTALLDIR/DynSpecMS && git checkout ApplyBeam
+
+    #
+    # Install ddf-pipeline
+    #
+    cd $INSTALLDIR && git clone https://github.com/mhardcastle/ddf-pipeline.git
+    # Commits after this break the pipeline, because they contain Python 3 preparations that NumPy 1.16.0 (required for MeqTrees) does not like.
+    cd ddf-pipeline && git checkout fe5393d && cd ..
+    # Download DDF catalogues.
+    mkdir -p $INSTALLDIR/DDFCatalogues
+    #wget ftp://ftp.strw.leidenuniv.nl/pub/shimwell/bootstrap-cats.tar
+    wget https://surfdrive.surf.nl/files/index.php/s/u7liDZH3SlWalwy/download -O bootstrap-cats.tar
+    tar xf bootstrap-cats.tar -C $INSTALLDIR/DDFCatalogues --strip-components=1
+
+	echo "Installation directory contents:"
+	ls ${INSTALLDIR}
+    dnf -y install hostname
+    dnf -y clean all
+
+	#
+	# init-lofar
+	#
+	echo "# DDF environment settings" >> $INSTALLDIR/init.sh
+    echo export DDF_DIR=$INSTALLDIR >> $INSTALLDIR/init.sh
+    echo export DDF_PIPELINE_CATALOGS=$INSTALLDIR/DDFCatalogues >> $INSTALLDIR/init.sh
+    echo export KILLMS_DIR=$INSTALLDIR >> $INSTALLDIR/init.sh
+    echo export OMP_NUM_THREADS=1 >> $INSTALLDIR/init.sh
+    echo export OMP_MAX_THREADS=1 >> $INSTALLDIR/init.sh
+    echo export OPENBLAS_NUM_THREADS=1 >> $INSTALLDIR/init.sh
+    echo export OPENBLAS_MAX_THREADS=1 >> $INSTALLDIR/init.sh
+    echo export PYTHONPATH=$INSTALLDIR:$INSTALLDIR/ddf-pipeline/scripts:$INSTALLDIR/ddf-pipeline/utils:$INSTALLDIR/DDFacet/lib/python2.7/site-packages:$INSTALLDIR/killMS:$INSTALLDIR/killMS/Predict:$INSTALLDIR/killMS/Array:$INSTALLDIR/killMS/Array/Dot:$INSTALLDIR/killMS/Gridder:$INSTALLDIR/DDFacet/bin:$INSTALLDIR/DynSpecMS:\$PYTHONPATH >> $INSTALLDIR/init.sh
+    echo export PATH=$INSTALLDIR/DDFacet/bin:$INSTALLDIR/DDFacet/src/SkyModel:$INSTALLDIR/DynSpecMS/:$INSTALLDIR/killMS:$INSTALLDIR/ddf-pipeline/scripts:\$PATH >> $INSTALLDIR/init.sh
+    echo "if echo \$(hostname) | grep -qi leiden; then export DDF_PIPELINE_CLUSTER="paracluster"; else export DDF_PIPELINE_CLUSTER=; fi" >> $INSTALLDIR/init.sh
+
+    #
+    # entrypoint
+    #
+%runscript
+    echo source $INSTALLDIR/init.sh >> $HOME/.bashrc
+    . $INSTALLDIR/init.sh
+    source $INSTALLDIR/pyenv-py2/bin/activate

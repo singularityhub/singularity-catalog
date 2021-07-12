@@ -3,7 +3,7 @@ From: ubuntu:18.04
 
 %environment
 	TZ=Europe/Berlin
-        PERL_MM_USE_DEFAULT=1
+	PERL_MM_USE_DEFAULT=1
 	export PERL_MM_USE_DEFAULT
 	PERL_EXTUTILS_AUTOINSTALL="--defaultdeps"
 	export PERL_EXTUTILS_AUTOINSTALL
@@ -21,17 +21,22 @@ From: ubuntu:18.04
 	add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/'
 
 	DEBIAN_FRONTEND="noninteractive" apt install -y software-properties-common build-essential autoconf libtool bc man git curl wget make moreutils libbz2-dev zlib1g-dev libncurses5-dev libncursesw5-dev liblzma-dev unzip python libgsl-dev r-base libcurl4-openssl-dev axel
-
-	cd /root
-	git clone git://github.com/samtools/htslib.git
-	cd htslib
-	make tabix && make bgzip && cp bgzip tabix /usr/bin
-
-	cd /root	
-	git clone git://github.com/samtools/bcftools.git
-	cd bcftools
-	make bcftools && cp bcftools /usr/bin
 	
+	# Install HTSlib
+	cd /opt
+	wget https://github.com/samtools/htslib/releases/download/1.13/htslib-1.13.tar.bz2
+	tar xjf htslib-1.13.tar.bz2 && rm htslib-1.13.tar.bz2
+	cd htslib-1.13
+	./configure && make && make install
+
+	# Install BCFTools
+	cd /opt
+	wget https://github.com/samtools/bcftools/releases/download/1.13/bcftools-1.13.tar.bz2
+	tar xjf bcftools-1.13.tar.bz2 && rm bcftools-1.13.tar.bz2
+	cd bcftools-1.13
+	./configure && make && make install
+
+
 	Rscript --vanilla -e "install.packages(c(\"reshape2\",\"R.utils\", \"parallel\", \"Hmisc\", \"argparser\", \"data.table\", \"BiocManager\", \"doMC\"),repos = \"http://cran.us.r-project.org\");BiocManager::install(c(\"SeqArray\", \"SeqVarTools\"));install.packages(\"GMMAT\", repos = \"http://cran.us.r-project.org\")"
 	perl -MCPAN -e 'foreach (@ARGV) { CPAN::Shell->rematein("notest", "install", $_) }' Module::Build DBI Try::Tiny JSON Data::Dumper File::Basename Getopt::Long Data::Types File::Path
 
@@ -76,7 +81,7 @@ From: ubuntu:18.04
 
 %labels
 	Author Arthur Gilly, Andrei Barysenka, Daniel Suveges, Young-Chan Park
-	Version v1.5.1
+	Version v1.5.2
 
 %help
 	This container allows you to run rare variant aggregation tests using MONSTER and SMMAT; for more information run this container with the help command line option.

@@ -2,7 +2,7 @@
 #From: tikk3r/lofar-grid-hpccloud:lofar_sksp_base
 # If building from a base image locally enable this instead.
 Bootstrap: localimage
-From: lofar_sksp_base.sif
+From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
 
 %environment
     export PYTHONPATH=
@@ -54,8 +54,8 @@ From: lofar_sksp_base.sif
     export CC=`which gcc`
 	export CXX=`which g++`
 
-    export CFLAGS="-mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
-    export CXXFLAGS="-std=c++11 -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+    export CFLAGS="-march=x86-64 -mtune=generic -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+    export CXXFLAGS="-march=x86-64 -mtune=generic -std=c++11 -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
     # Use below to optimize for a specific architecture
     #export CFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
     #export CXXFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"

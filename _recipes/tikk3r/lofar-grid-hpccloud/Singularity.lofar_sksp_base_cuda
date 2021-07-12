@@ -19,6 +19,7 @@ From: fedora:31
 	export CFITSIO_VERSION=7.3.47
     export FFTW_VERSION=3.5.8
 	export HDF5_VERSION=1.10.5
+    export IDG_VERSION=master
 	export LAPACK_VERSION=3.8.0
 	export OPENBLAS_VERSION=3.8.0
 	export SUPERLU_VERSION=5.2.1
@@ -90,8 +91,8 @@ From: fedora:31
     #export CFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
     #export CXXFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
     # Disable AVX512 instructions and build a generic architecture.
-    export CFLAGS="-mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
-    export CXXFLAGS="-mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+    export CFLAGS="-march=x86-64 -mtune=generic -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+    export CXXFLAGS="-march=x86-64 -mtune=generic -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
 
     ###################
     # Source installs #
@@ -107,14 +108,25 @@ From: fedora:31
     dnf -y install wcslib wcslib-devel 
 
     #
+    # Install Intel MKL
+    #
+    sudo dnf config-manager --add-repo https://yum.repos.intel.com/mkl/setup/intel-mkl.repo
+    sudo rpm --import https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB
+    dnf -y install intel-mkl-2020.0-088 intel-mkl-64bit-2020.0-088
+
+    #
     # Install CUDA
     #
     # For CUDA 10.2
     #sudo dnf -y config-manager --add-repo http://developer.download.nvidia.com/compute/cuda/repos/fedora29/x86_64/cuda-fedora29.repo
     # For CUDA 11.1
-    sudo dnf -y config-manager --add-repo http://developer.download.nvidia.com/compute/cuda/repos/fedora32/x86_64/cuda-fedora32.repo
+    #sudo dnf -y config-manager --add-repo http://developer.download.nvidia.com/compute/cuda/repos/fedora32/x86_64/cuda-fedora32.repo
+    # For CUDA 11.3
+    sudo dnf -y config-manager --add-repo http://developer.download.nvidia.com/compute/cuda/repos/fedora33/x86_64/cuda-fedora33.repo
     sudo dnf -y clean all
-    sudo dnf -y install cuda-11-1*
+    sudo dnf -y upgrade
+    #sudo dnf -y install cuda-11-1*
+    sudo dnf -y install cuda-11-3
 
     #   
     # Install Image Domain Gridder (IDG)
@@ -122,7 +134,8 @@ From: fedora:31
     mkdir -p $INSTALLDIR/idg && cd $INSTALLDIR/idg
     git clone https://gitlab.com/astron-idg/idg.git src 
     cd src && git checkout $IDG_VERSION && mkdir build && cd build
-    cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg -DBUILD_LIB_CUDA=ON -DCUDA_INCLUDE_DIR=/usr/local/cuda/include ..
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg -DBUILD_WITH_MKL=ON -DBUILD_LIB_CUDA=ON -DCUDA_INCLUDE_DIR=/usr/local/cuda/include ..
+    #cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg -DBUILD_WITH_MKL=ON -DBUILD_LIB_CUDA=OFF ..
     make -j $J
     make install
     rm -rf $INSTALLDIR/idg/src
