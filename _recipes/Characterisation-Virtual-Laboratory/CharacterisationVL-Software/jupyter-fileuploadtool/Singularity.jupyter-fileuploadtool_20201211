@@ -1,0 +1,43 @@
+Bootstrap: shub
+From: Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804-cuda10.1
+
+%labels
+MAINTAINER chris.hines@monash.edu
+
+%files
+jupyter_start /start
+jupyter_params.py /params
+tree.html /tree.html
+pages.html /page.html
+
+%post
+#export LC_ALL=en_AU.UTF-8
+#export LANGUAGE=en_AU.UTF-8
+#export DEBIAN_FRONTEND=noninteractive
+
+cat << EOF > /etc/apt/sources.list.d/au_archive_ubuntu_com_ubuntu.list
+deb http://archive.ubuntu.com/ubuntu/ bionic main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ bionic-security main restricted universe multiverse
+EOF
+
+apt -y update
+apt -y upgrade
+apt install -y python3-dev
+apt -y install sudo
+apt -y install curl
+apt -y install python2.7-dev
+apt install -y python3-pip
+apt -y install python3-venv
+apt install -y pandoc
+curl -sL https://deb.nodesource.com/setup_14.x | bash -
+apt -y update
+apt -y upgrade
+apt -y install nodejs
+apt -y install texlive-xetex
+apt -y install pandoc
+apt -y install python3-pypandoc python3-pandocfilters
+
+cp /page.html /usr/local/lib/python3.6/dist-packages/notebook/templates/page.html
+cp /tree.html /usr/local/lib/python3.6/dist-packages/notebook/templates/tree.html

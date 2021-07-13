@@ -13,7 +13,7 @@ bases:
   name: alpine
 - count: 61
   name: mkandes/naked-singularity
-- count: 58
+- count: 59
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
 - count: 46
   name: tensorflow/tensorflow
@@ -143,6 +143,8 @@ bases:
   name: slaclab/slac-jupyterlab
 - count: 4
   name: provarepro/mlperf_inference
+- count: 4
+  name: letaylor/sc_qc_cluster
 - count: 4
   name: node
 - count: 4
@@ -391,8 +393,6 @@ bases:
   name: bids/freesurfer
 - count: 1
   name: mustxyk/fsl
-- count: 1
-  name: letaylor/sc_qc_cluster
 - count: 1
   name: rockylinux/rockylinux
 - count: 1
@@ -934,11 +934,11 @@ bases:
 - count: 1
   name: charade/xlibbox@sha256
 bootstraps:
-- count: 2248
+- count: 2251
   name: docker
 - count: 248
   name: debootstrap
-- count: 224
+- count: 225
   name: shub
 - count: 151
   name: library
@@ -1097,8 +1097,6 @@ orgs:
   name: jncc
 - count: 1
   name: mustxyk
-- count: 1
-  name: letaylor
 - count: 1
   name: thomasrobinson
 - count: 1
@@ -1406,6 +1404,8 @@ orgs:
 - count: 1
   name: nipy
 - count: 1
+  name: letaylor
+- count: 1
   name: ncbi
 - count: 1
   name: multiphenics
@@ -1474,15 +1474,15 @@ orgs:
 - count: 1
   name: quay.io/vgteam
 tags:
-  latest: 233
-  other: 2065
+  latest: 236
+  other: 2066
 versions:
   APPIAN-PET/APPIAN:
     ants: 1
     base: 1
   Characterisation-Virtual-Laboratory/CharacterisationVL-Software:
     '1804': 20
-    1804-cuda10.1: 10
+    1804-cuda10.1: 11
     1804-cuda9: 17
     '2004': 6
     2004-cuda11.0: 5
@@ -1906,7 +1906,7 @@ versions:
   larbys/geant4:
     10.02.p03: 1
   letaylor/sc_qc_cluster:
-    latest: 1
+    latest: 4
   libatomsquip/quip-base:
     latest: 1
   library/centos:
