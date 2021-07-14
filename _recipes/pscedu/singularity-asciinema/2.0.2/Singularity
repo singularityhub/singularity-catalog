@@ -7,15 +7,8 @@ From: alpine:edge
     SUPPORT help@psc.edu
     REPOSITORY https://github.com/pscedu/singularity-asciinema
     COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.
-    VERSION 2.0.2-r3
+    VERSION 2.0.2-r5
 
 %post
     apk update
-    apk search asciinema-2.0.2-r3
-
-####################################################################################
-%appinstall asciinema
-
-%apphelp asciinema
-
-%apprun asciinema
+    apk add asciinema

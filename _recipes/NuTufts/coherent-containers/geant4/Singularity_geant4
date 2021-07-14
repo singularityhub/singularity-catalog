@@ -1,0 +1,10 @@
+Bootstrap: docker
+From: larbys/geant4:10.6.p03
+
+%post
+  apt update -y && apt install -y vim && apt autoremove -y && apt clean -y
+  mkdir -p /cluster/home
+  mkdir -p /cluster/kappa
+  mkdir -p /cluster/shared
+  mkdir -p /opt/shared
+  

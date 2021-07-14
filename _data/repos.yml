@@ -901,6 +901,297 @@ BennerLab/pipelines:
   subscribers_count: 6
   topics: []
   updated_at: 1625275230.0
+BergmannLab/MONET:
+  data_format: 2
+  description: 'MONET : MOdularising NEtwork Toolbox - https://doi.org/10.1093/bioinformatics/btaa236'
+  filenames:
+  - .containers/R1/singularity/Singularity
+  - .containers/M1/singularity/Singularity
+  - .containers/K1/singularity/Singularity
+  full_name: BergmannLab/MONET
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-monet\" class=\"anchor\" href=\"#monet\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>MONET</h1>\n\
+    <p>This repository holds the source code for <strong>MONET</strong>, a Linux/MacOS\
+    \ command-line toolbox to mine molecular and genetic networks, leveraging the\
+    \ top performing methods of the <strong>Disease Module Identification (DMI) DREAM\
+    \ Challenge</strong> (see DREAM Challenge paper under section PUBLICATIONS and\
+    \ <a href=\"https://www.synapse.org/modulechallenge\" rel=\"nofollow\">https://www.synapse.org/modulechallenge</a>)</p>\n\
+    <h2>\n<a id=\"user-content-prerequisites\" class=\"anchor\" href=\"#prerequisites\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>PREREQUISITES</h2>\n<p><strong>Operating System</strong>: MONET can\
+    \ be run on <strong>either</strong></p>\n<ul>\n<li>Linux (it was tested on <em>Ubuntu\
+    \ Linux</em> 20.04, <em>CentOS Linux</em> 7.5)</li>\n<li>MacOS (it was tested\
+    \ on <em>macOS Sierra</em> 10.12)</li>\n</ul>\n<p><strong>Software</strong>: MONET\
+    \ requires <strong>either</strong>:</p>\n<ul>\n<li>\n<code>Docker</code> (see\
+    \ \"Install using the repository\" <a href=\"https://docs.docker.com/engine/install/\"\
+    \ rel=\"nofollow\">https://docs.docker.com/engine/install/</a>)</li>\n<li>\n<code>Singularity</code>\
+    \ (see <a href=\"http://singularity.lbl.gov\" rel=\"nofollow\">http://singularity.lbl.gov</a>)</li>\n\
+    </ul>\n<p><strong>Hardware</strong>: MONET was tested both on server and on commodity\
+    \ hardware (i.e., regular desktop). For details, please refer to section COMPUTATIONAL\
+    \ RESOURCES below.</p>\n<h2>\n<a id=\"user-content-installation\" class=\"anchor\"\
+    \ href=\"#installation\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>INSTALLATION</h2>\n<p><strong>Just like you\
+    \ can <code>ls</code> a folder, after installation will be able to <code>monet</code>\
+    \ a network</strong> from any location on your system.</p>\n<p>Simply run:</p>\n\
+    <p><code>$ git clone https://github.com/BergmannLab/MONET.git &amp;&amp; cd MONET\
+    \ &amp;&amp; ./install.sh</code></p>\n<p>A folder MONET will have been created\
+    \ with the source code: you are free to remove it, if you are not interested.\
+    \ This will not affect MONET, which has now been installed in your system: the\
+    \ command <code>monet</code> can be invoked from any location on the system.</p>\n\
+    <h4>\n<a id=\"user-content-if-you-need-some-more-guidance\" class=\"anchor\" href=\"\
+    #if-you-need-some-more-guidance\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>IF YOU NEED SOME MORE GUIDANCE</h4>\n\
+    <p>You can follow this <a href=\"https://form.jotform.com/tomasonimattia/monet-installation\"\
+    \ rel=\"nofollow\">survey-tutorial</a>:</p>\n<ul>\n<li>it will guide you step\
+    \ by step (assumes no prior knowledge)</li>\n<li>(optionally) guides you through\
+    \ running some examples (feel free to skip those)</li>\n<li>it will help us collect\
+    \ information about possible errors on different platforms</li>\n</ul>\n<h4>\n\
+    <a id=\"user-content-if-you-are-on-windows\" class=\"anchor\" href=\"#if-you-are-on-windows\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>IF YOU ARE ON WINDOWS</h4>\n<p>Users using Windows are encouraged\
+    \ to install a hypervisor (i.e., a software that allows to creates and run virtual\
+    \ machines): for example, install VirtualBox <a href=\"https://www.virtualbox.org/wiki/Downloads\"\
+    \ rel=\"nofollow\">https://www.virtualbox.org/wiki/Downloads</a> and configure\
+    \ it up to run a virtual Ubuntu Linux inside which to install MONET (using the\
+    \ instructions above).</p>\n<h4>\n<a id=\"user-content-if-you-are-a-singularity-user-without-sudo-rights\"\
+    \ class=\"anchor\" href=\"#if-you-are-a-singularity-user-without-sudo-rights\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>IF YOU ARE A SINGULARITY USER WITHOUT SUDO RIGHTS</h4>\n<p>Sudo rights\
+    \ will be required at installation time for Singularity users: Singularity users\
+    \ will not need sudo rights while running MONET (i.e., Singularity does not require\
+    \ sudo right to run containers), but they will need it at installation time (i.e.,\
+    \ at the time the Singularity images are first created).</p>\n<p>Users that don't\
+    \ have sudo rights should follow the regular installation procedure explained\
+    \ above, then refer to MONET/docs/installation_no_sudo.txt where they will find\
+    \ a workaround to complete the installation manually without needing sudo.</p>\n\
+    <h2>\n<a id=\"user-content-testing-the-installation\" class=\"anchor\" href=\"\
+    #testing-the-installation\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>TESTING THE INSTALLATION</h2>\n<p>At the end\
+    \ of the install process, you will be asked whether you want to test MONET. This\
+    \ test is completely automatic.</p>\n<h2>\n<a id=\"user-content-monet-help-command\"\
+    \ class=\"anchor\" href=\"#monet-help-command\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>MONET HELP COMMAND</h2>\n<p>After\
+    \ installing MONET, the help command <code>monet --help</code> will be available\
+    \ from any location on your system.</p>\n<h2>\n<a id=\"user-content-running\"\
+    \ class=\"anchor\" href=\"#running\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>RUNNING</h2>\n<p>Once installed,\
+    \ from any location on your system, you can run the following example command:\
+    \ it will run a method called M1 (see section METHODS for details), on a network\
+    \ contained in your /tmp folder (see section INPUT for details), using docker\
+    \ virtualization (see section PREREQUISITES for details). In the remainder of\
+    \ this document, you will find details about what parameters you can use, what\
+    \ to expect as an output and resource usage (in the PARAMETERS, OUTPUT and COMPUTATIONAL\
+    \ RESOURCES sections respectively).</p>\n<p><code>$ monet --help</code></p>\n\
+    <p><code>$ monet --input=/tmp/input_network.txt \u2014-method=M1 --container=docker</code></p>\n\
+    <h2>\n<a id=\"user-content-input\" class=\"anchor\" href=\"#input\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>INPUT</h2>\n\
+    <p>The input file is provided to MONET using the <code>--input</code> parameter\
+    \ (see section RUNNING and section PARAMETERS).</p>\n<p>The format for the input\
+    \ network is the following: a <strong>tab-separated</strong> file containing one\
+    \ line for each edge.</p>\n<p>If an edge is connecting two nodes, gene_a and gene_b,\
+    \ with a certain weight, the file will contain the line:</p>\n<p><code>gene_a\
+    \ \\t gene_b \\t weight \\n</code></p>\n<p>Details:</p>\n<ul>\n<li>gene_a and\
+    \ gene_b, the gene ids, can be either <em>string</em> or <em>integer</em>\n</li>\n\
+    <li>weight can be of type <em>integer</em> or <em>float</em>\n</li>\n<li>\"\\\
+    t\" indicates the tab character and \"\\n\" the newline character</li>\n<li>no\
+    \ blank spaces should appear, neither as separators nor as part of the gene ids</li>\n\
+    </ul>\n<p>For an example, see MONET/.test/system_test/input/zachary_karate_club.txt.\
+    \ The same folder containing the actual inputs to the Disease Module Identification\
+    \ (DMI) DREAM Challenge. Beware that some of the inputs will require high amounts\
+    \ of computational resources and are not suited to be run on a simple laptop or\
+    \ desktop computer; please refer to section COMPUTATIONAL RESOURCES for details.</p>\n\
+    <h2>\n<a id=\"user-content-output\" class=\"anchor\" href=\"#output\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>OUTPUT</h2>\n\
+    <p>The output location is provided to MONET using the <code>--output</code> parameter\
+    \ (see section OPTIONAL PARAMETERS).</p>\n<p>Two output files will be generated\
+    \ in the directory where you run the command. They are marked with a timestamp,\
+    \ the name of the selected method and the name of your input network. For example,\
+    \ let's assume if you run M1 on 1st January 2020 at midday on a file called input_network.txt:</p>\n\
+    <ul>\n<li>a <strong>console-output</strong> file, which will contain the run-time\
+    \ outputs generated by the method you have selected, providing details about the\
+    \ steps that the M1 algorithm took to generate your output. Any errors would also\
+    \ be redirected here. The file would be called: <code>2020-01-01-120000__M1__console-output__input_network.txt</code>\n\
+    </li>\n<li>a <strong>result-modules</strong> file, containing the results of your\
+    \ analysis and it will not be generated in case of errors. The file would be called:\
+    \ <code>2020-01-01-120000__M1__result-modules__input_network.txt</code>. It will\
+    \ be in tab-separated format, containing one module per line:\n<ul>\n<li>the first\
+    \ value of each line will be a module identifier (in the form of an integer number\
+    \ starting from 1)</li>\n<li>the second is a fixed numerical value and can be\
+    \ ignored (curerntly set to <code>1.0</code>, it was originally used in the DREAM\
+    \ Challenge to provide module-level confidence scores)</li>\n<li>the rest of the\
+    \ values on the line will be the gene ids container in the input (like gene_a\
+    \ and gene_b, see section INPUT)</li>\n</ul>\n</li>\n</ul>\n<h2>\n<a id=\"user-content-methods\"\
+    \ class=\"anchor\" href=\"#methods\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>METHODS</h2>\n<p>Three methods\
+    \ are available as part of MONET, which emerged as the top-performing methods\
+    \ of the DREAM Challenge.</p>\n<p>In order to run one of the three methods, adapt\
+    \ the example command provided in section RUNNING providing the --method option\
+    \ with the name of the chosen method (--method=[K1|M1|R1], for details, see section\
+    \ PARAMETERS).</p>\n<ul>\n<li>\n<strong>K1</strong>: KERNEL CLUSTERING OPTIMISATION\
+    \ algorithm. K1 is based on the \u201CDiffusion State Distance\u201D (DSD), a\
+    \ novel graph metric which is built on the premise that paths through low-degree\
+    \ nodes are stronger indications of functional similarity than paths that traverse\
+    \ high degree nodes by Cao et al. (2014). The DSD metric is used to define a pairwise\
+    \ distance matrix between all nodes, on which a spectral clustering algorithm\
+    \ is applied. In parallel, dense bipartite sub-graphs are identified using standard\
+    \ graph techniques. Finally, results are merged into a single set of non-overlapping\
+    \ clusters. For further details, please see: <a href=\"https://www.synapse.org/#!Synapse:syn7349492/wiki/407359\"\
+    \ rel=\"nofollow\">https://www.synapse.org/#!Synapse:syn7349492/wiki/407359</a>\n\
+    </li>\n<li>\n<strong>M1</strong>: MODULARITY OPTIMIZATION algorithm. M1 employs\
+    \ an original technique named Multiresolution introduced by (Arenas et al., 2008)\
+    \ to explore all topological scales at which modules may be found. The novelty\
+    \ of this approach relies on the introduction of a parameter, called resistance,\
+    \ which controls the aversion of nodes to form modules. Modularity (Newman and\
+    \ Girvan, 2004; Arenas et al., 2007) is optimized using an ensemble of algorithms:\
+    \ Extremal optimization (Duch and Arenas, 2005), Spectral optimization (Newman,\
+    \ 2006), Fast algorithm (Newman, 2004), Tabu search (Arenas et al., 2008), and\
+    \ fine-tuning by iterative repositioning of individual nodes in adjacent modules.\
+    \ For further details, please see: <a href=\"https://www.synapse.org/#!Synapse:syn7352969/wiki/407384\"\
+    \ rel=\"nofollow\">https://www.synapse.org/#!Synapse:syn7352969/wiki/407384</a>\n\
+    </li>\n<li>\n<strong>R1</strong>: RANDOM-WALK-BASED algorithm. R1 is based on\
+    \ a variant of Markov Cluster Algorithm known as balanced Multi-layer Regularized\
+    \ Markov Cluster Algorithm(bMLRMCL) (Satuluriet al., 2010) which scales well to\
+    \ large graphs and minimizes the number of oversized clusters. First, a pre-processing\
+    \ step is applied so that edges with low weights are discarded and all remaining\
+    \ edges are scaled to integer values. Then, bMLRMCL is applied iteratively on\
+    \ modules of size grater than a user-defined threshold. For further details, please\
+    \ see: <a href=\"https://www.synapse.org/#!Synapse:syn7286597/wiki/406659\" rel=\"\
+    nofollow\">https://www.synapse.org/#!Synapse:syn7286597/wiki/406659</a>\n</li>\n\
+    </ul>\n<h2>\n<a id=\"user-content-parameters\" class=\"anchor\" href=\"#parameters\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>PARAMETERS</h2>\n<p>Please, provide values for the following MANDATORY\
+    \ parameters:</p>\n<ul>\n<li>\n<strong>--input</strong>: path to the network file\
+    \ to be analysed</li>\n<li>\n<strong>--method</strong>: method to be used to analyse\
+    \ the input: [K1|M1|R1]</li>\n<li>\n<strong>--container</strong>: virtualisation\
+    \ technology available on the system: [docker|singularity]</li>\n</ul>\n<h2>\n\
+    <a id=\"user-content-optional-parameters\" class=\"anchor\" href=\"#optional-parameters\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>OPTIONAL PARAMETERS</h2>\n<ul>\n<li>\n<strong>--output</strong>: directory\
+    \ in which to output results (default is current directory)</li>\n</ul>\n<p><strong>if\
+    \ you select K1</strong> as a method, you may additionally provide the following:</p>\n\
+    <ul>\n<li>\n<strong>--nclusters</strong>: initial number of output clusters for\
+    \ spectral clustering step; final number may differ (default is 100)</li>\n</ul>\n\
+    <p><strong>if you select M1</strong> as a method, you may additionally provide\
+    \ the following:</p>\n<ul>\n<li>\n<strong>--smallest</strong>: min size of output\
+    \ clusters (default is 3)</li>\n<li>\n<strong>--largest</strong>: max size of\
+    \ output clusters (default is 100)</li>\n<li>\n<strong>--linksdir</strong>: directionality\
+    \ of links: [undirected|directed] (default is undirected)</li>\n<li>\n<strong>--avgk</strong>:\
+    \ desired average degree for nodes in output (default is 25)</li>\n</ul>\n<p><strong>if\
+    \ you select R1</strong> as a method, you may additionally provide the following:</p>\n\
+    <ul>\n<li>\n<strong>--smallest</strong>: min size of output clusters (default\
+    \ is 3)</li>\n<li>\n<strong>--largest</strong>: max size of output clusters (default\
+    \ is 100)</li>\n<li>\n<strong>--c</strong>: trade-off parameter for computational\
+    \ efficiency; for larger c, the algorithm will run slower, but may provide more\
+    \ accurate results (default is 800)</li>\n<li>\n<strong>--i</strong>: inflation\
+    \ parameter for standard Markov Clustering algorithm on which R1 is based (default\
+    \ is 2)</li>\n<li>\n<strong>--b</strong>: parameter controlling how balanced the\
+    \ clustering results should be; for b=0, R1 behaves like standard Regularized\
+    \ Markov Cluster (default is 2)</li>\n<li>\n<strong>--threshold</strong>: remove\
+    \ edges smaller than threshold from the input (default is 4)</li>\n<li>\n<strong>--post</strong>:\
+    \ decide whether to recursively cluster (recluster) or discard too large output\
+    \ clusters: [recluster|discard] (default is discard)</li>\n<li>\n<strong>--c2</strong>:\
+    \ (only used if --post=recluster) sets --c for reclustering round (default is\
+    \ 500)</li>\n<li>\n<strong>--i2</strong>: (only used if --post=recluster) sets\
+    \ --i for reclustering round (default is 2)</li>\n<li>\n<strong>--b2</strong>:\
+    \ (only used if --post=recluster) sets --b for reclustering round (default is\
+    \ 2)</li>\n</ul>\n<h2>\n<a id=\"user-content-computational-resources\" class=\"\
+    anchor\" href=\"#computational-resources\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>COMPUTATIONAL RESOURCES</h2>\n\
+    <p>Some of the methods require large amount of resources, depending on your input\
+    \ (please, refer to the MONET paper in the PUBLICATIONS section for details about\
+    \ how resource needs will scale with the size of the input, for the different\
+    \ methods).</p>\n<p>To reproduce the results of the DREAM Challenge, you can run\
+    \ MONET/.test/system_test/reproduce_challenge/reproduce_challenge.sh. This might\
+    \ fail on commodity hardware (i.e., a regular laptop or desktop) as about 8GB\
+    \ or RAM need to be available. In that case, you can allocate a larger SWAP partition\
+    \ (on Linux) or run the experiment on more powerful hardware, such as a server.\
+    \ Please browser the rest of the contents of MONET/.test/system_test/reproduce_challenge\
+    \ to view the exact RAM usage (ram_usage.txt) and the challenge outputs produced\
+    \ by MONET (disease_modules_output directory).</p>\n<p>To monitor resource usage\
+    \ when running on your own input (and thus determine the amount or RAM / swap\
+    \ needed by your particular input network for a particular method), two simple\
+    \ scripts have been added to MONET/.test/helper_scripts (for Unix and one for\
+    \ MacOS systems): launch them before execution of MONET and redirect their output\
+    \ to file for simple inspection (no other task should be running).</p>\n<h2>\n\
+    <a id=\"user-content-benchmarking\" class=\"anchor\" href=\"#benchmarking\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>BENCHMARKING</h2>\n\
+    <p>For details about the modularization performance of the MONET methods on a\
+    \ set of artificial benchmarks (Louvain algorithm is shown as a baseline), please\
+    \ refer to the MONET paper in the PUBLICATIONS section; in particular, Fig. 1.\
+    \ MONET/.test/benchmarking for a detailed output of the experiments that have\
+    \ been carried out.</p>\n<h2>\n<a id=\"user-content-source-code\" class=\"anchor\"\
+    \ href=\"#source-code\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>SOURCE CODE</h2>\n<p>The source code is hosted\
+    \ at: <a href=\"https://github.com/BergmannLab/MONET.git\">https://github.com/BergmannLab/MONET.git</a></p>\n\
+    <h2>\n<a id=\"user-content-contributing\" class=\"anchor\" href=\"#contributing\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>CONTRIBUTING</h2>\n<p>If you are interested in contributing to MONET,\
+    \ we encourage you to get in touch! We will be happy to add you to the list of\
+    \ our developers <a href=\"https://github.com/BergmannLab/MONET/graphs/contributors\"\
+    >https://github.com/BergmannLab/MONET/graphs/contributors</a>. <strong>THANK YOU!</strong></p>\n\
+    <p><strong>CONTRIBUTING - CREATING A BRANCH</strong></p>\n<p>First, we will create\
+    \ an issue for the specific feature you are willing to contribute; let's say yours\
+    \ will happen to be issue 999. You will be then asked to create a new git branch\
+    \ where to implement your changes; run the following from the cloned MONET directory:</p>\n\
+    <p><code>$ git checkout -b issues_999</code></p>\n<p><code>$ git push origin issues_999</code></p>\n\
+    <p>At this point, you are free to make changes to your local code in your laptop.\
+    \ Don't worry if you mess things up, it's no problem to add mistakes to a branch.</p>\n\
+    <p><strong>CONTRIBUTING - TESTING YOUR CHANGES</strong></p>\n<p>Once you are done\
+    \ with your changes, you can test them locally by <strong>reinstalling</strong>\
+    \ from the modified MONET directory.</p>\n<p><strong>CONTRIBUTING - PUBLISHING\
+    \ YOUR CHANGES</strong></p>\n<p>Once you have tested your changes, run the following\
+    \ from the cloned MONET directory:</p>\n<p><code>$ git add .</code></p>\n<p><code>$\
+    \ git commit -m \"adding code for feature # issues_999\"</code></p>\n<p><code>$\
+    \ git push --set-upstream origin issues_999</code></p>\n<p><code>$ git checkout\
+    \ master</code></p>\n<p>One of the MONET developers will test the changes in your\
+    \ branch then merge to Master.</p>\n<h2>\n<a id=\"user-content-implementing-local-changes-to-monet\"\
+    \ class=\"anchor\" href=\"#implementing-local-changes-to-monet\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>IMPLEMENTING\
+    \ LOCAL CHANGES TO MONET</h2>\n<p>If you wish to implement local changes to MONET,\
+    \ independently from our github repository, you can simply modify the code in\
+    \ your local cloned repository and <strong>reinstall</strong> after having made\
+    \ those changes (i.e. run or re-run the <code>install.sh</code> script and confirm\
+    \ if you are asked to reinstall). This procedure can be repeated as many times\
+    \ as you like.</p>\n<h2>\n<a id=\"user-content-troubleshooting-common-problems\"\
+    \ class=\"anchor\" href=\"#troubleshooting-common-problems\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>TROUBLESHOOTING\
+    \ COMMON PROBLEMS</h2>\n<p>If a MONET run is suddenly interrupted or if the expected\
+    \ outputs has not been generated, here are few common problems that can occur:</p>\n\
+    <ul>\n<li>lack of RAM: if the console-output file (see section OUTPUT) contains\
+    \ the word \"Killed\", the MONET processed were stopped by the Operating System,\
+    \ likely due to a lack of RAM. To confirm this, please read section COMPUTATIONAL\
+    \ RESOURCES to learn how to monitor your resource usage while running MONET.</li>\n\
+    <li>outdated kernel: Singularity users that work on Linux distributions with old\
+    \ kernels (e.g. CentOS 6.1, kernel 2.6) will encounter trouble during the install\
+    \ process; they need to contact their system administrator to inquire whether\
+    \ a kernel upgrade is possible.</li>\n<li>can't implement local changes: please,\
+    \ refer to section IMPLEMENTING LOCAL CHANGES TO MONET.</li>\n</ul>\n<h2>\n<a\
+    \ id=\"user-content-bug-reports\" class=\"anchor\" href=\"#bug-reports\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>BUG-REPORTS</h2>\n\
+    <p>Please, address your questions and bug reports to Mattia Tomasoni, &lt;mattia.tomasoni\
+    \ AT unil.ch&gt;. An issue will be opened here to address your problem: <a href=\"\
+    https://github.com/BergmannLab/MONET/issues\">https://github.com/BergmannLab/MONET/issues</a></p>\n\
+    <h2>\n<a id=\"user-content-publications\" class=\"anchor\" href=\"#publications\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>PUBLICATIONS</h2>\n<ul>\n<li>\n<p><strong>MONET paper</strong>: Mattia\
+    \ Tomasoni, Sergio G\xF3mez, Jake Crawford, Weijia Zhang, Sarvenaz Choobdar, Daniel\
+    \ Marbach and Sven Bergmann. MONET: a toolbox integrating top-performing methods\
+    \ for network modularization. Bioinformatics 36 (12), 3920-3921. doi: <a href=\"\
+    https://doi.org/10.1093/bioinformatics/btaa236\" rel=\"nofollow\">https://doi.org/10.1093/bioinformatics/btaa236</a></p>\n\
+    </li>\n<li>\n<p><strong>DREAM Challenge paper</strong>: Sarvenaz Choobdar, Mehmet\
+    \ Ahsen, Jake Crawford, Mattia Tomasoni, Tao Fang, David Lamparter, Junyuan Lin,\
+    \ Benjamin Hescott, Xiaozhe Hu, Johnathan Mercer, Ted Natoli, Rajiv Narayan, The\
+    \ DREAM Module Identification Challenge Consortium, Aravind Subramanian, Jitao\
+    \ David Zhang, Gustavo Stolovitzky, Zolt\xE1n Kutalik, Kasper Lage, Donna Slonim,\
+    \ Julio Saez-Rodriguez, Lenore Cowen, Sven Bergmann, Daniel Marbach. Assessment\
+    \ of network module identification across complex diseases. Nature Methods 16\
+    \ (2019) 843-852. doi: <a href=\"https://doi.org/10.1038/s41592-019-0509-5\" rel=\"\
+    nofollow\">https://doi.org/10.1038/s41592-019-0509-5</a></p>\n</li>\n</ul>\n"
+  stargazers_count: 29
+  subscribers_count: 6
+  topics: []
+  updated_at: 1626079655.0
 Betterton-Lab/C-GLASS:
   data_format: 2
   description: Open source simulation engine for coarse-grained Brownian dynamics
@@ -8087,6 +8378,7 @@ NuTufts/coherent-containers:
   data_format: 2
   description: Recipes for docker and singularity containers for COHERENT projects
   filenames:
+  - geant4/Singularity_geant4
   - geant4/Singularity
   full_name: NuTufts/coherent-containers
   latest_release: null
@@ -8099,7 +8391,7 @@ NuTufts/coherent-containers:
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1625881464.0
+  updated_at: 1626189399.0
 ORNL/faro:
   data_format: 2
   description: 'Face Recognition from Oak Ridge (FaRO) provides a well-defined server-client
@@ -12284,7 +12576,7 @@ VUIIS/demo-singularity-matlab-fsl:
   filenames:
   - Singularity
   full_name: VUIIS/demo-singularity-matlab-fsl
-  latest_release: v1.0.0
+  latest_release: v1.0.1
   readme: "<h1>\n<a id=\"user-content-demo-singularity-container-for-matlab-plus-fsl\"\
     \ class=\"anchor\" href=\"#demo-singularity-container-for-matlab-plus-fsl\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Demo\
@@ -12460,12 +12752,11 @@ VUIIS/demo-singularity-matlab-fsl:
     true\" class=\"octicon octicon-link\"></span></a>Inputs</h3>\n<p>Paths to files\
     \ are relative to the container.</p>\n<pre><code>--t1_niigz        A T1 image\n\
     --seg_niigz       Its corresponding segmentation from e.g. slant pipeline\n--diameter_mm\
-    \     Diameter of the hole to zero out, in mm (default 30)\n\n--project      \
-    \   Labels from XNAT, used only to annotate the QA PDF\n--subject         (default\
-    \ UNK_*)\n--session\n--scan\n\n--out_dir         Where outputs will be stored\
-    \ (default /OUTPUTS)\n</code></pre>\n<h3>\n<a id=\"user-content-outputs\" class=\"\
-    anchor\" href=\"#outputs\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>Outputs</h3>\n<pre><code>PDF/holed_image.pdf\
+    \     Diameter of the hole to zero out, in mm (default 30)\n\n--label_info   \
+    \   A label to annotate the QA PDF, e.g. info from XNAT\n\n--out_dir         Where\
+    \ outputs will be stored (default /OUTPUTS)\n</code></pre>\n<h3>\n<a id=\"user-content-outputs\"\
+    \ class=\"anchor\" href=\"#outputs\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Outputs</h3>\n<pre><code>PDF/holed_image.pdf\
     \           QA report\nHOLED_T1/holed_t1.nii.gz      T1 image with a hole in it\n\
     HOLED_SEG/holed_seg.nii.gz    Segmentation with a hole in it\n</code></pre>\n\
     <h2>\n<a id=\"user-content-running-the-container-with-dax\" class=\"anchor\" href=\"\
@@ -12480,7 +12771,7 @@ VUIIS/demo-singularity-matlab-fsl:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1625683788.0
+  updated_at: 1626126045.0
 VUIIS/demo-singularity-spm-freeview:
   data_format: 2
   description: null
@@ -13020,6 +13311,68 @@ aces/cbrain-containers-recipes:
   - docker
   - cbrain
   updated_at: 1568207307.0
+aces/simulation_toolkit_singularity:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: aces/simulation_toolkit_singularity
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-simulation-toolkit-for-coticometry-pipeline\"\
+    \ class=\"anchor\" href=\"#simulation-toolkit-for-coticometry-pipeline\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Simulation\
+    \ Toolkit for Coticometry Pipeline</h1>\n<p>Tools in this repository can be used\
+    \ to simulate artificial lesions in the brain in order to estimate the sensitivity\
+    \ and specificity of lesion\ndetection, using different automated corticometry\
+    \ pipelines.</p>\n<p>To set up software you need the following:</p>\n<ol>\n<li>\n\
+    <p>Install the software packages needed to run the deformation-2.pl script. Please\
+    \ follow steps in: <a href=\"https://github.com/aces/simulation_toolkit_singularity/blob/main/Singularity\"\
+    >https://github.com/aces/simulation_toolkit_singularity/blob/main/Singularity</a></p>\n\
+    </li>\n<li>\n<p>Obtain data from\n<a href=\"https://ida.loni.usc.edu/collaboration/access/appLicense.jsp;jsessionid=B0278AF5FD413E9AC14512DF841FFCA4/\"\
+    \ rel=\"nofollow\">https://ida.loni.usc.edu/collaboration/access/appLicense.jsp;jsessionid=B0278AF5FD413E9AC14512DF841FFCA4/</a></p>\n\
+    </li>\n<li>\n<p>Run deformation pipeline\"</p>\n</li>\n</ol>\n<p>Usage\nUsage:\
+    \ deformation.pl -input &lt;.mnc&gt; -output  [options]</p>\n<p>Mandatory options:</p>\n\
+    <pre><code>-deformation_ratio    provide the ratio of deformation, values must\
+    \ be between 0.1 [shrinkage] to 1.50 [expansion] [e.g. 0.1,1.2,0.6,\u2026]\n\n\
+    -mask                 Specify a tolerance map file (.mnc) indicating voxels that\
+    \ have a different amount of error allowed e.g., CSF, background [e.g. your-mask.mnc]\n\
+    \n-coordinate           Specify a hyperslab starting at &lt;x&gt; &lt;y&gt; &lt;z&gt;\
+    \ and extending in respective directions by &lt;sizex&gt; &lt;sizey&gt; &lt;sizez&gt;\
+    \ [e.g. 70 100 80 5 5 5]\n\n-tolerance_space      Define the buffer area around\
+    \ the deformation region [default = 4]\n</code></pre>\n<p>Other options:</p>\n\
+    <pre><code>-blur_determinant     Blurring kernel size for blurring deformation\
+    \ determinant blurring kernel 0-1\n\n-error                Specify the amount\
+    \ of error that is allowed between the specified determinant and the final determinant\
+    \ (per voxel) [default =0.00001]\n\n-iteration            Specify the maximum\
+    \ number of iterations to update the deformations field (-1 means until convergence)\
+    \ [default 1000]\n</code></pre>\n<p>Example:</p>\n<p>./deformation.pl -input ICBM_00100_t1_final.mnc\
+    \ -output Debugging_Folder -deformation_ratio 0.6 -coordinate 70 100 70 10 10\
+    \ 10 -tolerance_space 4 -blur_determinant 0.25  -error 0.00001  -iteration 100</p>\n\
+    <p>The locally-deformed output file name includes input parameters to simplify\
+    \ creating GLM matrices for statistical analysis.</p>\n<p>ICBM_00100_t1_final_deformed_by_0.4atROIx70-y100-z70dimx10.dimy10.dimz10.mnc.</p>\n\
+    <p>There following intermediate files are generated to help you do quality control\
+    \ and can be deleted:</p>\n<p>/Debugging_Folder/TMP/block.mnc</p>\n<p>/Debugging_Folder/TMP/blurred0.25determinant_r_0.4x70-y100-z70dimx10.dimy10.dimz10.mnc</p>\n\
+    <p>/Debugging_Folder/TMP/DDDDdilated.mnc   &lt;&lt;number of D's corresponds to\
+    \ the number of times the tolerance space (defined to be 4 in the commandline)\
+    \ is dilated</p>\n<p>/Debugging_Folder/TMP/DDDDring.mnc</p>\n<p>/Debugging_Folder/TMP/determinant_r_0.4_grid.mnc</p>\n\
+    <p>/Debugging_Folder/TMP/determinant_r_0.4x70-y100-z70dimx10.dimy10.dimz10.mnc</p>\n\
+    <p>/Debugging_Folder/TMP/determinant_r_0.4.xfm</p>\n<p>/Debugging_Folder/TMPmask.mnc</p>\n\
+    <p>ALTERNATIVELY: If you don't want to use this Perl wrapper, then follow the\
+    \ instructions for creating your own deformations:\n<a href=\"https://wiki.mouseimaging.ca/display/MICePub/Generating+deformation+fields\"\
+    \ rel=\"nofollow\">https://wiki.mouseimaging.ca/display/MICePub/Generating+deformation+fields</a></p>\n\
+    <p>Source code for deformation pipeline and dependencies (MINC):\n<a href=\"https://github.com/Mouse-Imaging-Centre/generate_deformation_fields\"\
+    >https://github.com/Mouse-Imaging-Centre/generate_deformation_fields</a></p>\n\
+    <ol start=\"4\">\n<li>\n<p>Example Data, Scripts and Statistical analysis used\
+    \ in our Frontier's Paper can be found here: <a href=\"https://github.com/aces/simulation_toolkit_statistics\"\
+    >https://github.com/aces/simulation_toolkit_statistics</a></p>\n</li>\n<li>\n\
+    <p>All these tools and data needed will be made available via CBRAIN. To learn\
+    \ more, please contact us at <a href=\"mailto:cbrain-support.mni@mcgill.ca\">cbrain-support.mni@mcgill.ca</a>.\
+    \ In the subject line, pleasee be sure to write SIMULATION TOOLKIT.</p>\n</li>\n\
+    </ol>\n"
+  stargazers_count: 0
+  subscribers_count: 3
+  topics: []
+  updated_at: 1626116668.0
 achennings/neurodocker:
   data_format: 2
   description: Custom implementation of neurodocker (https://github.com/ReproNim/neurodocker)
@@ -15271,7 +15624,7 @@ baxpr/bedpost-singularity:
   filenames:
   - Singularity
   full_name: baxpr/bedpost-singularity
-  latest_release: v3.0.0-beta1
+  latest_release: v3.0.0
   readme: '<p>Runs FSL''s bedpostx on the input DWI data set, and creates a PDF report
     of the results.
 
@@ -15281,7 +15634,7 @@ baxpr/bedpost-singularity:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1626044348.0
+  updated_at: 1626106357.0
 baxpr/cersuit:
   data_format: 2
   description: null
@@ -16739,6 +17092,13 @@ biocorecrg/interproscan_docker:
     <p>You can avoid using <code>sudo</code> with <code>--fakeroot</code> Singularity
     build option.</p>
 
+    <ul>
+
+    <li><a href="https://biocore.crg.eu/iprscan/" rel="nofollow">Pregenerated open
+    images</a></li>
+
+    </ul>
+
     <h2>
 
     <a id="user-content-notes" class="anchor" href="#notes" aria-hidden="true"><span
@@ -16776,7 +17136,7 @@ biocorecrg/interproscan_docker:
   stargazers_count: 0
   subscribers_count: 4
   topics: []
-  updated_at: 1625498263.0
+  updated_at: 1626105383.0
 biocorecrg/sigtarp_docker:
   data_format: 2
   description: Container image with signalp and targetp programs for functional analysis
@@ -17275,14 +17635,14 @@ bow/crimson:
     \ class=\"anchor\" href=\"#license\" aria-hidden=\"true\"><span aria-hidden=\"\
     true\" class=\"octicon octicon-link\"></span></a>License</h2>\n<p><code>crimson</code>\
     \ is BSD-licensed. Refer to the <code>LICENSE</code> file for the full license.</p>\n"
-  stargazers_count: 29
+  stargazers_count: 30
   subscribers_count: 3
   topics:
   - bioinformatics
   - json
   - yaml
   - converter
-  updated_at: 1625434631.0
+  updated_at: 1626187656.0
 buregab/openspiel_singularity:
   data_format: 2
   description: null
@@ -17424,7 +17784,7 @@ cfe-lab/MiCall:
   - python
   - resistance
   - genotype
-  updated_at: 1625878947.0
+  updated_at: 1626220063.0
 chaotic-aur/toolbox:
   data_format: 2
   description: Unified kit with all the scripts required for maintaining the repository.
@@ -18645,8 +19005,8 @@ csf-ngs/hinkskalle-api:
     \ class=\"octicon octicon-link\"></span></a>Discovering &amp; Downloading Data</h4>\n\
     <p>Your most likely use case will be downloading data provided via Hinkskalle.</p>\n\
     <div class=\"highlight highlight-source-shell\"><pre><span class=\"pl-c\"><span\
-    \ class=\"pl-c\">#</span> shoows available collections of containers</span>\n\
-    hinkli list-collections\nhinkli list-containers [collection]\nhinkli list-downloads\
+    \ class=\"pl-c\">#</span> shows available collections of containers</span>\nhinkli\
+    \ list-collections\nhinkli list-containers [collection]\nhinkli list-downloads\
     \ [collection]/[container]\nhinkli pull [collection]/[container]:[tag]\n<span\
     \ class=\"pl-c\"><span class=\"pl-c\">#</span> username is optional, but can be\
     \ provided, too:</span>\nhinkli list-collections test.hase\nhinkli list-containers\
@@ -18684,11 +19044,18 @@ csf-ngs/hinkskalle-api:
     <span class=\"pl-ent\">hink_api_key</span>: <span class=\"pl-s\">your_super_secret_token</span></pre></div>\n\
     <p>You can use these env variables to override:</p>\n<ul>\n<li><code>HINK_API_BASE</code></li>\n\
     <li><code>HINK_API_KEY</code></li>\n<li>\n<code>HINK_API_CFG</code> - to look\
-    \ for the config file in a different location</li>\n</ul>\n"
+    \ for the config file in a different location</li>\n</ul>\n<h1>\n<a id=\"user-content-development\"\
+    \ class=\"anchor\" href=\"#development\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Development</h1>\n<p>You can\
+    \ regenerate the models from the Hinkskalle swagger/openapi definition:</p>\n\
+    <div class=\"highlight highlight-source-shell\"><pre>pip3 install git+https://ngs.vbcf.ac.at/repo/software/swagspotta.git\n\
+    <span class=\"pl-c\"><span class=\"pl-c\">#</span> from pkg.ngs.vbcf.ac.at production:</span>\n\
+    share/create_models.sh\n<span class=\"pl-c\"><span class=\"pl-c\">#</span> from\
+    \ your local hinkskalle dev server:</span>\nshare/create_models.sh http://localhost:7660/swagger</pre></div>\n"
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1625599337.0
+  updated_at: 1626104308.0
 csiro-crop-informatics/nextflow-embl-abr-webinar:
   data_format: 2
   description: null
@@ -20311,6 +20678,279 @@ ddbj/singularity-apache2-igvwebapp:
   subscribers_count: 7
   topics: []
   updated_at: 1625812484.0
+ddbj/submission-excel2xml:
+  data_format: 2
+  description: Tools for XML submission
+  filenames:
+  - Singularity
+  full_name: ddbj/submission-excel2xml
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-excel-and-container-images-for-dra-metadata-xml-submission\"\
+    \ class=\"anchor\" href=\"#excel-and-container-images-for-dra-metadata-xml-submission\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Excel and container images for DRA metadata XML submission</h1>\n\
+    <h2>\n<a id=\"user-content-\u65E5\u672C\u8A9E\" class=\"anchor\" href=\"#%E6%97%A5%E6%9C%AC%E8%AA%9E\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>\u65E5\u672C\u8A9E</h2>\n<ul>\n<li>\u751F\u547D\u60C5\u5831\u30FB\
+    DDBJ \u30BB\u30F3\u30BF\u30FC</li>\n<li>\u516C\u958B\u65E5: 2021-07-13</li>\n\
+    <li>version: v1.2</li>\n</ul>\n<p><a href=\"https://www.ddbj.nig.ac.jp/dra/submission.html\"\
+    \ rel=\"nofollow\">DDBJ Sequence Read Archive (DRA)</a> \u306B\u767B\u9332\u3059\
+    \u308B\u305F\u3081\u306E Submission\u3001Experiment \u3068 Run XML \u3092\u751F\
+    \u6210\u30FB\u30C1\u30A7\u30C3\u30AF\u3059\u308B\u305F\u3081\u306E\u30A8\u30AF\
+    \u30BB\u30EB\u3001Singularity \u3068 Docker \u30B3\u30F3\u30C6\u30CA\u3001\u53CA\
+    \u3073\u3001SRA xsd\u3002</p>\n<h2>\n<a id=\"user-content-\u5C65\u6B74\" class=\"\
+    anchor\" href=\"#%E5%B1%A5%E6%AD%B4\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>\u5C65\u6B74</h2>\n<ul>\n<li>2021-07-13:\
+    \ v1.2 <a href=\"https://github.com/ddbj/pub/tree/master/docs/dra#changes-to-common-xml-159-on-7-july-2021\"\
+    >xsd 1.5.9</a> \u306B\u5BFE\u5FDC\u3002xsd \u3092 <a href=\"https://github.com/ddbj/pub\"\
+    >pub</a> \u304B\u3089\u53D6\u5F97\u3059\u308B\u3088\u3046\u306B\u5909\u66F4\u3002\
+    </li>\n<li>2020-04-24: v1.1 \u521D\u7248</li>\n</ul>\n<h2>\n<a id=\"user-content-\u30C0\
+    \u30A6\u30F3\u30ED\u30FC\u30C9\" class=\"anchor\" href=\"#%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9</h2>\n<p>submission-excel2xml\
+    \ \u30EC\u30DD\u30B8\u30C8\u30EA\u3092\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9\u3057\
+    \u307E\u3059\u3002</p>\n<pre><code>git clone https://github.com/ddbj/submission-excel2xml.git\n\
+    </code></pre>\n<h2>\n<a id=\"user-content-\u30A8\u30AF\u30BB\u30EB\u306B\u30E1\
+    \u30BF\u30C7\u30FC\u30BF\u3092\u8A18\u5165\" class=\"anchor\" href=\"#%E3%82%A8%E3%82%AF%E3%82%BB%E3%83%AB%E3%81%AB%E3%83%A1%E3%82%BF%E3%83%87%E3%83%BC%E3%82%BF%E3%82%92%E8%A8%98%E5%85%A5\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>\u30A8\u30AF\u30BB\u30EB\u306B\u30E1\u30BF\u30C7\u30FC\u30BF\u3092\
+    \u8A18\u5165</h2>\n<p>\u30E1\u30BF\u30C7\u30FC\u30BF\u3068\u30C7\u30FC\u30BF\u30D5\
+    \u30A1\u30A4\u30EB\u3092\u30A8\u30AF\u30BB\u30EB\u306E 'Submission'\u3001'Experiment'\u3001\
+    'Run' \u3068 'Run-file' \u30B7\u30FC\u30C8\u306B\u8A18\u5165\u3057\u307E\u3059\
+    \u3002\u30E1\u30BF\u30C7\u30FC\u30BF\u306B\u3064\u3044\u3066\u306F<a href=\"https://www.ddbj.nig.ac.jp/dra/submission.html#metadata\"\
+    \ rel=\"nofollow\">\u30A6\u30A7\u30D6\u30B5\u30A4\u30C8</a>\u3068 'Readme' \u30B7\
+    \u30FC\u30C8\u3092\u3054\u89A7\u304F\u3060\u3055\u3044\u3002<br>\n'example-0001_dra_metadata.xlsx'\
+    \ \u304C\u8A18\u5165\u4F8B\u306B\u306A\u308A\u307E\u3059\u3002</p>\n<h3>\n<a id=\"\
+    user-content-xml-\u3092\u751F\u6210-singularity\" class=\"anchor\" href=\"#xml-%E3%82%92%E7%94%9F%E6%88%90-singularity\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>XML \u3092\u751F\u6210: Singularity</h3>\n<p>Singularity \u30A4\u30E1\
+    \u30FC\u30B8\u3092<a href=\"https://drive.google.com/drive/u/3/folders/1Qrqpgjw_No5q6mO6rcihNwVCyMBVytzL\"\
+    \ rel=\"nofollow\">\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9</a>\u3001\u3082\u3057\u304F\
+    \u306F\u3001\u4EE5\u4E0B\u306E\u624B\u9806\u3067\u30ED\u30FC\u30AB\u30EB\u74B0\
+    \u5883\u3067\u69CB\u7BC9\u3057\u307E\u3059\u3002</p>\n<pre><code>cd submission-excel2xml\n\
+    sudo singularity build excel2xml.simg Singularity\n</code></pre>\n<p>\u30A8\u30AF\
+    \u30BB\u30EB\u304B\u3089 Submission\u3001Experiment \u3068 Run XML \u3092\u751F\
+    \u6210\u3057\u307E\u3059\u3002\nD-way \u30A2\u30AB\u30A6\u30F3\u30C8 ID\u3001\
+    submission \u756A\u53F7\u3068 BioProject \u30A2\u30AF\u30BB\u30C3\u30B7\u30E7\u30F3\
+    \u756A\u53F7\u3092\u6307\u5B9A\u3057\u307E\u3059\u3002</p>\n<p>\u4F8B</p>\n<ul>\n\
+    <li>DRA submission id 'example-0001': -a example -i 0001</li>\n<li>BioProject\
+    \ 'PRJDB7252' : -p PRJDB7252</li>\n</ul>\n<pre><code>singularity exec excel2xml.simg\
+    \ excel2xml.rb -a example -i 0001 -p PRJDB7252 example-0001_dra_metadata.xlsx\n\
+    </code></pre>\n<p>\u30A8\u30AF\u30BB\u30EB\u304B\u3089\u4E09\u3064\u306E XML \u304C\
+    \u751F\u6210\u3055\u308C\u307E\u3059\u3002</p>\n<ul>\n<li>example-0001_Submission.xml</li>\n\
+    <li>example-0001_Experiment.xml</li>\n<li>example-0001_Run.xml</li>\n</ul>\n<p>Submission\
+    \ ID \u3092\u6307\u5B9A\u3057\u3066 XML \u3092\u30C1\u30A7\u30C3\u30AF\u3057\u307E\
+    \u3059\u3002XML \u306F submission-excel2xml \u30C7\u30A3\u30EC\u30AF\u30C8\u30EA\
+    \u76F4\u4E0B\u306B\u914D\u7F6E\u3055\u308C\u3066\u3044\u308B\u5FC5\u8981\u304C\
+    \u3042\u308A\u307E\u3059\u3002SRA xsd \u30D5\u30A1\u30A4\u30EB\u306F build \u4E2D\
+    \u306B\u30B3\u30F3\u30C6\u30CA\u30FC\u5185\u306E /opt/submission-excel2xml/ \u306B\
+    \u30C0\u30A6\u30F3\u30ED\u30FC\u30C9\u3055\u308C\u3066\u3044\u307E\u3059\u3002\
+    </p>\n<pre><code>singularity exec excel2xml.simg validate_dra_meta.rb -a example\
+    \ -i 0001\n</code></pre>\n<p>\u3053\u3053\u3067\u306F xsd \u306B\u5BFE\u3059\u308B\
+    \u30C1\u30A7\u30C3\u30AF\u3068\u6700\u4F4E\u9650\u306E\u30C1\u30A7\u30C3\u30AF\
+    \u304C\u5B9F\u65BD\u3055\u308C\u307E\u3059\u3002<br>\nDRA \u306E\u767B\u9332\u30B5\
+    \u30A4\u30C8\u3067\u306F\u3088\u308A\u8A73\u7D30\u306A\u30C1\u30A7\u30C3\u30AF\
+    \u304C\u5B9F\u65BD\u3055\u308C\u308B\u305F\u3081\u3001\u30D1\u30B9\u3057\u305F\
+    \ XML \u304C\u767B\u9332\u904E\u7A0B\u3067\u30A8\u30E9\u30FC\u306B\u306A\u308B\
+    \u3053\u3068\u304C\u3042\u308A\u307E\u3059\u3002</p>\n<h3>\n<a id=\"user-content-xml-\u3092\
+    \u751F\u6210-docker\" class=\"anchor\" href=\"#xml-%E3%82%92%E7%94%9F%E6%88%90-docker\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>XML \u3092\u751F\u6210: Docker</h3>\n<p>Docker \u30A4\u30E1\u30FC\u30B8\
+    \u3092\u69CB\u7BC9\u3057\u307E\u3059\u3002</p>\n<pre><code>cd submission-excel2xml\n\
+    sudo docker build -t excel2xml .\n</code></pre>\n<p>\u30A8\u30AF\u30BB\u30EB\u304B\
+    \u3089 Submission\u3001Experiment \u3068 Run XML \u3092\u751F\u6210\u3057\u307E\
+    \u3059\u3002<br>\nD-way \u30A2\u30AB\u30A6\u30F3\u30C8 ID\u3001submission \u756A\
+    \u53F7\u3001BioProject \u30A2\u30AF\u30BB\u30C3\u30B7\u30E7\u30F3\u756A\u53F7\u3068\
+    \u30A8\u30AF\u30BB\u30EB\u3092\u542B\u3080\u30C7\u30A3\u30EC\u30AF\u30C8\u30EA\
+    \u306E\u30D5\u30EB\u30D1\u30B9\u3092\u6307\u5B9A\u3057\u307E\u3059\u3002</p>\n\
+    <p>\u4F8B</p>\n<ul>\n<li>DRA submission id 'example-0001': -a example -i 0001</li>\n\
+    <li>BioProject 'PRJDB7252' : -p PRJDB7252</li>\n<li>'path_to_excel_directory':\
+    \ \u30A8\u30AF\u30BB\u30EB\u3092\u542B\u3080\u30C7\u30A3\u30EC\u30AF\u30C8\u30EA\
+    \u306E\u30D5\u30EB\u30D1\u30B9</li>\n</ul>\n<pre><code>sudo docker run -v /path_to_excel_directory:/data\
+    \ -w /data excel2xml excel2xml.rb -a example -i 0001 -p PRJDB7252 example-0001_dra_metadata.xlsx\n\
+    </code></pre>\n<p>\u30A8\u30AF\u30BB\u30EB\u304B\u3089\u4E09\u3064\u306E XML \u304C\
+    \u751F\u6210\u3055\u308C\u307E\u3059\u3002</p>\n<ul>\n<li>example-0001_Submission.xml</li>\n\
+    <li>example-0001_Experiment.xml</li>\n<li>example-0001_Run.xml</li>\n</ul>\n<p>Submission\
+    \ ID \u3092\u6307\u5B9A\u3057\u3066 XML \u3092\u30C1\u30A7\u30C3\u30AF\u3057\u307E\
+    \u3059\u3002XML \u306F submission-excel2xml \u30C7\u30A3\u30EC\u30AF\u30C8\u30EA\
+    \u76F4\u4E0B\u306B\u914D\u7F6E\u3055\u308C\u3066\u3044\u308B\u5FC5\u8981\u304C\
+    \u3042\u308A\u307E\u3059\u3002SRA xsd \u30D5\u30A1\u30A4\u30EB\u306F build \u4E2D\
+    \u306B\u30B3\u30F3\u30C6\u30CA\u30FC\u5185\u306E /opt/submission-excel2xml/ \u306B\
+    \u30C0\u30A6\u30F3\u30ED\u30FC\u30C9\u3055\u308C\u3066\u3044\u307E\u3059\u3002\
+    </p>\n<pre><code>sudo docker run -v /path_to_excel_directory:/data -w /data excel2xml\
+    \ validate_dra_meta.rb -a example -i 0001\n</code></pre>\n<p>\u3053\u3053\u3067\
+    \u306F xsd \u306B\u5BFE\u3059\u308B\u30C1\u30A7\u30C3\u30AF\u3068\u6700\u4F4E\u9650\
+    \u306E\u30C1\u30A7\u30C3\u30AF\u304C\u5B9F\u65BD\u3055\u308C\u307E\u3059\u3002\
+    <br>\nDRA \u306E\u767B\u9332\u30B5\u30A4\u30C8\u3067\u306F\u3088\u308A\u8A73\u7D30\
+    \u306A\u30C1\u30A7\u30C3\u30AF\u304C\u5B9F\u65BD\u3055\u308C\u308B\u305F\u3081\
+    \u3001\u30D1\u30B9\u3057\u305F XML \u304C\u767B\u9332\u904E\u7A0B\u3067\u30A8\u30E9\
+    \u30FC\u306B\u306A\u308B\u3053\u3068\u304C\u3042\u308A\u307E\u3059\u3002</p>\n\
+    <h2>\n<a id=\"user-content-\u30C1\u30A7\u30C3\u30AF\u7D50\u679C\" class=\"anchor\"\
+    \ href=\"#%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF%E7%B5%90%E6%9E%9C\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>\u30C1\
+    \u30A7\u30C3\u30AF\u7D50\u679C</h2>\n<h3>\n<a id=\"user-content-sra-xsd-\u306B\
+    \u5BFE\u3059\u308B-xml-\u30C1\u30A7\u30C3\u30AF\" class=\"anchor\" href=\"#sra-xsd-%E3%81%AB%E5%AF%BE%E3%81%99%E3%82%8B-xml-%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>SRA xsd \u306B\u5BFE\u3059\u308B XML \u30C1\u30A7\u30C3\u30AF</h3>\n\
+    <ul>\n<li>\u30E1\u30BF\u30C7\u30FC\u30BF XML \u306F <a href=\"https://github.com/ddbj/pub/tree/master/docs/dra/xsd/1-5\"\
+    >SRA xsd</a> \u306B\u5BFE\u3057\u3066\u30C1\u30A7\u30C3\u30AF\u3055\u308C\u307E\
+    \u3059\u3002\u30E1\u30C3\u30BB\u30FC\u30B8\u306B\u5F93\u3063\u3066 XML \u3092\u4FEE\
+    \u6B63\u3057\u3066\u304F\u3060\u3055\u3044\u3002</li>\n</ul>\n<h3>\n<a id=\"user-content-xml-\u306E\
+    \u5185\u5BB9\u30C1\u30A7\u30C3\u30AF\" class=\"anchor\" href=\"#xml-%E3%81%AE%E5%86%85%E5%AE%B9%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>XML \u306E\u5185\u5BB9\u30C1\u30A7\u30C3\u30AF</h3>\n<p><strong>Submission</strong></p>\n\
+    <ul>\n<li>Error: Submission: \u516C\u958B\u4E88\u5B9A\u65E5\u304C\u904E\u53BB\u306E\
+    \u65E5\u4ED8<br>\n\u5C06\u6765\u306E\u65E5\u4ED8\u3092\u6307\u5B9A\u3057\u3066\
+    \u304F\u3060\u3055\u3044\u3002</li>\n</ul>\n<p><strong>Experiment \u3068 Run</strong></p>\n\
+    <ul>\n<li>Error: Run: #{run_alias} Paired library only has one file.<br>\n\u30DA\
+    \u30A2\u30E9\u30A4\u30D6\u30E9\u30EA Experiment \u3067\u306F\u5C11\u306A\u304F\
+    \u3068\u3082\u4E8C\u3064\u306E\u914D\u5217\u30C7\u30FC\u30BF\u30D5\u30A1\u30A4\
+    \u30EB (\u4F8B\u3001R1.fastq \u3068 R2.fastq) \u304C\u542B\u307E\u308C\u3066\u3044\
+    \u308B\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059\u3002</li>\n</ul>\n<h3>\n<a id=\"\
+    user-content-\u30AA\u30D6\u30B8\u30A7\u30AF\u30C8\u306E\u53C2\u7167\u95A2\u4FC2\
+    \u30C1\u30A7\u30C3\u30AF\" class=\"anchor\" href=\"#%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%81%AE%E5%8F%82%E7%85%A7%E9%96%A2%E4%BF%82%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>\u30AA\u30D6\u30B8\u30A7\u30AF\u30C8\u306E\u53C2\u7167\u95A2\u4FC2\
+    \u30C1\u30A7\u30C3\u30AF</h3>\n<ul>\n<li>Error: Run to Experiment reference error.<br>\n\
+    \u5168\u3066\u306E Experiment \u304C Run \u304B\u3089\u53C2\u7167\u3055\u308C\u3066\
+    \u3044\u306A\u3044\u3002<br>\nExperiment \u3092\u53C2\u7167\u3057\u3066\u3044\u306A\
+    \u3044 Run \u304C\u5B58\u5728\u3059\u308B\u3002<br>\nRun \u304B\u3089\u53C2\u7167\
+    \u3055\u308C\u3066\u3044\u306A\u3044 Experiment \u304C\u5B58\u5728\u3059\u308B\
+    \u3002\n\u3053\u306E\u3088\u3046\u306A\u5834\u5408\u3001\u5168\u3066\u306E Run\
+    \ \u304C\u5168\u3066\u306E Experiment \u3092\u53C2\u7167\u3059\u308B\u3088\u3046\
+    \u306B\u4FEE\u6B63\u3057\u3066\u304F\u3060\u3055\u3044\u3002</li>\n</ul>\n<p>\u30E1\
+    \u30BF\u30C7\u30FC\u30BF\u30E2\u30C7\u30EB\u306F <a href=\"https://www.ddbj.nig.ac.jp/dra/submission.html#metadata-objects\"\
+    \ rel=\"nofollow\">DRA Handbook</a> \u3092\u53C2\u7167\u3057\u3066\u304F\u3060\
+    \u3055\u3044\u3002</p>\n<h2>\n<a id=\"user-content-dra-\u30A6\u30A7\u30D6\u753B\
+    \u9762\u304B\u3089-xml-\u3092\u767B\u9332\u3059\u308B\" class=\"anchor\" href=\"\
+    #dra-%E3%82%A6%E3%82%A7%E3%83%96%E7%94%BB%E9%9D%A2%E3%81%8B%E3%82%89-xml-%E3%82%92%E7%99%BB%E9%8C%B2%E3%81%99%E3%82%8B\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>DRA \u30A6\u30A7\u30D6\u753B\u9762\u304B\u3089 XML \u3092\u767B\u9332\
+    \u3059\u308B</h2>\n<p>\u30E1\u30BF\u30C7\u30FC\u30BF XML \u3092\u767B\u9332\u3059\
+    \u308B\u524D\u306B<a href=\"https://www.ddbj.nig.ac.jp/dra/submission.html#upload-sequence-data\"\
+    \ rel=\"nofollow\">\u767B\u9332\u30C7\u30A3\u30EC\u30AF\u30C8\u30EA\u306B\u914D\
+    \u5217\u30C7\u30FC\u30BF\u30D5\u30A1\u30A4\u30EB\u3092\u30A2\u30C3\u30D7\u30ED\
+    \u30FC\u30C9\u3057\u307E\u3059</a>\u3002D-way \u306B\u30ED\u30B0\u30A4\u30F3\u5F8C\
+    \u3001<a href=\"https://www.ddbj.nig.ac.jp/dra/submission.html#create-metadata-in-xml-files\"\
+    \ rel=\"nofollow\">Submission\u3001Experiment \u3068 Run XML \u3092 DRA \u767B\
+    \u9332\u30DA\u30FC\u30B8\u3067\u3067\u30A2\u30C3\u30D7\u30ED\u30FC\u30C9</a> \u3057\
+    \u307E\u3059\u3002</p>\n<h2>\n<a id=\"user-content-github-\u3084-xml-\u751F\u6210\
+    \u65B9\u6CD5\u304C\u5206\u304B\u3089\u306A\u3044\u5834\u5408\" class=\"anchor\"\
+    \ href=\"#github-%E3%82%84-xml-%E7%94%9F%E6%88%90%E6%96%B9%E6%B3%95%E3%81%8C%E5%88%86%E3%81%8B%E3%82%89%E3%81%AA%E3%81%84%E5%A0%B4%E5%90%88\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Github \u3084 XML \u751F\u6210\u65B9\u6CD5\u304C\u5206\u304B\u3089\
+    \u306A\u3044\u5834\u5408</h2>\n<p><a href=\"https://www.ddbj.nig.ac.jp/files/submission/dra_metadata.xlsx\"\
+    \ rel=\"nofollow\">DRA \u30E1\u30BF\u30C7\u30FC\u30BF\u30A8\u30AF\u30BB\u30EB\
+    </a> \u3092\u30A6\u30A7\u30D6\u30B5\u30A4\u30C8\u304B\u3089\u30C0\u30A6\u30F3\u30ED\
+    \u30FC\u30C9\u3001\u5185\u5BB9\u3092\u82F1\u8A9E\u3067\u8A18\u5165\u3057\u3001\
+    \u30E1\u30FC\u30EB (<a href=\"mailto:trace@ddbj.nig.ac.jp\">trace@ddbj.nig.ac.jp</a>)\
+    \ \u6DFB\u4ED8\u3067 DRA \u30C1\u30FC\u30E0\u306B\u304A\u9001\u308A\u304F\u3060\
+    \u3055\u3044\u3002</p>\n<h2>\n<a id=\"user-content-english\" class=\"anchor\"\
+    \ href=\"#english\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>English</h2>\n<ul>\n<li>Bioinformation and DDBJ Center</li>\n\
+    <li>release: 2020-07-13</li>\n<li>version: v1.2</li>\n</ul>\n<p>These files are\
+    \ Excel, Singularity and Docker container images and SRA xsd for generation and\
+    \ validation of Submission, Experiment and Run XMLs for <a href=\"https://www.ddbj.nig.ac.jp/dra/submission-e.html\"\
+    \ rel=\"nofollow\">DDBJ Sequence Read Archive (DRA)</a> submission.</p>\n<h2>\n\
+    <a id=\"user-content-history\" class=\"anchor\" href=\"#history\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>History</h2>\n\
+    <ul>\n<li>2021-07-13: v1.2 Update to <a href=\"https://github.com/ddbj/pub/tree/master/docs/dra#changes-to-common-xml-159-on-7-july-2021\"\
+    >xsd 1.5.9</a>. Download the xsd files from <a href=\"https://github.com/ddbj/pub\"\
+    >pub</a>.</li>\n<li>2020-04-24: v1.1 Initial release</li>\n</ul>\n<h2>\n<a id=\"\
+    user-content-download\" class=\"anchor\" href=\"#download\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Download</h2>\n\
+    <p>Download the DDBJ submission-excel2xml repository.</p>\n<pre><code>git clone\
+    \ https://github.com/ddbj/submission-excel2xml.git\n</code></pre>\n<h2>\n<a id=\"\
+    user-content-enter-metadata-in-the-excel\" class=\"anchor\" href=\"#enter-metadata-in-the-excel\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Enter metadata in the excel</h2>\n<p>Enter metadata and data files\
+    \ in the 'Submission', 'Experiment', 'Run' and 'Run-file' sheets of the excel.<br>\n\
+    See our <a href=\"https://www.ddbj.nig.ac.jp/dra/submission-e.html#metadata\"\
+    \ rel=\"nofollow\">website</a> for metadata and 'Readme' sheet of the excel for\
+    \ details.<br>\nSee 'example-0001_dra_metadata.xlsx' for example.</p>\n<h3>\n\
+    <a id=\"user-content-generate-xmls-singularity\" class=\"anchor\" href=\"#generate-xmls-singularity\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Generate XMLs: Singularity</h3>\n<p><a href=\"https://drive.google.com/drive/u/3/folders/1Qrqpgjw_No5q6mO6rcihNwVCyMBVytzL\"\
+    \ rel=\"nofollow\">Download</a> the Singularity image or build the Singularity\
+    \ image as follows.</p>\n<pre><code>cd submission-excel2xml\nsudo singularity\
+    \ build excel2xml.simg Singularity\n</code></pre>\n<p>Generate Submission, Experiment\
+    \ and Run XMLs from the excel.<br>\nSpecify the D-way account ID, submission number\
+    \ and BioProject accession.</p>\n<p>For example,</p>\n<ul>\n<li>DRA submission\
+    \ id 'example-0001': -a example -i 0001</li>\n<li>BioProject 'PRJDB7252' : -p\
+    \ PRJDB7252</li>\n</ul>\n<pre><code>singularity exec excel2xml.simg excel2xml.rb\
+    \ -a example -i 0001 -p PRJDB7252 example-0001_dra_metadata.xlsx\n</code></pre>\n\
+    <p>Three XMLs are generated from the excel.</p>\n<ul>\n<li>example-0001_Submission.xml</li>\n\
+    <li>example-0001_Experiment.xml</li>\n<li>example-0001_Run.xml</li>\n</ul>\n<p>Validate\
+    \ the XMLs by specifying the submission ID. The XML files must be under the submission-excel2xml\
+    \ directory. The SRA xsd files have been downloaded to /opt/submission-excel2xml/\
+    \ from <a href=\"https://github.com/ddbj/pub\">pub</a> in the container during\
+    \ the build.</p>\n<pre><code>singularity exec excel2xml.simg validate_dra_meta.rb\
+    \ -a example -i 0001\n</code></pre>\n<p>Please note that this validator only performs\
+    \ xsd validation and minimum checks.<br>\nThe XMLs are fully validated in the\
+    \ DRA web XML registration process,\nso the checked XMLs may be failed in the\
+    \ DRA submission system.</p>\n<h3>\n<a id=\"user-content-generate-xmls-docker\"\
+    \ class=\"anchor\" href=\"#generate-xmls-docker\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Generate XMLs: Docker</h3>\n\
+    <p>Build the Docker image.</p>\n<pre><code>cd submission-excel2xml\nsudo docker\
+    \ build -t excel2xml .\n</code></pre>\n<p>Generate Submission, Experiment and\
+    \ Run XMLs from the excel.<br>\nSpecify the D-way account ID, submission number,\
+    \ BioProject accession and full path of the directory which contains the excel.</p>\n\
+    <p>For example,</p>\n<ul>\n<li>DRA submission id 'example-0001': -a example -i\
+    \ 0001</li>\n<li>BioProject 'PRJDB7252' : -p PRJDB7252</li>\n<li>'path_to_excel_directory':\
+    \ full path of the directory which contains the excel.</li>\n</ul>\n<pre><code>sudo\
+    \ docker run -v /path_to_excel_directory:/data -w /data excel2xml excel2xml.rb\
+    \ -a example -i 0001 -p PRJDB7252 example-0001_dra_metadata.xlsx\n</code></pre>\n\
+    <p>Three XMLs are generated from the excel.</p>\n<ul>\n<li>example-0001_Submission.xml</li>\n\
+    <li>example-0001_Experiment.xml</li>\n<li>example-0001_Run.xml</li>\n</ul>\n<p>Validate\
+    \ the XMLs by specifying the submission ID. The XML files must be under the submission-excel2xml\
+    \ directory. The SRA xsd files have been downloaded to /opt/submission-excel2xml/\
+    \ from <a href=\"https://github.com/ddbj/pub\">pub</a> in the container during\
+    \ the build.</p>\n<pre><code>sudo docker run -v /path_to_excel_directory:/data\
+    \ -w /data excel2xml validate_dra_meta.rb -a example -i 0001\n</code></pre>\n\
+    <p>Please note that this validator only performs xsd validation and minimum checks.<br>\n\
+    The XMLs are fully validated in the DRA web XML registration process,\nso the\
+    \ checked XMLs may be failed in the DRA submission system.</p>\n<h2>\n<a id=\"\
+    user-content-validation-results\" class=\"anchor\" href=\"#validation-results\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Validation results</h2>\n<h3>\n<a id=\"user-content-xml-validation-against-sra-xsd\"\
+    \ class=\"anchor\" href=\"#xml-validation-against-sra-xsd\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>XML validation\
+    \ against SRA xsd</h3>\n<ul>\n<li>Metadata XMLs are validated against <a href=\"\
+    https://github.com/ddbj/pub/tree/master/docs/dra/xsd/1-5\">respective SRA xsd</a>.\
+    \ Modify the XMLs according to the xsd validation messages.</li>\n</ul>\n<h3>\n\
+    <a id=\"user-content-xml-content-check\" class=\"anchor\" href=\"#xml-content-check\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>XML content check</h3>\n<p><strong>Submission</strong></p>\n<ul>\n\
+    <li>Error: Submission: Past hold date.<br>\nSet the future hold date.</li>\n</ul>\n\
+    <p><strong>Experiment and Run</strong></p>\n<ul>\n<li>Error: Run: #{run_alias}\
+    \ Paired library only has one file.<br>\nInclude at least two sequence data files\
+    \ (for example, R1.fastq and R2.fastq) for paired library Experiment.</li>\n</ul>\n\
+    <h3>\n<a id=\"user-content-object-reference-check\" class=\"anchor\" href=\"#object-reference-check\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Object reference check</h3>\n<ul>\n<li>Error: Run to Experiment reference\
+    \ error.<br>\nNot all Experiments are referenced by Runs.<br>\nThere is Run(s)\
+    \ not referencing Experiment.<br>\nThere is Experiment(s) not referenced by Run.<br>\n\
+    Modify metadata to make all Runs reference all Experiments.</li>\n</ul>\n<p>See\
+    \ <a href=\"https://www.ddbj.nig.ac.jp/dra/submission-e.html#metadata-objects\"\
+    \ rel=\"nofollow\">the DRA Handbook</a> for metadata model.</p>\n<h2>\n<a id=\"\
+    user-content-submit-xmls-in-the-dra-web-interface\" class=\"anchor\" href=\"#submit-xmls-in-the-dra-web-interface\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Submit XMLs in the DRA web interface</h2>\n<p>Before submitting the\
+    \ metadata XMLs, <a href=\"https://www.ddbj.nig.ac.jp/dra/submission-e.html#upload-sequence-data\"\
+    \ rel=\"nofollow\">upload sequence data files to the submission directory</a>.<br>\n\
+    After logging in the D-way, <a href=\"https://www.ddbj.nig.ac.jp/dra/submission-e.html#create-metadata-in-xml-files\"\
+    \ rel=\"nofollow\">upload the Submission, Experiment and Run XMLs in the XML upload\
+    \ area of the DRA submission</a>.</p>\n<h2>\n<a id=\"user-content-when-github-and-xml-generation-are-not-clear-for-you\"\
+    \ class=\"anchor\" href=\"#when-github-and-xml-generation-are-not-clear-for-you\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>When Github and XML generation are not clear for you</h2>\n<p>Download\
+    \ <a href=\"https://www.ddbj.nig.ac.jp/files/submission/dra_metadata.xlsx\" rel=\"\
+    nofollow\">DRA metadata Excel</a> from website, fill in and send it to the DRA\
+    \ team by Email (<a href=\"mailto:trace@ddbj.nig.ac.jp\">trace@ddbj.nig.ac.jp</a>).</p>\n"
+  stargazers_count: 3
+  subscribers_count: 8
+  topics: []
+  updated_at: 1626221606.0
 deisseroth-lab/two-photon:
   data_format: 2
   description: Common scripts, libraries, and utilities for 2p experiments
@@ -20838,7 +21478,7 @@ devitocodes/devito:
     jupyterhub.</p>
 
     '
-  stargazers_count: 311
+  stargazers_count: 310
   subscribers_count: 36
   topics:
   - compilers
@@ -20849,7 +21489,7 @@ devitocodes/devito:
   - performance
   - fwi
   - rtm
-  updated_at: 1625934439.0
+  updated_at: 1626166754.0
 dfornika/nf-core-cpo:
   data_format: 2
   description: null
@@ -25911,10 +26551,10 @@ grst/rstudio-server-conda:
     \ as a command line parameter.</p>\n<pre><code>uuid &gt; /tmp/rstudio-server/${USER}_secure-cookie-key\n\
     rserver # ...\n  --secure-cookie-key-file /tmp/rstudio-server/${USER}_secure-cookie-key\n\
     </code></pre>\n</li>\n</ul>\n"
-  stargazers_count: 78
+  stargazers_count: 80
   subscribers_count: 3
   topics: []
-  updated_at: 1625752901.0
+  updated_at: 1626141101.0
 gwastro/pycbc_bench:
   data_format: 2
   description: Some benchmark singularity images for pycbc / pycbc inference
@@ -26850,7 +27490,7 @@ hmgu-itg/burden_testing:
   stargazers_count: 2
   subscribers_count: 2
   topics: []
-  updated_at: 1626065850.0
+  updated_at: 1626144695.0
 housw/BlendIt:
   data_format: 2
   description: null
@@ -30760,6 +31400,299 @@ lkirk/nb-env:
   subscribers_count: 1
   topics: []
   updated_at: 1623793048.0
+lscsoft/bilby:
+  data_format: 2
+  description: null
+  filenames:
+  - containers/Singularity.0.3.3
+  - containers/Singularity.0.3.6
+  - containers/Singularity.0.4.1
+  - containers/Singularity.0.3.5
+  - containers/Singularity.0.4.0
+  full_name: lscsoft/bilby
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-monet\" class=\"anchor\" href=\"#monet\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>MONET</h1>\n\
+    <p>This repository holds the source code for <strong>MONET</strong>, a Linux/MacOS\
+    \ command-line toolbox to mine molecular and genetic networks, leveraging the\
+    \ top performing methods of the <strong>Disease Module Identification (DMI) DREAM\
+    \ Challenge</strong> (see DREAM Challenge paper under section PUBLICATIONS and\
+    \ <a href=\"https://www.synapse.org/modulechallenge\" rel=\"nofollow\">https://www.synapse.org/modulechallenge</a>)</p>\n\
+    <h2>\n<a id=\"user-content-prerequisites\" class=\"anchor\" href=\"#prerequisites\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>PREREQUISITES</h2>\n<p><strong>Operating System</strong>: MONET can\
+    \ be run on <strong>either</strong></p>\n<ul>\n<li>Linux (it was tested on <em>Ubuntu\
+    \ Linux</em> 20.04, <em>CentOS Linux</em> 7.5)</li>\n<li>MacOS (it was tested\
+    \ on <em>macOS Sierra</em> 10.12)</li>\n</ul>\n<p><strong>Software</strong>: MONET\
+    \ requires <strong>either</strong>:</p>\n<ul>\n<li>\n<code>Docker</code> (see\
+    \ \"Install using the repository\" <a href=\"https://docs.docker.com/engine/install/\"\
+    \ rel=\"nofollow\">https://docs.docker.com/engine/install/</a>)</li>\n<li>\n<code>Singularity</code>\
+    \ (see <a href=\"http://singularity.lbl.gov\" rel=\"nofollow\">http://singularity.lbl.gov</a>)</li>\n\
+    </ul>\n<p><strong>Hardware</strong>: MONET was tested both on server and on commodity\
+    \ hardware (i.e., regular desktop). For details, please refer to section COMPUTATIONAL\
+    \ RESOURCES below.</p>\n<h2>\n<a id=\"user-content-installation\" class=\"anchor\"\
+    \ href=\"#installation\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>INSTALLATION</h2>\n<p><strong>Just like you\
+    \ can <code>ls</code> a folder, after installation will be able to <code>monet</code>\
+    \ a network</strong> from any location on your system.</p>\n<p>Simply run:</p>\n\
+    <p><code>$ git clone https://github.com/BergmannLab/MONET.git &amp;&amp; cd MONET\
+    \ &amp;&amp; ./install.sh</code></p>\n<p>A folder MONET will have been created\
+    \ with the source code: you are free to remove it, if you are not interested.\
+    \ This will not affect MONET, which has now been installed in your system: the\
+    \ command <code>monet</code> can be invoked from any location on the system.</p>\n\
+    <h4>\n<a id=\"user-content-if-you-need-some-more-guidance\" class=\"anchor\" href=\"\
+    #if-you-need-some-more-guidance\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>IF YOU NEED SOME MORE GUIDANCE</h4>\n\
+    <p>You can follow this <a href=\"https://form.jotform.com/tomasonimattia/monet-installation\"\
+    \ rel=\"nofollow\">survey-tutorial</a>:</p>\n<ul>\n<li>it will guide you step\
+    \ by step (assumes no prior knowledge)</li>\n<li>(optionally) guides you through\
+    \ running some examples (feel free to skip those)</li>\n<li>it will help us collect\
+    \ information about possible errors on different platforms</li>\n</ul>\n<h4>\n\
+    <a id=\"user-content-if-you-are-on-windows\" class=\"anchor\" href=\"#if-you-are-on-windows\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>IF YOU ARE ON WINDOWS</h4>\n<p>Users using Windows are encouraged\
+    \ to install a hypervisor (i.e., a software that allows to creates and run virtual\
+    \ machines): for example, install VirtualBox <a href=\"https://www.virtualbox.org/wiki/Downloads\"\
+    \ rel=\"nofollow\">https://www.virtualbox.org/wiki/Downloads</a> and configure\
+    \ it up to run a virtual Ubuntu Linux inside which to install MONET (using the\
+    \ instructions above).</p>\n<h4>\n<a id=\"user-content-if-you-are-a-singularity-user-without-sudo-rights\"\
+    \ class=\"anchor\" href=\"#if-you-are-a-singularity-user-without-sudo-rights\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>IF YOU ARE A SINGULARITY USER WITHOUT SUDO RIGHTS</h4>\n<p>Sudo rights\
+    \ will be required at installation time for Singularity users: Singularity users\
+    \ will not need sudo rights while running MONET (i.e., Singularity does not require\
+    \ sudo right to run containers), but they will need it at installation time (i.e.,\
+    \ at the time the Singularity images are first created).</p>\n<p>Users that don't\
+    \ have sudo rights should follow the regular installation procedure explained\
+    \ above, then refer to MONET/docs/installation_no_sudo.txt where they will find\
+    \ a workaround to complete the installation manually without needing sudo.</p>\n\
+    <h2>\n<a id=\"user-content-testing-the-installation\" class=\"anchor\" href=\"\
+    #testing-the-installation\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>TESTING THE INSTALLATION</h2>\n<p>At the end\
+    \ of the install process, you will be asked whether you want to test MONET. This\
+    \ test is completely automatic.</p>\n<h2>\n<a id=\"user-content-monet-help-command\"\
+    \ class=\"anchor\" href=\"#monet-help-command\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>MONET HELP COMMAND</h2>\n<p>After\
+    \ installing MONET, the help command <code>monet --help</code> will be available\
+    \ from any location on your system.</p>\n<h2>\n<a id=\"user-content-running\"\
+    \ class=\"anchor\" href=\"#running\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>RUNNING</h2>\n<p>Once installed,\
+    \ from any location on your system, you can run the following example command:\
+    \ it will run a method called M1 (see section METHODS for details), on a network\
+    \ contained in your /tmp folder (see section INPUT for details), using docker\
+    \ virtualization (see section PREREQUISITES for details). In the remainder of\
+    \ this document, you will find details about what parameters you can use, what\
+    \ to expect as an output and resource usage (in the PARAMETERS, OUTPUT and COMPUTATIONAL\
+    \ RESOURCES sections respectively).</p>\n<p><code>$ monet --help</code></p>\n\
+    <p><code>$ monet --input=/tmp/input_network.txt \u2014-method=M1 --container=docker</code></p>\n\
+    <h2>\n<a id=\"user-content-input\" class=\"anchor\" href=\"#input\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>INPUT</h2>\n\
+    <p>The input file is provided to MONET using the <code>--input</code> parameter\
+    \ (see section RUNNING and section PARAMETERS).</p>\n<p>The format for the input\
+    \ network is the following: a <strong>tab-separated</strong> file containing one\
+    \ line for each edge.</p>\n<p>If an edge is connecting two nodes, gene_a and gene_b,\
+    \ with a certain weight, the file will contain the line:</p>\n<p><code>gene_a\
+    \ \\t gene_b \\t weight \\n</code></p>\n<p>Details:</p>\n<ul>\n<li>gene_a and\
+    \ gene_b, the gene ids, can be either <em>string</em> or <em>integer</em>\n</li>\n\
+    <li>weight can be of type <em>integer</em> or <em>float</em>\n</li>\n<li>\"\\\
+    t\" indicates the tab character and \"\\n\" the newline character</li>\n<li>no\
+    \ blank spaces should appear, neither as separators nor as part of the gene ids</li>\n\
+    </ul>\n<p>For an example, see MONET/.test/system_test/input/zachary_karate_club.txt.\
+    \ The same folder containing the actual inputs to the Disease Module Identification\
+    \ (DMI) DREAM Challenge. Beware that some of the inputs will require high amounts\
+    \ of computational resources and are not suited to be run on a simple laptop or\
+    \ desktop computer; please refer to section COMPUTATIONAL RESOURCES for details.</p>\n\
+    <h2>\n<a id=\"user-content-output\" class=\"anchor\" href=\"#output\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>OUTPUT</h2>\n\
+    <p>The output location is provided to MONET using the <code>--output</code> parameter\
+    \ (see section OPTIONAL PARAMETERS).</p>\n<p>Two output files will be generated\
+    \ in the directory where you run the command. They are marked with a timestamp,\
+    \ the name of the selected method and the name of your input network. For example,\
+    \ let's assume if you run M1 on 1st January 2020 at midday on a file called input_network.txt:</p>\n\
+    <ul>\n<li>a <strong>console-output</strong> file, which will contain the run-time\
+    \ outputs generated by the method you have selected, providing details about the\
+    \ steps that the M1 algorithm took to generate your output. Any errors would also\
+    \ be redirected here. The file would be called: <code>2020-01-01-120000__M1__console-output__input_network.txt</code>\n\
+    </li>\n<li>a <strong>result-modules</strong> file, containing the results of your\
+    \ analysis and it will not be generated in case of errors. The file would be called:\
+    \ <code>2020-01-01-120000__M1__result-modules__input_network.txt</code>. It will\
+    \ be in tab-separated format, containing one module per line:\n<ul>\n<li>the first\
+    \ value of each line will be a module identifier (in the form of an integer number\
+    \ starting from 1)</li>\n<li>the second is a fixed numerical value and can be\
+    \ ignored (curerntly set to <code>1.0</code>, it was originally used in the DREAM\
+    \ Challenge to provide module-level confidence scores)</li>\n<li>the rest of the\
+    \ values on the line will be the gene ids container in the input (like gene_a\
+    \ and gene_b, see section INPUT)</li>\n</ul>\n</li>\n</ul>\n<h2>\n<a id=\"user-content-methods\"\
+    \ class=\"anchor\" href=\"#methods\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>METHODS</h2>\n<p>Three methods\
+    \ are available as part of MONET, which emerged as the top-performing methods\
+    \ of the DREAM Challenge.</p>\n<p>In order to run one of the three methods, adapt\
+    \ the example command provided in section RUNNING providing the --method option\
+    \ with the name of the chosen method (--method=[K1|M1|R1], for details, see section\
+    \ PARAMETERS).</p>\n<ul>\n<li>\n<strong>K1</strong>: KERNEL CLUSTERING OPTIMISATION\
+    \ algorithm. K1 is based on the \u201CDiffusion State Distance\u201D (DSD), a\
+    \ novel graph metric which is built on the premise that paths through low-degree\
+    \ nodes are stronger indications of functional similarity than paths that traverse\
+    \ high degree nodes by Cao et al. (2014). The DSD metric is used to define a pairwise\
+    \ distance matrix between all nodes, on which a spectral clustering algorithm\
+    \ is applied. In parallel, dense bipartite sub-graphs are identified using standard\
+    \ graph techniques. Finally, results are merged into a single set of non-overlapping\
+    \ clusters. For further details, please see: <a href=\"https://www.synapse.org/#!Synapse:syn7349492/wiki/407359\"\
+    \ rel=\"nofollow\">https://www.synapse.org/#!Synapse:syn7349492/wiki/407359</a>\n\
+    </li>\n<li>\n<strong>M1</strong>: MODULARITY OPTIMIZATION algorithm. M1 employs\
+    \ an original technique named Multiresolution introduced by (Arenas et al., 2008)\
+    \ to explore all topological scales at which modules may be found. The novelty\
+    \ of this approach relies on the introduction of a parameter, called resistance,\
+    \ which controls the aversion of nodes to form modules. Modularity (Newman and\
+    \ Girvan, 2004; Arenas et al., 2007) is optimized using an ensemble of algorithms:\
+    \ Extremal optimization (Duch and Arenas, 2005), Spectral optimization (Newman,\
+    \ 2006), Fast algorithm (Newman, 2004), Tabu search (Arenas et al., 2008), and\
+    \ fine-tuning by iterative repositioning of individual nodes in adjacent modules.\
+    \ For further details, please see: <a href=\"https://www.synapse.org/#!Synapse:syn7352969/wiki/407384\"\
+    \ rel=\"nofollow\">https://www.synapse.org/#!Synapse:syn7352969/wiki/407384</a>\n\
+    </li>\n<li>\n<strong>R1</strong>: RANDOM-WALK-BASED algorithm. R1 is based on\
+    \ a variant of Markov Cluster Algorithm known as balanced Multi-layer Regularized\
+    \ Markov Cluster Algorithm(bMLRMCL) (Satuluriet al., 2010) which scales well to\
+    \ large graphs and minimizes the number of oversized clusters. First, a pre-processing\
+    \ step is applied so that edges with low weights are discarded and all remaining\
+    \ edges are scaled to integer values. Then, bMLRMCL is applied iteratively on\
+    \ modules of size grater than a user-defined threshold. For further details, please\
+    \ see: <a href=\"https://www.synapse.org/#!Synapse:syn7286597/wiki/406659\" rel=\"\
+    nofollow\">https://www.synapse.org/#!Synapse:syn7286597/wiki/406659</a>\n</li>\n\
+    </ul>\n<h2>\n<a id=\"user-content-parameters\" class=\"anchor\" href=\"#parameters\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>PARAMETERS</h2>\n<p>Please, provide values for the following MANDATORY\
+    \ parameters:</p>\n<ul>\n<li>\n<strong>--input</strong>: path to the network file\
+    \ to be analysed</li>\n<li>\n<strong>--method</strong>: method to be used to analyse\
+    \ the input: [K1|M1|R1]</li>\n<li>\n<strong>--container</strong>: virtualisation\
+    \ technology available on the system: [docker|singularity]</li>\n</ul>\n<h2>\n\
+    <a id=\"user-content-optional-parameters\" class=\"anchor\" href=\"#optional-parameters\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>OPTIONAL PARAMETERS</h2>\n<ul>\n<li>\n<strong>--output</strong>: directory\
+    \ in which to output results (default is current directory)</li>\n</ul>\n<p><strong>if\
+    \ you select K1</strong> as a method, you may additionally provide the following:</p>\n\
+    <ul>\n<li>\n<strong>--nclusters</strong>: initial number of output clusters for\
+    \ spectral clustering step; final number may differ (default is 100)</li>\n</ul>\n\
+    <p><strong>if you select M1</strong> as a method, you may additionally provide\
+    \ the following:</p>\n<ul>\n<li>\n<strong>--smallest</strong>: min size of output\
+    \ clusters (default is 3)</li>\n<li>\n<strong>--largest</strong>: max size of\
+    \ output clusters (default is 100)</li>\n<li>\n<strong>--linksdir</strong>: directionality\
+    \ of links: [undirected|directed] (default is undirected)</li>\n<li>\n<strong>--avgk</strong>:\
+    \ desired average degree for nodes in output (default is 25)</li>\n</ul>\n<p><strong>if\
+    \ you select R1</strong> as a method, you may additionally provide the following:</p>\n\
+    <ul>\n<li>\n<strong>--smallest</strong>: min size of output clusters (default\
+    \ is 3)</li>\n<li>\n<strong>--largest</strong>: max size of output clusters (default\
+    \ is 100)</li>\n<li>\n<strong>--c</strong>: trade-off parameter for computational\
+    \ efficiency; for larger c, the algorithm will run slower, but may provide more\
+    \ accurate results (default is 800)</li>\n<li>\n<strong>--i</strong>: inflation\
+    \ parameter for standard Markov Clustering algorithm on which R1 is based (default\
+    \ is 2)</li>\n<li>\n<strong>--b</strong>: parameter controlling how balanced the\
+    \ clustering results should be; for b=0, R1 behaves like standard Regularized\
+    \ Markov Cluster (default is 2)</li>\n<li>\n<strong>--threshold</strong>: remove\
+    \ edges smaller than threshold from the input (default is 4)</li>\n<li>\n<strong>--post</strong>:\
+    \ decide whether to recursively cluster (recluster) or discard too large output\
+    \ clusters: [recluster|discard] (default is discard)</li>\n<li>\n<strong>--c2</strong>:\
+    \ (only used if --post=recluster) sets --c for reclustering round (default is\
+    \ 500)</li>\n<li>\n<strong>--i2</strong>: (only used if --post=recluster) sets\
+    \ --i for reclustering round (default is 2)</li>\n<li>\n<strong>--b2</strong>:\
+    \ (only used if --post=recluster) sets --b for reclustering round (default is\
+    \ 2)</li>\n</ul>\n<h2>\n<a id=\"user-content-computational-resources\" class=\"\
+    anchor\" href=\"#computational-resources\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>COMPUTATIONAL RESOURCES</h2>\n\
+    <p>Some of the methods require large amount of resources, depending on your input\
+    \ (please, refer to the MONET paper in the PUBLICATIONS section for details about\
+    \ how resource needs will scale with the size of the input, for the different\
+    \ methods).</p>\n<p>To reproduce the results of the DREAM Challenge, you can run\
+    \ MONET/.test/system_test/reproduce_challenge/reproduce_challenge.sh. This might\
+    \ fail on commodity hardware (i.e., a regular laptop or desktop) as about 8GB\
+    \ or RAM need to be available. In that case, you can allocate a larger SWAP partition\
+    \ (on Linux) or run the experiment on more powerful hardware, such as a server.\
+    \ Please browser the rest of the contents of MONET/.test/system_test/reproduce_challenge\
+    \ to view the exact RAM usage (ram_usage.txt) and the challenge outputs produced\
+    \ by MONET (disease_modules_output directory).</p>\n<p>To monitor resource usage\
+    \ when running on your own input (and thus determine the amount or RAM / swap\
+    \ needed by your particular input network for a particular method), two simple\
+    \ scripts have been added to MONET/.test/helper_scripts (for Unix and one for\
+    \ MacOS systems): launch them before execution of MONET and redirect their output\
+    \ to file for simple inspection (no other task should be running).</p>\n<h2>\n\
+    <a id=\"user-content-benchmarking\" class=\"anchor\" href=\"#benchmarking\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>BENCHMARKING</h2>\n\
+    <p>For details about the modularization performance of the MONET methods on a\
+    \ set of artificial benchmarks (Louvain algorithm is shown as a baseline), please\
+    \ refer to the MONET paper in the PUBLICATIONS section; in particular, Fig. 1.\
+    \ MONET/.test/benchmarking for a detailed output of the experiments that have\
+    \ been carried out.</p>\n<h2>\n<a id=\"user-content-source-code\" class=\"anchor\"\
+    \ href=\"#source-code\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>SOURCE CODE</h2>\n<p>The source code is hosted\
+    \ at: <a href=\"https://github.com/BergmannLab/MONET.git\">https://github.com/BergmannLab/MONET.git</a></p>\n\
+    <h2>\n<a id=\"user-content-contributing\" class=\"anchor\" href=\"#contributing\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>CONTRIBUTING</h2>\n<p>If you are interested in contributing to MONET,\
+    \ we encourage you to get in touch! We will be happy to add you to the list of\
+    \ our developers <a href=\"https://github.com/BergmannLab/MONET/graphs/contributors\"\
+    >https://github.com/BergmannLab/MONET/graphs/contributors</a>. <strong>THANK YOU!</strong></p>\n\
+    <p><strong>CONTRIBUTING - CREATING A BRANCH</strong></p>\n<p>First, we will create\
+    \ an issue for the specific feature you are willing to contribute; let's say yours\
+    \ will happen to be issue 999. You will be then asked to create a new git branch\
+    \ where to implement your changes; run the following from the cloned MONET directory:</p>\n\
+    <p><code>$ git checkout -b issues_999</code></p>\n<p><code>$ git push origin issues_999</code></p>\n\
+    <p>At this point, you are free to make changes to your local code in your laptop.\
+    \ Don't worry if you mess things up, it's no problem to add mistakes to a branch.</p>\n\
+    <p><strong>CONTRIBUTING - TESTING YOUR CHANGES</strong></p>\n<p>Once you are done\
+    \ with your changes, you can test them locally by <strong>reinstalling</strong>\
+    \ from the modified MONET directory.</p>\n<p><strong>CONTRIBUTING - PUBLISHING\
+    \ YOUR CHANGES</strong></p>\n<p>Once you have tested your changes, run the following\
+    \ from the cloned MONET directory:</p>\n<p><code>$ git add .</code></p>\n<p><code>$\
+    \ git commit -m \"adding code for feature # issues_999\"</code></p>\n<p><code>$\
+    \ git push --set-upstream origin issues_999</code></p>\n<p><code>$ git checkout\
+    \ master</code></p>\n<p>One of the MONET developers will test the changes in your\
+    \ branch then merge to Master.</p>\n<h2>\n<a id=\"user-content-implementing-local-changes-to-monet\"\
+    \ class=\"anchor\" href=\"#implementing-local-changes-to-monet\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>IMPLEMENTING\
+    \ LOCAL CHANGES TO MONET</h2>\n<p>If you wish to implement local changes to MONET,\
+    \ independently from our github repository, you can simply modify the code in\
+    \ your local cloned repository and <strong>reinstall</strong> after having made\
+    \ those changes (i.e. run or re-run the <code>install.sh</code> script and confirm\
+    \ if you are asked to reinstall). This procedure can be repeated as many times\
+    \ as you like.</p>\n<h2>\n<a id=\"user-content-troubleshooting-common-problems\"\
+    \ class=\"anchor\" href=\"#troubleshooting-common-problems\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>TROUBLESHOOTING\
+    \ COMMON PROBLEMS</h2>\n<p>If a MONET run is suddenly interrupted or if the expected\
+    \ outputs has not been generated, here are few common problems that can occur:</p>\n\
+    <ul>\n<li>lack of RAM: if the console-output file (see section OUTPUT) contains\
+    \ the word \"Killed\", the MONET processed were stopped by the Operating System,\
+    \ likely due to a lack of RAM. To confirm this, please read section COMPUTATIONAL\
+    \ RESOURCES to learn how to monitor your resource usage while running MONET.</li>\n\
+    <li>outdated kernel: Singularity users that work on Linux distributions with old\
+    \ kernels (e.g. CentOS 6.1, kernel 2.6) will encounter trouble during the install\
+    \ process; they need to contact their system administrator to inquire whether\
+    \ a kernel upgrade is possible.</li>\n<li>can't implement local changes: please,\
+    \ refer to section IMPLEMENTING LOCAL CHANGES TO MONET.</li>\n</ul>\n<h2>\n<a\
+    \ id=\"user-content-bug-reports\" class=\"anchor\" href=\"#bug-reports\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>BUG-REPORTS</h2>\n\
+    <p>Please, address your questions and bug reports to Mattia Tomasoni, &lt;mattia.tomasoni\
+    \ AT unil.ch&gt;. An issue will be opened here to address your problem: <a href=\"\
+    https://github.com/BergmannLab/MONET/issues\">https://github.com/BergmannLab/MONET/issues</a></p>\n\
+    <h2>\n<a id=\"user-content-publications\" class=\"anchor\" href=\"#publications\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>PUBLICATIONS</h2>\n<ul>\n<li>\n<p><strong>MONET paper</strong>: Mattia\
+    \ Tomasoni, Sergio G\xF3mez, Jake Crawford, Weijia Zhang, Sarvenaz Choobdar, Daniel\
+    \ Marbach and Sven Bergmann. MONET: a toolbox integrating top-performing methods\
+    \ for network modularization. Bioinformatics 36 (12), 3920-3921. doi: <a href=\"\
+    https://doi.org/10.1093/bioinformatics/btaa236\" rel=\"nofollow\">https://doi.org/10.1093/bioinformatics/btaa236</a></p>\n\
+    </li>\n<li>\n<p><strong>DREAM Challenge paper</strong>: Sarvenaz Choobdar, Mehmet\
+    \ Ahsen, Jake Crawford, Mattia Tomasoni, Tao Fang, David Lamparter, Junyuan Lin,\
+    \ Benjamin Hescott, Xiaozhe Hu, Johnathan Mercer, Ted Natoli, Rajiv Narayan, The\
+    \ DREAM Module Identification Challenge Consortium, Aravind Subramanian, Jitao\
+    \ David Zhang, Gustavo Stolovitzky, Zolt\xE1n Kutalik, Kasper Lage, Donna Slonim,\
+    \ Julio Saez-Rodriguez, Lenore Cowen, Sven Bergmann, Daniel Marbach. Assessment\
+    \ of network module identification across complex diseases. Nature Methods 16\
+    \ (2019) 843-852. doi: <a href=\"https://doi.org/10.1038/s41592-019-0509-5\" rel=\"\
+    nofollow\">https://doi.org/10.1038/s41592-019-0509-5</a></p>\n</li>\n</ul>\n"
+  stargazers_count: 22
+  subscribers_count: 6
+  topics: []
+  updated_at: 1626078914.0
 lxwgcool/singularity:
   data_format: 2
   description: singularity-recipe-share
@@ -31274,7 +32207,7 @@ matt-sd-watson/nextflow_for_bioinformatics:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1625685437.0
+  updated_at: 1626196442.0
 maxpkatz/singularity_image_files:
   data_format: 2
   description: null
@@ -38039,7 +38972,7 @@ pscedu/singularity-asciinema:
     \ class=\"anchor\" href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installing\
     \ the container on Bridges 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code>\
-    \ file</li>\n<li>and the Perl scripts</li>\n</ul>\n<p>to <code>/opt/packages/asciinema/2.0.2</code>.</p>\n\
+    \ file</li>\n<li>and the <code>asciinema</code> script</li>\n</ul>\n<p>to <code>/opt/packages/asciinema/2.0.2</code>.</p>\n\
     <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/asciinema</code>\
     \ as <code>2.0.2.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
     \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
@@ -38067,7 +39000,7 @@ pscedu/singularity-asciinema:
   topics:
   - singularity
   - utilities
-  updated_at: 1625845911.0
+  updated_at: 1626144723.0
 pscedu/singularity-aspera-connect:
   data_format: 2
   description: null
@@ -38639,6 +39572,7 @@ pscedu/singularity-dust:
   description: du + rust = dust. Like du but more intuitive.
   filenames:
   - 0.5.4/Singularity
+  - 0.6.0/Singularity
   full_name: pscedu/singularity-dust
   latest_release: v0.6.0
   readme: "<p><a href=\"https://github.com/icaoberg/singularity-dust/actions/workflows/main.yml/badge.svg\"\
@@ -38693,7 +39627,7 @@ pscedu/singularity-dust:
   topics:
   - singularity
   - utilities
-  updated_at: 1625845807.0
+  updated_at: 1626147060.0
 pscedu/singularity-fastani:
   data_format: 2
   description: FastANI is developed for fast alignment-free computation of whole-genome
@@ -38760,7 +39694,7 @@ pscedu/singularity-fasttree:
   filenames:
   - 2.1.11/Singularity
   full_name: pscedu/singularity-fasttree
-  latest_release: null
+  latest_release: v2.1.11
   readme: "<p><a href=\"https://github.com/pscedu/singularity-fasttree/actions/workflows/main.yml/badge.svg\"\
     \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-fasttree/actions/workflows/main.yml/badge.svg\"\
     \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/776c7e7d72b508b47ce8bd555bc38368be7629ae529461cdfcfaf5af2920c141/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d6661737474726565\"\
@@ -38782,28 +39716,28 @@ pscedu/singularity-fasttree:
     \ href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"true\"><span aria-hidden=\"\
     true\" class=\"octicon octicon-link\"></span></a>Installing the container on Bridges\
     \ 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code> file</li>\n<li>and the\
-    \ <code>ascp</code> script</li>\n</ul>\n<p>to <code>/opt/packages/fasttree/2.1.11</code>.</p>\n\
-    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/fasttree</code>\
+    \ <code>FastTree</code>, <code>FastTreeMP</code> and <code>FastTreeDbl</code>\
+    \ scripts</li>\n</ul>\n<p>to <code>/opt/packages/FastTree/2.1.11</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/FastTree</code>\
     \ as <code>2.1.11.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
     \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
     \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
     \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
     \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
-    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.\
-    \ As of today, Does not work on MacOSX.</p>\n<pre><code>bash ./build.sh\n</code></pre>\n\
-    <h3>\n<a id=\"user-content-to-build-the-image-remotely\" class=\"anchor\" href=\"\
-    #to-build-the-image-remotely\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>To build the image remotely</h3>\n\
-    <p>Run the script <code>rbuild.sh</code> to build image remotely.</p>\n<pre><code>bash\
-    \ ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\" class=\"\
-    anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run the available\
-    \ tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n<hr>\n\
-    <p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights Reserved.</p>\n\
-    <p>The <a href=\"https://www.psc.edu/biomedical-applications/\" rel=\"nofollow\"\
-    >Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\" rel=\"\
-    nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
+    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
     \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
     \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
   stargazers_count: 0
@@ -38811,63 +39745,56 @@ pscedu/singularity-fasttree:
   topics:
   - singularity
   - bioinformatics
-  updated_at: 1625973624.0
+  updated_at: 1626120833.0
 pscedu/singularity-ffmpeg:
   data_format: 2
-  description: null
+  description: A complete, cross-platform solution to record, convert and stream audio
+    and video.
   filenames:
   - 4.3.1/Singularity
   full_name: pscedu/singularity-ffmpeg
-  latest_release: null
-  readme: "<p><a href=\"https://github.com/pscedu/singularity-fasttree/actions/workflows/main.yml/badge.svg\"\
-    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-fasttree/actions/workflows/main.yml/badge.svg\"\
-    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/776c7e7d72b508b47ce8bd555bc38368be7629ae529461cdfcfaf5af2920c141/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d6661737474726565\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/776c7e7d72b508b47ce8bd555bc38368be7629ae529461cdfcfaf5af2920c141/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d6661737474726565\"\
-    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-fasttree\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/6ba1353dc0bb816d3bca4dafd9f90d560fb7d5234867b2ac4b80d0557d1bdc90/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d6661737474726565\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/6ba1353dc0bb816d3bca4dafd9f90d560fb7d5234867b2ac4b80d0557d1bdc90/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d6661737474726565\"\
-    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-fasttree\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/a6aa9ae28b1371a303884250204eea3a43e273bae8eb19f063f732416f9d6bec/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d6661737474726565\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/a6aa9ae28b1371a303884250204eea3a43e273bae8eb19f063f732416f9d6bec/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d6661737474726565\"\
-    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-fasttree\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/0cc26b73063b0fb2d5f502b2eeb83e3568bac891ce91b016300d28524b83b564/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d6661737474726565\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/0cc26b73063b0fb2d5f502b2eeb83e3568bac891ce91b016300d28524b83b564/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d6661737474726565\"\
-    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-fasttree\"\
-    \ style=\"max-width:100%;\"></a></p>\n<h2>\n<a id=\"user-content-singularity-fasttree\"\
-    \ class=\"anchor\" href=\"#singularity-fasttree\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>singularity-fasttree</h2>\n<h2>\n\
-    <a id=\"user-content-installing-the-container-on-bridges-2\" class=\"anchor\"\
-    \ href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Installing the container on Bridges\
-    \ 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code> file</li>\n<li>and the\
-    \ <code>ascp</code> script</li>\n</ul>\n<p>to <code>/opt/packages/fasttree/2.1.11</code>.</p>\n\
-    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/fasttree</code>\
-    \ as <code>2.1.11.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+  latest_release: v4.3.1
+  readme: "<p><a href=\"https://github.com/pscedu/singularity-ffmpeg/actions/workflows/main.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-ffmpeg/actions/workflows/main.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/995f5ae739e4b5e84bed8c94242535f1e6574cc5235830d1dfc03fb2c27382dd/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d66666d706567\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/995f5ae739e4b5e84bed8c94242535f1e6574cc5235830d1dfc03fb2c27382dd/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d66666d706567\"\
+    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-ffmpeg\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/751ca05bfc064a3625d33ff3e8c03f3de87f71ec9dddd793595d069d15810c10/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d66666d706567\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/751ca05bfc064a3625d33ff3e8c03f3de87f71ec9dddd793595d069d15810c10/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d66666d706567\"\
+    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-ffmpeg\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/ee0114c2f5583f3eb834c4a96dd51bc36819a88db8bbb7aa824f8fb6d2f0ca80/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d66666d706567\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/ee0114c2f5583f3eb834c4a96dd51bc36819a88db8bbb7aa824f8fb6d2f0ca80/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d66666d706567\"\
+    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-ffmpeg\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/ce3c524f22af51a683432f83f9b6327df7ceaf1d06ad3a84afc59e0218eacc46/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d66666d706567\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/ce3c524f22af51a683432f83f9b6327df7ceaf1d06ad3a84afc59e0218eacc46/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d66666d706567\"\
+    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-ffmpeg\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
     \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
     \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
     \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
     \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
-    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.\
-    \ As of today, Does not work on MacOSX.</p>\n<pre><code>bash ./build.sh\n</code></pre>\n\
-    <h3>\n<a id=\"user-content-to-build-the-image-remotely\" class=\"anchor\" href=\"\
-    #to-build-the-image-remotely\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>To build the image remotely</h3>\n\
-    <p>Run the script <code>rbuild.sh</code> to build image remotely.</p>\n<pre><code>bash\
-    \ ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\" class=\"\
-    anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run the available\
-    \ tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n<hr>\n\
-    <p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights Reserved.</p>\n\
-    <p>The <a href=\"https://www.psc.edu/biomedical-applications/\" rel=\"nofollow\"\
-    >Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\" rel=\"\
-    nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
+    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
     \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
     \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
   stargazers_count: 0
   subscribers_count: 3
-  topics: []
-  updated_at: 1625846007.0
+  topics:
+  - singularity
+  - utilities
+  updated_at: 1626117178.0
 pscedu/singularity-flac:
   data_format: 2
   description: "FLAC (/fl\xE6k/; Free Lossless Audio Codec) is an audio coding format\
@@ -40129,6 +41056,68 @@ pscedu/singularity-raxml:
   - singularity
   - bioinformatics
   updated_at: 1624981389.0
+pscedu/singularity-rclone:
+  data_format: 2
+  description: Rclone is a command line program to manage files on cloud storage.
+    It is a feature rich alternative to cloud vendors' web storage interfaces.
+  filenames:
+  - 1.55.1/Singularity
+  full_name: pscedu/singularity-rclone
+  latest_release: v1.55.1
+  readme: "<p><a href=\"https://github.com/pscedu/singularity-rclone/actions/workflows/main.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-rclone/actions/workflows/main.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/f31bf43512fe989665052aceb62d92cb2f4e9a9edeb3b1b0d8bc249a77520f6e/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d72636c6f6e65\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/f31bf43512fe989665052aceb62d92cb2f4e9a9edeb3b1b0d8bc249a77520f6e/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d72636c6f6e65\"\
+    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-rclone\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/4112143cfddf18da1c82c040d25965a3f3c2a344d4b1eff145b510baeb571677/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d72636c6f6e65\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/4112143cfddf18da1c82c040d25965a3f3c2a344d4b1eff145b510baeb571677/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d72636c6f6e65\"\
+    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-rclone\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/005088e44a1d6ffe07b6d97e456d3deb7878f9bb91560db5ece75b8aff184f32/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d72636c6f6e65\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/005088e44a1d6ffe07b6d97e456d3deb7878f9bb91560db5ece75b8aff184f32/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d72636c6f6e65\"\
+    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-rclone\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/0d0ce263787353de0284943fc84d23d8906e758dd563e0b8806f8877dc36b02a/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d72636c6f6e65\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/0d0ce263787353de0284943fc84d23d8906e758dd563e0b8806f8877dc36b02a/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d72636c6f6e65\"\
+    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-rclone\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-singularity-rclone\"\
+    \ class=\"anchor\" href=\"#singularity-rclone\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>singularity-rclone</h1>\n<p><a\
+    \ href=\"https://camo.githubusercontent.com/486e96833b074a96dff53dfa6bd1d2d4eb9d08629ea07e48bdd38a9f3e13e622/68747470733a2f2f72636c6f6e652e6f72672f696d672f6c6f676f5f6f6e5f6c696768745f5f686f72697a6f6e74616c5f636f6c6f722e737667\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/486e96833b074a96dff53dfa6bd1d2d4eb9d08629ea07e48bdd38a9f3e13e622/68747470733a2f2f72636c6f6e652e6f72672f696d672f6c6f676f5f6f6e5f6c696768745f5f686f72697a6f6e74616c5f636f6c6f722e737667\"\
+    \ alt=\"Logo\" data-canonical-src=\"https://rclone.org/img/logo_on_light__horizontal_color.svg\"\
+    \ style=\"max-width:100%;\"></a>\nSingularity recipe for <a href=\"https://rclone.org/\"\
+    \ rel=\"nofollow\">rclone</a>.</p>\n<h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\"\
+    \ class=\"anchor\" href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installing\
+    \ the container on Bridges 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code>\
+    \ file</li>\n<li>and the <code>rclone</code> script</li>\n</ul>\n<p>to <code>/opt/packages/rclone/1.55.1</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/rclone</code>\
+    \ as <code>1.55.1.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
+    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing Center</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
+    \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
+    \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 3
+  topics:
+  - singularity
+  - utilities
+  updated_at: 1626114837.0
 pscedu/singularity-shellcheck:
   data_format: 2
   description: Singularity recipe for shellcheck
@@ -40670,7 +41659,7 @@ refitt/refitt:
 
     '
   stargazers_count: 4
-  subscribers_count: 1
+  subscribers_count: 2
   topics:
   - science
   - astronomy
@@ -41511,7 +42500,7 @@ sassy-crick/Singularity-Easybuild:
   - definitions/bcftools/Singularity.BCFtools-1.3-foss-2016b-envmod-centos7
   - definitions/meme/Singularity.MEME-5.1.1-foss-2019b-Perl-5.30.0-Python-3.7.4-envmod-debian10
   full_name: sassy-crick/Singularity-Easybuild
-  latest_release: v1.0.0
+  latest_release: v1.0.1
   readme: "<h1>\n<a id=\"user-content-singularity-easybuild\" class=\"anchor\" href=\"\
     #singularity-easybuild\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
     octicon octicon-link\"></span></a>Singularity-Easybuild</h1>\n<h2>\n<a id=\"user-content-description\"\
@@ -41521,7 +42510,7 @@ sassy-crick/Singularity-Easybuild:
     \ Distributions</p>\n<p>The definitions folder contains the successful Singularity\
     \ Definition files, tested with version 3.5.3 and 3.7.1, whereas the scripts folder\
     \ contains the scripts to create the Singularity definition files which are based\
-    \ on EasyBuild. This version is using EasyBuild version 4.4.0.</p>\n<h2>\n<a id=\"\
+    \ on EasyBuild. This version is using EasyBuild version 4.4.1.</p>\n<h2>\n<a id=\"\
     user-content-requirements\" class=\"anchor\" href=\"#requirements\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Requirements:</h2>\n\
     <p>You will need to have a Linux environment and Singularity installed in it.\n\
@@ -41649,7 +42638,7 @@ sassy-crick/Singularity-Easybuild:
   stargazers_count: 5
   subscribers_count: 2
   topics: []
-  updated_at: 1623235915.0
+  updated_at: 1626102484.0
 sbutcher/container-R:
   data_format: 2
   description: singularity container for use with singularity hub
@@ -44665,7 +45654,7 @@ sylabs/singularity:
   - containers
   - hpc
   - linux
-  updated_at: 1625857765.0
+  updated_at: 1626190638.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '

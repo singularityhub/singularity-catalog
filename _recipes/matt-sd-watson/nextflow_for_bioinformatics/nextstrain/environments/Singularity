@@ -15,16 +15,17 @@ description="Docker image containing all requirements for running Nextstrain and
 
 Bootstrap: docker
 From: ubuntu:21.04
-Stage: app
+Stage: apps
 
 %post
 export DEBIAN_FRONTEND=noninteractive
 apt-get update && \
 apt-get install -y git procps && apt install -y r-base && \
 apt install -f -y r-cran-dplyr && apt install -f -y r-cran-data.table && \
-apt update && apt install -f -y r-cran-argparse
+apt update && apt install -f -y r-cran-optparse
 %files from condabuild
   /opt/conda/envs/nf_nextstrain
 %environment
 export PATH=/opt/conda/envs/nf_nextstrain/bin:$PATH
+
 

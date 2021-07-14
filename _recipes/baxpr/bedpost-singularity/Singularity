@@ -26,11 +26,6 @@ From: ubuntu:20.04
   # Fix imagemagick policy to allow PDF output. See https://usn.ubuntu.com/3785-1/
   mv /opt/ImageMagick-policy.xml /etc/ImageMagick-6/policy.xml
 
-  # Install python3 with pip and use by default
-  # https://stackoverflow.com/a/61878185
-  apt install -y python3 python3-pip python-is-python3
-  pip3 install pandas nilearn nibabel
-
   # FSL dependencies, h/t https://github.com/MPIB/singularity-fsl
   #            debian              ubuntu
   #            libjpeg62-turbo ->  libjpeg-turbo8
