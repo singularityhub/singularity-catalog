@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: alpine:edge
+
+%labels
+    AUTHOR icaoberg
+    MAINTAINER icaoberg@psc.edu
+    WEBSITE https://gitlab.psc.edu/icaoberg/singularity-lazygit
+    VERSION 0.24.2
+
+%post
+    apk update
+    apk add wget git
+
+####################################################################################
+%appinstall lazygit
+    wget https://github.com/jesseduffield/lazygit/releases/download/v0.24.2/lazygit_0.24.2_Linux_x86_64.tar.gz
+    tar -xvf lazygit_0.24.2_Linux_x86_64.tar.gz && rm -fv lazygit_0.24.2_Linux_x86_64.tar.gz
+    rm -fv README.md LICENSE
+    mv lazygit /usr/bin/lazygit
+
+%apphelp lazygit
+    lazygit --help
+
+%apprun lazygit
+    lazygit "$@"

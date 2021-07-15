@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: quay.io/biocontainers/cutadapt:2.10--py37hf01694f_1
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE http://www.andrew.cmu.edu/~icaoberg
+    VERSION 2.10
+
+%post
+   rm /etc/resolv.conf
+
+####################################################################################

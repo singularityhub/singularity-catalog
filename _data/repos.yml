@@ -343,6 +343,168 @@ Amjadhpc/PHEnix:
   subscribers_count: 2
   topics: []
   updated_at: 1539686949.0
+AndreWeiner/of_pytorch_docker:
+  data_format: 2
+  description: Dockerfile to create an image with OpenFOAM-plus and PyTorch support
+  filenames:
+  - Singularity.def
+  full_name: AndreWeiner/of_pytorch_docker
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-dockersingularity--openfoam--pytorch\" class=\"\
+    anchor\" href=\"#dockersingularity--openfoam--pytorch\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Docker/Singularity\
+    \ + OpenFOAM\xAE + PyTorch</h1>\n<h2>\n<a id=\"user-content-overview\" class=\"\
+    anchor\" href=\"#overview\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Overview</h2>\n<p>The Dockerfile in this repository\
+    \ creates an image with <a href=\"https://openfoam.com/\" rel=\"nofollow\">OpenFOAM-plus</a>\
+    \ and <a href=\"https://pytorch.org/\" rel=\"nofollow\">PyTorch</a> support. The\
+    \ image is currently based on</p>\n<ul>\n<li>Ubuntu 20.04,</li>\n<li>OpenFOAM-v2106,\
+    \ and</li>\n<li>PyTorch 1.9.0 (only CPU).</li>\n</ul>\n<p>There are also convenience\
+    \ scripts for creating and running a container based on the image. The <em>test</em>\
+    \ directory contains two examples demonstrating how to compile applications using\
+    \ <em>cmake</em> and <em>wmake</em></p>\n<p>OpenFOAM is not compiled from scratch\
+    \ but installed via the package manager (<a href=\"https://develop.openfoam.com/Development/openfoam/-/wikis/precompiled/debian\"\
+    \ rel=\"nofollow\">read more</a>). Also for PyTorch, only the pre-compiled C++\
+    \ part of the library, named <em>libtorch</em>, is contained on the image.</p>\n\
+    <h2>\n<a id=\"user-content-how-to-build-the-images\" class=\"anchor\" href=\"\
+    #how-to-build-the-images\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>How to build the images</h2>\n<h3>\n<a id=\"\
+    user-content-docker-image\" class=\"anchor\" href=\"#docker-image\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Docker\
+    \ image</h3>\n<p>To build the image yourself, copy this repository and navigate\
+    \ into the top-level folder:</p>\n<pre><code>git clone https://github.com/AndreWeiner/of_pytorch_docker.git\n\
+    cd of_pytorch_docker\n</code></pre>\n<p>If you want to upload the image to a Docker\
+    \ registry, consider the following naming convention when running the build command:</p>\n\
+    <pre><code>docker build -t user_name/of_pytorch:of2106-py1.9.0-cpu -f Dockerfile\
+    \ .\n</code></pre>\n<h3>\n<a id=\"user-content-singularity-definition-file\" class=\"\
+    anchor\" href=\"#singularity-definition-file\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Singularity definition file</h3>\n\
+    <p>For university clusters, <a href=\"https://sylabs.io/guides/3.6/user-guide/introduction.html\"\
+    \ rel=\"nofollow\">Singularity</a> is often the only supported container tool.\
+    \ In contrast to Docker, the <strong>execution</strong> of Singularity images\
+    \ does not require root-privileges (the image creation does, though). The <em>Singularity.def</em>\
+    \ file converts the Docker image into a Singularity image named, e.g., <em>of2106-py1.9.0-cpu.sif</em>.\
+    \ To create the image, run:</p>\n<pre><code>sudo singularity build of2106-py1.9.0-cpu.sif\
+    \ Singularity.def\n</code></pre>\n<p>The image may be used similarly to the Docker\
+    \ image. Convenience scripts like <em>create_openfoam_container.sh</em> or <em>start_openfoam.sh</em>\
+    \ are not necessary because Singularity performs similar actions by default (e.g.,\
+    \ mapping the user and important directories). To start an interactive shell,\
+    \ run:</p>\n<pre><code>singularity shell of2106-py1.9.0-cpu.sif\n# first thing\
+    \ to do inside the container\n. /usr/lib/openfoam/openfoam2106/etc/bashrc\n</code></pre>\n\
+    <h2>\n<a id=\"user-content-usage-and-examples\" class=\"anchor\" href=\"#usage-and-examples\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Usage and examples</h2>\n<h3>\n<a id=\"user-content-docker-image-1\"\
+    \ class=\"anchor\" href=\"#docker-image-1\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Docker image</h3>\n<p>Copy this\
+    \ repository and navigate into the top-level folder:</p>\n<pre><code>git clone\
+    \ https://github.com/AndreWeiner/of_pytorch_docker.git\ncd of_pytorch_docker\n\
+    </code></pre>\n<p>The script <em>create_openfoam_container.sh</em> creates a container\
+    \ with suitable settings (e.g. mapping the user into the container, mounting the\
+    \ current directory, setting the working directory to <em>./test/</em>). The script\
+    \ also pulls the Docker image from <a href=\"https://hub.docker.com/repository/docker/andreweiner/of_pytorch\"\
+    \ rel=\"nofollow\">Dockerhub</a> if it cannot be found locally. The default image\
+    \ and container names can be changed by passing them as command line arguments.</p>\n\
+    <pre><code># default settings\n./create_openfoam_container.sh\n\n# use different\
+    \ image, e.g., to use an older version\n./create_openfoam_container.sh \"andreweiner/of_pytorch:of2012-py1.7.1-cpu\"\
+    \ \"of2012-py1.7.1-cpu\" \n</code></pre>\n<p>The <em>start_openfoam.sh</em> script\
+    \ starts an interactive shell instance in the running container. If you modified\
+    \ the container name in the previous step, provide the modified name as command\
+    \ line argument.</p>\n<pre><code># default\n./start_openfoam.sh\n\n# custom container\
+    \ name\n./start_openfoam.sh \"of2012-py1.7.1-cpu\"\n</code></pre>\n<p>The container's\
+    \ entry point is set to the <em>test</em> directory. There you are presented with\
+    \ two examples:</p>\n<ul>\n<li>\n<strong>tensorCreation</strong>: PyTorch tensor\
+    \ basics; compiled with <strong>wmake</strong>\n</li>\n<li>\n<strong>simpleMLP</strong>:\
+    \ implementation of a simple <em>multilayer perceptron</em> (MLP) class; compiled\
+    \ with <strong>cmake</strong>\n</li>\n</ul>\n<h3>\n<a id=\"user-content-tensorcreation\"\
+    \ class=\"anchor\" href=\"#tensorcreation\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a><em>tensorCreation</em>\n</h3>\n\
+    <p>To compile and run <em>tensorCreation</em>, execute:</p>\n<pre><code># you\
+    \ must be inside the container for this to work\n# execute ./start_openfoam.sh\
+    \ to launch a shell instance\ncd tensorCreation\nwmake\n./tensorCreation\n</code></pre>\n\
+    <h3>\n<a id=\"user-content-simplemlp\" class=\"anchor\" href=\"#simplemlp\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a><em>simpleMLP</em>\n\
+    </h3>\n<p>To compile and run <em>simpleMLP</em>, execute:</p>\n<pre><code># you\
+    \ must be inside the container for this to work\n# execute ./start_openfoam.sh\
+    \ to launch a shell instance\ncd simpleMLP\nmkdir build\ncd build\ncmake ..\n\
+    make\n./simpleMLP\n</code></pre>\n<h3>\n<a id=\"user-content-singularity-image\"\
+    \ class=\"anchor\" href=\"#singularity-image\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Singularity image</h3>\n<p>The\
+    \ singularity image contains some simple shell logic to execute commands in a\
+    \ given path. This addition simplifies creating batch jobs. The general syntax\
+    \ is:</p>\n<pre><code>singularity run of2106-py1.9.0-cpu.sif command [path] [arguments]\n\
+    </code></pre>\n<p>Assuming you are in the top-level folder of this repository,\
+    \ you can build and run <em>tensorCreation</em> as follows:</p>\n<pre><code>#\
+    \ build\nsingularity run of2106-py1.9.0-cpu.sif wmake test/tensorCreation/\n#\
+    \ run\nsingularity run of2106-py1.9.0-cpu.sif ./tensorCreation test/tensorCreation/\n\
+    # clean\nsingularity run of2106-py1.9.0-cpu.sif wclean test/tensorCreation/\n\
+    </code></pre>\n<p>Alternatively, one can also define scripts, which are then executed\
+    \ by Singularity. For example, to build and run the second example, <em>simpleMLP</em>,\
+    \ run the <em>compileAndRun.sh</em> script:</p>\n<pre><code>singularity run of2106-py1.9.0-cpu.sif\
+    \ ./compileAndRun.sh test/simpleMLP/\n</code></pre>\n<p>To hide the additional\
+    \ complexity from using containers, one can also define shell functions that assemble\
+    \ suitable commands in the background. E.g., in <a href=\"https://github.com/AndreWeiner/naca0012_shock_buffet/blob/main/functions\"\
+    >this</a> file, the function <code>singularityRun</code> works the same way as\
+    \ the frequently used <code>runApplication</code> but uses a singularity image\
+    \ in the background.</p>\n<h2>\n<a id=\"user-content-get-in-touch\" class=\"anchor\"\
+    \ href=\"#get-in-touch\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Get in touch</h2>\n<p>If you would like to suggest\
+    \ changes or improvements regarding the</p>\n<ul>\n<li>build process,</li>\n<li>pre-installed\
+    \ packages,</li>\n<li>examples,</li>\n<li>documentation,</li>\n<li>...</li>\n\
+    </ul>\n<p>please use the <a href=\"https://github.com/AndreWeiner/of_pytorch_docker/issues\"\
+    >issue tracker</a>.</p>\n<h2>\n<a id=\"user-content-miscellaneous\" class=\"anchor\"\
+    \ href=\"#miscellaneous\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Miscellaneous</h2>\n<h3>\n<a id=\"user-content-issue-with-sourceforge\"\
+    \ class=\"anchor\" href=\"#issue-with-sourceforge\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Issue with Sourceforge</h3>\n\
+    <p>Building the Docker image sometimes fails with the error message:</p>\n<blockquote>\n\
+    <p>E: Failed to fetch <a href=\"https://nav.dl.sourceforge.net/project/openfoam/repos/deb/dists/focal/main/pool/2012_1/binary-amd64/openfoam2012_1-2_amd64.deb\"\
+    \ rel=\"nofollow\">https://nav.dl.sourceforge.net/project/openfoam/repos/deb/dists/focal/main/pool/2012_1/binary-amd64/openfoam2012_1-2_amd64.deb</a><br>\n\
+    Could not connect to nav.dl.sourceforge.net:443 (5.154.224.27), connection timed\
+    \ out\nE: Unable to fetch some archives, maybe run apt-get update or try with\
+    \ --fix-missing?</p>\n</blockquote>\n<p>The OpenFOAM Debian package is hosted\
+    \ on Sourceforge, and sometimes their servers are not available. Usually waiting\
+    \ a couple of minutes before rebuilding the image helps to solve this issue.</p>\n\
+    <h3>\n<a id=\"user-content-older-versions-of-the-dockerfile\" class=\"anchor\"\
+    \ href=\"#older-versions-of-the-dockerfile\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Older versions of the Dockerfile</h3>\n\
+    <p>There are two more Dockerfiles which were used to build previous versions of\
+    \ the Docker image. They remain part of the repository since they might be helpful\
+    \ to some users.</p>\n<ul>\n<li>\n<em>Dockerfile.abi_source</em>: OpenFOAM is\
+    \ compiled from scratch; only some third-party packages are installed and, hence,\
+    \ some applications are missing</li>\n<li>\n<em>Dockerfile.no_abi</em>: OpenFOAM\
+    \ is compiled from scratch with modified compiler flags to be compatible with\
+    \ <em>libtorch</em> versions prior to version 1.3</li>\n</ul>\n<p>By default,\
+    \ the OpenFOAM library will be compiled running two jobs in parallel. If you prefer\
+    \ to use more jobs, set the <em>NP</em> build argument, e.g.:</p>\n<pre><code>docker\
+    \ build --build-args NP=8 -t user_name/of_pytorch:of1912-py1.5-cpu -f Dockerfile.abi\
+    \ .\n</code></pre>\n<p>I also recommend to save the Docker output in a log-file:</p>\n\
+    <pre><code>docker build --build-args NP=8 -t user_name/of_pytorch:of1912-py1.5-cpu\
+    \ -f Dockerfile.abi . &amp;&gt; log.docker\n</code></pre>\n<h3>\n<a id=\"user-content-abi\"\
+    \ class=\"anchor\" href=\"#abi\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>ABI</h3>\n<p>Since version 1.3 of\
+    \ PyTorch, there is a version of libtorch compiled with ABI enabled (<a href=\"\
+    https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_dual_abi.html\" rel=\"nofollow\"\
+    >read more</a>). The only change in prior versions compared to a regular compilation\
+    \ is the additional flag</p>\n<pre><code>-D_GLIBCXX_USE_CXX11_ABI=0\n</code></pre>\n\
+    <p>when compiling OpenFOAM. The flag is related to backwards compatibility for\
+    \ standards older than C++11 (<a href=\"https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_dual_abi.html\"\
+    \ rel=\"nofollow\">read more</a>).</p>\n<h3>\n<a id=\"user-content-libtorch\"\
+    \ class=\"anchor\" href=\"#libtorch\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Libtorch</h3>\n<p>The PyTorch\
+    \ library files are located in <em>/opt/libtorch</em>. The environment variable\
+    \ <strong>TORCH_LIBRARIES</strong> can be used to indicate the location of certain\
+    \ header and library files to the compiler and linker. To compile PyTorch C++\
+    \ code using <em>wmake</em>, add</p>\n<pre><code>EXE_INC = \\\n    -I$(TORCH_LIBRARIES)/include\
+    \ \\\n    -I$(TORCH_LIBRARIES)/include/torch/csrc/api/include \\\n</code></pre>\n\
+    <p>to the include paths, and</p>\n<pre><code>EXE_LIBS = \\\n    -Wl,-rpath,$(TORCH_LIBRARIES)/lib\
+    \ $(TORCH_LIBRARIES)/lib/libtorch.so $(TORCH_LIBRARIES)/lib/libc10.so \\\n   \
+    \ -Wl,--no-as-needed,$(TORCH_LIBRARIES)/lib/libtorch_cpu.so \\\n    -Wl,--as-needed\
+    \ $(TORCH_LIBRARIES)/lib/libc10.so \\\n    -Wl,--no-as-needed,$(TORCH_LIBRARIES)/lib/libtorch.so\n\
+    </code></pre>\n<p>to the library paths.</p>\n"
+  stargazers_count: 9
+  subscribers_count: 0
+  topics: []
+  updated_at: 1626257743.0
 Asap7772/railrl_evalsawyer:
   data_format: 2
   description: null
@@ -4825,6 +4987,7 @@ HERA-Team/hera-singularity:
   - Singularity.casa_imaging
   - Singularity.hera1
   - Singularity.rtp
+  - Singularity.h4c
   - Singularity.casa6_modular
   full_name: HERA-Team/hera-singularity
   latest_release: null
@@ -4977,7 +5140,7 @@ HERA-Team/hera-singularity:
   stargazers_count: 0
   subscribers_count: 13
   topics: []
-  updated_at: 1624348511.0
+  updated_at: 1626279205.0
 HanLabUNLV/hanlab_singularity_defs:
   data_format: 2
   description: definition files for containers used in Hanlab
@@ -5030,7 +5193,7 @@ Irfanwustl/Research_code:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1625966952.0
+  updated_at: 1626306141.0
 JCSDA-internal/containers:
   data_format: 2
   description: Contains tools for building and distributing the JEDI/JCSDA Containers
@@ -17784,7 +17947,7 @@ cfe-lab/MiCall:
   - python
   - resistance
   - genotype
-  updated_at: 1626220063.0
+  updated_at: 1626309704.0
 chaotic-aur/toolbox:
   data_format: 2
   description: Unified kit with all the scripts required for maintaining the repository.
@@ -21489,7 +21652,7 @@ devitocodes/devito:
   - performance
   - fwi
   - rtm
-  updated_at: 1626166754.0
+  updated_at: 1626247595.0
 dfornika/nf-core-cpo:
   data_format: 2
   description: null
@@ -23347,6 +23510,162 @@ evanfloden/dpa-analysis:
   subscribers_count: 0
   topics: []
   updated_at: 1620129144.0
+fanglab/nanodisco:
+  data_format: 2
+  description: 'nanodisco: a toolbox for discovering and exploiting multiple types
+    of DNA methylation from individual bacteria and microbiomes using nanopore sequencing.'
+  filenames:
+  - Singularity
+  full_name: fanglab/nanodisco
+  latest_release: v1.0.3
+  readme: "<h1>\n<a id=\"user-content-nanodisco\" class=\"anchor\" href=\"#nanodisco\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>nanodisco</h1>\n<p><code>nanodisco</code> is a toolbox for <em>de\
+    \ novo</em> discovery of all the three types (6mA, 5mC and 4mC) of DNA methylation\
+    \ from individual bacteria and microbiomes using nanopore sequencing. For microbiomes,\
+    \ nanodisco also supports the use of DNA methylation patterns as natural epigenetic\
+    \ barcodes to facilitate high resolution metagenomic binning. Specifically, nanodisco\
+    \ can be used to:</p>\n<ul>\n<li>\n<em>De novo</em> discover DNA methylation motifs,\
+    \ identify specific type (6mA, 5mC or 4mC, namely <em>typing</em>) of a methylation\
+    \ motif, and identify which specific position within the motif is methylated (namely\
+    \ <em>fine mapping</em>).</li>\n<li>Perform metagenomic binning based on microbial\
+    \ DNA methylation pattern by constructing and clustering a methylation profile\
+    \ matrix.</li>\n<li>Integrate the two functionalities above together for <em>de\
+    \ novo</em> methylation motif discovery from microbiomes, and metagenomic analysis.</li>\n\
+    </ul>\n<h2>\n<a id=\"user-content-authors-notes\" class=\"anchor\" href=\"#authors-notes\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Authors' notes</h2>\n<p>We are actively developing <code>nanodisco</code>\
+    \ to facilitate usage and broaden features. All feedback is more than welcome.\
+    \ You can reach us on twitter (<a href=\"https://twitter.com/iamfanggang\" rel=\"\
+    nofollow\">@iamfanggang</a> and <a href=\"https://twitter.com/AlanTourancheau\"\
+    \ rel=\"nofollow\">@AlanTourancheau</a>) or directly through the <a href=\"https://github.com/fanglab/nanodisco/issues\"\
+    >GitHub issues system</a>.</p>\n<p>02/13/21: Updated to <code>v1.0.2</code>, including\
+    \ a new <code>nanodisco score</code> command and the <code>--split_fasta</code>\
+    \ option to generate binned fasta files.</p>\n<h2>\n<a id=\"user-content-content\"\
+    \ class=\"anchor\" href=\"#content\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Content</h2>\n<ul>\n<li><a href=\"\
+    #Installation\">Installation</a></li>\n<li>\n<a href=\"#Tool-showcase\">Tool showcase</a>\n\
+    <ul>\n<li><a href=\"#Prepare-the-container-for-examples\">Prepare the container\
+    \ for examples</a></li>\n<li><a href=\"#Methylation-typing-and-fine-mapping\"\
+    >Methylation typing and fine mapping</a></li>\n<li><a href=\"#Methylation-binning-of-metagenomic-contigs\"\
+    >Methylation binning of metagenomic contigs</a></li>\n</ul>\n</li>\n<li><a href=\"\
+    #Documentation\">Documentation</a></li>\n<li><a href=\"#Citation\">Citation</a></li>\n\
+    </ul>\n<h2>\n<a id=\"user-content-installation\" class=\"anchor\" href=\"#installation\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Installation</h2>\n<p><code>nanodisco</code> is distributed as a fully\
+    \ functional image bypassing the need to install any dependencies others than\
+    \ the virtualization software. We currently recommend using Singularity (v3.2.1\
+    \ and above), which can be installed on Linux systems and is often the preferred\
+    \ solution by HPC administrators (<a href=\"https://sylabs.io/guides/3.5/user-guide/quick_start.html\"\
+    \ rel=\"nofollow\">Quick Start</a>). <code>nanodisco</code> was tested extensively\
+    \ with Singularity v3.2.1 and v3.5.2.</p>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>singularity pull --name nanodisco.sif library://fanglab/default/nanodisco\
+    \ <span class=\"pl-c\"><span class=\"pl-c\">#</span> Download the image from cloud.sylabs.io</span>\n\
+    singularity build nd_env nanodisco.sif                         <span class=\"\
+    pl-c\"><span class=\"pl-c\">#</span> Create a container named nd_env</span></pre></div>\n\
+    <h2>\n<a id=\"user-content-tool-showcase\" class=\"anchor\" href=\"#tool-showcase\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Tool showcase</h2>\n<p>To showcase the toolbox applications and facilitate\
+    \ an understanding of the methods, we provide examples for the analysis of two\
+    \ datasets presented in our preprint. Those datasets can be download with the\
+    \ following commands from within a <code>nanodisco</code> container: <code>get_data_bacteria</code>\
+    \ and <code>get_data_microbiome</code>.</p>\n<h3>\n<a id=\"user-content-prepare-the-container-for-examples\"\
+    \ class=\"anchor\" href=\"#prepare-the-container-for-examples\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Prepare\
+    \ the container for examples</h3>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>singularity build --sandbox nd_example nanodisco.sif <span class=\"pl-c\"\
+    ><span class=\"pl-c\">#</span> Create a writable container (directory) named nd_example</span>\n\
+    singularity run --no-home -w nd_example              <span class=\"pl-c\"><span\
+    \ class=\"pl-c\">#</span> Start an interactive shell to use nanodisco, type `exit`\
+    \ to leave</span></pre></div>\n<p>The image retrieved from <a href=\"https://singularity-hub.org/\"\
+    \ rel=\"nofollow\">Singularity Hub</a> with <code>singularity pull</code> (nanodisco.sif)\
+    \ is already build and can be reused at will. Containers built with those instructions\
+    \ are writable meaning that results from nanodisco analysis can be retrieved when\
+    \ the container is not running. Outputs for the following commands can be found\
+    \ at <code>./path/to/nd_example/home/nanodisco/analysis</code>.</p>\n<h3>\n<a\
+    \ id=\"user-content-methylation-typing-and-fine-mapping\" class=\"anchor\" href=\"\
+    #methylation-typing-and-fine-mapping\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Methylation typing and fine mapping</h3>\n\
+    <p><strong>Goal:</strong> Identify the specific type (6mA, 5mC or 4mC, namely\
+    \ <em>typing</em>) of a methylation motif, and identify which specific position\
+    \ within the motif is methylated (namely <em>fine mapping</em>). The detailed\
+    \ method is described in the preprint.</p>\n<p><strong>Inputs:</strong></p>\n\
+    <ol>\n<li>Current differences file (pre-computed in the following example, can\
+    \ be generated with <code>nanodisco difference</code>)</li>\n<li>Reference genome\
+    \ file (.fasta)</li>\n<li>Methylation motifs for which one wants to perform typing\
+    \ and fine mapping</li>\n</ol>\n<p><strong>Outputs:</strong> For each queried\
+    \ methylation motif, <code>nanodisco</code> identifies the methylation type and\
+    \ the methylated position summarized in a heatmap (<code>analysis/Ecoli_motifs/Motifs_classification_Ecoli_nn_model.pdf</code>).\
+    \ See Figure 4d in the preprint as an example. In addition, the predicted methylation\
+    \ type and methylated position for each motif is compiled in a text file (<code>analysis/Ecoli_motifs/Motifs_classification_Ecoli_nn_model.tsv</code>).</p>\n\
+    <p><a href=\"/docs/figures/Motifs_classification_Ecoli_nn_model.png\" target=\"\
+    _blank\" rel=\"noopener noreferrer\"><img src=\"/docs/figures/Motifs_classification_Ecoli_nn_model.png\"\
+    \ alt=\"Output Characterize\" title=\"E. coli methylation motifs classification\
+    \ results\" style=\"max-width:100%;\"></a>\n<sub><em>1. AACNNNNNNGTGC: highest\
+    \ value (85) is on the 6mA row with offset +1 (relative to the first base), meaning\
+    \ that the second base (A) is 6mA</em></sub><br>\n<sub><em>2. CCWGG: highest value\
+    \ (95) is on the 5mC row with offset +1 (relative to the first base), meaning\
+    \ that the second base (C) is 5mC</em></sub><br>\n<sub><em>3. GATC: highest value\
+    \ (91) is on the 6mA row with offset +1 (relative to the first base), meaning\
+    \ that the second base (A) is 6mA</em></sub><br>\n<sub><em>4. GCACNNNNNNGTT: highest\
+    \ value (84) is on the 6mA row with offset +2 (relative to the first base), meaning\
+    \ that the third base (A) is 6mA</em></sub></p>\n<p><strong>Example commands:</strong></p>\n\
+    <div class=\"highlight highlight-source-shell\"><pre>get_data_bacteria <span class=\"\
+    pl-c\"><span class=\"pl-c\">#</span> Retrieve E. coli current differences and\
+    \ reference genome</span>\nnanodisco characterize -p 4 -b Ecoli -d dataset/EC_difference.RDS\
+    \ -o analysis/Ecoli_motifs -m GATC,CCWGG,GCACNNNNNNGTT,AACNNNNNNGTGC -t nn -r\
+    \ reference/Ecoli_K12_MG1655_ATCC47076.fasta</pre></div>\n<p>In this example,\
+    \ the current differences file (<code>EC_difference.RDS</code>) was generated\
+    \ on a whole <em>E. coli</em> nanopore sequencing dataset, from the preprint,\
+    \ using <code>nanodisco difference</code>. <strong>Runtime is ~1 min with 4 threads</strong>\
+    \ (~6.5 GB memory used).</p>\n<h3>\n<a id=\"user-content-methylation-binning-of-metagenomic-contigs\"\
+    \ class=\"anchor\" href=\"#methylation-binning-of-metagenomic-contigs\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Methylation\
+    \ binning of metagenomic contigs</h3>\n<p><strong>Goal:</strong> Construct methylation\
+    \ profiles for metagenomic contigs, identify informative features, and perform\
+    \ methylation binning for high-resolution metagenomic analysis.</p>\n<p><strong>Inputs:</strong></p>\n\
+    <ol>\n<li>Current differences file (pre-computed in the following example)</li>\n\
+    <li>Metagenomic <em>de novo</em> assembly (.fasta)</li>\n<li>Metagenomic contigs\
+    \ coverage files</li>\n<li>\n<em>De novo</em> discovered methylation motifs</li>\n\
+    <li>(Optional) Annotation for metagenome contigs (e.g. species of origin) and\
+    \ List of contigs from Mobile Genetic Elements (MGEs)</li>\n</ol>\n<p><strong>Outputs:</strong>\
+    \ t-SNE scatter plots that demonstrates the species level clustering of metagenomic\
+    \ contigs (<code>analysis/binning/Contigs_methylation_tsne_MGM1_motif.pdf</code>)\
+    \ as presented in the preprint Figure 5a.</p>\n<p align=\"center\">\n  <a href=\"\
+    /docs/figures/Contigs_methylation_tsne_MGM1_motif.png\" target=\"_blank\" rel=\"\
+    noopener noreferrer\"><img src=\"/docs/figures/Contigs_methylation_tsne_MGM1_motif.png\"\
+    \ alt=\"MGM1 guided metagenomic contigs binning\" width=\"500\" style=\"max-width:100%;\"\
+    ></a>\n</p>\n<p><strong>Example commands:</strong></p>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre>get_data_microbiome <span class=\"pl-c\"><span\
+    \ class=\"pl-c\">#</span> Retrieve current differences, de novo metagenome assembly,\
+    \ etc</span>\nnanodisco profile -p 4 -r reference/metagenome.fasta -d dataset/metagenome_subset_difference.RDS\
+    \ -w dataset/metagenome_WGA.cov -n dataset/metagenome_NAT.cov -b MGM1_motif -o\
+    \ analysis/binning --motifs_file dataset/list_de_novo_discovered_motifs.txt\n\
+    nanodisco binning -r reference/metagenome.fasta -s dataset/methylation_profile_MGM1_motif.RDS\
+    \ -b MGM1_motif -o analysis/binning\nnanodisco plot_binning -r reference/metagenome.fasta\
+    \ -u analysis/binning/methylation_binning_MGM1_motif.RDS -b MGM1_motif -o analysis/binning\
+    \ -a reference/motif_binning_annotation.RDS --MGEs_file dataset/list_MGE_contigs.txt</pre></div>\n\
+    <p>In this example, the current differences file (<code>metagenome_subset_difference.RDS</code>)\
+    \ was generated on a mouse gut microbiome nanopore sequencing dataset, MGM1 from\
+    \ the preprint, using <code>nanodisco difference</code>. This examples correspond\
+    \ to the procedure refered to as guided methylation binning where methylation\
+    \ motifs were already <em>de novo</em> discovered. <strong>Runtime is ~10 min\
+    \ with 4 threads</strong> and ~4 GB of memory used.</p>\n<h2>\n<a id=\"user-content-documentation\"\
+    \ class=\"anchor\" href=\"#documentation\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Documentation</h2>\n<p>For a\
+    \ comprehensive description of <code>nanodisco</code> including installation guide,\
+    \ and a detailed tutorial, please consult the <a href=\"https://nanodisco.readthedocs.io/en/latest/overview.html\"\
+    \ rel=\"nofollow\">complete documentation</a>.</p>\n<h2>\n<a id=\"user-content-citation\"\
+    \ class=\"anchor\" href=\"#citation\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Citation</h2>\n<p>Tourancheau,\
+    \ A., Mead, E.A., Zhang, XS. &amp; Fang, G. Discovering multiple types of DNA\
+    \ methylation from bacteria and microbiome using nanopore sequencing. <em>Nat\
+    \ Methods</em> (2021). doi:<a href=\"https://doi.org/10.1038/s41592-021-01109-3\"\
+    \ rel=\"nofollow\">10.1038/s41592-021-01109-3</a></p>\n"
+  stargazers_count: 28
+  subscribers_count: 7
+  topics: []
+  updated_at: 1626321091.0
 faustus123/hdsingularity:
   data_format: 2
   description: Repository used to build Singularity containers of HD software
@@ -27732,7 +28051,7 @@ hpcng/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 2134
+  stargazers_count: 2135
   subscribers_count: 93
   topics:
   - containers
@@ -27749,7 +28068,7 @@ hpcng/singularity:
   - portability
   - rootless-containers
   - cloud-native
-  updated_at: 1625804409.0
+  updated_at: 1626271091.0
 humanconnectome/hcp-pipelines-singularity:
   data_format: 2
   description: The definition files for creating singularity containers that can run
@@ -28642,6 +28961,67 @@ icaoberg/singularity-methylpy:
   subscribers_count: 1
   topics: []
   updated_at: 1622730662.0
+icaoberg/singularity-msee:
+  data_format: 2
+  description: msee is a command-line tool to read markdown file.
+  filenames:
+  - 0.3.5/Singularity
+  full_name: icaoberg/singularity-msee
+  latest_release: v0.3.5
+  readme: "<p><a href=\"https://github.com/icaoberg/singularity-msee/actions/workflows/main.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/icaoberg/singularity-msee/actions/workflows/main.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/8f15c74b6b0c9b138f9da5b4933fe28294369dc8e7eb93b731dc2ce072de357e/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f6963616f626572672f73696e67756c61726974792d6d736565\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/8f15c74b6b0c9b138f9da5b4933fe28294369dc8e7eb93b731dc2ce072de357e/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f6963616f626572672f73696e67756c61726974792d6d736565\"\
+    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/icaoberg/singularity-msee\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/dc49ece7c14937e5c2802e8ab4824bc9c4606e21bd4f04eede89efffab599a2d/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f6963616f626572672f73696e67756c61726974792d6d736565\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/dc49ece7c14937e5c2802e8ab4824bc9c4606e21bd4f04eede89efffab599a2d/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f6963616f626572672f73696e67756c61726974792d6d736565\"\
+    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/icaoberg/singularity-msee\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/bc6a9157f824c9765da6596c0beb4a82c4f71d7a27b46cec8e32781fb8c3faad/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f6963616f626572672f73696e67756c61726974792d6d736565\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/bc6a9157f824c9765da6596c0beb4a82c4f71d7a27b46cec8e32781fb8c3faad/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f6963616f626572672f73696e67756c61726974792d6d736565\"\
+    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/icaoberg/singularity-msee\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/5858470ac4cc23a618c46e8f874d611a5c2ba2762846b37cae4b6767e4e8784f/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f6963616f626572672f73696e67756c61726974792d6d736565\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/5858470ac4cc23a618c46e8f874d611a5c2ba2762846b37cae4b6767e4e8784f/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f6963616f626572672f73696e67756c61726974792d6d736565\"\
+    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/icaoberg/singularity-msee\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-singularity-msee\"\
+    \ class=\"anchor\" href=\"#singularity-msee\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>singularity-msee</h1>\n<p><a\
+    \ href=\"https://cloud.githubusercontent.com/assets/157338/10902801/531ba216-823d-11e5-87ac-986b8d5ea4cc.png\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://cloud.githubusercontent.com/assets/157338/10902801/531ba216-823d-11e5-87ac-986b8d5ea4cc.png\"\
+    \ alt=\"Example\" style=\"max-width:100%;\"></a>\nSingularity recipe for <a href=\"\
+    https://www.npmjs.com/package/msee\" rel=\"nofollow\">msee</a>.</p>\n<h2>\n<a\
+    \ id=\"user-content-installing-the-container-on-bridges-2\" class=\"anchor\" href=\"\
+    #installing-the-container-on-bridges-2\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Installing the container on Bridges\
+    \ 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code> file</li>\n<li>and the\
+    \ <code>msee</code> scripts</li>\n</ul>\n<p>to <code>/opt/packages/msee/0.3.5</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/msee</code>\
+    \ as <code>0.3.5.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
+    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/msees/\"\
+    \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
+    \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 1
+  topics:
+  - singularity
+  - utilties
+  updated_at: 1626319169.0
 icaoberg/singularity-shellcheck:
   data_format: 2
   description: Singularity recipe for shellcheck
@@ -29905,14 +30285,14 @@ jintonic/gears:
     </ul>
 
     '
-  stargazers_count: 25
+  stargazers_count: 26
   subscribers_count: 11
   topics:
   - geant4
   - detector
   - physics
   - monte-carlo-simulation
-  updated_at: 1625975403.0
+  updated_at: 1626272086.0
 jkulhanek/a2cat-vn-pytorch:
   data_format: 2
   description: Target driven visual navigation using deep reinforcement learning implemented
@@ -32207,7 +32587,7 @@ matt-sd-watson/nextflow_for_bioinformatics:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1626196442.0
+  updated_at: 1626277295.0
 maxpkatz/singularity_image_files:
   data_format: 2
   description: null
@@ -36127,7 +36507,7 @@ perminaa/SingularityHPC:
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1625231985.0
+  updated_at: 1626275610.0
 peterk87/nf-villumina:
   data_format: 2
   description: Generic viral Illumina sequence analysis pipeline
@@ -39337,6 +39717,64 @@ pscedu/singularity-bedtools:
   - singularity-container
   - bedtools
   updated_at: 1625243546.0
+pscedu/singularity-bismark:
+  data_format: 2
+  description: null
+  filenames:
+  - 0.22.3/Singularity
+  full_name: pscedu/singularity-bismark
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-lazygit" class="anchor" href="#lazygit" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>lazygit</h1>
+
+    <h2>
+
+    <a id="user-content-building-the-image-using-the-recipe" class="anchor" href="#building-the-image-using-the-recipe"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building
+    the image using the recipe</h2>
+
+    <h3>
+
+    <a id="user-content-to-build-the-image-locally" class="anchor" href="#to-build-the-image-locally"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>To
+    build the image locally</h3>
+
+    <p>Run the script <code>build.sh</code> to build image locally.</p>
+
+    <pre><code>bash ./build.sh
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-example" class="anchor" href="#example" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Example</h2>
+
+    <pre><code>singularity exec singularity-lazygit-0.22.9.sif lazygit
+
+    </code></pre>
+
+    <p><a href="/images/screenshot.png" target="_blank" rel="noopener noreferrer"><img
+    src="/images/screenshot.png" alt="Screenshot" style="max-width:100%;"></a></p>
+
+    <hr>
+
+    <p><a href="http://www.psc.edu" rel="nofollow"><img src="https://camo.githubusercontent.com/ee7cb50ef5a31fe25a8e149b0a09b50a8523d5e11a27311af8e63f22a8c915b2/687474703a2f2f7777772e616e647265772e636d752e6564752f757365722f6963616f626572672f696d616765732f6c6f676f732f7073632e706e67"
+    alt="PSC" data-canonical-src="http://www.andrew.cmu.edu/user/icaoberg/images/logos/psc.png"
+    style="max-width:100%;"></a></p>
+
+    <p><a href="http://www.andrew.cmu.edu/~icaoberg" rel="nofollow">icaoberg</a> at
+    the <a href="http://www.psc.edu" rel="nofollow">Pittsburgh Supercomputing Center</a>
+    in the <a href="https://www.cmu.edu/mcs/" rel="nofollow">Mellon College of Science</a>
+    at <a href="http://www.cmu.edu" rel="nofollow">Carnegie Mellon University</a>.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 3
+  topics: []
+  updated_at: 1626306604.0
 pscedu/singularity-blast:
   data_format: 2
   description: BLAST finds regions of similarity between biological sequences.
@@ -39367,7 +39805,7 @@ pscedu/singularity-blast:
     \ class=\"anchor\" href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installing\
     \ the container on Bridges 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code>\
-    \ file</li>\n<li>and the Perl scripts</li>\n</ul>\n<p>to <code>/opt/packages/blast/2.11.0</code>.</p>\n\
+    \ file</li>\n<li>and the other scripts</li>\n</ul>\n<p>to <code>/opt/packages/blast/2.11.0</code>.</p>\n\
     <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/blast</code>\
     \ as <code>2.11.0.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
     \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
@@ -39395,7 +39833,7 @@ pscedu/singularity-blast:
   topics:
   - bioinformatics
   - singularity
-  updated_at: 1625845434.0
+  updated_at: 1626286759.0
 pscedu/singularity-bowtie2:
   data_format: 2
   description: bowtie2 is an ultrafast and memory-efficient tool for aligning sequencing
@@ -39567,6 +40005,64 @@ pscedu/singularity-bwa:
   - bioinformatics
   - singularity
   updated_at: 1625845512.0
+pscedu/singularity-cutadapt:
+  data_format: 2
+  description: null
+  filenames:
+  - 2.10/Singularity
+  full_name: pscedu/singularity-cutadapt
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-lazygit" class="anchor" href="#lazygit" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>lazygit</h1>
+
+    <h2>
+
+    <a id="user-content-building-the-image-using-the-recipe" class="anchor" href="#building-the-image-using-the-recipe"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building
+    the image using the recipe</h2>
+
+    <h3>
+
+    <a id="user-content-to-build-the-image-locally" class="anchor" href="#to-build-the-image-locally"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>To
+    build the image locally</h3>
+
+    <p>Run the script <code>build.sh</code> to build image locally.</p>
+
+    <pre><code>bash ./build.sh
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-example" class="anchor" href="#example" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Example</h2>
+
+    <pre><code>singularity exec singularity-lazygit-0.22.9.sif lazygit
+
+    </code></pre>
+
+    <p><a href="/images/screenshot.png" target="_blank" rel="noopener noreferrer"><img
+    src="/images/screenshot.png" alt="Screenshot" style="max-width:100%;"></a></p>
+
+    <hr>
+
+    <p><a href="http://www.psc.edu" rel="nofollow"><img src="https://camo.githubusercontent.com/ee7cb50ef5a31fe25a8e149b0a09b50a8523d5e11a27311af8e63f22a8c915b2/687474703a2f2f7777772e616e647265772e636d752e6564752f757365722f6963616f626572672f696d616765732f6c6f676f732f7073632e706e67"
+    alt="PSC" data-canonical-src="http://www.andrew.cmu.edu/user/icaoberg/images/logos/psc.png"
+    style="max-width:100%;"></a></p>
+
+    <p><a href="http://www.andrew.cmu.edu/~icaoberg" rel="nofollow">icaoberg</a> at
+    the <a href="http://www.psc.edu" rel="nofollow">Pittsburgh Supercomputing Center</a>
+    in the <a href="https://www.cmu.edu/mcs/" rel="nofollow">Mellon College of Science</a>
+    at <a href="http://www.cmu.edu" rel="nofollow">Carnegie Mellon University</a>.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 3
+  topics: []
+  updated_at: 1626306533.0
 pscedu/singularity-dust:
   data_format: 2
   description: du + rust = dust. Like du but more intuitive.
@@ -40218,6 +40714,68 @@ pscedu/singularity-imagemagick:
   - utilities
   - image-processing
   updated_at: 1625845969.0
+pscedu/singularity-lazygit:
+  data_format: 2
+  description: Simple terminal UI for git commands
+  filenames:
+  - 0.24.2/Singularity
+  - 0.22.9/Singularity
+  - 0.23.7/Singularity
+  full_name: pscedu/singularity-lazygit
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-lazygit" class="anchor" href="#lazygit" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>lazygit</h1>
+
+    <h2>
+
+    <a id="user-content-building-the-image-using-the-recipe" class="anchor" href="#building-the-image-using-the-recipe"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building
+    the image using the recipe</h2>
+
+    <h3>
+
+    <a id="user-content-to-build-the-image-locally" class="anchor" href="#to-build-the-image-locally"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>To
+    build the image locally</h3>
+
+    <p>Run the script <code>build.sh</code> to build image locally.</p>
+
+    <pre><code>bash ./build.sh
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-example" class="anchor" href="#example" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Example</h2>
+
+    <pre><code>singularity exec singularity-lazygit-0.22.9.sif lazygit
+
+    </code></pre>
+
+    <p><a href="/images/screenshot.png" target="_blank" rel="noopener noreferrer"><img
+    src="/images/screenshot.png" alt="Screenshot" style="max-width:100%;"></a></p>
+
+    <hr>
+
+    <p><a href="http://www.psc.edu" rel="nofollow"><img src="https://camo.githubusercontent.com/ee7cb50ef5a31fe25a8e149b0a09b50a8523d5e11a27311af8e63f22a8c915b2/687474703a2f2f7777772e616e647265772e636d752e6564752f757365722f6963616f626572672f696d616765732f6c6f676f732f7073632e706e67"
+    alt="PSC" data-canonical-src="http://www.andrew.cmu.edu/user/icaoberg/images/logos/psc.png"
+    style="max-width:100%;"></a></p>
+
+    <p><a href="http://www.andrew.cmu.edu/~icaoberg" rel="nofollow">icaoberg</a> at
+    the <a href="http://www.psc.edu" rel="nofollow">Pittsburgh Supercomputing Center</a>
+    in the <a href="https://www.cmu.edu/mcs/" rel="nofollow">Mellon College of Science</a>
+    at <a href="http://www.cmu.edu" rel="nofollow">Carnegie Mellon University</a>.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 3
+  topics:
+  - singularity
+  - utilities
+  updated_at: 1626307362.0
 pscedu/singularity-mc:
   data_format: 2
   description: GNU Midnight Commander is a visual file manager, licensed under GNU
@@ -40386,7 +40944,7 @@ pscedu/singularity-ncdu:
   topics:
   - singularity
   - ncdu
-  updated_at: 1625242725.0
+  updated_at: 1626307019.0
 pscedu/singularity-octave:
   data_format: 2
   description: GNU Octave is software featuring a high-level programming language,
@@ -40602,6 +41160,64 @@ pscedu/singularity-picard:
   - bioinformatics
   - singularity
   updated_at: 1625845531.0
+pscedu/singularity-prodigal:
+  data_format: 2
+  description: null
+  filenames:
+  - 2.6.3/Singularity
+  full_name: pscedu/singularity-prodigal
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-lazygit" class="anchor" href="#lazygit" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>lazygit</h1>
+
+    <h2>
+
+    <a id="user-content-building-the-image-using-the-recipe" class="anchor" href="#building-the-image-using-the-recipe"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building
+    the image using the recipe</h2>
+
+    <h3>
+
+    <a id="user-content-to-build-the-image-locally" class="anchor" href="#to-build-the-image-locally"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>To
+    build the image locally</h3>
+
+    <p>Run the script <code>build.sh</code> to build image locally.</p>
+
+    <pre><code>bash ./build.sh
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-example" class="anchor" href="#example" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Example</h2>
+
+    <pre><code>singularity exec singularity-lazygit-0.22.9.sif lazygit
+
+    </code></pre>
+
+    <p><a href="/images/screenshot.png" target="_blank" rel="noopener noreferrer"><img
+    src="/images/screenshot.png" alt="Screenshot" style="max-width:100%;"></a></p>
+
+    <hr>
+
+    <p><a href="http://www.psc.edu" rel="nofollow"><img src="https://camo.githubusercontent.com/ee7cb50ef5a31fe25a8e149b0a09b50a8523d5e11a27311af8e63f22a8c915b2/687474703a2f2f7777772e616e647265772e636d752e6564752f757365722f6963616f626572672f696d616765732f6c6f676f732f7073632e706e67"
+    alt="PSC" data-canonical-src="http://www.andrew.cmu.edu/user/icaoberg/images/logos/psc.png"
+    style="max-width:100%;"></a></p>
+
+    <p><a href="http://www.andrew.cmu.edu/~icaoberg" rel="nofollow">icaoberg</a> at
+    the <a href="http://www.psc.edu" rel="nofollow">Pittsburgh Supercomputing Center</a>
+    in the <a href="https://www.cmu.edu/mcs/" rel="nofollow">Mellon College of Science</a>
+    at <a href="http://www.cmu.edu" rel="nofollow">Carnegie Mellon University</a>.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 3
+  topics: []
+  updated_at: 1626297173.0
 pscedu/singularity-prokka:
   data_format: 2
   description: 'Prokka: rapid prokaryotic genome annotation.'
@@ -41250,6 +41866,64 @@ pscedu/singularity-spades:
   subscribers_count: 3
   topics: []
   updated_at: 1625771764.0
+pscedu/singularity-star:
+  data_format: 2
+  description: null
+  filenames:
+  - 2.7.6a/Singularity
+  full_name: pscedu/singularity-star
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-lazygit" class="anchor" href="#lazygit" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>lazygit</h1>
+
+    <h2>
+
+    <a id="user-content-building-the-image-using-the-recipe" class="anchor" href="#building-the-image-using-the-recipe"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building
+    the image using the recipe</h2>
+
+    <h3>
+
+    <a id="user-content-to-build-the-image-locally" class="anchor" href="#to-build-the-image-locally"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>To
+    build the image locally</h3>
+
+    <p>Run the script <code>build.sh</code> to build image locally.</p>
+
+    <pre><code>bash ./build.sh
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-example" class="anchor" href="#example" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Example</h2>
+
+    <pre><code>singularity exec singularity-lazygit-0.22.9.sif lazygit
+
+    </code></pre>
+
+    <p><a href="/images/screenshot.png" target="_blank" rel="noopener noreferrer"><img
+    src="/images/screenshot.png" alt="Screenshot" style="max-width:100%;"></a></p>
+
+    <hr>
+
+    <p><a href="http://www.psc.edu" rel="nofollow"><img src="https://camo.githubusercontent.com/ee7cb50ef5a31fe25a8e149b0a09b50a8523d5e11a27311af8e63f22a8c915b2/687474703a2f2f7777772e616e647265772e636d752e6564752f757365722f6963616f626572672f696d616765732f6c6f676f732f7073632e706e67"
+    alt="PSC" data-canonical-src="http://www.andrew.cmu.edu/user/icaoberg/images/logos/psc.png"
+    style="max-width:100%;"></a></p>
+
+    <p><a href="http://www.andrew.cmu.edu/~icaoberg" rel="nofollow">icaoberg</a> at
+    the <a href="http://www.psc.edu" rel="nofollow">Pittsburgh Supercomputing Center</a>
+    in the <a href="https://www.cmu.edu/mcs/" rel="nofollow">Mellon College of Science</a>
+    at <a href="http://www.cmu.edu" rel="nofollow">Carnegie Mellon University</a>.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 3
+  topics: []
+  updated_at: 1626306899.0
 pscedu/singularity-tiger:
   data_format: 2
   description: Target/Integrative Genetic Element Retriever
@@ -45654,7 +46328,7 @@ sylabs/singularity:
   - containers
   - hpc
   - linux
-  updated_at: 1626190638.0
+  updated_at: 1626298636.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
@@ -47278,7 +47952,7 @@ vivekkatial/HAQC:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1625479792.0
+  updated_at: 1626263238.0
 vivekkatial/qaoa-three-sat:
   data_format: 2
   description: An implementation for solving 3SAT (Exact Cover) using the Quantum

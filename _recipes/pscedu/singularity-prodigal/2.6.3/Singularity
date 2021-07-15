@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: quay.io/biocontainers/prodigal:2.6.3--h516909a_2
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE http://www.andrew.cmu.edu/~icaoberg
+    VERSION 2.6.3
+
+%post
+   rm /etc/resolv.conf
+
+####################################################################################

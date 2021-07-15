@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: alpine:edge
+
+%labels
+    AUTHOR icaoberg
+    MAINTAINER icaoberg@psc.edu
+    WEBSITE https://gitlab.psc.edu/icaoberg/singularity-lazygit
+    VERSION 0.22.9
+
+%post
+    apk update
+    apk add lazygit=0.22.9 git
+
+####################################################################################
+%apphelp lazygit
+    lazygit --help
+
+%apprun lazygit
+    lazygit "$@"
