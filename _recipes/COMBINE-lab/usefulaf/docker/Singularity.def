@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: condaforge/mambaforge:4.10.3-1
+Stage: spython-base
+
+%labels
+MAINTAINER salmon.maintainer@gmail.com
+%post
+# image: COMBINE-lab/dockeraf
+
+mamba install -c anaconda git
+mamba install -c bioconda salmon alevin-fry gffread
+mamba install -c conda-forge cxx-compiler
+mamba install -c conda-forge r-base r-essentials
+mamba install -c bioconda bioconductor-eisar bioconductor-biostrings bioconductor-bsgenome bioconductor-genomicfeatures bioconductor-singlecellexperiment
+mamba install -c conda-forge r-stringr r-argparser r-rjson r-matrix
+mamba install -c conda-forge time
+
+git clone https://github.com/COMBINE-lab/usefulaf.git
+%environment
+  export ALEVIN_FRY_HOME="/workdir/.afhome"
+  export TIME_BIN="/opt/conda/bin/time"
+%runscript
+  exec /bin/bash "$@"
+%startscript
+  exec /bin/bash "$@"

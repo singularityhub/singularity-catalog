@@ -60,17 +60,17 @@ From: ubuntu:18.04
   # This does not make the executable available during runtime.
   . $CONDA_INIT_SCRIPT && conda update -n base conda
 
-  # Create `hera1` enviroment and install dependencies for HEREA packages.
+  # Create `casa6_modular` enviroment and install dependencies for HEREA packages.
   # All dependencies are available in conda although the conda ephem
   # package seems to be too old for hera_cal.
-  conda create -n casa6 -c conda-forge python=3.6 ipython ipykernel numpy scipy \
+  conda create -n casa6_modular -c conda-forge python=3.6 ipython ipykernel numpy scipy \
     scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
     aipy healpy pyuvdata h5py pyyaml click python-casacore cartopy \
     xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl aplpy \
-    psutil line_profiler spiceypy
+    psutil line_profiler spiceypy pytest
 
   # Activate the Python environment
-  conda activate casa6
+  conda activate casa6_modular
 
   # Install pyuvsim and dependencies
   pip install lunarsky
@@ -79,6 +79,9 @@ From: ubuntu:18.04
 
   # Install pygdsm
   pip install git+https://github.com/telegraphic/pygdsm
+
+  # Install SSINS
+  pip install git+https://github.com/mwilensky768/SSINS.git
 
   # Install HERA packages.
   # linsolve is used in most hera software and should be installed first

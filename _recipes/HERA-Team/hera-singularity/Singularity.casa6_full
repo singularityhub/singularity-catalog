@@ -1,7 +1,11 @@
 # =============================================================================
 # Definition file for a singularity container for HERA
-# This container is inteded for general purpose work on the HERA software stack.
-# It contain most scientific Python packages and HERA software.
+# This container is a modern attempt to build a software stack to run
+# the HERA casa_imaging pipeline. The existing IDR2 pipeline was based on
+# Python 2, which has been depreciated, and all HERA software packages have
+# since been moved to be Python3-only compatible. This container is largely
+# similar to the `hera1` container, with an addition of a full installation
+# of CASA-6, which is also based on Python 3.
 # =============================================================================
 Bootstrap: library
 From: ubuntu:20.04
@@ -12,13 +16,16 @@ From: ubuntu:20.04
 # Define environment variables that will be set at runtime.
 # -----------------------------------------------------------------------------
 %environment
+  export CASA_VERSION="casa-6.1.2-7-pipeline-2020.1.0.40"
+  export CASA_INSTALL_PATH="/usr/local/$CASA_VERSION"
   export CONDA_INSTALL_PATH="/usr/local/miniconda3"
   export CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
+  export PATH=$PATH:"$CONDA_INSTALL_PATH/condabin:/usr/local/$CASA_VERSION/bin"
 
 
 # -----------------------------------------------------------------------------
 # - Built commands -
-# Commands to be executed at build time after the base OS has been installed.
+# Commands to be executed at build time in the base OS.
 # These commands are executed as root in /root inside the container.
 # -----------------------------------------------------------------------------
 %post
@@ -49,15 +56,17 @@ From: ubuntu:20.04
   # This does not make the executable available during runtime.
   . $CONDA_INIT_SCRIPT && conda update -n base conda
 
-  # Create `hera1` enviroment and install dependencies for HEREA packages.
-  conda create -n hera1 -c conda-forge python=3.8 ipython ipykernel numpy scipy \
+  # Create `casa6_full` enviroment and install dependencies for HEREA packages.
+  # All dependencies are available in conda although the conda ephem
+  # package seems to be too old for hera_cal.
+  conda create -n casa6_full -c conda-forge python=3.8 ipython ipykernel numpy scipy \
     scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
     aipy healpy pyuvdata h5py pyyaml click python-casacore cartopy \
-    xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl \
+    xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl aplpy \
     psutil line_profiler spiceypy pytest
 
   # Activate the Python environment
-  conda activate hera1
+  conda activate casa6_full
 
   # Install pyuvsim and dependencies
   pip install lunarsky
@@ -78,13 +87,24 @@ From: ubuntu:20.04
     pip install git+https://github.com/HERA-Team/$pkg
   done
 
+  # Install CASA-6
+  CASA_VERSION="casa-6.1.2-7-pipeline-2020.1.0.40"
+  cd $ROOT_INSTALL_PATH && \
+  wget https://casa.nrao.edu/download/distro/casa-pipeline/release/linux/$CASA_VERSION.tar.xz && \
+  tar -xvf $CASA_VERSION.tar.xz && \
+  rm $CASA_VERSION.tar.xz
+
   echo "== Done building container =="
 
 
 %labels
   Author HERA Team
-
+  Version v0.0.1
 
 %help
-  This container is inteded for general purpose work on the HERA software stack.
-  It contain most scientific Python packages and HERA software.
+  This container is a modern attempt to build a software stack to run
+  the HERA casa_imaging pipeline. The existing IDR2 pipeline was based on
+  Python 2, which has been depreciated, and all HERA software packages have
+  since been moved to be Python3-only compatible. This container is largely
+  similar to the `hera1` container, with an addition of a full installation
+  of CASA6, which is also based on Python 3.

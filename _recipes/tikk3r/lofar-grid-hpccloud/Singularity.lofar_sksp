@@ -19,6 +19,7 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
 	# Path to where the patch for python-casacore's setup is stored.
 	export PYTHON_CASACORE_PATCH=$INSTALLDIR/python-casacore/python_casacore_setup_patch.patch
 	export PATCH_LOFAR=$INSTALLDIR/lofar/lofar.patch
+    export PATCH_LOFAR_JOBSERVER=$INSTALLDIR/lofar/patch_lofar_jobserver.patch
 	
 	# Settings relevant to the installed software.
 	export AOFLAGGER_VERSION=v2.15.0
@@ -47,18 +48,23 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
 	export PYTHON_CASACORE_VERSION=v2.2.1
     export RMEXTRACT_VERSION=4c61232
 	export SUPERLU_VERSION=5.2.1
-	export WSCLEAN_VERSION=latest
+	export WSCLEAN_VERSION=v2.10.1
 	export WCSLIB_VERSION=6.4
 	export HDF5_USE_FILE_LOCKING=FALSE
 
     export CC=`which gcc`
 	export CXX=`which g++`
+    export MARCH='x86-64'
+    export MTUNE='generic'
+    export NOAVX512=true
 
-    export CFLAGS="-march=x86-64 -mtune=generic -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
-    export CXXFLAGS="-march=x86-64 -mtune=generic -std=c++11 -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
-    # Use below to optimize for a specific architecture
-    #export CFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
-    #export CXXFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
+    if [ $NOAVX512 ]; then
+        export CFLAGS="-march=${MARCH} -mtune=${MTUNE} -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+        export CXXFLAGS="-march=${MARCH} -mtune=${MTUNE} -std=c++11 -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+    else
+        export CFLAGS="-march=${MARCH} -mtune=${MTUNE}"
+        export CXXFLAGS="-march=${MARCH} -mtune=${MTUNE} -std=c++11"
+    fi
     export CPLUS_INCLUDE_PATH="/usr/include/openmpi-x86_64:/usr/include/c++/9:$CPLUS_INCLUDE_PATH:/usr/include/python2.7:$INSTALLDIR/casacore/include:/usr/include/boost:/usr/include/cfitsio:$INSTALLDIR/EveryBeam/include"
     export CPATH="/usr/include/openmpi-x86_64/:/opt/intel/mkl/include:${INSTALLDIR}/casacore/include:$INSTALLDIR/LOFARBeam/include:$INSTALLDIR/idg/include:$INSTALLDIR/aoflagger/include:$INSTALLDIR/EveryBeam/include:$CPATH"
     export CMAKE_PREFIX_PATH="$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:$INSTALLDIR/lofar:$INSTALLDIR/LOFARBeam:/usr/lib64/openmpi:$INSTALLDIR/EveryBeam"
@@ -220,7 +226,7 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
 	if [ "${LOFAR_VERSION}" = "latest" ]; then cd ${INSTALLDIR}/lofar && svn checkout https://svn.astron.nl/LOFAR/trunk src; fi
 	if [ "${LOFAR_VERSION}" != "latest" ]; then cd ${INSTALLDIR}/lofar && svn checkout https://svn.astron.nl/LOFAR/tags/LOFAR-Release-${LOFAR_VERSION} src; fi
 	cd $INSTALLDIR/lofar && svn update --depth=infinity $INSTALLDIR/lofar/src/CMake
-	wget https://raw.githubusercontent.com/tikk3r/lofar-grid-hpccloud/master/patches/lofar.patch
+	wget https://raw.githubusercontent.com/tikk3r/lofar-grid-hpccloud/fedora/patches/lofar.patch
 	patch $INSTALLDIR/lofar/src/CMake/variants/GNUCXX11.cmake $PATCH_LOFAR
     # makesourcedb and showsourcedb are covered by DPPP already.
     rm ${INSTALLDIR}/lofar/src/CEP/ParmDB/src/makesourcedb.cc
@@ -233,6 +239,9 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
     cmake -DBUILD_PACKAGES="Pipeline ParmDB pyparmdb" -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/lofar/ -DUSE_LOG4CPLUS=OFF -DUSE_OPENMP=True -DBUILD_PYTHON3=OFF ${INSTALLDIR}/lofar/src/
 	$make -s -j $J
 	$make install
+    # Patch jobserver.py
+	wget https://raw.githubusercontent.com/tikk3r/lofar-grid-hpccloud/fedora/patches/patch_lofar_jobserver.patch -O $PATCH_LOFAR_JOBSERVER
+    patch $INSTALLDIR/lofar/lib64/python2.7/site-packages/lofarpipe/support/jobserver.py $PATCH_LOFAR_JOBSERVER
     cd $INSTALLDIR
     rm -rf $INSTALLDIR/lofar/build
     rm -rf $INSTALLDIR/lofar/src
@@ -379,7 +388,7 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
     # Switch to mpicc for a minute
     export CC=`which mpicc`
     export CXX=`which mpic++`
-    cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/wsclean -DPORTABLE=True -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include ..
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/wsclean -DTARGET_CPU=${MARCH} -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include ..
     $make -j ${J}
     $make install
     cd $INSTALLDIR

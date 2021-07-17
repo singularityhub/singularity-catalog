@@ -38,12 +38,12 @@ From: nvidia/cudagl:10.1-devel-ubuntu18.04
 
     # Download and install namd_gpu
     mkdir -p /opt/namd_gpu
-    wget -O /opt/namd_gpu/namd_gpu.tar.gz https://www.ks.uiuc.edu/Research/namd/cvs/download/741376/NAMD_Git-2021-07-02_Linux-x86_64-multicore-CUDA.tar.gz
+    wget -O /opt/namd_gpu/namd_gpu.tar.gz https://www.ks.uiuc.edu/Research/namd/cvs/download/741376/NAMD_Git-2021-07-15_Linux-x86_64-multicore-CUDA.tar.gz
     cd /opt/namd_gpu
     tar xvzf namd_gpu.tar.gz
     rm namd_gpu.tar.gz
-    mv NAMD_Git-2021-07-02_Linux-x86_64-multicore-CUDA/* ./
-    rmdir NAMD_Git-2021-07-02_Linux-x86_64-multicore-CUDA
+    mv NAMD_Git-2021-07-15_Linux-x86_64-multicore-CUDA/* ./
+    rmdir NAMD_Git-2021-07-15_Linux-x86_64-multicore-CUDA
     mv namd2 namd2_gpu
 
     # Download and install vmd
@@ -117,6 +117,8 @@ From: nvidia/cudagl:10.1-devel-ubuntu18.04
     rm java.tar.gz
     mv jre1.8.0_291/* ./
     rmdir jre1.8.0_291
+    
+    ldconfig
 
     # Remove all the packages we won't need anymore to try and keep the container size down
     apt purge -y xz-utils gcc g++ make git

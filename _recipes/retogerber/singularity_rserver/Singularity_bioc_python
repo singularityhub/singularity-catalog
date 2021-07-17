@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: bioconductor/bioconductor_docker:RELEASE_3_12
+
+%environment
+        # env variable for reticulate
+        export RETICULATE_PYTHON=/usr/bin/python3.9
+
+%post
+        # install python and python packages
+        add-apt-repository ppa:deadsnakes/ppa \
+        && apt update \
+        && apt install -y python3.9-dev python3-pip \
+        && whereis python3.9 \
+        && python3.9 -m pip install scanpy scanorama
+
+        # install R packages
+        R -e 'BiocManager::install(c("pheatmap","scater","reshape2","cowplot","mvoutlier","Matrix","gplots","scran","mclust","readxl","DropletUtils","UpSetR","SingleCellExperiment","igraph","SingleR","scuttle","celldex","ggbeeswarm","tidySingleCellExperiment","bluster","rmarkdown","knitr","ggpubr","CellMixS","batchelor","scDblFinder","GSEABase","AUCell","sctransform","glmGamPoi","here","muscat","limma","svglite","googlesheets4","doRNG","downloadthis","ChristophH/sctransform@develop","slingshot","tradeSeq","wmacnair/SampleQC","ensembldb","celda","reticulate"), ask = FALSE, verbose=FALSE, quiet=TRUE)'
+
+        # check python installation
+        export RETICULATE_PYTHON=/usr/bin/python3.9
+        R -e 'reticulate::py_config()'
+
+        echo "RETICULATE_PYTHON=/usr/bin/python3.9" >> /home/.Renviron
+

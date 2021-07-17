@@ -1,13 +1,13 @@
 bases:
-- count: 685
+- count: 687
   name: ubuntu
 - count: 218
   name: nvidia/cuda
-- count: 165
+- count: 167
   name: debian
 - count: 115
   name: centos
-- count: 70
+- count: 71
   name: alpine
 - count: 65
   name: continuumio/miniconda3
@@ -144,8 +144,6 @@ bases:
 - count: 4
   name: provarepro/mlperf_inference
 - count: 4
-  name: letaylor/sc_qc_cluster
-- count: 4
   name: node
 - count: 4
   name: anair17/railrl_hand_v2
@@ -181,6 +179,8 @@ bases:
   name: rust
 - count: 3
   name: r/r_3.5.1.simg
+- count: 3
+  name: bioconductor/bioconductor_docker
 - count: 3
   name: rocker/geospatial
 - count: 3
@@ -286,8 +286,6 @@ bases:
 - count: 2
   name: sriggi/caesar-base
 - count: 2
-  name: bioconductor/bioconductor_docker
-- count: 2
   name: r-base
 - count: 2
   name: openresty/openresty
@@ -369,6 +367,8 @@ bases:
   name: amazon/aws-cli
 - count: 2
   name: powerPlant/open-mpi-srf
+- count: 2
+  name: condaforge/mambaforge
 - count: 1
   name: stevekm/ngs580-nf
 - count: 1
@@ -397,6 +397,8 @@ bases:
   name: bids/freesurfer
 - count: 1
   name: mustxyk/fsl
+- count: 1
+  name: letaylor/sc_qc_cluster
 - count: 1
   name: rockylinux/rockylinux
 - count: 1
@@ -521,8 +523,6 @@ bases:
   name: mercury/indelible
 - count: 1
   name: nunofonseca/irap_fedora
-- count: 1
-  name: condaforge/mambaforge
 - count: 1
   name: java
 - count: 1
@@ -944,13 +944,13 @@ bases:
 - count: 1
   name: charade/xlibbox@sha256
 bootstraps:
-- count: 2271
+- count: 2273
   name: docker
 - count: 248
   name: debootstrap
 - count: 225
   name: shub
-- count: 152
+- count: 154
   name: library
 - count: 71
   name: yum
@@ -1108,6 +1108,8 @@ orgs:
 - count: 1
   name: mustxyk
 - count: 1
+  name: letaylor
+- count: 1
   name: thomasrobinson
 - count: 1
   name: rockylinux
@@ -1201,8 +1203,6 @@ orgs:
   name: mercury
 - count: 1
   name: nunofonseca
-- count: 1
-  name: condaforge
 - count: 1
   name: underworldcode
 - count: 1
@@ -1416,8 +1416,6 @@ orgs:
 - count: 1
   name: nipy
 - count: 1
-  name: letaylor
-- count: 1
   name: ncbi
 - count: 1
   name: multiphenics
@@ -1485,9 +1483,11 @@ orgs:
   name: powerPlant
 - count: 1
   name: quay.io/vgteam
+- count: 1
+  name: condaforge
 tags:
-  latest: 237
-  other: 2081
+  latest: 234
+  other: 2088
 versions:
   APPIAN-PET/APPIAN:
     ants: 1
@@ -1530,7 +1530,7 @@ versions:
     '3.6': 2
     '3.7': 2
     '3.8': 2
-    edge: 22
+    edge: 23
     latest: 13
   alpine/git:
     1.0.4: 1
@@ -1586,6 +1586,7 @@ versions:
     3.5.3--py_0: 1
   bioconductor/bioconductor_docker:
     RELEASE_3_10: 2
+    RELEASE_3_12: 1
   bioconductor/bioconductor_full:
     RELEASE_3_10: 1
     RELEASE_3_8: 1
@@ -1663,6 +1664,7 @@ versions:
   conda/miniconda3-centos7:
     latest: 1
   condaforge/mambaforge:
+    4.10.3-1: 1
     latest: 1
   continuumio/anaconda:
     5.3.0: 1
@@ -1721,6 +1723,7 @@ versions:
     bullseye: 1
     bullseye-slim: 1
     buster: 55
+    buster-20200908-slim: 2
     buster-slim: 15
     jessie: 7
     jessie-slim: 4
@@ -1921,7 +1924,7 @@ versions:
     10.02.p03: 1
     10.6.p03: 1
   letaylor/sc_qc_cluster:
-    latest: 4
+    latest: 1
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2541,7 +2544,7 @@ versions:
     '18.04': 146
     '19.04': 4
     '19.10': 4
-    '20.04': 112
+    '20.04': 114
     '20.10': 1
     '21.04': 1
     artful: 1
