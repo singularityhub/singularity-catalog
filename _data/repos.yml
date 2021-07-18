@@ -1692,7 +1692,7 @@ Betterton-Lab/C-GLASS:
     <p>This software is licensed under the terms of the BSD-3 Clause license. See\
     \ the <code>LICENSE</code> for more details.</p>\n"
   stargazers_count: 2
-  subscribers_count: 1
+  subscribers_count: 2
   topics: []
   updated_at: 1625759937.0
 BiomedicalMachineLearning/HEMnet:
@@ -14796,191 +14796,14 @@ arcsUVA/cryoCARE:
   - Singularity.0.1.0
   full_name: arcsUVA/cryoCARE
   latest_release: null
-  readme: "<h1>\n<a id=\"user-content-ppo_cpp\" class=\"anchor\" href=\"#ppo_cpp\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>PPO_CPP</h1>\n<h2>\n<a id=\"user-content-what-is-it\" class=\"anchor\"\
-    \ href=\"#what-is-it\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>What is it?</h2>\n<p>PPO_CPP is a C++ version\
-    \ of a Proximal Policy Optimization algorithm @Schulman2017 with some additions.\n\
-    It was partially ported from Stable Baselines @Hill2018 Deep Reinforcement Learning\
-    \ suite,\nwith elements of the OpenAI Gym framework @Brockman2016, in a form of\
-    \ a Tensorflow @Abadi2016 graph executor. It additionally\nfeatures an example\
-    \ environment based on DART simulation engine @Lee2018 with a hexapod robot @Cully2015\
-    \ tasked to walk as far as\npossible along X-axis (<a href=\"https://drive.google.com/open?id=1ds_VrjTDdhqWkh40eF1vscetfUyJUlVm\"\
-    \ rel=\"nofollow\">example recording</a>).</p>\n<h2>\n<a id=\"user-content-why\"\
-    \ class=\"anchor\" href=\"#why\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>Why?</h2>\n<p><strong>Performance</strong>.\
-    \ The interesting thing is that PPO_CPP executes 2~3 times faster than corresponding\
-    \ Python implementation when running on the\nsame example environment with the\
-    \ same number of threads. Originally, however, PPO_CPP was set up for the sake\
-    \ of DRL/Neuroevolution comparison (see citation section below).</p>\n<h2>\n<a\
-    \ id=\"user-content-is-it-optimized\" class=\"anchor\" href=\"#is-it-optimized\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Is it optimized?</h2>\n<p>Not at all. Particularly in the multithreaded\
-    \ case, there might be some easy wins to further boost performance, e.g. by going\
-    \ away from\nported ideas and leveraging thread safety of Tensorflow's Session.Run()\
-    \ or promoting immutability by copying network weights.</p>\n<h2>\n<a id=\"user-content-how-was-it-tested-so-far\"\
-    \ class=\"anchor\" href=\"#how-was-it-tested-so-far\" aria-hidden=\"true\"><span\
-    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>How was it tested\
-    \ so far?</h2>\n<p>Both hexapod environments were run in many instances on a High\
-    \ Performance Computing cluster for a grand total of 100 000 CPU hours yielding\
-    \ believable results.</p>\n<h2>\n<a id=\"user-content-how-can-i-use-it-for-my-work\"\
-    \ class=\"anchor\" href=\"#how-can-i-use-it-for-my-work\" aria-hidden=\"true\"\
-    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>How can\
-    \ I use it for my work?</h2>\n<p>You should be able to easily check the examples\
-    \ below, however if you want to use it in different settings you will probably\
-    \ need 3 things:</p>\n<ul>\n<li>Make your environment inherit from Env abstract\
-    \ class under <code>env\\env.hpp</code>\n</li>\n<li>Modify or replace main <code>ppo2.cpp</code>\
-    \ which creates instance of an environment and passes it to PPO</li>\n<li>Create\
-    \ own computational graph and potentially make some small modifications to the\
-    \ core algorithm if using more involved\npolicies (currently implementation supports\
-    \ only MLP policies). Graph generation is mentioned below.</li>\n</ul>\n<h2>\n\
-    <a id=\"user-content-state-of-the-project\" class=\"anchor\" href=\"#state-of-the-project\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>State of the project</h2>\n<p>This a proof-of-concept that could benefit\
-    \ from a number of improvements. Let me know if this project is useful for you!</p>\n\
-    <h2>\n<a id=\"user-content-recommended-dev-setup-and-dependencies\" class=\"anchor\"\
-    \ href=\"#recommended-dev-setup-and-dependencies\" aria-hidden=\"true\"><span\
-    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Recommended dev\
-    \ setup and dependencies</h2>\n<p>Except for <code>ppo2.cpp</code> and potentially\
-    \ the hexapod environments, core PPO code should be easily portable.\nTwo main\
-    \ dependencies are Eigen @Guennebaud2010 and Tensorflow @Abadi2016. If the hexapod\
-    \ environment considered then also DART @Lee2018.\nContainers additionally use\
-    \ Sferes2 @Mouret2010 framework and Python WAF build system @Nagy2010 which\n\
-    are the outcome of the history of the project and could be ditched. A most solid\
-    \ way to examine container dependencies\nis to read the project's <code>singularity/singularity.def</code>\
-    \ file and its parent.\nTo run the examples a Linux system supporting Singularity\
-    \ container system is needed, preferably:</p>\n<ul>\n<li>\n<p>Ubuntu 18.04 LTS\
-    \ operating system,</p>\n</li>\n<li>\n<p><a href=\"https://sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps\"\
-    \ rel=\"nofollow\">Singularity</a> @Kurtzer2016 containerization environment,</p>\n\
-    </li>\n</ul>\n<h1>\n<a id=\"user-content-examples\" class=\"anchor\" href=\"#examples\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Examples</h1>\n<h2>\n<a id=\"user-content-training-gaits\" class=\"\
-    anchor\" href=\"#training-gaits\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>Training gaits</h2>\n<p>To start the\
-    \ PPO training you need to <a href=\"https://sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps\"\
-    \ rel=\"nofollow\">install\nSingularity</a>\n@Kurtzer2016 version 3.5 or later\
-    \ (at the moment available only for\nLinux systems). For your convenience, a well-performing\
-    \ PPO setup was\ncommitted in the PPO repository. Paying attention to the very\
-    \ long\nargument list to the SIMG file, type in bash:</p>\n<pre><code>git clone\
-    \ git@github.com:Antymon/ppo_cpp.git\n\ncd ppo_cpp/singularity\n\n./build_final_image.sh\n\
-    \n# very long argument list\n./final*.simg \n    0 \n    ppo_cpp_[4_5]_lr_0.0004_cr_0.1610_ent_0.0007\n\
-    ../resources/ppo_cl/graphs/ppo_cpp_\\[4_5\\]_lr_0.0004_cr_0.1610_ent_0.0007.meta.txt\
-    \ \n    --steps 75000000 \n    --num_saves 75 \n    --lr 0.000393141171574037\
-    \ \n    --ent 0.0007160293279937344 \n    --cr 0.16102319952328978 \n    --num_epochs\
-    \ 10 \n    --batch_steps 65536 \n    --cl\n</code></pre>\n<p>This will trigger\
-    \ a single training run of a closed-loop PPO for 75M\nframes. On a modern CPU,\
-    \ this will take around 1 day of computation,\n10GB memory (leak in the example\
-    \ environment),\nand less than 2 logical cores. You can check the PNG image\n\
-    with an example learning curve available in the repository as\n<code>./resources/ppo_cl/*.png</code>\
-    \ to see what to expect over time. The results\nwith the log file will be available\
-    \ under <code>./results</code> in the same\ndirectory as the SIMG file. To display\
-    \ help of the main executable through the SIMG file:</p>\n<pre><code>    singularity\
-    \ run --app help *.simg\n</code></pre>\n<p>Inside of <code>./results</code> directory\
-    \ there will be <code>./tensorboard</code> directory\ncreated with episode rewards\
-    \ logs. Tensorboard utility that is installed\nwith Python Tensorflow @Abadi2016\
-    \ can spawn a web server,\nwhich is able to visualize those logs at runtime by\
-    \ simply pointing to\nthe mentioned directory:</p>\n<pre><code>    tensorboard\
-    \ --logdir tensorboard --port 6080\n</code></pre>\n<p>Upon starting the server,\
-    \ weblink will be displayed in the output to\nrender the visualization in a browser.<br>\n\
-    <br>\nYou can of course change passed parameters, however, if you wish to\nchange\
-    \ the graph structure you will need to regenerate the graph file (MLP):</p>\n\
-    <pre><code>git clone https://gitlab.doc.ic.ac.uk/sb5817/stable-baselines.git\n\
-    \ncd stable-baselines/\n\npython3 ./stable_baselines/ppo2/graph_generator.py \n\
-    \    [4,5] \n    --observation_space_size 18 \n    --save_path graphs/ppo_cpp_[4_5]_lr_0.0004_cr_0.1610_ent_0.0007.meta.txt\
-    \ \n    --learning_rate 0.000393141171574037\n    --ent_coef 0.0007160293279937344\n\
-    \    --cliprange 0.16102319952328978\n</code></pre>\n<p>This will generate a closed-loop\
-    \ graph similar to the one used in the\ntraining initiated above. The generator\
-    \ will write the file with respect to\nyour Stable Baselines @Hill2018 repository.\
-    \ You need to point to\nthis file when calling into the PPO SIMG file. In order\
-    \ to see what\nparameters are accepted, from <em>within</em> the repository call:</p>\n\
-    <pre><code>    python3 ./stable_baselines/ppo2/graph_generator.py --help\n</code></pre>\n\
-    <p>If you require policy other than MLP, modifications to both graph_generator\
-    \ and\ncore PPO_CPP may be needed, however as long as the Policy is originally\
-    \ supported\nby Stable Baselines, those changes shouldn't be too challenging.\
-    \ The reason for\nforking Stable Baselines was mainly to name tensors which need\
-    \ to be referred to on the C++ side,\nbut also to introduce a thin graph generator\
-    \ layer over the original implementation extended with\ncomputational graph export/import\
-    \ functionality.</p>\n<h2>\n<a id=\"user-content-visualizing-gaits\" class=\"\
-    anchor\" href=\"#visualizing-gaits\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Visualizing gaits</h2>\n<p>To\
-    \ start the PPO gait visualization you need to <a href=\"https://sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps\"\
-    \ rel=\"nofollow\">install\nSingularity</a>\n@Kurtzer2016 version 3.5 or later\
-    \ (at the moment available only for\nLinux systems). For your convenience, a well-performing\
-    \ PPO setup was\ncommitted in the PPO repository. The following assumes you are\
-    \ <strong>not</strong>\nrunning in the headless mode. Paying attention to the\
-    \ very long argument\nlist to the SIMG file, type in bash:</p>\n<pre><code>git\
-    \ clone git@github.com:Antymon/ppo_cpp.git\n\ncd ppo_cpp/singularity\n\n./start_container.sh\n\
-    \ncd /git/sferes2/\n./exp/ppo_cpp/singularity/resources/setup.sh\n./build/exp/ppo_cpp/ppo_cpp_visual\n\
-    \    --cl \n    -p exp/ppo_cpp/resources/ppo_cl/2019-08-20_21_13_01_2859_0.pkl.71\n\
-    </code></pre>\n<p>This will trigger a window in which hexapod will be visualized\
-    \ in\n5-second sessions, looping forever. Close through the Ctrl+C key\ncombination.\
-    \ If you close the window manually, the simulation will just\nrun headless, just\
-    \ like in the training process. You can use <code>\u2013help</code> to\nsee the\
-    \ full listing of available options. Serialization files are\ncreated during the\
-    \ training process under <code>./checkpoints</code> directory\nnested under <code>./results</code>\
-    \ with a name according to the chosen frame\ninterval (typically 1 save per 1M\
-    \ frames).<br>\n<br>\nIf you are running in a headless mode, you can try running\n\
-    <code>visu_server.sh</code> from any directory within the container (preferably\
-    \ as\na background process using &amp;) to start a VNC @VNC server. This will\
-    \ bind\nto the localhost on port 6080 of the host machine, where visualization\n\
-    will be rendered. As a practitioner\u2019s note, it is advisable to check if\n\
-    VNC started correctly and restart it if it did not. It is also not\nrecommended\
-    \ to do this when not in headless mode due to the deep\nintegration of Singularity\
-    \ @Kurtzer2016 with the host machine that can\nresult in undesirable side effects.</p>\n\
-    <h1>\n<a id=\"user-content-related-repositories\" class=\"anchor\" href=\"#related-repositories\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a><a name=\"user-content-repos\"></a>Related repositories</h1>\n<ul>\n\
-    <li>\n<p><a href=\"https://gitlab.doc.ic.ac.uk/sb5817/docker-dart-gym\" rel=\"\
-    nofollow\">docker-pydart2_hexapod_baselines</a> - Docker @Merkel2014 file describing\
-    \ analogous Python setup. In order to try out an example hexapod experiment run\
-    \ <code>python3 run_hexapod.py</code> inside of <code>/git/stable-baselines</code>\
-    \ directory.</p>\n</li>\n<li>\n<p><a href=\"https://gitlab.doc.ic.ac.uk/sb5817/stable-baselines\"\
-    \ rel=\"nofollow\">stable_baselines</a> - Fork of Stable Baselines @Hill2018 (deep\
-    \ RL algorithm\nsuite). Includes modified PPO2 algorithm @Schulman2017 and utilities\
-    \ to export\nTensorflow @Abadi2016 meta graph.</p>\n</li>\n<li>\n<p><a href=\"\
-    https://gitlab.doc.ic.ac.uk/sb5817/dart_env\" rel=\"nofollow\">gym-dart_env</a>\
-    \ -\nHexapod setup as a Python-based environment within OpenAI Gym\n@Brockman2016\
-    \ framework.</p>\n</li>\n<li>\n<p><a href=\"https://gitlab.doc.ic.ac.uk/sb5817/pydart2\"\
-    \ rel=\"nofollow\">pydart2</a> - Fork of\nPydart2 @Ha2016: Python layer over C++-based\
-    \ DART @Lee2018\nsimulation framework. Modified to enable experiments with hexapod.</p>\n\
-    </li>\n</ul>\n<h1>\n<a id=\"user-content-citing\" class=\"anchor\" href=\"#citing\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Citing</h1>\n<pre><code>@misc{brych2020competitiveness,\n  title={Competitiveness\
-    \ of MAP-Elites against Proximal Policy Optimization on locomotion tasks in deterministic\
-    \ simulations}, \n  author={Szymon Brych and Antoine Cully},\n  year={2020},\n\
-    \  eprint={2009.08438},\n  archivePrefix={arXiv},\n  primaryClass={cs.AI}\n</code></pre>\n\
-    <h1>\n<a id=\"user-content-references\" class=\"anchor\" href=\"#references\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>References</h1>\n<ol>\n<li>Martin Abadi, Paul Barham, Jianmin Chen,\
-    \ Zhifeng Chen, Andy Davis, JeffreyDean, Matthieu Devin, Sanjay Ghemawat, Geoffrey\
-    \ Irving, Michael Isard, et al. Tensorflow: A system for large-scale machine learning.\
-    \ In12th{USENIX}Sym-posium on Operating Systems Design and Implementation ({OSDI}16),\
-    \ pages265\u2013283, 2016</li>\n<li>Greg  Brockman,  Vicki  Cheung,  Ludwig  Pettersson,\
-    \  Jonas  Schneider,  John Schulman,  Jie  Tang,  and  Wojciech Zaremba.   Openai\
-    \  gym.arXiv  preprintarXiv:1606.01540, 2016</li>\n<li>Antoine Cully, Jeff Clune,\
-    \ Danesh Tarapore, and Jean-Baptiste Mouret. Robots that can adapt like animals.\
-    \ Nature, 521(7553):503, 2015</li>\n<li>Gael Guennebaud, Benoit Jacob, et al.\
-    \  Eigen v3. <a href=\"http://eigen.tuxfamily.org\" rel=\"nofollow\">http://eigen.tuxfamily.org</a>,\
-    \ 2010</li>\n<li>Sehoon  Ha. Pydart2:   A python binding of  DART. <a href=\"\
-    https://github.com/sehoonha/pydart2\">https://github.com/sehoonha/pydart2</a>,\
-    \ 2016</li>\n<li>Ashley Hill, Antonin Raffin, Maximilian Ernestus, Adam Gleave,\
-    \ Rene Traore, Prafulla Dhariwal, Christopher Hesse, Oleg Klimov, Alex Nichol,\
-    \ Matthias Plap-pert,  Alec Radford,  John Schulman,  Szymon Sidor,  and Yuhuai\
-    \ Wu.   Stablebaselines.<a href=\"https://github.com/hill-a/stable-baselines\"\
-    >https://github.com/hill-a/stable-baselines</a>, 2018</li>\n<li>Gregory M Kurtzer.\
-    \ Singularity 2.1.2 - Linux application and environment containers for science,\
-    \ August 2016</li>\n<li>Jeongseok Lee, Michael Grey, Sehoon Ha, Tobias Kunz, Sumit\
-    \ Jain, Yuting Ye, Siddhartha Srinivasa, Mike Stilman, and C Karen Liu.  Dart:\
-    \  Dynamic animation and robotics toolkit.The Journal of Open Source Software,\
-    \ 3:500, 02 2018</li>\n<li>Dirk Merkel. Docker: Lightweight Linux containers for\
-    \ consistent development and deployment. Linux J., 2014(239), March 2014</li>\n\
-    <li>Jean-Baptiste Mouret and Stephane  Doncieux.   SFERESv2: Evolvin\u2019 in\
-    \ the multi-core world.   InProc.  of  Congress  on  Evolutionary  Computation\
-    \  (CEC), pages 4079\u20134086, 2010</li>\n<li>Thomas Nagy.The WAF Book. 2010</li>\n\
-    <li>John   Schulman,    Filip   Wolski,    Prafulla   Dhariwal,    Alec   Radford,\
-    \    and Oleg  Klimov. Proximal  policy  optimization  algorithms. arXiv  preprint\
-    \ arXiv:1707.06347, 2017</li>\n</ol>\n"
+  readme: '<h1>
+
+    <a id="user-content-singularity-images" class="anchor" href="#singularity-images"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>singularity-images</h1>
+
+    <p>Setups for various images used on the dgx.</p>
+
+    '
   stargazers_count: 0
   subscribers_count: 5
   topics: []
@@ -15404,7 +15227,7 @@ arzwa/wgd:
     \ https://doi.org/10.1093/bioinformatics/bty915\n</code></pre>\n<p>For citation\
     \ of the tools used in wgd, please consult the documentation at\n<a href=\"https://wgd.readthedocs.io/en/latest/index.html#citation\"\
     \ rel=\"nofollow\">https://wgd.readthedocs.io/en/latest/index.html#citation</a>.</p>\n"
-  stargazers_count: 56
+  stargazers_count: 57
   subscribers_count: 4
   topics:
   - wgd
@@ -15413,7 +15236,7 @@ arzwa/wgd:
   - bioinformatics
   - genomics
   - evolution
-  updated_at: 1625051985.0
+  updated_at: 1626469613.0
 asafpr/singularity:
   data_format: 2
   description: Singularity description files
@@ -18691,14 +18514,53 @@ chenhongluo/horovord:
   - Singularity
   full_name: chenhongluo/horovord
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-supernova" class="anchor" href="#supernova" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>supernova</h1>
-
-    <p>Singularity container script for 10x Genomics SuperNova software</p>
-
-    '
+  readme: "<h1>\n<a id=\"user-content-singularity-container-for-molecular-electrostatic-calculations-using-pdb2pqrapbs-and-brownian-dynamics-with-browndye\"\
+    \ class=\"anchor\" href=\"#singularity-container-for-molecular-electrostatic-calculations-using-pdb2pqrapbs-and-brownian-dynamics-with-browndye\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Singularity container for molecular electrostatic calculations using\
+    \ PDB2PQR/APBS and Brownian dynamics with BrownDye.</h1>\n<p>This singularity\
+    \ image contains a complete software environment for running <a href=\"http://browndye.ucsd.edu/\"\
+    \ rel=\"nofollow\">BrownDye (version 1 and 2)</a> simulations. It also includes\
+    \ <a href=\"http://www.poissonboltzmann.org/\" rel=\"nofollow\">PDB2PQR</a> and\
+    \ <a href=\"http://www.poissonboltzmann.org/\" rel=\"nofollow\">APBS</a>.</p>\n\
+    <p>Please <a href=\"http://eepurl.com/by4eQr\" rel=\"nofollow\">register</a> your\
+    \ use of APBS and PDB2PQR.</p>\n<p>The image has been verified to work on XSEDE\
+    \ <a href=\"https://portal.xsede.org/sdsc-comet\" rel=\"nofollow\">comet</a> and\
+    \ <a href=\"https://www.sdsc.edu/support/user_guides/tscc-quick-start.html\" rel=\"\
+    nofollow\">TSCC</a> shared cluster at SDSC. It will automatically bind <code>/cvmfs</code>\
+    \ <code>/oasis</code> <code>/projects</code> <code>/scratch</code> directories,\
+    \ if available on the host.</p>\n<h2>\n<a id=\"user-content-using-the-container\"\
+    \ class=\"anchor\" href=\"#using-the-container\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Using the container</h2>\n<p>Pull\
+    \ the singularity image:</p>\n<pre><code>singularity pull shub://nbcrrolls/electrostatics-singularity\n\
+    </code></pre>\n<p>Start bash shell in the container:</p>\n<pre><code>singularity\
+    \ shell nbcrrolls-electrostatics-singularity-master-latest.simg\n</code></pre>\n\
+    <p>Now the container is running and we can start a BrownDye2 job (using the Thrombin\
+    \ example):</p>\n<pre><code>module load browndye2\ncp -ai $BD2_PATH/examples/thrombin\
+    \ .\ncd thrombin\nsed -i 's/-PE0//g' *\nsed -i 's/&lt;n_trajectories&gt; 10000\
+    \ /&lt;n_trajectories&gt; 1000 /' t_m_simulation.xml.bak\nmake all # takes about\
+    \ min to run\nmodule unload browndye2\n</code></pre>\n<p>And if you want to use\
+    \ BrownDye version 1:</p>\n<pre><code>module load browndye1\ncp -ai $BD1_PATH/thrombin-example\
+    \ .\ncd thrombin-example\nsed -i 's/-PE0//g' *\nsed -i 's/&lt;n-trajectories&gt;\
+    \ 10000 /&lt;n-trajectories&gt; 1000 /' input.xml.bak # limit the number of calculated\
+    \ trajectories\nmake all\nbd_top input.xml\nnam_simulation t-m-simulation.xml\
+    \ # this takes about 3 min to run\ncat results.xml\nmodule unload browndye1\n\
+    </code></pre>\n<p>After we are finished we can quit the container:</p>\n<pre><code>exit\n\
+    </code></pre>\n<p>You can also access individual applications from the electrostatics\
+    \ container.</p>\n<p>To list available applications:</p>\n<pre><code>$ singularity\
+    \ apps nbcrrolls-electrostatics-singularity-master-latest.simg \napbs\npdb2pqr\n\
+    nam_simulation\nwe_simulation\n</code></pre>\n<p>To run, for example, apbs calculation:</p>\n\
+    <pre><code>singularity exec nbcrrolls-electrostatics-singularity-master-latest.simg\
+    \ apbs input.in\n</code></pre>\n<p>or</p>\n<pre><code>singularity run --app apbs\
+    \ nbcrrolls-electrostatics-singularity-master-latest.simg input.in\n</code></pre>\n\
+    <p>This Singularity image is hosted on Singularity Hub: <a href=\"https://singularity-hub.org/collections/2497\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667\"\
+    \ alt=\"https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg\"\
+    \ data-canonical-src=\"https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h6>\n<a id=\"user-content-this-project-is-supported-by-nbcr\"\
+    \ class=\"anchor\" href=\"#this-project-is-supported-by-nbcr\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>This\
+    \ project is supported by <a href=\"http://nbcr.ucsd.edu\" rel=\"nofollow\">NBCR</a>.</h6>\n"
   stargazers_count: 0
   subscribers_count: 0
   topics: []
@@ -26701,7 +26563,7 @@ gpuhackathons-org/gpubootcamp:
 
     '
   stargazers_count: 77
-  subscribers_count: 7
+  subscribers_count: 8
   topics: []
   updated_at: 1626462028.0
 granek/jupyter-MIC-2021:
@@ -30907,10 +30769,10 @@ jkulhanek/deep-rl-pytorch:
     arXiv:1312.6120.</p>
 
     '
-  stargazers_count: 4
+  stargazers_count: 5
   subscribers_count: 1
   topics: []
-  updated_at: 1615406783.0
+  updated_at: 1626571356.0
 jmurga/bgd-pic:
   data_format: 2
   description: null
@@ -31526,10 +31388,45 @@ kavonrtep/SeqGrapheR:
   latest_release: v0.5.0.2.4
   readme: '<h1>
 
-    <a id="user-content-supernova" class="anchor" href="#supernova" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>supernova</h1>
+    <a id="user-content-batch-connect---osc-rstudio-server" class="anchor" href="#batch-connect---osc-rstudio-server"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Batch
+    Connect - OSC RStudio Server</h1>
 
-    <p>Singularity container script for 10x Genomics SuperNova software</p>
+    <p><a href="https://camo.githubusercontent.com/bbf138f428dd98a7b779e572caebe1d8f6c369fb4f9ba270c27f4b29282e5530/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f72656c656173652f6f73632f62635f6f73635f7273747564696f5f7365727665725f7069747a65722e737667"
+    target="_blank" rel="nofollow"><img src="https://camo.githubusercontent.com/bbf138f428dd98a7b779e572caebe1d8f6c369fb4f9ba270c27f4b29282e5530/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f72656c656173652f6f73632f62635f6f73635f7273747564696f5f7365727665725f7069747a65722e737667"
+    alt="GitHub Release" data-canonical-src="https://img.shields.io/github/release/osc/bc_osc_rstudio_server_pitzer.svg"
+    style="max-width:100%;"></a>
+
+    <a href="https://opensource.org/licenses/MIT" rel="nofollow"><img src="https://camo.githubusercontent.com/45b4ffbd594af47fe09a3432f9f8e122c6518aa6352b4ce453a1a2563da2905c/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d4d49542d677265656e2e737667"
+    alt="GitHub License" data-canonical-src="https://img.shields.io/badge/license-MIT-green.svg"
+    style="max-width:100%;"></a></p>
+
+    <p>An interactive app designed for OSC OnDemand that launches an RStudio Server
+
+    within an Pitzer batch job.</p>
+
+    <h2>
+
+    <a id="user-content-deprecated-application-warning" class="anchor" href="#deprecated-application-warning"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Deprecated
+    application warning</h2>
+
+    <p>This application no longer works.  It raises an exception when users attempt
+    to submit jobs.
+
+    This is because we now have functionality to submit to multiple clusters and
+
+    <a href="https://github.com/OSC/bc_osc_rstudio_server">the generic application</a>
+    now submits
+
+    to pitzer rendering this application useless.</p>
+
+    <p>For historic versions, see the last released you can still view
+
+    <a href="https://github.com/OSC/bc_osc_rstudio_server_pitzer/tree/v0.3.0">v0.3.0</a>
+    as it was the last
+
+    working version of this application.</p>
 
     '
   stargazers_count: 2
@@ -33604,7 +33501,7 @@ mbhall88/eipp-2019-singularity:
     \ you could try\nand reduce the size of the containers we have already produced\
     \ by using <a href=\"https://www.alpinelinux.org/\" rel=\"nofollow\">Alpine</a>\
     \ as the\nbase OS.</p>\n"
-  stargazers_count: 2
+  stargazers_count: 3
   subscribers_count: 1
   topics:
   - singularity
@@ -33613,7 +33510,7 @@ mbhall88/eipp-2019-singularity:
   - phd
   - embl-ebi
   - embl
-  updated_at: 1573137725.0
+  updated_at: 1626495910.0
 mbhall88/head_to_head_pipeline:
   data_format: 2
   description: Snakemake pipeline to run analysis for the Illumina vs. Nanopore comparison.
@@ -33945,7 +33842,7 @@ mbhall88/pistis:
     <p>If you would like to contribute to this package you are more than welcome.<br>\n\
     <strong>Please read through the <a href=\"https://github.com/mbhall88/pistis/blob/master/CONTRIBUTING.rst\"\
     >contributing guidelines</a> first</strong>.</p>\n"
-  stargazers_count: 5
+  stargazers_count: 6
   subscribers_count: 2
   topics:
   - nanopore
@@ -33955,7 +33852,7 @@ mbhall88/pistis:
   - plotting
   - quality-control
   - pacbio
-  updated_at: 1614735802.0
+  updated_at: 1626495440.0
 melnel000/Sarek_CBIO:
   data_format: 2
   description: null
@@ -36496,7 +36393,7 @@ openPMD/openPMD-api:
     >openPMD-standard</a> by <a href=\"https://github.com/ax3l\">Axel Huebl (HZDR,\
     \ now LBNL)</a> and <a href=\"https://github.com/openPMD/openPMD-standard/blob/latest/AUTHORS.md\"\
     >contributors</a>\n</li>\n</ul>\n"
-  stargazers_count: 69
+  stargazers_count: 70
   subscribers_count: 9
   topics:
   - openpmd
@@ -36511,7 +36408,7 @@ openPMD/openPMD-api:
   - meta-data
   - opendata
   - cpp14
-  updated_at: 1626285548.0
+  updated_at: 1626465110.0
 openhpc/ohpc:
   data_format: 2
   description: OpenHPC Integration, Packaging, and Test Repo
