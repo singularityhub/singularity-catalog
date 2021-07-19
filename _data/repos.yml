@@ -2577,56 +2577,45 @@ ChunCun/container:
   latest_release: null
   readme: '<h1>
 
-    <a id="user-content-centos8_roar" class="anchor" href="#centos8_roar" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>centos8_roar</h1>
+    <a id="user-content-chamois-singularity" class="anchor" href="#chamois-singularity"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>chamois-singularity</h1>
 
-    <p>Centos 8 base image for Roar</p>
+    <p>A recipe file for a singularity containerized version of <a href="https://github.com/idaholab/moose">Moose</a>
+    and <a href="https://github.com/matthiasneuner/chamois">Chamois</a>.
 
-    <h3>
+    Chamois requires the constitutive model library <a href="">Marmot</a>.
 
-    <a id="user-content-note" class="anchor" href="#note" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>NOTE</h3>
+    The container environment is based either on Centos 8, GCC-9, CMake 3.18, and
+    OpenMPI 4.0.2 or alternatively Debian 11, gcc-10, CMake 3.18, and OpenMPI 4.0.2.
 
-    <ul>
+    Note that libMesh is built only in <code>opt</code> mode.</p>
 
-    <li>This recipe may include unnecessary packages for certain software installation</li>
-
-    <li>More packages will be added in the future</li>
-
-    </ul>
-
-    <h2>
-
-    <a id="user-content-updates" class="anchor" href="#updates" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Updates</h2>
+    <p>Instructions:</p>
 
     <ul>
 
-    <li>
+    <li>Ensure that <code>moose</code>, <code>chamois</code> and <code>Marmot</code>
+    repositories are available</li>
 
-    <p>2020/11/13</p>
-
-    <ul>
-
-    <li>Initial recipe added</li>
-
-    </ul>
+    <li>Build: <code>MOOSE_DIR=/moose/repo/dir MARMOT_DIR=/marmot/repo/dir CHAMOIS_DIR=/chamois/repo/dir
+    sudo singularity build chamois-singularity.simg chamois-singularity-XXX.def</code>
 
     </li>
 
-    <li>
+    <li>Optional: Pass <code>SINGULARITYENV_MAKE_JOBS=XX</code> to set the number
+    <code>XX</code> of make jobs during building</li>
 
-    <p>2021/03/22</p>
+    <li>Optional: Pass <code>SINGULARITYENV_DELETE_GIT=TRUE</code> to delete all Moose,
+    PETSc and libMesh (and submodule) .git repositories in order to reduce container
+    size</li>
 
-    <ul>
+    <li>Execute: <code>singularity exec chamois-singularity.simg /projects/chamois/chamois-opt
+    -i inputfile.i</code>
 
-    <li>Default Python3 is updated to Python 3.8</li>
+    </li>
 
-    <li>Lapack, BLAS, OpenBLAS, ATLAS, and NetCDF are added</li>
-
-    <li>CMake 3.19.7, Boost 1.75.0, and R 4.0.4 are added</li>
-
-    </ul>
+    <li>Execute with MPI: <code>mpiexec -np XX singularity exec chamois-singularity.simg
+    /projects/chamois/chamois-opt -i inputfile.i</code>
 
     </li>
 
@@ -12635,7 +12624,7 @@ UniversalDataTool/universal-data-tool:
     </g-emoji></a>\n</td>\n  </tr>\n</table>\n\n\n\n<p>This project follows the <a\
     \ href=\"https://github.com/all-contributors/all-contributors\">all-contributors</a>\
     \ specification. Contributions of any kind welcome!</p>\n"
-  stargazers_count: 1453
+  stargazers_count: 1454
   subscribers_count: 33
   topics:
   - computer-vision
@@ -12658,7 +12647,7 @@ UniversalDataTool/universal-data-tool:
   - labeling
   - labeling-tool
   - hacktoberfest
-  updated_at: 1626189036.0
+  updated_at: 1626669418.0
 VIB-CBD/scanpy-images:
   data_format: 2
   description: Docker and Singularity images for Scanpy
@@ -17345,7 +17334,7 @@ bbodi/rustarok:
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Thanks</h2>\n\
     <ul>\n<li>\n<a href=\"https://github.com/vthibault/roBrowser/\">roBrowser</a>:\
     \ Its source code was useful for decoding the game asset files</li>\n</ul>\n"
-  stargazers_count: 225
+  stargazers_count: 227
   subscribers_count: 13
   topics:
   - rust
@@ -17356,7 +17345,7 @@ bbodi/rustarok:
   - multiplayer
   - 2d
   - 3d
-  updated_at: 1623498993.0
+  updated_at: 1626620410.0
 biocorecrg/interproscan_docker:
   data_format: 2
   description: Docker recipe for building Interproscan
@@ -19507,48 +19496,7 @@ ctpelok77/fd-red-black-postipc2018:
   - Singularity
   full_name: ctpelok77/fd-red-black-postipc2018
   latest_release: null
-  readme: '<p>Fast Downward is a domain-independent planning system.</p>
-
-    <p>For documentation and contact information see <a href="http://www.fast-downward.org/"
-    rel="nofollow">http://www.fast-downward.org/</a>.</p>
-
-    <p>The following directories are not part of Fast Downward as covered by this
-
-    license:</p>
-
-    <ul>
-
-    <li>./src/search/ext</li>
-
-    </ul>
-
-    <p>For the rest, the following license applies:</p>
-
-    <pre><code>Fast Downward is free software: you can redistribute it and/or modify
-    it under
-
-    the terms of the GNU General Public License as published by the Free Software
-
-    Foundation, either version 3 of the License, or (at your option) any later
-
-    version.
-
-
-    Fast Downward is distributed in the hope that it will be useful, but WITHOUT ANY
-
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-    A
-
-    PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-
-    You should have received a copy of the GNU General Public License along with
-
-    this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
-
-    </code></pre>
-
-    '
+  readme: '{"message":"API rate limit exceeded for installation ID 633759.","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}'
   stargazers_count: 3
   subscribers_count: 1
   topics: []
@@ -26563,7 +26511,7 @@ gpuhackathons-org/gpubootcamp:
 
     '
   stargazers_count: 77
-  subscribers_count: 8
+  subscribers_count: 7
   topics: []
   updated_at: 1626462028.0
 granek/jupyter-MIC-2021:
@@ -26979,10 +26927,10 @@ grst/containerize-conda:
     placeholders back to the actual paths matching the new location.</p>
 
     '
-  stargazers_count: 11
+  stargazers_count: 13
   subscribers_count: 2
   topics: []
-  updated_at: 1624680632.0
+  updated_at: 1626360667.0
 grst/rstudio-server-conda:
   data_format: 2
   description: Run Rstudio Server in a conda environment
@@ -42776,79 +42724,86 @@ radio1988/OneStopRNAseq:
   - snakemake/workflow/envs/Singularity
   full_name: radio1988/OneStopRNAseq
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-singularity-molgfx" class="anchor" href="#singularity-molgfx"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Singularity
-    Molgfx</h1>
-
-    <p><a href="https://singularity-hub.org/collections/4301" rel="nofollow"><img
-    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
-    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    style="max-width:100%;"></a>
-
-    <a href="https://opensource.org/licenses/MIT" rel="nofollow"><img src="https://camo.githubusercontent.com/45b4ffbd594af47fe09a3432f9f8e122c6518aa6352b4ce453a1a2563da2905c/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d4d49542d677265656e2e737667"
-    alt="GitHub License" data-canonical-src="https://img.shields.io/badge/license-MIT-green.svg"
-    style="max-width:100%;"></a></p>
-
-    <p>Singularity image for <a href="https://github.com/OpenChemistry">Open Chemistry</a>,
-    Gabedit and Jmol. It was built on top of the base Docker image <a href="https://hub.docker.com/_/ubuntu"
-    rel="nofollow">ubuntu</a>.</p>
-
-    <h2>
-
-    <a id="user-content-build" class="anchor" href="#build" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Build</h2>
-
-    <p>You can build a local Singularity image named <code>molgfx.sif</code> with:</p>
-
-    <div class="highlight highlight-source-shell"><pre>sudo singularity build molgfx.sif
-    Singularity</pre></div>
-
-    <h2>
-
-    <a id="user-content-deploy" class="anchor" href="#deploy" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Deploy</h2>
-
-    <p>Instead of building it yourself you can download the pre-built image from <a
-    href="https://www.singularity-hub.org" rel="nofollow">Singularity Hub</a> with:</p>
-
-    <div class="highlight highlight-source-shell"><pre>singularity pull molgfx.sif
-    shub://OSC/sa_singularity_molgfx</pre></div>
-
-    <h2>
-
-    <a id="user-content-run" class="anchor" href="#run" aria-hidden="true"><span aria-hidden="true"
-    class="octicon octicon-link"></span></a>Run</h2>
-
-    <h3>
-
-    <a id="user-content-find-versions-of-molecular-graphics-systems" class="anchor"
-    href="#find-versions-of-molecular-graphics-systems" aria-hidden="true"><span aria-hidden="true"
-    class="octicon octicon-link"></span></a>Find versions of molecular graphics systems</h3>
-
-    <div class="highlight highlight-source-shell"><pre>singularity inspect -H molgfx.sif</pre></div>
-
-    <h3>
-
-    <a id="user-content-start-avogadro2" class="anchor" href="#start-avogadro2" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Start Avogadro2</h3>
-
-    <p>Avogadro2 is started using the default exec command:</p>
-
-    <div class="highlight highlight-source-shell"><pre>singularity <span class="pl-c1">exec</span>
-    molgfx.sif avogadro2</pre></div>
-
-    <h2>
-
-    <a id="user-content-license" class="anchor" href="#license" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
-
-    <p>The code is available as open source under the terms of the <a href="http://opensource.org/licenses/MIT"
-    rel="nofollow">MIT License</a>.</p>
-
-    '
+  readme: "<h1>\n<a id=\"user-content-csci5980\" class=\"anchor\" href=\"#csci5980\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>csci5980</h1>\n<p>Final project for CSci 5980: deep learning for automatic\
+    \ music translation.</p>\n<p>Follow theses steps to install all package dependencies\
+    \ for running the model:</p>\n<p>We first install software dependencies for manipulating\
+    \ raw audio (<code>ffmpeg</code>):</p>\n<ol>\n<li>\n<p>Create a local software\
+    \ directory\n<code>mkdir ~/software</code></p>\n</li>\n<li>\n<p>Install the NASM\
+    \ assembler (dependency of ffmpeg):</p>\n</li>\n</ol>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre><span class=\"pl-c1\">cd</span> <span class=\"\
+    pl-k\">~</span>/software\nwget https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/nasm-2.14.02.tar.bz2\n\
+    tar -xvf nasm-2.14.02.tar.bz2\n<span class=\"pl-c1\">cd</span> nasm-2.14.02\n\
+    ./configure --prefix=<span class=\"pl-k\">~</span>/software/nasm/\nmake install\n\
+    <span class=\"pl-k\">export</span> PATH=<span class=\"pl-smi\">$PATH</span>:<span\
+    \ class=\"pl-k\">~</span>/software/nasm/bin/</pre></div>\n<ol start=\"3\">\n<li>Make\
+    \ sure that NASM assembler installed correctly:</li>\n</ol>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre>nasm -v</pre></div>\n<p>The output should look\
+    \ something like:\n<code>NASM version 2.14.02 compiled on Mar 11 2020</code></p>\n\
+    <ol start=\"4\">\n<li>Install ffmpeg:</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre><span class=\"pl-c1\">cd</span> <span class=\"pl-k\">~</span>/software\n\
+    wget https://ffmpeg.org/releases/ffmpeg-4.2.2.tar.bz2\ntar -xvf ffmpeg-4.2.2.tar.bz2\n\
+    <span class=\"pl-c1\">cd</span> ffmpeg-4.2.2\n./configure --prefix=<span class=\"\
+    pl-k\">~</span>/software/ffmpeg/\nmake install\n<span class=\"pl-k\">export</span>\
+    \ PATH=<span class=\"pl-smi\">$PATH</span>:<span class=\"pl-k\">~</span>/software/ffmpeg/bin/</pre></div>\n\
+    <ol start=\"5\">\n<li>Make sure that ffmpeg installed correctly:</li>\n</ol>\n\
+    <div class=\"highlight highlight-source-shell\"><pre>ffmpeg -version</pre></div>\n\
+    <p>The output should look something like:</p>\n<pre><code>ffmpeg version 4.2.2\
+    \ Copyright (c) 2000-2019 the FFmpeg developers\nbuilt with gcc 4.4.7 (GCC) 20120313\
+    \ (Red Hat 4.4.7-23)\nconfiguration: --prefix=/home/csci5980/piehl008/software/ffmpeg/\n\
+    libavutil      56. 31.100 / 56. 31.100\nlibavcodec     58. 54.100 / 58. 54.100\n\
+    libavformat    58. 29.100 / 58. 29.100\nlibavdevice    58.  8.100 / 58.  8.100\n\
+    libavfilter     7. 57.100 /  7. 57.100\nlibswscale      5.  5.100 /  5.  5.100\n\
+    libswresample   3.  5.100 /  3.  5.100\n</code></pre>\n<ol start=\"6\">\n<li>Now,\
+    \ we can make the virtual environment and install python packages.  First, create\
+    \ the virtual environment by running:</li>\n</ol>\n<p><code>conda create --name\
+    \ audio-proj python=3.7</code></p>\n<ol start=\"7\">\n<li>Next, install packages\
+    \ by running</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"><pre><span\
+    \ class=\"pl-c1\">cd</span> <span class=\"pl-k\">~</span>/csci5980\nconda install\
+    \ --name audio-proj --file requirements.txt --channel defaults --channel conda-forge</pre></div>\n\
+    <p>(Note: this can take a while - and you need to say yes to installing everything\
+    \ after it solves the environment)</p>\n<ol start=\"8\">\n<li>To activate the\
+    \ virtual environment, you can now run <code>source activate audio-proj</code>.\
+    \ Note: you should do this to test that you can activate the virtual evironment,\
+    \ but you probably shouldn't run a lot unless you are submitting jobs to the queue.\
+    \  If you want to use this virtual environment through the MSI notebooks, check\
+    \ out the tutorial at <a href=\"https://sunju.org/teach/DL-Spring-2020/TensorFlowPyTorch.html\"\
+    \ rel=\"nofollow\">https://sunju.org/teach/DL-Spring-2020/TensorFlowPyTorch.html</a>.</li>\n\
+    </ol>\n<h3>\n<a id=\"user-content-adding-the-virtual-environment-to-jupyter-notebooks\"\
+    \ class=\"anchor\" href=\"#adding-the-virtual-environment-to-jupyter-notebooks\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Adding the Virtual Environment to Jupyter Notebooks</h3>\n<p>Now that\
+    \ we have created the virtual environment, we can add it to the Jupyter notebook\
+    \ kernels so that we can use the virtual environment through MSI's notebook server.\
+    \ To do this, we have to add the kernel specifications to the known Jupyter kernels\
+    \ for our user:</p>\n<ol start=\"9\">\n<li>If you haven't already, activate your\
+    \ virtual environment by running <code>source activate audio-proj</code>. Then\
+    \ enter</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"><pre>which\
+    \ python</pre></div>\n<p>Your output should tell you where the python executable\
+    \ for this virtual environment lives - the output for me displays <code>~/.conda/envs/audio-proj/bin/python</code>.\
+    \  If you see something that looks like <code>/panfs/roc/msisoft/anaconda/anaconda3-2018.12/bin/python</code>,\
+    \ go back and make sure that you have the virtual environment active and try again.\
+    \ After you have an ouput that clearly has the name of the virtual environment\
+    \ in the directory path (i.e. contains audio-proj in it), continue to the next\
+    \ step.</p>\n<ol start=\"10\">\n<li>Now, we need to create the kernel configuration.\
+    \ To do this run</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>mkdir <span class=\"pl-k\">~</span>/.local/share/jupyter/kernels/audio-proj\n\
+    nano <span class=\"pl-k\">~</span>/.local/share/jupyter/kernels/audio-proj/kernel.json</pre></div>\n\
+    <p>The nano command will open a very basic text editor that you can navigate with\
+    \ the arrow keys. Enter the following:</p>\n<pre lang=\"text\"><code>{\n \"argv\"\
+    : [\n  \"~/.conda/envs/audio-proj/bin/python\", #replace this with your path from\
+    \ step 9 above! (and delete this comment)\n  \"-m\",\n  \"ipykernel_launcher\"\
+    ,\n  \"-f\",\n  \"{connection_file}\"\n ],\n \"display_name\": \"Audio Project\
+    \ Kernel\",\n \"language\": \"python\"\n}\n</code></pre>\n<p>where you replace\
+    \ the first line of the argv array with whatever executable path was output from\
+    \ step 9 above (it likely will be identical to this). To exit the nano text editor,\
+    \ type <code>Ctrl-x &lt;RETURN&gt;</code> and then type <code>Y &lt;RETURN&gt;</code>\
+    \ to save the file.</p>\n<ol start=\"11\">\n<li>Now that you have saved the kernel\
+    \ file, you should be able to go to <code>https://notebooks.msi.umn.edu/</code>\
+    \ and when you click on the <code>New</code> tab to create a new file, you should\
+    \ be able to select <code>Audio Project Kernel</code> as an available kernel to\
+    \ run your newly created file in.</li>\n</ol>\n"
   stargazers_count: 2
   subscribers_count: 1
   topics: []
@@ -47019,13 +46974,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 56
+  stargazers_count: 57
   subscribers_count: 9
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1626449331.0
+  updated_at: 1626643673.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
