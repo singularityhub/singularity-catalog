@@ -2577,45 +2577,56 @@ ChunCun/container:
   latest_release: null
   readme: '<h1>
 
-    <a id="user-content-chamois-singularity" class="anchor" href="#chamois-singularity"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>chamois-singularity</h1>
+    <a id="user-content-centos8_roar" class="anchor" href="#centos8_roar" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>centos8_roar</h1>
 
-    <p>A recipe file for a singularity containerized version of <a href="https://github.com/idaholab/moose">Moose</a>
-    and <a href="https://github.com/matthiasneuner/chamois">Chamois</a>.
+    <p>Centos 8 base image for Roar</p>
 
-    Chamois requires the constitutive model library <a href="">Marmot</a>.
+    <h3>
 
-    The container environment is based either on Centos 8, GCC-9, CMake 3.18, and
-    OpenMPI 4.0.2 or alternatively Debian 11, gcc-10, CMake 3.18, and OpenMPI 4.0.2.
-
-    Note that libMesh is built only in <code>opt</code> mode.</p>
-
-    <p>Instructions:</p>
+    <a id="user-content-note" class="anchor" href="#note" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>NOTE</h3>
 
     <ul>
 
-    <li>Ensure that <code>moose</code>, <code>chamois</code> and <code>Marmot</code>
-    repositories are available</li>
+    <li>This recipe may include unnecessary packages for certain software installation</li>
 
-    <li>Build: <code>MOOSE_DIR=/moose/repo/dir MARMOT_DIR=/marmot/repo/dir CHAMOIS_DIR=/chamois/repo/dir
-    sudo singularity build chamois-singularity.simg chamois-singularity-XXX.def</code>
+    <li>More packages will be added in the future</li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-updates" class="anchor" href="#updates" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Updates</h2>
+
+    <ul>
+
+    <li>
+
+    <p>2020/11/13</p>
+
+    <ul>
+
+    <li>Initial recipe added</li>
+
+    </ul>
 
     </li>
 
-    <li>Optional: Pass <code>SINGULARITYENV_MAKE_JOBS=XX</code> to set the number
-    <code>XX</code> of make jobs during building</li>
+    <li>
 
-    <li>Optional: Pass <code>SINGULARITYENV_DELETE_GIT=TRUE</code> to delete all Moose,
-    PETSc and libMesh (and submodule) .git repositories in order to reduce container
-    size</li>
+    <p>2021/03/22</p>
 
-    <li>Execute: <code>singularity exec chamois-singularity.simg /projects/chamois/chamois-opt
-    -i inputfile.i</code>
+    <ul>
 
-    </li>
+    <li>Default Python3 is updated to Python 3.8</li>
 
-    <li>Execute with MPI: <code>mpiexec -np XX singularity exec chamois-singularity.simg
-    /projects/chamois/chamois-opt -i inputfile.i</code>
+    <li>Lapack, BLAS, OpenBLAS, ATLAS, and NetCDF are added</li>
+
+    <li>CMake 3.19.7, Boost 1.75.0, and R 4.0.4 are added</li>
+
+    </ul>
 
     </li>
 
@@ -3529,7 +3540,7 @@ ComputationalRadiationPhysics/picongpu:
     our strong scaling" title="Strong Scaling" style="max-width:100%;"></a></p>
 
     '
-  stargazers_count: 478
+  stargazers_count: 479
   subscribers_count: 46
   topics:
   - laser
@@ -3542,7 +3553,7 @@ ComputationalRadiationPhysics/picongpu:
   - particle-in-cell
   - pic
   - research
-  updated_at: 1626312107.0
+  updated_at: 1626806049.0
 D-Lo/bambi:
   data_format: 2
   description: R wrapper for bamdb
@@ -4724,7 +4735,7 @@ DiamondLightSource/Savu:
   stargazers_count: 28
   subscribers_count: 14
   topics: []
-  updated_at: 1626269596.0
+  updated_at: 1626814904.0
 DoaneAS/atacflow:
   data_format: 2
   description: Analysis pipeline for ATACseq data using Nextflow
@@ -10408,18 +10419,7 @@ PreibischLab/BigStitcher-Singularity:
   - Singularity-BigStitcher
   full_name: PreibischLab/BigStitcher-Singularity
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-bigstitcher-singularity" class="anchor" href="#bigstitcher-singularity"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BigStitcher-Singularity</h1>
-
-    <p>Singularity container description that automatically creates an Uber-JAR of
-    the current BigStitcher version (including all dependencies) using local copy
-    of the Oracle JDK.</p>
-
-    <p>Can easily be deployed for example on a cluster for parallel resaving.</p>
-
-    '
+  readme: '{"message":"API rate limit exceeded for installation ID 633759.","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}'
   stargazers_count: 0
   subscribers_count: 11
   topics: []
@@ -12624,7 +12624,7 @@ UniversalDataTool/universal-data-tool:
     </g-emoji></a>\n</td>\n  </tr>\n</table>\n\n\n\n<p>This project follows the <a\
     \ href=\"https://github.com/all-contributors/all-contributors\">all-contributors</a>\
     \ specification. Contributions of any kind welcome!</p>\n"
-  stargazers_count: 1454
+  stargazers_count: 1455
   subscribers_count: 33
   topics:
   - computer-vision
@@ -12647,7 +12647,7 @@ UniversalDataTool/universal-data-tool:
   - labeling
   - labeling-tool
   - hacktoberfest
-  updated_at: 1626669418.0
+  updated_at: 1626716370.0
 VIB-CBD/scanpy-images:
   data_format: 2
   description: Docker and Singularity images for Scanpy
@@ -13978,14 +13978,14 @@ aertslab/pySCENIC:
     <p>Please be aware of FSL''s strict license regarding non-commercial use.</p>
 
     '
-  stargazers_count: 156
+  stargazers_count: 157
   subscribers_count: 13
   topics:
   - single-cell
   - transcriptomics
   - gene-regulatory-network
   - transcription-factors
-  updated_at: 1626179873.0
+  updated_at: 1626741013.0
 agaveplatform/SC17-container-tutorial:
   data_format: 2
   description: 'SC17 tutorial - "HPC via HTTP: Portable, Scalable Computing using
@@ -19496,7 +19496,48 @@ ctpelok77/fd-red-black-postipc2018:
   - Singularity
   full_name: ctpelok77/fd-red-black-postipc2018
   latest_release: null
-  readme: '{"message":"API rate limit exceeded for installation ID 633759.","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}'
+  readme: '<p>Fast Downward is a domain-independent planning system.</p>
+
+    <p>For documentation and contact information see <a href="http://www.fast-downward.org/"
+    rel="nofollow">http://www.fast-downward.org/</a>.</p>
+
+    <p>The following directories are not part of Fast Downward as covered by this
+
+    license:</p>
+
+    <ul>
+
+    <li>./src/search/ext</li>
+
+    </ul>
+
+    <p>For the rest, the following license applies:</p>
+
+    <pre><code>Fast Downward is free software: you can redistribute it and/or modify
+    it under
+
+    the terms of the GNU General Public License as published by the Free Software
+
+    Foundation, either version 3 of the License, or (at your option) any later
+
+    version.
+
+
+    Fast Downward is distributed in the hope that it will be useful, but WITHOUT ANY
+
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+    A
+
+    PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+
+    You should have received a copy of the GNU General Public License along with
+
+    this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+
+    </code></pre>
+
+    '
   stargazers_count: 3
   subscribers_count: 1
   topics: []
@@ -35269,14 +35310,14 @@ nextgenusfs/funannotate:
     </code></pre>
 
     '
-  stargazers_count: 163
+  stargazers_count: 164
   subscribers_count: 13
   topics:
   - genome-annotation
   - gene-models
   - comparative-genomics
   - ncbi-submission
-  updated_at: 1626408048.0
+  updated_at: 1626814559.0
 nhoffman/dada2-nf:
   data_format: 2
   description: A Nextflow pipeline for processing 16S rRNA sequences using dada2
@@ -36356,7 +36397,7 @@ openPMD/openPMD-api:
   - meta-data
   - opendata
   - cpp14
-  updated_at: 1626465110.0
+  updated_at: 1626846577.0
 openhpc/ohpc:
   data_format: 2
   description: OpenHPC Integration, Packaging, and Test Repo
@@ -36475,8 +36516,8 @@ openhpc/ohpc:
     Form</a>.</p>
 
     '
-  stargazers_count: 572
-  subscribers_count: 93
+  stargazers_count: 573
+  subscribers_count: 92
   topics:
   - hpc
   - scientific-computing
@@ -36485,7 +36526,7 @@ openhpc/ohpc:
   - devtools
   - mpi
   - linuxfoundation
-  updated_at: 1625238327.0
+  updated_at: 1626694488.0
 pbranson/pangeo-hpc-singularity:
   data_format: 2
   description: Scripts to run dask and jupyter lab on Singularity using the pangeo-notebook
@@ -46825,7 +46866,7 @@ sylabs/singularity:
   - examples/legacy/2.2/contrib/fedora.def
   - examples/build-singularity/build-singularity.def
   full_name: sylabs/singularity
-  latest_release: v3.8.0
+  latest_release: v3.8.1
   readme: '<h1>
 
     <a id="user-content-singularityce" class="anchor" href="#singularityce" aria-hidden="true"><span
@@ -46974,13 +47015,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 57
+  stargazers_count: 58
   subscribers_count: 9
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1626643673.0
+  updated_at: 1626816939.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
