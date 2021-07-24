@@ -42,15 +42,7 @@ From: ubuntu:18.04
 # Bedtools
     apt install -y python-pip
     apt-get install -y zlib1g zlib1g-dev firefox python-dev emacs
-
-    cd /opt
-    git clone https://github.com/arq5x/bedtools2.git
-    cd bedtools2
-    # gwava needs a version without "sam header" error messages
-    git checkout tags/v2.27.1
-    make && make install
     pip install scipy pandas numpy scikit-learn==0.14.1
-    pip install pybedtools
 
 # PLINK
     cd /opt

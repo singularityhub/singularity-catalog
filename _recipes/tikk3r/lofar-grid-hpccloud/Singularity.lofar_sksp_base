@@ -24,6 +24,8 @@ From: fedora:31
 	export SUPERLU_VERSION=5.2.1
 	export WCSLIB_VERSION=6.4
     export DEBIAN_FRONTEND=noninteractive
+    export HAS_CUDA=true
+    export HAS_MKL=true
 
     #
     # System installs
@@ -106,16 +108,24 @@ From: fedora:31
 	#
     dnf -y install wcslib wcslib-devel 
 
-    #   
-    # Install Image Domain Gridder (IDG)
-    #   
-    mkdir -p $INSTALLDIR/idg && cd $INSTALLDIR/idg
-    git clone https://gitlab.com/astron-idg/idg.git src 
-    cd src && git checkout $IDG_VERSION && mkdir build && cd build
-    cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg ..
-    make -j $J
-    make install
-    rm -rf $INSTALLDIR/idg/src
+    if [ $HAS_MKL ]; then
+        #
+        # Install Intel MKL
+        #
+        sudo dnf config-manager --add-repo https://yum.repos.intel.com/mkl/setup/intel-mkl.repo
+        sudo rpm --import https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB
+        dnf -y install intel-mkl-2020.0-088 intel-mkl-64bit-2020.0-088
+    fi
+
+    if [ $HAS_CUDA ]; then
+        #
+        # Install CUDA 11.3
+        #
+        sudo dnf -y config-manager --add-repo http://developer.download.nvidia.com/compute/cuda/repos/fedora33/x86_64/cuda-fedora33.repo
+        sudo dnf -y clean all
+        sudo dnf -y upgrade
+        sudo dnf -y install cuda-11-3
+    fi
 
 	echo "Installation directory contents:"
 	ls $INSTALLDIR
@@ -130,6 +140,10 @@ From: fedora:31
 	#
 	echo export INSTALLDIR=$INSTALLDIR > $INSTALLDIR/init.sh
     echo export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
+    echo export HAS_CUDA=true >> $INSTALLDIR/init.sh
+    echo export HAS_MKL=true >> $INSTALLDIR/init.sh
+    echo export MARCH=$MARCH >> $INSTALLDIR/init.sh
+    echo export MTUNE=$MTUNE >> $INSTALLDIR/init.sh
 
     #
     # entrypoint
@@ -138,6 +152,10 @@ From: fedora:31
     echo source $INSTALLDIR/init.sh >> $HOME/.bashrc
     echo export PATH=/usr/local/cuda/bin:\$PATH >> $INSTALLDIR/init.sh
     echo export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
+    echo export HAS_CUDA=true >> $INSTALLDIR/init.sh
+    echo export HAS_MKL=true >> $INSTALLDIR/init.sh
+    echo export MARCH=$MARCH >> $INSTALLDIR/init.sh
+    echo export MTUNE=$MTUNE >> $INSTALLDIR/init.sh
     . $INSTALLDIR/init.sh
 
 %help

@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: perl:5.32.1
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-vcf2maf
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    VERSION 1.6.21
+
+%environment
+    export LANGUAGE=en_US.UTF-8
+    export LC_ALL=C
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    apt update && apt-get install -y locales libipc-run3-perl git
+    locale-gen en_US.UTF-8
+    cd /opt
+    wget https://github.com/mskcc/vcf2maf/archive/refs/tags/v1.6.21.tar.gz
+    tar -xvf v1.6.21.tar.gz && rm -f v1.6.21.tar.gz
+    cd vcf2maf-1.6.21
+    ln -s $(pwd)/maf2maf.pl /usr/local/bin/maf2maf.pl && chmod +x /usr/local/bin/maf2maf.pl
+    ln -s $(pwd)/maf2vcf.pl /usr/local/bin/maf2vcf.pl && chmod +x /usr/local/bin/maf2vcf.pl
+    ln -s $(pwd)/vcf2maf.pl /usr/local/bin/vcf2maf.pl && chmod +x /usr/local/bin/vcf2maf.pl
+    ln -s $(pwd)/vcf2vcf.pl /usr/local/bin/vcf2vcf.pl && chmod +x /usr/local/bin/vcf2vcf.pl

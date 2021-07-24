@@ -2,7 +2,7 @@
 #From: tikk3r/lofar-grid-hpccloud:lofar_sksp_base
 # If building from a base image locally enable this instead.
 Bootstrap: localimage
-From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
+From: test_3.3_base.sif
 
 %environment
     export PYTHONPATH=
@@ -22,7 +22,7 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
     export PATCH_LOFAR_JOBSERVER=$INSTALLDIR/lofar/patch_lofar_jobserver.patch
 	
 	# Settings relevant to the installed software.
-	export AOFLAGGER_VERSION=v2.15.0
+	export AOFLAGGER_VERSION=v3.1.0
 	export ARMADILLO_VERSION=9.900.3
 	export BLAS_VERSION=3.8.0
 	export BOOST_VERSION=1.69.0
@@ -30,10 +30,9 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
 	# Leave at latest, release versions crash for some reason.
 	export CASAREST_VERSION=latest
 	export CFITSIO_VERSION=7.3.47
-    export DPPP_VERSION=v4.2
+    export DPPP_VERSION=v5.1
 	export DYSCO_VERSION=v1.2
-    #export EVERYBEAM_VERSION=0cc64a81
-    export EVERYBEAM_VERSION=master
+    export EVERYBEAM_VERSION=v0.1.3
     export FFTW_VERSION=3.5.8
 	export HDF5_VERSION=1.10.5
     export IDG_VERSION=master
@@ -48,7 +47,7 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
 	export PYTHON_CASACORE_VERSION=v2.2.1
     export RMEXTRACT_VERSION=4c61232
 	export SUPERLU_VERSION=5.2.1
-	export WSCLEAN_VERSION=v2.10.1
+	export WSCLEAN_VERSION=latest
 	export WCSLIB_VERSION=6.4
 	export HDF5_USE_FILE_LOCKING=FALSE
 
@@ -66,9 +65,9 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
         export CXXFLAGS="-march=${MARCH} -mtune=${MTUNE} -std=c++11"
     fi
     export CPLUS_INCLUDE_PATH="/usr/include/openmpi-x86_64:/usr/include/c++/9:$CPLUS_INCLUDE_PATH:/usr/include/python2.7:$INSTALLDIR/casacore/include:/usr/include/boost:/usr/include/cfitsio:$INSTALLDIR/EveryBeam/include"
-    export CPATH="/usr/include/openmpi-x86_64/:/opt/intel/mkl/include:${INSTALLDIR}/casacore/include:$INSTALLDIR/LOFARBeam/include:$INSTALLDIR/idg/include:$INSTALLDIR/aoflagger/include:$INSTALLDIR/EveryBeam/include:$CPATH"
-    export CMAKE_PREFIX_PATH="$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:$INSTALLDIR/lofar:$INSTALLDIR/LOFARBeam:/usr/lib64/openmpi:$INSTALLDIR/EveryBeam"
-    export LD_LIBRARY_PATH="$INSTALLDIR/aoflagger/lib:$INSTALLDIR/casacore/lib:$INSTALLDIR/idg/lib:$INSTALLDIR/LOFARBeam/lib:/usr/lib64/openmpi/lib/:$INSTALLDIR/EveryBeam/lib:LD_LIBRARY_PATH"
+    export CPATH="/usr/include/openmpi-x86_64/:/usr/local/cuda/include:/opt/intel/mkl/include:${INSTALLDIR}/casacore/include:$INSTALLDIR/LOFARBeam/include:$INSTALLDIR/idg/include:$INSTALLDIR/aoflagger/include:$INSTALLDIR/EveryBeam/include:$CPATH"
+    export CMAKE_PREFIX_PATH="$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:$INSTALLDIR/lofar:$INSTALLDIR/LOFARBeam:/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:/usr/lib64/openmpi:$INSTALLDIR/EveryBeam"
+    export LD_LIBRARY_PATH="$INSTALLDIR/aoflagger/lib:$INSTALLDIR/casacore/lib:$INSTALLDIR/idg/lib:$INSTALLDIR/LOFARBeam/lib:/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:/usr/lib64/openmpi/lib/:$INSTALLDIR/EveryBeam/lib:LD_LIBRARY_PATH"
     export PATH="/usr/lib64/openmpi/bin:$PATH"
     export make=`which make`
     export OLD_PYTHONPATH=$PYTHONPATH
@@ -85,7 +84,7 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
     dnf -y install rsync
     dnf -y install openmpi openmpi-devel
     dnf -y install htop
-    dnf -y install python3-pybind11 pybind11-devel mysql mysql-devel
+    dnf -y install python3-pybind11 pybind11-devel mysql mysql-devel python-devel python3-devel
     #module load mpi
 
     #
@@ -93,9 +92,25 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
     #
     wget https://raw.githubusercontent.com/tikk3r/lofar-grid-hpccloud/fedora/requirements.txt -O $INSTALLDIR/requirements.txt
     wget https://raw.githubusercontent.com/tikk3r/lofar-grid-hpccloud/fedora/requirements3.txt -O $INSTALLDIR/requirements3.txt
+    pip2 --version
+    pip --version
+    pip2 install --upgrade "pip<21.0"
+    pip2 install --upgrade setuptools
+    pip2 install xmlrunner typing
+    pip install --upgrade setuptools
     pip install xmlrunner
-    pip3 install xmlrunner
-    pip --no-cache-dir install "virtualenv<20"
+    pip2 --no-cache-dir install "virtualenv<21"
+    pip --no-cache-dir install virtualenv
+
+    python2 -m virtualenv -h
+    virtualenv $INSTALLDIR/pyenv-py2 --python=python2 --pip=20.3.4 --system-site-packages
+    source $INSTALLDIR/pyenv-py2/bin/activate
+    python -m pip --version
+    python -m pip install --no-binary h5py h5py
+    python -m pip install --no-deps -r $INSTALLDIR/requirements.txt
+    python -m pip install --no-deps "reproject==0.5.1"
+    deactivate
+
     virtualenv $INSTALLDIR/pyenv-py3 --python=python3
     source $INSTALLDIR/pyenv-py3/bin/activate
     pip install numpy
@@ -104,12 +119,8 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
     pip install -r $INSTALLDIR/requirements3.txt
     pip install lofar-h5plot
     deactivate
-    virtualenv $INSTALLDIR/pyenv-py2 --python=python2
+
     source $INSTALLDIR/pyenv-py2/bin/activate
-    pip install numpy
-    pip install --no-binary h5py h5py
-    pip install --no-deps -r $INSTALLDIR/requirements.txt
-    pip install --no-deps "reproject==0.5.1"
 
     #
     # Install Montage
@@ -158,9 +169,11 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
 	#
 	# Install CASAcore
 	#
-	# Casacore 2.4.1 does not seem to deal well with AVX512 instructions, so disable them if needed
-    #export CFLAGS="-march=skylake -mtune=skylake -mno-avx512f"
-    #export CXXFLAGS="-march=skylake -mtune=skylake -mno-avx512f"
+	# Casacore 2.4.1 did not seem to deal well with AVX512 instructions, so disable them if they are available
+    if [ ! $NOAVX512 ]; then
+        export CFLAGS="-march=${MARCH} -mtune=${MTUNE} -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+        export CXXFLAGS="-march=${MARCH} -mtune=${MTUNE} -std=c++11 -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+    fi
 	mkdir -p ${INSTALLDIR}/casacore/build
 	mkdir -p ${INSTALLDIR}/casacore/data
 	cd $INSTALLDIR/casacore
@@ -191,15 +204,17 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
     cd $INSTALLDIR
     rm -rf $INSTALLDIR/python-casacore/python-casacore
     # and then reset the flags again if needed
-    #export CFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
-    #export CXXFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
+    if [ ! $NOAVX512 ]; then
+        export CFLAGS="-march=${MARCH} -mtune=${MTUNE}"
+        export CXXFLAGS="-march=${MARCH} -mtune=${MTUNE} -std=c++11"
+    fi
     
 	#
 	# Install Dysco
 	#
 	mkdir -p $INSTALLDIR/dysco/build
 	cd $INSTALLDIR/dysco && git clone https://github.com/aroffringa/dysco.git src
-    if [ "$DYDSCO_VERSION" != "latest" ]; then cd src && git checkout $DYSCO_VERSION; fi
+    if [ "$DYSCO_VERSION" != "latest" ]; then cd src && git checkout $DYSCO_VERSION; fi
 	cd $INSTALLDIR/dysco/build && cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/dysco -DCASACORE_ROOT_DIR=$INSTALLDIR/casacore -DPORTABLE=True ../src && $make -s -j $J && $make install
     cd $INSTALLDIR
     rm -rf $INSTALLDIR/dysco/build
@@ -208,16 +223,19 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
 	#
 	# Install AOFlagger
 	#
+    source $INSTALLDIR/pyenv-py3/bin/activate
 	mkdir -p ${INSTALLDIR}/aoflagger/build
-	if [ "${AOFLAGGER_VERSION}" = "latest" ]; then cd ${INSTALLDIR}/aoflagger && git clone git://git.code.sf.net/p/aoflagger/code aoflagger && cd ${INSTALLDIR}/aoflagger/aoflagger; fi
-	if [ "${AOFLAGGER_VERSION}" != "latest" ]; then cd ${INSTALLDIR}/aoflagger && git clone git://git.code.sf.net/p/aoflagger/code aoflagger && cd ${INSTALLDIR}/aoflagger/aoflagger && git checkout tags/${AOFLAGGER_VERSION}; fi
-	cd ${INSTALLDIR}/aoflagger/build && cmake -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/aoflagger/ -DCASACORE_ROOT_DIR=${INSTALLDIR}/casacore -DBUILD_SHARED_LIBS=ON -DPORTABLE=True ../aoflagger
+	if [ "${AOFLAGGER_VERSION}" = "latest" ]; then cd ${INSTALLDIR}/aoflagger && git clone https://gitlab.com/aroffringa/aoflagger.git src && cd ${INSTALLDIR}/aoflagger/src; fi
+	if [ "${AOFLAGGER_VERSION}" != "latest" ]; then cd ${INSTALLDIR}/aoflagger && git clone https://gitlab.com/aroffringa/aoflagger.git src && cd ${INSTALLDIR}/aoflagger/src && git checkout ${AOFLAGGER_VERSION}; fi
+	cd ${INSTALLDIR}/aoflagger/build && cmake -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/aoflagger/ -DCASACORE_ROOT_DIR=${INSTALLDIR}/casacore -DBUILD_SHARED_LIBS=ON -DPORTABLE=True ../src
 	cd ${INSTALLDIR}/aoflagger/build && $make -s -j ${J}
 	cd ${INSTALLDIR}/aoflagger/build && $make install
     cd $INSTALLDIR
     rm -rf $INSTALLDIR/aoflagger/aoflagger
     rm -rf $INSTALLDIR/aoflagger/build
     rm -rf $INSTALLDIR/aoflagger/src
+	deactivate
+    source $INSTALLDIR/pyenv-py2/bin/activate
 
 	#
 	# Install LOFAR
@@ -287,7 +305,6 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
     rm -rf $INSTALLDIR/LOFARBeam/build
     rm -rf $INSTALLDIR/LOFARBeam/src
 
-
     #
     # Install EveryBeam library
     #
@@ -301,13 +318,33 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
     $make -j $J
     $make install
 
+    #   
+    # Install Image Domain Gridder (IDG)
+    #   
+    mkdir -p $INSTALLDIR/idg && cd $INSTALLDIR/idg
+    git clone https://gitlab.com/astron-idg/idg.git src 
+    cd src && git checkout $IDG_VERSION && mkdir build && cd build
+    if [ $HAS_CUDA ] && [ $HAS_MKL ]; then
+        cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg -DBUILD_WITH_MKL=ON -DBUILD_LIB_CUDA=ON -DCUDA_INCLUDE_DIR=/usr/local/cuda/include ..
+    elif [ ! $HAS_CUDA ] && [ $HAS_MKL ]; then
+        cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg -DBUILD_WITH_MKL=ON ..
+    elif [ $HAS_CUDA ] && [ ! $HAS_MKL ]; then
+        cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg -DBUILD_WITH_MKL=OFF -DBUILD_LIB_CUDA=ON -DCUDA_INCLUDE_DIR=/usr/local/cuda/include ..
+    else
+        cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg ..
+    fi
+    make -j $J
+    make install
+    cd $INSTALLDIR
+    rm -rf $INSTALLDIR/idg/src
+
     #
     # Install DPPP
     #
     mkdir -p $INSTALLDIR/DPPP/build
-    git clone https://github.com/lofar-astron/DP3.git $INSTALLDIR/DPPP/src
+    git clone https://git.astron.nl/RD/DP3.git $INSTALLDIR/DPPP/src
     cd $INSTALLDIR/DPPP/src
-    git checkout tags/${DPPP_VERSION}
+    git checkout ${DPPP_VERSION}
     cd $INSTALLDIR/DPPP/build
     cmake3 -DCMAKE_CXX_FLAGS="-D_GLIB_USE_CXX_ABI=1 -DBOOST_NO_CXX11_SCOPED_ENUMS" -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLDIR/DPPP -DLOFAR_STATION_RESPONSE_DIR:PATH=$INSTALLDIR/lofar/include -DLOFAR_STATION_RESPONSE_LIB:FILEPATH=$INSTALLDIR/lofar/lib/libstationresponse.so -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include -DAOFLAGGER_INCLUDE_DIR=$INSTALLDIR/aoflagger/include -DAOFLAGGER_LIB=$INSTALLDIR/aoflagger/lib/libaoflagger.so ../src
     $make -s -j $J && $make install
@@ -388,6 +425,7 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
     # Switch to mpicc for a minute
     export CC=`which mpicc`
     export CXX=`which mpic++`
+    # TARGET_CPU is a WSClean 2.10.2 feature. Change to PORTABLE=TRUE if using and older version to avoid -march=native being triggered.
     cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/wsclean -DTARGET_CPU=${MARCH} -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include ..
     $make -j ${J}
     $make install
@@ -426,7 +464,11 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
 	ln -s /opt/lofar/DPPP/bin/makesourcedb /opt/lofar/lofar/bin/makesourcedb
     ln -s $INSTALLDIR/pyenv-py3/bin/h5plot /usr/bin/h5plot
 
-	echo export INSTALLDIR=$INSTALLDIR > $INSTALLDIR/init.sh
+    echo $'export MARCH_MACHINE=$(gcc -march=native -Q --help=target | grep "\-march=" | head -n 1 | awk \'{print $2}\')' >> $INSTALLDIR/init.sh
+    echo $'export MTUNE_MACHINE=$(gcc -mtune=native -Q --help=target | grep "\-mtune=" | head -n 1 | awk \'{print $2}\')' >> $INSTALLDIR/init.sh
+    echo $'if [ "$MARCH_MACHINE" != "$MARCH" ]; then echo "WARNING - software has been build with -march=$MARCH but current machine reports -march=$MARCH_MACHINE.\nIf you encounter strange behaviour or Illegal instruction warnings, consider building a container with the appropriate architecture set."; fi' >> $INSTALLDIR/init.sh
+    echo $'if [ "$MTUNE_MACHINE" != "$MTUNE" ]; then echo "WARNING - software has been build with -mtune=$MTUNE but current machine -mtune=$MTUNE_MACHINE.\nIf you encounter strange behaviour or Illegal instruction warnings, consider building a container with the appropriate architecture set."; fi' >> $INSTALLDIR/init.sh
+	echo export INSTALLDIR=$INSTALLDIR >> $INSTALLDIR/init.sh
 	echo export HDF5_USE_FILE_LOCKING=FALSE >> $INSTALLDIR/init.sh
 	echo source \$INSTALLDIR/lofar/lofarinit.sh  >> $INSTALLDIR/init.sh
 	echo export PYTHONPATH=\$INSTALLDIR/dppp:\$INSTALLDIR/lofar/lib64/python2.7/site-packages >> $INSTALLDIR/init.sh
@@ -454,7 +496,34 @@ From: lofar_sksp_base_x86-64_generic_cuda_fedora31.sif
 
     echo "measures.directory: $INSTALLDIR/casacore/data" > $INSTALLDIR/.casarc 
     echo export CASARCFILES=\$INSTALLDIR/.casarc >> $INSTALLDIR/init.sh
-    #echo module load mpi >> $INSTALLDIR/init.sh
+    
+    # Store version information.
+	echo export AOFLAGGER_VERSION=v3.1.0 >> $INSTALLDIR/init.sh
+	echo export ARMADILLO_VERSION=9.900.3 >> $INSTALLDIR/init.sh
+	echo export BLAS_VERSION=3.8.0 >> $INSTALLDIR/init.sh
+	echo export BOOST_VERSION=1.69.0 >> $INSTALLDIR/init.sh
+	echo export CASACORE_VERSION=v2.4.1 >> $INSTALLDIR/init.sh
+	echo export CASAREST_VERSION=latest >> $INSTALLDIR/init.sh
+	echo export CFITSIO_VERSION=7.3.47 >> $INSTALLDIR/init.sh
+    echo export DPPP_VERSION=v5.1 >> $INSTALLDIR/init.sh
+	echo export DYSCO_VERSION=v1.2 >> $INSTALLDIR/init.sh
+    echo export EVERYBEAM_VERSION=v0.1.3 >> $INSTALLDIR/init.sh
+    echo export FFTW_VERSION=3.5.8 >> $INSTALLDIR/init.sh
+	echo export HDF5_VERSION=1.10.5 >> $INSTALLDIR/init.sh
+    echo export IDG_VERSION=master >> $INSTALLDIR/init.sh
+	echo export LAPACK_VERSION=3.8.0 >> $INSTALLDIR/init.sh
+	echo export LOFAR_VERSION=3_2_18 >> $INSTALLDIR/init.sh
+	echo export LOSOTO2_VERSION=c8fbd61 >> $INSTALLDIR/init.sh
+	echo export LOSOTO3_VERSION=latest >> $INSTALLDIR/init.sh
+    echo export LSMTOOL_VERSION=v1.4.2 >> $INSTALLDIR/init.sh
+	echo export OPENBLAS_VERSION=3.8.0 >> $INSTALLDIR/init.sh
+	echo export PYBDSF_VERSION=master >> $INSTALLDIR/init.sh
+	echo export PYTHON_CASACORE_VERSION=v2.2.1 >> $INSTALLDIR/init.sh
+    echo export RMEXTRACT_VERSION=4c61232 >> $INSTALLDIR/init.sh
+	echo export SUPERLU_VERSION=5.2.1 >> $INSTALLDIR/init.sh
+	echo export WSCLEAN_VERSION=latest >> $INSTALLDIR/init.sh
+	echo export WCSLIB_VERSION=6.4 >> $INSTALLDIR/init.sh
+	echo export HDF5_USE_FILE_LOCKING=FALSE >> $INSTALLDIR/init.sh
 
     #
     # entrypoint

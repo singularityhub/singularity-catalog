@@ -1,0 +1,52 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%post
+    apt-get -y update
+    apt-get -y install wget
+    apt-get -y install apt-transport-https
+# Next lines require to download Intel Python
+    wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB
+    apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB
+    wget https://apt.repos.intel.com/setup/intelproducts.list -O /etc/apt/sources.list.d/intelproducts.list
+    apt-get -y update
+# This prevents some questions being asked
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get install dialog
+date
+# Intalling Fortran also give us C.    
+    apt install -y gfortran
+# Installing g++ make installing openmpi easier
+    apt install -y g++
+    apt install -y make
+date
+
+# Install editors
+  apt install -y vim
+  apt install -y nano
+
+
+# The next two lines install a perl module needed 
+# by the backup app installed below.
+    apt install -y cpanminus
+    cpan install Term::ANSIColor
+
+
+date    
+%environment
+    export LC_ALL=C
+# Python order is important if you want both 3 and 2  
+# because there is "python" under intelpython3 that is
+# actually python3
+    export PATH=/opt/intel/intelpython3/bin:$PATH
+   #export PATH=/opt/intel/intelpython2/bin:$PATH
+    export PATH=/opt/install:$PATH
+    export PATH=/opt/examples:$PATH
+    export PATH=/usr/local/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+    export export R_LIBS=/opt/install/rlibs/
+    export DO_IMPI=/opt/intel/impi/2019.3.199/intel64/bin/mpivars.sh
+
+%labels
+    Author thkphd
+

@@ -1,0 +1,41 @@
+Bootstrap:docker
+From:ubuntu:xenial
+
+%help
+"
+Singularity recipe for an Ubuntu Xenial container. Intended for giving a minimal sandbox environment for building other containers without relying on singularity hub. N.B. the container is created with an admin account 'ubuntu' with password 'ubuntu'. Change this if you care about security! 
+"
+%setup
+cd ${SINGULARITY_ROOTFS}
+
+%files
+
+%labels
+Maintainer hbraunDSP
+Version v0.1
+
+%environment
+
+%post
+apt-get update
+apt-get install -y wget
+apt-get install -y git
+
+#install dummy X server
+#TODO
+
+#install miniconda
+#TODO
+
+#Install Slicer
+#TODO
+#Install fsl
+#TODO
+
+#install dbspype
+
+
+
+
+%runscript
+echo "Run 'singularity shell xenial' to get a bash prompt!"

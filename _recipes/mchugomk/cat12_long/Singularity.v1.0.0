@@ -1,0 +1,122 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%help
+  Singularity container that runs cat12 longitudinal processing stream. 
+  Info and usage: /opt/cat12_long/README.md
+
+
+%setup
+
+  # Create an installation directory for the codebase. We can often finagle this
+  # in the 'files' section and forgo the 'setup' section entirely, but it's 
+  # clearer this way.
+  mkdir -p "${SINGULARITY_ROOTFS}"/opt/cat12_long
+
+
+%files
+
+  # Copy all the code into the container's installation directory. We do this in
+  # specific pieces to avoid bulk copying any extra junk we might have floating
+  # around in the local working copy of the repository. This Singularity recipe
+  # itself is put in the container automatically during the build, at 
+  # /.singularity.d/Singularity
+  #
+  # The Matlab source code is not actually used, because we'll run the compiled
+  # version with the Matlab Runtime instead. But the source code will be in the
+  # container for reference. Don't let these get out of sync, i.e. don't change
+  # the Matlab source code and then forget to recompile it before building the
+  # container.
+  src                          /opt/cat12_long
+  matlab                       /opt/cat12_long
+  README.md                    /opt/cat12_long
+  ImageMagick-policy.xml       /opt
+  
+  # If we have local copies of these packages, we can use them instead of downloading
+  external/MCR_R2017b_glnxa64_installer.zip     /opt/mcr_installer.zip
+ 
+%labels
+  Maintainer maureen.mchugo@vanderbilt.edu
+
+
+%post
+
+  # Make sure we get the newest versions of OS packages and the package data. 
+  # Note, this means if we build the container twice with some time in between, 
+  # versions of things will likely be different. We could specify particular 
+  # versions below if needed - easy (if tedious) to find out what they are in an
+  # existing container.
+  apt update
+  
+  # Misc tools needed for basic operations
+  apt install -y wget unzip zip bc
+  
+  # ImageMagick and Ghostscript are very handy for making PDF QA reports.
+  apt install -y imagemagick
+  
+  # ImageMagick security policy needs to be more permissive
+  # https://www.kb.cert.org/vuls/id/332928
+  mv /opt/ImageMagick-policy.xml /etc/ImageMagick-6/policy.xml
+
+  # xvfb is used to perform graphics operations "headless" to create figures,
+  # images, etc. This pipeline will be run entirely on the virtual display,
+  # although it's also possible to do X operations piecemeal/as needed.
+  apt install -y xvfb
+
+  # Matlab Runtime requires this Java runtime
+  apt install -y openjdk-8-jre  
+
+  # Matlab Compiled Runtime installation. Uncomment the wget command to download 
+  # the install package instead of using a local copy. The installed version of 
+  # the runtime must match the Matlab version that was used to compile the code. 
+  # Make sure to use R2017b, v93 for cat 12 longitudinal batch to work.
+  # Each version of the runtime has its own download URL and installed location:
+  # https://www.mathworks.com/products/compiler/matlab-runtime.html
+  runtime_url=https://ssd.mathworks.com/supportfiles/downloads/R2017b/deployment_files/R2017b/installers/glnxa64/MCR_R2017b_glnxa64_installer.zip
+  runtime_location=/usr/local/MATLAB/MATLAB_Runtime/v93
+  #wget -nv -P /opt ${runtime_url} -O /opt/mcr_installer.zip
+  unzip /opt/mcr_installer.zip -d /opt/mcr_installer
+  /opt/mcr_installer/install -mode silent -agreeToLicense yes
+  rm -r /opt/mcr_installer /opt/mcr_installer.zip
+
+  # Matlab executable must be run now to extract the CTF archive, because
+  # now is the only time the container is writeable. The run_spm12.sh command
+  # can be used with SPM12's 'function' argument to run any command that was
+  # available in the Matlab path at compile time.
+  /opt/cat12_long/matlab/bin/run_spm12.sh ${runtime_location} function exit
+ 
+
+  # Create a few directories to use as bind points when we run the container
+  mkdir /INPUTS
+  mkdir /OUTPUTS
+  mkdir /wkdir
+
+  # Clean up unneeded packages and cache
+  apt clean && apt -y autoremove
+  
+  
+%environment
+  
+  # Matlab.
+  # We set Matlab's default shell, in case we call any shell commands from 
+  # Matlab. We also set the runtime's installed location, as it's needed to run
+  # the compiled binary - note, this must match the runtime_location specified
+  # above in the 'post' section. However we don't need to set the Matlab library
+  # path here, because Matlab's auto-generated run_??.sh script does it for us.
+  # This needs to run with matlab R2017b (v9.3) for the compiled cat12 longitudinal batch
+  # to run. Otherwise, it fails but without any sort of helpful error, just no valid batch job    
+  # error.
+  export MATLAB_SHELL=/usr/bin/bash
+  export MATLAB_RUNTIME=/usr/local/MATLAB/MATLAB_Runtime/v93
+    
+  # Path
+  # We add the src directory, which contains shell scripts etc; and the 
+  # matlab/bin directory, which contains the compiled Matlab binary.
+  export PATH=/opt/cat12_long/src:/opt/cat12_long/matlab/bin:${PATH}
+
+
+%runscript
+
+  # We just call our entrypoint, passing along all the command line arguments 
+  # that were given at the singularity run command line.
+  cat12_long_entrypoint.sh "$@"

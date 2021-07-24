@@ -1,0 +1,56 @@
+Bootstrap: docker
+From: continuumio/miniconda3:latest
+Stage: condabuild
+
+%labels
+authors="Iain Perry" 
+description="Docker image containing all requirements for the NanoSeqQC"
+%post
+echo "
+name: NanoSeqQC-illumina
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3
+  - biopython=1.74
+  - libxcb
+  - matplotlib=3.3.3
+  - pandas=0.23.0=py36_1
+  - fastp=0.20.1
+  - multiqc=1.7
+  - pyvcf=0.6.8
+  - pyyaml=5.3.1" >> /environment.yml
+  
+/opt/conda/bin/conda install mamba -c conda-forge && \
+/opt/conda/bin/mamba env create -f /environment.yml 
+
+
+Bootstrap: docker
+From: debian:buster-slim
+Stage: final
+
+%post
+apt-get update && \
+apt-get install -y git procps curl rsync g++ gcc bzip2 libc-dev ncurses-dev xz-utils zlib perl make && \
+apt-get clean -y
+
+cd /usr/local/bin
+/usr/bin/curl -fsSL "https://github.com/DerrickWood/kraken2/archive/v2.0.7-beta.tar.gz" | tar xz
+    cd kraken2-2.0.7-beta
+    ./install_kraken2.sh /usr/local/bin
+cd /usr/local/bin
+    git clone https://github.com/marbl/Krona
+    mkdir -p /usr/local/bin/Krona/KronaTools/taxonomy
+    cd /usr/local/bin/Krona/KronaTools && ./install.pl
+    cd /usr/local/bin/Krona/KronaTools && ./updateTaxonomy.sh
+cd /usr/local/bin   
+   git clone https://github.com/jenniferlu717/KrakenTools.git
+   cd /usr/local/bin/KrakenTools && chmod +x *.py
+
+%files from condabuild
+  /opt/conda/envs/NanoSeqQC-illumina /opt/conda/envs/NanoSeqQC-illumina
+
+%environment
+export PATH=/opt/conda/envs/NanoSeqQC-illumina/bin:$PATH

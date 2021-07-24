@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: i686/python
+# Sep 09 12:38 PM
+%post
+    apt-get -y update --fix-missing
+    apt-get -y install wget
+    apt-get -y install gawk
+    apt-get -y install apt-transport-https
+
+# Intalling Fortran also gives us C.    
+    apt install -y gfortran 
+    apt install -y g++
+    apt install -y make
+date
+
+# Install editors
+  apt install -y nano
+  apt install -y vim
+
+# Do R
+  apt install -y software-properties-common
+  add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/'
+  apt -y update
+  #apt install -y r-base
+
+
+%environment
+    export LC_ALL=C
+
+%labels
+    Author thkphd

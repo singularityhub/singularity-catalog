@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: alpine:edge
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-ncdu
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    VERSION 1.13
+
+####################################################################################
+%appinstall ncdu
+    apk update
+    apk add ncdu
+
+%apphelp ncdu
+    ncdu --help
+
+%apprun ncdu
+    ncdu "$@"

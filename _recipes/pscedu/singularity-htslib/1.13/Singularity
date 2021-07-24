@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: debian:latest
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-htslib
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    VERSION 1.13
+
+%environment
+    export LANGUAGE=en_US.UTF-8
+    export LC_ALL=C
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    apt update
+    apt install -y locales gcc wget bzip2 zlib1g zlib1g-dev libbz2-dev liblzma-dev libcurl4 build-essential
+    cd /opt
+    wget https://github.com/samtools/htslib/releases/download/1.13/htslib-1.13.tar.bz2
+    tar -xvf htslib-1.13.tar.bz2 && rm -f htslib-1.13.tar.bz2
+    cd htslib-1.13
+    ./configure
+    make
+    make install
+    apt remove -y wget
+    apt -y autoremove && apt -y clean
