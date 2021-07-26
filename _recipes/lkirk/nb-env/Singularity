@@ -120,7 +120,7 @@ etc/zshrc.local /opt/home/.zshrc.local
 
     r --eval '
     library('IRkernel')
-    IRkernel::installspec()
+    IRkernel::installspec(user = FALSE)
 
     devtools::install_github("hadley/devtools")
     library('remotes')
