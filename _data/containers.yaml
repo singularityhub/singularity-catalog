@@ -19,7 +19,7 @@ bases:
   name: tensorflow/tensorflow
 - count: 40
   name: nfcore/base
-- count: 39
+- count: 40
   name: python
 - count: 35
   name: conda/miniconda3
@@ -192,6 +192,8 @@ bases:
 - count: 3
   name: golang
 - count: 3
+  name: r-base
+- count: 3
   name: singularityhub/ubuntu
 - count: 3
   name: slaclab/cryosparc-docker
@@ -203,6 +205,8 @@ bases:
   name: nvcr.io/nvidia/deepstream
 - count: 3
   name: biocorecrg/debian-perlbrew-pyenv3-java
+- count: 3
+  name: nvcr.io/nvidia/cuda
 - count: 3
   name: quay.io/biocontainers/edta
 - count: 2
@@ -290,8 +294,6 @@ bases:
 - count: 2
   name: sriggi/caesar-base
 - count: 2
-  name: r-base
-- count: 2
   name: openresty/openresty
 - count: 2
   name: vanessa/salad
@@ -359,8 +361,6 @@ bases:
   name: jcsda/public/jedi-gnu-openmpi-dev
 - count: 2
   name: continuumio/anaconda3
-- count: 2
-  name: nvcr.io/nvidia/cuda
 - count: 2
   name: urgi/docker_vre_aio
 - count: 2
@@ -716,6 +716,10 @@ bases:
 - count: 1
   name: wangyoucao577/centos7-gcc7.4
 - count: 1
+  name: centos/centos-7.7.1908-openmpi-3.1.6.sif
+- count: 1
+  name: centos-7.7.1908.sif
+- count: 1
   name: r-3.6.1.sif
 - count: 1
   name: anaconda/anaconda3-py38-2020.11-ubuntu-18.04.sif
@@ -948,17 +952,17 @@ bases:
 - count: 1
   name: charade/xlibbox@sha256
 bootstraps:
-- count: 2306
+- count: 2308
   name: docker
 - count: 248
   name: debootstrap
 - count: 225
   name: shub
-- count: 154
+- count: 155
   name: library
-- count: 71
+- count: 72
   name: yum
-- count: 57
+- count: 59
   name: localimage
 - count: 10
   name: scratch
@@ -1306,6 +1310,8 @@ orgs:
 - count: 1
   name: wangyoucao577
 - count: 1
+  name: centos
+- count: 1
   name: anaconda
 - count: 1
   name: miniconda
@@ -1493,7 +1499,7 @@ orgs:
   name: condaforge
 tags:
   latest: 240
-  other: 2114
+  other: 2116
 versions:
   APPIAN-PET/APPIAN:
     ants: 1
@@ -2051,7 +2057,7 @@ versions:
   nvcr.io/hpc/pgi-compilers:
     ce: 1
   nvcr.io/nvidia/cuda:
-    10.2-devel-ubuntu18.04: 2
+    10.2-devel-ubuntu18.04: 3
   nvcr.io/nvidia/deepstream:
     5.0-20.07-triton: 3
   nvcr.io/nvidia/hpc-benchmarks:
@@ -2248,7 +2254,7 @@ versions:
     3.5.1: 1
     '3.6': 1
     '3.7': 1
-    3.7-slim: 12
+    3.7-slim: 13
     3.7.4-slim: 1
     3.7.7-slim-buster: 1
     3.7.9: 1
@@ -2550,7 +2556,7 @@ versions:
     '14.04': 8
     '16.04': 111
     '17.04': 6
-    '18.04': 150
+    '18.04': 151
     '19.04': 7
     '19.10': 4
     '20.04': 115
@@ -2565,7 +2571,7 @@ versions:
     cosmic: 4
     disco: 2
     eoan-20200410: 2
-    focal: 14
+    focal: 13
     focal-20200729: 1
     focal-20200925: 3
     latest: 57

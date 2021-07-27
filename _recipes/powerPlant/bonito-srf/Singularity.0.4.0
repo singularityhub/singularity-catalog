@@ -14,4 +14,8 @@ Version 0.4.0
   rm -rf /root/.cache
 
 %runscript
+if [ ! -f /usr/local/lib/python3.6/dist-packages/bonito/models/dna_r9.4.1.hdf5 ]; then
+  exec /bin/echo -e "This container requires that you bind mount the location of Bonito pre-trained models data into `/usr/local/lib/python3.6/dist-packages/bonito/models/`. Please use \"singularity run -B <path_to_bonito_models>:/usr/local/lib/python3.6/dist-packages/bonito/models $SINGULARITY_NAME\" and try again. You can download the pre-trained models with \"bonito download\". See https://github.com/nanoporetech/bonito#models for more information."
+else
   exec bonito "$@"
+fi

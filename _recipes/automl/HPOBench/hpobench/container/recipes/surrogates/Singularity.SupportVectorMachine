@@ -6,13 +6,16 @@ MAINTAINER muelleph@cs.uni-freiburg.de
 VERSION v0.0.1
 
 %post
+
+%post
     apt update -y \
-    && apt install build-essential git -y \
-    && cd /home \
+    && apt install build-essential git wget -y
+
+    cd /home \
     && git clone https://github.com/automl/HPOBench.git \
     && cd HPOBench \
     && git checkout master \
-    && pip install .[pybnn] \
+    && pip install --upgrade .[paramnet] \
     && cd / \
     && mkdir /var/lib/hpobench/ \
     && chmod -R 777 /var/lib/hpobench/ \
@@ -20,4 +23,4 @@ VERSION v0.0.1
     && pip cache purge
 
 %runscript
-    python -s /home/HPOBench/hpobench/container/server_abstract_benchmark.py ml.pybnn $@
+    python -s /home/HPOBench/hpobench/container/server_abstract_benchmark.py surrogates.svm_benchmark $@
