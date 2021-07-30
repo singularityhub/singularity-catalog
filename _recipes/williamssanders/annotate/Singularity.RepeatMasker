@@ -1,0 +1,70 @@
+Bootstrap:docker
+From:ubuntu
+
+%labels
+	MAINTAINER Shane Sanders
+	
+%files
+	# Files for Build Go Here
+
+%post
+	# DEBCONF Configuration
+    export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+    echo "tzdata tzdata/Areas select US" >> /opt/preseed.txt
+    echo "tzdata tzdata/Zones/US select Chicago" >> /opt/preseed.txt
+    debconf-set-selections /opt/preseed.txt
+    rm /opt/preseed.txt
+
+    # Update System
+	apt update && apt upgrade -y
+    
+    # Install RepeatMasker Dependencies
+    apt install -y wget make python3 python3-pip locales build-essential cpio cpanminus
+    LANG=C perl -e exit
+    locale-gen en_US.UTF-8
+    cpanm Text::Soundex
+    # Install h5py Python Library
+    pip3 install pytest
+    pip3 install h5py
+    # Note MPI h5py Functionality Not Installed
+    # Download and Build RMBlast
+    cd /opt
+    wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.10.0/ncbi-blast-2.10.0+-src.tar.gz
+    wget http://www.repeatmasker.org/isb-2.10.0+-rmblast.patch.gz
+    tar zxvf ncbi-blast-2.10.0+-src.tar.gz
+    gunzip isb-2.10.0+-rmblast.patch.gz
+    cd ncbi-blast-2.10.0+-src
+    patch -p1 < ../isb-2.10.0+-rmblast.patch
+    cd c++
+    ./configure --with-mt --without-debug --without-krb5 --without-openssl --with-projects=scripts/projects/rmblastn/project.lst --prefix=/usr/local/rmblast
+    make -j2
+    make -j2 install
+    cd /opt
+    rm ncbi-blast-2.10.0+-src.tar.gz
+
+    # Install Tandem Repeat Finder
+    cd /opt
+    wget http://tandem.bu.edu/trf/downloads/trf409.linux64
+    chmod +rx trf409.linux64
+
+    #Install RepeatMasker
+    cd /opt
+    wget http://www.repeatmasker.org/RepeatMasker/RepeatMasker-4.1.1.tar.gz
+    tar xzvf RepeatMasker-4.1.1.tar.gz
+    rm RepeatMasker-4.1.1.tar.gz
+    cd /opt/RepeatMasker
+    #perl ./configure
+
+    # Update Dfam Libraries (~15 GB)
+    #wget https://www.dfam.org/releases/Dfam_3.2/families/Dfam.h5.gz
+    #gunzip Dfam.h5.gz
+    #mv Dfam.h5 /usr/local/RepeatMasker/Libraries 
+
+
+
+       
+
+   
+%runscript
+	echo "Hello from RepeatMasker Container!"
+    

@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: r-base
+
+%apprun R
+exec R "$@"
+
+%apprun Rscript
+exec Rscript "$@"
+
+%runscript
+exec Rscript "$@"
+# exec R "$@"
+
+%post
+    Rscript -e 'install.packages("glue")'
+

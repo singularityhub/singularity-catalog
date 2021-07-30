@@ -1,11 +1,23 @@
 # =============================================================================
-# Definition file for a singularity container for HERA
-# This container is a modern attempt to build a software stack to run
-# the HERA casa_imaging pipeline. The existing IDR2 pipeline was based on
-# Python 2, which has been depreciated, and all HERA software packages have
-# since been moved to be Python3-only compatible. This container is largely
-# similar to the `hera1` container, with an addition of a full installation
-# of CASA-6, which is also based on Python 3.
+# Definition file for singularity containers for the HERA software stack.
+# All containers come standard with the following Python packages:
+#
+# |-------------------------------------------------|
+# |  Data Analysis |  Astronomical    |  HERA       |
+# |----------------|------------------|-------------|
+# |  dask	         |  aipy	          |  linsolve   |
+# |  jupyterlab	   |  astropy	        |  uvtools    |
+# |  matplotlib	   |  astropy-healpix	|  hera_qm    |
+# |  numpy	       |  astroquery	    |  hera_cal   |
+# |  pandas	       |  cartopy	        |  hera_sim   |
+# |  scipy	       |  healpy	        |  hera_psepc |
+# |  scikit-learn	 |  pyuvdata1       |	            |
+# |  xarray	       |  pyuvsim         |             |
+# |                |  SSINS3          |             |
+# |-------------------------------------------------|
+#
+# This container is built for casa-related work and come with
+# a full installation of CASA-6 as an addition.
 # =============================================================================
 Bootstrap: library
 From: ubuntu:20.04

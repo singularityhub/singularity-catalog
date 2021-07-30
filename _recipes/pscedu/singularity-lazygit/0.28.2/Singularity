@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: debian:latest
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-lazygit
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    VERSION 5.32.1
+
+%post
+    apt update
+    apt install -y git wget
+    wget -nc https://github.com/jesseduffield/lazygit/releases/download/v0.28.2/lazygit_0.28.2_Linux_x86_64.tar.gz
+    tar -xvf lazygit_0.28.2_Linux_x86_64.tar.gz
+    mv lazygit /usr/local/bin
+    rm -f README.md LICENSE lazygit_0.28.2_Linux_x86_64.tar.gz

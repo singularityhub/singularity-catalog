@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: debian:buster
+
+%labels
+    AUTHOR icaoberg
+    MAINTAINER icaoberg@alumni.cmu.edu
+    WEBSITE http://www.andrew.cmu.edu/~icaoberg
+    VERSION 1.2.0
+
+%post
+    apt update
+    apt install -y --no-install-recommends apt-utils
+    apt update --fix-missing
+    apt install -y curl git ffmpeg
+    git clone --depth 1 https://github.com/lukechilds/gifgen.git
+    mv gifgen/gifgen /usr/local/bin
+    rm -rf gifgen

@@ -1,0 +1,14 @@
+Bootstrap:docker
+From:ubuntu
+
+%labels
+	MAINTAINER Shane Sanders
+
+%post
+	apt update && apt upgrade -y
+	apt install -y wget gzip zip unzip ncbi-blast+ locales
+	LANG=C perl -e exit
+	locale-gen en_US.UTF-8
+
+%runscript
+	echo "Hello from BLAST!"

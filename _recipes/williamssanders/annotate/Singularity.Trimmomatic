@@ -1,0 +1,40 @@
+Bootstrap:docker
+From:ubuntu
+
+%labels
+	MAINTAINER Shane Sanders
+	
+%files
+	# Files for Build Go Here
+
+%post
+	# DEBCONF Configuration
+    export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+    echo "tzdata tzdata/Areas select US" >> /opt/preseed.txt
+    echo "tzdata tzdata/Zones/US select Chicago" >> /opt/preseed.txt
+    debconf-set-selections /opt/preseed.txt
+    rm /opt/preseed.txt
+
+    # Update System
+	apt update && apt upgrade -y
+    
+    # Install SRA Toolkit
+    apt install -y wget default-jre zip locales
+    locale-gen en_US.UTF-8
+    cd /opt
+    wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.39.zip
+    unzip Trimmomatic-0.39.zip
+    cd Trimmomatic-0.39/
+    cd adapters/
+    find . -name "*.fa" | xargs -n 1 -I {} sed -i -e '$a\' {}
+    cat *.fa > all_adapters.fa
+    cd /opt
+    rm Trimmomatic-0.39.zip
+    
+    
+   
+%runscript
+    java --version
+    java -jar /opt/Trimmomatic-0.39/trimmomatic-0.39.jar 
+    echo "java -jar /opt/Trimmomatic-0.39/trimmomatic-0.39.jar"
+

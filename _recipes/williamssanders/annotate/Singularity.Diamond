@@ -1,0 +1,33 @@
+Bootstrap:docker
+From:ubuntu
+
+%labels
+	MAINTAINER Shane Sanders
+	
+%files
+	# Files for Build Go Here
+
+%post
+	# DEBCONF Configuration
+    export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+    echo "tzdata tzdata/Areas select US" >> /opt/preseed.txt
+    echo "tzdata tzdata/Zones/US select Chicago" >> /opt/preseed.txt
+    debconf-set-selections /opt/preseed.txt
+    rm /opt/preseed.txt
+
+    # Update System
+	apt update && apt upgrade -y
+    
+    # Install DIAMOND
+    apt-get install -y g++ automake cmake zlib1g-dev git
+    cd /opt
+    git clone https://github.com/bbuchfink/diamond.git
+    cd diamond
+    mkdir build
+    cd build 
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_MARCH=nehalem ..
+    make && make install
+   
+%runscript
+	diamond help
+    

@@ -1,0 +1,28 @@
+# Ubuntu 14.04 based container with ROOT 5 and NuWro 18.02
+
+BootStrap: shub
+From: NuWro/builds:root5
+
+%help
+See NuWro User Guide at https://nuwro.github.io/user-guide/
+
+%labels
+NuWro 18.02
+
+%post
+    export ROOTSYS=/opt/root/
+    export PATH=$PATH:$ROOTSYS/bin/
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib/
+
+    ##### INSTALL NuWro #####
+
+    cd /opt/
+
+    # to avoid "Problem with the SSL CA cert (path? access rights?)" 
+    update-ca-certificates
+    git clone -b nuwro_18.02 --depth 1 https://github.com/NuWro/nuwro.git
+    cd nuwro
+    make
+
+%runscript
+    exec /opt/nuwro/bin/nuwro "$@"

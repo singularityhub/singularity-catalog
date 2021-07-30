@@ -1,0 +1,30 @@
+Bootstrap:docker
+From:ubuntu
+
+%labels
+	MAINTAINER Shane Sanders
+	
+%files
+	# Files for Build Go Here
+
+%post
+	# DEBCONF Configuration
+    export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+    echo "tzdata tzdata/Areas select US" >> /opt/preseed.txt
+    echo "tzdata tzdata/Zones/US select Chicago" >> /opt/preseed.txt
+    debconf-set-selections /opt/preseed.txt
+    rm /opt/preseed.txt
+
+    # Update System
+	apt update && apt upgrade -y
+    
+    # Install SRA Toolkit
+    apt install -y wget make build-essential nano libxml-libxml-perl
+    cd /opt
+    wget --output-document sratoolkit.tar.gz http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz    
+    tar -vxzf sratoolkit.tar.gz
+    rm sratoolkit.tar.gz
+    # Needs an Overlay for Configuration
+   
+%runscript
+    echo "Binaries at: /opt/sratoolkit.2.11.0-ubuntu64/bin/"

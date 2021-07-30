@@ -1,0 +1,42 @@
+Bootstrap: docker
+From: centos:8.3.2011
+%files
+	dnf.conf /etc/dnf
+	TSUBASA-soft-release-*.noarch.rpm /etc/yum.repos.d
+	TSUBASA-repo.repo /etc/yum.repos.d
+	TSUBASA-restricted.repo /etc/yum.repos.d
+	MLNX_OFED_LINUX-4.9-3.1.5.0-rhel8.3-x86_64.tgz
+
+%post
+	mv /etc/yum.repos.d/TSUBASA-repo.repo /etc/yum.repos.d/TSUBASA-repo.repo.bk
+	mv /etc/yum.repos.d/TSUBASA-restricted.repo /etc/yum.repos.d/TSUBASA-restricted.repo.bk
+	yum -y install /etc/yum.repos.d/TSUBASA-soft-release-*.noarch.rpm
+	mv /etc/yum.repos.d/TSUBASA-repo.repo.bk /etc/yum.repos.d/TSUBASA-repo.repo
+	mv /etc/yum.repos.d/TSUBASA-restricted.repo.bk /etc/yum.repos.d/TSUBASA-restricted.repo
+	yum clean all
+	#yum -y group install ve-container nec-sdk-runtime -d 10
+	yum -y group install ve-container nec-sdk-runtime 
+
+	yum -y install perl pciutils gtk2 atk cairo tcsh lsof libnl3 libmnl ethtool tcl tk numactl-libs python36 -d 10
+	yum -y install pkgconf-pkg-config gcc-gfortran -d 10
+	yum -y install http://mirror.centos.org/centos/8.3.2011/BaseOS/x86_64/os/Packages/hwloc-libs-1.11.9-3.el8.x86_64.rpm -d 10
+
+	tar zxvf MLNX_OFED_LINUX-4.9-3.1.5.0-rhel8.3-x86_64.tgz
+	cd MLNX_OFED_LINUX-4.9-3.1.5.0-rhel8.3-x86_64 && \
+        mkdir tmp && \
+	./mlnxofedinstall --tmpdir ./tmp --user-space-only --without-fw-update -q --all && \
+	cd ../ && rm -rf ./MLNX*
+
+	yum -y group install nec-mpi-runtime ve-container-infiniband -d 10
+
+	sed -i -e "s|username=.*|username=|" -e "s|password=.*|password=|" \
+	   /etc/yum.repos.d/TSUBASA-restricted.repo
+
+%environment
+	MPI_VER=${MPI_VER:-$(ls -1 /opt/nec/ve/mpi/ | grep -v libexec | sort -V | tail -1)}
+	NLC_VER=${NLC_VER:-$(ls -1 /opt/nec/ve/nlc/ | sort -V | tail -1)}
+	source /opt/nec/ve/mpi/$MPI_VER/bin/necmpivars.sh ""
+	VE_LD_LIBRARY_PATH="$VE_LD_LIBRARY_PATH:/opt/nec/ve/nlc/$NLC_VER/lib"
+	export VE_LD_LIBRARY_PATH
+	LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/opt/nec/ve/nlc/$NLC_VER/lib"
+	export LD_LIBRARY_PATH

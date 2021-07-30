@@ -30,9 +30,11 @@ From: test_3.3_base.sif
 	# Leave at latest, release versions crash for some reason.
 	export CASAREST_VERSION=latest
 	export CFITSIO_VERSION=7.3.47
-    export DPPP_VERSION=v5.1
+    #export DPPP_VERSION=v5.1
+    export DPPP_VERSION=master
 	export DYSCO_VERSION=v1.2
-    export EVERYBEAM_VERSION=v0.1.3
+    #export EVERYBEAM_VERSION=v0.1.3
+    export EVERYBEAM_VERSION=master
     export FFTW_VERSION=3.5.8
 	export HDF5_VERSION=1.10.5
     export IDG_VERSION=master
@@ -53,9 +55,11 @@ From: test_3.3_base.sif
 
     export CC=`which gcc`
 	export CXX=`which g++`
-    export MARCH='x86-64'
-    export MTUNE='generic'
-    export NOAVX512=true
+    #export MARCH='x86-64'
+    #export MTUNE='generic'
+    export MARCH='skylake-avx512'
+    export MTUNE='skylake-avx512'
+    export NOAVX512=false
 
     if [ $NOAVX512 ]; then
         export CFLAGS="-march=${MARCH} -mtune=${MTUNE} -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
@@ -464,6 +468,8 @@ From: test_3.3_base.sif
 	ln -s /opt/lofar/DPPP/bin/makesourcedb /opt/lofar/lofar/bin/makesourcedb
     ln -s $INSTALLDIR/pyenv-py3/bin/h5plot /usr/bin/h5plot
 
+    echo export MARCH=$MARCH >> $INSTALLDIR/init.sh
+    echo export MTUNE=$MTUNE >> $INSTALLDIR/init.sh
     echo $'export MARCH_MACHINE=$(gcc -march=native -Q --help=target | grep "\-march=" | head -n 1 | awk \'{print $2}\')' >> $INSTALLDIR/init.sh
     echo $'export MTUNE_MACHINE=$(gcc -mtune=native -Q --help=target | grep "\-mtune=" | head -n 1 | awk \'{print $2}\')' >> $INSTALLDIR/init.sh
     echo $'if [ "$MARCH_MACHINE" != "$MARCH" ]; then echo "WARNING - software has been build with -march=$MARCH but current machine reports -march=$MARCH_MACHINE.\nIf you encounter strange behaviour or Illegal instruction warnings, consider building a container with the appropriate architecture set."; fi' >> $INSTALLDIR/init.sh

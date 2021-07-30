@@ -1,10 +1,26 @@
 # =============================================================================
-# Definition file for a singularity container for HERA
-# This container is equivalent to `hera1` with an addition of pip-wheel
+# Definition file for singularity containers for the HERA software stack.
+# All containers come standard with the following Python packages:
+#
+# |-------------------------------------------------|
+# |  Data Analysis |  Astronomical    |  HERA       |
+# |----------------|------------------|-------------|
+# |  dask	         |  aipy	          |  linsolve   |
+# |  jupyterlab	   |  astropy	        |  uvtools    |
+# |  matplotlib	   |  astropy-healpix	|  hera_qm    |
+# |  numpy	       |  astroquery	    |  hera_cal   |
+# |  pandas	       |  cartopy	        |  hera_sim   |
+# |  scipy	       |  healpy	        |  hera_psepc |
+# |  scikit-learn	 |  pyuvdata1       |	            |
+# |  xarray	       |  pyuvsim         |             |
+# |                |  SSINS3          |             |
+# |-------------------------------------------------|
+#
+# This container is built for casa-related work and come with a pip-wheel
 # installation of CASA-6, making `casatasks`, `casatools`, and `casampi`
 # packages available (see https://casa-pip.nrao.edu/).
 # Note:
-# 1. This container is built with Ubuntu 18.04 as the casa pakcages
+# 1. This container is built with Ubuntu 18.04 as the casa pipe-wheel packages
 # requires some library not available in newer Ubuntu release.
 # 2. The Python version is 3.6 as the casa packages are only fully supported
 # on this Python version at the moment.

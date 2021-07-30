@@ -1,0 +1,33 @@
+Bootstrap:docker
+From:ubuntu
+
+%labels
+	MAINTAINER Shane Sanders
+	
+%files
+	# Files for Build Go Here
+
+%post
+	# DEBCONF Configuration
+    export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+    echo "tzdata tzdata/Areas select US" >> /opt/preseed.txt
+    echo "tzdata tzdata/Zones/US select Chicago" >> /opt/preseed.txt
+    debconf-set-selections /opt/preseed.txt
+    
+    # Update System
+	apt update && apt upgrade -y
+    
+    # Install Augustus Dependencies
+    apt install -y build-essential dialog apt-utils git libboost-iostreams-dev zlib1g-dev libgsl-dev libboost-all-dev libsuitesparse-dev liblpsolve55-dev libsqlite3-dev libbamtools-dev libboost-all-dev libmysql++-dev
+    # Install bam2wig Dependencies 
+    apt install -y samtools libhts-dev
+    # Install Augustus
+    cd /opt
+    git clone https://github.com/Gaius-Augustus/Augustus.git
+    cd Augustus
+    make
+    make install
+
+        
+%runscript
+	augustus

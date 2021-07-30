@@ -1,0 +1,47 @@
+Bootstrap:docker
+From:ubuntu
+
+%labels
+	MAINTAINER Shane Sanders
+	
+%files
+	# Files for Build Go Here
+
+%post
+	# DEBCONF Configuration
+    export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+    echo "tzdata tzdata/Areas select US" >> /opt/preseed.txt
+    echo "tzdata tzdata/Zones/US select Chicago" >> /opt/preseed.txt
+    debconf-set-selections /opt/preseed.txt
+    rm /opt/preseed.txt
+
+    # Update System
+	apt update && apt upgrade -y
+    
+    # Install GeneMark ES/ET/EP Dependencies
+    apt install -y wget cpanminus make python3 locales
+    LANG=C perl -e exit
+    locale-gen en_US.UTF-8
+    cpanm YAML
+    cpanm Algorithm::Diff
+    cpanm Test::Base
+    cpanm Test::Deep 
+    cpanm Test::YAML
+    cpanm Hash::Merge
+    cpanm Logger::Simple
+    cpanm Parallel::ForkManager
+    cpanm MCE::Mutex
+    cpanm Thread::Queue
+    cpanm threads
+    # Download GeneMark ES/ET/EP & Key File 
+    cd /opt
+    #wget http://topaz.gatech.edu/GeneMark/tmp/GMtool_W1C3F/gmes_linux_64.tar.gz
+    wget http://topaz.gatech.edu/GeneMark/tmp/GMtool_UfdZ7/gmes_linux_64.tar.gz
+    tar -xzvf gmes_linux_64.tar.gz
+    rm gmes_linux_64.tar.gz
+    
+
+   
+%runscript
+	/opt/gmes_linux_64/gmes_petap.pl
+    

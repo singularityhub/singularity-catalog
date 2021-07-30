@@ -1,0 +1,145 @@
+Bootstrap:docker
+From:ubuntu
+
+%labels
+	MAINTAINER Shane Sanders
+	
+%files
+	# Files for Build Go Here
+
+%post
+	# DEBCONF Configuration
+    export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+    echo "tzdata tzdata/Areas select US" >> /opt/preseed.txt
+    echo "tzdata tzdata/Zones/US select Chicago" >> /opt/preseed.txt
+    debconf-set-selections /opt/preseed.txt
+    rm /opt/preseed.txt
+
+    # Update System
+	apt update && apt upgrade -y
+    apt install -y wget make python3 python3-pip locales build-essential cpio cpanminus nano
+        
+    # Install RECON
+    cd /opt
+    wget http://www.repeatmasker.org/RepeatModeler/RECON-1.08.tar.gz
+    tar -xzf RECON-1.08.tar.gz
+    cd RECON-1.08/src/
+    make
+    make install
+    cd /opt
+    rm RECON-1.08.tar.gz
+    # Needs Additional Configuration in Overlay IMG
+
+    # Install RepeatScout
+    cd /opt
+    wget http://www.repeatmasker.org/RepeatScout-1.0.6.tar.gz
+    tar -xzf RepeatScout-1.0.6.tar.gz
+    cd RepeatScout-1.0.6/
+    make
+    cd /opt
+    rm RepeatScout-1.0.6.tar.gz
+    
+    # Install RepeatMasker Dependencies
+    #apt install -y wget make python3 python3-pip locales build-essential cpio cpanminus
+    LANG=C perl -e exit
+    locale-gen en_US.UTF-8
+    cpanm Text::Soundex
+    # Install h5py Python Library
+    pip3 install pytest
+    pip3 install h5py
+    # Note MPI h5py Functionality Not Installed
+    # Download and Build RMBlast
+    cd /opt
+    wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.10.0/ncbi-blast-2.10.0+-src.tar.gz
+    wget http://www.repeatmasker.org/isb-2.10.0+-rmblast.patch.gz
+    tar zxvf ncbi-blast-2.10.0+-src.tar.gz
+    gunzip isb-2.10.0+-rmblast.patch.gz
+    cd ncbi-blast-2.10.0+-src
+    patch -p1 < ../isb-2.10.0+-rmblast.patch
+    cd c++
+    ./configure --with-mt --without-debug --without-krb5 --without-openssl --with-projects=scripts/projects/rmblastn/project.lst --prefix=/usr/local/rmblast
+    make -j2
+    make -j2 install
+    cd /opt
+    rm ncbi-blast-2.10.0+-src.tar.gz
+
+    # Install Tandem Repeat Finder
+    cd /opt
+    wget http://tandem.bu.edu/trf/downloads/trf409.linux64
+    chmod +rx trf409.linux64
+
+    #Install RepeatMasker
+    cd /opt
+    wget http://www.repeatmasker.org/RepeatMasker/RepeatMasker-4.1.1.tar.gz
+    tar xzvf RepeatMasker-4.1.1.tar.gz
+    rm RepeatMasker-4.1.1.tar.gz
+    cd /opt/RepeatMasker
+    #perl ./configure
+    # Needs Additional Configuration in Overlay IMG
+
+
+    # Update Dfam Libraries (~15 GB)
+    #wget https://www.dfam.org/releases/Dfam_3.2/families/Dfam.h5.gz
+    #gunzip Dfam.h5.gz
+    #mv Dfam.h5 /usr/local/RepeatMasker/Libraries 
+    # Can Bind Larger DFAM Libraries Externally to the Container
+
+    # RepeatModeler LTR Structural Search Pipelines
+    # Genome Tools
+    cd /opt
+    wget http://genometools.org/pub/genometools-1.5.9.tar.gz
+    tar xzf genometools-1.5.9.tar.gz
+    cd genometools-1.5.9/
+    apt install -y libcairo2-dev libpango1.0-dev
+    #make cleanup
+    make 64bit=yes errorcheck=no threads=yes install
+    cd /opt
+    rm genometools-1.5.9.tar.gz
+
+    # LTR Retriever 
+    cd /opt
+    wget https://github.com/oushujun/LTR_retriever/archive/refs/tags/v2.9.0.tar.gz
+    tar xzf v2.9.0.tar.gz
+    rm v2.9.0.tar.gz
+
+    # MAFFT
+    cd /opt
+    wget https://mafft.cbrc.jp/alignment/software/mafft_7.475-1_amd64.deb
+    dpkg -i mafft_7.475-1_amd64.deb
+    rm mafft_7.475-1_amd64.deb
+
+    # CD-Hit
+    cd /opt
+    wget https://github.com/weizhongli/cdhit/releases/download/V4.8.1/cd-hit-v4.8.1-2019-0228.tar.gz
+    tar xzf cd-hit-v4.8.1-2019-0228.tar.gz
+    cd cd-hit-v4.8.1-2019-0228
+    apt install -y zlib1g-dev
+    make
+    cd cd-hit-auxtools
+    make
+    cd /opt
+    rm cd-hit-v4.8.1-2019-0228.tar.gz
+   
+    # NINJA
+    cd /opt
+    wget https://github.com/TravisWheelerLab/NINJA/archive/refs/tags/0.95-cluster_only.tar.gz
+    tar xzf 0.95-cluster_only.tar.gz
+    cd NINJA-0.95-cluster_only/
+    cd NINJA/
+    make all
+
+    # Install RepeatModeler
+    cpanm JSON
+    cpanm File::Which
+    cpanm LWP::UserAgent
+    cd /opt
+    wget http://www.repeatmasker.org/RepeatModeler/RepeatModeler-2.0.1.tar.gz
+    tar xzvf RepeatModeler-2.0.1.tar.gz
+    rm RepeatModeler-2.0.1.tar.gz
+    # Needs Additional Configuration in Overlay IMG
+       
+
+   
+%runscript
+	echo "Hello from RepeatModeler Container!"
+    

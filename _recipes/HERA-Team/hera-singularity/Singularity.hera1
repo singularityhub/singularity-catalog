@@ -1,7 +1,22 @@
 # =============================================================================
-# Definition file for a singularity container for HERA
-# This container is inteded for general purpose work on the HERA software stack.
-# It contain most scientific Python packages and HERA software.
+# Definition file for singularity containers for the HERA software stack.
+# All containers come standard with the following Python packages:
+#
+# |-------------------------------------------------|
+# |  Data Analysis |  Astronomical    |  HERA       |
+# |----------------|------------------|-------------|
+# |  dask	         |  aipy	          |  linsolve   |
+# |  jupyterlab	   |  astropy	        |  uvtools    |
+# |  matplotlib	   |  astropy-healpix	|  hera_qm    |
+# |  numpy	       |  astroquery	    |  hera_cal   |
+# |  pandas	       |  cartopy	        |  hera_sim   |
+# |  scipy	       |  healpy	        |  hera_psepc |
+# |  scikit-learn	 |  pyuvdata1       |	            |
+# |  xarray	       |  pyuvsim         |             |
+# |                |  SSINS3          |             |
+# |-------------------------------------------------|
+#
+# This container is intended for general purpose work.
 # =============================================================================
 Bootstrap: library
 From: ubuntu:20.04

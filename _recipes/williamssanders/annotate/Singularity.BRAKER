@@ -1,0 +1,130 @@
+Bootstrap:docker
+From:ubuntu
+
+%labels
+	MAINTAINER Shane Sanders
+	
+%files
+	# Files for Build Go Here
+
+%post
+	# DEBCONF Configuration
+    export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+    echo "tzdata tzdata/Areas select US" >> /opt/preseed.txt
+    echo "tzdata tzdata/Zones/US select Chicago" >> /opt/preseed.txt
+    debconf-set-selections /opt/preseed.txt
+    rm /opt/preseed.txt
+
+    # Update System
+	apt update && apt upgrade -y
+    
+    # Install GeneMark ES/ET/EP Dependencies
+    apt install -y wget cpanminus make python3 locales
+    LANG=C perl -e exit
+    locale-gen en_US.UTF-8
+    cpanm YAML
+    cpanm Algorithm::Diff
+    cpanm Test::Base
+    cpanm Test::Deep 
+    cpanm Test::YAML
+    cpanm Hash::Merge
+    cpanm Logger::Simple
+    cpanm Parallel::ForkManager
+    cpanm MCE::Mutex
+    cpanm Thread::Queue
+    cpanm threads
+    # Download GeneMark ES/ET/EP & Key File 
+    cd /opt
+    # Accept User Agreement to Get Download Link: http://exon.gatech.edu/GeneMark/
+    wget http://topaz.gatech.edu/GeneMark/tmp/GMtool_l3IOI/gmes_linux_64.tar.gz
+    tar -xzvf gmes_linux_64.tar.gz
+    rm gmes_linux_64.tar.gz
+
+
+    # Install Augustus Dependencies
+    apt install -y build-essential dialog apt-utils git libboost-iostreams-dev zlib1g-dev libgsl-dev libboost-all-dev libsuitesparse-dev liblpsolve55-dev libsqlite3-dev libbamtools-dev libboost-all-dev libmysql++-dev
+    # Install bam2wig Dependencies 
+    apt install -y samtools libhts-dev
+    # Install Augustus
+    cd /opt
+    git clone https://github.com/Gaius-Augustus/Augustus.git
+    cd Augustus
+    make
+    make install
+
+    # Install BamTools
+    apt install -y git cmake curl zip unzip tar
+    cd /opt
+    git clone https://github.com/Microsoft/vcpkg.git
+    cd vcpkg
+    ./bootstrap-vcpkg.sh
+    ./vcpkg integrate install
+    ./vcpkg install jsoncpp
+    cd /opt
+    git clone git://github.com/pezmaster31/bamtools.git
+    cd bamtools
+    mkdir build
+    mkdir bin
+    cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/opt/bamtools/ ..
+    make
+    make install
+
+    # Install DIAMOND
+    apt-get install -y g++ automake cmake zlib1g-dev git
+    cd /opt
+    git clone https://github.com/bbuchfink/diamond.git
+    cd diamond
+    mkdir build
+    cd build 
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_MARCH=nehalem ..
+    make && make install
+
+    # Install ProtHint
+    cd /opt
+    git clone https://github.com/gatech-genemark/ProtHint.git
+
+    # Install GUSHR
+    cd /opt
+    apt-get install -y openjdk-8-jdk
+    git clone https://github.com/Gaius-Augustus/GUSHR.git
+
+    # Install MakeHub
+    cd /opt
+    git clone https://github.com/Gaius-Augustus/MakeHub.git
+
+    # BRAKER Dependencies 
+    apt-get install -y python3-pip cdbfasta
+    pip3 install biopython
+    cpanm File::Spec::Functions
+    cpanm File::HomeDir
+    cpanm Hash::Merge
+    cpanm List::Util 
+    cpanm MCE::Mutex 
+    cpanm Module::Load::Conditional
+    cpanm Parallel::ForkManager
+    cpanm POSIX
+    cpanm Scalar::Util::Numeric
+    cpanm YAML
+    cpanm Math::Utils 
+    cpanm threads
+    cd /opt
+    git clone https://github.com/Gaius-Augustus/BRAKER.git
+    cd /opt
+    chmod -R a+w /opt
+
+
+   
+%runscript
+	/opt/gmes_linux_64/gmes_petap.pl
+    augustus
+    /opt/bamtools/bin/bamtools
+    diamond help
+    /opt/ProtHint/bin/prothint.py
+    /opt/GUSHR/gushr.py
+    /opt/BRAKER/scripts/braker.pl
+
+
+
+
+    
