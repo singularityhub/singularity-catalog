@@ -36,10 +36,10 @@ AAIR-lab/AIA-AAAI21:
   description: 'Code for Asking the Right Questions: Learning Interpretable Action
     Models Through Query Answering. AAAI 2021.'
   filenames:
-  - dependencies/FD/misc/releases/19.12/Singularity.19.12
   - dependencies/FD/misc/releases/20.06/Singularity.20.06
-  - dependencies/FD/misc/releases/19.06/Singularity.19.06
   - dependencies/FD/misc/releases/latest/Singularity
+  - dependencies/FD/misc/releases/19.12/Singularity.19.12
+  - dependencies/FD/misc/releases/19.06/Singularity.19.06
   full_name: AAIR-lab/AIA-AAAI21
   latest_release: null
   readme: "<h1>\n<a id=\"user-content-agent-interrogation-algorithm-aia\" class=\"\
@@ -10113,17 +10113,21 @@ Lizhen0909/LSHVec:
     \ class=\"anchor\" href=\"#lshvec-a-vector-representation-of-dna-sequences-using-locality-sensitive-hashing\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
     ></span></a>LSHVec: A Vector Representation of DNA Sequences Using Locality Sensitive\
-    \ Hashing</h1>\n<h2>\n<a id=\"user-content-summary\" class=\"anchor\" href=\"\
-    #summary\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Summary</h2>\n<p>LSHVec is a k-mer/sequence embedding/classfication\
-    \ software which extends <a href=\"https://fasttext.cc/\" rel=\"nofollow\">FastText</a>\
-    \ . It applies LSH (Locality Sensitive Hashing) to reduce the size of k-mer vocabulary\
-    \ and improve the performance of embedding.</p>\n<p>Besides building from source\
-    \ code, LSHVec can run using docker or singularity.</p>\n<p>Please refer to <a\
-    \ href=\"https://www.biorxiv.org/content/10.1101/726729v1\" rel=\"nofollow\">A\
-    \ Vector Representation of DNA Sequences Using Locality Sensitive Hashing</a>\
-    \ for the idea and experiments.</p>\n<p>There are also some pretained models that\
-    \ can be used, please see <a href=\"https://github.com/Lizhen0909/PyLSHvec/blob/master/README.md\"\
+    \ Hashing</h1>\n<h3>\n<a id=\"user-content-july-2021-checkout-lshvec-upcxx-which-is-a-pure-c-implementation\"\
+    \ class=\"anchor\" href=\"#july-2021-checkout-lshvec-upcxx-which-is-a-pure-c-implementation\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>July 2021: checkout <a href=\"https://github.com/bochen0909/lshvec-upcxx\"\
+    >lshvec-upcxx</a> which is a pure c++ implementation.</h3>\n<h2>\n<a id=\"user-content-summary\"\
+    \ class=\"anchor\" href=\"#summary\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Summary</h2>\n<p>LSHVec is a\
+    \ k-mer/sequence embedding/classfication software which extends <a href=\"https://fasttext.cc/\"\
+    \ rel=\"nofollow\">FastText</a> . It applies LSH (Locality Sensitive Hashing)\
+    \ to reduce the size of k-mer vocabulary and improve the performance of embedding.</p>\n\
+    <p>Besides building from source code, LSHVec can run using docker or singularity.</p>\n\
+    <p>Please refer to <a href=\"https://www.biorxiv.org/content/10.1101/726729v1\"\
+    \ rel=\"nofollow\">A Vector Representation of DNA Sequences Using Locality Sensitive\
+    \ Hashing</a> for the idea and experiments.</p>\n<p>There are also some pretained\
+    \ models that can be used, please see <a href=\"https://github.com/Lizhen0909/PyLSHvec/blob/master/README.md\"\
     >PyLSHvec</a> for details.</p>\n<h2>\n<a id=\"user-content-requirements\" class=\"\
     anchor\" href=\"#requirements\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
     \ class=\"octicon octicon-link\"></span></a>Requirements</h2>\n<p>Here is the\
@@ -10235,7 +10239,7 @@ Lizhen0909/LSHVec:
   - locality-sensitive-hashing
   - sequence-vector
   - classfication
-  updated_at: 1624367592.0
+  updated_at: 1627594508.0
 Lizhen0909/PyLSHvec:
   data_format: 2
   description: LSHVec pre-trained models and its Python bindings
@@ -10516,147 +10520,14 @@ LuisBonillaR/singularity:
   - Singularity.pyhon3
   full_name: LuisBonillaR/singularity
   latest_release: null
-  readme: '<h1>
+  readme: '<p><a href="https://singularity-hub.org/collections/3399" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
+    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    style="max-width:100%;"></a></p>
 
-    <a id="user-content-vep-annotation-nf" class="anchor" href="#vep-annotation-nf"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>vep-annotation-nf</h1>
-
-    <p>Demo pipeline for annotating variants in .vcf files using <a href="https://useast.ensembl.org/info/docs/tools/vep/index.html"
-    rel="nofollow">Variant Effect Predictor</a> (VEP).</p>
-
-    <h1>
-
-    <a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h1>
-
-    <p>Clone this repo:</p>
-
-    <pre><code>git clone https://github.com/stevekm/vep-annotation-nf.git
-
-    cd vep-annotation-nf
-
-    </code></pre>
-
-    <h2>
-
-    <a id="user-content-nextflow" class="anchor" href="#nextflow" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Nextflow</h2>
-
-    <p>Install <code>nextflow</code> in the current directory with the command in
-    the Makefile.</p>
-
-    <pre><code>make install
-
-    </code></pre>
-
-    <h2>
-
-    <a id="user-content-vep-docker" class="anchor" href="#vep-docker" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>VEP: Docker</h2>
-
-    <p>To install VEP using Docker, run the Makefile command in the <code>container</code>
-    directory.</p>
-
-    <pre><code>cd container
-
-    make docker-build
-
-    </code></pre>
-
-    <h2>
-
-    <a id="user-content-vep-conda" class="anchor" href="#vep-conda" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>VEP: conda</h2>
-
-    <p>To install VEP using <code>conda</code> (for NYULMC Big Purple HPC), instead
-    run the <code>conda-install</code> recipe from the Makefile in the parent repo
-    directory.</p>
-
-    <pre><code>make conda-install
-
-    </code></pre>
-
-    <h2>
-
-    <a id="user-content-reference-files" class="anchor" href="#reference-files" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Reference Files</h2>
-
-    <p>VEP reference files will be downloaded automatically by the pipeline. However
-    the hg19 genome fasta, fasta.fai, and fasta.dict files must also be obtained (not
-    included; try <a href="https://support.illumina.com/sequencing/sequencing_software/igenome.html"
-    rel="nofollow">these</a>). On NYULMC Big Purple, all required files are already
-    cached and no download should be needed. On other systems, the command line arguments
-    specifying the genome fasta files should be provided separately when running,
-    or place the files <code>genome.fa</code>, <code>genome.fa.fai</code>, and <code>genome.dict</code>
-    inside the included <code>ref</code> directory.</p>
-
-    <h1>
-
-    <a id="user-content-run" class="anchor" href="#run" aria-hidden="true"><span aria-hidden="true"
-    class="octicon octicon-link"></span></a>Run</h1>
-
-    <p>The Makefile includes shortcuts to help run the pipeline easier on NYULMC Big
-    Purple HPC.</p>
-
-    <pre><code>make run
-
-    </code></pre>
-
-    <p>The command can also be used to run on other systems, it will simply invoke
-    the command:</p>
-
-    <pre><code>./nextflow run main.nf -resume
-
-    </code></pre>
-
-    <p>Nextflow <code>params</code> values can be passed on the command line:</p>
-
-    <pre><code>./nextflow run main.nf -resume --ref_fa /path/to/genome.fa --ref_fai
-    /path/to/genome.fa.fai --ref_dict /path/to/genome.dict
-
-    </code></pre>
-
-    <h1>
-
-    <a id="user-content-output" class="anchor" href="#output" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Output</h1>
-
-    <p>Output files will be collected in the <code>output</code> directory.</p>
-
-    <h1>
-
-    <a id="user-content-software" class="anchor" href="#software" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Software</h1>
-
-    <p>Tested on RHEL 7, macOS 10.12</p>
-
-    <ul>
-
-    <li>
-
-    <p>Nextflow (Java 8+)</p>
-
-    </li>
-
-    <li>
-
-    <p><code>bash</code></p>
-
-    </li>
-
-    <li>
-
-    <p>GNU <code>make</code></p>
-
-    </li>
-
-    <li>
-
-    <p>Python 2.7+</p>
-
-    </li>
-
-    </ul>
+    <p>Singularity recipe files for the PAML tool for phylogenetic analyses of DNA
+    or protein sequences using maximum likelihood.</p>
 
     '
   stargazers_count: 0
@@ -14111,7 +13982,79 @@ OSC/sa_singularity_molgfx:
   - Singularity
   full_name: OSC/sa_singularity_molgfx
   latest_release: null
-  readme: '{"message":"API rate limit exceeded for installation ID 633759.","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}'
+  readme: '<h1>
+
+    <a id="user-content-singularity-molgfx" class="anchor" href="#singularity-molgfx"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Singularity
+    Molgfx</h1>
+
+    <p><a href="https://singularity-hub.org/collections/4301" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
+    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    style="max-width:100%;"></a>
+
+    <a href="https://opensource.org/licenses/MIT" rel="nofollow"><img src="https://camo.githubusercontent.com/45b4ffbd594af47fe09a3432f9f8e122c6518aa6352b4ce453a1a2563da2905c/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d4d49542d677265656e2e737667"
+    alt="GitHub License" data-canonical-src="https://img.shields.io/badge/license-MIT-green.svg"
+    style="max-width:100%;"></a></p>
+
+    <p>Singularity image for <a href="https://github.com/OpenChemistry">Open Chemistry</a>,
+    Gabedit and Jmol. It was built on top of the base Docker image <a href="https://hub.docker.com/_/ubuntu"
+    rel="nofollow">ubuntu</a>.</p>
+
+    <h2>
+
+    <a id="user-content-build" class="anchor" href="#build" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Build</h2>
+
+    <p>You can build a local Singularity image named <code>molgfx.sif</code> with:</p>
+
+    <div class="highlight highlight-source-shell"><pre>sudo singularity build molgfx.sif
+    Singularity</pre></div>
+
+    <h2>
+
+    <a id="user-content-deploy" class="anchor" href="#deploy" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Deploy</h2>
+
+    <p>Instead of building it yourself you can download the pre-built image from <a
+    href="https://www.singularity-hub.org" rel="nofollow">Singularity Hub</a> with:</p>
+
+    <div class="highlight highlight-source-shell"><pre>singularity pull molgfx.sif
+    shub://OSC/sa_singularity_molgfx</pre></div>
+
+    <h2>
+
+    <a id="user-content-run" class="anchor" href="#run" aria-hidden="true"><span aria-hidden="true"
+    class="octicon octicon-link"></span></a>Run</h2>
+
+    <h3>
+
+    <a id="user-content-find-versions-of-molecular-graphics-systems" class="anchor"
+    href="#find-versions-of-molecular-graphics-systems" aria-hidden="true"><span aria-hidden="true"
+    class="octicon octicon-link"></span></a>Find versions of molecular graphics systems</h3>
+
+    <div class="highlight highlight-source-shell"><pre>singularity inspect -H molgfx.sif</pre></div>
+
+    <h3>
+
+    <a id="user-content-start-avogadro2" class="anchor" href="#start-avogadro2" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Start Avogadro2</h3>
+
+    <p>Avogadro2 is started using the default exec command:</p>
+
+    <div class="highlight highlight-source-shell"><pre>singularity <span class="pl-c1">exec</span>
+    molgfx.sif avogadro2</pre></div>
+
+    <h2>
+
+    <a id="user-content-license" class="anchor" href="#license" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+    <p>The code is available as open source under the terms of the <a href="http://opensource.org/licenses/MIT"
+    rel="nofollow">MIT License</a>.</p>
+
+    '
   stargazers_count: 0
   subscribers_count: 6
   topics: []
@@ -14120,8 +14063,8 @@ OSC/sa_singularity_openexr:
   data_format: 2
   description: OpenEXR in a Singularity container
   filenames:
-  - Singularity
   - Singularity.2.2
+  - Singularity
   full_name: OSC/sa_singularity_openexr
   latest_release: null
   readme: '<h1>
@@ -15487,434 +15430,15 @@ ResearchIT/revbayes-singularity:
   - Singularity
   full_name: ResearchIT/revbayes-singularity
   latest_release: null
-  readme: "<h1>\n<a id=\"user-content-eipp-2019-singularity-group-project\" class=\"\
-    anchor\" href=\"#eipp-2019-singularity-group-project\" aria-hidden=\"true\"><span\
-    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>EIPP 2019 Singularity\
-    \ group project</h1>\n<p><a href=\"https://sylabs.io/singularity/\" rel=\"nofollow\"\
-    ><img src=\"https://camo.githubusercontent.com/4457c96be6834fd67756b9c0eab298334a5b948ab2234fbea89648e221e66af1/68747470733a2f2f73796c6162732e696f2f6775696465732f322e362f61646d696e2d67756964652f5f7374617469632f6c6f676f2e706e67\"\
-    \ height=\"100\" data-canonical-src=\"https://sylabs.io/guides/2.6/admin-guide/_static/logo.png\"\
-    \ style=\"max-width:100%;\"></a> <a href=\"https://camo.githubusercontent.com/0d44589c34845e74b1d32ae082d1f190828469fdc700fd026f3e4935eba669d2/68747470733a2f2f736369656e63652e736369656e63656d61672e6f72672f636f6e74656e742f7363692f3238372f353435372f313430312f46312e6d656469756d2e676966\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/0d44589c34845e74b1d32ae082d1f190828469fdc700fd026f3e4935eba669d2/68747470733a2f2f736369656e63652e736369656e63656d61672e6f72672f636f6e74656e742f7363692f3238372f353435372f313430312f46312e6d656469756d2e676966\"\
-    \ height=\"100\" data-canonical-src=\"https://science.sciencemag.org/content/sci/287/5457/1401/F1.medium.gif\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://singularity-hub.org/collections/3751\"\
-    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667\"\
-    \ alt=\"https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg\"\
-    \ data-canonical-src=\"https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg\"\
-    \ style=\"max-width:100%;\"></a></p>\n<ul>\n<li>\n<a href=\"#introduction-to-containers\"\
-    >Introduction to containers</a>\n<ul>\n<li><a href=\"#tldr\">tl;dr</a></li>\n\
-    </ul>\n</li>\n<li><a href=\"#what-can-i-do-with-a-container\">What can I do with\
-    \ a container?</a></li>\n<li>\n<a href=\"#how-do-i-get-a-container\">How do I\
-    \ get a container?</a>\n<ul>\n<li>\n<a href=\"#remote\">Remote</a>\n<ul>\n<li><a\
-    \ href=\"#docker-hub\">Docker Hub</a></li>\n<li><a href=\"#singularity-hub\">Singularity\
-    \ Hub</a></li>\n<li><a href=\"#singularity-library\">Singularity Library</a></li>\n\
-    <li><a href=\"#quay-and-biocontainers\">Quay and BioContainers</a></li>\n</ul>\n\
-    </li>\n<li><a href=\"#build-locally\">Build locally</a></li>\n</ul>\n</li>\n<li>\n\
-    <a href=\"#exercise-1\">Exercise 1</a>\n<ul>\n<li><a href=\"#task-1\">Task 1</a></li>\n\
-    <li><a href=\"#task-2\">Task 2</a></li>\n<li><a href=\"#task-3\">Task 3</a></li>\n\
-    </ul>\n</li>\n<li><a href=\"#sandbox-development\">Sandbox development</a></li>\n\
-    <li><a href=\"#exercise-2\">Exercise 2</a></li>\n<li>\n<a href=\"#run-and-serving-applications\"\
-    ><code>run</code> and serving applications</a>\n<ul>\n<li><a href=\"#singularity-run\"\
-    ><code>singularity run</code></a></li>\n<li><a href=\"#serving-applications\"\
-    >Serving applications</a></li>\n</ul>\n</li>\n<li><a href=\"#workflow-management-systems\"\
-    >Workflow management systems</a></li>\n<li><a href=\"#programs-requiring-gpus\"\
-    >Programs requiring GPUs</a></li>\n<li><a href=\"#bonus\">Bonus</a></li>\n</ul>\n\
-    <h2>\n<a id=\"user-content-introduction-to-containers\" class=\"anchor\" href=\"\
-    #introduction-to-containers\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>Introduction to containers</h2>\n\
-    <h3>\n<a id=\"user-content-tldr\" class=\"anchor\" href=\"#tldr\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>tl;dr</h3>\n\
-    <p>A container is a standard unit of software that packages up code and all its\n\
-    dependencies, so the application runs quickly and reliably from one computing\n\
-    environment to another. That includes files, environment variables, dependencies\
-    \ and\nlibraries.</p>\n<p>For those who would like more detailed information about\
-    \ what containers are, please\nrefer to <a href=\"https://github.com/titansmc/singularity-training-2019/raw/master/1.-singularity-training-what-are-containers.odp\"\
-    >this fantastic slide deck from Josep Moscardo</a>.</p>\n<h2>\n<a id=\"user-content-what-can-i-do-with-a-container\"\
-    \ class=\"anchor\" href=\"#what-can-i-do-with-a-container\" aria-hidden=\"true\"\
-    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>What can\
-    \ I do with a container?</h2>\n<p>In it's most basic form, you can execute a software\
-    \ program, via a container, even\nthough you may not have that program installed\
-    \ on the system you are running it on.</p>\n<p>Examples are the best teachers!</p>\n\
-    <p>Firstly, let's clone this repository (and call it <code>eipp-singularity</code>)\
-    \ as we will use some files from it throughout this\nproject.</p>\n<div class=\"\
-    highlight highlight-source-shell\"><pre>project=<span class=\"pl-s\"><span class=\"\
-    pl-pds\">\"</span>eipp-singularity<span class=\"pl-pds\">\"</span></span>\ngit\
-    \ clone https://github.com/mbhall88/eipp-2019-singularity.git <span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span><span class=\"pl-smi\">$project</span><span class=\"\
-    pl-pds\">\"</span></span>\n<span class=\"pl-c1\">cd</span> <span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span><span class=\"pl-smi\">$project</span><span class=\"\
-    pl-pds\">\"</span></span></pre></div>\n<p>Now, there is a <a href=\"https://samtools.github.io/hts-specs/SAMv1.pdf\"\
-    \ rel=\"nofollow\">BAM</a> file in the repository that we sadly can't view as\
-    \ we do not have <a href=\"https://github.com/samtools/samtools\"><code>samtools</code></a>\
-    \ installed (let's pretend). Thanks to Singularity we\ndon't have to worry about\
-    \ trying to install <code>samtools</code> and can instead use a pre-built container\
-    \ to view our BAM file with <code>samtools</code>.</p>\n<div class=\"highlight\
-    \ highlight-source-shell\"><pre>img=<span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>docker://quay.io/biocontainers/samtools:1.9--h10a08f8_12<span class=\"\
-    pl-pds\">\"</span></span>\nsingularity <span class=\"pl-c1\">exec</span> <span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span><span class=\"pl-smi\">$img</span><span\
-    \ class=\"pl-pds\">\"</span></span> samtools view data/toy.bam</pre></div>\n<p>Magic\
-    \ <g-emoji class=\"g-emoji\" alias=\"sparkles\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/2728.png\"\
-    >\u2728</g-emoji></p>\n<p>So what's going on here?</p>\n<p>Let's work our way\
-    \ through the command.</p>\n<ol>\n<li>\n<a href=\"https://sylabs.io/guides/3.4/user-guide/quick_start.html#executing-commands\"\
-    \ rel=\"nofollow\"><code>singularity exec</code></a> tells Singularity to execute\
-    \ a given command inside a\ngiven container.</li>\n<li>\n<code>\"$img\"</code>\
-    \ specifies the container for Singularity to operate on. We will look at this\
-    \ component in more detail later.</li>\n<li>\n<code>samtools view data/toy.bam</code>\
-    \ This is the command we want Singularity to execute inside the container. Notice\
-    \ how we can specify files that exist on our local file system?!</li>\n</ol>\n\
-    <h2>\n<a id=\"user-content-how-do-i-get-a-container\" class=\"anchor\" href=\"\
-    #how-do-i-get-a-container\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>How do I get a container?</h2>\n<h3>\n<a id=\"\
-    user-content-remote\" class=\"anchor\" href=\"#remote\" aria-hidden=\"true\"><span\
-    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Remote</h3>\n\
-    <p>In the above example, the container we used for <code>samtools</code> was remote.</p>\n\
-    <p>Remote containers are containers that have been pre-built and stored in \"\
-    the cloud\".\nThere are many benefits to this kind of set up. Firstly, it makes\
-    \ sharing containers\neasy. Secondly, it saves users (and yourself) a lot of time\
-    \ in the future. As the\ncontainer is pre-built, we don't need to spend time waiting\
-    \ for the build to happen (more on this later). The only wait time we have is\
-    \ for the download of the remote\ncontainer to finish. Lastly, remote services\
-    \ are convenient for building images if we\ndon't have <code>sudo</code> access\
-    \ on the machine we are using. We will look at building containers\nlocally very\
-    \ soon, but for now, it suffices to know that to build them locally, you need\n\
-    <code>sudo</code> access.</p>\n<p>Now you might have noticed in the example above\
-    \ that the <a href=\"https://en.wikipedia.org/wiki/Uniform_Resource_Identifier\"\
-    \ rel=\"nofollow\">URI</a> for the <code>samtools</code>\ncontainer has the work\
-    \ 'docker' in it. This is one of the coolest things about Singularity: <a href=\"\
-    https://sylabs.io/guides/3.4/user-guide/singularity_and_docker.html\" rel=\"nofollow\"\
-    >it can convert Docker containers into Singularity containers</a>! We now have\n\
-    access to any Docker container <em>plus</em> any Singularity container.</p>\n\
-    <p>Let's take a look at some remote container registries in a little more detail\
-    \ and see\nhow we can use containers from them.</p>\n<h4>\n<a id=\"user-content-docker-hub\"\
-    \ class=\"anchor\" href=\"#docker-hub\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a><a href=\"https://hub.docker.com/\"\
-    \ rel=\"nofollow\">Docker Hub</a>\n</h4>\n<p>The official registry for Docker\
-    \ containers. Let's search for <a href=\"http://conda.pydata.org/miniconda.html\"\
-    \ rel=\"nofollow\"><code>miniconda3</code></a> on <a href=\"https://hub.docker.com/\"\
-    \ rel=\"nofollow\">Docker Hub</a> and select the option <a href=\"https://hub.docker.com/r/continuumio/miniconda3\"\
-    \ rel=\"nofollow\"><code>continuumio/miniconda3</code></a>. On the right, there\
-    \ is a section <strong>Docker Pull Command</strong>. It\nsays <code>docker pull\
-    \ continuumio/miniconda3</code>. If we were using Docker, this would be the\n\
-    command we would use to pull that container to our local machine. To use it in\
-    \ Singularity\nwe need to tweak it just a little. For <code>miniconda3</code>\
-    \ we would use the URI <code>docker://continuumio/miniconda3</code>. As we can\
-    \ see, you need to add <code>docker://</code> to the\nbeginning of the <code>repository/tag</code>.<br>\n\
-    We can go one step further and unlock another great benefit of using remote containers.\
-    \ We're reproducibility warriors, right?! Of course, we are. So let's be specific\n\
-    about the version of <code>miniconda3</code> we want to use. On the <a href=\"\
-    https://hub.docker.com/r/continuumio/miniconda3\" rel=\"nofollow\"><code>miniconda3</code>\
-    \ Docker Hub page</a>, select the <a href=\"https://hub.docker.com/r/continuumio/miniconda3/tags\"\
-    \ rel=\"nofollow\"><strong>Tags</strong></a> heading. On this\npage, we see a\
-    \ whole bunch of different versions of <code>miniconda3</code> we can choose from.\
-    \ Any\nversion of this container that has been built is kept. If we wanted to\
-    \ use version <code>4.6.14</code>, then all we have to do is append this, with\
-    \ a colon, to our original URI</p>\n<div class=\"highlight highlight-source-shell\"\
-    ><pre>docker://continuumio/miniconda3:4.6.14</pre></div>\n<p>Now, as we saw earlier,\
-    \ we can directly execute a container from it's URI. However, it\nis likely you\
-    \ may want to use a container multiple times. In these circumstances, it is\n\
-    more \"economical\" to pull a copy of the container onto our local machine, so\
-    \ we don't\nhave to try and retrieve it from the registry each time (images are\
-    \ usually cached though). To pull the <code>miniconda3</code> container from Docker\
-    \ Hub, we use Singularity's <a href=\"https://sylabs.io/guides/3.4/user-guide/quick_start.html#download-pre-built-images\"\
-    \ rel=\"nofollow\"><code>pull</code></a>\ncommand and optionally specify a name.</p>\n\
-    <div class=\"highlight highlight-source-shell\"><pre>singularity pull docker://continuumio/miniconda3:4.6.14</pre></div>\n\
-    <p>The above command will pull the container into the current directory and name\
-    \ it <code>miniconda3-4.6.14.sif</code>. If we wanted to call it instead <code>miniconda3.sif</code>\
-    \ we would use the <code>--name</code> argument</p>\n<div class=\"highlight highlight-source-shell\"\
-    ><pre>singularity pull --name miniconda3.sif docker://continuumio/miniconda3:4.6.14</pre></div>\n\
-    <p>When we want to use this image again in the future, rather than specifying\
-    \ the URI we\njust point Singularity at our local copy</p>\n<div class=\"highlight\
-    \ highlight-source-shell\"><pre>singularity <span class=\"pl-c1\">exec</span>\
-    \ miniconda3.sif <span class=\"pl-k\">&lt;</span>command<span class=\"pl-k\">&gt;</span></pre></div>\n\
-    <h4>\n<a id=\"user-content-singularity-hub\" class=\"anchor\" href=\"#singularity-hub\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a><a href=\"https://singularity-hub.org/\" rel=\"nofollow\">Singularity\
-    \ Hub</a>\n</h4>\n<p>Set up and maintained by a collaboration between Stanford\
-    \ University and Singularity,\nSingularity Hub is Singularity's \"semi-official\"\
-    \ version of Docker Hub. We will dig\ninto how to set this up for yourself a little\
-    \ later in <a href=\"#Exercise-1\">Exercise 1</a>.</p>\n<p>As with Docker Hub,\
-    \ we can search for containers uploaded by users and then use them in\nthe same\
-    \ way. However, it will ask us to log in using GitHub first. Login with your\n\
-    GitHub account and then search for <a href=\"https://github.com/DaehwanKimLab/centrifuge\"\
-    ><code>centrifuge</code></a>. The first result should\nbe for <a href=\"https://singularity-hub.org/collections/685\"\
-    \ rel=\"nofollow\"><code>mbhall88/Singularity_recipes</code></a> - click on this.\
-    \ This will take\nyou to a page listing all of the Singularity containers I maintain\
-    \ in a <a href=\"https://github.com/mbhall88/Singularity_recipes\">recipes repository\
-    \ on GitHub</a>. Scroll through these and look for the\n<a href=\"https://singularity-hub.org/containers/5461\"\
-    \ rel=\"nofollow\"><code>centrifuge</code></a> one and then click on the green\
-    \ <strong>Complete</strong> button.\nThe resulting screen will have the Build\
-    \ Specs (more on this soon) plus a bunch of\nbuild metrics. Additionally, at the\
-    \ top of this screen, you will see the core piece of\nthe URI that we need: <code>mbhall88/Singularity_recipes:centrifuge</code>.\
-    \ So to use this container,\nwe add the <code>shub://</code> scheme to the front.</p>\n\
-    <div class=\"highlight highlight-source-shell\"><pre>uri=<span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span>shub://mbhall88/Singularity_recipes:centrifuge<span\
-    \ class=\"pl-pds\">\"</span></span>\nsingularity pull --name centrifuge.sif <span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span><span class=\"pl-smi\">$uri</span><span\
-    \ class=\"pl-pds\">\"</span></span>\nsingularity <span class=\"pl-c1\">exec</span>\
-    \ centrifuge.sif centrifuge --help</pre></div>\n<p>Due to Singularity Hub be generously\
-    \ hosted as no charge by Google Cloud, and also due\nto a recent malicious attack,\
-    \ it is <a href=\"https://singularityhub.github.io/singularityhub-docs/docs/interact\"\
-    \ rel=\"nofollow\">recommended</a> to <code>pull</code> containers from Singularity\
-    \ and\nthen execute them, rather than running directly from the URI.</p>\n<p>Again,\
-    \ we can go one step further and specify a particular build of the container we\n\
-    want to use. In the <strong>Build Metrics</strong> section, there is a field called\
-    \ 'Version (file hash)'. For reproducibility purposes, it is advisable to use\
-    \ this hash as it makes it\nclear to others who may read your code exactly which\
-    \ container you used. So to pull the\nlatest centrifuge container, we would do\
-    \ the following (<strong>don't run this if you already\npulled the container above</strong>).</p>\n\
-    <div class=\"highlight highlight-source-shell\"><pre>hash=<span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span>13bc12f41b20001f17e6f8811dc3eeea<span class=\"\
-    pl-pds\">\"</span></span>\nuri=<span class=\"pl-s\"><span class=\"pl-pds\">\"\
-    </span>shub://mbhall88/Singularity_recipes:centrifuge@<span class=\"pl-smi\">${hash}</span><span\
-    \ class=\"pl-pds\">\"</span></span>\nsingularity pull --name centrifuge.sif <span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span><span class=\"pl-smi\">$uri</span><span\
-    \ class=\"pl-pds\">\"</span></span>\nsingularity <span class=\"pl-c1\">exec</span>\
-    \ centrifuge.sif centrifuge --help</pre></div>\n<h4>\n<a id=\"user-content-singularity-library\"\
-    \ class=\"anchor\" href=\"#singularity-library\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a><a href=\"https://cloud.sylabs.io/library\"\
-    \ rel=\"nofollow\">Singularity Library</a>\n</h4>\n<p>This is the official container\
-    \ registry for Singularity. However, all images built on\nthis service are Singularity\
-    \ v3+ compatible. At EBI we only have Singularity v2.6, but\nEMBL Heidelberg's\
-    \ cluster does use Singularity v3+. This service works similarly to Singularity\
-    \ and Docker Hubs, using the scheme <code>library://</code> for its URIs.</p>\n\
-    <p>One additional feature that Singularity Library has is a <a href=\"https://cloud.sylabs.io/builder\"\
-    \ rel=\"nofollow\">remote builder</a>. This builder allows you to dump a recipe\
-    \ for a container, it will build the\ncontainer for you, and then you can download\
-    \ it on to your local machine. Very handy\nwhen working on a computer you do not\
-    \ have <code>sudo</code> access on.</p>\n<p>See the slides <em>below</em> <a href=\"\
-    https://slides.com/mbhall88/remote-container-systems#/2/1\" rel=\"nofollow\">this</a>\
-    \ for more information about Singularity\nLibrary.</p>\n<h4>\n<a id=\"user-content-quay-and-biocontainers\"\
-    \ class=\"anchor\" href=\"#quay-and-biocontainers\" aria-hidden=\"true\"><span\
-    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a><a href=\"https://quay.io/\"\
-    \ rel=\"nofollow\">Quay</a> and <a href=\"https://biocontainers.pro/\" rel=\"\
-    nofollow\">BioContainers</a>\n</h4>\n<p>Quay is a container registry for Docker\
-    \ and <a href=\"https://coreos.com/rkt/\" rel=\"nofollow\">rkt</a> containers.\
-    \ We won't talk much\nabout this service outside how to use the BioContainers\
-    \ builds hosted on it.</p>\n<p>BioContainers is an open-source and community-driven\
-    \ framework for reproducibility in\nbioinformatics<a href=\"https://doi.org/10.1093/bioinformatics/btx192\"\
-    \ rel=\"nofollow\"><sup>1</sup></a>. They build and maintain containers for a\
-    \ large suite of bioinformatics\ntools. In particular, any tool that has a <a\
-    \ href=\"https://bioconda.github.io/\" rel=\"nofollow\">Bioconda</a> recipe automatically\
-    \ has\na BioContainers image built and stored on Quay.</p>\n<p>To see an example\
-    \ of how to find and use these BioContainers images check out the slides\nbelow\
-    \ <a href=\"https://slides.com/mbhall88/remote-container-systems#/4/1i\" rel=\"\
-    nofollow\">here</a>.</p>\n<hr>\n<p>For more details on remote container systems,\
-    \ refer to <a href=\"https://slides.com/mbhall88/remote-container-systems\" rel=\"\
-    nofollow\">my slides</a> from a one-day\n<a href=\"https://git.embl.de/grp-bio-it/singularity-training-2019\"\
-    \ rel=\"nofollow\">Singularity course</a> I was involved in running at EMBL in\
-    \ early 2019.</p>\n<h3>\n<a id=\"user-content-build-locally\" class=\"anchor\"\
-    \ href=\"#build-locally\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>Build locally</h3>\n<p>We've talked a lot about\
-    \ how to use containers that others have been kind enough to\nconstruct for us.\
-    \ But what happens if an image doesn't exist for the software tool you\nwant to\
-    \ use? Or if you want to combine multiple programs into a single container? You\n\
-    guessed it; we can build containers locally from definition/recipe files.</p>\n\
-    <p>Rather than reinvent the wheel, please refer to (and work your way through)\
-    \ <a href=\"https://slides.com/mbhall88/making-containers#/\" rel=\"nofollow\"\
-    >these slides</a> from the <a href=\"https://git.embl.de/grp-bio-it/singularity-training-2019\"\
-    \ rel=\"nofollow\">Singularity course</a> I was involved in running at EMBL in\
-    \ early 2019. Once you get to slide titled <a href=\"https://slides.com/mbhall88/making-containers#/2/4\"\
-    \ rel=\"nofollow\">\"Playing in a sandbox with a shell\"</a> you can move on to\
-    \ <a href=\"#Exercise-1\">Exercise 1</a>.</p>\n<p><strong>Note:</strong> As the\
-    \ course was aimed at users of Singularity v3+ you will see the container\nextension\
-    \ <code>.sif</code> used. This was a new container file format introduced in v3\
-    \ that is\nnot usable with v2. The container extension for v2 was <code>.simg</code>,\
-    \ so you may see this sometimes.\nFor instance, the cluster at EBI is still on\
-    \ v2 (the training VMs are v3). For those using\nthe Heidelberg cluster, your\
-    \ cluster has v3. Singularity v2 containers, with the <code>.simg</code> extension,\n\
-    can be executed by Singularity v3. You will also find all of the recipe\nfiles\
-    \ in that presentation in the <a href=\"https://github.com/mbhall88/eipp-2019-singularity/tree/master/recipes\"\
-    ><code>recipes/</code></a> directory of this repository.</p>\n<h2>\n<a id=\"user-content-exercise-1\"\
-    \ class=\"anchor\" href=\"#exercise-1\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Exercise 1</h2>\n<p>Form two\
-    \ groups and complete the following tasks.</p>\n<h3>\n<a id=\"user-content-task-1\"\
-    \ class=\"anchor\" href=\"#task-1\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Task 1</h3>\n<p><a href=\"https://help.github.com/en/github/getting-started-with-github/fork-a-repo\"\
-    >Fork</a> this repository on GitHub.</p>\n<h3>\n<a id=\"user-content-task-2\"\
-    \ class=\"anchor\" href=\"#task-2\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Task 2</h3>\n<p><a href=\"https://slides.com/mbhall88/remote-container-systems#/1/6\"\
-    \ rel=\"nofollow\">Enable Singularity Hub</a> on your fork of this repository.</p>\n\
-    <h3>\n<a id=\"user-content-task-3\" class=\"anchor\" href=\"#task-3\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Task\
-    \ 3</h3>\n<p>Each group should choose one of the following two GitHub issues to\
-    \ close:</p>\n<ul>\n<li>\n<code>snakemake</code> recipe: <a href=\"https://github.com/mbhall88/eipp-2019-singularity/issues/1\"\
-    ><img src=\"https://camo.githubusercontent.com/26d3e148ca179ea5b34cb0255936905ed487432faa4027a512640b8f92a68ea7/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f64657461696c2f73746174652f6d6268616c6c38382f656970702d323031392d73696e67756c61726974792f31\"\
-    \ alt=\"GitHub issue/pull request detail\" data-canonical-src=\"https://img.shields.io/github/issues/detail/state/mbhall88/eipp-2019-singularity/1\"\
-    \ style=\"max-width:100%;\"></a>\n</li>\n<li>\n<code>shellcheck</code> recipe:\
-    \ <a href=\"https://github.com/mbhall88/eipp-2019-singularity/issues/2\"><img\
-    \ src=\"https://camo.githubusercontent.com/a43a776c8cd5a471e5293ecd213c14f9452745fe9c75b850bd1986cf79d0d70a/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f64657461696c2f73746174652f6d6268616c6c38382f656970702d323031392d73696e67756c61726974792f32\"\
-    \ alt=\"GitHub issue/pull request detail\" data-canonical-src=\"https://img.shields.io/github/issues/detail/state/mbhall88/eipp-2019-singularity/2\"\
-    \ style=\"max-width:100%;\"></a>\n</li>\n</ul>\n<h2>\n<a id=\"user-content-sandbox-development\"\
-    \ class=\"anchor\" href=\"#sandbox-development\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Sandbox development</h2>\n<p>During\
-    \ the previous exercise, you may have noticed that errors in your build recipe\
-    \ require you to rerun the build all over again. When installing simple programs,\
-    \ this isn't too costly. However, when we want to build more complicated containers,\
-    \ it becomes time-consuming to rerun the entire build continually. In this section,\
-    \ we will look at how we can use Singularity's <a href=\"https://sylabs.io/guides/3.4/user-guide/build_a_container.html#creating-writable-images-and-sandbox-directories\"\
-    \ rel=\"nofollow\"><code>--sandbox</code></a> option to speed up the container\
-    \ recipe development cycle.</p>\n<p>So what is a sandbox? Think of it as a directory\
-    \ that mimics the inside of a container. You can then start an interactive shell\
-    \ session in this sandbox and run commands in the same environment that they will\
-    \ run in when building the container. In this way, you can test out what commands\
-    \ you need to run to get your program(s) installed and executing correctly. This\
-    \ massively reduces your turnaround time for creating containers. In addition,\
-    \ as we make the sandbox writeable, any changes we make will stay saved.</p>\n\
-    <p>Let's get into the sandbox and play!</p>\n<p>Create a new directory where we\
-    \ will do our sandbox development.</p>\n<div class=\"highlight highlight-source-shell\"\
-    ><pre>mkdir sandbox-dev\n<span class=\"pl-c1\">cd</span> sandbox-dev</pre></div>\n\
-    <p>Next, we will use the <a href=\"https://github.com/mbhall88/eipp-2019-singularity/blob/master/recipes/Singularity.template\"\
-    >template recipe</a> in this repository to build our sandbox from.</p>\n<div class=\"\
-    highlight highlight-source-shell\"><pre>sudo singularity build --sandbox playground\
-    \ ../recipes/Singularity.template</pre></div>\n<p>You should now see a directory\
-    \ called <code>playground</code>. I've named the sandbox <code>playground</code>,\
-    \ but you can name it whatever you want.</p>\n<p>Now we will start an interactive\
-    \ shell within the sandbox/container image.</p>\n<div class=\"highlight highlight-source-shell\"\
-    ><pre>sudo singularity shell --writable playground</pre></div>\n<p><em>Note: If\
-    \ you don't use <a href=\"https://sylabs.io/guides/3.4/user-guide/build_a_container.html#writable\"\
-    \ rel=\"nofollow\"><code>--writable</code></a> you won't be able to install anything\
-    \ or do anything that changes the size of the container.</em></p>\n<p>You should\
-    \ now see the prompt change to something like</p>\n<div class=\"highlight highlight-source-shell\"\
-    ><pre>Singularity playground:<span class=\"pl-k\">~</span><span class=\"pl-k\"\
-    >&gt;</span></pre></div>\n<p><strong>IMPORTANT:<br>\nThe directory <code>/root</code>\
-    \ from your local machine will be mounted in the sandbox. So anything you do in\
-    \ the sandbox in that directory will also be reflected in the <code>/root</code>\
-    \ directory locally.\nEnsure you move out of <code>/root</code> within the sandbox\
-    \ and do all of your work there. I tend to use <code>/usr/local</code>, but you\
-    \ could create a new directory altogether (but outside <code>/root</code>) e.g.\
-    \ <code>/sandbox</code>.</strong></p>\n<div class=\"highlight highlight-source-shell\"\
-    ><pre><span class=\"pl-c1\">cd</span> /usr/local</pre></div>\n<p>Now we'll try\
-    \ and <a href=\"https://conda.io/projects/conda/en/latest/user-guide/install/macos.html#install-macos-silent\"\
-    \ rel=\"nofollow\">install <code>conda</code></a> inside the sandbox.</p>\n<div\
-    \ class=\"highlight highlight-source-shell\"><pre>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh\
-    \ -O miniconda3.sh</pre></div>\n<p>This will give us: <code>bash: wget: command\
-    \ not found</code>. A perfect example of why these sandboxes\nare so useful. The\
-    \ OS installation is <em>very</em> minimal and doesn't include a lot of programs.</p>\n\
-    <p>Let's install <code>wget</code> in our sandbox and try again.</p>\n<div class=\"\
-    highlight highlight-source-shell\"><pre>apt install -y wget\nwget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh\
-    \ -O miniconda3.sh</pre></div>\n<p>Now we'll install <code>conda</code>, specifying\
-    \ the prefix (<code>-p</code>) as a directory in <code>/usr/local</code>\ncalled\
-    \ <code>miniconda</code>.</p>\n<div class=\"highlight highlight-source-shell\"\
-    ><pre>bash miniconda3.sh -b -p <span class=\"pl-s\"><span class=\"pl-pds\">$(</span>pwd<span\
-    \ class=\"pl-pds\">)</span></span>/miniconda</pre></div>\n<p>In order to run <code>conda</code>\
-    \ now, we need to ensure it's binary is in our <code>PATH</code>.</p>\n<div class=\"\
-    highlight highlight-source-shell\"><pre><span class=\"pl-k\">export</span> PATH=<span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span><span class=\"pl-s\"><span class=\"\
-    pl-pds\">$(</span>realpath miniconda/bin<span class=\"pl-pds\">)</span></span>:<span\
-    \ class=\"pl-smi\">${PATH}</span><span class=\"pl-pds\">\"</span></span></pre></div>\n\
-    <p><em>Remember from the <a href=\"https://slides.com/mbhall88/making-containers#/1/7\"\
-    \ rel=\"nofollow\"><code>%environment</code> slide</a> that when writing the recipe\
-    \ for\nthis <code>conda</code> installation we would need to write the <code>export</code>\
-    \ line as:</em></p>\n<div class=\"highlight highlight-source-shell\"><pre><span\
-    \ class=\"pl-c1\">echo</span> <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>export\
-    \ PATH=<span class=\"pl-s\"><span class=\"pl-pds\">$(</span>realpath miniconda/bin<span\
-    \ class=\"pl-pds\">)</span></span>:<span class=\"pl-smi\">${PATH}</span><span\
-    \ class=\"pl-pds\">\"</span></span> <span class=\"pl-k\">&gt;&gt;</span> <span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span><span class=\"pl-smi\">$SINGULARITY_ENVIRONMENT</span><span\
-    \ class=\"pl-pds\">\"</span></span></pre></div>\n<p>Lastly, we need to test <code>conda</code>\
-    \ is executable.</p>\n<div class=\"highlight highlight-source-shell\"><pre>conda\
-    \ list</pre></div>\n<p>In order to convert these commands into a recipe I generally\
-    \ keep a text file open where\nI paste (successful) commands into as I go so I\
-    \ don't have to search back through my\nshell history later.</p>\n<h2>\n<a id=\"\
-    user-content-exercise-2\" class=\"anchor\" href=\"#exercise-2\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Exercise\
-    \ 2</h2>\n<p>Similar to <a href=\"#exercise-1\">Exercise 1</a>, form two groups\
-    \ (can be different groups) and put\nin a pull request each to close the following\
-    \ two issues:</p>\n<ul>\n<li>\n<code>flye</code> recipe: <a href=\"https://github.com/mbhall88/eipp-2019-singularity/issues/3\"\
-    ><img src=\"https://camo.githubusercontent.com/5bdb30d6ea7dece3a9a4cfc16de03ce988f6197b0363cb987ad5506c879a57eb/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f64657461696c2f73746174652f6d6268616c6c38382f656970702d323031392d73696e67756c61726974792f33\"\
-    \ alt=\"GitHub issue/pull request detail\" data-canonical-src=\"https://img.shields.io/github/issues/detail/state/mbhall88/eipp-2019-singularity/3\"\
-    \ style=\"max-width:100%;\"></a>\n</li>\n<li>\n<code>nanopolish</code> recipe:\
-    \ <a href=\"https://github.com/mbhall88/eipp-2019-singularity/issues/4\"><img\
-    \ src=\"https://camo.githubusercontent.com/b1fb67d7045f5f2f26d02ed8c2d5b5423da330dfc0b19efa70dbfd53ca698f5f/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f64657461696c2f73746174652f6d6268616c6c38382f656970702d323031392d73696e67756c61726974792f34\"\
-    \ alt=\"GitHub issue/pull request detail\" data-canonical-src=\"https://img.shields.io/github/issues/detail/state/mbhall88/eipp-2019-singularity/4\"\
-    \ style=\"max-width:100%;\"></a>\n</li>\n</ul>\n<p>I chose more complicated programs\
-    \ this time so you can get some experience using a sandbox.</p>\n<h2>\n<a id=\"\
-    user-content-run-and-serving-applications\" class=\"anchor\" href=\"#run-and-serving-applications\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a><code>run</code> and serving applications</h2>\n<h3>\n<a id=\"user-content-singularity-run\"\
-    \ class=\"anchor\" href=\"#singularity-run\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a><code>singularity run</code>\n\
-    </h3>\n<p>The <a href=\"https://sylabs.io/guides/3.4/user-guide/cli/singularity_run.html\"\
-    \ rel=\"nofollow\"><code>run</code></a> directive will execute the <a href=\"\
-    https://slides.com/mbhall88/making-containers#/1/10\" rel=\"nofollow\"><code>%runscript</code></a>\
-    \ and\npass along all arguments to this script. The <code>run</code> directive\
-    \ is handy for when you want\nto automate some common tasks using the programs\
-    \ installed within the container and be\nable to handle user options. Refer to\
-    \ <a href=\"https://slides.com/mbhall88/making-containers#/1/10\" rel=\"nofollow\"\
-    >the slide on <code>%runscript</code></a>,\nfrom the earlier section on <a href=\"\
-    #build-locally\">buiding containers locally</a>, for\nan example of using <code>singularity\
-    \ run</code>.</p>\n<h3>\n<a id=\"user-content-serving-applications\" class=\"\
-    anchor\" href=\"#serving-applications\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Serving applications</h3>\n<p>It\
-    \ is also possible to serve applications through a port from a container. As an\
-    \ example\nwe will build a container to run a <a href=\"https://jupyter.org/\"\
-    \ rel=\"nofollow\"><code>jupyter notebook</code></a> that we can access on\nour\
-    \ local machine.</p>\n<p>The recipe to do this can be found in the <code>recipe/</code>\
-    \ directory as <a href=\"https://github.com/mbhall88/eipp-2019-singularity/blob/master/recipes/Singularity.jupyter\"\
-    ><code>Singularity.jupyter</code></a>.\nOf particular interest for this example,\
-    \ see the <code>%runscript</code> section.</p>\n<div class=\"highlight highlight-source-shell\"\
-    ><pre>%runscript\n    PORT=<span class=\"pl-s\"><span class=\"pl-pds\">\"</span><span\
-    \ class=\"pl-smi\">${1<span class=\"pl-k\">:-</span>8888}</span><span class=\"\
-    pl-pds\">\"</span></span>\n    <span class=\"pl-c1\">echo</span> <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>Starting notebook...<span class=\"pl-pds\"\
-    >\"</span></span>\n    <span class=\"pl-c1\">echo</span> <span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span>Open browser to localhost:<span class=\"pl-smi\"\
-    >${PORT}</span><span class=\"pl-pds\">\"</span></span>\n    <span class=\"pl-c1\"\
-    >exec</span> /usr/local/bin/jupyter notebook  --ip=<span class=\"pl-s\"><span\
-    \ class=\"pl-pds\">'</span>*<span class=\"pl-pds\">'</span></span> --port=<span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span><span class=\"pl-smi\">$PORT</span><span\
-    \ class=\"pl-pds\">\"</span></span> --no-browser</pre></div>\n<p>We take the first\
-    \ option passed by the user and store it in a variable <code>PORT</code>, or use\
-    \ <code>8888</code>\nif nothing is given. We print some logging to the screen\
-    \ with <code>echo</code> and then start\na <code>jupyter</code> session, passing\
-    \ the <code>PORT</code> to <code>jupyter</code>.</p>\n<p>Let's build this image\
-    \ and then fire it up.</p>\n<div class=\"highlight highlight-source-shell\"><pre>sudo\
-    \ singularity build jupyter.sif recipes/Singularity.jupyter\n<span class=\"pl-c\"\
-    ><span class=\"pl-c\">#</span> we will use the default port 8888</span>\nsingularity\
-    \ run jupyter.sif  </pre></div>\n<p>You should get some output from <code>jupyter</code>\
-    \ indicating it has started running the notebook\nand providing a location, which\
-    \ should look something like:</p>\n<pre><code>[I 11:40:28.948 NotebookApp] Serving\
-    \ notebooks from local directory: /home/vagrant/container-dev\n[I 11:40:28.949\
-    \ NotebookApp] The Jupyter Notebook is running at:\n[I 11:40:28.949 NotebookApp]\
-    \ http://dev-vm:8888/?token=c8fe88de778120e5ccd42850d6d13712e27b125b0481d5b0\n\
-    [I 11:40:28.949 NotebookApp]  or http://127.0.0.1:8888/?token=c8fe88de778120e5ccd42850d6d13712e27b125b0481d5b0\n\
-    [I 11:40:28.949 NotebookApp] Use Control-C to stop this server and shut down all\
-    \ kernels (twice to skip confirmation).\n[C 11:40:28.953 NotebookApp]\n</code></pre>\n\
-    <p>Copy the URL (either one), and paste it into a web browser. You should now\
-    \ see the home\npage for the notebook. Select the example notebook at <code>notebooks/plot.ipynb</code>.</p>\n\
-    <p>Run the two cells in the notebook, and you should see some toy data plotted.</p>\n\
-    <p>This is quite a simple use case for serving applications. You can do far more\
-    \ complicated\nthings like <a href=\"https://divingintogeneticsandgenomics.rbind.io/post/run-rstudio-server-with-singularity-on-hpc/\"\
-    \ rel=\"nofollow\">running an RStudio server</a> from a container and access it\
-    \ locally.</p>\n<h2>\n<a id=\"user-content-workflow-management-systems\" class=\"\
-    anchor\" href=\"#workflow-management-systems\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Workflow management systems</h2>\n\
-    <p>Containers and workflow management systems (WMSs), such as <code>snakemake</code>\
-    \ and <a href=\"https://www.nextflow.io/\" rel=\"nofollow\"><code>nextflow</code></a>,\n\
-    are a match made in heaven. Containers add a crucial layer of reproducibility\
-    \ to these systems.</p>\n<p>Though this is not a project to teach you how to use\
-    \ WMSs, I would\nencourage you to take a look at <a href=\"https://slides.com/mbhall88/singularity-and-workflow-management-systems#/\"\
-    \ rel=\"nofollow\">this short slide deck</a> from the Singularity course I ran\n\
-    as it shows you how easy it is to integrate Singularity containers into WMSs.</p>\n\
-    <h2>\n<a id=\"user-content-programs-requiring-gpus\" class=\"anchor\" href=\"\
-    #programs-requiring-gpus\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>Programs requiring GPUs</h2>\n<p>Singularity\
-    \ also provides the ability to utilise GPU cards, without needing to install\n\
-    the GPU drivers into your container. Currently, it can only use NVIDIA GPUs. To\
-    \ allow a\ncontainer to use the local GPU card and drivers all you need to do\
-    \ it pass the\n<a href=\"https://sylabs.io/guides/2.6/user-guide/appendix.html#a-gpu-example\"\
-    \ rel=\"nofollow\"><code>--nv</code></a> option. For example, to get a python\
-    \ shell with the GPU version of <code>tensorflow</code>\navailable, you would\
-    \ run the following (on a machine with an NVIDIA GPU).</p>\n<div class=\"highlight\
-    \ highlight-source-shell\"><pre>singularity <span class=\"pl-c1\">exec</span>\
-    \ --nv docker://tensorflow/tensorflow:latest-gpu python</pre></div>\n<h2>\n<a\
-    \ id=\"user-content-bonus\" class=\"anchor\" href=\"#bonus\" aria-hidden=\"true\"\
-    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Bonus</h2>\n\
-    <p>If you have gotten to this point, then have a go at creating a container for\
-    \ a piece of\nsoftware you have had difficulties installing in the past. Alternatively,\
-    \ you could try\nand reduce the size of the containers we have already produced\
-    \ by using <a href=\"https://www.alpinelinux.org/\" rel=\"nofollow\">Alpine</a>\
-    \ as the\nbase OS.</p>\n"
+  readme: '<p><a href="https://singularity-hub.org/collections/3722" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
+    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    style="max-width:100%;"></a></p>
+
+    <p>Singularity recipe files for the PLINK association analysis toolset</p>
+
+    '
   stargazers_count: 0
   subscribers_count: 7
   topics: []
@@ -17753,7 +17277,7 @@ UniversalDataTool/universal-data-tool:
     </g-emoji></a>\n</td>\n  </tr>\n</table>\n\n\n\n<p>This project follows the <a\
     \ href=\"https://github.com/all-contributors/all-contributors\">all-contributors</a>\
     \ specification. Contributions of any kind welcome!</p>\n"
-  stargazers_count: 1461
+  stargazers_count: 1465
   subscribers_count: 33
   topics:
   - computer-vision
@@ -17776,7 +17300,7 @@ UniversalDataTool/universal-data-tool:
   - labeling
   - labeling-tool
   - hacktoberfest
-  updated_at: 1627477226.0
+  updated_at: 1627659231.0
 VIB-CBD/scanpy-images:
   data_format: 2
   description: Docker and Singularity images for Scanpy
@@ -19194,14 +18718,14 @@ aertslab/pySCENIC:
     <p>Please be aware of FSL''s strict license regarding non-commercial use.</p>
 
     '
-  stargazers_count: 158
+  stargazers_count: 159
   subscribers_count: 13
   topics:
   - single-cell
   - transcriptomics
   - gene-regulatory-network
   - transcription-factors
-  updated_at: 1627516338.0
+  updated_at: 1627579171.0
 agaveplatform/SC17-container-tutorial:
   data_format: 2
   description: 'SC17 tutorial - "HPC via HTTP: Portable, Scalable Computing using
@@ -20001,191 +19525,14 @@ arcsUVA/cryoCARE:
   - Singularity.0.1.0
   full_name: arcsUVA/cryoCARE
   latest_release: null
-  readme: "<h1>\n<a id=\"user-content-ppo_cpp\" class=\"anchor\" href=\"#ppo_cpp\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>PPO_CPP</h1>\n<h2>\n<a id=\"user-content-what-is-it\" class=\"anchor\"\
-    \ href=\"#what-is-it\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>What is it?</h2>\n<p>PPO_CPP is a C++ version\
-    \ of a Proximal Policy Optimization algorithm @Schulman2017 with some additions.\n\
-    It was partially ported from Stable Baselines @Hill2018 Deep Reinforcement Learning\
-    \ suite,\nwith elements of the OpenAI Gym framework @Brockman2016, in a form of\
-    \ a Tensorflow @Abadi2016 graph executor. It additionally\nfeatures an example\
-    \ environment based on DART simulation engine @Lee2018 with a hexapod robot @Cully2015\
-    \ tasked to walk as far as\npossible along X-axis (<a href=\"https://drive.google.com/open?id=1ds_VrjTDdhqWkh40eF1vscetfUyJUlVm\"\
-    \ rel=\"nofollow\">example recording</a>).</p>\n<h2>\n<a id=\"user-content-why\"\
-    \ class=\"anchor\" href=\"#why\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>Why?</h2>\n<p><strong>Performance</strong>.\
-    \ The interesting thing is that PPO_CPP executes 2~3 times faster than corresponding\
-    \ Python implementation when running on the\nsame example environment with the\
-    \ same number of threads. Originally, however, PPO_CPP was set up for the sake\
-    \ of DRL/Neuroevolution comparison (see citation section below).</p>\n<h2>\n<a\
-    \ id=\"user-content-is-it-optimized\" class=\"anchor\" href=\"#is-it-optimized\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Is it optimized?</h2>\n<p>Not at all. Particularly in the multithreaded\
-    \ case, there might be some easy wins to further boost performance, e.g. by going\
-    \ away from\nported ideas and leveraging thread safety of Tensorflow's Session.Run()\
-    \ or promoting immutability by copying network weights.</p>\n<h2>\n<a id=\"user-content-how-was-it-tested-so-far\"\
-    \ class=\"anchor\" href=\"#how-was-it-tested-so-far\" aria-hidden=\"true\"><span\
-    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>How was it tested\
-    \ so far?</h2>\n<p>Both hexapod environments were run in many instances on a High\
-    \ Performance Computing cluster for a grand total of 100 000 CPU hours yielding\
-    \ believable results.</p>\n<h2>\n<a id=\"user-content-how-can-i-use-it-for-my-work\"\
-    \ class=\"anchor\" href=\"#how-can-i-use-it-for-my-work\" aria-hidden=\"true\"\
-    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>How can\
-    \ I use it for my work?</h2>\n<p>You should be able to easily check the examples\
-    \ below, however if you want to use it in different settings you will probably\
-    \ need 3 things:</p>\n<ul>\n<li>Make your environment inherit from Env abstract\
-    \ class under <code>env\\env.hpp</code>\n</li>\n<li>Modify or replace main <code>ppo2.cpp</code>\
-    \ which creates instance of an environment and passes it to PPO</li>\n<li>Create\
-    \ own computational graph and potentially make some small modifications to the\
-    \ core algorithm if using more involved\npolicies (currently implementation supports\
-    \ only MLP policies). Graph generation is mentioned below.</li>\n</ul>\n<h2>\n\
-    <a id=\"user-content-state-of-the-project\" class=\"anchor\" href=\"#state-of-the-project\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>State of the project</h2>\n<p>This a proof-of-concept that could benefit\
-    \ from a number of improvements. Let me know if this project is useful for you!</p>\n\
-    <h2>\n<a id=\"user-content-recommended-dev-setup-and-dependencies\" class=\"anchor\"\
-    \ href=\"#recommended-dev-setup-and-dependencies\" aria-hidden=\"true\"><span\
-    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Recommended dev\
-    \ setup and dependencies</h2>\n<p>Except for <code>ppo2.cpp</code> and potentially\
-    \ the hexapod environments, core PPO code should be easily portable.\nTwo main\
-    \ dependencies are Eigen @Guennebaud2010 and Tensorflow @Abadi2016. If the hexapod\
-    \ environment considered then also DART @Lee2018.\nContainers additionally use\
-    \ Sferes2 @Mouret2010 framework and Python WAF build system @Nagy2010 which\n\
-    are the outcome of the history of the project and could be ditched. A most solid\
-    \ way to examine container dependencies\nis to read the project's <code>singularity/singularity.def</code>\
-    \ file and its parent.\nTo run the examples a Linux system supporting Singularity\
-    \ container system is needed, preferably:</p>\n<ul>\n<li>\n<p>Ubuntu 18.04 LTS\
-    \ operating system,</p>\n</li>\n<li>\n<p><a href=\"https://sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps\"\
-    \ rel=\"nofollow\">Singularity</a> @Kurtzer2016 containerization environment,</p>\n\
-    </li>\n</ul>\n<h1>\n<a id=\"user-content-examples\" class=\"anchor\" href=\"#examples\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Examples</h1>\n<h2>\n<a id=\"user-content-training-gaits\" class=\"\
-    anchor\" href=\"#training-gaits\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>Training gaits</h2>\n<p>To start the\
-    \ PPO training you need to <a href=\"https://sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps\"\
-    \ rel=\"nofollow\">install\nSingularity</a>\n@Kurtzer2016 version 3.5 or later\
-    \ (at the moment available only for\nLinux systems). For your convenience, a well-performing\
-    \ PPO setup was\ncommitted in the PPO repository. Paying attention to the very\
-    \ long\nargument list to the SIMG file, type in bash:</p>\n<pre><code>git clone\
-    \ git@github.com:Antymon/ppo_cpp.git\n\ncd ppo_cpp/singularity\n\n./build_final_image.sh\n\
-    \n# very long argument list\n./final*.simg \n    0 \n    ppo_cpp_[4_5]_lr_0.0004_cr_0.1610_ent_0.0007\n\
-    ../resources/ppo_cl/graphs/ppo_cpp_\\[4_5\\]_lr_0.0004_cr_0.1610_ent_0.0007.meta.txt\
-    \ \n    --steps 75000000 \n    --num_saves 75 \n    --lr 0.000393141171574037\
-    \ \n    --ent 0.0007160293279937344 \n    --cr 0.16102319952328978 \n    --num_epochs\
-    \ 10 \n    --batch_steps 65536 \n    --cl\n</code></pre>\n<p>This will trigger\
-    \ a single training run of a closed-loop PPO for 75M\nframes. On a modern CPU,\
-    \ this will take around 1 day of computation,\n10GB memory (leak in the example\
-    \ environment),\nand less than 2 logical cores. You can check the PNG image\n\
-    with an example learning curve available in the repository as\n<code>./resources/ppo_cl/*.png</code>\
-    \ to see what to expect over time. The results\nwith the log file will be available\
-    \ under <code>./results</code> in the same\ndirectory as the SIMG file. To display\
-    \ help of the main executable through the SIMG file:</p>\n<pre><code>    singularity\
-    \ run --app help *.simg\n</code></pre>\n<p>Inside of <code>./results</code> directory\
-    \ there will be <code>./tensorboard</code> directory\ncreated with episode rewards\
-    \ logs. Tensorboard utility that is installed\nwith Python Tensorflow @Abadi2016\
-    \ can spawn a web server,\nwhich is able to visualize those logs at runtime by\
-    \ simply pointing to\nthe mentioned directory:</p>\n<pre><code>    tensorboard\
-    \ --logdir tensorboard --port 6080\n</code></pre>\n<p>Upon starting the server,\
-    \ weblink will be displayed in the output to\nrender the visualization in a browser.<br>\n\
-    <br>\nYou can of course change passed parameters, however, if you wish to\nchange\
-    \ the graph structure you will need to regenerate the graph file (MLP):</p>\n\
-    <pre><code>git clone https://gitlab.doc.ic.ac.uk/sb5817/stable-baselines.git\n\
-    \ncd stable-baselines/\n\npython3 ./stable_baselines/ppo2/graph_generator.py \n\
-    \    [4,5] \n    --observation_space_size 18 \n    --save_path graphs/ppo_cpp_[4_5]_lr_0.0004_cr_0.1610_ent_0.0007.meta.txt\
-    \ \n    --learning_rate 0.000393141171574037\n    --ent_coef 0.0007160293279937344\n\
-    \    --cliprange 0.16102319952328978\n</code></pre>\n<p>This will generate a closed-loop\
-    \ graph similar to the one used in the\ntraining initiated above. The generator\
-    \ will write the file with respect to\nyour Stable Baselines @Hill2018 repository.\
-    \ You need to point to\nthis file when calling into the PPO SIMG file. In order\
-    \ to see what\nparameters are accepted, from <em>within</em> the repository call:</p>\n\
-    <pre><code>    python3 ./stable_baselines/ppo2/graph_generator.py --help\n</code></pre>\n\
-    <p>If you require policy other than MLP, modifications to both graph_generator\
-    \ and\ncore PPO_CPP may be needed, however as long as the Policy is originally\
-    \ supported\nby Stable Baselines, those changes shouldn't be too challenging.\
-    \ The reason for\nforking Stable Baselines was mainly to name tensors which need\
-    \ to be referred to on the C++ side,\nbut also to introduce a thin graph generator\
-    \ layer over the original implementation extended with\ncomputational graph export/import\
-    \ functionality.</p>\n<h2>\n<a id=\"user-content-visualizing-gaits\" class=\"\
-    anchor\" href=\"#visualizing-gaits\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Visualizing gaits</h2>\n<p>To\
-    \ start the PPO gait visualization you need to <a href=\"https://sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps\"\
-    \ rel=\"nofollow\">install\nSingularity</a>\n@Kurtzer2016 version 3.5 or later\
-    \ (at the moment available only for\nLinux systems). For your convenience, a well-performing\
-    \ PPO setup was\ncommitted in the PPO repository. The following assumes you are\
-    \ <strong>not</strong>\nrunning in the headless mode. Paying attention to the\
-    \ very long argument\nlist to the SIMG file, type in bash:</p>\n<pre><code>git\
-    \ clone git@github.com:Antymon/ppo_cpp.git\n\ncd ppo_cpp/singularity\n\n./start_container.sh\n\
-    \ncd /git/sferes2/\n./exp/ppo_cpp/singularity/resources/setup.sh\n./build/exp/ppo_cpp/ppo_cpp_visual\n\
-    \    --cl \n    -p exp/ppo_cpp/resources/ppo_cl/2019-08-20_21_13_01_2859_0.pkl.71\n\
-    </code></pre>\n<p>This will trigger a window in which hexapod will be visualized\
-    \ in\n5-second sessions, looping forever. Close through the Ctrl+C key\ncombination.\
-    \ If you close the window manually, the simulation will just\nrun headless, just\
-    \ like in the training process. You can use <code>\u2013help</code> to\nsee the\
-    \ full listing of available options. Serialization files are\ncreated during the\
-    \ training process under <code>./checkpoints</code> directory\nnested under <code>./results</code>\
-    \ with a name according to the chosen frame\ninterval (typically 1 save per 1M\
-    \ frames).<br>\n<br>\nIf you are running in a headless mode, you can try running\n\
-    <code>visu_server.sh</code> from any directory within the container (preferably\
-    \ as\na background process using &amp;) to start a VNC @VNC server. This will\
-    \ bind\nto the localhost on port 6080 of the host machine, where visualization\n\
-    will be rendered. As a practitioner\u2019s note, it is advisable to check if\n\
-    VNC started correctly and restart it if it did not. It is also not\nrecommended\
-    \ to do this when not in headless mode due to the deep\nintegration of Singularity\
-    \ @Kurtzer2016 with the host machine that can\nresult in undesirable side effects.</p>\n\
-    <h1>\n<a id=\"user-content-related-repositories\" class=\"anchor\" href=\"#related-repositories\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a><a name=\"user-content-repos\"></a>Related repositories</h1>\n<ul>\n\
-    <li>\n<p><a href=\"https://gitlab.doc.ic.ac.uk/sb5817/docker-dart-gym\" rel=\"\
-    nofollow\">docker-pydart2_hexapod_baselines</a> - Docker @Merkel2014 file describing\
-    \ analogous Python setup. In order to try out an example hexapod experiment run\
-    \ <code>python3 run_hexapod.py</code> inside of <code>/git/stable-baselines</code>\
-    \ directory.</p>\n</li>\n<li>\n<p><a href=\"https://gitlab.doc.ic.ac.uk/sb5817/stable-baselines\"\
-    \ rel=\"nofollow\">stable_baselines</a> - Fork of Stable Baselines @Hill2018 (deep\
-    \ RL algorithm\nsuite). Includes modified PPO2 algorithm @Schulman2017 and utilities\
-    \ to export\nTensorflow @Abadi2016 meta graph.</p>\n</li>\n<li>\n<p><a href=\"\
-    https://gitlab.doc.ic.ac.uk/sb5817/dart_env\" rel=\"nofollow\">gym-dart_env</a>\
-    \ -\nHexapod setup as a Python-based environment within OpenAI Gym\n@Brockman2016\
-    \ framework.</p>\n</li>\n<li>\n<p><a href=\"https://gitlab.doc.ic.ac.uk/sb5817/pydart2\"\
-    \ rel=\"nofollow\">pydart2</a> - Fork of\nPydart2 @Ha2016: Python layer over C++-based\
-    \ DART @Lee2018\nsimulation framework. Modified to enable experiments with hexapod.</p>\n\
-    </li>\n</ul>\n<h1>\n<a id=\"user-content-citing\" class=\"anchor\" href=\"#citing\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Citing</h1>\n<pre><code>@misc{brych2020competitiveness,\n  title={Competitiveness\
-    \ of MAP-Elites against Proximal Policy Optimization on locomotion tasks in deterministic\
-    \ simulations}, \n  author={Szymon Brych and Antoine Cully},\n  year={2020},\n\
-    \  eprint={2009.08438},\n  archivePrefix={arXiv},\n  primaryClass={cs.AI}\n</code></pre>\n\
-    <h1>\n<a id=\"user-content-references\" class=\"anchor\" href=\"#references\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>References</h1>\n<ol>\n<li>Martin Abadi, Paul Barham, Jianmin Chen,\
-    \ Zhifeng Chen, Andy Davis, JeffreyDean, Matthieu Devin, Sanjay Ghemawat, Geoffrey\
-    \ Irving, Michael Isard, et al. Tensorflow: A system for large-scale machine learning.\
-    \ In12th{USENIX}Sym-posium on Operating Systems Design and Implementation ({OSDI}16),\
-    \ pages265\u2013283, 2016</li>\n<li>Greg  Brockman,  Vicki  Cheung,  Ludwig  Pettersson,\
-    \  Jonas  Schneider,  John Schulman,  Jie  Tang,  and  Wojciech Zaremba.   Openai\
-    \  gym.arXiv  preprintarXiv:1606.01540, 2016</li>\n<li>Antoine Cully, Jeff Clune,\
-    \ Danesh Tarapore, and Jean-Baptiste Mouret. Robots that can adapt like animals.\
-    \ Nature, 521(7553):503, 2015</li>\n<li>Gael Guennebaud, Benoit Jacob, et al.\
-    \  Eigen v3. <a href=\"http://eigen.tuxfamily.org\" rel=\"nofollow\">http://eigen.tuxfamily.org</a>,\
-    \ 2010</li>\n<li>Sehoon  Ha. Pydart2:   A python binding of  DART. <a href=\"\
-    https://github.com/sehoonha/pydart2\">https://github.com/sehoonha/pydart2</a>,\
-    \ 2016</li>\n<li>Ashley Hill, Antonin Raffin, Maximilian Ernestus, Adam Gleave,\
-    \ Rene Traore, Prafulla Dhariwal, Christopher Hesse, Oleg Klimov, Alex Nichol,\
-    \ Matthias Plap-pert,  Alec Radford,  John Schulman,  Szymon Sidor,  and Yuhuai\
-    \ Wu.   Stablebaselines.<a href=\"https://github.com/hill-a/stable-baselines\"\
-    >https://github.com/hill-a/stable-baselines</a>, 2018</li>\n<li>Gregory M Kurtzer.\
-    \ Singularity 2.1.2 - Linux application and environment containers for science,\
-    \ August 2016</li>\n<li>Jeongseok Lee, Michael Grey, Sehoon Ha, Tobias Kunz, Sumit\
-    \ Jain, Yuting Ye, Siddhartha Srinivasa, Mike Stilman, and C Karen Liu.  Dart:\
-    \  Dynamic animation and robotics toolkit.The Journal of Open Source Software,\
-    \ 3:500, 02 2018</li>\n<li>Dirk Merkel. Docker: Lightweight Linux containers for\
-    \ consistent development and deployment. Linux J., 2014(239), March 2014</li>\n\
-    <li>Jean-Baptiste Mouret and Stephane  Doncieux.   SFERESv2: Evolvin\u2019 in\
-    \ the multi-core world.   InProc.  of  Congress  on  Evolutionary  Computation\
-    \  (CEC), pages 4079\u20134086, 2010</li>\n<li>Thomas Nagy.The WAF Book. 2010</li>\n\
-    <li>John   Schulman,    Filip   Wolski,    Prafulla   Dhariwal,    Alec   Radford,\
-    \    and Oleg  Klimov. Proximal  policy  optimization  algorithms. arXiv  preprint\
-    \ arXiv:1707.06347, 2017</li>\n</ol>\n"
+  readme: '<h1>
+
+    <a id="user-content-singularity-images" class="anchor" href="#singularity-images"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>singularity-images</h1>
+
+    <p>Setups for various images used on the dgx.</p>
+
+    '
   stargazers_count: 0
   subscribers_count: 5
   topics: []
@@ -20223,14 +19570,38 @@ arcsUVA/patric:
   - Singularity.1.026
   full_name: arcsUVA/patric
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-r" class="anchor" href="#r" aria-hidden="true"><span aria-hidden="true"
-    class="octicon octicon-link"></span></a>R</h1>
-
-    <p>R containers</p>
-
-    '
+  readme: "<h1>\n<a id=\"user-content-cntdocker\" class=\"anchor\" href=\"#cntdocker\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>CNTdocker</h1>\n<h2>\n<a id=\"user-content-about\" class=\"anchor\"\
+    \ href=\"#about\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>About</h2>\n<p>Dockerfiles to create Docker images\
+    \ used by the CNT at the university of Pennsylvania</p>\n<h2>\n<a id=\"user-content-directory-contents-explanation\"\
+    \ class=\"anchor\" href=\"#directory-contents-explanation\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Directory\
+    \ contents explanation</h2>\n<h3>\n<a id=\"user-content-eeg\" class=\"anchor\"\
+    \ href=\"#eeg\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a><strong>EEG</strong>:</h3>\n<p>Dockerfiles used to\
+    \ create images with common EEG analysis tools. Usually python 3</p>\n<p><strong>echobase</strong>:\
+    \ Dockerfiles used to create images that can calculate functional connectivity\
+    \ of EEG\nAlso has ieegpy python package used to interface with iEEG.org\nEchobase\
+    \ code is from <a href=\"https://github.com/andyrevell/paper001\">https://github.com/andyrevell/paper001</a></p>\n\
+    <pre><code>Ubuntu 18.04\nPython 2.7 and Python 3.6\nNumpy 1.18.4\npandas 1.0.3\n\
+    scipy 1.4.1\n</code></pre>\n<h3>\n<a id=\"user-content-imaging\" class=\"anchor\"\
+    \ href=\"#imaging\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a><strong>Imaging</strong>:</h3>\n<p>Dockerfiles used\
+    \ to create images with common MRI analysis tools.</p>\n<pre><code>  Ubuntu 18.04\n\
+    \  Python 2.7, Python 3.6, Python 3.7\n  dcm2niix\n  dsistudio\n  ANTS\n  Freesurfer\n\
+    \  FSL 6.0.1\n</code></pre>\n<h3>\n<a id=\"user-content-ml\" class=\"anchor\"\
+    \ href=\"#ml\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a><strong>ml</strong>:</h3>\n<p>Dockerfiles used to\
+    \ create images with common machine learning tools.</p>\n<p><strong>wavenet</strong>:\
+    \ Dockerfile to create compatible dependencies to use with Goodgle Deepmind wavenet\
+    \ paper\n<a href=\"https://deepmind.com/blog/article/wavenet-generative-model-raw-audio\"\
+    \ rel=\"nofollow\">Wavenet blog</a>\n<a href=\"https://arxiv.org/pdf/1609.03499.pdf\"\
+    \ rel=\"nofollow\">Wavenet paper</a></p>\n<pre><code>  Ubuntu 18.04\n  tensorflow\
+    \ 1.0.0\n  pandas 0.19.2\n  librosa 0.5.0\n</code></pre>\n<p><strong>Tensorflow_2.1</strong>:\
+    \ Dockerfile to create compatible dependencies to with tensorflow 2.1</p>\n<pre><code>\
+    \  Ubuntu 18.04\n  tensorflow 2.1\n</code></pre>\n"
   stargazers_count: 0
   subscribers_count: 5
   topics: []
@@ -24747,27 +24118,61 @@ cokelaer/damona:
   - damona/recipes/art/Singularity.art_3.11.14
   full_name: cokelaer/damona
   latest_release: v0.4.3
-  readme: '<h1>
-
-    <a id="user-content-hpc-singularity" class="anchor" href="#hpc-singularity" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>hpc-singularity</h1>
-
-    <p>Singularity for HPC</p>
-
-    <p>Make sure the sigularity is built on <a href="https://singularity-hub.org"
-    rel="nofollow">https://singularity-hub.org</a></p>
-
-    <p>if ready use:</p>
-
-    <p><code>singularity pull shub://sinaehsani6/hpc-singularity:centos7-python3.7-transformers3.0.2-imagecrawl</code></p>
-
-    <p>Transformer 2.11.0:
-
-    <code>singularity pull shub://sinaehsani6/hpc-singularity:centos7-python3.7-transformers2.11.0-imagecrawl</code></p>
-
-    <p>Make sure the imagecrawl is updated (latest commit)</p>
-
-    '
+  readme: "<h1>\n<a id=\"user-content--nemo---ocean\" class=\"anchor\" href=\"#-nemo---ocean\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a><g-emoji class=\"g-emoji\" alias=\"ocean\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f30a.png\"\
+    >\U0001F30A</g-emoji> NEMO - ocean</h1>\n<p>HPC-AI 2020 | Training Project - NEMO:\
+    \ Nucleus for European Modelling of the Ocean</p>\n<h2>\n<a id=\"user-content--docker-images---centos\"\
+    \ class=\"anchor\" href=\"#-docker-images---centos\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a><g-emoji class=\"\
+    g-emoji\" alias=\"floppy_disk\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f4be.png\"\
+    >\U0001F4BE</g-emoji> Docker Images - CentOS</h2>\n<p>Thank you for an image \
+    \ (<a href=\"https://hub.docker.com/r/wangyoucao577/centos7-gcc7.4\" rel=\"nofollow\"\
+    >wangyoucao577/centos7-gcc7.4</a>)</p>\n<h2>\n<a id=\"user-content--tag\" class=\"\
+    anchor\" href=\"#-tag\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a><g-emoji class=\"g-emoji\" alias=\"bookmark\"\
+    \ fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f516.png\"\
+    >\U0001F516</g-emoji> Tag</h2>\n<ul>\n<li><a href=\"https://hub.docker.com/layers/soycoder/centos7/nemo-ocean/images/sha256-c7bdaa3614e1fc1bbef31bdb05ac997e64b11abff716d00315807b1b79ad13c3\"\
+    \ rel=\"nofollow\">:nemo-ocean</a></li>\n</ul>\n<h2>\n<a id=\"user-content--environment\"\
+    \ class=\"anchor\" href=\"#-environment\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a><g-emoji class=\"g-emoji\" alias=\"\
+    sunrise_over_mountains\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f304.png\"\
+    >\U0001F304</g-emoji> Environment</h2>\n<ol>\n<li>HPC-X to build an out-of-box\
+    \ MPI environment</li>\n<li>Boost library</li>\n<li>HDF5 Parallellibrary</li>\n\
+    <li>NETCDF Parallel library with HDF5</li>\n<li>NETCDF-FortranParallel library\
+    \ with NETCDF Parallel</li>\n<li>XIOS</li>\n<li>GYREwith GNUgfortran + HPC-X OpenMPI</li>\n\
+    </ol>\n<div class=\"highlight highlight-text-html-basic\"><pre>/usr/mpi/gcc/openmpi-3.1.1rc1/bin/mpirun\
+    \ \\\n-mca pml ucx -x UCX_NET_DEVICES=mlx5_0:1 \\\n-mca mpi_show_mca_params 1\
+    \ -mca pml_ucx_verbose 9 \\\n/usr/mpi/gcc/openmpi-3.1.1rc1/tests/osu-micro-benchmarks-5.3.2/osu_get_bw\n\
+    \n\n/usr/mpi/gcc/openmpi-3.1.1rc1/bin/mpirun -n 2 \\\n-mca pml ucx -x UCX_NET_DEVICES=mlx5_0:1\
+    \ \\\n/usr/mpi/gcc/openmpi-3.1.1rc1/tests/osu-micro-benchmarks-5.3.2/osu_get_bw\n\
+    \n/usr/bin/time -p mpirun -n 2 \\\n-mca pml ucx -x UCX_TLS=rc UCX_NET_DEVICES=mlx5_0:1\
+    \ ./nemo\n\n/usr/bin/time -p mpirun -n 2 \\\n-mca -x UCX_TLS=rc -x UCX_NET_DEVICES=mlx5_0:1\
+    \ ./nemo\n\n/usr/bin/time -p mpirun -n 2 \\\n-mca -x UCX_TLS=rc -x UCX_NET_DEVICES=ib0\
+    \ \\\n/home/hpc/nemo/apps/hpcx-v2.6.0-gcc-MLNX_OFED_LINUX-4.7-1.0.0.1-redhat7.7-x86_64/ompi/tests/osu-micro-benchmarks-5.3.2/osu_get_bw\n\
+    \nibstat\n\n\nNow step into the container and install MOFED:\n\n$ sudo singularity\
+    \ exec -w u16.04-sandbox/ bash\n(singularity)# cd MOFED/MLNX_OFED_LINUX-4.3-1.0.1.0-ubuntu16.04-x86_64\n\
+    (singularity)# ./mlnxofedinstall\n\n\n! -- (nemo) singularity exec -w nemo.sif\
+    \ bash\n\n\n## Run container\nTo use Singularity in Mellanox/HPCX need to load\
+    \ env module: `module load tools/singularity`\n.\n\nRun `osu_latency` test:\n\
+    ```sh\n$ mpirun -np 2 --map-by node -mca btl self singularity exec hpcx-u16.04.simg\
+    \ /hpcx/ompi-a7df\nd94/tests/osu-micro-benchmarks-5.3.2/osu_latency\n# OSU MPI\
+    \ Latency Test v5.3.2\n# Size          Latency (us)\n0                       1.55\n\
+    1                       1.55\n2                       1.55\n4                \
+    \       1.55\n8                       1.54\n16                      1.55\n32 \
+    \                     1.55\n64                      1.65\n128                \
+    \     2.19\n256                     2.23\n512                     2.35\n1024 \
+    \                   2.64\n2048                    2.89\n4096                 \
+    \   3.51\n8192                    5.00\n16384                   6.44\n32768  \
+    \                 8.91\n65536                  14.12\n131072                 25.05\n\
+    262144                 27.31\n524288                 49.03\n1048576          \
+    \      92.53\n2097152               178.95\n4194304               351.24\n\n\n\
+    \n$hpcx_mpi_dir/tests/osu-micro-benchmarks-5.3.2/osu_get_bw\n\ncd /home/hpc/nemo/apps/hpcx-v2.6.0-gcc-MLNX_OFED_LINUX-4.7-1.0.0.1-redhat7.7-x86_64\n\
+    \nmpirun \\\n-mca pml ucx -x UCX_NET_DEVICES=mlx5_0:1 \\\n-mca mpi_show_mca_params\
+    \ 1 -mca pml_ucx_verbose 9 \\\n./ompi/tests/osu-micro-benchmarks-5.3.2/osu_get_bw\n\
+    \n\nmpirun \\\n-mca mpi_show_mca_params 1 -mca pml_ucx_verbose 9 \\\n./ompi/tests/osu-micro-benchmarks-5.3.2/osu_get_bw\n\
+    \n\n\n/usr/bin/time -p mpirun -np 4 \\\n--map-by core -report-bindings \\\n-mca\
+    \ io ompio -x UCX_NET_DEVICES=mlx5_0:1 ./nemo</pre></div>\n"
   stargazers_count: 0
   subscribers_count: 0
   topics: []
@@ -25913,20 +25318,20 @@ d-w-moore/new_d2c:
   data_format: 2
   description: null
   filenames:
-  - store_pw/Singularity.4.2.5
   - store_pw/Singularity.pw_embed
-  - store_pw/Singularity.python-4.2.5
   - store_pw/Singularity.base-4.2.5
   - store_pw/Singularity.pw_encrypt
-  - docs/Singularity.3_0.debian9
-  - os_recipes/Singularity.archive.debian
-  - os_recipes/Singularity.4.2.5
-  - os_recipes/Singularity.SuSE
+  - store_pw/Singularity.python-4.2.5
+  - store_pw/Singularity.4.2.5
   - os_recipes/Singularity.centos6
   - os_recipes/Singularity.base-4.2.5
-  - os_recipes/Singularity.centos7
-  - os_recipes/Singularity.usmirror.debian
+  - os_recipes/Singularity.SuSE
   - os_recipes/Singularity.deboot.ubuntu
+  - os_recipes/Singularity.usmirror.debian
+  - os_recipes/Singularity.4.2.5
+  - os_recipes/Singularity.archive.debian
+  - os_recipes/Singularity.centos7
+  - docs/Singularity.3_0.debian9
   full_name: d-w-moore/new_d2c
   latest_release: null
   readme: "<h1>\n<a id=\"user-content-installing-and-running-slurm-on-ubuntu-16-or-18\"\
@@ -32801,8 +32206,20 @@ gpuhackathons-org/gpubootcamp:
     '
   stargazers_count: 86
   subscribers_count: 7
-  topics: []
-  updated_at: 1627557009.0
+  topics:
+  - machine-learning
+  - deep-learning
+  - data-science
+  - gpu
+  - cuda
+  - openacc
+  - mpi
+  - hpc
+  - deepstream
+  - rapidsai
+  - openmp
+  - ai4hpc
+  updated_at: 1627653431.0
 granek/jupyter-MIC-2021:
   data_format: 2
   description: null
@@ -36814,64 +36231,56 @@ jganong/ubuntu-focal-foiegras:
   - Singularity
   full_name: jganong/ubuntu-focal-foiegras
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-centos8_roar" class="anchor" href="#centos8_roar" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>centos8_roar</h1>
-
-    <p>Centos 8 base image for Roar</p>
-
-    <h3>
-
-    <a id="user-content-note" class="anchor" href="#note" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>NOTE</h3>
-
-    <ul>
-
-    <li>This recipe may include unnecessary packages for certain software installation</li>
-
-    <li>More packages will be added in the future</li>
-
-    </ul>
-
-    <h2>
-
-    <a id="user-content-updates" class="anchor" href="#updates" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Updates</h2>
-
-    <ul>
-
-    <li>
-
-    <p>2020/11/13</p>
-
-    <ul>
-
-    <li>Initial recipe added</li>
-
-    </ul>
-
-    </li>
-
-    <li>
-
-    <p>2021/03/22</p>
-
-    <ul>
-
-    <li>Default Python3 is updated to Python 3.8</li>
-
-    <li>Lapack, BLAS, OpenBLAS, ATLAS, and NetCDF are added</li>
-
-    <li>CMake 3.19.7, Boost 1.75.0, and R 4.0.4 are added</li>
-
-    </ul>
-
-    </li>
-
-    </ul>
-
-    '
+  readme: "<h1>\n<a id=\"user-content-create-study-specific-roi-image-in-mni-space\"\
+    \ class=\"anchor\" href=\"#create-study-specific-roi-image-in-mni-space\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Create\
+    \ study-specific ROI image in MNI space</h1>\n<p>PMAT resting state connectivity\
+    \ study.</p>\n<h2>\n<a id=\"user-content-inputs\" class=\"anchor\" href=\"#inputs\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Inputs:</h2>\n<p>All should be matched to the same T1 image.</p>\n\
+    <ul>\n<li>T1 image in atlas space (typically BIAS_NORM resource of cat12 assessor)</li>\n\
+    <li>Deformation from T1 subject space to atlas space (typically DEF_FWD resource\
+    \ of cat12 assessor)</li>\n<li>SUBJECT directory of Freesurfer output (typically\
+    \ SUBJECT resource of freesurfer_dev assessor)</li>\n<li>Temporal lobe segmentation\
+    \ (typically SEG resource of Temporal_Lobe assessor)</li>\n</ul>\n<h2>\n<a id=\"\
+    user-content-outputs\" class=\"anchor\" href=\"#outputs\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Outputs</h2>\n\
+    <pre><code>rois_PMAT.nii.gz            Region of interest image\nrois_PMAT-labels.csv\
+    \        Region labels and volumes\nmakerois-PMAT.pdf           Visual report\
+    \ of final ROI image\n</code></pre>\n<h2>\n<a id=\"user-content-regions-of-interest\"\
+    \ class=\"anchor\" href=\"#regions-of-interest\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Regions of interest</h2>\n<h3>\n\
+    <a id=\"user-content-spheres-atlas-space\" class=\"anchor\" href=\"#spheres-atlas-space\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Spheres (atlas space)</h3>\n<p>Source: <em>Libby LA, Ekstrom AD, Ragland\
+    \ JD, Ranganath C. Differential connectivity of perirhinal and parahippocampal\
+    \ cortices within human hippocampal subregions revealed by high-resolution functional\
+    \ imaging. J Neurosci. 2012;32(19):6550-6560. doi:10.1523/JNEUROSCI.3711-11.2012</em></p>\n\
+    <p>Method: <em>Schr\xF6der TN, Haak K V., Jimenez NIZ, et al. Functional topography\
+    \ of the human entorhinal cortex. Elife. 2015;4(October 2016):1-17. doi:10.7554/eLife.06738</em></p>\n\
+    <h3>\n<a id=\"user-content-entorhinal-cortex-atlas-space\" class=\"anchor\" href=\"\
+    #entorhinal-cortex-atlas-space\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Entorhinal cortex (atlas space)</h3>\n\
+    <p>Anterior lateral and posterior medial sections. Source and method: <em>Schr\xF6\
+    der TN, Haak K V., Jimenez NIZ, et al. Functional topography of the human entorhinal\
+    \ cortex. Elife. 2015;4(October 2016):1-17. doi:10.7554/eLife.06738</em></p>\n\
+    <h3>\n<a id=\"user-content-temporal-lobe-subject-space-warped\" class=\"anchor\"\
+    \ href=\"#temporal-lobe-subject-space-warped\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Temporal lobe (Subject space,\
+    \ warped)</h3>\n<p>Head for anterior hippocampus; body and tail combined for posterior\
+    \ hippocampus. Method: <em>Plassard AJ, McHugo M, Heckers S, Landman BA. Multi-Scale\
+    \ Hippocampal Parcellation Improves Atlas-Based Segmentation Accuracy. Proc SPIE\
+    \ Int Soc Opt Eng. 2017 Feb 11;10133:101332D. doi: 10.1117/12.2254425. Epub 2017\
+    \ Feb 24. PMID: 28781411; PMCID: PMC5544133.</em></p>\n<h3>\n<a id=\"user-content-parahippocampal-perirhinal-subject-space-warped\"\
+    \ class=\"anchor\" href=\"#parahippocampal-perirhinal-subject-space-warped\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Parahippocampal,\
+    \ perirhinal (Subject space, warped)</h3>\n<p>Generated by Freesurfer 6. Parahippocampal\
+    \ (1016,2016) and perirhinal (surface patch resampled to volume, overlap with\
+    \ parahippocampus was assigned to perirhinal). Method: <em>Bruce Fischl, Andre\
+    \ van der Kouwe, Christophe Destrieux, Eric Halgren, Florent Segonne, David H.\
+    \ Salat, Evelina Busa, Larry J. Seidman, Jill Goldstein, David Kennedy, Verne\
+    \ Caviness, Nikos Makris, Bruce Rosen, and Anders M. Dale. Automatically Parcellating\
+    \ the Human Cerebral Cortex. Cerebral Cortex January 2004; 14:11-22.</em></p>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -42067,14 +41476,14 @@ nextgenusfs/funannotate:
     </code></pre>
 
     '
-  stargazers_count: 165
+  stargazers_count: 166
   subscribers_count: 13
   topics:
   - genome-annotation
   - gene-models
   - comparative-genomics
   - ncbi-submission
-  updated_at: 1626963864.0
+  updated_at: 1627579389.0
 nhoffman/dada2-nf:
   data_format: 2
   description: A Nextflow pipeline for processing 16S rRNA sequences using dada2
@@ -42136,7 +41545,7 @@ nhoffman/dada2-nf:
   stargazers_count: 0
   subscribers_count: 5
   topics: []
-  updated_at: 1623959326.0
+  updated_at: 1627602169.0
 nickjer/singularity-rstudio:
   data_format: 2
   description: RStudio Server in a Singularity container
@@ -42636,7 +42045,7 @@ openPMD/openPMD-api:
   filenames:
   - Singularity
   full_name: openPMD/openPMD-api
-  latest_release: 0.13.4
+  latest_release: 0.14.0
   readme: "<h1>\n<a id=\"user-content-c--python-api-for-scientific-io-with-openpmd\"\
     \ class=\"anchor\" href=\"#c--python-api-for-scientific-io-with-openpmd\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>C++\
@@ -43094,27 +42503,28 @@ openPMD/openPMD-api:
     https://github.com/PrometheusPi\">Richard Pausch (HZDR)</a>:\ncompatibility testing,\
     \ documentation improvements</li>\n<li>\n<a href=\"https://github.com/pordyna\"\
     >Pawe\u0142 Ordyna (HZDR)</a>:\nreport on NVCC warnings</li>\n<li>\n<a href=\"\
-    https://github.com/dmitry-ganyushin\">Dmitry Ganyushin (ORNL)</a>:\nDask dataframe\
-    \ support</li>\n<li>\n<a href=\"https://github.com/jakirkham\">John Kirkham (NVIDIA)</a>:\n\
-    Dask guidance &amp; reviews</li>\n</ul>\n<h3>\n<a id=\"user-content-grants\" class=\"\
-    anchor\" href=\"#grants\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>Grants</h3>\n<p>The openPMD-api authors acknowledge\
-    \ support via the following programs.\nThis project has received funding from\
-    \ the European Unions Horizon 2020 research and innovation programme under grant\
-    \ agreement No 654220.\nSupported by the Consortium for Advanced Modeling of Particles\
-    \ Accelerators (CAMPA), funded by the U.S. DOE Office of Science under Contract\
-    \ No. DE-AC02-05CH11231.\nSupported by the Exascale Computing Project (17-SC-20-SC),\
-    \ a collaborative effort of two U.S. Department of Energy organizations (Office\
-    \ of Science and the National Nuclear Security Administration).\nThis work was\
-    \ partially funded by the Center of Advanced Systems Understanding (CASUS), which\
-    \ is financed by Germany's Federal Ministry of Education and Research (BMBF) and\
-    \ by the Saxon Ministry for Science, Culture and Tourism (SMWK) with tax funds\
-    \ on the basis of the budget approved by the Saxon State Parliament.</p>\n<h3>\n\
-    <a id=\"user-content-transitive-contributions\" class=\"anchor\" href=\"#transitive-contributions\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Transitive Contributions</h3>\n<p>openPMD-api stands on the shoulders\
-    \ of giants and we are grateful for the following projects included as direct\
-    \ dependencies:</p>\n<ul>\n<li>\n<a href=\"https://github.com/ornladios/ADIOS\"\
+    https://github.com/dmitry-ganyushin\">Dmitry Ganyushin (ORNL)</a>:\nDask prototyping\
+    \ &amp; ADIOS2 benchmarking</li>\n<li>\n<a href=\"https://github.com/jakirkham\"\
+    >John Kirkham (NVIDIA)</a>:\nDask guidance &amp; reviews</li>\n<li>\n<a href=\"\
+    https://github.com/eschnett\">Erik Schnetter (PITP)</a>:\nC++ API bug fixes</li>\n\
+    </ul>\n<h3>\n<a id=\"user-content-grants\" class=\"anchor\" href=\"#grants\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Grants</h3>\n\
+    <p>The openPMD-api authors acknowledge support via the following programs.\nThis\
+    \ project has received funding from the European Unions Horizon 2020 research\
+    \ and innovation programme under grant agreement No 654220.\nSupported by the\
+    \ Consortium for Advanced Modeling of Particles Accelerators (CAMPA), funded by\
+    \ the U.S. DOE Office of Science under Contract No. DE-AC02-05CH11231.\nSupported\
+    \ by the Exascale Computing Project (17-SC-20-SC), a collaborative effort of two\
+    \ U.S. Department of Energy organizations (Office of Science and the National\
+    \ Nuclear Security Administration).\nThis work was partially funded by the Center\
+    \ of Advanced Systems Understanding (CASUS), which is financed by Germany's Federal\
+    \ Ministry of Education and Research (BMBF) and by the Saxon Ministry for Science,\
+    \ Culture and Tourism (SMWK) with tax funds on the basis of the budget approved\
+    \ by the Saxon State Parliament.</p>\n<h3>\n<a id=\"user-content-transitive-contributions\"\
+    \ class=\"anchor\" href=\"#transitive-contributions\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Transitive Contributions</h3>\n\
+    <p>openPMD-api stands on the shoulders of giants and we are grateful for the following\
+    \ projects included as direct dependencies:</p>\n<ul>\n<li>\n<a href=\"https://github.com/ornladios/ADIOS\"\
     >ADIOS1</a> and <a href=\"https://github.com/ornladios/ADIOS2\">ADIOS2</a> by\
     \ <a href=\"https://csmd.ornl.gov/adios\" rel=\"nofollow\">S. Klasky (ORNL), team,\
     \ collaborators</a> and <a href=\"https://github.com/ornladios/ADIOS2/graphs/contributors\"\
@@ -43154,7 +42564,7 @@ openPMD/openPMD-api:
   - meta-data
   - opendata
   - cpp14
-  updated_at: 1627499004.0
+  updated_at: 1627672750.0
 openhpc/ohpc:
   data_format: 2
   description: OpenHPC Integration, Packaging, and Test Repo
@@ -43283,7 +42693,7 @@ openhpc/ohpc:
   - devtools
   - mpi
   - linuxfoundation
-  updated_at: 1627533579.0
+  updated_at: 1627647844.0
 pbranson/pangeo-hpc-singularity:
   data_format: 2
   description: Scripts to run dask and jupyter lab on Singularity using the pangeo-notebook
@@ -45913,9 +45323,9 @@ powerPlant/metabat2-srf:
   data_format: 2
   description: Singularity recipe files for metabat2 (https://bitbucket.org/berkeleylab/metabat/src/master/)
   filenames:
-  - Singularity
   - Singularity.2.15
   - Singularity.2.15-3-g367a7ef
+  - Singularity
   full_name: powerPlant/metabat2-srf
   latest_release: null
   readme: '<p>Singularity recipe files for MetaBAT: A robust statistical framework
@@ -45974,8 +45384,8 @@ powerPlant/novograph-srf:
   data_format: 2
   description: Singularity recipe files for NovoGraph (https://github.com/NCBI-Hackathons/NovoGraph)
   filenames:
-  - Singularity
   - Singularity.1.0.0
+  - Singularity
   full_name: powerPlant/novograph-srf
   latest_release: null
   readme: '<p><a href="https://singularity-hub.org/collections/2342" rel="nofollow"><img
@@ -46252,8 +45662,8 @@ powerPlant/sex-detector-plusplus-srf:
   data_format: 2
   description: Singularity recipe files for sex-detector-plusplus (https://gitlab.in2p3.fr/sex-det-family/sex-detector-plusplus)
   filenames:
-  - Singularity
   - Singularity.00f7d723
+  - Singularity
   full_name: powerPlant/sex-detector-plusplus-srf
   latest_release: null
   readme: '<p>Singularity recipe files for SEX-DETector, a tool for the statistical
@@ -46269,8 +45679,8 @@ powerPlant/sga-srf:
   data_format: 2
   description: Singularity recipe files for sga (https://github.com/jts/sga)
   filenames:
-  - Singularity
   - Singularity.0.10.15
+  - Singularity
   full_name: powerPlant/sga-srf
   latest_release: null
   readme: '<p><a href="https://singularity-hub.org/collections/3984" rel="nofollow"><img
@@ -51477,8 +50887,8 @@ seb-mueller/singularity_dropSeqPipe:
   data_format: 2
   description: Singularity container for dropSeqPipe
   filenames:
-  - Singularity
   - Singularity.v04
+  - Singularity
   full_name: seb-mueller/singularity_dropSeqPipe
   latest_release: null
   readme: "<p><a href=\"https://mybinder.org/v2/gh/BiomedicalMachineLearning/HEMnet/master?filepath=Development\"\
@@ -54327,7 +53737,7 @@ sylabs/singularity:
   - containers
   - hpc
   - linux
-  updated_at: 1627592410.0
+  updated_at: 1627667556.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
@@ -55482,20 +54892,112 @@ tpall/singularity-stan:
   - Singularity
   full_name: tpall/singularity-stan
   latest_release: null
-  readme: '<p><a href="https://singularity-hub.org/collections/2366" rel="nofollow"><img
-    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
-    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    style="max-width:100%;"></a></p>
+  readme: '<h1>
 
-    <h2>
+    <a id="user-content-centos7_aci" class="anchor" href="#centos7_aci" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>centos7_aci</h1>
 
-    <a id="user-content-singularity-tidyverse" class="anchor" href="#singularity-tidyverse"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Singularity
-    tidyverse</h2>
+    <p>Centos 7 base image for ACI Singualarity recipe<br>
 
-    <p>This will run R tidyverse + some other packages, like <em>here</em>, <em>readxl</em>,
-    <em>lubridate</em>, <em>bookdown</em>, etc.</p>
+    This recipe may include unnecessary packages for certain software installation.<br>
+
+    Size of CPU-only container: ~1 GB<br>
+
+    Size of GPU container: ~2.6 GB</p>
+
+    <p>More packages will be added in the future</p>
+
+    <p>2019/2/17
+
+    <strong>Centos 7</strong> with <strong>GCC 8</strong><br>
+
+    To enable GCC 8,</p>
+
+    <pre><code>&gt; source /opt/rh/devtoolset-8/enable
+
+    </code></pre>
+
+    <p>2019/3/1<br>
+
+    OpenMPI is added to <code>$PATH</code></p>
+
+    <p>2019/3/11<br>
+
+    OpenMPI is updated to version 2.1.6</p>
+
+    <p>2019/4/12<br>
+
+    Boost 1.70.0 in added</p>
+
+    <p>2019/7/19<br>
+
+    <del>Python 2 and 3 are updated to version 2.7.16 and version 3.7.4</del><br>
+
+    OpenMPI is updated to version 4.0.1</p>
+
+    <p>2019/7/21<br>
+
+    <del>Few Python packages are added</del></p>
+
+    <p>2019/7/22<br>
+
+    <del>Few corrections are made including Python</del></p>
+
+    <p>2019/7/23<br>
+
+    Pythons are replaced with packages<br>
+
+    To enable Python 2.7.16,</p>
+
+    <pre><code>&gt; source /opt/rh/python27/enable
+
+    </code></pre>
+
+    <p>System version of python is 3.6.8</p>
+
+    <p>2019/7/30<br>
+
+    devtoolset-7 GCC is added (some software can''t be built with GCC 8)</p>
+
+    <p>2019/11/9<br>
+
+    CMake 3.15.5 is added</p>
+
+    <p>2019/11/22<br>
+
+    OpenMPI is downgraded to 1.10.1 to match version on ACI</p>
+
+    <p>2020/2/12<br>
+
+    Boost is upgraded to 1.72.0 and CMake is upgraded to 3.16.4</p>
+
+    <p>2020/3/2<br>
+
+    GPU version is added</p>
+
+    <p>2020/9/21<br>
+
+    Minor updates are made (regarding libxkb)</p>
+
+    <p>2020/9/28<br>
+
+    Recipe for CUDA 9.1 is added (for FSL with CUDA)</p>
+
+    <p>2020/10/11<br>
+
+    Boost is upgraded to 1.74.0 and CMake is upgraded to 3.18.4<br>
+
+    R 4.0.3 is added (Curl 7.72.0 and XZ 5.2.5 are added for R)<br>
+
+    VirtualGL is downgraded to 2.5.2 to match system version</p>
+
+    <p>2020/10/18<br>
+
+    UDUNITS 2.2.26 is added</p>
+
+    <p>2020/10/20<br>
+
+    Tix-devel, Tx-devel, TkInter-devel, LAPACK-devel, and BLAS-devel are added</p>
 
     '
   stargazers_count: 0
@@ -56465,10 +55967,10 @@ willgpaik/centos7_aci:
   data_format: 2
   description: Centos 7 base image for ACI
   filenames:
-  - Singularity.gpu
-  - Singularity.test
-  - Singularity
   - Singularity.cuda9.1
+  - Singularity.test
+  - Singularity.gpu
+  - Singularity
   full_name: willgpaik/centos7_aci
   latest_release: null
   readme: '<h1>
