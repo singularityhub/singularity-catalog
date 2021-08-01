@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: larbys/ubdl:depsonly_py3.6.11_u16.04_cu11_pytorch1.7.1
+
+%post
+	touch /usr/bin/nvidia-smi
+	touch /usr/bin/nvidia-debugdump
+	touch /usr/bin/nvidia-persistenced
+	touch /usr/bin/nvidia-cuda-mps-control
+	touch /usr/bin/nvidia-cuda-mps-server
+	mkdir -p /cluster/home
+	mkdir -p /cluster/kappa
+	mkdir -p /cluster/shared
+	mkdir -p /opt/shared
+		    

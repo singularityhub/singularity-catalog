@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: larbys/uboonecode:v08_00_00_40
+
+%post
+	/usr/local/bin/pip install pyyaml typing figcan zmq
+	apt install -y emacs vim gdb 
+	apt autoremove -y && apt clean -y
+	mkdir -p /cluster/home
+	mkdir -p /cluster/kappa
+	mkdir -p /cluster/shared
+	mkdir -p /opt/shared
+		    

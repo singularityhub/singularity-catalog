@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: larbys/ubdl:ubuntu16.04_py3
+
+%post
+	apt update -y
+	apt install -y emacs vim gdb
+	apt autoremove -y && apt clean -y
+	mkdir -p /cluster/home
+	mkdir -p /cluster/kappa
+	mkdir -p /cluster/shared
+	mkdir -p /opt/shared
+		    

@@ -1,5 +1,5 @@
 bases:
-- count: 723
+- count: 724
   name: ubuntu
 - count: 218
   name: nvidia/cuda
@@ -11,11 +11,11 @@ bases:
   name: alpine
 - count: 69
   name: continuumio/miniconda3
-- count: 61
+- count: 62
   name: mkandes/naked-singularity
 - count: 59
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 46
+- count: 47
   name: tensorflow/tensorflow
 - count: 40
   name: nfcore/base
@@ -78,6 +78,8 @@ bases:
 - count: 8
   name: ewels/multiqc
 - count: 8
+  name: r-base
+- count: 8
   name: slaclab/relion
 - count: 7
   name: jekriske/r-base
@@ -87,6 +89,8 @@ bases:
   name: trinityrnaseq/trinityrnaseq
 - count: 6
   name: ml4ai/UA-hpc-containers
+- count: 6
+  name: provarepro/mlperf_inference
 - count: 6
   name: vitchyr/railrl-torch4cuda9
 - count: 6
@@ -102,11 +106,7 @@ bases:
 - count: 6
   name: julia
 - count: 6
-  name: r-base
-- count: 6
   name: provarepro/openvino
-- count: 5
-  name: provarepro/mlperf_inference
 - count: 5
   name: sequana.img
 - count: 5
@@ -139,8 +139,6 @@ bases:
   name: intel/oneapi-hpckit
 - count: 4
   name: danabl/glimslib
-- count: 4
-  name: letaylor/sc_qc_cluster
 - count: 4
   name: 'GodloveD/busybox   '
 - count: 4
@@ -205,6 +203,8 @@ bases:
   name: willgpaik/centos8_roar
 - count: 3
   name: willgpaik/centos7_aci
+- count: 3
+  name: larbys/ubdl
 - count: 3
   name: mesnardo/petibm-decoupledibpm
 - count: 3
@@ -291,6 +291,8 @@ bases:
   name: registry.gitlab.com/rode0day/fuzzer-testing/qsym_runner
 - count: 2
   name: postgres
+- count: 2
+  name: nvidia/cudagl
 - count: 2
   name: ''
 - count: 2
@@ -532,6 +534,8 @@ bases:
 - count: 1
   name: weatherhub/metview
 - count: 1
+  name: letaylor/sc_qc_cluster
+- count: 1
   name: thakk/bioinformatics
 - count: 1
   name: anair17/railrl-hand-v1a
@@ -620,8 +624,6 @@ bases:
 - count: 1
   name: nginx
 - count: 1
-  name: nvidia/cudagl
-- count: 1
   name: registry
 - count: 1
   name: https
@@ -671,6 +673,8 @@ bases:
   name: bgruening/busybox-bash
 - count: 1
   name: r-minimal/r-minimal_3.5.1.simg
+- count: 1
+  name: richelbilderbeek/default/plinkr
 - count: 1
   name: nvcr.io/hpc/pgi-compilers
 - count: 1
@@ -874,6 +878,10 @@ bases:
 - count: 1
   name: /data/ubuntu-cuda10-20190226.sif
 - count: 1
+  name: larbys/sparseconvnet
+- count: 1
+  name: larbys/uboonecode
+- count: 1
   name: rockylinux/rockylinux
 - count: 1
   name: faustus123/hddeps
@@ -954,13 +962,13 @@ bases:
 - count: 1
   name: conda/conda_4.9.1.img
 bootstraps:
-- count: 2346
+- count: 2354
   name: docker
 - count: 248
   name: debootstrap
-- count: 228
+- count: 229
   name: shub
-- count: 156
+- count: 157
   name: library
 - count: 73
   name: yum
@@ -1007,6 +1015,8 @@ orgs:
   name: godloved
 - count: 4
   name: willgpaik
+- count: 4
+  name: larbys
 - count: 4
   name: conda
 - count: 3
@@ -1196,6 +1206,8 @@ orgs:
 - count: 1
   name: weatherhub
 - count: 1
+  name: letaylor
+- count: 1
   name: thakk
 - count: 1
   name: scr.svc.stanford.edu
@@ -1270,8 +1282,6 @@ orgs:
 - count: 1
   name: default
 - count: 1
-  name: larbys
-- count: 1
   name: jncc
 - count: 1
   name: rstudio
@@ -1294,6 +1304,8 @@ orgs:
 - count: 1
   name: r
 - count: 1
+  name: richelbilderbeek
+- count: 1
   name: nvcr.io/hpc
 - count: 1
   name: rapidsai
@@ -1303,8 +1315,6 @@ orgs:
   name: nipype
 - count: 1
   name: ncbi
-- count: 1
-  name: letaylor
 - count: 1
   name: deeplearnphysics
 - count: 1
@@ -1502,8 +1512,8 @@ orgs:
 - count: 1
   name: semc
 tags:
-  latest: 250
-  other: 2132
+  latest: 247
+  other: 2143
 versions:
   APPIAN-PET/APPIAN:
     ants: 1
@@ -1942,8 +1952,16 @@ versions:
   larbys/geant4:
     10.02.p03: 1
     10.6.p03: 1
+  larbys/sparseconvnet:
+    pytorch1.3_cpu: 1
+  larbys/ubdl:
+    depsonly_py3.6.11_u16.04_cu11_pytorch1.7.1: 1
+    ubuntu16.04: 1
+    ubuntu16.04_py3: 1
+  larbys/uboonecode:
+    v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 4
+    latest: 1
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -1994,7 +2012,7 @@ versions:
     centos-7.9.2009: 3
     centos-7.9.2009-mvapich-2.3.2: 1
     centos-7.9.2009-openmpi-3.1.4: 1
-    ubuntu-18.04: 20
+    ubuntu-18.04: 21
     ubuntu-18.04-cuda-10.1.168: 6
     ubuntu-18.04-cuda-10.1.168-openmpi-3.1.4: 7
     ubuntu-18.04-cuda-10.2: 1
@@ -2166,6 +2184,7 @@ versions:
     9.2-runtime-centos7: 5
   nvidia/cudagl:
     10.1-devel-ubuntu18.04: 1
+    9.2-devel-ubuntu18.04: 1
   nvidia/opencl:
     runtime: 1
   nvidia/opengl:
@@ -2247,6 +2266,7 @@ versions:
     v0.5-OpenVINO-2019_R3.1_src_c_omp-py36-gcc75-ubuntu18: 1
     v0.5-OpenVINO-2019_R3.1_src_c_omp-py38-gcc75-ubuntu20: 1
     v0.5-OpenVINO-2019_R3.1_src_c_tbb-py36-gcc75-ubuntu18: 1
+    v0.5-OpenVINO-2020.3.1_src_c_omp-py36-gcc75-ubuntu18: 1
   provarepro/openvino:
     2019_c_deps-ubuntu18: 2
     2019_cg_deps-ubuntu18: 2
@@ -2416,6 +2436,8 @@ versions:
     '20.04': 1
   registry.scicore.unibas.ch/schwede/openstructure:
     2.0.0: 1
+  richelbilderbeek/default/plinkr:
+    v0.15.2: 1
   ro47014:
     20-10-3: 1
   rocker/geospatial:
@@ -2520,7 +2542,7 @@ versions:
     2.3.3-gpu: 1
     2.4.0-custom-op-gpu-ubuntu16: 1
     2.4.1-gpu: 3
-    latest-gpu: 5
+    latest-gpu: 6
     latest-gpu-jupyter: 1
     latest-gpu-py3: 4
     latest-py3: 3
@@ -2568,7 +2590,7 @@ versions:
     '18.04': 153
     '19.04': 7
     '19.10': 4
-    '20.04': 117
+    '20.04': 118
     '20.10': 1
     '21.04': 1
     artful: 1

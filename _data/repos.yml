@@ -190,7 +190,7 @@ AdamWilsonLab/singularity-geospatial-r:
   filenames:
   - Singularity.latest
   full_name: AdamWilsonLab/singularity-geospatial-r
-  latest_release: 0.0.3
+  latest_release: 0.0.4
   readme: "<h1>\n<a id=\"user-content-singularity-status\" class=\"anchor\" href=\"\
     #singularity-status\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
     octicon octicon-link\"></span></a>Singularity Status</h1>\n<p><a href=\"https://singularity-hub.org/collections/4930\"\
@@ -323,7 +323,7 @@ AdamWilsonLab/singularity-geospatial-r:
   stargazers_count: 1
   subscribers_count: 1
   topics: []
-  updated_at: 1625164854.0
+  updated_at: 1627671966.0
 Amjadhpc/PHEnix:
   data_format: 2
   description: This is singularity 2.6.0 image for PHEnix -1.4a
@@ -1084,9 +1084,9 @@ BergmannLab/MONET:
     ></span></a>PREREQUISITES</h2>\n<p><strong>Operating System</strong>: MONET can\
     \ be run on <strong>either</strong></p>\n<ul>\n<li>Linux (it was tested on <em>Ubuntu\
     \ Linux</em> 20.04, <em>CentOS Linux</em> 7.5)</li>\n<li>MacOS (it was tested\
-    \ on <em>macOS Sierra</em> 10.12)</li>\n</ul>\n<p><strong>Software</strong>: MONET\
-    \ requires <strong>either</strong>:</p>\n<ul>\n<li>\n<code>Docker</code> (see\
-    \ \"Install using the repository\" <a href=\"https://docs.docker.com/engine/install/\"\
+    \ on <em>Big Sur</em> 11.4 and <em>Sierra</em> 10.12)</li>\n</ul>\n<p><strong>Software</strong>:\
+    \ MONET requires <strong>either</strong>:</p>\n<ul>\n<li>\n<code>Docker</code>\
+    \ (see \"Install using the repository\" <a href=\"https://docs.docker.com/engine/install/\"\
     \ rel=\"nofollow\">https://docs.docker.com/engine/install/</a>)</li>\n<li>\n<code>Singularity</code>\
     \ (see <a href=\"http://singularity.lbl.gov\" rel=\"nofollow\">http://singularity.lbl.gov</a>)</li>\n\
     </ul>\n<p><strong>Hardware</strong>: MONET was tested both on server and on commodity\
@@ -1353,7 +1353,7 @@ BergmannLab/MONET:
   stargazers_count: 29
   subscribers_count: 6
   topics: []
-  updated_at: 1626079655.0
+  updated_at: 1627730492.0
 Betterton-Lab/C-GLASS:
   data_format: 2
   description: Open source simulation engine for coarse-grained Brownian dynamics
@@ -2425,7 +2425,7 @@ BrendelGroup/BWASPR:
   stargazers_count: 2
   subscribers_count: 6
   topics: []
-  updated_at: 1627598948.0
+  updated_at: 1627671623.0
 C0C0AN/EEGprep:
   data_format: 2
   description: A BIDSapp for automated preprocessing of EEG data.
@@ -2433,135 +2433,76 @@ C0C0AN/EEGprep:
   - Singularity
   full_name: C0C0AN/EEGprep
   latest_release: null
-  readme: "<h1>\n<a id=\"user-content-singularity-status\" class=\"anchor\" href=\"\
-    #singularity-status\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>Singularity Status</h1>\n<p><a href=\"https://singularity-hub.org/collections/4930\"\
-    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667\"\
-    \ alt=\"https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg\"\
-    \ data-canonical-src=\"https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg\"\
-    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-overview\" class=\"\
-    anchor\" href=\"#overview\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>Overview</h1>\n<p>This repository includes a\
-    \ definition file for a singularity container <em>and</em> instructions for starting\
-    \ up an instance on CENTOS in a HPC environment.</p>\n<h1>\n<a id=\"user-content-getting-started\"\
-    \ class=\"anchor\" href=\"#getting-started\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Getting Started</h1>\n<h2>\n\
-    <a id=\"user-content-setting-up-the-singularity-instance\" class=\"anchor\" href=\"\
-    #setting-up-the-singularity-instance\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Setting up the Singularity Instance</h2>\n\
-    <ol>\n<li>SSH to the server</li>\n<li>Run the following lines to create a new\
-    \ directory in the scratch drive and pull the desired container from the Singularity\
-    \ Hub (or other source):</li>\n</ol>\n<pre><code>mkdir -p /panasas/scratch/grp-adamw/singularity/$USER\n\
-    cd /panasas/scratch/grp-adamw/singularity/$USER;\nsingularity pull -F shub://AdamWilsonLab/singularity-geospatial-r\n\
-    </code></pre>\n<p>Or if you are downloading from github, use something like this:</p>\n\
-    <pre><code>cd /panasas/scratch/grp-adamw/singularity/$USER;\nwget -O singularity-geospatial-r_latest.sif\
-    \ https://github.com/AdamWilsonLab/singularity-geospatial-r/releases/download/0.0.1/AdamWilsonLab-singularity-geospatial-r.latest.sif\n\
-    </code></pre>\n<ol start=\"3\">\n<li>Create symlinks to singularity folder in\
-    \ project storage to prevent disk space problems in the home directory.</li>\n\
-    </ol>\n<pre><code>mkdir -p /projects/academic/adamw/singularity/$USER/.singularity\n\
-    ln -s /projects/academic/adamw/singularity/$USER/.singularity .singularity\n\n\
-    # Symlinks for RStudio\nmkdir -p /projects/academic/adamw/rstudio/$USER/rstudio\n\
-    mv .local/share/rstudio /projects/academic/adamw/rstudio/$USER/\n\nmkdir -p ~/.local/share\n\
-    ln -s /projects/academic/adamw/rstudio/$USER/rstudio ~/.local/share/rstudio\n\
-    </code></pre>\n<ol start=\"4\">\n<li>Run the <a href=\"https://github.com/AdamWilsonLab/singularity-geospatial-r/blob/main/singularity_start.sh\"\
-    >singularity_start.sh</a> script to start up a singularity instance. You can just\
-    \ copy paste the code into the terminal.  This includes a few system specific\
-    \ settings for the Buffalo CCR.  This should only need to be done once (as long\
-    \ as the instance keeps running, server is not restarted, etc.).  If the instance\
-    \ stops for any reason, you'll need to rerun this script.  You can confirm it's\
-    \ running with <code>singularity instance list</code> or by checking <code>htop</code>.</li>\n\
-    </ol>\n<h2>\n<a id=\"user-content-connecting-to-rstudio\" class=\"anchor\" href=\"\
-    #connecting-to-rstudio\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>Connecting to RStudio</h2>\n<p>After running\
-    \ the steps above, you should be able to do just the following to begin working.\
-    \  If the server restarts you will need to re-run step 4 above.</p>\n<ol>\n<li>Connect\
-    \ to the instance via SSH with port Forwarding.  You will need to be on campus\
-    \ or connected via VPN.  See notes below for *nix and windows.</li>\n<li>Open\
-    \ RStudio at localhost:8787 in your local browser and login with user/password\
-    \ from #4 above.</li>\n</ol>\n<h2>\n<a id=\"user-content-singularity-container-geospatial-r\"\
-    \ class=\"anchor\" href=\"#singularity-container-geospatial-r\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Singularity\
-    \ Container: Geospatial R</h2>\n<p>This container builds upon the <a href=\"https://hub.docker.com/r/rocker/geospatial\"\
-    \ rel=\"nofollow\">rocker geospatial container</a>, which I ported to <a href=\"\
-    https://singularity-hub.org/collections/4908\" rel=\"nofollow\">Singularity here</a>.\
-    \  This repository/collection then <a href=\"https://github.com/AdamWilsonLab/singularity-geospatial-r/blob/main/Singularity.latest\"\
-    >adds additional packages in this file</a>.  That's the file to modify if you\
-    \ want to add more linux packages, etc.</p>\n<h1>\n<a id=\"user-content-connecting-via-ssh\"\
-    \ class=\"anchor\" href=\"#connecting-via-ssh\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Connecting via SSH</h1>\n<h2>\n\
-    <a id=\"user-content-nix-systems-mac-and-linux\" class=\"anchor\" href=\"#nix-systems-mac-and-linux\"\
+  readme: "<h1>\n<a id=\"user-content-fast-downward\" class=\"anchor\" href=\"#fast-downward\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>*NIX systems (Mac and Linux)</h2>\n<p>Use terminal to ssh to the server\
-    \ as explained in <a href=\"https://github.com/AdamWilsonLab/singularity-geospatial-r/blob/main/singularity_start.sh\"\
-    >singularity_start.sh</a>.\nAdd something like the following to your .ssh/config\
-    \ file to simplify connecting with port forwarding via ssh.</p>\n<pre><code>Host\
-    \ rserver\nHostName HOST\nLocalForward 8787 HOST:PORT_NUMBER\nUser adamw\nForwardX11\
-    \ yes\nForwardAgent yes\n</code></pre>\n<h2>\n<a id=\"user-content-windows\" class=\"\
-    anchor\" href=\"#windows\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>Windows</h2>\n<h3>\n<a id=\"user-content-putty-instructions\"\
-    \ class=\"anchor\" href=\"#putty-instructions\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>PuTTY Instructions</h3>\n<p>On\
-    \ Windows you will need to use PuTTY or a similar terminal program.</p>\n<ol>\n\
-    <li>In PuTTY, enter the server address (host name) and \"22\" (port) on the \"\
-    Session\" tab.</li>\n<li>On the \"SSH/Tunnels\" tab, enter the port number of\
-    \ the rsession  under \u201CSource port\u201D and type in HOST:PORT (replace with\
-    \ the actual server IP address + the port number) as the destination address.\
-    \ Then, click \"Add\".</li>\n<li>Connect and login as usual in the terminal.</li>\n\
-    <li>Point the web browser to <code>http://localhost:PORT</code> (where PORT is\
-    \ the port number)\" and log in with the user name and the previously generated\
-    \ password.</li>\n</ol>\n<h1>\n<a id=\"user-content-todos\" class=\"anchor\" href=\"\
-    #todos\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>TODOs</h1>\n<ol>\n<li>Separate container from startup and monitor\
-    \ script</li>\n<li>Switch to a docker image</li>\n</ol>\n<h1>\n<a id=\"user-content-development-notes\"\
-    \ class=\"anchor\" href=\"#development-notes\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Development Notes</h1>\n<p>I\
-    \ started with <a href=\"https://github.com/nickjer/singularity-rstudio/blob/master/.travis.yml\"\
-    >nickjer's very helpful example</a> and updated it to pull from the geospatial\
-    \ version of the versioned rocker stack instead of the repository based R.  This\
-    \ should make it easier to keep up to date.</p>\n<h2>\n<a id=\"user-content-errors\"\
-    \ class=\"anchor\" href=\"#errors\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Errors</h2>\n<h3>\n<a id=\"user-content-unable-to-connect-to-service\"\
-    \ class=\"anchor\" href=\"#unable-to-connect-to-service\" aria-hidden=\"true\"\
-    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Unable to\
-    \ connect to service</h3>\n<p>This error can appear in the web browser when connecting\
-    \ via localhost.  This can be caused by RStudio not being able to write session\
-    \ files in the right place.  Confirm that:</p>\n<ol>\n<li>The directory <code>/projects/academic/adamw/rstudio/$USER/rstudio</code>\
-    \ exists</li>\n<li>and is linked to <code>~/.local/share/rstudio</code>\n</li>\n\
-    </ol>\n<h3>\n<a id=\"user-content-could-not-acquire-revocation-list-file-lock\"\
-    \ class=\"anchor\" href=\"#could-not-acquire-revocation-list-file-lock\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Could\
-    \ not acquire revocation list file lock</h3>\n<p>The error \"Could not acquire\
-    \ revocation list file lock\" resolved with help from <a href=\"https://www.gitmemory.com/issue/rocker-org/rocker-versioned/213/726807289\"\
-    \ rel=\"nofollow\">here</a></p>\n<h3>\n<a id=\"user-content-database-error-7\"\
-    \ class=\"anchor\" href=\"#database-error-7\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>database error 7</h3>\n<p>Starting\
-    \ in early 2021, something changed that resulted in the following error when starting\
-    \ a new instance:</p>\n<pre><code>ERROR database error 7 (sqlite3_statement_backend::loadOne:\
-    \ attempt to write a readonly database) [description: Could not delete expired\
-    \ revoked cookies from the database, description: Could not read revoked cookies\
-    \ from the database]; OCCURRED AT virtual rstudio::core::Error rstudio::core::database::Connection::execute(rstudio::core::database::Query&amp;,\
-    \ bool*) src/cpp/core/Database.cpp:480; LOGGED FROM: int main(int, char* const*)\
-    \ src/cpp/server/ServerMain.cpp:729\n</code></pre>\n<p>I solved this by binding\
-    \ an address outside the container to <code>/var/lib/rstudio-server</code> when\
-    \ starting the instance as follows:</p>\n<pre><code>--bind $RSTUDIO_DB:/var/lib/rstudio-server\n\
-    </code></pre>\n<p>where <code>$RSTUDIO_DB</code> is just a path outside the container.\
-    \  I got this idea from <a href=\"https://community.rstudio.com/t/permissions-related-to-upgrade-to-rstudio-server-open-source-1-4/94256/3\"\
-    \ rel=\"nofollow\">this post</a>.</p>\n<h2>\n<a id=\"user-content-local-rocker-updates\"\
-    \ class=\"anchor\" href=\"#local-rocker-updates\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Local rocker updates</h2>\n<p><code>docker\
-    \ run -d -p 8787:8787 -e PASSWORD=really_clever_password -v ~/Documents:~/Documents\
-    \ rocker/rstudio</code></p>\n<h1>\n<a id=\"user-content-useful-links\" class=\"\
-    anchor\" href=\"#useful-links\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>Useful Links</h1>\n<p>A few links\
-    \ I found useful while developing this container</p>\n<ul>\n<li><a href=\"https://divingintogeneticsandgenomics.rbind.io/post/run-rstudio-server-with-singularity-on-hpc/\"\
-    \ rel=\"nofollow\">https://divingintogeneticsandgenomics.rbind.io/post/run-rstudio-server-with-singularity-on-hpc/</a></li>\n\
-    <li><a href=\"https://hub.docker.com/r/rocker/geospatial\" rel=\"nofollow\">https://hub.docker.com/r/rocker/geospatial</a></li>\n\
-    <li><a href=\"https://singularity-hub.org/collections/4930\" rel=\"nofollow\"\
-    >https://singularity-hub.org/collections/4930</a></li>\n<li><a href=\"https://pawseysc.github.io/singularity-containers/23-web-rstudio/index.html\"\
-    \ rel=\"nofollow\">https://pawseysc.github.io/singularity-containers/23-web-rstudio/index.html</a></li>\n\
-    <li><a href=\"https://www.rocker-project.org/use/singularity/\" rel=\"nofollow\"\
-    >https://www.rocker-project.org/use/singularity/</a></li>\n<li><a href=\"https://github.com/grst/rstudio-server-conda/issues/3\"\
-    >https://github.com/grst/rstudio-server-conda/issues/3</a></li>\n</ul>\n"
+    ></span></a>Fast Downward</h1>\n<p>Fast Downward is a domain-independent classical\
+    \ planning system.</p>\n<p>Copyright 2003-2020 Fast Downward contributors (see\
+    \ below).</p>\n<p>For further information:</p>\n<ul>\n<li>Fast Downward website:\
+    \ <a href=\"http://www.fast-downward.org\" rel=\"nofollow\">http://www.fast-downward.org</a>\n\
+    </li>\n<li>Report a bug or file an issue: <a href=\"http://issues.fast-downward.org\"\
+    \ rel=\"nofollow\">http://issues.fast-downward.org</a>\n</li>\n<li>Fast Downward\
+    \ mailing list: <a href=\"https://groups.google.com/forum/#!forum/fast-downward\"\
+    \ rel=\"nofollow\">https://groups.google.com/forum/#!forum/fast-downward</a>\n\
+    </li>\n<li>Fast Downward main repository: <a href=\"https://github.com/aibasel/downward\"\
+    >https://github.com/aibasel/downward</a>\n</li>\n</ul>\n<h2>\n<a id=\"user-content-tested-software-versions\"\
+    \ class=\"anchor\" href=\"#tested-software-versions\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Tested software\
+    \ versions</h2>\n<p>This version of Fast Downward has been tested with the following\
+    \ software versions:</p>\n<table>\n<thead>\n<tr>\n<th>OS</th>\n<th>Python</th>\n\
+    <th>C++ compiler</th>\n<th>CMake</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Ubuntu\
+    \ 20.04</td>\n<td>3.8</td>\n<td>GCC 9, GCC 10, Clang 10, Clang 11</td>\n<td>3.16</td>\n\
+    </tr>\n<tr>\n<td>Ubuntu 18.04</td>\n<td>3.6</td>\n<td>GCC 7, Clang 6</td>\n<td>3.10</td>\n\
+    </tr>\n<tr>\n<td>macOS 10.15</td>\n<td>3.6</td>\n<td>AppleClang 12</td>\n<td>3.19</td>\n\
+    </tr>\n<tr>\n<td>Windows 10</td>\n<td>3.6</td>\n<td>Visual Studio Enterprise 2017\
+    \ (MSVC 19.16) and 2019 (MSVC 19.28)</td>\n<td>3.19</td>\n</tr>\n</tbody>\n</table>\n\
+    <p>We test LP support with CPLEX 12.9, SoPlex 3.1.1 and Osi 0.107.9.\nOn Ubuntu,\
+    \ we test both CPLEX and SoPlex. On Windows, we currently\nonly test CPLEX, and\
+    \ on macOS, we do not test LP solvers (yet).</p>\n<h2>\n<a id=\"user-content-contributors\"\
+    \ class=\"anchor\" href=\"#contributors\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Contributors</h2>\n<p>The following\
+    \ list includes all people that actively contributed to\nFast Downward, i.e. all\
+    \ people that appear in some commits in Fast\nDownward's history (see below for\
+    \ a history on how Fast Downward\nemerged) or people that influenced the development\
+    \ of such commits.\nCurrently, this list is sorted by the last year the person\
+    \ has been\nactive, and in case of ties, by the earliest year the person started\n\
+    contributing, and finally by last name.</p>\n<ul>\n<li>2003-2020 Malte Helmert</li>\n\
+    <li>2008-2016, 2018-2020 Gabriele Roeger</li>\n<li>2010-2020 Jendrik Seipp</li>\n\
+    <li>2010-2011, 2013-2020 Silvan Sievers</li>\n<li>2012-2020 Florian Pommerening</li>\n\
+    <li>2013, 2015-2020 Salome Eriksson</li>\n<li>2016-2020 Cedric Geissmann</li>\n\
+    <li>2017-2020 Guillem Franc\xE8s</li>\n<li>2018-2020 Augusto B. Corr\xEAa</li>\n\
+    <li>2018-2020 Patrick Ferber</li>\n<li>2015-2019 Manuel Heusner</li>\n<li>2017\
+    \ Daniel Killenberger</li>\n<li>2016 Yusra Alkhazraji</li>\n<li>2016 Martin Wehrle</li>\n\
+    <li>2014-2015 Patrick von Reth</li>\n<li>2015 Thomas Keller</li>\n<li>2009-2014\
+    \ Erez Karpas</li>\n<li>2014 Robert P. Goldman</li>\n<li>2010-2012 Andrew Coles</li>\n\
+    <li>2010, 2012 Patrik Haslum</li>\n<li>2003-2011 Silvia Richter</li>\n<li>2009-2011\
+    \ Emil Keyder</li>\n<li>2010-2011 Moritz Gronbach</li>\n<li>2010-2011 Manuela\
+    \ Ortlieb</li>\n<li>2011 Vidal Alc\xE1zar Saiz</li>\n<li>2011 Michael Katz</li>\n\
+    <li>2011 Raz Nissim</li>\n<li>2010 Moritz Goebelbecker</li>\n<li>2007-2009 Matthias\
+    \ Westphal</li>\n<li>2009 Christian Muise</li>\n</ul>\n<h2>\n<a id=\"user-content-history\"\
+    \ class=\"anchor\" href=\"#history\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>History</h2>\n<p>The current\
+    \ version of Fast Downward is the merger of three different\nprojects:</p>\n<ul>\n\
+    <li>the original version of Fast Downward developed by Malte Helmert\nand Silvia\
+    \ Richter</li>\n<li>LAMA, developed by Silvia Richter and Matthias Westphal based\
+    \ on\nthe original Fast Downward</li>\n<li>FD-Tech, a modified version of Fast\
+    \ Downward developed by Erez\nKarpas and Michael Katz based on the original code</li>\n\
+    </ul>\n<p>In addition to these three main sources, the codebase incorporates\n\
+    code and features from numerous branches of the Fast Downward codebase\ndeveloped\
+    \ for various research papers. The main contributors to these\nbranches are Malte\
+    \ Helmert, Gabi R\xF6ger and Silvia Richter.</p>\n<h2>\n<a id=\"user-content-license\"\
+    \ class=\"anchor\" href=\"#license\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>License</h2>\n<p>The following\
+    \ directory is not part of Fast Downward as covered by\nthis license:</p>\n<ul>\n\
+    <li>./src/search/ext</li>\n</ul>\n<p>For the rest, the following license applies:</p>\n\
+    <pre><code>Fast Downward is free software: you can redistribute it and/or modify\n\
+    it under the terms of the GNU General Public License as published by\nthe Free\
+    \ Software Foundation, either version 3 of the License, or (at\nyour option) any\
+    \ later version.\n\nFast Downward is distributed in the hope that it will be useful,\
+    \ but\nWITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY\
+    \ or FITNESS FOR A PARTICULAR PURPOSE. See the GNU\nGeneral Public License for\
+    \ more details.\n\nYou should have received a copy of the GNU General Public License\n\
+    along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.\n\
+    </code></pre>\n"
   stargazers_count: 4
   subscribers_count: 5
   topics: []
@@ -7658,7 +7599,7 @@ HERA-Team/hera-singularity:
   stargazers_count: 0
   subscribers_count: 13
   topics: []
-  updated_at: 1627582382.0
+  updated_at: 1627643474.0
 HanLabUNLV/hanlab_singularity_defs:
   data_format: 2
   description: definition files for containers used in Hanlab
@@ -9630,7 +9571,7 @@ Irfanwustl/Research_code:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1627428666.0
+  updated_at: 1627755196.0
 JCSDA-internal/containers:
   data_format: 2
   description: Contains tools for building and distributing the JEDI/JCSDA Containers
@@ -9899,6 +9840,154 @@ JoshLoecker/MAPT:
   subscribers_count: 1
   topics: []
   updated_at: 1620064890.0
+LArbys/larbys-containers:
+  data_format: 2
+  description: One place for all the different container recipes
+  filenames:
+  - uboonecode/Singularity.uboonecode
+  - ubdl/Singularity.ubdldev.python3
+  - ubdl/Singularity.ubdldeps.u16.04_py3.6.11
+  - ubdl/Singularity.ubdldev
+  - sparseconvnet/Singularity.sparseconvnet
+  full_name: LArbys/larbys-containers
+  latest_release: null
+  readme: "<p>Repository to hold various Docker and singularity container building\
+    \ scripts</p>\n<h2>\n<a id=\"user-content-what-are-containers\" class=\"anchor\"\
+    \ href=\"#what-are-containers\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>What are containers?</h2>\n<p>Containers\
+    \ according to Amazon:</p>\n<blockquote>\n<p>Containers provide a standard way\
+    \ to package your application's code, configurations, and dependencies into a\
+    \ single object.\nContainers share an operating system installed on the server\
+    \ and run as resource-isolated processes, ensuring quick,\nreliable, and consistent\
+    \ deployments, regardless of environment.</p>\n</blockquote>\n<p>As far as our\
+    \ group is concerned, we use containers to be able to run the same piece of code\
+    \ on\nthe various compute platforms we have access to.\nThis is primary the Tufts\
+    \ cluster, which requires us to put our code into <code>Singularity</code> containers.</p>\n\
+    <h2>\n<a id=\"user-content-whats-the-repo-for\" class=\"anchor\" href=\"#whats-the-repo-for\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>What's the repo for?</h2>\n<p>We hold instructions on how to build\
+    \ particularly useful containers for our work.\nIn addition to packing up the\
+    \ code, containers can be built on top of another allow us to build, for example,\n\
+    a container holding the common dependencies of our different software packages.</p>\n\
+    <p>This allows one to build a container for a specific analysis without having\
+    \ to repackage the whole stack of code again.</p>\n<h2>\n<a id=\"user-content-are-you-going-to-make-me-build-all-of-these-myself\"\
+    \ class=\"anchor\" href=\"#are-you-going-to-make-me-build-all-of-these-myself\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Are you going to make me build all of these myself?</h2>\n<p>No! We\
+    \ keep copies of the containers on our <a href=\"dockerhub\">dockerhub</a> and\
+    \ <a href=\"https://www.singularity-hub.org/collections/2494\" rel=\"nofollow\"\
+    >singularity</a> hub pages.</p>\n<h1>\n<a id=\"user-content-containers-and-the-heirarchy\"\
+    \ class=\"anchor\" href=\"#containers-and-the-heirarchy\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Containers\
+    \ (and the heirarchy)</h1>\n<p><a href=\"https://camo.githubusercontent.com/232863cf1838592aed70d01a47bdf2e517095bcbf4637bbf2fccda3c9dc523ab/68747470733a2f2f672e67726176697a6f2e636f6d2f736f757263652f637573746f6d5f6d61726b31303f68747470732533412532462532467261772e67697468756275736572636f6e74656e742e636f6d2532464c41726279732532466c61726279732d636f6e7461696e6572732532466d6173746572253246636f6e7461696e65725f67726170682e646f74\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/232863cf1838592aed70d01a47bdf2e517095bcbf4637bbf2fccda3c9dc523ab/68747470733a2f2f672e67726176697a6f2e636f6d2f736f757263652f637573746f6d5f6d61726b31303f68747470732533412532462532467261772e67697468756275736572636f6e74656e742e636f6d2532464c41726279732532466c61726279732d636f6e7461696e6572732532466d6173746572253246636f6e7461696e65725f67726170682e646f74\"\
+    \ alt=\"Alt text\" data-canonical-src=\"https://g.gravizo.com/source/custom_mark10?https%3A%2F%2Fraw.githubusercontent.com%2FLArbys%2Flarbys-containers%2Fmaster%2Fcontainer_graph.dot\"\
+    \ style=\"max-width:100%;\"></a></p>\n<table>\n<thead>\n<tr>\n<th align=\"center\"\
+    >Container</th>\n<th align=\"left\">Descripton</th>\n</tr>\n</thead>\n<tbody>\n\
+    <tr>\n<td align=\"center\">ubuntu</td>\n<td align=\"left\">\n<a href=\"https://hub.docker.com/r/nvidia/cuda/\"\
+    \ rel=\"nofollow\">nvidia containers</a> which include cuda and cuDNN libraries</td>\n\
+    </tr>\n<tr>\n<td align=\"center\">ROOT</td>\n<td align=\"left\">build of CERN's\
+    \ <a href=\"https://github.com/root-project/root\">ROOT</a> data-analysis library</td>\n\
+    </tr>\n<tr>\n<td align=\"center\">OpenCV</td>\n<td align=\"left\">open source\
+    \ <a href=\"https://github.com/opencv/opencv\">library</a> of computer vision\
+    \ algorithms</td>\n</tr>\n<tr>\n<td align=\"center\">PyTorch</td>\n<td align=\"\
+    left\">deep learning <a href=\"https://pytorch.org/\" rel=\"nofollow\">library</a>\n\
+    </td>\n</tr>\n<tr>\n<td align=\"center\">SparseConvNet</td>\n<td align=\"left\"\
+    >includes submanifold convolution library for pytorch</td>\n</tr>\n<tr>\n<td align=\"\
+    center\">dllee_unified</td>\n<td align=\"left\">current-gen analysis code for\
+    \ MicroBooNE DL low-energy excess analysis</td>\n</tr>\n<tr>\n<td align=\"center\"\
+    >ubdl</td>\n<td align=\"left\">repository with next-gen LArbys tools for MicroBooNE\
+    \ DL-working group analysis</td>\n</tr>\n</tbody>\n</table>\n<h2>\n<a id=\"user-content-specific-versions\"\
+    \ class=\"anchor\" href=\"#specific-versions\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Specific Versions</h2>\n<p>Here\
+    \ we list official stack versions to be used for production and analysis studies</p>\n\
+    <table>\n<thead>\n<tr>\n<th align=\"center\">Stack Name</th>\n<th>ubuntu</th>\n\
+    <th>python</th>\n<th>ROOT</th>\n<th>OpenCV</th>\n<th>PyTorch</th>\n<th>SubConvNet\
+    \ (nutufts-fork)</th>\n<th>dllee_unified</th>\n<th>ubdl</th>\n</tr>\n</thead>\n\
+    <tbody>\n<tr>\n<td align=\"center\">dllee_unified</td>\n<td>16.04 LTS+CUDA 10.0+cuDNN\
+    \ 7</td>\n<td>2.7</td>\n<td>6.16/00</td>\n<td>3.4</td>\n<td>1.0.1post2</td>\n\
+    <td>tagXXXXXX</td>\n<td>tagXXXXXXXX</td>\n<td>n/a</td>\n</tr>\n<tr>\n<td align=\"\
+    center\">ubdl</td>\n<td>16.04 LTS+CUDA 10.0+cuDNN 7</td>\n<td>2.7</td>\n<td>6.16/00</td>\n\
+    <td>3.4</td>\n<td>1.0.1post2</td>\n<td>tagXXXXXX</td>\n<td>n/a</td>\n<td>tagxxxx</td>\n\
+    </tr>\n<tr>\n<td align=\"center\">ubdl dependences</td>\n<td>16.04 LTS+CUDA 11.0+cuDNN\
+    \ 8</td>\n<td>3.6.11</td>\n<td>6.22/06</td>\n<td>3.4.11</td>\n<td>1.7.1</td>\n\
+    <td>7dfbd0f</td>\n<td>n/a</td>\n<td>n/a</td>\n</tr>\n</tbody>\n</table>\n<p>The\
+    \ <code>ubdl dependencies</code> container is used to build the <code>ubdl</code>\
+    \ repository on Tufts.\nThis provides a development environment.</p>\n<h2>\n<a\
+    \ id=\"user-content-built-containers-on-tufts\" class=\"anchor\" href=\"#built-containers-on-tufts\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Built containers on Tufts</h2>\n<p>On the Tufts Cluster you can find\
+    \ the containers at:</p>\n<pre><code>/cluster/tufts/wongjiradlab/larbys/larbys-containers\n\
+    </code></pre>\n<h1>\n<a id=\"user-content-instructions\" class=\"anchor\" href=\"\
+    #instructions\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>Instructions</h1>\n<p>We use two packages: <a href=\"\
+    https://www.docker.com/why-docker\" rel=\"nofollow\">docker</a> and <a href=\"\
+    https://www.sylabs.io/singularity/\" rel=\"nofollow\">singularity</a>.</p>\n<p>Typically,\
+    \ we will use <code>docker</code> to build the containers and then convert the\
+    \ docker image into a <code>singularity</code> container.</p>\n<p>In the end,\
+    \ it is not important what tool we use to build the containers (one could use\
+    \ just singularity), but ultimately we must end up with a singularity container\
+    \ to run on the Tufts cluster.  (The reason is that docker is not supported on\
+    \ the cluster due to security concerns with docker.)</p>\n<p>You can run both\
+    \ docker and singularity from your personal machine. You can also use lab machines\
+    \ at:</p>\n<ul>\n<li>Tufts: meitner, rubin</li>\n<li>MIT: nudot, trex</li>\n</ul>\n\
+    <p>to build your containers.</p>\n<h2>\n<a id=\"user-content-what-do-i-need-to-do-to-build-a-container\"\
+    \ class=\"anchor\" href=\"#what-do-i-need-to-do-to-build-a-container\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>What\
+    \ do I need to do to build a container?</h2>\n<p>(still under construction)</p>\n\
+    <p>In general, you just need to know the instructions you'd type to install the\
+    \ software in question.\nYou put those instructions into a recipe file and tell\
+    \ docker or singularity to build the container.</p>\n<p>As an example, we will\
+    \ use the anticipated most-likely case, which is to make a container with a new\
+    \ version of analysis code (<code>ubdl</code>).</p>\n<p>In the folder <code>ubdl</code>,\
+    \ there is the docker recipe file to build this container.\nIt probably looks\
+    \ something like the following (assuming it hasn't changed too much since the\
+    \ time this README was written):</p>\n<pre><code>FROM larbys/sparseconvnet:ubuntu16.04_latest\n\
+    \nMAINTAINER taritree.wongjirad@tufts.edu\n\n# UBDL\nRUN apt-get update -y &amp;&amp;\
+    \ apt install -y rsync &amp;&amp; apt-get autoremove -y &amp;&amp; apt-get clean\
+    \ -y\nRUN pip install pyyaml typing figcan zmq\nRUN cd /usr/local &amp;&amp; git\
+    \ clone --recursive https://github.com/larbys/ubdl &amp;&amp; \\\n     cd ubdl\
+    \ &amp;&amp; chmod +x setenv.sh &amp;&amp; chmod +x buildall.sh &amp;&amp; chmod\
+    \ +x configure.sh\nRUN cd /usr/local/ubdl/larcv &amp;&amp; cp misc/FindCUDA.cmake\
+    \ /usr/local/share/cmake-3.13/Modules/\nRUN cd /usr/local/ubdl &amp;&amp; bash\
+    \ -c \"source /usr/local/root/build/bin/thisroot.sh &amp;&amp; source setenv.sh\
+    \ &amp;&amp; source configure.sh &amp;&amp; source  buildall.sh\"\n</code></pre>\n\
+    <p>The first line tells docker to build off of an existing image.\nThis happens\
+    \ to be the <code>larbys/sparseconvnet</code> image,\nwhich contains the software\
+    \ stack up to the Sparse Convolutional Network library.\nThe SparseConvNet library\
+    \ is the last dependency for the <code>ubdl</code> code.\nSo all that's left to\
+    \ finish the container is to build <code>ubdl</code> into the container.</p>\n\
+    <p>The docker file is just the list of instructions to install <code>ubdl</code>.</p>\n\
+    <p>To build it, run</p>\n<pre><code>docker build -t larbys/ubdl:dev . -f Dockerfile_ubuntu16.04\n\
+    </code></pre>\n<p>The <code>-t</code> flag is to the set the \"name\" or \"tag\"\
+    \ of the image.\n<code>.</code> tells Docker where to find the docker recipe file.\n\
+    And '-f' is what recipe file to use (in '.').</p>\n<p>With the image with ubdl\
+    \ built, the next step if one wants to create a container to run\nat Tufts, is\
+    \ to create a singularity container.\nLike the docker build file above,\nwe list\
+    \ the commands we would run to configure the computer for <code>ubdl</code>.</p>\n\
+    <p>As an example, in the <code>ubdl</code> folder,\nyou'll see a file called <code>Singularity.ubdl</code>,\n\
+    which contains the instructions to build the <code>ubdl</code> repository.\nIt'll\
+    \ look something that the following:</p>\n<pre><code>bootstrap: docker\nFrom:\
+    \ larbys/ubdl:latest\n\n%post\n  mkdir -p /cluster/home\n  mkdir -p /cluster/kappa\n\
+    \  mkdir -p /cluster/shared\n  mkdir -p /opt/shared\n\n%environment\n\n</code></pre>\n\
+    <h2>\n<a id=\"user-content-alternative-build-ubdl-outside-the-container\" class=\"\
+    anchor\" href=\"#alternative-build-ubdl-outside-the-container\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Alternative,\
+    \ build <code>ubdl</code> outside the container</h2>\n<p>Here, we of course start\
+    \ with the container we built with docker above, <code>larbys/ubdl:latest</code>.\n\
+    You can see all we do is create four folders.\nThese folders server to provide\
+    \ a mount point for our container to the network storage area.\nWhen making singularity\
+    \ containers for the Tufts cluster,\nplease include these commands.</p>\n<p>Note\
+    \ that the instructinos here were about installing <code>ubdl</code> into the\
+    \ container.\nHowever, an alternative is to clone the <code>ubdl</code> code into\
+    \ some folder and then compile that source\nusing the libraries found in the container.\n\
+    We provide the <code>ubdl-dependencies</code> container for this.</p>\n<p>Instructions\
+    \ on how to do that can be found <a href=\"https://github.com/LArbys/ubdl/wiki/Build-development-copy-of-UBDL-with-container\"\
+    >here</a>\nas part of the <code>ubdl</code> wiki.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 3
+  topics: []
+  updated_at: 1627755865.0
 LLNL/MaPPeRTrac:
   data_format: 2
   description: Massively Parallel, Portable, and Reproducible Tractography
@@ -11789,10 +11878,10 @@ Mykrobe-tools/mykrobe:
     \ \\\n  --species tb \\\n  --output out.json \\\n  --format json \\\n  --seq reads.fq.gz\n\
     </code></pre>\n<p>Test reads can be obtained by running:</p>\n<pre><code>wget\
     \ -O reads.fq.gz https://ndownloader.figshare.com/files/21059229\n</code></pre>\n"
-  stargazers_count: 45
+  stargazers_count: 46
   subscribers_count: 6
   topics: []
-  updated_at: 1625665948.0
+  updated_at: 1627682725.0
 NIH-HPC/singularity-def-files:
   data_format: 2
   description: definition files and wrapper scripts used by NIH HPC staff to install
@@ -13080,10 +13169,10 @@ No-Diehl/FD-SAT:
   data_format: 2
   description: null
   filenames:
-  - misc/releases/19.12/Singularity.19.12
   - misc/releases/20.06/Singularity.20.06
-  - misc/releases/19.06/Singularity.19.06
   - misc/releases/latest/Singularity
+  - misc/releases/19.12/Singularity.19.12
+  - misc/releases/19.06/Singularity.19.06
   full_name: No-Diehl/FD-SAT
   latest_release: null
   readme: "<h1>\n<a id=\"user-content-fast-downward\" class=\"anchor\" href=\"#fast-downward\"\
@@ -16156,7 +16245,7 @@ TheJacksonLaboratory/acm-bcb-singularity2021:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1627593627.0
+  updated_at: 1627760455.0
 TormodLandet/Ocellaris:
   data_format: 2
   description: This is a github MIRROR of the main ocellaris repo on bitbucket (https://bitbucket.org/ocellarisproject/ocellaris).
@@ -17953,7 +18042,7 @@ WalesGenePark/NanoSeqQC:
 
     '
   stargazers_count: 0
-  subscribers_count: 0
+  subscribers_count: 1
   topics: []
   updated_at: 1627380153.0
 XSEDE/nix-container-perfzero:
@@ -19117,6 +19206,201 @@ agladstein/SimPrily_update:
   subscribers_count: 0
   topics: []
   updated_at: 1615073384.0
+airbert-vln/bnb-dataset:
+  data_format: 2
+  description: Downloading a dataset from Airbnb
+  filenames:
+  - container/Singularity.butd
+  full_name: airbert-vln/bnb-dataset
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-houses-bnb-dataset-houses\" class=\"anchor\"\
+    \ href=\"#houses-bnb-dataset-houses\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a><g-emoji class=\"g-emoji\" alias=\"\
+    houses\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f3d8.png\"\
+    >\U0001F3D8\uFE0F</g-emoji> BnB Dataset <g-emoji class=\"g-emoji\" alias=\"houses\"\
+    \ fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f3d8.png\"\
+    >\U0001F3D8\uFE0F</g-emoji>\n</h1>\n<p><a href=\"./LICENSE.md\"><img src=\"https://camo.githubusercontent.com/2b802816c8f54fe93a3d0b3319660a1426c20d6205bfa22b29370f70941685ab/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f616972626572742d766c6e2f626e622d64617461736574\"\
+    \ alt=\"MIT\" data-canonical-src=\"https://img.shields.io/github/license/airbert-vln/bnb-dataset\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://arxiv.org/abs/%3CINDEX%3E\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/eb533236263be4e38d813d687cf3d166d68063a6becd2f33c906114ea354e17a/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f61725869762d253343494e4445582533452d677265656e2e737667\"\
+    \ alt=\"arXiv\" data-canonical-src=\"https://img.shields.io/badge/arXiv-%3CINDEX%3E-green.svg\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://eval.ai/web/challenges/challenge-page/97/leaderboard/270\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/cb6009fa3ba3b5c590d659c03d727f85bdd941198648cf7c85e5e09b6910c9c7/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f5232522d2546302539462541352538372d677265656e2e737667\"\
+    \ alt=\"R2R 1st\" data-canonical-src=\"https://img.shields.io/badge/R2R-%F0%9F%A5%87-green.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n<p>This contains a set of scripts for downloading\
+    \ a dataset from Airbnb.</p>\n<h2>\n<a id=\"user-content-hammer_and_wrench-1-get-started\"\
+    \ class=\"anchor\" href=\"#hammer_and_wrench-1-get-started\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a><g-emoji\
+    \ class=\"g-emoji\" alias=\"hammer_and_wrench\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f6e0.png\"\
+    >\U0001F6E0\uFE0F</g-emoji> 1. Get started</h2>\n<p>You need to have a recent\
+    \ version of Python (higher than 3.6) and install dependencies:</p>\n<div class=\"\
+    highlight highlight-source-shell\"><pre>pip install -r requirements</pre></div>\n\
+    <p>Note that typing is extensively used in the script. This was a real time saver\
+    \ for detecting errors before runtime. You might want to setup properly your IDE\
+    \ to play well with mypy. I  recommend the <a href=\"https://github.com/neoclide/coc.nvim\"\
+    ><code>coc.nvim</code></a> extension <a href=\"https://github.com/fannheyward/coc-pyright\"\
+    ><code>coc-pyright</code></a> for <a href=\"https://github.com/neovim/neovim/\"\
+    >neovim</a> users.</p>\n<p>Managing a large of images is tricky and usually take\
+    \ a lot of times. Usually, the scripts are splitting the task among several workers.\
+    \ A cache folder is keeping the order list for each worker, while each worker\
+    \ is producing its own output file.\nLook for <code>num_workers</code> or <code>num_procs</code>\
+    \ parameters in the <code>argtyped Arguments</code>.</p>\n<p>To parallelize among\
+    \ multiple GPUs, you can use the <code>distributed.launcher</code> script as is:</p>\n\
+    <div class=\"highlight highlight-source-shell\"><pre>python  -m torch.distributed.launch\
+    \ \\\n  --nproc_per_node=24 \\\n  --nnodes=1 \\\n  --node_rank=0 \\\n  -m scripts.extract_noun_phrases\
+    \ \\\n    --start 24 \\\n    --num_splits 48 \\\n    --source data/bnb-test-indoor.tsv\
+    \ \\\n    --output noun_phrases.tsv \\\n    --num_workers 8 \\\n    --batch_size\
+    \ 20\n</pre></div>\n<h2>\n<a id=\"user-content-world_map-2-download-listings-from-airbnb\"\
+    \ class=\"anchor\" href=\"#world_map-2-download-listings-from-airbnb\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a><g-emoji\
+    \ class=\"g-emoji\" alias=\"world_map\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f5fa.png\"\
+    >\U0001F5FA\uFE0F</g-emoji> 2. Download listings from Airbnb</h2>\n<p>This step\
+    \ is building a TSV file with 4 columns: listing ID, photo ID, image URL, image\
+    \ caption.\nA too high request rate would induce a rejection from Airbnb. Instead,\
+    \ it is advised to split the job among different IP addresses.</p>\n<p>You can\
+    \ use the pre-computed TSV file used in our paper <a href=\"./data/bnb-train.tsv\"\
+    >for training</a> and <a href=\"./data/bnb-test.tsv\">for testing</a>.\nNote that\
+    \ this file contains only a portion from Airbnb listings, and some images might\
+    \ not be available anymore.</p>\n<h3>\n<a id=\"user-content-21-create-a-list-of-regions\"\
+    \ class=\"anchor\" href=\"#21-create-a-list-of-regions\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>2.1. Create\
+    \ a list of regions</h3>\n<p>Airbnb listings are searched among a specific region.\n\
+    We need first to initialize the list of regions. A quick hack for that consists\
+    \ in scrapping Wikipedia list of places, as done in the script <a href=\"./scripts/cities.py\"\
+    >cities.py</a>:</p>\n<div class=\"highlight highlight-source-shell\"><pre>pip\
+    \ install selenium\n<span class=\"pl-c\"><span class=\"pl-c\">#</span> Install\
+    \ a driver following selenium specific instructions for your platform:</span>\n\
+    <span class=\"pl-c\"><span class=\"pl-c\">#</span> https://selenium-python.readthedocs.io/installation.html</span>\n\
+    python scripts/cities.py --output data/cities.txt</pre></div>\n<p>You can other\
+    \ examples  in the <a href=\"./scripts/locations/\"><code>scripts/locations/</code></a>\
+    \ folder.</p>\n<h3>\n<a id=\"user-content-22-download-listings\" class=\"anchor\"\
+    \ href=\"#22-download-listings\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>2.2. Download listings</h3>\n<div\
+    \ class=\"highlight highlight-source-shell\"><pre><span class=\"pl-c\"><span class=\"\
+    pl-c\">#</span> Download a list of listing from the list of cities</span>\npython\
+    \ scripts/search_listings.py --locations data/cities.txt --output data/listings\n\
+    <span class=\"pl-c\"><span class=\"pl-c\">#</span> FIXME I think this script is\
+    \ broken</span>\n\n<span class=\"pl-c\"><span class=\"pl-c\">#</span> Download\
+    \ JSON files for each listing</span>\npython scripts/download_listings.py --listings\
+    \ data/listings.txt --output data/merlin\n\n<span class=\"pl-c\"><span class=\"\
+    pl-c\">#</span> Extract photo URLs from listing export files</span>\npython scripts/extract_photo_metadata.py\
+    \ --merlin data/merlin --output data/bnb-dataset-raw.tsv</pre></div>\n<h3>\n<a\
+    \ id=\"user-content-23-filter-captions\" class=\"anchor\" href=\"#23-filter-captions\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>2.3. Filter captions</h3>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre><span class=\"pl-c\"><span class=\"pl-c\">#</span> Apply basic rules to\
+    \ remove some captions</span>\npython scripts/filter_captions.py --input data/bnb-dataset-raw.tsv\
+    \ --output data/bnb-dataset.tsv</pre></div>\n<h2>\n<a id=\"user-content-camera_flash-3-get-images\"\
+    \ class=\"anchor\" href=\"#camera_flash-3-get-images\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a><g-emoji class=\"\
+    g-emoji\" alias=\"camera_flash\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f4f8.png\"\
+    >\U0001F4F8</g-emoji> 3. Get images</h2>\n<p>Now we want to download images and\
+    \ filter out outdoor images.</p>\n<h3>\n<a id=\"user-content-31-download-images\"\
+    \ class=\"anchor\" href=\"#31-download-images\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>3.1. Download images</h3>\n<p>The\
+    \ download rate can be higher before the server kicks us out. However, it is still\
+    \ preferable to use a pool of IP addresses.</p>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>python scripts/download_images.py --csv_file data/bnb-dataset.tsv --output\
+    \ data/images --correspondance /tmp/cache-download-images/</pre></div>\n<h3>\n\
+    <a id=\"user-content-32-optionally-make-sure-images-were-correctly-downloaded\"\
+    \ class=\"anchor\" href=\"#32-optionally-make-sure-images-were-correctly-downloaded\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>3.2. Optionally, make sure images were correctly downloaded</h3>\n\
+    <div class=\"highlight highlight-source-shell\"><pre>python scripts/detect_errors.py\
+    \ --images data/images --merlin data/merlin</pre></div>\n<h3>\n<a id=\"user-content-33-filter-out-outdoor-images\"\
+    \ class=\"anchor\" href=\"#33-filter-out-outdoor-images\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>3.3. Filter\
+    \ out outdoor images</h3>\n<p>Outdoor images tend to be of lower qualities and\
+    \ captions are often not relevant.\nWe first detect outdoor images from a CNN\
+    \ pretrained on the places365 dataset. Later on, we will keep indoor images.</p>\n\
+    <p>Note that the output of this step is also used for image merging.</p>\n<div\
+    \ class=\"highlight highlight-source-shell\"><pre><span class=\"pl-c\"><span class=\"\
+    pl-c\">#</span> Detect room types</span>\npython scripts/detect_room.py --output\
+    \ data/places365/detect.tsv --images data/images\n\n<span class=\"pl-c\"><span\
+    \ class=\"pl-c\">#</span> Filter out indoor images</span>\npython scripts/extract_indoor.py\
+    \ --output data/bnb-dataset-indoor.tsv --detection data/places365/detect.tsv</pre></div>\n\
+    <h2>\n<a id=\"user-content-minidisc-4-build-an-lmdb-database-with-bnb-pictures\"\
+    \ class=\"anchor\" href=\"#minidisc-4-build-an-lmdb-database-with-bnb-pictures\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a><g-emoji class=\"g-emoji\" alias=\"minidisc\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f4bd.png\"\
+    >\U0001F4BD</g-emoji> 4. Build an LMDB database with BnB pictures</h2>\n<p>Extract\
+    \ visual features and store them on a single file. Several steps are required\
+    \ to achieve that. Unfortunately, we don't own permissions over Airbnb images,\
+    \ and thus we are not permitted to share our own LMDB file.</p>\n<h3>\n<a id=\"\
+    user-content-41-split-between-train-and-test\" class=\"anchor\" href=\"#41-split-between-train-and-test\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>4.1. Split between train and test</h3>\n<h3>\n<a id=\"user-content-42-extract-bottom-up-top-down-features\"\
+    \ class=\"anchor\" href=\"#42-extract-bottom-up-top-down-features\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>4.2.\
+    \ Extract bottom-up top-down features</h3>\n<p>This step is one of the most annoying\
+    \ one, since the install of bottom-up top-down attention is outdated. I put docker\
+    \ file and Singularity definition file in the folder <code>container</code> to\
+    \ help you with that.\nNote that this step is also extremely slow and you might\
+    \ want to use multiple GPUs.</p>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>python scripts/precompute_airbnb_img_features_with_butd.py  --images data/images</pre></div>\n\
+    <h3>\n<a id=\"user-content-43-build-an-lmdb-file\" class=\"anchor\" href=\"#43-build-an-lmdb-file\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>4.3. Build an LMDB file</h3>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre><span class=\"pl-c\"><span class=\"pl-c\">#</span> Extract keys</span>\n\
+    python scripts/extract_keys.py --output data/keys.txt --datasets data/bnb-dataset.indoor.tsv\n\
+    <span class=\"pl-c\"><span class=\"pl-c\">#</span> Create an LMDB</span>\npython\
+    \ scripts/convert_to_lmdb.py --output img_features --keys data/keys.txt</pre></div>\n\
+    <p>Note that you can split the LMDB into multiple files by using a number of workers.\
+    \ This could be relevant when your LMDB file is super huge!</p>\n<h2>\n<a id=\"\
+    user-content-link-5-create-dataset-files-with-path-instruction-pairs\" class=\"\
+    anchor\" href=\"#link-5-create-dataset-files-with-path-instruction-pairs\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a><g-emoji\
+    \ class=\"g-emoji\" alias=\"link\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f517.png\"\
+    >\U0001F517</g-emoji> 5. Create dataset files with path-instruction pairs</h2>\n\
+    <p>Almost there! We built  image-caption pairs and now we want to convert them\
+    \ into path-instruction pairs.\nActually, we are just going to produce  JSON files\
+    \ that you can feed into the <a href=\"https://github.com/airbert-vln/airbert/\"\
+    >training repository</a>.</p>\n<h3>\n<a id=\"user-content-chains-51-concatenation\"\
+    \ class=\"anchor\" href=\"#chains-51-concatenation\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a><g-emoji class=\"\
+    g-emoji\" alias=\"chains\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/26d3.png\"\
+    >\u26D3\uFE0F</g-emoji> 5.1. Concatenation</h3>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>python scripts/preprocess_dataset.py --csv data/bnb-train.tsv --name bnb_train\n\
+    python scripts/preprocess_dataset.py --csv data/bnb-test.tsv --name bnb_test</pre></div>\n\
+    <h3>\n<a id=\"user-content-busts_in_silhouette-52-image-merging\" class=\"anchor\"\
+    \ href=\"#busts_in_silhouette-52-image-merging\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a><g-emoji class=\"g-emoji\" alias=\"\
+    busts_in_silhouette\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f465.png\"\
+    >\U0001F465</g-emoji> 5.2. Image merging</h3>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>python scripts/merge_photos.py --source bnb_train.py --output merge+bnb_train.py\
+    \ --detection-dir data/places365 \npython scripts/merge_photos.py --source bnb_test.py\
+    \ --output merge+bnb_test.py --detection-dir data/places365</pre></div>\n<h3>\n\
+    <a id=\"user-content--53-captionless-insertion\" class=\"anchor\" href=\"#-53-captionless-insertion\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a><g-emoji class=\"g-emoji\" alias=\"family_man_woman_girl\" fallback-src=\"\
+    https://github.githubassets.com/images/icons/emoji/unicode/1f468-1f469-1f467.png\"\
+    >\U0001F468\u200D\U0001F469\u200D\U0001F467</g-emoji> 5.3. Captionless insertion</h3>\n\
+    <div class=\"highlight highlight-source-shell\"><pre>python scripts/preprocess_dataset.py\
+    \ --csv data/bnb-dataset.indoor.tsv --captionless True --min-caption 2 --min-length\
+    \ 4 --name 2capt+bnb_train\n\npython scripts/preprocess_dataset.py --csv datasets/data/bnb-dataset.indoor.tsv\
+    \ --captionless True --min-caption 2 --min-length 4 --name 2capt+bnb_test</pre></div>\n\
+    <h3>\n<a id=\"user-content--54-instruction-rephrasing\" class=\"anchor\" href=\"\
+    #-54-instruction-rephrasing\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a><g-emoji class=\"g-emoji\" alias=\"\
+    footprints\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f463.png\"\
+    >\U0001F463</g-emoji> 5.4. Instruction rephrasing</h3>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre><span class=\"pl-c\"><span class=\"pl-c\">#</span>\
+    \ Extract noun phrases from BnB captions</span>\npython scripts/extract_noun_phrases.py\
+    \ --source data/bnb-train.tsv --output data/bnb-train.np.tsv \npython scripts/extract_noun_phrases.py\
+    \ --source data/bnb-test.tsv --output data/bnb-test.np.tsv \n\n<span class=\"\
+    pl-c\"><span class=\"pl-c\">#</span> Extract noun phrases from R2R train set</span>\n\
+    python scripts/perturbate_dataset.py --infile R2R_train.json --outfile np_train.json\
+    \ --mode object --training True \n</pre></div>\n<h3>\n<a id=\"user-content-55-create-the-testset\"\
+    \ class=\"anchor\" href=\"#55-create-the-testset\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>5.5. Create the\
+    \ testset</h3>\n<p>You need to create a testset for each dataset. Here is an example\
+    \ for captionless insertion.</p>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>python scripts/build_testset.py --output data/bnb/2capt+testset.json --out-listing\
+    \ False --captions 2capt+bnb_test.json\n</pre></div>\n"
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1627653513.0
 alestarbucks/ofappdl:
   data_format: 2
   description: null
@@ -22507,7 +22791,36 @@ biocorecrg/interproscan_docker:
     is adequately reflected in <code>interproscan.properties</code> or <code>interproscan.open.properties</code>
     files. Otherwise Interproscan is not likely to work.</p>
 
-    <p>Building with Singularity:</p>
+    <h2>
+
+    <a id="user-content-building-from-docker-recipes" class="anchor" href="#building-from-docker-recipes"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building
+    from Docker recipes</h2>
+
+    <pre><code># With privative software
+
+    docker build --build-arg IPSCAN_DATA=/path/to/5.48-83.0 -t iprscan:5.48-83.0 -f
+    Dockerfile .
+
+    sudo singularity build iprscan-5.48-83.0.sif docker-daemon://iprscan:5.48-83.0
+
+    # Without privative software
+
+    docker build --build-arg IPSCAN_DATA=/path/to/5.48-83.0 -t iprscan-open:5.48-83.0
+    -f Dockerfile.open .
+
+    sudo singularity build iprscan-5.48-83.0.open.sif docker-daemon://iprscan-open:5.48-83.0
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-building-from-singularity-recipes" class="anchor" href="#building-from-singularity-recipes"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building
+    from Singularity recipes</h2>
+
+    <p><strong>As commented above, you need to adapt Singularity recipes first and
+    change <code>IPSCAN_DATA</code> to fit your system.</strong></p>
 
     <pre><code># With privative software
 
@@ -22566,7 +22879,7 @@ biocorecrg/interproscan_docker:
   stargazers_count: 0
   subscribers_count: 4
   topics: []
-  updated_at: 1626105383.0
+  updated_at: 1627666323.0
 biocorecrg/sigtarp_docker:
   data_format: 2
   description: Container image with signalp and targetp programs for functional analysis
@@ -23214,7 +23527,7 @@ cfe-lab/MiCall:
   - python
   - resistance
   - genotype
-  updated_at: 1627492391.0
+  updated_at: 1627681133.0
 chaotic-aur/toolbox:
   data_format: 2
   description: Unified kit with all the scripts required for maintaining the repository.
@@ -23571,7 +23884,7 @@ chaotic-aur/toolbox:
     yarn run lint</pre></div>
 
     '
-  stargazers_count: 29
+  stargazers_count: 30
   subscribers_count: 11
   topics:
   - archlinux
@@ -23580,7 +23893,7 @@ chaotic-aur/toolbox:
   - continuous-deployment
   - pkgbuild
   - aur
-  updated_at: 1627305961.0
+  updated_at: 1627773638.0
 chenhongluo/horovord:
   data_format: 2
   description: null
@@ -26022,7 +26335,7 @@ datalad/datalad:
     \ href=\"https://github.com/datalad/datalad/commits?author=ypid\" title=\"Code\"\
     ><g-emoji class=\"g-emoji\" alias=\"computer\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f4bb.png\"\
     >\U0001F4BB</g-emoji></a>\n</td>\n  </tr>\n</table>\n\n\n\n"
-  stargazers_count: 252
+  stargazers_count: 253
   subscribers_count: 22
   topics:
   - python
@@ -26030,7 +26343,7 @@ datalad/datalad:
   - data-storage
   - dataset
   - usable
-  updated_at: 1627577107.0
+  updated_at: 1627786435.0
 davecwright3/bart-singularity:
   data_format: 2
   description: Bayesian Atmospheric Radiative Transfer (BART) packaged in a Singularity
@@ -32790,10 +33103,10 @@ grst/rstudio-server-conda:
     \ as a command line parameter.</p>\n<pre><code>uuid &gt; /tmp/rstudio-server/${USER}_secure-cookie-key\n\
     rserver # ...\n  --secure-cookie-key-file /tmp/rstudio-server/${USER}_secure-cookie-key\n\
     </code></pre>\n</li>\n</ul>\n"
-  stargazers_count: 82
+  stargazers_count: 83
   subscribers_count: 3
   topics: []
-  updated_at: 1627501598.0
+  updated_at: 1627633105.0
 gwastro/pycbc_bench:
   data_format: 2
   description: Some benchmark singularity images for pycbc / pycbc inference
@@ -34103,7 +34416,7 @@ hpcng/singularity:
   - portability
   - rootless-containers
   - cloud-native
-  updated_at: 1627558318.0
+  updated_at: 1627747041.0
 humanconnectome/hcp-pipelines-singularity:
   data_format: 2
   description: The definition files for creating singularity containers that can run
@@ -34202,6 +34515,7 @@ huynhngoc/head-neck-analysis:
   data_format: 2
   description: null
   filenames:
+  - Singularity.ray
   - Singularity.beta
   - Singularity
   full_name: huynhngoc/head-neck-analysis
@@ -34276,7 +34590,7 @@ huynhngoc/head-neck-analysis:
   stargazers_count: 1
   subscribers_count: 1
   topics: []
-  updated_at: 1625647816.0
+  updated_at: 1627632144.0
 ianjamesx/DeepCAM_Singularity:
   data_format: 2
   description: Experimental Singularity container for MLCommons DeepCAM Climate Segmentation
@@ -35495,6 +35809,61 @@ ifurther/flair-def:
   subscribers_count: 1
   topics: []
   updated_at: 1619686613.0
+ikmb/finemapping:
+  data_format: 2
+  description: A Nextflow framework for finemap
+  filenames:
+  - Singularity.def
+  full_name: ikmb/finemapping
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-finemapping\" class=\"anchor\" href=\"#finemapping\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>finemapping</h1>\n<h2>\n<a id=\"user-content-a-nextflow-framework-for-finemap\"\
+    \ class=\"anchor\" href=\"#a-nextflow-framework-for-finemap\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>A Nextflow\
+    \ framework for finemap</h2>\n<h3>\n<a id=\"user-content-installation\" class=\"\
+    anchor\" href=\"#installation\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Installation:</h3>\n<p>Download this\
+    \ pipeline locally or on the medcluster.<br>\nInstall finemap_v1.4_x86_64.tgz\
+    \ within the bin folder so finemap is located in bin/finemap_v1.4_x86_64/finemap_v1.4_x86_64.<br></p>\n\
+    <h3>\n<a id=\"user-content-usage\" class=\"anchor\" href=\"#usage\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Usage:</h3>\n\
+    <p>Pipeline needs 6 input files:<br>\n<strong>Reference</strong>: in bim, bed,\
+    \ fam (3 files with same basename)<br>\n<strong>Locus-file</strong>: csv-file\
+    \ setting the boundaries of the finemap plots; columns: chunk,NSNP,chr,st,sp,PPA_3<br></p>\n\
+    <ul>\n<li>chunk: iterate your loci like 1,2,3...</li>\n<li>NSNP: currently not\
+    \ in use, put in NA</li>\n<li>chr: chromosome, like 12, not chr12, and 23 instead\
+    \ of X</li>\n<li>st: coordinate where plotting starts</li>\n<li>sp: coordinate\
+    \ where plotting ends</li>\n<li>PPA_3: currently not in use, put in 1</li>\n</ul>\n\
+    <p><strong>SNP-List</strong>: file with 1 snp per row, all other SNPs are excluded\
+    \ drom plotting and finemapping<br>\n<strong>SUMSTAT-FILE</strong>: file containing\
+    \ following columns:<br>\nCHR\tBP\tSNP\tA1\tA2\tP\tOR\tBETA\tSE\tN\tCHISQ\tZ\t\
+    SOURCE\tFRQ_A_A1\tFRQ_U_A1\tINFO<br>\nonly CHR, BP, SNP, A1, A2, P, BETA, SE,\
+    \ FRQ_U_A1 are relevant, the other columns can be filled with NA.\nCall pipeline\
+    \ with:<br></p>\n<div class=\"highlight highlight-source-shell\"><pre>nextflow\
+    \ run main.nf -profile standard --locus /home/user/finepipe/example/locusfile.sample\
+    \ --snps /home/user/finepipe/example/snplist.sample --reference /home/user/finepipe/example/GerNorItaSpa.chr3\
+    \ --sumstats /home/user/finepipe/example/sumstats.sample --nsum 15743 --nsignal\
+    \ 1 --method sss -resume  </pre></div>\n<h4>\n<a id=\"user-content-mandatory\"\
+    \ class=\"anchor\" href=\"#mandatory\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Mandatory:</h4>\n<p><strong>--locus</strong>\
+    \ \"path/to/locus.file\"<br>\n<strong>--snps</strong>  \"path/to/snp.list\"<br>\n\
+    <strong>--reference</strong>   \"path/to/bimbedfam\" (no file extension)<br>\n\
+    <strong>--sumstats</strong>  \"path/to/sumstat.file\"<br>\n<strong>--nsum</strong>\
+    \  N of studysize<br>\n<strong>--method</strong>    \"sss\" or \"cond\"<br>\n\
+    <strong>--nsignal</strong>   N of max signals<br></p>\n<p>If you run it locally,\
+    \ download the locuszoom database and set it with:<br>\n<strong>--locuszoomdb</strong>\
+    \ \"/path/to/locuszoom/data/database/locuszoom_hg38.db\"<br>\nand set profile\
+    \ to local:<br>\n<strong>-profile</strong>    \"local\" or \"standard\"<br></p>\n\
+    <h4>\n<a id=\"user-content-optional\" class=\"anchor\" href=\"#optional\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Optional:</h4>\n\
+    <p><strong>--dprime</strong>    sets ld method from the default r\xB2 to dprime<br>\n\
+    <strong>--output</strong> \"/path/to/output\" if not set output is baseDir/Results<br>\n\
+    <strong>-resume</strong> Continue a run with cached processes<br></p>\n"
+  stargazers_count: 0
+  subscribers_count: 0
+  topics: []
+  updated_at: 1627637347.0
 intel/HPC-containers-from-Intel:
   data_format: 2
   description: Intel HPC Containers using Singularity
@@ -38169,7 +38538,7 @@ lkirk/nb-env:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1627204676.0
+  updated_at: 1627689667.0
 lkirk/singularity-in-singularity:
   data_format: 2
   description: proof of concept for running singularity in a singularity container
@@ -38244,9 +38613,9 @@ lscsoft/bilby:
     ></span></a>PREREQUISITES</h2>\n<p><strong>Operating System</strong>: MONET can\
     \ be run on <strong>either</strong></p>\n<ul>\n<li>Linux (it was tested on <em>Ubuntu\
     \ Linux</em> 20.04, <em>CentOS Linux</em> 7.5)</li>\n<li>MacOS (it was tested\
-    \ on <em>macOS Sierra</em> 10.12)</li>\n</ul>\n<p><strong>Software</strong>: MONET\
-    \ requires <strong>either</strong>:</p>\n<ul>\n<li>\n<code>Docker</code> (see\
-    \ \"Install using the repository\" <a href=\"https://docs.docker.com/engine/install/\"\
+    \ on <em>Big Sur</em> 11.4 and <em>Sierra</em> 10.12)</li>\n</ul>\n<p><strong>Software</strong>:\
+    \ MONET requires <strong>either</strong>:</p>\n<ul>\n<li>\n<code>Docker</code>\
+    \ (see \"Install using the repository\" <a href=\"https://docs.docker.com/engine/install/\"\
     \ rel=\"nofollow\">https://docs.docker.com/engine/install/</a>)</li>\n<li>\n<code>Singularity</code>\
     \ (see <a href=\"http://singularity.lbl.gov\" rel=\"nofollow\">http://singularity.lbl.gov</a>)</li>\n\
     </ul>\n<p><strong>Hardware</strong>: MONET was tested both on server and on commodity\
@@ -38513,7 +38882,7 @@ lscsoft/bilby:
   stargazers_count: 22
   subscribers_count: 6
   topics: []
-  updated_at: 1626969756.0
+  updated_at: 1627648850.0
 lxwgcool/singularity:
   data_format: 2
   description: singularity-recipe-share
@@ -41749,7 +42118,7 @@ nservant/HiC-Pro:
     \ Hub</a>\nTo pull a Docker image, simply use :</p>\n<pre><code>docker pull nservant/hicpro:latest\n\
     </code></pre>\n<p>Note that the <code>tag</code> may depend on the HiC-Pro version.</p>\n\
     <p>You can also build your own image from the root folder using</p>\n<pre><code>docker\
-    \ build -t hicpro:3.0.0 .\n</code></pre>\n<h3>\n<a id=\"user-content-using-hic-pro-through-singularity\"\
+    \ build -t hicpro:3.1.0 .\n</code></pre>\n<h3>\n<a id=\"user-content-using-hic-pro-through-singularity\"\
     \ class=\"anchor\" href=\"#using-hic-pro-through-singularity\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Using\
     \ HiC-Pro through <code>Singularity</code>\n</h3>\n<p>HiC-Pro provides a Singularity\
@@ -41826,7 +42195,7 @@ nservant/HiC-Pro:
     ></span></a>How to use it ?</h2>\n<p>First have a look at the help message !</p>\n\
     <pre><code>  HiC-Pro --help\n  usage : HiC-Pro -i INPUT -o OUTPUT -c CONFIG [-s\
     \ ANALYSIS_STEP] [-p] [-h] [-v]\n  Use option -h|--help for more information\n\
-    \n  HiC-Pro 3.0.0\n  ---------------\n  OPTIONS\n\n   -i|--input INPUT : input\
+    \n  HiC-Pro 3.1.0\n  ---------------\n  OPTIONS\n\n   -i|--input INPUT : input\
     \ data folder; Must contains a folder per sample with input files\n   -o|--output\
     \ OUTPUT : output folder\n   -c|--conf CONFIG : configuration file for Hi-C processing\n\
     \   [-p|--parallel] : if specified run HiC-Pro on a cluster\n   [-s|--step ANALYSIS_STEP]\
@@ -41867,7 +42236,7 @@ nservant/HiC-Pro:
     \ &amp;&amp; tar -zxvf HiCPro_testdata.tar.gz\n\n ## Edit the configuration file\
     \ and set the path to Human bowtie2 indexes\n\n ## Run HiC-Pro\n time HICPRO_INSTALL_DIR/bin/HiC-Pro\
     \ -c config_test_latest.txt -i test_data -o hicpro_latest_test\n\nRun HiC-Pro\
-    \ 3.0.0\n--------------------------------------------\nThu Mar 19, 12:18:10 (UTC+0100)\n\
+    \ 3.1.0\n--------------------------------------------\nThu Mar 19, 12:18:10 (UTC+0100)\n\
     Bowtie2 alignment step1 ...\nLogs: logs/dixon_2M_2/mapping_step1.log\nLogs: logs/dixon_2M/mapping_step1.log\n\
     \n--------------------------------------------\nThu Mar 19, 12:18:57 (UTC+0100)\n\
     Bowtie2 alignment step2 ...\nLogs: logs/dixon_2M_2/mapping_step2.log\nLogs: logs/dixon_2M/mapping_step2.log\n\
@@ -41897,7 +42266,7 @@ nservant/HiC-Pro:
   stargazers_count: 247
   subscribers_count: 20
   topics: []
-  updated_at: 1626145689.0
+  updated_at: 1627644950.0
 nuKs/preprocessing:
   data_format: 2
   description: null
@@ -45971,10 +46340,11 @@ provarepro/mlperf_inference:
   - v0.5/cpp/OpenVINO/singularity/Singularity.v0.5-OpenVINO-2019_R3.1_rt_cg_tbb-py36-gcc75-ubuntu18
   - v0.5/cpp/OpenVINO/singularity/Singularity.v0.5-OpenVINO-2019_R3.1_src_c_tbb-py36-gcc75-ubuntu18
   - v0.5/cpp/OpenVINO/singularity/Singularity.v0.5-OpenVINO-2019_R3.1_src_c_omp-py36-gcc75-ubuntu18
+  - v0.5/cpp/OpenVINO/singularity/Singularity.v0.5-OpenVINO-2020.3.1_src_c_omp-py36-gcc75-ubuntu18
   - v0.5/cpp/OpenVINO/singularity/Singularity.v0.5-OpenVINO-2019_R3.1_rt_c_tbb-py36-gcc75-ubuntu18
   - v0.5/cpp/OpenVINO/singularity/Singularity.v0.5-OpenVINO-2019_R3.1_src_c_omp-py38-gcc75-ubuntu20
   full_name: provarepro/mlperf_inference
-  latest_release: 0.0.2
+  latest_release: 0.0.3
   readme: '<h1>
 
     <a id="user-content-mlperf-inference" class="anchor" href="#mlperf-inference"
@@ -45987,7 +46357,7 @@ provarepro/mlperf_inference:
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1627502794.0
+  updated_at: 1627762348.0
 pscedu/singularity-abyss:
   data_format: 2
   description: ABySS is a de novo sequence assembler that is designed for very short
@@ -46305,7 +46675,7 @@ pscedu/singularity-bat:
   topics:
   - singularity
   - utilities
-  updated_at: 1625845844.0
+  updated_at: 1627699459.0
 pscedu/singularity-bcftools:
   data_format: 2
   description: "bcftools \u2014 utilities for variant calling and manipulating VCFs\
@@ -46560,7 +46930,7 @@ pscedu/singularity-blast:
   topics:
   - bioinformatics
   - singularity
-  updated_at: 1626286759.0
+  updated_at: 1627675710.0
 pscedu/singularity-bowtie2:
   data_format: 2
   description: bowtie2 is an ultrafast and memory-efficient tool for aligning sequencing
@@ -46731,7 +47101,7 @@ pscedu/singularity-bwa:
   topics:
   - bioinformatics
   - singularity
-  updated_at: 1625845512.0
+  updated_at: 1627675819.0
 pscedu/singularity-cutadapt:
   data_format: 2
   description: null
@@ -47802,7 +48172,7 @@ pscedu/singularity-ncdu:
   topics:
   - singularity
   - utilities
-  updated_at: 1627060161.0
+  updated_at: 1627699937.0
 pscedu/singularity-octave:
   data_format: 2
   description: GNU Octave is software featuring a high-level programming language,
@@ -49519,13 +49889,280 @@ retogerber/singularity_rserver:
   subscribers_count: 1
   topics: []
   updated_at: 1626332421.0
+richelbilderbeek/gcaer:
+  data_format: 2
+  description: R package interface to GCAE
+  filenames:
+  - Singularity
+  full_name: richelbilderbeek/gcaer
+  latest_release: v0.3
+  readme: '<h1>
+
+    <a id="user-content-gcaer" class="anchor" href="#gcaer" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>gcaer</h1>
+
+    <table>
+
+    <thead>
+
+    <tr>
+
+    <th>Branch</th>
+
+    <th><a href="https://github.com/richelbilderbeek/gcaer/actions"><img src="man/figures/GitHubActions.png"
+    alt="GitHub Actions logo" style="max-width:100%;"></a></th>
+
+    <th><a href="https://ci.appveyor.com/project/richelbilderbeek/gcaer/" rel="nofollow"><img
+    src="man/figures/AppVeyor.png" alt="AppVeyor logo" style="max-width:100%;"></a></th>
+
+    <th><a href="https://www.codecov.io" rel="nofollow"><img src="man/figures/Codecov.png"
+    alt="Codecov logo" style="max-width:100%;"></a></th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr>
+
+    <td><code>master</code></td>
+
+    <td><a href="https://github.com/richelbilderbeek/gcaer/workflows/R-CMD-check/badge.svg?branch=master"
+    target="_blank" rel="noopener noreferrer"><img src="https://github.com/richelbilderbeek/gcaer/workflows/R-CMD-check/badge.svg?branch=master"
+    alt="R-CMD-check" style="max-width:100%;"></a></td>
+
+    <td><a href="https://ci.appveyor.com/project/richelbilderbeek/gcaer" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/4ee03d124748c9890fa57e373bff9239f5f648fc944a8f2bad25d9d658a890df/68747470733a2f2f63692e6170707665796f722e636f6d2f6170692f70726f6a656374732f7374617475732f6769746875622f72696368656c62696c6465726265656b2f67636165723f6272616e63683d6d6173746572267376673d74727565"
+    alt="AppVeyor build status" data-canonical-src="https://ci.appveyor.com/api/projects/status/github/richelbilderbeek/gcaer?branch=master&amp;svg=true"
+    style="max-width:100%;"></a></td>
+
+    <td><a href="https://codecov.io/github/richelbilderbeek/gcaer/branch/master" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/3b7a6e924b6bcb32c8b3da0bd2aae7b7fe775432f4a3c611efa42f2ae77dee9b/68747470733a2f2f636f6465636f762e696f2f6769746875622f72696368656c62696c6465726265656b2f67636165722f636f7665726167652e7376673f6272616e63683d6d6173746572"
+    alt="codecov.io" data-canonical-src="https://codecov.io/github/richelbilderbeek/gcaer/coverage.svg?branch=master"
+    style="max-width:100%;"></a></td>
+
+    </tr>
+
+    <tr>
+
+    <td><code>develop</code></td>
+
+    <td><a href="https://github.com/richelbilderbeek/gcaer/workflows/R-CMD-check/badge.svg?branch=develop"
+    target="_blank" rel="noopener noreferrer"><img src="https://github.com/richelbilderbeek/gcaer/workflows/R-CMD-check/badge.svg?branch=develop"
+    alt="R-CMD-check" style="max-width:100%;"></a></td>
+
+    <td><a href="https://ci.appveyor.com/project/richelbilderbeek/gcaer" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/1e2dba222e2443795966591d32500d710767b8c5031ca49fd9f3014dc1502e36/68747470733a2f2f63692e6170707665796f722e636f6d2f6170692f70726f6a656374732f7374617475732f6769746875622f72696368656c62696c6465726265656b2f67636165723f6272616e63683d646576656c6f70267376673d74727565"
+    alt="AppVeyor build status" data-canonical-src="https://ci.appveyor.com/api/projects/status/github/richelbilderbeek/gcaer?branch=develop&amp;svg=true"
+    style="max-width:100%;"></a></td>
+
+    <td><a href="https://codecov.io/github/richelbilderbeek/gcaer/branch/develop"
+    rel="nofollow"><img src="https://camo.githubusercontent.com/3159ac77b3ba0a6725db4cdb3e85629c887a8ab8cf3c360fb92d05388280ff1a/68747470733a2f2f636f6465636f762e696f2f6769746875622f72696368656c62696c6465726265656b2f67636165722f636f7665726167652e7376673f6272616e63683d646576656c6f70"
+    alt="codecov.io" data-canonical-src="https://codecov.io/github/richelbilderbeek/gcaer/coverage.svg?branch=develop"
+    style="max-width:100%;"></a></td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    <p>Work with <a href="https://github.com/kausmees/GenoCAE">GCAE</a> from R.</p>
+
+    <ul>
+
+    <li><a href="https://github.com/kausmees/GenoCAE">GCAE GitHub repository</a></li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+    <p><code>gcaer</code> is not on CRAN yet. To install <code>gcaer</code>:</p>
+
+    <pre><code>library(remotes)
+
+    install_github("richelbilderbeek/gcaer")
+
+    </code></pre>
+
+    <p>This assumes you have the <code>remotes</code> package installed.</p>
+
+    <h2>
+
+    <a id="user-content-install-gcae-versions" class="anchor" href="#install-gcae-versions"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install
+    GCAE versions</h2>
+
+    <p>To install GCAE all:</p>
+
+    <pre><code>library(gcaer)
+
+    install_gcae()
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-examples" class="anchor" href="#examples" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Examples</h2>
+
+    <p>Get the GCAE help text:</p>
+
+    <pre><code>library(gcaer)
+
+    get_gcae_help_text()
+
+    </code></pre>
+
+    <h3>
+
+    <a id="user-content-running-gcae" class="anchor" href="#running-gcae" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Running GCAE</h3>
+
+    <p>Run GCAE:</p>
+
+    <pre><code>library(gcaer)
+
+    run_gcae("--help")
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-links" class="anchor" href="#links" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Links</h2>
+
+    <ul>
+
+    <li><a href="https://github.com/kausmees/GenoCAE">GCAE GitHub repository</a></li>
+
+    </ul>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1627649487.0
+richelbilderbeek/mhcnuggetsr:
+  data_format: 2
+  description: Package to call MHCnuggets from R, to predict MHC-I and MHC-II epitopes
+  filenames:
+  - Singularity
+  full_name: richelbilderbeek/mhcnuggetsr
+  latest_release: v1.1
+  readme: "\n<h1>\n<a id=\"user-content-mhcnuggetsr\" class=\"anchor\" href=\"#mhcnuggetsr\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>mhcnuggetsr</h1>\n\n<p><a href=\"https://www.tidyverse.org/lifecycle/#stable\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/f92308582c303fb4e899bc59dd8e3aff6305da887902492fe8590be27121963a/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6966656379636c652d737461626c652d677265656e2e737667\"\
+    \ alt=\"Lifecycle: stable\" data-canonical-src=\"https://img.shields.io/badge/lifecycle-stable-green.svg\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://CRAN.R-project.org/package=mhcnuggetsr\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/74ab11ecbca21212884c7a775100dca63fc2a1eaf3953ce9e650bb9a6d2f7499/68747470733a2f2f7777772e722d706b672e6f72672f6261646765732f76657273696f6e2f6d68636e75676765747372\"\
+    \ alt=\"CRAN status\" data-canonical-src=\"https://www.r-pkg.org/badges/version/mhcnuggetsr\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://CRAN.R-project.org/package=mhcnuggetsr\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/61a7e267db3b3bc5662c5cbf997c54cebc1e9f78fba7e8960673dd67e08aaa19/687474703a2f2f6372616e6c6f67732e722d706b672e6f72672f6261646765732f6772616e642d746f74616c2f6d68636e75676765747372\"\
+    \ alt=\"\" data-canonical-src=\"http://cranlogs.r-pkg.org/badges/grand-total/mhcnuggetsr\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://CRAN.R-project.org/package=mhcnuggetsr\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/af4e45d17d5f937442ac9aff39e704702ff2a96a59164688aca6fe93e2020f85/687474703a2f2f6372616e6c6f67732e722d706b672e6f72672f6261646765732f6d68636e75676765747372\"\
+    \ alt=\"\" data-canonical-src=\"http://cranlogs.r-pkg.org/badges/mhcnuggetsr\"\
+    \ style=\"max-width:100%;\"></a></p>\n<table>\n<thead>\n<tr>\n<th>Branch</th>\n\
+    <th><a href=\"https://github.com/richelbilderbeek/mhcnuggetsr/actions\">GitHub\
+    \ Actions</a></th>\n<th><a href=\"https://travis-ci.org\" rel=\"nofollow\"><img\
+    \ src=\"man/figures/TravisCI.png\" alt=\"Travis CI logo\" style=\"max-width:100%;\"\
+    ></a></th>\n<th><a href=\"https://www.appveyor.com\" rel=\"nofollow\"><img src=\"\
+    man/figures/AppVeyor.png\" alt=\"AppVeyor logo\" style=\"max-width:100%;\"></a></th>\n\
+    <th><a href=\"https://www.codecov.io\" rel=\"nofollow\"><img src=\"man/figures/Codecov.png\"\
+    \ alt=\"Codecov logo\" style=\"max-width:100%;\"></a></th>\n</tr>\n</thead>\n\
+    <tbody>\n<tr>\n<td><code>master</code></td>\n<td><a href=\"https://github.com/richelbilderbeek/mhcnuggetsr/workflows/R-CMD-check/badge.svg?branch=master\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/richelbilderbeek/mhcnuggetsr/workflows/R-CMD-check/badge.svg?branch=master\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://travis-ci.org/richelbilderbeek/mhcnuggetsr\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/8c6767ccdd7aff64c05b190e0f1f6f1367e244f4e8b759efd6ad77f42582a9e7/68747470733a2f2f7472617669732d63692e6f72672f72696368656c62696c6465726265656b2f6d68636e756767657473722e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.org/richelbilderbeek/mhcnuggetsr.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://ci.appveyor.com/project/richelbilderbeek/mhcnuggetsr/branch/master\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/7f706c0c0fb2d3618405f5980985582ebe166ceb4e739fd2a04a23f8e0c17635/68747470733a2f2f63692e6170707665796f722e636f6d2f6170692f70726f6a656374732f7374617475732f723761706471657932657639733471372f6272616e63682f6d61737465723f7376673d74727565\"\
+    \ alt=\"Build status\" data-canonical-src=\"https://ci.appveyor.com/api/projects/status/r7apdqey2ev9s4q7/branch/master?svg=true\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/richelbilderbeek/mhcnuggetsr/branch/master\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/0efceeafef8cb6b819fdc0cce8b9add409f6a50eb70cd51d4d1e42325d8b9ccd/68747470733a2f2f636f6465636f762e696f2f6769746875622f72696368656c62696c6465726265656b2f6d68636e756767657473722f636f7665726167652e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/richelbilderbeek/mhcnuggetsr/coverage.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n<tr>\n<td><code>develop</code></td>\n\
+    <td><a href=\"https://github.com/richelbilderbeek/mhcnuggetsr/workflows/R-CMD-check/badge.svg?branch=develop\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/richelbilderbeek/mhcnuggetsr/workflows/R-CMD-check/badge.svg?branch=develop\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://travis-ci.org/richelbilderbeek/mhcnuggetsr\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/72ce8594dd91af0c5afe25b7f481b81c58234a570a6133ada0e133962c15dac9/68747470733a2f2f7472617669732d63692e6f72672f72696368656c62696c6465726265656b2f6d68636e756767657473722e7376673f6272616e63683d646576656c6f70\"\
+    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.org/richelbilderbeek/mhcnuggetsr.svg?branch=develop\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://ci.appveyor.com/project/richelbilderbeek/mhcnuggetsr/branch/develop\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/4aeedb6abf9bdc20a683e341bebaa1322da2c0f6cb7886d6052d23fb00af7419/68747470733a2f2f63692e6170707665796f722e636f6d2f6170692f70726f6a656374732f7374617475732f723761706471657932657639733471372f6272616e63682f646576656c6f703f7376673d74727565\"\
+    \ alt=\"Build status\" data-canonical-src=\"https://ci.appveyor.com/api/projects/status/r7apdqey2ev9s4q7/branch/develop?svg=true\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/richelbilderbeek/mhcnuggetsr/branch/develop\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/cc45f67d2c836a0f7f5a715102356fc4642ce481e3f2e4314e7134a1a338c882/68747470733a2f2f636f6465636f762e696f2f6769746875622f72696368656c62696c6465726265656b2f6d68636e756767657473722f636f7665726167652e7376673f6272616e63683d646576656c6f70\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/richelbilderbeek/mhcnuggetsr/coverage.svg?branch=develop\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n</tbody>\n</table>\n\n<blockquote>\n\
+    <p>mhcnuggetsr is broken, see\n<a href=\"https://github.com/richelbilderbeek/mhcnuggetsr/issues/13\"\
+    >here</a>, as\nthe import of the <code>MHCnuggets</code> Python package by `reticulate``\n\
+    fails. If you know how to fix this, please contact me</p>\n</blockquote>\n<p>R\
+    \ package to work with\n<a href=\"https://github.com/KarchinLab/mhcnuggets\">MHCnuggets</a>.</p>\n\
+    <p>The goal of <code>mhcnuggetsr</code> is to predict the half maximal inhibitory\n\
+    concentration of peptides for an MHC haplotype. It does by calling\n<a href=\"\
+    https://github.com/KarchinLab/mhcnuggets\">MHCnuggets</a>.</p>\n<h2>\n<a id=\"\
+    user-content-installation\" class=\"anchor\" href=\"#installation\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installation</h2>\n\
+    <p>You can install the released version of mhcnuggetsr from\n<a href=\"https://github.com/\"\
+    >GitHub</a> with:</p>\n<pre><code>remotes::install_github(\"richelbilderbeek/mhcnuggetsr\"\
+    )\n</code></pre>\n<p>Install MHCnuggets using the non-CRAN extension\n<a href=\"\
+    https://github.com/richelbilderbeek/mhcnuggetsrinstall\">mhcnuggetsrinstall</a>:</p>\n\
+    <pre><code># {r install}\nlibrary(mhcnuggetsr)\n\nif (!is_mhcnuggets_installed())\
+    \ {\n  remotes::install_github(\"richelbilderbeek/mhcnuggetsrinstall\")\n  mhcnuggetsrinstall::install_mhcnuggets()\n\
+    \  mhcnuggetsr_self_test()\n}\n</code></pre>\n<h2>\n<a id=\"user-content-example\"\
+    \ class=\"anchor\" href=\"#example\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Example</h2>\n<p>Here is how\
+    \ to get the IC50 values (in nM) for the peptides in an\nexample file:</p>\n<pre><code>#\
+    \ {r example}\nlibrary(testthat)\nlibrary(mhcnuggetsr)\n\nif (is_mhcnuggets_installed())\
+    \ {\n  mhcnuggets_options &lt;- create_mhcnuggets_options(\n    mhc = \"HLA-A02:01\"\
+    \n  )\n  \n  df &lt;- predict_ic50(\n    peptides = \"AIAACAMLLV\",\n    mhcnuggets_options\
+    \ = mhcnuggets_options\n  )\n  expect_equal(df$ic50, 5578.77)\n}\n</code></pre>\n\
+    <h2>\n<a id=\"user-content-how-can-i-suppress-the-output-when-making-a-prediction\"\
+    \ class=\"anchor\" href=\"#how-can-i-suppress-the-output-when-making-a-prediction\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>How can I suppress the output when making a prediction?</h2>\n<p>One\
+    \ cannot until MHCnuggets allows to do so. Issue is posted\n<a href=\"https://github.com/KarchinLab/mhcnuggets/issues/17\"\
+    >here</a>.</p>\n<h2>\n<a id=\"user-content-there-is-a-feature-i-miss\" class=\"\
+    anchor\" href=\"#there-is-a-feature-i-miss\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>There is a feature I miss</h2>\n\
+    <p>See <a href=\"CONTRIBUTING.md\">CONTRIBUTING</a>, at <code>Submitting use cases</code></p>\n\
+    <h2>\n<a id=\"user-content-i-want-to-collaborate\" class=\"anchor\" href=\"#i-want-to-collaborate\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>I want to collaborate</h2>\n<p>See <a href=\"CONTRIBUTING.md\">CONTRIBUTING</a>,\
+    \ at \u2018Submitting code\u2019</p>\n<h2>\n<a id=\"user-content-i-think-i-have-found-a-bug\"\
+    \ class=\"anchor\" href=\"#i-think-i-have-found-a-bug\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>I think I have\
+    \ found a bug</h2>\n<p>See <a href=\"CONTRIBUTING.md\">CONTRIBUTING</a>, at \u2018\
+    Submitting bugs\u2019</p>\n<h2>\n<a id=\"user-content-theres-something-else-i-want-to-say\"\
+    \ class=\"anchor\" href=\"#theres-something-else-i-want-to-say\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>There\u2019\
+    s something else I want to say</h2>\n<p>Sure, just add an Issue. Or send an email.</p>\n\
+    <h2>\n<a id=\"user-content-external-links\" class=\"anchor\" href=\"#external-links\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>External links</h2>\n<ul>\n<li><a href=\"https://github.com/KarchinLab/mhcnuggets\"\
+    >MHCnuggets GitHub repo</a></li>\n</ul>\n<h2>\n<a id=\"user-content-references\"\
+    \ class=\"anchor\" href=\"#references\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>References</h2>\n<p>Article about\
+    \ MHCnuggets:</p>\n<ul>\n<li>Shao, Xiaoshan M., et al.\_\u201CHigh-throughput\
+    \ prediction of MHC class I\nand II neoantigens with MHCnuggets.\u201D Cancer\
+    \ Immunology Research 8.3\n(2020): 396-408.</li>\n</ul>\n"
+  stargazers_count: 1
+  subscribers_count: 1
+  topics: []
+  updated_at: 1627743157.0
 richelbilderbeek/plinkr:
   data_format: 2
   description: Work with PLINK from R
   filenames:
   - Singularity
   full_name: richelbilderbeek/plinkr
-  latest_release: v0.15.1
+  latest_release: v0.15.2
   readme: "<h1>\n<a id=\"user-content-plinkr\" class=\"anchor\" href=\"#plinkr\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>plinkr</h1>\n\
     <table>\n<thead>\n<tr>\n<th>Branch</th>\n<th><a href=\"https://github.com/richelbilderbeek/plinkr/actions\"\
@@ -49606,7 +50243,7 @@ richelbilderbeek/plinkr:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1627460550.0
+  updated_at: 1627632283.0
 richelbilderbeek/singularity_example_1:
   data_format: 2
   description: 'Singularity example 1: Hello World'
@@ -49679,8 +50316,9 @@ richelbilderbeek/singularity_example_14:
   - Singularity_2
   - Singularity_1
   - Singularity_3
+  - Singularity_5
   full_name: richelbilderbeek/singularity_example_14
-  latest_release: null
+  latest_release: v1.0
   readme: "<h1>\n<a id=\"user-content-singularity_example_14\" class=\"anchor\" href=\"\
     #singularity_example_14\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
     octicon octicon-link\"></span></a>singularity_example_14</h1>\n<p>Singularity\
@@ -49689,9 +50327,12 @@ richelbilderbeek/singularity_example_14:
     <p>The R package we'll use is <a href=\"https://CRAN.R-project.org/package=glue\"\
     \ rel=\"nofollow\">glue</a>,\nas it is a simple R package without dependencies.</p>\n\
     <p>This is the R script, called <a href=\"script.R\">script.R</a>:</p>\n<pre><code>glue::glue(\"\
-    Hello {target}\", target = \"world\")\n</code></pre>\n<h1>\n<a id=\"user-content-attempt-1-singularity-does-not-run-scripts\"\
-    \ class=\"anchor\" href=\"#attempt-1-singularity-does-not-run-scripts\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Attempt\
+    Hello {target}\", target = \"world\")\n</code></pre>\n<p><code>Attempt 3: clean\
+    \ up</code> is the best way:</p>\n<ul>\n<li>build with sudo (i.e. no <code>--fakeroot</code>)</li>\n\
+    <li>send the script text to the container, not the script filename</li>\n</ul>\n\
+    <h1>\n<a id=\"user-content-attempt-1-singularity-does-not-run-scripts\" class=\"\
+    anchor\" href=\"#attempt-1-singularity-does-not-run-scripts\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Attempt\
     \ 1: Singularity does not run scripts</h1>\n<p><a href=\"Singularity_1\">Singularity_1</a>\
     \ is a minimal Singularity container:</p>\n<pre><code>Bootstrap: docker\nFrom:\
     \ r-base\n\n%post\n    Rscript -e 'install.packages(\"glue\")'\n</code></pre>\n\
@@ -49722,22 +50363,66 @@ richelbilderbeek/singularity_example_14:
     \ singularity_2.sif R --vanilla --silent --no-echo\n</code></pre>\n<p>Running\
     \ this locally goes fine, also on GitHub Actions!</p>\n<h1>\n<a id=\"user-content-attempt-3-clean-up\"\
     \ class=\"anchor\" href=\"#attempt-3-clean-up\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Attempt 3: clean up</h1>\n<p><a\
-    \ href=\"Singularity_3\">Singularity_3</a> is a minimal Singularity container,\n\
-    with a <code>runscript</code> section added:</p>\n<pre><code>Bootstrap: docker\n\
-    From: r-base\n\n%runscript\nexec R --vanilla --silent --no-echo \"$@\"\n\n%post\n\
-    \    Rscript -e 'install.packages(\"glue\")'\n</code></pre>\n<p><a href=\"build_singularity_3.sh\"\
-    >build_singularity_3.sh</a> is a simple shell script\nto build a container from\
-    \ <a href=\"Singularity_3\">Singularity_3</a>:</p>\n<pre><code>#!/bin/bash\nsudo\
-    \ -E singularity build singularity_3.sif Singularity_3\n</code></pre>\n<p><a href=\"\
-    run_singularity_3.sh\">run_singularity_3.sh</a> is a simple shell script\nto run\
-    \ the container built from <a href=\"Singularity_3\">Singularity_3</a>:</p>\n\
-    <pre><code>#!/bin/bash\ncat script.R | ./singularity_3.sif\n</code></pre>\n<p>Running\
-    \ this locally goes fine, also on GitHub Actions!</p>\n"
+    true\" class=\"octicon octicon-link\"></span></a>Attempt 3: clean up</h1>\n<pre><code>THIS\
+    \ IS THE BEST WAY\n</code></pre>\n<p><a href=\"Singularity_3\">Singularity_3</a>\
+    \ is a minimal Singularity container,\nwith a <code>runscript</code> section added:</p>\n\
+    <pre><code>Bootstrap: docker\nFrom: r-base\n\n%runscript\nexec R --vanilla --silent\
+    \ --no-echo \"$@\"\n\n%post\n    Rscript -e 'install.packages(\"glue\")'\n</code></pre>\n\
+    <p><a href=\"build_singularity_3.sh\">build_singularity_3.sh</a> is a simple shell\
+    \ script\nto build a container from <a href=\"Singularity_3\">Singularity_3</a>:</p>\n\
+    <pre><code>#!/bin/bash\nsudo -E singularity build singularity_3.sif Singularity_3\n\
+    </code></pre>\n<p><a href=\"run_singularity_3.sh\">run_singularity_3.sh</a> is\
+    \ a simple shell script\nto run the container built from <a href=\"Singularity_3\"\
+    >Singularity_3</a>:</p>\n<pre><code>#!/bin/bash\ncat script.R | ./singularity_3.sif\n\
+    </code></pre>\n<p>Running this locally goes fine, also on GitHub Actions!</p>\n\
+    <h1>\n<a id=\"user-content-attempt-4-fakeroot-experiment\" class=\"anchor\" href=\"\
+    #attempt-4-fakeroot-experiment\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Attempt 4: fakeroot experiment</h1>\n\
+    <p>In this case, we'll re-use <a href=\"Singularity_3\">Singularity_3</a>,\nyet\
+    \ build it differently, using the\n<a href=\"https://sylabs.io/guides/3.8/user-guide/fakeroot.html?highlight=fakeroot\"\
+    \ rel=\"nofollow\">fakeroot</a>\nfeature.</p>\n<p><a href=\"build_singularity_4.sh\"\
+    >build_singularity_4.sh</a> is a simple shell script\nto build a container from\
+    \ <a href=\"Singularity_3\">Singularity_3</a>:</p>\n<pre><code>#!/bin/bash\nsingularity\
+    \ build --fakeroot singularity_4.sif Singularity_3\n</code></pre>\n<p><a href=\"\
+    run_singularity_4.sh\">run_singularity_4.sh</a> is a simple shell script\nto run\
+    \ the container built from <a href=\"Singularity_4\">Singularity_4</a>:</p>\n\
+    <pre><code>#!/bin/bash\ncat script.R | ./singularity_4.sif\n</code></pre>\n<p>Running\
+    \ this locally goes fine, but fails on GitHub Actions:</p>\n<pre><code>Run ./build_singularity_4.sh\n\
+    FATAL:   could not use fakeroot: no mapping entry found in /etc/subuid for root\n\
+    Error: Process completed with exit code 255.\n</code></pre>\n<p>Apparently, GHA\
+    \ does not support that mapping.</p>\n<h1>\n<a id=\"user-content-attempt-5-run-script-directly-revised\"\
+    \ class=\"anchor\" href=\"#attempt-5-run-script-directly-revised\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Attempt\
+    \ 5: run script directly revised</h1>\n<p><a href=\"Singularity_5\">Singularity_5</a>\
+    \ is a minimal Singularity container,\nwith a <code>runscript</code> section added:</p>\n\
+    <pre><code>Bootstrap: docker\nFrom: r-base\n\n%runscript\nexec Rscript \"$@\"\n\
+    \n%post\n    Rscript -e 'install.packages(\"glue\")'\n</code></pre>\n<p><a href=\"\
+    build_singularity_5.sh\">build_singularity_5.sh</a> is a simple shell script\n\
+    to build a container from <a href=\"Singularity_5\">Singularity_5</a>:</p>\n<pre><code>#!/bin/bash\n\
+    singularity build --fakeroot singularity_5.sif Singularity_5\n</code></pre>\n\
+    <p><a href=\"run_singularity_5.sh\">run_singularity_5.sh</a> is a simple shell\
+    \ script\nto run the container built from <a href=\"Singularity_5\">Singularity_5</a>:</p>\n\
+    <pre><code>#!/bin/bash\n./singularity_5.sif script.R\n</code></pre>\n<p>Running\
+    \ this locally goes fine, but fails on GitHub Actions:</p>\n<pre><code>Run ./build_singularity_5.sh\n\
+    FATAL:   could not use fakeroot: no mapping entry found in /etc/subuid for root\n\
+    Error: Process completed with exit code 255.\n</code></pre>\n<h1>\n<a id=\"user-content-attempt-6-run-script-container-built-with-sudo\"\
+    \ class=\"anchor\" href=\"#attempt-6-run-script-container-built-with-sudo\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Attempt\
+    \ 6: run script, container built with sudo</h1>\n<p>Here we will re-use <a href=\"\
+    Singularity_5\">Singularity_5</a>.</p>\n<p><a href=\"build_singularity_6.sh\"\
+    >build_singularity_6.sh</a> is a simple shell script\nto build a container from\
+    \ <a href=\"Singularity_5\">Singularity_5</a>:</p>\n<pre><code>#!/bin/bash\nsudo\
+    \ -E singularity build singularity_6.sif Singularity_5\n</code></pre>\n<p><a href=\"\
+    run_singularity_6.sh\">run_singularity_6.sh</a> is a simple shell script\nto run\
+    \ the container built from <a href=\"Singularity_5\">Singularity_5</a>:</p>\n\
+    <pre><code>#!/bin/bash\n./singularity_6.sif script.R\n</code></pre>\n<p>Running\
+    \ this locally goes fine, however, on GHA this goes the classic sideways again:</p>\n\
+    <pre><code>Run ./run_singularity_6.sh\nFatal error: cannot open file 'script.R':\
+    \ No such file or directory\nError: Process completed with exit code 2.\n</code></pre>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1627625994.0
+  updated_at: 1627629507.0
 rickstaa/COR-robotics-lab-reference:
   data_format: 2
   description: A quick reference repository for using the robots in the COR lab
@@ -50829,6 +51514,54 @@ sc-eQTLgen-consortium/WG1-pipeline-QC:
   subscribers_count: 2
   topics: []
   updated_at: 1623743752.0
+sdsc/sdsc-summer-institute-2021:
+  data_format: 2
+  description: San Diego Supercomputer Center Summer Institute
+  filenames:
+  - 2.1a_Python_for_HPC/singularity/Singularity.miniconda3-dask-numba-py38-4.9.2-ubuntu-18.04
+  full_name: sdsc/sdsc-summer-institute-2021
+  latest_release: null
+  readme: '<p><a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" rel="nofollow"><img
+    alt="Creative Commons License" src="https://camo.githubusercontent.com/72437363a2c150e50c5c090c5ec0dfde31ce3a28c8a092f638509882b56ceb4e/68747470733a2f2f692e6372656174697665636f6d6d6f6e732e6f72672f6c2f62792d6e632d73612f342e302f38307831352e706e67"
+    data-canonical-src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" style="max-width:100%;"></a></p>
+
+    <h1>
+
+    <a id="user-content-sdsc-summer-institute-2021" class="anchor" href="#sdsc-summer-institute-2021"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>SDSC
+    Summer Institute 2021</h1>
+
+    <p>This repository hosts all material and slides of the presentations at the Summer
+    Institute</p>
+
+    <ol>
+
+    <li><a href="https://na.eventscloud.com/website/21339/agenda/" rel="nofollow">Agenda</a></li>
+
+    <li>See also <a href="https://github.com/sdsc/sdsc-summer-institute-2020">last
+    year''s material</a>
+
+    </li>
+
+    </ol>
+
+    <h2>
+
+    <a id="user-content-license" class="anchor" href="#license" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+    <p>All the teaching material in this repository is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    rel="nofollow">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+    License</a></p>
+
+    <p>If you are re-using this material, please cite our <a href="TODO">record on
+    Zenodo</a></p>
+
+    '
+  stargazers_count: 4
+  subscribers_count: 12
+  topics: []
+  updated_at: 1627689612.0
 seasite-project/CGO21_YaskSite_AD:
   data_format: 2
   description: "This is the Artifact Description repository for the CGO21 paper: YaskSite\
@@ -51405,8 +52138,8 @@ shub-fuzz/angora:
   data_format: 2
   description: Singularity image for Angora (https://github.com/AngoraFuzzer/Angora)
   filenames:
-  - Singularity.1804
   - Singularity.1604
+  - Singularity.1804
   full_name: shub-fuzz/angora
   latest_release: 0.0.2
   readme: "<p>Singularity image for Angora (<a href=\"https://github.com/AngoraFuzzer/Angora\"\
@@ -55066,22 +55799,25 @@ unlhcc/bc-hcc-rstudio-server:
   latest_release: null
   readme: '<h1>
 
-    <a id="user-content-batch-connect---osc-rstudio-server" class="anchor" href="#batch-connect---osc-rstudio-server"
+    <a id="user-content-batch-connect---hcc-rstudio-server" class="anchor" href="#batch-connect---hcc-rstudio-server"
     aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Batch
-    Connect - OSC RStudio Server</h1>
+    Connect - HCC RStudio Server</h1>
 
-    <p><a href="https://camo.githubusercontent.com/a1b9af067a60a648ea0b5068b19ea4a14b09e232574dac90c50903719ef5cc5b/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f72656c656173652f6f73632f62635f6f73635f7273747564696f5f7365727665722e737667"
-    target="_blank" rel="nofollow"><img src="https://camo.githubusercontent.com/a1b9af067a60a648ea0b5068b19ea4a14b09e232574dac90c50903719ef5cc5b/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f72656c656173652f6f73632f62635f6f73635f7273747564696f5f7365727665722e737667"
-    alt="GitHub Release" data-canonical-src="https://img.shields.io/github/release/osc/bc_osc_rstudio_server.svg"
+    <p><a href="https://git.unl.edu/hcc/bc-hcc-rstudio-server/-/commits/master" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/eed68de7ee579cda26a799a79e6376b967f69b7e355d2eca9b2a46e88e54c904/68747470733a2f2f6769742e756e6c2e6564752f6863632f62632d6863632d7273747564696f2d7365727665722f6261646765732f6d61737465722f706970656c696e652e737667"
+    alt="pipeline status" data-canonical-src="https://git.unl.edu/hcc/bc-hcc-rstudio-server/badges/master/pipeline.svg"
     style="max-width:100%;"></a>
 
     <a href="https://opensource.org/licenses/MIT" rel="nofollow"><img src="https://camo.githubusercontent.com/45b4ffbd594af47fe09a3432f9f8e122c6518aa6352b4ce453a1a2563da2905c/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d4d49542d677265656e2e737667"
     alt="GitHub License" data-canonical-src="https://img.shields.io/badge/license-MIT-green.svg"
     style="max-width:100%;"></a></p>
 
-    <p>An interactive app designed for OSC OnDemand that launches an RStudio Server
+    <p>An interactive app designed for OSC OnDemand that launches an <a href="https://www.rstudio.com/products/rstudio-server/"
+    rel="nofollow">RStudio Server</a>
 
-    within an Owens batch job.</p>
+    within a SLURM batch job.</p>
+
+    <p>Based off of <a href="https://github.com/OSC/bc_osc_rstudio_server">https://github.com/OSC/bc_osc_rstudio_server</a>.</p>
 
     <h2>
 
@@ -55107,83 +55843,27 @@ unlhcc/bc-hcc-rstudio-server:
 
     launching the RStudio Server.</li>
 
-    </ul>
-
-    <p><strong>without Singularity</strong></p>
-
-    <ul>
-
-    <li>
-
-    <a href="https://www.r-project.org/" rel="nofollow">R</a> 3.3.2+ (earlier versions
-    are untested but may work for you)</li>
-
-    <li>
-
-    <a href="https://www.rstudio.com/products/rstudio-server/" rel="nofollow">RStudio
-    Server</a> 1.0.136+ (earlier versions are untested by may work for you)</li>
-
-    <li>
-
-    <a href="https://proot-me.github.io/" rel="nofollow">PRoot</a> 5.1.0+ (used to
-    setup fake bind mount)</li>
-
-    </ul>
-
-    <p><strong>or with Singularity</strong></p>
-
-    <ul>
-
     <li>
 
     <a href="http://singularity.lbl.gov/" rel="nofollow">Singularity</a> 2.4.2+</li>
 
-    <li>A Singularity image similar to <a href="https://www.singularity-hub.org/collections/463"
-    rel="nofollow">nickjer/singularity-rstudio</a>
+    <li>A Singularity image similar to <a href="https://hub.docker.com/r/rocker/rstudio"
+    rel="nofollow">rocker/rstudio</a>
 
     </li>
-
-    <li>Corresponding module to launch the above Singularity image (see
-
-    <a href="https://github.com/nickjer/singularity-rstudio/blob/master/example_module/">example_module</a>)</li>
 
     </ul>
 
     <h2>
 
-    <a id="user-content-install" class="anchor" href="#install" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Install</h2>
+    <a id="user-content-buildinstall" class="anchor" href="#buildinstall" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Build/Install</h2>
 
-    <p>Use git to clone this app and checkout the desired branch/version you want
-    to
+    <p>Gitlab CI will automatically build both CentOS 7 and 8 RPMs.
 
-    use:</p>
+    They can be installed directly via <code>yum</code> for testing.</p>
 
-    <div class="highlight highlight-source-shell"><pre>scl <span class="pl-c1">enable</span>
-    git19 -- git clone <span class="pl-k">&lt;</span>repo<span class="pl-k">&gt;</span>
-
-    <span class="pl-c1">cd</span> <span class="pl-k">&lt;</span>dir<span class="pl-k">&gt;</span>
-
-    scl <span class="pl-c1">enable</span> git19 -- git checkout <span class="pl-k">&lt;</span>tag/branch<span
-    class="pl-k">&gt;</span></pre></div>
-
-    <p>You will not need to do anything beyond this as all necessary assets are
-
-    installed. You will also not need to restart this app as it isn''t a Passenger
-
-    app.</p>
-
-    <p>To update the app you would:</p>
-
-    <div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span>
-    <span class="pl-k">&lt;</span>dir<span class="pl-k">&gt;</span>
-
-    scl <span class="pl-c1">enable</span> git19 -- git fetch
-
-    scl <span class="pl-c1">enable</span> git19 -- git checkout <span class="pl-k">&lt;</span>tag/branch<span
-    class="pl-k">&gt;</span></pre></div>
-
-    <p>Again, you do not need to restart the app as it isn''t a Passenger app.</p>
+    <p>For production, add to the per-cluster common repos and require via puppet.</p>
 
     <h2>
 
@@ -55192,8 +55872,8 @@ unlhcc/bc-hcc-rstudio-server:
 
     <ol>
 
-    <li>Fork it ( <a href="https://github.com/OSC/bc_osc_rstudio_server/fork">https://github.com/OSC/bc_osc_rstudio_server/fork</a>
-    )</li>
+    <li>Fork it ( <a href="https://git.unl.edu/hcc/bc-hcc-rstudio-server/-/forks/new"
+    rel="nofollow">https://git.unl.edu/hcc/bc-hcc-rstudio-server/-/forks/new</a> )</li>
 
     <li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
 
@@ -55218,7 +55898,7 @@ unlhcc/bc-hcc-rstudio-server:
 
     </li>
 
-    <li>Code is licensed under MIT (see LICENSE.txt)o</li>
+    <li>Code is licensed under MIT (see LICENSE.txt)</li>
 
     <li>RStudio, Shiny and the RStudio logo are all registered trademarks of RStudio.</li>
 
@@ -55228,7 +55908,7 @@ unlhcc/bc-hcc-rstudio-server:
   stargazers_count: 0
   subscribers_count: 9
   topics: []
-  updated_at: 1627606445.0
+  updated_at: 1627692272.0
 urbanopt/JModelica_simulation:
   data_format: 2
   description: GitHub repo for storing scripts related to simulation using JModelica.
