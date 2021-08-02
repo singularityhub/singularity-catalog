@@ -210,6 +210,8 @@ bases:
 - count: 3
   name: rocker/rstudio
 - count: 3
+  name: centos-7.7.1908.sif
+- count: 3
   name: slaclab/cryosparc-docker
 - count: 3
   name: biocorecrg/debian-perlbrew-pyenv3-java
@@ -375,6 +377,8 @@ bases:
   name: rynlib
 - count: 2
   name: halfpipe/halfpipe
+- count: 2
+  name: centos-7.7.1908-cuda-11.0.sif
 - count: 2
   name: nysbc/topaz
 - count: 2
@@ -942,7 +946,9 @@ bases:
 - count: 1
   name: centos/centos-7.7.1908-openmpi-3.1.6.sif
 - count: 1
-  name: centos-7.7.1908.sif
+  name: centos/centos-7.7.1908-openmpi-4.0.5.sif
+- count: 1
+  name: centos/centos-7.7.1908-cuda-11.0-openmpi-3.1.6.sif
 - count: 1
   name: slaclab/xfce
 - count: 1
@@ -972,7 +978,7 @@ bootstraps:
   name: library
 - count: 73
   name: yum
-- count: 59
+- count: 65
   name: localimage
 - count: 10
   name: scratch
@@ -1049,6 +1055,8 @@ orgs:
   name: xsede
 - count: 3
   name: vanessa
+- count: 3
+  name: centos
 - count: 3
   name: cokelaer
 - count: 2
@@ -1497,8 +1505,6 @@ orgs:
   name: anaconda
 - count: 1
   name: miniconda
-- count: 1
-  name: centos
 - count: 1
   name: mkandes
 - count: 1
