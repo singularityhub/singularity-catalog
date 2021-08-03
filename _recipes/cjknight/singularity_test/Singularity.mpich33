@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: centos
+
+%setup
+   # make directory for test MPI program
+   mkdir ${SINGULARITY_ROOTFS}/HelloAffinity
+   cp /projects/catalyst/knight/tests/singularity/HelloAffinity/* ${SINGULARITY_ROOTFS}/HelloAffinity/
+
+%post
+   # install development tools
+   yum update -y
+   yum groupinstall -y "Development Tools"
+   yum install -y gcc gcc-c++ wget
+   
+   # install MPICH
+   MPICH_VERSION=3.3
+   mkdir /mpich
+   cd /mpich
+   wget http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz
+   tar xf mpich-$MPICH_VERSION.tar.gz --strip-components=1
+
+   # disable the addition of the RPATH to compiled executables
+   # this allows us to override the MPI libraries to use those
+   # found via LD_LIBRARY_PATH
+   ./configure --prefix=/mpich/install --disable-wrapper-rpath
+   make -j 4 install
+   # add to local environment to build
+   export PATH=$PATH:/mpich/install/bin
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mpich/install/lib
+   env | sort
+   cd /HelloAffinity
+   g++ -fopenmp main.cpp -o hello_affinity
+
+%runscript
+   /HelloAffinity/hello_affinity

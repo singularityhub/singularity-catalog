@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+    Maintainer marty.hickman@plantandfood.co.nz
+    Version 0.0
+
+%post
+    apt-get -y update
+    DEBIAN_FRONTEND=noninteractive apt-get -y install git cmake build-essential
+    git clone --recurse-submodules https://github.com/comprna/RATTLE /rattle
+    cd /rattle && ./build.sh
+    apt-get -y remove git cmake build-essential
+    apt-get clean
+
+%environment
+    export PATH=/rattle:$PATH
+
+%runscript
+    exec rattle "$@"

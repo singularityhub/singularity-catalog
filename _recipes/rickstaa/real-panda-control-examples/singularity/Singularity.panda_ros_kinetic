@@ -1,0 +1,59 @@
+# Ubuntu 16.04 - Ros noetic franka ros container
+Bootstrap: docker
+From: osrf/ros:kinetic-desktop-full
+
+%help
+    A container used for controlling the panda_franka robot using ros-noetic.
+%labels
+    Maintainer: Rick Staa
+    Github: https://github.com/rickstaa/COR-robotics-lab-reference
+    Version: v0.0.0
+    Type: Private
+%environment
+    # Set language options
+    export LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+    # Set ROS vars
+    export ROS_DISTRO=noetic
+    export ROBOT_IP="172.16.0.2"
+    export ROS_MASTER_URI="http://${ROBOT_IP}:11311"
+    machine_ip=(`hostname -I | grep ${ROBOT_IP%.*}`)
+    export ROS_IP=${machine_ip[0]}
+%post
+    # Install system package dependencies
+    apt update --fix-missing
+    apt install -q -y \
+        vim \
+        git \
+        bash-completion \
+        wget \
+        lsb-release \
+        iputils-ping
+    apt upgrade -y
+
+    # Install ros build tools
+    apt install -q -y python-catkin-tools \
+       python-rosdep \
+       python-rosinstall \
+       python-rosinstall-generator \
+       python-wstool \
+       build-essential
+    # NOTE: Needed because of a catkin-tools bug https://github.com/catkin/catkin_tools/issues/594)
+    apt install -q -y python-osrf-pycommon
+
+    # Install extra ROS packages
+    apt install -y ros-kinetic-ros-controllers
+
+    # Add container resources to the container
+    bash -c "cd / \
+        && git clone https://github.com/rickstaa/COR-robot-lab-reference.git \
+        && cp ./COR-robot-lab-reference/containers/singularity/resources/.singularity_bashrc /.singularity_bashrc \
+        && cp ./COR-robot-lab-reference/containers/singularity/resources/welcome_msgs/.ros-noetic.txt /.welcome_msg \
+        && cp ./COR-robot-lab-reference/containers/singularity/resources/bash_aliases/.singularity_bash_aliases /.singularity_bash_aliases \
+        && rm -rf /COR-robot-lab-reference"
+%runscript
+	# Execute the .singularity_bashrc file
+	OCI_CMD='/bin/bash'
+	OCI_ARGS='-rcfile /.singularity_bashrc'
+	SINGULARITY_OCI_RUN="${OCI_CMD} ${OCI_ARGS}"
+	exec $SINGULARITY_OCI_RUN
