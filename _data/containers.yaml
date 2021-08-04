@@ -100,6 +100,8 @@ bases:
 - count: 6
   name: pranithavangala/singularity
 - count: 6
+  name: nvcr.io/nvidia/nvhpc
+- count: 6
   name: gipert/default/arch-base
 - count: 6
   name: continuumio/miniconda2
@@ -111,8 +113,6 @@ bases:
   name: sequana.img
 - count: 5
   name: anibali/pytorch
-- count: 5
-  name: nvcr.io/nvidia/nvhpc
 - count: 5
   name: poldracklab/fmriprep
 - count: 5
@@ -139,6 +139,8 @@ bases:
   name: intel/oneapi-hpckit
 - count: 4
   name: danabl/glimslib
+- count: 4
+  name: letaylor/sc_qc_cluster
 - count: 4
   name: 'GodloveD/busybox   '
 - count: 4
@@ -537,8 +539,6 @@ bases:
   name: thinkplayhack/python_jupyter
 - count: 1
   name: weatherhub/metview
-- count: 1
-  name: letaylor/sc_qc_cluster
 - count: 1
   name: thakk/bioinformatics
 - count: 1
@@ -968,7 +968,7 @@ bases:
 - count: 1
   name: conda/conda_4.9.1.img
 bootstraps:
-- count: 2362
+- count: 2366
   name: docker
 - count: 248
   name: debootstrap
@@ -1214,8 +1214,6 @@ orgs:
 - count: 1
   name: weatherhub
 - count: 1
-  name: letaylor
-- count: 1
   name: thakk
 - count: 1
   name: scr.svc.stanford.edu
@@ -1323,6 +1321,8 @@ orgs:
   name: nipype
 - count: 1
   name: ncbi
+- count: 1
+  name: letaylor
 - count: 1
   name: deeplearnphysics
 - count: 1
@@ -1518,8 +1518,8 @@ orgs:
 - count: 1
   name: semc
 tags:
-  latest: 248
-  other: 2149
+  latest: 251
+  other: 2150
 versions:
   APPIAN-PET/APPIAN:
     ants: 1
@@ -1967,7 +1967,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 1
+    latest: 4
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2097,7 +2097,7 @@ versions:
   nvcr.io/nvidia/mxnet:
     21.02-py3: 1
   nvcr.io/nvidia/nvhpc:
-    20.11-devel-cuda_multi-ubuntu20.04: 3
+    20.11-devel-cuda_multi-ubuntu20.04: 4
     20.9-devel-ubuntu20.04: 2
   nvcr.io/nvidia/pytorch:
     19.03-py3: 1
