@@ -1,0 +1,29 @@
+BootStrap: shub
+From: Characterisation-Virtual-Laboratory/CharacterisationVL-Software:2004
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        r-base
+    rm -rf /var/lib/apt/lists/*
+
+# https://github.com/danknights/sourcetracker.git
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch v1.0.1 https://github.com/danknights/sourcetracker.git sourcetracker && cd -
+    cd /var/tmp/sourcetracker
+    mkdir -p /usr/local/sourcetracker/bin && mv src/SourceTracker.r /usr/local/sourcetracker/bin
+    rm -rf /var/tmp/sourcetracker
+
+%environment
+    export PATH=/usr/local/sourcetracker/bin:$PATH
+    export SOURCETRACKER_PATH=/usr/local/sourcetracker/bin
+%post
+    export PATH=/usr/local/sourcetracker/bin:$PATH
+    export SOURCETRACKER_PATH=/usr/local/sourcetracker/bin

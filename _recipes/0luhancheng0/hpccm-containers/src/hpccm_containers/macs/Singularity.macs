@@ -1,0 +1,82 @@
+BootStrap: docker
+From: ubuntu:20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        python-dev \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+# GNU compiler
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++-9 \
+        gcc-9 \
+        gfortran-9
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    update-alternatives --install /usr/bin/g++ g++ $(which g++-9) 30
+    update-alternatives --install /usr/bin/gcc gcc $(which gcc-9) 30
+    update-alternatives --install /usr/bin/gcov gcov $(which gcov-9) 30
+    update-alternatives --install /usr/bin/gfortran gfortran $(which gfortran-9) 30
+
+# https://github.com/lh3/fermi-lite
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch v0.1 https://github.com/lh3/fermi-lite fermi-lite && cd -
+    cd /var/tmp/fermi-lite
+    make
+    cd /var/tmp/fermi-lite
+    mkdir -p /usr/local/fermi_lite/
+    mv * /usr/local/fermi_lite/
+    rm -rf /var/tmp/fermi-lite
+
+%environment
+    export C_INCLUDE_PATH=/usr/local/fermi_lite/:$C_INCLUDE_PATH
+    export LIBRARY_PATH=/usr/local/fermi_lite/:$LIBRARY_PATH
+    export PATH=/usr/local/fermi_lite/:/usr/local/anaconda/bin:$PATH
+%post
+    export C_INCLUDE_PATH=/usr/local/fermi_lite/:$C_INCLUDE_PATH
+    export LIBRARY_PATH=/usr/local/fermi_lite/:$LIBRARY_PATH
+    export PATH=/usr/local/fermi_lite/:/usr/local/anaconda/bin:$PATH
+
+# Anaconda
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp http://repo.anaconda.com/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh
+    bash /var/tmp/Miniconda3-py38_4.8.3-Linux-x86_64.sh -b -p /usr/local/anaconda
+    /usr/local/anaconda/bin/conda init
+    ln -s /usr/local/anaconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+    . /usr/local/anaconda/etc/profile.d/conda.sh
+    conda activate base
+    conda config --add channels anaconda --add channels conda-forge
+    conda install -y cykhash cython numpy python=3.8
+    /usr/local/anaconda/bin/conda clean -afy
+    rm -rf /var/tmp/Miniconda3-py38_4.8.3-Linux-x86_64.sh
+
+# https://github.com/macs3-project/MACS.git
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch v3.0.0a5 --recursive https://github.com/macs3-project/MACS.git MACS && cd -
+    cd /var/tmp/MACS
+    python3 setup.py install
+    rm -rf /var/tmp/MACS

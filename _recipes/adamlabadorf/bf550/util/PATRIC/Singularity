@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%post
+    # tzdata package requires interactive input by default, avoid it
+    export DEBIAN_FRONTEND=noninteractive
+    ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+
+    apt-get -y update
+    apt-get -y install curl
+
+    curl -LO https://github.com/PATRIC3/PATRIC-distribution/releases/download/1.035/patric-cli-1.035.deb
+    apt-get -y install /patric-cli-1.035.deb
+
+%environment
+    export LC_ALL=C

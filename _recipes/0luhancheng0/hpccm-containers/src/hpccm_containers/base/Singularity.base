@@ -1,0 +1,37 @@
+BootStrap: docker
+From: nvcr.io/nvidia/cuda:11.0-devel-ubuntu20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+# OpenMPI version 4.0.3
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bzip2 \
+        file \
+        hwloc \
+        libnuma-dev \
+        make \
+        openssh-client \
+        perl \
+        tar \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.open-mpi.org/software/ompi/v4.0/downloads/openmpi-4.0.3.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/openmpi-4.0.3.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/openmpi-4.0.3 &&  CC=/usr/local/gnu/bin/gcc CXX=/usr/local/gnu/bin/g++ F77=/usr/local/gnu/bin/gfortran F90=/usr/local/gnu/bin/gfortran FC=/usr/local/gnu/bin/gfortran LD_LIBRARY_PATH='/usr/local/gnu/lib64:$LD_LIBRARY_PATH' ./configure --prefix=/usr/local/openmpi --disable-getpwuid --enable-orterun-prefix-by-default --with-cuda --without-verbs
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/openmpi-4.0.3 /var/tmp/openmpi-4.0.3.tar.bz2
+%environment
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH

@@ -1,0 +1,36 @@
+BootStrap: docker
+From: ubuntu:18.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+# Anaconda
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%files
+    qiime2-2020.11-py36-linux-conda.yml /var/tmp/qiime2-2020.11-py36-linux-conda.yml
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp http://repo.anaconda.com/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh
+    bash /var/tmp/Miniconda3-py38_4.8.3-Linux-x86_64.sh -b -p /usr/local/anaconda
+    /usr/local/anaconda/bin/conda init
+    ln -s /usr/local/anaconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+    . /usr/local/anaconda/etc/profile.d/conda.sh
+    conda activate base
+    conda config --add channels conda-forge
+    conda env update -f /var/tmp/qiime2-2020.11-py36-linux-conda.yml
+    rm -rf /var/tmp/qiime2-2020.11-py36-linux-conda.yml
+    conda install -y mmvec
+    /usr/local/anaconda/bin/conda clean -afy
+    rm -rf /var/tmp/Miniconda3-py38_4.8.3-Linux-x86_64.sh
+
+%post
+    cd /
+    echo '#!/bin/bash\nsource /usr/local/anaconda/bin/activate base\n$@' > /usr/local/bin/entrypoint.sh
+    chmod a+x /usr/local/bin/entrypoint.sh
+
+%runscript
+    exec /usr/local/bin/entrypoint.sh "$@"

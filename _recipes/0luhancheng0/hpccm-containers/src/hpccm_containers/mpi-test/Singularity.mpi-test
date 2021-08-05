@@ -1,0 +1,39 @@
+BootStrap: docker
+From: ubuntu:18.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+# NVIDIA HPC SDK version 20.9
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        debianutils \
+        g++ \
+        gcc \
+        gfortran \
+        libatomic1 \
+        libnuma1 \
+        openssh-client \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc_2020_209_Linux_x86_64_cuda_multi.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/nvhpc_2020_209_Linux_x86_64_cuda_multi.tar.gz -C /var/tmp -z
+    cd /var/tmp/nvhpc_2020_209_Linux_x86_64_cuda_multi && NVHPC_ACCEPT_EULA=accept NVHPC_INSTALL_DIR=/opt/nvidia/hpc_sdk NVHPC_SILENT=true ./install
+    rm -rf /var/tmp/nvhpc_2020_209_Linux_x86_64_cuda_multi /var/tmp/nvhpc_2020_209_Linux_x86_64_cuda_multi.tar.gz
+%environment
+    export LD_LIBRARY_PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nvshmem/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nccl/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/math_libs/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/mpi/lib:$LD_LIBRARY_PATH
+    export MANPATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/man:$MANPATH
+    export PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nvshmem/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nccl/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/profilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/mpi/bin:$PATH
+%post
+    export LD_LIBRARY_PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nvshmem/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nccl/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/math_libs/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/mpi/lib:$LD_LIBRARY_PATH
+    export MANPATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/man:$MANPATH
+    export PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nvshmem/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nccl/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/profilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/mpi/bin:$PATH
+
+%files
+    heat_mpi.f90 /var/tmp/heat_mpi.f90
+
+%post
+    cd /
+    mpif90 /var/tmp/heat_mpi.f90 -o /usr/local/bin/heat_mpi

@@ -1,0 +1,164 @@
+BootStrap: docker
+From: ubuntu:20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm /usr/bin/sh
+    ln -s /usr/bin/bash /usr/bin/sh
+    /usr/bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        libx11-dev \
+        locales \
+        ncbi-blast+ \
+        perl \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+# GNU compiler
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++-10 \
+        gcc-10 \
+        gfortran-10
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    update-alternatives --install /usr/bin/g++ g++ $(which g++-10) 30
+    update-alternatives --install /usr/bin/gcc gcc $(which gcc-10) 30
+    update-alternatives --install /usr/bin/gcov gcov $(which gcov-10) 30
+    update-alternatives --install /usr/bin/gfortran gfortran $(which gfortran-10) 30
+
+# http://search.cpan.org/CPAN/authors/id/Y/YA/YANICK/Parallel-ForkManager-1.19.tar.gz
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp http://search.cpan.org/CPAN/authors/id/Y/YA/YANICK/Parallel-ForkManager-1.19.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/Parallel-ForkManager-1.19.tar.gz -C /var/tmp -z
+    cd /var/tmp/Parallel-ForkManager-1.19
+    perl Makefile.PL
+    make install
+    mkdir -p /usr/local/parallel-forkmanager
+    cd /var/tmp/Parallel-ForkManager-1.19
+    mv * /usr/local/parallel-forkmanager/
+    rm -rf /var/tmp/Parallel-ForkManager-1.19 /var/tmp/Parallel-ForkManager-1.19.tar.gz
+
+%environment
+    export PATH=/usr/local/parallel-forkmanager:$PATH
+%post
+    export PATH=/usr/local/parallel-forkmanager:$PATH
+
+# ftp://ftp.ebi.ac.uk/pub/software/clustalw2/2.1/clustalw-2.1-linux-x86_64-libcppstatic.tar.gz
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp ftp://ftp.ebi.ac.uk/pub/software/clustalw2/2.1/clustalw-2.1-linux-x86_64-libcppstatic.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/clustalw-2.1-linux-x86_64-libcppstatic.tar.gz -C /var/tmp -z
+    mkdir -p /usr/local/clustalw
+    cd /var/tmp/clustalw-2.1-linux-x86_64-libcppstatic
+    mv clustalw2 /usr/local/clustalw/clustalw
+    rm -rf /var/tmp/clustalw-2.1-linux-x86_64-libcppstatic /var/tmp/clustalw-2.1-linux-x86_64-libcppstatic.tar.gz
+
+%environment
+    export PATH=/usr/local/clustalw:$PATH
+%post
+    export PATH=/usr/local/clustalw:$PATH
+
+# ftp://emboss.open-bio.org/pub/EMBOSS/EMBOSS-6.6.0.tar.gz
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp ftp://emboss.open-bio.org/pub/EMBOSS/EMBOSS-6.6.0.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/EMBOSS-6.6.0.tar.gz -C /var/tmp -z
+    cd /var/tmp/EMBOSS-6.6.0 &&   ./configure --prefix=/usr/local/emboss
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/EMBOSS-6.6.0 /var/tmp/EMBOSS-6.6.0.tar.gz
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/emboss/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/emboss/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/emboss/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/emboss/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/emboss/bin:$PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/emboss/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/emboss/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/emboss/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/emboss/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/emboss/bin:$PATH
+
+# https://www.tbi.univie.ac.at/RNA/download/sourcecode/2_4_x/ViennaRNA-2.4.17.tar.gz
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.tbi.univie.ac.at/RNA/download/sourcecode/2_4_x/ViennaRNA-2.4.17.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/ViennaRNA-2.4.17.tar.gz -C /var/tmp -z
+    cd /var/tmp/ViennaRNA-2.4.17 &&   ./configure --prefix=/usr/local/viennarna
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/ViennaRNA-2.4.17 /var/tmp/ViennaRNA-2.4.17.tar.gz
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/viennarna/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/viennarna/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/viennarna/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/viennarna/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/viennarna/bin:$PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/viennarna/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/viennarna/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/viennarna/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/viennarna/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/viennarna/bin:$PATH
+
+# https://github.com/weizhongli/cdhit/archive/V4.8.1.tar.gz
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://github.com/weizhongli/cdhit/archive/V4.8.1.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/V4.8.1.tar.gz -C /var/tmp -z
+    cd /var/tmp/cdhit-4.8.1
+    make
+    mkdir -p /usr/local/cdhit
+    cd /var/tmp/cdhit-4.8.1
+    mv * /usr/local/cdhit/
+    rm -rf /var/tmp/cdhit-4.8.1 /var/tmp/V4.8.1.tar.gz
+
+%environment
+    export PATH=/usr/local/cdhit:$PATH
+%post
+    export PATH=/usr/local/cdhit:$PATH
+
+# https://github.com/ambarishbiswas/CRISPRDetect_2.2.git
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone  https://github.com/ambarishbiswas/CRISPRDetect_2.2.git CRISPRDetect_2.2 && cd - && cd /var/tmp/CRISPRDetect_2.2 && git checkout 0f8249f && cd -
+    mkdir -p /usr/local/crisprdetect
+    cd /var/tmp/CRISPRDetect_2.2
+    mv * /usr/local/crisprdetect/
+    rm -rf /var/tmp/CRISPRDetect_2.2
+
+%environment
+    export PATH=/usr/local/crisprdetect:$PATH
+%post
+    export PATH=/usr/local/crisprdetect:$PATH

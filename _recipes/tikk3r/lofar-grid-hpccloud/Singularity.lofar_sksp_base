@@ -3,7 +3,6 @@ From: fedora:31
 
 %environment
     export INSTALLDIR=/opt/lofar
-    . $INSTALLDIR/init.sh
 
 %post
 	# General environment settings.
@@ -88,12 +87,6 @@ From: fedora:31
     export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:$LD_LIBRARY_PATH
     export CMAKE_PREFIX_PATH=/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:$CMAKE_PREFIX_PATH
     export CPATH=/usr/local/cuda/include:/opt/intel/mkl/include:$CPATH
-    # Use these flags instead for an architecture optimized build.
-    #export CFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
-    #export CXXFLAGS="-march=skylake-avx512 -mtune=skylake-avx512"
-    # Disable AVX512 instructions and build a generic architecture.
-    export CFLAGS="-mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
-    export CXXFLAGS="-mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
 
     ###################
     # Source installs #
@@ -139,24 +132,13 @@ From: fedora:31
 	# init-lofar
 	#
 	echo export INSTALLDIR=$INSTALLDIR > $INSTALLDIR/init.sh
-    echo export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
-    echo export HAS_CUDA=true >> $INSTALLDIR/init.sh
-    echo export HAS_MKL=true >> $INSTALLDIR/init.sh
-    echo export MARCH=$MARCH >> $INSTALLDIR/init.sh
-    echo export MTUNE=$MTUNE >> $INSTALLDIR/init.sh
-
-    #
-    # entrypoint
-    #
-%runscript
-    echo source $INSTALLDIR/init.sh >> $HOME/.bashrc
     echo export PATH=/usr/local/cuda/bin:\$PATH >> $INSTALLDIR/init.sh
     echo export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
     echo export HAS_CUDA=true >> $INSTALLDIR/init.sh
     echo export HAS_MKL=true >> $INSTALLDIR/init.sh
-    echo export MARCH=$MARCH >> $INSTALLDIR/init.sh
-    echo export MTUNE=$MTUNE >> $INSTALLDIR/init.sh
-    . $INSTALLDIR/init.sh
+
+%runscript
+    echo Base container built from LOFAR-SKSP Singularity v3.3
 
 %help
     This Singularity image acts as a base for the LOFAR installation. It has Fedora 31 setup, with the required dependencies installed. These are:

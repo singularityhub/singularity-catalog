@@ -1,0 +1,121 @@
+BootStrap: docker
+From: nvcr.io/nvidia/cuda:11.0.3-devel-ubuntu20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm -f /bin/sh && ln -s /bin/bash /bin/sh
+    rm -f /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
+    /bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        locales \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        freeglut3-dev \
+        libgl1-mesa-glx \
+        libglu1-mesa \
+        libglu1-mesa-dev \
+        libx11-dev \
+        libxi-dev \
+        libxmu-dev \
+        mesa-utils
+    rm -rf /var/lib/apt/lists/*
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/cuda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin:$PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/cuda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin:$PATH
+
+# Installing vglrun and TurboVNC
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        mesa-utils \
+        pyqt5-dev \
+        python3-pip \
+        python3-pyqt5 \
+        python3-tk \
+        ubuntu-desktop \
+        vim
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/turbovnc_2.2.5_amd64.deb && dpkg -i turbovnc_2.2.5_amd64.deb && rm turbovnc_2.2.5_amd64.deb
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/virtualgl_2.6.4_amd64.deb && dpkg -i virtualgl_2.6.4_amd64.deb && rm virtualgl_2.6.4_amd64.deb
+    apt update
+    apt -y upgrade
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        libfftw3-dev \
+        libhdf5-dev \
+        libjpeg-dev \
+        libopenmpi-dev \
+        libsqlite3-dev \
+        libtiff-dev \
+        make \
+        openjdk-8-jdk \
+        python3-tk
+    rm -rf /var/lib/apt/lists/*
+
+%environment
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/hdf5/serial
+%post
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/hdf5/serial
+
+%post
+    cd /
+    python3 -m pip install --user scipion-installer
+    python3 -m scipioninstaller /usr/local/scipion -j 4
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/scipion/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/scipion/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/scipion/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/scipion/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/scipion/bin:$PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/scipion/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/scipion/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/scipion/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/scipion/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/scipion/bin:$PATH

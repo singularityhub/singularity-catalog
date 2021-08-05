@@ -1,0 +1,58 @@
+BootStrap: docker
+From: nvcr.io/nvidia/cuda-arm64:11.2.2-devel-ubuntu20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm -f /bin/sh && ln -s /bin/bash /bin/sh
+    rm -f /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
+    /bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        locales \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+# Arm Allinea Studio version 20.3
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        libc6-dev \
+        lmod \
+        python \
+        tar \
+        tcl \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://developer.arm.com/-/media/Files/downloads/hpc/arm-allinea-studio/20-3/Ubuntu16.04/arm-compiler-for-linux_20.3_Ubuntu-16.04_aarch64.tar
+    mkdir -p /var/tmp && tar -x -f /var/tmp/arm-compiler-for-linux_20.3_Ubuntu-16.04_aarch64.tar -C /var/tmp
+    cd /var/tmp/arm-compiler-for-linux_20.3_Ubuntu-16.04 && ./arm-compiler-for-linux_20.3_Ubuntu-16.04.sh --install-to /opt/arm --accept --only-install-microarchitectures=generic
+    rm -rf /var/tmp/arm-compiler-for-linux_20.3_Ubuntu-16.04_aarch64.tar /var/tmp/arm-compiler-for-linux_20.3_Ubuntu-16.04
+%environment
+    export MODULEPATH=/opt/arm/modulefiles:$MODULEPATH
+%post
+    export MODULEPATH=/opt/arm/modulefiles:$MODULEPATH

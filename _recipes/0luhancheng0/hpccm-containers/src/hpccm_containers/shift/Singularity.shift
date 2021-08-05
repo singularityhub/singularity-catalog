@@ -1,0 +1,86 @@
+BootStrap: docker
+From: ubuntu:20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm /usr/bin/sh
+    ln -s /usr/bin/bash /usr/bin/sh
+    /usr/bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        acl-dev \
+        build-essential \
+        git \
+        globus-gridftp-server-progs \
+        gnuplot \
+        libssl-dev \
+        locales \
+        openssh-server \
+        perl \
+        rsync \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+# GNU compiler
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++-10 \
+        gcc-10 \
+        gfortran-10
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    update-alternatives --install /usr/bin/g++ g++ $(which g++-10) 30
+    update-alternatives --install /usr/bin/gcc gcc $(which gcc-10) 30
+    update-alternatives --install /usr/bin/gcov gcov $(which gcov-10) 30
+    update-alternatives --install /usr/bin/gfortran gfortran $(which gfortran-10) 30
+
+%post
+    cd /
+    yes | cpan Data::MessagePack
+    yes | cpan IO::Socket::SSL
+
+# https://github.com/eeertekin/bbcp.git
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone  https://github.com/eeertekin/bbcp.git bbcp && cd - && cd /var/tmp/bbcp && git checkout 64af832 && cd -
+    cd /var/tmp/bbcp
+    make -C src
+    mkdir -p /usr/local/bbcp/
+    cd /var/tmp/bbcp
+    mv bin/amd64_linux/bbcp /usr/local/bbcp/
+    rm -rf /var/tmp/bbcp
+
+%environment
+    export PATH=/usr/local/bbcp:$PATH
+%post
+    export PATH=/usr/local/bbcp:$PATH
+
+# https://github.com/pkolano/shift.git
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone  https://github.com/pkolano/shift.git shift && cd - && cd /var/tmp/shift && git checkout ffb7f5f && cd -
+    cd /var/tmp/shift/c
+    make nolustre
+    mkdir -p /usr/local/shift
+    cd /var/tmp/shift/c
+    mdkir /usr/local/shift/bin && mv c/shift-bin /usr/local/shift/bin
+    rm -rf /var/tmp/shift/c

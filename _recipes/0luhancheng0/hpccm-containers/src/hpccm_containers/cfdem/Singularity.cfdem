@@ -1,0 +1,154 @@
+BootStrap: docker
+From: ubuntu:20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm /usr/bin/sh
+    ln -s /usr/bin/bash /usr/bin/sh
+    /usr/bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bison \
+        build-essential \
+        cmake \
+        curl \
+        flex \
+        git \
+        git-core \
+        gnuplot \
+        libboost-system-dev \
+        libboost-thread-dev \
+        libgl1-mesa-dev \
+        libncurses-dev \
+        libosmesa6-dev \
+        libptscotch-dev \
+        libqt5x11extras5-dev \
+        libreadline-dev \
+        libscotch-dev \
+        libssh2-1 \
+        libtool \
+        libvtk6-dev \
+        libxt-dev \
+        locales \
+        python-dev \
+        python-numpy \
+        qt5-default \
+        qttools5-dev \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+# GNU compiler
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++-10 \
+        gcc-10 \
+        gfortran-10
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    update-alternatives --install /usr/bin/g++ g++ $(which g++-10) 30
+    update-alternatives --install /usr/bin/gcc gcc $(which gcc-10) 30
+    update-alternatives --install /usr/bin/gcov gcov $(which gcov-10) 30
+    update-alternatives --install /usr/bin/gfortran gfortran $(which gfortran-10) 30
+
+# OpenMPI version 2.0.4
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bzip2 \
+        file \
+        hwloc \
+        libnuma-dev \
+        make \
+        openssh-client \
+        perl \
+        tar \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.open-mpi.org/software/ompi/v2.0/downloads/openmpi-2.0.4.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/openmpi-2.0.4.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/openmpi-2.0.4 &&  CC=gcc CXX=g++ F77=gfortran F90=gfortran FC=gfortran ./configure --prefix=/usr/local/openmpi --disable-getpwuid --enable-orterun-prefix-by-default --with-verbs --without-cuda
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/openmpi-2.0.4 /var/tmp/openmpi-2.0.4.tar.bz2
+%environment
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+
+# https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/gmp-6.2.1.tar.xz -C /var/tmp -J
+    cd /var/tmp/gmp-6.2.1/ &&   ./configure --prefix=/usr/local/gmp
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/gmp-6.2.1/ /var/tmp/gmp-6.2.1.tar.xz
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/gmp/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/gmp/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/gmp/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/gmp/lib64:$LIBRARY_PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/gmp/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/gmp/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/gmp/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/gmp/lib64:$LIBRARY_PATH
+
+# https://github.com/MLton/mlton.git
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch on-20210117-release https://github.com/MLton/mlton.git mlton && cd -
+    cd /var/tmp/mlton
+    make -j
+    cd /var/tmp/mlton
+    make PREFIX=/usr/local/mlton
+    rm -rf /var/tmp/mlton
+
+# Obtain CFDEM source
+
+%post
+    cd /
+    mkdir -p /usr/local/cfdem /usr/local/ligghts /usr/local/lpp
+    git clone --branch 3.8.0 https://github.com/CFDEMproject/CFDEMcoupling-PUBLIC.git /usr/local/cfdem
+    git clone --branch 3.8.0 https://github.com/CFDEMproject/LIGGGHTS-PUBLIC.git /usr/local/ligghts
+    git clone https://github.com/CFDEMproject/LPP.git /usr/local/lpp
+
+# Install OpenFoam
+
+%post
+    cd /
+    mkdir -p /usr/local/OpenFOAM-5.x /usr/local/ThirdParty-5.x
+    git clone https://github.com/OpenFOAM/OpenFOAM-5.x.git /usr/local/OpenFOAM-5.x && cd /usr/local/OpenFOAM-5.x && git checkout 538044ac05c4672b37c7df607dca1116fa88df88
+    git clone https://github.com/OpenFOAM/ThirdParty-5.x.git /usr/local/ThirdParty-5.x
+
+%post
+    cd /
+    echo "source /usr/local/OpenFOAM-5.x/etc/bashrc" >> ~/.bashrc
+
+%post
+    cd /
+    /usr/local/ThirdParty-5.x/Allwmake -j 2>&1 | tee -a /var/tmp/_usr_local_ThirdParty-5.x_Allwmake_-j.log
+    /usr/local/ThirdParty-5.x/makeParaView -mpiwmRefresh 2>&1 | tee -a /var/tmp/_usr_local_ThirdParty-5.x_makeParaView_-mpiwmRefresh.log
+    rm /var/tmp/_usr_local_ThirdParty-5.x_Allwmake_-j.log /var/tmp/_usr_local_ThirdParty-5.x_makeParaView_-mpiwmRefresh.log
+
+%post
+    cd /
+    /usr/local/OpenFOAM-5.x/Allwmake -j

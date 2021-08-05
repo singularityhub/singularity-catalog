@@ -1,0 +1,40 @@
+BootStrap: docker
+From: nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
+
+%environment
+LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH
+PATH="/usr/local/cuda/bin:$PATH"
+export PATH
+CPATH="/usr/local/cuda/include:$CPATH"
+export CPATH
+CUDA_HOME="/usr/local/cuda"
+export CUDA_HOME
+
+%post
+    apt-get -y update && apt-get -y install git \
+                                            cmake \
+                                            python3 \
+                                            python3-pip \
+				            build-essential swig \
+                                            libglib2.0-0 libsm6 libxext6 libxrender1
+    pip3 install numpy==1.14.2 pyyaml mkl setuptools cmake cffi
+    pip3 install anytree
+    pip3 install torch==1.0.1 -f https://download.pytorch.org/whl/cu90/stable
+    
+    pip3 install dtw
+
+    pip3 install pygame
+    pip3 install Pillow
+    pip3 install opencv-python==3.3.1.11
+    pip3 install scipy==1.1.0
+    pip3 install matplotlib==3.0.0
+    pip3 install shapely
+    pip3 install tqdm
+
+    git clone https://github.com/pybox2d/pybox2d
+    cd pybox2d
+    python3 setup.py build
+    python3 setup.py install
+
+    apt-get clean

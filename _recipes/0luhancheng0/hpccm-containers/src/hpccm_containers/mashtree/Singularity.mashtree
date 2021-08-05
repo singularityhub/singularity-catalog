@@ -1,0 +1,95 @@
+BootStrap: shub
+From: Characterisation-Virtual-Laboratory/CharacterisationVL-Software:2004
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        autoconf \
+        cpanminus \
+        libexpat1-dev \
+        libsqlite3-dev \
+        sqlite3
+    rm -rf /var/lib/apt/lists/*
+
+# https://github.com/khowe/quicktree
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch v2.5 https://github.com/khowe/quicktree quicktree && cd -
+    cd /var/tmp/quicktree
+    make
+    cd /var/tmp/quicktree
+    mv quicktree /usr/local/bin
+    mv include/* /usr/local/include/
+    rm -rf /var/tmp/quicktree
+
+# Boost version 1.74.0
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bzip2 \
+        libbz2-dev \
+        tar \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://dl.bintray.com/boostorg/release/1.74.0/source/boost_1_74_0.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/boost_1_74_0.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/boost_1_74_0 && ./bootstrap.sh --prefix=/usr/local/boost --without-libraries=python
+    ./b2 -j$(nproc) -q install
+    rm -rf /var/tmp/boost_1_74_0.tar.bz2 /var/tmp/boost_1_74_0
+%environment
+    export LD_LIBRARY_PATH=/usr/local/boost/lib:$LD_LIBRARY_PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/boost/lib:$LD_LIBRARY_PATH
+
+# https://capnproto.org/capnproto-c++-0.8.0.tar.gz
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://capnproto.org/capnproto-c++-0.8.0.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/capnproto-c++-0.8.0.tar.gz -C /var/tmp -z
+    cd /var/tmp/capnproto-c++-0.8.0 &&   ./configure --prefix=/usr/local
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/capnproto-c++-0.8.0 /var/tmp/capnproto-c++-0.8.0.tar.gz
+
+%post
+    cd /
+    cpanm -l /usr/local/perl5 --notest BioPerl Bio::Sketch::Mash DBD::SQLite DBI
+
+# https://github.com/marbl/Mash
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch v2.2.2 https://github.com/marbl/Mash Mash && cd -
+    cd /var/tmp/Mash
+    ./bootstrap.sh
+    cd /var/tmp/Mash &&   ./configure --prefix=/usr/local --with-boost=/usr/local/boost/ --with-capnp=/usr/local/
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/Mash
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/mashtree/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/mashtree/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/mashtree/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/mashtree/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/mashtree/bin:$PATH
+    export PERL5LIB=$PERL5LIB:/usr/local
+%post
+    export CXX_INCLUDE_PATH=/usr/local/mashtree/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/mashtree/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/mashtree/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/mashtree/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/mashtree/bin:$PATH
+    export PERL5LIB=$PERL5LIB:/usr/local
+
+%post
+    cd /
+    cpanm -f -l /usr/local/mashtree Mashtree

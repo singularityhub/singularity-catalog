@@ -1,0 +1,65 @@
+BootStrap: docker
+From: ubuntu:18.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm -f /bin/sh && ln -s /bin/bash /bin/sh
+    rm -f /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
+    /bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        cmake \
+        git \
+        libboost-all-dev \
+        libfftw3-dev \
+        libgdal-dev \
+        libqt4-dev \
+        libqwt-dev \
+        locales \
+        software-properties-common \
+        unzip \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+# https://github.com/cbig/zonation-core.git
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch 4.0.0 https://github.com/cbig/zonation-core.git zonation-core && cd -
+    mkdir -p /var/tmp/zonation-core/build && cd /var/tmp/zonation-core/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local/zonation /var/tmp/zonation-core
+    cmake --build /var/tmp/zonation-core/build --target all -- -j$(nproc)
+    cmake --build /var/tmp/zonation-core/build --target install -- -j$(nproc)
+    rm -rf /var/tmp/zonation-core
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/zonation/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/zonation/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/zonation/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/zonation/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/zonation/bin:$PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/zonation/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/zonation/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/zonation/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/zonation/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/zonation/bin:$PATH

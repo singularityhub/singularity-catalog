@@ -1,0 +1,150 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%help
+    This is the container used to run SODALITE (https://www.sodalite.eu/)
+    Code-Aster Clinical UC.
+
+%labels
+    Author HPE EMEA Research Lab
+    Version v0.1.0
+
+%environment
+    #
+    # Read configuration
+    #
+#    . /usr/local/workdir/config/code_aster_clinical_conf.def
+#
+    if test ! -z ${NP+x}; then
+	export RUNCMD="mpiexec -np ${NP}"
+    fi
+
+    export OPENBLAS_NUM_THREADS=${OPENBLAS_NUM_THREADS:-1}
+    export OPENBLAS_MAIN_FREE=1 # Used to avoid Python crash
+    export OMP_NUM_THREADS=${OMP_NUM_THREADS:-1}
+    export OMP_PROC_BIND=${OMP_PROC_BIND:-close}
+    export OMP_PLACES=${OMP_PLACES:=cores}
+
+    export ASTER_ROOT=/usr/local/workdir/aster
+    export ASTER_NUM_THREADS=${ASTER_NUM_THREADS:-1}
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/usr/local/workdir/config
+
+%runscript
+    . ${ASTER_ROOT}/14.4/share/aster/profile.sh
+    . ${ASTER_ROOT}/etc/codeaster/profile.sh
+
+    if test $# -eq 0 || test -z "$@" ; then
+        bash -norc
+    else
+        # pass arguments to run code-aster
+	OLDPWD=`pwd`
+	cd "$1"
+	# Clean previous runs
+	rm -f REPE_OUT/* fort.15 fort.8 fort.80 fort.9 glob.1 info_cpu pick.1 vola.1
+	${ASTER_ROOT}/14.4/bin/aster \
+		     ${ASTER_ROOT}/14.4/lib/aster/Execution/E_SUPERV.py \
+		     -commandes fort.1 --num_job=1432 --mode=interactif \
+		     --rep_mat=${ASTER_ROOT}/14.4/share/aster/materiau \
+		     --rep_dex=${ASTER_ROOT}/14.4/share/aster/datg \
+		     --numthreads=${ASTER_NUM_THREADS} --suivi_batch --memjeveux=8192.0 --tpmax=3600.0
+	cd ${OLDPWD}
+    fi
+
+%files
+    # Copy C program to check MPI rank
+    mpirank.c /usr/local/workdir
+
+    # Building configuration
+#    code_aster_clinical_conf.def /usr/local/workdir/config
+
+%post
+    #
+    # First install default packages and clean caches
+    #
+    apt-get update && apt-get -y upgrade --no-install-recommends
+    apt-get -y install --no-install-recommends \
+                       build-essential wget less gfortran procps \
+		       libopenblas-dev locales ca-certificates \
+		       python3 python3-dev python3-pip python3-numpy vim ssh git \
+		       zlib1g-dev file xterm tk bison flex
+    apt-get clean && rm -rf /var/lib/apt/lists/* # do not forget to clean!
+
+    #
+    # Move inside build directory
+    #
+    cd /usr/local/workdir
+
+    #
+    # Install NUMPY with OpenBLAS
+    #
+    #
+    # Read configuration
+    #
+#    . config/code_aster_clinical_conf.def
+
+    #
+    # Install MPICH
+    #
+    if test "$MPI_DIST" = "MPICH"; then
+	export MPICH_VERSION=3.3.1
+#	wget -q http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz
+#	tar xf mpich-${MPICH_VERSION}.tar.gz && rm mpich-${MPICH_VERSION}.tar.gz
+#	cd mpich-${MPICH_VERSION}
+#	./configure --prefix=/usr/local --disable-static --disable-rpath --disable-wrapper-rpath \
+#                    --mandir=/usr/share/man --enable-fast=all,O3
+#	make -j$(getconf _NPROCESSORS_ONLN) install
+#	ldconfig
+#	cd .. && rm -rf mpich-${MPICH_VERSION}
+    #
+    # Install OpenMPI
+    #
+    elif test "$MPI_DIST" = "OpenMPI"; then
+	export OMPI_VERSION=4.0.1
+#	wget https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-$OMPI_VERSION.tar.bz2
+#	tar xf openmpi-$OMPI_VERSION.tar.bz2 && rm openmpi-$OMPI_VERSION.tar.bz2
+#	cd openmpi-$OMPI_VERSION
+#	./configure --prefix=/usr/local --disable-static --disable-rpath \
+#                    --mandir=/usr/share/man --enable-fast=all,O3 \
+#		    --enable-mpi1-compatibility
+#	make -j$(getconf _NPROCESSORS_ONLN) install
+#	ldconfig
+#	cd .. && rm -rf openmpi-$OMPI_VERSION
+    fi
+
+    #
+    # Compile program to get MPI rank
+    #
+    mkdir -p /usr/local/workdir/bin
+#    mpicc /usr/local/workdir/mpirank.c -o /usr/local/workdir/bin/mpirank
+
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
+    export LANG=en_US.UTF-8
+
+    # Install latest cmake
+    export CMAKE_VERSION=3.18.2
+    wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-Linux-x86_64.sh
+    sh cmake-${CMAKE_VERSION}-Linux-x86_64.sh --prefix=/usr/local --skip-license
+    ldconfig
+    rm -f cmake-${CMAKE_VERSION}-Linux-x86_64.sh
+
+    # Build Python Boost
+    BOOST_VERSION=1.72.0
+    BOOST_VERSION_=$(echo "${BOOST_VERSION}" | sed 's/\./_/g')
+    wget -q https://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost_${BOOST_VERSION_}.tar.bz2
+    tar xf boost_${BOOST_VERSION_}.tar.bz2 && rm boost_${BOOST_VERSION_}.tar.bz2
+    cd boost_${BOOST_VERSION_}
+    ./bootstrap.sh --with-python=$(which python3) --with-libraries=python
+    ./b2 stage -j$(getconf _NPROCESSORS_ONLN) install
+    cd .. && rm -rf boost_${BOOST_VERSION_}
+
+    # Code Aster install
+    export PYTHONIOENCODING=utf8
+    wget https://www.code-aster.org/FICHIERS/aster-full-src-14.4.0-1.noarch.tar.gz
+    tar -xzf aster-full-src-14.4.0-1.noarch.tar.gz && cd aster-full-src-14.4.0
+    echo 'F90FLAGS="-O3 -fPIC -mavx2 -mfma"' >> setup.cfg
+    echo 'CFLAGS=-O3 -fno-stack-protector -fPIC -mavx2 -mfma'
+    echo 'CXXFLAGS=-O3 -fno-stack-protector -fPIC -mavx2 -mfma'
+    python3 setup.py install --prefix=/usr/local/workdir/aster --noprompt --quiet
+#    cd .. && rm -rf aster-full-src-14.4.0-1.noarch.tar.gz aster-full-src-14.4.0-1.noarch

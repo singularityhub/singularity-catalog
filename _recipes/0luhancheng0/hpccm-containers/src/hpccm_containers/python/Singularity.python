@@ -1,0 +1,152 @@
+BootStrap: docker
+From: ubuntu:20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm /bin/sh && ln -s /bin/bash /bin/sh
+    /bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        locales \
+        software-properties-common \
+        wget
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        libbz2-dev \
+        libffi-dev \
+        libgdbm-compat-dev \
+        libgdbm-dev \
+        liblzma-dev \
+        libncurses*-dev \
+        libreadline-dev \
+        libsqlite3-dev \
+        libsqlite3-dev \
+        libssl-dev \
+        libssl-dev \
+        python-dev \
+        software-properties-common \
+        tk-dev \
+        uuid-dev \
+        wget \
+        xz-utils \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+# GNU compiler
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++-10 \
+        gcc-10 \
+        gfortran-10
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    update-alternatives --install /usr/bin/g++ g++ $(which g++-10) 30
+    update-alternatives --install /usr/bin/gcc gcc $(which gcc-10) 30
+    update-alternatives --install /usr/bin/gcov gcov $(which gcov-10) 30
+    update-alternatives --install /usr/bin/gfortran gfortran $(which gfortran-10) 30
+
+# https://www.python.org/ftp/python/3.8.7/Python-3.8.7.tar.xz
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.python.org/ftp/python/3.8.7/Python-3.8.7.tar.xz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/Python-3.8.7.tar.xz -C /var/tmp -J
+    cd /var/tmp/Python-3.8.7 &&  CC=gcc CXX=g++ F77=gfortran F90=gfortran FC=gfortran ./configure --prefix=/usr/local/python --enable-ipv6 --enable-optimizations --enable-profiling --enable-shared --with-computed-goto --with-pydebug --with-threads
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/Python-3.8.7 /var/tmp/Python-3.8.7.tar.xz
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        patchelf
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    patchelf --set-rpath /usr/local/python/lib /usr/local/python/bin/python3
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/python/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/python/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/python/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/python/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/python/bin:$PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/python/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/python/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/python/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/python/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/python/bin:$PATH
+
+# MKL version 2020.0-088
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        apt-transport-https \
+        ca-certificates \
+        gnupg \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    wget -qO - https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB | apt-key add -
+    echo "deb https://apt.repos.intel.com/mkl all main" >> /etc/apt/sources.list.d/hpccm.list
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        intel-mkl-64bit-2020.0-088
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    echo "source /opt/intel/mkl/bin/mklvars.sh intel64" >> /etc/bash.bashrc
+
+%post
+    cd /
+    source /opt/intel/mkl/bin/mklvars.sh intel64
+
+# pip
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3-pip \
+        python3-setuptools \
+        python3-wheel
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    pip3 --no-cache-dir install Cython>0.29.21 pytest>1.15 Hypothesis>5.3.0
+
+%post
+    cd /
+    git clone --branch v1.20.0rc2 https://github.com/numpy/numpy.git
+    apt remove -y python-numpy python-scipy
+    rm -rf /numpy
+
+%runscript
+    exec /usr/local/python/bin/python3 $* "$@"

@@ -1,0 +1,114 @@
+BootStrap: docker
+From: nvidia/cuda:10.0-cudnn7-runtime-ubuntu16.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%post
+    cd /
+    rm /bin/sh
+    ln -s /bin/bash /bin/sh
+    /bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bc \
+        build-essential \
+        bzip2 \
+        ca-certificates \
+        cmake \
+        gawk \
+        git \
+        libglu1-mesa \
+        libglu1-mesa-dev \
+        libgomp1 \
+        libjpeg-dev \
+        libpng-dev \
+        libx11-6 \
+        perl-modules \
+        tar \
+        tcsh \
+        time \
+        vim \
+        wget \
+        zip
+    rm -rf /var/lib/apt/lists/*
+
+# https://github.com/Deep-MI/FastSurfer/blob/master/Docker/Dockerfile
+
+%post
+    cd /
+    wget -qO- https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.1/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.1.tar.gz | tar zxv --no-same-owner -C /opt         --exclude='freesurfer/trctrain'         --exclude='freesurfer/subjects/fsaverage_sym'         --exclude='freesurfer/subjects/fsaverage3'         --exclude='freesurfer/subjects/fsaverage4'         --exclude='freesurfer/subjects/fsaverage5'         --exclude='freesurfer/subjects/fsaverage6'         --exclude='freesurfer/subjects/cvs_avg35'         --exclude='freesurfer/subjects/cvs_avg35_inMNI152'         --exclude='freesurfer/subjects/bert'         --exclude='freesurfer/subjects/V1_average'         --exclude='freesurfer/average/mult-comp-cor'         --exclude='freesurfer/lib/cuda'         --exclude='freesurfer/lib/qt'
+
+# Anaconda
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp http://repo.anaconda.com/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh
+    bash /var/tmp/Miniconda3-py38_4.8.3-Linux-x86_64.sh -b -p /usr/local/anaconda
+    /usr/local/anaconda/bin/conda init
+    ln -s /usr/local/anaconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+    . /usr/local/anaconda/etc/profile.d/conda.sh
+    conda activate base
+    conda config --add channels conda-forge --add channels pytorch
+    conda install -y cudatoolkit=10.0 h5py matplotlib nibabel=2.5.1 numpy pillow=7.1.1 python=3.6 pytorch pytorch=1.2.0=py3.6_cuda10.0.130_cudnn7.6.2_0 scikit-image scikit-sparse scipy torchvision=0.4.0
+    /usr/local/anaconda/bin/conda clean -afy
+    rm -rf /var/tmp/Miniconda3-py38_4.8.3-Linux-x86_64.sh
+
+# https://github.com/Deep-MI/FastSurfer.git
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 https://github.com/Deep-MI/FastSurfer.git FastSurfer && cd -
+    cd /var/tmp/FastSurfer
+    git checkout c5894bd
+    cd /var/tmp/FastSurfer
+    mkdir /fastsurfer && mv * /fastsurfer/
+    rm -rf /var/tmp/FastSurfer
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/cuda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/lib:$C_INCLUDE_PATH
+    export FIX_VERTEX_AREA=
+    export FREESURFER_HOME=/opt/freesurfer
+    export FSFAST_HOME=/opt/freesurfer/fsfast
+    export FSF_OUTPUT_FORMAT=nii.gz
+    export FS_OVERRIDE=0
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
+    export LOCAL_DIR=/opt/freesurfer/local
+    export MNI_DIR=/opt/freesurfer/mni
+    export MNI_PERL4LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
+    export OS=Linux
+    export PATH=/usr/local/cuda/bin:$PATH
+    export PERL5LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
+    export PYTHONNUMBUFFERED=0
+    export SUBJECTS_DIR=/opt/freesurfer/subjects
+%post
+    export CXX_INCLUDE_PATH=/usr/local/cuda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/lib:$C_INCLUDE_PATH
+    export FIX_VERTEX_AREA=
+    export FREESURFER_HOME=/opt/freesurfer
+    export FSFAST_HOME=/opt/freesurfer/fsfast
+    export FSF_OUTPUT_FORMAT=nii.gz
+    export FS_OVERRIDE=0
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
+    export LOCAL_DIR=/opt/freesurfer/local
+    export MNI_DIR=/opt/freesurfer/mni
+    export MNI_PERL4LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
+    export OS=Linux
+    export PATH=/usr/local/cuda/bin:$PATH
+    export PERL5LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
+    export PYTHONNUMBUFFERED=0
+    export SUBJECTS_DIR=/opt/freesurfer/subjects
+
+%runscript
+    cd /fastsurfer
+    source /usr/local/anaconda/etc/profile.d/conda.sh
+    source $FREESURFER_HOME/SetUpFreeSurfer.sh
+    exec $*

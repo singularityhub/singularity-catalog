@@ -1,0 +1,20 @@
+BootStrap: shub
+From: Characterisation-Virtual-Laboratory/CharacterisationVL-Software:2004
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+# pip
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3-pip \
+        python3-setuptools \
+        python3-wheel
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    pip3 --no-cache-dir install numpy h5py ncempy numba scikit-image scikit-learn PyQt5 pyqtgraph qtconsole ipywidgets tqdm ipyparallel dask py4dstem==0.11.5

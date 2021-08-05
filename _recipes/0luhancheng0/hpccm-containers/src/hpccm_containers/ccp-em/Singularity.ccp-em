@@ -1,0 +1,103 @@
+BootStrap: docker
+From: nvcr.io/nvidia/cuda:11.0-devel-ubuntu20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm -f /bin/sh && ln -s /bin/bash /bin/sh
+    rm -f /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
+    /bin/bash
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/cuda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin:$PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/cuda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin:$PATH
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        locales \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+# Installing vglrun and TurboVNC
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        mesa-utils \
+        pyqt5-dev \
+        python3-pip \
+        python3-pyqt5 \
+        python3-tk \
+        ubuntu-desktop \
+        vim
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/turbovnc_2.2.5_amd64.deb && dpkg -i turbovnc_2.2.5_amd64.deb && rm turbovnc_2.2.5_amd64.deb
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/virtualgl_2.6.4_amd64.deb && dpkg -i virtualgl_2.6.4_amd64.deb && rm virtualgl_2.6.4_amd64.deb
+    apt update
+    apt -y upgrade
+
+# Installing pre-requisites
+
+%files
+    ./ccp4-7.1.014-shelx-arpwarp-linux64.tar.gz /opt/ccp4-7.1.014-shelx-arpwarp-linux64.tar.gz
+
+%post
+    cd /
+    cd /opt && tar -xf ccp4-7.1.014-shelx-arpwarp-linux64.tar.gz && rm ccp4-7.1.014-shelx-arpwarp-linux64.tar.gz
+    touch $HOME/.agree2ccp4v6
+    cd ccp4-7.1
+    ./BINARY.setup
+
+%environment
+    export PATH=/opt/ccp4-7.1/bin:$PATH
+%post
+    export PATH=/opt/ccp4-7.1/bin:$PATH
+
+# Installing CCP-EM
+
+%files
+    ./ccpem-1.5.0-linux-x86_64.tar.gz /opt/ccpem-1.5.0-linux-x86_64.tar.gz
+
+%files
+    ./input.txt /opt/input.txt
+
+%post
+    cd /
+    touch $HOME/.agree2ccpemv1
+    cd /opt && tar -xf ccpem-1.5.0-linux-x86_64.tar.gz && rm ccpem-1.5.0-linux-x86_64.tar.gz
+    cd ccpem-1.5.0
+    ./install_ccpem.sh
+    cat /opt/input.txt | bash install_modeller.sh

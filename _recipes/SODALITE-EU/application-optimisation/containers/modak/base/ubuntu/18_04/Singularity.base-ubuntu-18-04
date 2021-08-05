@@ -1,0 +1,32 @@
+# build base container required for all other container builds. Installs Ubuntu 18.04 as well as packages required for FW builds.
+BootStrap: docker
+From: ubuntu:18.04
+
+%post 
+	# update ubuntu repository list
+    # sed -i 's/$/ universe/' /etc/apt/sources.list
+
+	# install ubuntu updates
+    apt-get update
+	# install helper software
+    apt-get -y install vim git wget gnupg2 software-properties-common
+
+	# Update to llvm-8 and clang-8, as required for FW source builds
+	wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
+    add-apt-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8 main"
+    apt-get update
+    apt-get install -y llvm-8 llvm-8-dev
+	apt-get install -y clang-8
+
+	# install source build requirements
+    apt-get -y install cmake graphviz libpng-dev \
+    libprotobuf-dev ninja-build protobuf-compiler wget \
+    opencl-headers libgoogle-glog-dev python3 python3-pip python-pip \
+    libtbb-dev
+    apt-get clean
+
+	# set ubuntu to use newest c compilers
+    update-alternatives --config cc
+    update-alternatives --config c++
+
+%labels

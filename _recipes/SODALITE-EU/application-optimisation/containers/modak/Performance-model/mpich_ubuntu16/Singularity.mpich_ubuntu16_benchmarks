@@ -1,0 +1,204 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%help
+    This is the container used to run SODALITE (https://www.sodalite.eu/)
+    benchmarks for performance modelling (WP3).
+
+%labels
+    Author cerl@cray.com --  Cray EMEA Research Lab
+    Version v0.1.0
+
+%environment
+    export BINDIR=/usr/local/benchmarks/bin
+
+    # Taken MPI parameters
+    export MYRANK=$(${BINDIR}/mpirank | cut -d':' -f 1)
+    export NPROCS=$(${BINDIR}/mpirank | cut -d':' -f 2)
+
+    # Ignore inputs if multiple ranks are recongnized
+    if test ${NPROCS} -eq 1; then
+	if test ! -z ${NP+x}; then
+	    export NPROCS=${NP}
+	    export RUNCMD="mpiexec -np ${NPROCS}"
+	fi
+    fi
+
+%setup
+    mkdir ${SINGULARITY_ROOTFS}/usr/local/benchmarks
+    mkdir ${SINGULARITY_ROOTFS}/usr/local/benchmarks/config
+
+%runscript
+    trace()
+    {
+	if test ${MYRANK} -eq 0; then
+	    echo $@
+	fi
+    }
+
+    timestamp=${timestamp:-$(date '+%Y%m%d%H%M')}
+    filelabel=${filelabel:-"ranks${NPROCS}"}
+    maindir=${PWD}
+    rundir=${rundir:-${maindir}}
+    trace "NPROCS:" ${NPROCS}
+    trace "Label file:" ${filelabel}
+    trace "Rundir:" ${rundir}
+
+    run_hpcc()
+    {
+	trace "Run:" ${RUNCMD} ${BINDIR}/hpcc
+	if test ${MYRANK} -eq 0; then
+	    # Delete previous HPCC output
+	    rm -f hpccoutf.txt
+	    # Check if there is an input file in the local directory, otherwise take the default on
+	    if test -e ${maindir}/hpccinf.txt; then
+		infdir="${maindir}"
+	    else
+		infdir="/usr/local/benchmarks/config"
+	    fi
+	    cmp -s ${infdir}/hpccinf.txt ${rundir}/hpccinf.txt || cp ${infdir}/hpccinf.txt ${rundir}/hpccinf.txt
+	fi
+	trace "Inf file: " ${infdir}/hpccinf.txt
+	${RUNCMD} ${BINDIR}/hpcc
+	if test ${MYRANK} -eq 0; then
+	    # Rename HPCC output
+	    if test -f hpccoutf.txt; then
+		mv hpccoutf.txt ${maindir}/results/${filelabel}___${timestamp}___hpccoutf.txt
+	    else
+		trace "Exit with error!"
+		exit 1
+	    fi
+	fi
+    }
+
+    run_beffio()
+    {
+	TOTMEM=`free -m | grep Mem | awk '{print $2}'`
+	COREMEM=$(( TOTMEM / $(getconf _NPROCESSORS_ONLN) ))
+	if test -e ${maindir}/beffio_flags.txt; then
+	    flagsdir="${maindir}"
+	else
+	    flagsdir="/usr/local/benchmarks/config"
+	fi
+	BEFFFLAGS="${flagsdir}/beffio_flags.txt"
+	trace "Flags file: " ${BEFFFLAGS}
+	BEFFIOCMD="-MB ${COREMEM} -MT ${TOTMEM} $(cat ${BEFFFLAGS}) -N ${NPROCS} -f ${filelabel}___${timestamp}___b_eff_io"
+	trace "Run:" ${RUNCMD} ${BINDIR}/b_eff_io ${BEFFIOCMD}
+	${RUNCMD} ${BINDIR}/b_eff_io ${BEFFIOCMD}
+	if test ${MYRANK} -eq 0; then
+	    if test -f ${filelabel}___${timestamp}___b_eff_io.prot -a -f ${filelabel}___${timestamp}___b_eff_io.sum; then
+		mv ${filelabel}___${timestamp}___b_eff_io.prot ${filelabel}___${timestamp}___b_eff_io.sum ${maindir}/results
+	    else
+		trace "Exit with error!"
+		exit 1
+	    fi
+	fi
+    }
+
+    cd ${rundir}
+
+    case "${APP}" in
+	hpcc)
+	    run_hpcc
+	    ;;
+	beffio)
+	    run_beffio
+	    ;;
+	*)
+	    # Run all apps
+	    run_hpcc
+	    run_beffio
+	    ;;
+    esac
+
+    cd ${maindir}
+
+
+%files
+    # Copy ARCH file to compile HPCC
+    # Based on https://github.com/hpc-uk/archer-benchmarks/blob/master/synth/HPCC/Make_arch/Athena/Make.athena_gcc
+    Make.Linux /usr/local/benchmarks/
+
+    # Copy C program to check MPI rank
+    mpirank.c /usr/local/benchmarks
+
+    # Copy configuration files
+    beffio_flags.txt /usr/local/benchmarks/config
+    hpccinf.txt /usr/local/benchmarks/config
+
+%post
+    #
+    # Binary directory
+    #
+    export BINDIR=/usr/local/benchmarks/bin
+    mkdir -p ${BINDIR}
+
+    #
+    # First install default packages and clean caches
+    #
+    apt-get update && apt-get -y upgrade --no-install-recommends
+    apt-get -y install --no-install-recommends \
+                       build-essential wget less gfortran procps \
+		       libopenblas-dev locales ca-certificates \
+		       libxpm4 libxext6 libfreetype6 libxft2 \
+		       libtiff5 \
+		       python
+
+    apt-get clean && rm -rf /var/lib/apt/lists/* # do not forget to clean!
+
+    #
+    # Move inside build directory
+    #
+    cd /usr/local/benchmarks
+
+    #
+    # Install MPICH
+    #
+    export MPICH_VERSION=3.3.1
+    wget -q http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz
+    tar xf mpich-${MPICH_VERSION}.tar.gz && rm mpich-${MPICH_VERSION}.tar.gz
+    cd mpich-${MPICH_VERSION}
+    ./configure --prefix=/usr/local --disable-static --disable-rpath --disable-wrapper-rpath \
+                --mandir=/usr/share/man --enable-fast=all,O3
+    make -j$(getconf _NPROCESSORS_ONLN) install
+    ldconfig
+    cd .. && rm -rf mpich-${MPICH_VERSION}
+
+    #
+    # Install HPCC (https://icl.cs.utk.edu/hpcc/)
+    #
+    export HPCC_VERSION=1.5.0
+    wget http://icl.cs.utk.edu/projectsfiles/hpcc/download/hpcc-${HPCC_VERSION}.tar.gz
+    tar xf hpcc-${HPCC_VERSION}.tar.gz && rm hpcc-${HPCC_VERSION}.tar.gz
+    cd hpcc-${HPCC_VERSION}
+    # Move Arch file
+    mv ../Make.Linux hpl/
+    make arch=Linux
+    cp /usr/local/benchmarks/hpcc-${HPCC_VERSION}/hpcc ${BINDIR}
+    cd .. && rm -rf hpcc-${HPCC_VERSION}
+
+    #
+    # Install b_eff_io (https://fs.hlrs.de/projects/par/mpi//b_eff_io/)
+    #
+    export BEFFIO_VERSION=2.1
+    wget --no-check-certificat https://fs.hlrs.de/projects/par/mpi//b_eff_io/b_eff_io_v${BEFFIO_VERSION}.tar.gz
+    tar xf b_eff_io_v${BEFFIO_VERSION}.tar.gz && rm b_eff_io_v${BEFFIO_VERSION}.tar.gz
+    cd b_eff_io
+    mpicc -o ${BINDIR}/b_eff_io b_eff_io.c -lm
+    cp -r eps ${BINDIR}/b_eff_io_eps
+    cd .. && rm -rf b_eff_io
+
+    #
+    # Compile program to get MPI rank
+    #
+    mpicc /usr/local/benchmarks/mpirank.c -o ${BINDIR}/mpirank
+
+    # Install ROOT for analysis
+    export ROOTVER=root_v6.20.04.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
+    wget -q https://root.cern/download/${ROOTVER}
+    tar xf ${ROOTVER} && rm ${ROOTVER}
+    echo 'export ROOTSYS=/usr/local/benchmarks/root' >> /.singularity.d/env/90-local.sh
+    echo 'export PATH=${ROOTSYS}/bin:$PATH' >> /.singularity.d/env/90-local.sh
+    echo 'export LD_LIBRARY_PATH=${ROOTSYS}/lib:${LD_LIBRARY_PATH}' >> /.singularity.d/env/90-local.sh
+
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen

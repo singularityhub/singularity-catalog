@@ -1,0 +1,98 @@
+BootStrap: docker
+From: ubuntu:20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    SourceDockerfile https://github.com/nipreps/fmriprep/blob/master/Dockerfile
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm /bin/sh
+    ln -s /bin/bash /bin/sh
+    /bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        cmake \
+        git \
+        locales \
+        python2.7 \
+        software-properties-common \
+        wget
+    rm -rf /var/lib/apt/lists/*
+
+# GNU compiler
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++-10 \
+        gcc-10 \
+        gfortran-10
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    update-alternatives --install /usr/bin/g++ g++ $(which g++-10) 30
+    update-alternatives --install /usr/bin/gcc gcc $(which gcc-10) 30
+    update-alternatives --install /usr/bin/gcov gcov $(which gcov-10) 30
+    update-alternatives --install /usr/bin/gfortran gfortran $(which gfortran-10) 30
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+# Anaconda
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp http://repo.anaconda.com/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh
+    bash /var/tmp/Miniconda3-py38_4.8.3-Linux-x86_64.sh -b -p /usr/local/anaconda
+    /usr/local/anaconda/bin/conda init
+    ln -s /usr/local/anaconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+    /usr/local/anaconda/bin/conda clean -afy
+    rm -rf /var/tmp/Miniconda3-py38_4.8.3-Linux-x86_64.sh
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/anaconda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/anaconda/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/anaconda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/anaconda/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/anaconda/bin:$PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/anaconda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/anaconda/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/anaconda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/anaconda/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/anaconda/bin:$PATH
+
+%post
+    cd /
+    wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py
+    mkdir -p /usr/local/fsl
+    python2.7 fslinstaller.py -d /usr/local/fsl/ -V 5.0.9 -q
+    rm fslinstaller.py
+
+# https://github.com/ANTsX/ANTs.git
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch v2.3.6 https://github.com/ANTsX/ANTs.git ANTs && cd -
+    mkdir -p /var/tmp/ANTs/build && cd /var/tmp/ANTs/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local/ants /var/tmp/ANTs
+    cmake --build /var/tmp/ANTs/build --target all -- -j$(nproc)
+    cmake --build /var/tmp/ANTs/build --target install -- -j$(nproc)
+    rm -rf /var/tmp/ANTs

@@ -1,0 +1,117 @@
+BootStrap: docker
+From: nvcr.io/nvidia/cuda:11.0-devel-ubuntu20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+# Toolchain installation translated from https://github.com/cp2k/cp2k/
+# blob/master/tools/toolchain/Dockerfile.cuda_mkl
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        gfortran \
+        git \
+        libmpich-dev \
+        mpich \
+        python-dev \
+        software-properties-common
+    rm -rf /var/lib/apt/lists/*
+
+# Python
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python \
+        python3
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    git clone --depth 1 --branch v8.1.0 https://github.com/cp2k/cp2k.git /cp2k
+    cd /cp2k
+    git submodule update --init --recursive
+
+%post
+    cd /
+    /cp2k/tools/toolchain/install_requirements_ubuntu.sh
+
+%environment
+    export CUDA_PATH=/usr/local/cuda
+    export CXX_INCLUDE_PATH=/usr/local/cuda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
+    export MKLROOT=/opt/intel/compilers_and_libraries/linux/mkl
+    export PATH=/usr/local/cuda/bin:$PATH
+%post
+    export CUDA_PATH=/usr/local/cuda
+    export CXX_INCLUDE_PATH=/usr/local/cuda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
+    export MKLROOT=/opt/intel/compilers_and_libraries/linux/mkl
+    export PATH=/usr/local/cuda/bin:$PATH
+
+# MKL version 2020.0-088
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        apt-transport-https \
+        ca-certificates \
+        gnupg \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    wget -qO - https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB | apt-key add -
+    echo "deb https://apt.repos.intel.com/mkl all main" >> /etc/apt/sources.list.d/hpccm.list
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        intel-mkl-64bit-2020.0-088
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    echo "source /opt/intel/mkl/bin/mklvars.sh intel64" >> /etc/bash.bashrc
+
+%post
+    cd /
+    mkdir -p /opt/cp2k-toolchain
+    cd /opt/cp2k-toolchain
+
+%post
+    cd /
+    cd /opt/cp2k-toolchain
+    mkdir scripts && cp -r /cp2k/tools/toolchain/scripts/* ./scripts/
+    cp /cp2k/tools/toolchain/install_cp2k_toolchain.sh .
+
+%post
+    cd /
+    cd /opt/cp2k-toolchain
+    ./install_cp2k_toolchain.sh --mpi-mode=mpich --math-mode=mkl --with-reflapack=no --with-scalapack=no --with-elpa=no --gpu-ver=V100
+    rm -rf ./build
+
+%post
+    cd /
+    cp /opt/cp2k-toolchain/install/arch/* /cp2k/arch/
+    cd /cp2k
+    sed  's/source /. /g' /opt/cp2k-toolchain/install/setup > /opt/cp2k-toolchain/install/setup 
+    . /opt/cp2k-toolchain/install/setup
+    make ARCH=local VERSION="psmp" | tee /var/tmp/log.txt
+
+%environment
+    export PATH=/cp2k/exe/local:$PATH
+%post
+    export PATH=/cp2k/exe/local:$PATH
+
+%post
+    cd /
+    ln -s /usr/lib/x86_64-linux-gnu/libncursesw.so.6 /usr/lib/x86_64-linux-gnu/libncursesw.so.5
+    ln -s /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5
+
+%environment
+    export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH
+%post
+    export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH

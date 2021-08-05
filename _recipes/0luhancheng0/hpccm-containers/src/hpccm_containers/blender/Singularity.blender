@@ -1,0 +1,123 @@
+BootStrap: docker
+From: ubuntu:20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm -f /bin/sh && ln -s /bin/bash /bin/sh
+    rm -f /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
+    /bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        locales \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+# Installing vglrun and TurboVNC
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        libgdal-dev \
+        mesa-utils \
+        pyqt5-dev \
+        python3-pip \
+        python3-pyqt5 \
+        python3-tk \
+        python3.8-dev \
+        ubuntu-desktop \
+        vim
+    rm -rf /var/lib/apt/lists/*
+
+%environment
+    export CPATH=/usr/include/gdal:/usr/include/python3.7:$CPATH
+    export PYTHONPATH=/usr/lib/python3.8/
+%post
+    export CPATH=/usr/include/gdal:/usr/include/python3.7:$CPATH
+    export PYTHONPATH=/usr/lib/python3.8/
+
+%post
+    cd /
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/turbovnc_2.2.5_amd64.deb && dpkg -i turbovnc_2.2.5_amd64.deb && rm turbovnc_2.2.5_amd64.deb
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/virtualgl_2.6.4_amd64.deb && dpkg -i virtualgl_2.6.4_amd64.deb && rm virtualgl_2.6.4_amd64.deb
+    apt update
+    apt -y upgrade
+
+# GNU compiler
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends software-properties-common
+    apt-add-repository ppa:ubuntu-toolchain-r/test -y
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++-10 \
+        gcc-10 \
+        gfortran-10
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    update-alternatives --install /usr/bin/g++ g++ $(which g++-10) 30
+    update-alternatives --install /usr/bin/gcc gcc $(which gcc-10) 30
+    update-alternatives --install /usr/bin/gcov gcov $(which gcov-10) 30
+    update-alternatives --install /usr/bin/gfortran gfortran $(which gfortran-10) 30
+
+# https://ftp.nluug.nl/pub/graphics/blender/release/Blender2.92/blender-2.92.0-linux64.tar.xz
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://ftp.nluug.nl/pub/graphics/blender/release/Blender2.92/blender-2.92.0-linux64.tar.xz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/blender-2.92.0-linux64.tar.xz -C /var/tmp -J
+    mkdir -p /usr/local/blender
+    cd /var/tmp/blender-2.92.0-linux64
+    mv * /usr/local/blender
+    rm -rf /var/tmp/blender-2.92.0-linux64 /var/tmp/blender-2.92.0-linux64.tar.xz
+
+%environment
+    export LD_LIBRARY_PATH=/usr/local/blender/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/blender:/usr/local/blender/2.92/python/bin:$PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/blender/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/blender:/usr/local/blender/2.92/python/bin:$PATH
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        libopenexr-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    cd /usr/local/blender/2.92/python/bin
+    ./python3.7m -m ensurepip
+    ./python3.7m -m pip install -U pip setuptools wheel numpy 2to3
+    ./python3.7m -m pip install -U opencv-python openexr bpycv
+    ./python3.7m -m pip install -U GDAL pyproj
+
+%post
+    cd /
+    wget https://github.com/domlysz/BlenderGIS/archive/refs/tags/225.zip && unzip 255.zip && rm -f 255.zip
+    mv BlenderGIS-255 /usr/local/blender/2.92/scripts/addons/
+
+%runscript
+    exec /usr/local/blender/blender-softwaregl "$@"

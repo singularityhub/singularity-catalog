@@ -1,0 +1,76 @@
+Bootstrap:docker
+From:nfcore/base
+
+%labels
+	MAINTAINER Per Brattås <per.brattas@med.lu.se>
+	DESCRIPTION Singularity container Cellranger-ATAC
+	VERSION 0.0.1
+
+%environment
+	PATH=/opt/cellranger-atac-2.0.0:/opt/bin:$PATH
+
+%files
+	/data/bnf/sw/bcl2fastq2-v2.20.0.422-Source.tar.gz /opt   
+	environment.yml /
+	
+%post
+	rm -rf /var/lib/apt/lists/*
+	apt -y clean
+	apt -y update
+	apt -y install libz-dev build-essential gettext cmake libxml2-dev libcurl4-openssl-dev libssl-dev make libbz2-dev libboost-dev python3-pip sudo unzip
+
+	mkdir -p /usr/share/man/man1
+	
+	sudo apt -y install default-jre
+
+	# set up conda 
+	/opt/conda/bin/conda env create -f /environment.yml
+	
+	#install latest multiqc 1.11dev
+	pip3 install --upgrade --force-reinstall git+https://github.com/ewels/MultiQC.git
+
+	# download/install fastqc
+	mkdir -p /opt/bin
+	cd /opt/bin/
+	wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
+	unzip fastqc_v0.11.9.zip
+	chmod -R 777 FastQC
+	cd -
+
+        ln -s /opt/bin/FastQC/fastqc /opt/bin/
+
+	cd /opt
+	
+	# download and install cellranger atac v2.0
+	wget -O cellranger-atac-2.0.0.tar.gz "https://cf.10xgenomics.com/releases/cell-atac/cellranger-atac-2.0.0.tar.gz?Expires=1628118222&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1hdGFjL2NlbGxyYW5nZXItYXRhYy0yLjAuMC50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MjgxMTgyMjJ9fX1dfQ__&Signature=MZ2mbdv9jci4JGTgBOcpouD4SKSApOrYKslqJqQ234vl2yXPOdBWZSIZZx8wd~giuvC4SlQ5QyL0mU7FSfWbjLU398cL5Ml83mklheFZt0eW7A8yH6K7uDSrwkZxHBVtu5LoZeKz5XinPkKChRC98yCiO9BcOkyRsunJwmTVhFLHLfgyjCAj0vVwWKhtpGwg05O5YnUVj8FSvvJqB6xODaj6TAgFhpxyfFoTTuSYCTuabne-~FF-SIayHB1nPKdqGRg9IXaPtoLoLb3VWK7ZsM3ibQk66rIPEtApu-tQOdlrTC02GKwDNedFpUy4TxFNEfGKXsl9hEfylIXz1YP~TQ__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"
+
+
+	tar -zxvf cellranger-atac-2.0.0.tar.gz
+
+	# Setup multiqc
+	pip3 install multiqc
+
+	# Setup bcl2fastq
+	export TMP=/tmp
+	export SOURCE=/tmp${TMP}/bcl2fastq
+	export BUILD=${TMP}/bcl2fastq2-v2.20.0-build
+	export INSTALL_DIR=${SINGULARITY_ROOTFS}/opt/bcl2fastq2-v2.20.0
+
+	mkdir -p /opt/bin
+        mkdir -p /opt/bcl2fastq
+        cd /opt/bcl2fastq
+        mkdir -p build
+
+	export C_INCLUDE_PATH=/usr/include/x86_64-linux-gnu
+
+	tar -xzvf /opt/bcl2fastq2-v2.20.0.422-Source.tar.gz
+        chmod ugo+x bcl2fastq/src/configure
+        chmod ugo+x bcl2fastq/src/cmake/bootstrap/installCmake.sh
+        cd build
+        ../bcl2fastq/src/configure --prefix=/opt/
+        make
+        make install
+
+
+
+	

@@ -1,0 +1,98 @@
+BootStrap: docker
+From: nvcr.io/nvidia/cuda:11.0-devel-ubuntu20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm /usr/bin/sh
+    ln -s /usr/bin/bash /usr/bin/sh
+    /usr/bin/bash
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/cuda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin:$PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/cuda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin:$PATH
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        locales \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+# Installing vglrun and TurboVNC
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        mesa-utils \
+        pyqt5-dev \
+        python3-pip \
+        python3-pyqt5 \
+        python3-tk \
+        ubuntu-desktop \
+        vim
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/turbovnc_2.2.5_amd64.deb && dpkg -i turbovnc_2.2.5_amd64.deb && rm turbovnc_2.2.5_amd64.deb
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/virtualgl_2.6.4_amd64.deb && dpkg -i virtualgl_2.6.4_amd64.deb && rm virtualgl_2.6.4_amd64.deb
+    apt update
+    apt -y upgrade
+
+# NVIDIA HPC SDK version 20.9
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        debianutils \
+        g++ \
+        gcc \
+        gfortran \
+        libatomic1 \
+        libnuma1 \
+        openssh-client \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc_2020_209_Linux_x86_64_cuda_multi.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/nvhpc_2020_209_Linux_x86_64_cuda_multi.tar.gz -C /var/tmp -z
+    cd /var/tmp/nvhpc_2020_209_Linux_x86_64_cuda_multi && NVHPC_ACCEPT_EULA=accept NVHPC_DEFAULT_CUDA=True NVHPC_INSTALL_DIR=/opt/nvidia/hpc_sdk NVHPC_SILENT=true ./install
+    rm -rf /var/tmp/nvhpc_2020_209_Linux_x86_64_cuda_multi /var/tmp/nvhpc_2020_209_Linux_x86_64_cuda_multi.tar.gz
+%environment
+    export LD_LIBRARY_PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nvshmem/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nccl/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/math_libs/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/mpi/lib:$LD_LIBRARY_PATH
+    export MANPATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/man:$MANPATH
+    export PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nvshmem/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nccl/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/profilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/mpi/bin:$PATH
+%post
+    export LD_LIBRARY_PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nvshmem/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nccl/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/math_libs/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/mpi/lib:$LD_LIBRARY_PATH
+    export MANPATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/man:$MANPATH
+    export PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nvshmem/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nccl/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/profilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/mpi/bin:$PATH

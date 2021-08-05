@@ -1,0 +1,94 @@
+BootStrap: docker
+From: ubuntu:20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm -f /bin/sh && ln -s /bin/bash /bin/sh
+    rm -f /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
+    /bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        locales \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        binutils-dev \
+        bison \
+        clang \
+        cmake \
+        flex \
+        fuse3 \
+        g++ \
+        libarchive-dev \
+        libboost-context-dev \
+        libboost-filesystem-dev \
+        libboost-program-options-dev \
+        libboost-python-dev \
+        libboost-regex-dev \
+        libboost-system-dev \
+        libboost-thread-dev \
+        libdouble-conversion-dev \
+        libdwarf-dev \
+        libelf-dev \
+        libevent-dev \
+        libfmt-dev \
+        libfuse3-dev \
+        libgoogle-glog-dev \
+        libiberty-dev \
+        libjemalloc-dev \
+        liblz4-dev \
+        liblzma-dev \
+        libssl-dev \
+        libunwind-dev \
+        make \
+        pkg-config \
+        ronn
+    rm -rf /var/lib/apt/lists/*
+
+# https://github.com/mhx/dwarfs.git
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch v0.5.5 --recursive https://github.com/mhx/dwarfs.git dwarfs && cd -
+    mkdir -p /var/tmp/dwarfs/build && cd /var/tmp/dwarfs/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local/dwarfs -D WITH_TESTS=1 /var/tmp/dwarfs
+    cmake --build /var/tmp/dwarfs/build --target all -- -j$(nproc)
+    cmake --build /var/tmp/dwarfs/build --target install -- -j$(nproc)
+    rm -rf /var/tmp/dwarfs
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/dwarfs/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/dwarfs/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/dwarfs/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/dwarfs/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/dwarfs/bin:$PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/dwarfs/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/dwarfs/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/dwarfs/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/dwarfs/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/dwarfs/bin:$PATH

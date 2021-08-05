@@ -1,0 +1,23 @@
+BootStrap: shub
+From: Characterisation-Virtual-Laboratory/CharacterisationVL-Software:2004
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+# https://github.com/lh3/seqtk.git
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch v1.3 https://github.com/lh3/seqtk.git seqtk && cd -
+    cd /var/tmp/seqtk
+    make
+    cd /var/tmp/seqtk
+    mkdir -p /usr/local/seqtk/bin && cp seqtk /usr/local/seqtk/bin/
+    rm -rf /var/tmp/seqtk
+
+%environment
+    export PATH=/usr/local/seqtk/bin:$PATH
+%post
+    export PATH=/usr/local/seqtk/bin:$PATH

@@ -1,0 +1,21 @@
+BootStrap: shub
+From: Characterisation-Virtual-Laboratory/CharacterisationVL-Software:2004
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+# https://github.com/DerrickWood/kraken2.git
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch v2.1.1 https://github.com/DerrickWood/kraken2.git kraken2 && cd -
+    cd /var/tmp/kraken2
+    ./install_kraken2.sh /usr/local/kraken2
+    rm -rf /var/tmp/kraken2
+
+%environment
+    export PATH=/usr/local/kraken2/bin:$PATH
+%post
+    export PATH=/usr/local/kraken2/bin:$PATH

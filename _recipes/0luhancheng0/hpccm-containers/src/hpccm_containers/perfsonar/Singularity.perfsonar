@@ -1,0 +1,57 @@
+BootStrap: docker
+From: ubuntu:18.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm /usr/bin/sh
+    ln -s /usr/bin/bash /usr/bin/sh
+    /usr/bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        locales \
+        software-properties-common \
+        wget
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+%post
+    cd /
+    cd /etc/apt/sources.list.d/
+    wget http://downloads.perfsonar.net/debian/perfsonar-release.list
+    wget -qO - http://downloads.perfsonar.net/debian/perfsonar-official.gpg.key | apt-key add -
+    add-apt-repository -y universe
+    apt-get update
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        perfsonar-centralmanagement \
+        perfsonar-core \
+        perfsonar-testpoint \
+        perfsonar-toolkit \
+        perfsonar-tools
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    /usr/lib/perfsonar/scripts/install-optional-packages.py

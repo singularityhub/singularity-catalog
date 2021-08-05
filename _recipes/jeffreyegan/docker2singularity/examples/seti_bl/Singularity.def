@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: nvidia/cuda:11.2.2-devel-ubuntu20.04
+Stage: spython-base
+
+%labels
+description="SETI Breakthrough Listen Pytorch CNN Container"
+version="0.1.0"
+%post
+
+apt-get update && \
+apt-get install -y --no-install-recommends \
+python3-dev \
+python3-pip \
+python3-venv \
+python3-wheel \
+python3-setuptools \
+git && \
+rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+
+pip3 install --no-cache-dir -U install setuptools pip
+pip3 install --no-cache-dir "cupy-cuda112==8.6.0" \
+numba numpy scipy torch opencv-python-headless jupyter fastai tqdm timm pandas sklearn
+
+update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+
+cd /SETI
+%runscript
+cd /SETI
+exec /bin/bash python seti_bl_pytorch_cnn.py "$@"
+%startscript
+cd /SETI
+exec /bin/bash python seti_bl_pytorch_cnn.py "$@"

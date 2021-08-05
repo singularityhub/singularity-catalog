@@ -1,0 +1,47 @@
+BootStrap: docker
+From: modakopt/modak:ubuntu-18-04
+
+%environment
+PATH=$PATH:/opt/anaconda3/bin
+export PATH
+
+%post
+
+	# install anaconda3 as required by torch source
+	cd home
+	wget https://repo.anaconda.com/archive/Anaconda3-2019.10-Linux-x86_64.sh
+	bash Anaconda3-2019.10-Linux-x86_64.sh -b -p /opt/anaconda3
+
+	# enable anaconda in bash environment
+	touch /home/.bashrc
+	echo "PATH=/opt/anaconda3/bin:\$PATH" >> /home/.bashrc
+	echo "export PATH" >> /home/.bashrc
+	rm Anaconda3-2019.10-Linux-x86_64.sh 
+	. /home/.bashrc
+
+	# install additional required packages via anaconda
+	cd /home
+	conda install numpy ninja pyyaml mkl mkl-include setuptools cmake cffi typing
+
+	#set to no cuda installation
+	export USE_CUDA=0
+
+	# Get pytorch source
+	git clone --recursive https://github.com/pytorch/pytorch
+	cd pytorch
+	export CMAKE_PREFIX_PATH=${CONDA_PREFIX:-"$(dirname $(which conda))/../"}
+	pip3 install numpy ninja pyyaml mkl mkl-include setuptools cmake cffi typing
+	python3 setup.py install
+
+	# Get torchvision source
+	cd ../
+	git clone --recursive https://github.com/pytorch/vision
+	cd vision
+	python3 setup.py install
+
+	# Get pytorch examples
+	cd ../
+	git clone --recursive https://github.com/pytorch/examples
+
+%labels
+    Author nina, karthee
