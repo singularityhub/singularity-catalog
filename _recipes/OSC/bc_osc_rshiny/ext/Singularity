@@ -1,0 +1,28 @@
+BootStrap: docker
+From: openresty/openresty:1.13.6.1-2-alpine
+
+%labels
+  Maintainer Ohio Supercomputer Center
+  Resty_Version 1.13.6.1
+  Image_Version 2
+  Image_Flavor alpine
+  Lua_Resty_Session_Version 2.22
+
+%help
+  This will run OpenResty - a dynamic web platform based on NGINX and LuaJIT
+
+%runscript
+  exec nginx "${@}"
+
+%post
+  export LUA_RESTY_SESSION_VERSION="v2.22"
+
+  #
+  # Install lua-resty-session
+  #
+
+  export BUILD_ROOT="$(mktemp -d)"
+  wget -O - https://github.com/bungle/lua-resty-session/archive/${LUA_RESTY_SESSION_VERSION}.tar.gz \
+    | tar xzf - -C "${BUILD_ROOT}" --strip-components=1
+  cp -r "${BUILD_ROOT}/lib/resty/." "/usr/local/openresty/lualib/resty"
+  rm -fr "${BUILD_ROOT}"
