@@ -14,13 +14,14 @@ From: osrf/ros:kinetic-desktop-full
     export LANG=C.UTF-8 LC_ALL=C.UTF-8
 
     # Set ROS vars
-    export ROS_DISTRO=noetic
+    export ROS_DISTRO=kinetic
     export ROBOT_IP="172.16.0.2"
-    export ROS_MASTER_URI="http://${ROBOT_IP}:11311"
-    machine_ip=(`hostname -I | grep ${ROBOT_IP%.*}`)
-    export ROS_IP=${machine_ip[0]}
+    robot_net_base=`echo ${ROBOT_IP} | sed 's/\.[0-9]*$//'`
+    machine_ip=`hostname -I | grep -oh "${robot_net_base}.[0-9]*"`
+    export ROS_MASTER_URI="http://${machine_ip}:11311"
+    export ROS_IP=${machine_ip}
 %post
-    # Install system package dependencies
+    # Install extra system package dependencies
     apt update --fix-missing
     apt install -q -y \
         vim \

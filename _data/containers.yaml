@@ -1,9 +1,9 @@
 bases:
-- count: 761
+- count: 763
   name: ubuntu
 - count: 239
   name: nvidia/cuda
-- count: 175
+- count: 176
   name: debian
 - count: 118
   name: centos
@@ -45,7 +45,7 @@ bases:
   name: busybox
 - count: 16
   name: ezlabgva/busco
-- count: 14
+- count: 15
   name: osrf/ros
 - count: 13
   name: nvcr.io/nvidia/pytorch
@@ -86,6 +86,8 @@ bases:
 - count: 7
   name: jekriske/r-base
 - count: 7
+  name: tpall/singularity-r
+- count: 7
   name: pytorch/pytorch
 - count: 7
   name: ghcr.io/mkandes/naked-singularity
@@ -97,8 +99,6 @@ bases:
   name: provarepro/mlperf_inference
 - count: 6
   name: vitchyr/railrl-torch4cuda9
-- count: 6
-  name: tpall/singularity-r
 - count: 6
   name: bud42/fs6
 - count: 6
@@ -148,8 +148,6 @@ bases:
 - count: 4
   name: danabl/glimslib
 - count: 4
-  name: letaylor/sc_qc_cluster
-- count: 4
   name: golang
 - count: 4
   name: finalduty/archlinux
@@ -179,8 +177,6 @@ bases:
   name: registry.gitlab.com/rode0day/fuzzer-testing/honggfuzz_runner
 - count: 3
   name: thomasrobinson/centos7-netcdff
-- count: 3
-  name: intel_netcdf_ubuntu.sif
 - count: 3
   name: rocker/tidyverse
 - count: 3
@@ -225,6 +221,8 @@ bases:
   name: icbi/quantiseq2
 - count: 2
   name: quay.io/biocontainers/bamtools
+- count: 2
+  name: quay.io/biocontainers/spades
 - count: 2
   name: perl
 - count: 2
@@ -295,6 +293,8 @@ bases:
   name: registry.gitlab.com/rode0day/fuzzer-testing/angora_runner
 - count: 2
   name: registry.gitlab.com/rode0day/fuzzer-testing/qsym_runner
+- count: 2
+  name: intel_netcdf_ubuntu.sif
 - count: 2
   name: postgres
 - count: 2
@@ -432,8 +432,6 @@ bases:
 - count: 1
   name: quay.io/biocontainers/cutadapt
 - count: 1
-  name: quay.io/biocontainers/spades
-- count: 1
   name: quay.io/biocontainers/blast
 - count: 1
   name: staphb/prokka
@@ -550,6 +548,8 @@ bases:
 - count: 1
   name: weatherhub/metview
 - count: 1
+  name: letaylor/sc_qc_cluster
+- count: 1
   name: thakk/bioinformatics
 - count: 1
   name: anair17/railrl-hand-v1a
@@ -612,6 +612,8 @@ bases:
 - count: 1
   name: maplesond/portcullis
 - count: 1
+  name: intel2021.2_netcdfc4.7.4_ubuntu.sif
+- count: 1
   name: danabl/meshtool
 - count: 1
   name: nipy/heudiconv
@@ -655,6 +657,8 @@ bases:
   name: multiphenics/multiphenics
 - count: 1
   name: theasp/emacs
+- count: 1
+  name: rbartelme/anvio-pangenomics
 - count: 1
   name: default/centos
 - count: 1
@@ -974,11 +978,11 @@ bases:
 - count: 1
   name: conda/conda_4.9.1.img
 bootstraps:
-- count: 2449
+- count: 2452
   name: docker
 - count: 251
   name: debootstrap
-- count: 234
+- count: 235
   name: shub
 - count: 160
   name: library
@@ -1222,6 +1226,8 @@ orgs:
 - count: 1
   name: weatherhub
 - count: 1
+  name: letaylor
+- count: 1
   name: thakk
 - count: 1
   name: scr.svc.stanford.edu
@@ -1294,6 +1300,8 @@ orgs:
 - count: 1
   name: theasp
 - count: 1
+  name: rbartelme
+- count: 1
   name: default
 - count: 1
   name: jncc
@@ -1329,8 +1337,6 @@ orgs:
   name: nipype
 - count: 1
   name: ncbi
-- count: 1
-  name: letaylor
 - count: 1
   name: deeplearnphysics
 - count: 1
@@ -1528,8 +1534,8 @@ orgs:
 - count: 1
   name: semc
 tags:
-  latest: 253
-  other: 2243
+  latest: 251
+  other: 2249
 versions:
   APPIAN-PET/APPIAN:
     ants: 1
@@ -1769,6 +1775,7 @@ versions:
     bullseye-slim: 1
     buster: 58
     buster-20200908-slim: 2
+    buster-20201012: 1
     buster-slim: 16
     jessie: 7
     jessie-slim: 4
@@ -1917,8 +1924,9 @@ versions:
   ikester/blender:
     '2.82': 1
   intel/oneapi-hpckit:
+    2021.2-devel-ubuntu18.04: 1
     devel-centos8: 1
-    devel-ubuntu18.04: 3
+    devel-ubuntu18.04: 2
   intelpython/intelpython2_full:
     latest: 1
   java:
@@ -1983,7 +1991,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 4
+    latest: 1
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2234,7 +2242,7 @@ versions:
     '15.1': 1
   osrf/ros:
     kinetic-desktop-full: 3
-    melodic-desktop-full: 6
+    melodic-desktop-full: 7
     noetic-desktop-full: 5
   pangeo/pangeo-notebook:
     latest: 1
@@ -2391,6 +2399,7 @@ versions:
     8.2.9--h516909a_3: 1
   quay.io/biocontainers/spades:
     3.14.1--h2d02072_0: 1
+    3.15.3--h95f258a_0: 1
   quay.io/biocontainers/star:
     2.7.6a--0: 1
   quay.io/biocontainers/uropa:
@@ -2425,6 +2434,8 @@ versions:
     latest: 2
   rapidsai/rapidsai:
     cuda11.0-runtime-ubuntu18.04-py3.7: 1
+  rbartelme/anvio-pangenomics:
+    latest: 1
   registry:
     2.7.1: 1
   registry.gitlab.com/fuzzing/directed-fuzzing/llvm-12:
@@ -2597,7 +2608,7 @@ versions:
     v0.4.3: 1
   tpall/singularity-r:
     3.6.3: 2
-    4.0.3: 3
+    4.0.3: 4
     latest: 1
   trinityctat/fusioninspector:
     2.3.0: 1
@@ -2618,10 +2629,10 @@ versions:
     '14.04': 10
     '16.04': 116
     '17.04': 6
-    '18.04': 162
+    '18.04': 163
     '19.04': 7
     '19.10': 4
-    '20.04': 136
+    '20.04': 137
     '20.10': 1
     '21.04': 1
     artful: 1

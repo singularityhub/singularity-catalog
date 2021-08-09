@@ -1,0 +1,440 @@
+bootstrap: docker
+from: debian:buster-20201012
+
+%help
+    Contains:
+        - subread 2.0.1
+        - bcl2fastq 2.20.0
+        - htslib 1.11
+        - samtools 1.11
+        - bcftools 1.11
+        - bedtools 2.29.2
+        - bwa 0.7.17
+        - bowtie 1.3.0
+        - bowtie2 2.4.2
+        - STAR 2.7.7a
+        - fastqc 0.11.9
+        - fastq_screen 0.14.1
+        - picardtools 2.23.8
+        - gmap/gsnap 2020-12-17
+        - snakemake 5.32.1
+        - multiqc 1.9
+    Run directly invokes samtools
+
+%labels
+    Version 1.0.0
+    Maintainer Andreas Petzold, andreas.petzold@tu-dresden.de    
+
+
+%environment
+    export PATH="/opt/bin:/opt/conda/bin:${PATH}"
+    export LD_LIBRARY_PATH="/opt/lib:${LD_LIBRARY_PATH}"
+
+%setup
+    # if bcl2fastq source is passed via BCL2FASTQ_SOURCE, copy it; otherwise it will be built from conda/mamba
+    if [ -f "${BCL2FASTQ_SOURCE}" ]
+    then
+      cp ${BCL2FASTQ_SOURCE} ${SINGULARITY_ROOTFS}/opt/bcl2fastq.zip
+    else
+      echo "IMPORTANT: BCL2FASTQ_SOURCE variable not defined, bcl2fastq will not be built from source but obtained from conda/mamba. However, this may not be the most recent version!"
+    fi
+    # if cellranger source is passed via CELLRANGER_SOURCE, copy it
+    if [ -f "${CELLRANGER_SOURCE}" ]
+    then
+      cp ${CELLRANGER_SOURCE} ${SINGULARITY_ROOTFS}/opt/cellranger.tar.gz
+    else
+      echo "IMPORTANT: CELLRANGER_SOURCE variable not defined, cellranger will not be available!"
+    fi
+
+%post
+    set -eu
+    
+    # the linux command 'make' supports the compilation of independent targets in parallel; this is also passed to R 'install.packages' since it uses 'make' internally
+    COMPILE_CPUS=4
+    
+    # deactive interactive dialogs
+    export DEBIAN_FRONTEND=noninteractive
+    
+    # install and reconfigure locale
+    apt-get clean && apt-get update -y && apt-get upgrade -y
+    apt-get install -y locales
+    apt-get clean
+    export LANGUAGE="en_US.UTF-8"
+    export LANG="en_US.UTF-8"
+    export LC_ALL="en_US.UTF-8"
+    echo "LC_ALL=en_US.UTF-8" >> /etc/environment
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    echo "LANG=en_US.UTF-8" > /etc/locale.conf
+    locale-gen --purge en_US.UTF-8
+    dpkg-reconfigure --frontend=noninteractive locales
+    
+    # install basic system tools and libs
+    apt-get clean && apt-get update -y && apt-get upgrade -y
+    apt-get install -y build-essential gnupg2 software-properties-common  wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl
+    apt-get clean
+        
+    # this is where the binaries go
+    mkdir -p /opt/bin
+    
+    # this is for bcl2fastq (https://sarahpenir.github.io/linux/Installing-bcl2fastq/)
+    mkdir -p /usr/include/sys
+    ln -s /usr/include/x86_64-linux-gnu/sys/stat.h /usr/include/sys/stat.h
+
+    ####################
+    # R and R packages #
+    ####################
+    
+    # Install R v4 from source since apt-get does not work
+    R_VERSION=4.0.4
+    cd /opt && wget -O R-${R_VERSION}.tar.gz -nv https://cran.rstudio.com/src/base/R-4/R-${R_VERSION}.tar.gz && \
+    tar -zxf R-${R_VERSION}.tar.gz  && \
+    cd R-${R_VERSION} && \
+    ./configure --prefix=/opt/R/${R_VERSION} --enable-memory-profiling --enable-R-shlib --with-blas --with-lapack --with-readline --with-pcre2 --with-tcltk --with-cairo --with-libpng --with-jpeglib --with-libtiff && \
+    make -j $COMPILE_CPUS -k && \
+    make install && \
+    ln -s /opt/R/${R_VERSION}/bin/R /opt/bin/R && \
+    ln -s /opt/R/${R_VERSION}/bin/Rscript /opt/bin/Rscript && \
+    cd /opt && \
+    rm -r R-${R_VERSION}.tar.gz R-${R_VERSION}
+    
+
+    # CRAN packages
+	# --no-init-file prevents R from loading user settings since all should be independent from the user
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'install.packages("tidyverse", repos="http://cran.r-project.org", Ncpus='"$COMPILE_CPUS"')'
+    ## tidyverse contains:  broom,cli,crayon,dbplyr,dplyr,forcats,ggplot2,haven,hms,httr,jsonlite,lubridate,magrittr,modelr,pillar,purrr,readr,readxl,reprex,rlang,rstudioapi,rvest,stringr,tibble,tidyr,xml2,tidyverse
+    
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'install.packages(c("reshape2","plyr","scales","gridExtra","ggrepel","data.table","R.utils","openxlsx","WriteXLS","hwriter","factoextra","pheatmap","RColorBrewer","PoiClaClu","knitr","devtools","remotes","cowplot","patchwork","ggsci","ggpubr","ggthemes","argparse","pander","shiny","shinydashboard","shinythemes","shinyjs","reticulate","enrichR","future","Matrix","glmGamPoi","kableExtra","sessioninfo"), repos="http://cran.r-project.org", Ncpus='"$COMPILE_CPUS"')'
+
+    # Bioconductor packages
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'if (!requireNamespace("BiocManager",quietly=TRUE)) install.packages("BiocManager", repos="http://cran.r-project.org")'
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'BiocManager::install(ask=FALSE)'
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'BiocManager::install(c("biomaRt","DESeq2","MAST","edgeR","BiocParallel","IHW","clusterProfiler","ReportingTools","genefilter","org.Mm.eg.db","org.Hs.eg.db","org.Dr.eg.db", "LoomExperiment", "SingleCellExperiment"), ask=FALSE, Ncpus='"$COMPILE_CPUS"')'
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'BiocManager::install("romanhaa/cerebroApp",ask=FALSE, Ncpus='"$COMPILE_CPUS"')'
+    
+    # github/dev packages
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');remotes::install_github(repo = "satijalab/seurat", ref = "develop")'
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');remotes::install_github("chris-mcginnis-ucsf/DoubletFinder")'
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');devtools::install_github("cellgeni/sceasy")'
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');devtools::install_github("cboettig/knitcitations")'
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');remotes::install_github("rstudio/DT")'
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');devtools::install_github("rstudio/bookdown")'
+
+
+    ###########
+    # RStudio #
+    ###########
+    
+    RSTUDIO_VERSION="1.4.1103"
+    cd /opt && wget -nv https://download1.rstudio.org/desktop/bionic/amd64/rstudio-${RSTUDIO_VERSION}-amd64.deb && \
+    dpkg -i /opt/rstudio-${RSTUDIO_VERSION}-amd64.deb && \
+    cd /opt/ && rm rstudio-${RSTUDIO_VERSION}-amd64.deb
+    apt-get clean 
+
+    #######################################
+    # miniconda and mamba package manager #
+    #######################################
+    
+    # Directory always needs to be named 'conda' to work with the PATH variable
+    MINICONDA_VERSION="4.9.2"
+    MINICONDA_DIR=conda
+    
+    cd /opt/ && wget -O ${MINICONDA_DIR}.sh -nv  https://repo.anaconda.com/miniconda/Miniconda3-py39_${MINICONDA_VERSION}-Linux-x86_64.sh && \
+    bash ${MINICONDA_DIR}.sh -b -p /opt/${MINICONDA_DIR} && \
+    rm ${MINICONDA_DIR}.sh
+    export PATH="/opt/bin:/opt/conda/bin:$PATH"
+    
+    conda update conda
+    conda install -c conda-forge mamba
+    
+    mamba install --quiet --yes -c conda-forge -c bioconda \
+    snakemake \
+    multiqc \
+    cutadapt \
+    umi_tools \
+    anndata \
+    anndata2ri \
+    scipy \
+    scanpy \
+    scikit-learn \
+    python-igraph \
+    pandas \
+    pip \
+    h5py \
+    leidenalg \
+    numpy \
+    numba \
+    pytest
+    
+    mamba clean -ai
+    
+    mamba create --quiet --yes -n dsp_legacy python=2.7
+    mamba install --quiet --yes -n dsp_legacy -c conda-forge -c bioconda \
+    pysam \
+    numpy \
+    mysql-python
+    
+    ###########
+    # subread #
+    ###########
+    
+    SUBREAD_VERSION="2.0.1"
+    SUBREAD_DIR=subread-${SUBREAD_VERSION}
+    
+    cd /opt && wget -O ${SUBREAD_DIR}-source.tar.gz -nv https://sourceforge.net/projects/subread/files/subread-${SUBREAD_VERSION}/subread-${SUBREAD_VERSION}-source.tar.gz/download && \
+    tar -zxf ${SUBREAD_DIR}-source.tar.gz && \
+    cd ${SUBREAD_DIR}-source/src && \
+    make -j $COMPILE_CPUS -k -f Makefile.Linux && \
+    cd /opt && cp ${SUBREAD_DIR}-source/bin/utilities/* /opt/bin && rm -rf ${SUBREAD_DIR}-source/bin/utilities/ && \
+    cp ${SUBREAD_DIR}-source/bin/* /opt/bin && \
+    rm -rf ${SUBREAD_DIR}-source ${SUBREAD_DIR}-source.tar.gz
+    
+    ##########
+    # htslib #
+    ##########
+
+    HTSLIB_VERSION="1.11"
+    HTSLIB_DIR=htslib-${HTSLIB_VERSION}
+    
+    cd /opt && wget -nv https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/${HTSLIB_DIR}.tar.bz2 && \
+        tar -jxf ${HTSLIB_DIR}.tar.bz2 && \
+        cd ${HTSLIB_DIR} && \
+        ./configure --prefix=/opt && \
+        make -j $COMPILE_CPUS -k && \
+        make install && \
+        cd /opt && rm -r ${HTSLIB_DIR}.tar.bz2 ${HTSLIB_DIR}
+    
+    ############
+    # samtools #
+    ############
+    
+    SAMTOOLS_VERSION="1.11"
+    SAMTOOLS_DIR=samtools-${SAMTOOLS_VERSION}
+    
+    cd /opt && wget -nv https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/${SAMTOOLS_DIR}.tar.bz2 && \
+        tar -jxf ${SAMTOOLS_DIR}.tar.bz2 && \
+        cd ${SAMTOOLS_DIR} && \
+        ./configure --prefix=/opt --with-htslib=/opt/ && \
+        make -j $COMPILE_CPUS -k && \
+        make install && \
+        cd /opt && rm -r ${SAMTOOLS_DIR}.tar.bz2 ${SAMTOOLS_DIR}
+
+    ############
+    # bcftools #
+    ############
+    
+    BCFTOOLS_VERSION="1.11"
+    BCFTOOLS_DIR=bcftools-${BCFTOOLS_VERSION}
+    
+    cd /opt && wget -nv https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSION}/${BCFTOOLS_DIR}.tar.bz2 && \
+        tar -jxf ${BCFTOOLS_DIR}.tar.bz2 && \
+        cd ${BCFTOOLS_DIR} && \
+        ./configure --prefix=/opt --with-htslib=/opt/ && \
+        make -j $COMPILE_CPUS -k && \
+        make install && \
+        cd /opt && rm -r ${BCFTOOLS_DIR}.tar.bz2 ${BCFTOOLS_DIR}
+
+    ############
+    # bedtools #
+    ############
+    
+    BEDTOOLS_VERSION="2.29.2"
+    BEDTOOLS_DIR="bedtools-${BEDTOOLS_VERSION}"  
+    
+    cd /opt && wget -nv https://github.com/arq5x/bedtools2/releases/download/v${BEDTOOLS_VERSION}/${BEDTOOLS_DIR}.tar.gz && \
+        tar -zxf bedtools-${BEDTOOLS_VERSION}.tar.gz && \
+        mv bedtools2 ${BEDTOOLS_DIR} && \
+        cd ${BEDTOOLS_DIR} && \
+        make -j $COMPILE_CPUS -k && \
+        mv bin/* /opt/bin && \
+        cd /opt && rm -r bedtools-${BEDTOOLS_VERSION}.tar.gz ${BEDTOOLS_DIR}
+        
+    #######
+    # bwa #
+    #######
+    
+    BWA_VERSION="0.7.17"
+    BWA_DIR=bwa-${BWA_VERSION}
+    
+    cd /opt && wget -O ${BWA_DIR}.tar.gz -nv https://github.com/lh3/bwa/archive/v${BWA_VERSION}.tar.gz && \
+        tar -zxf ${BWA_DIR}.tar.gz && \
+        cd ${BWA_DIR} && \
+        make -j $COMPILE_CPUS -k && \
+        mv bwa /opt/bin && \
+        cd /opt && rm -r ${BWA_DIR}.tar.gz ${BWA_DIR}
+
+    ##########
+    # bowtie #
+    ##########
+    
+    BOWTIE1_VERSION="1.3.0"
+    BOWTIE1_DIR=bowtie-${BOWTIE1_VERSION}
+    
+    cd /opt && wget -O ${BOWTIE1_DIR}.tar.gz -nv https://github.com/BenLangmead/bowtie/archive/v${BOWTIE1_VERSION}.tar.gz && \
+        tar -zxf ${BOWTIE1_DIR}.tar.gz && \
+        cd ${BOWTIE1_DIR} && \
+        make -j $COMPILE_CPUS -k && \
+        mv bowtie-build-s bowtie-build-l bowtie-align-s bowtie-align-l bowtie-inspect-s bowtie-inspect-l  bowtie-inspect bowtie-build bowtie /opt/bin && \
+        cd /opt && rm -r ${BOWTIE1_DIR}.tar.gz ${BOWTIE1_DIR}
+
+    ###########
+    # bowtie2 #
+    ###########
+    
+    BOWTIE2_VERSION="2.4.2"
+    BOWTIE2_DIR=bowtie2-${BOWTIE2_VERSION}
+    
+    cd /opt && wget -O ${BOWTIE2_DIR}.tar.gz -nv https://github.com/BenLangmead/bowtie2/archive/v${BOWTIE2_VERSION}.tar.gz && \
+        tar -zxf ${BOWTIE2_DIR}.tar.gz && \
+        cd ${BOWTIE2_DIR} && \
+        make -j $COMPILE_CPUS -k && \
+        mv bowtie2  bowtie2-align-l  bowtie2-align-s  bowtie2-build  bowtie2-build-l  bowtie2-build-s  bowtie2-inspect  bowtie2-inspect-l	bowtie2-inspect-s /opt/bin && \
+        cd /opt && rm -rf ${BOWTIE2_DIR}.tar.gz ${BOWTIE2_DIR}
+
+    ########
+    # STAR #
+    ########
+    
+    STAR_VERSION="2.7.7a"
+    STAR_DIR=STAR-${STAR_VERSION}
+    
+    cd /opt && wget -O ${STAR_DIR}.tar.gz -nv https://github.com/alexdobin/STAR/archive/${STAR_VERSION}.tar.gz && \
+        tar -zxf ${STAR_DIR}.tar.gz && \
+        cd ${STAR_DIR}/source && \
+        make -j $COMPILE_CPUS -k STAR && \
+        cp STAR /opt/bin && \
+        cd /opt && rm -r ${STAR_DIR}.tar.gz ${STAR_DIR}
+
+    ##########
+    # fastqc #
+    ##########
+    
+    FASTQC_VERSION="0.11.9"
+    FASTQC_DIR=FastQC-${FASTQC_VERSION}
+
+    cd /opt && wget -O ${FASTQC_DIR}.zip -nv https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQC_VERSION}.zip && \
+        unzip ${FASTQC_DIR}.zip && \
+        mv FastQC ${FASTQC_DIR} && \
+        chmod +x /opt/${FASTQC_DIR}/fastqc && \
+        ln -sf /opt/${FASTQC_DIR}/fastqc /opt/bin/fastqc && \
+        cd /opt && rm -r ${FASTQC_DIR}.zip
+    
+ 
+    ################
+    # fastq_screen #
+    ################
+    
+    FASTQ_SCREEN_VERSION="0.14.1"
+    FASTQ_SCREEN_DIR=FastQ-Screen-${FASTQ_SCREEN_VERSION}
+        
+    cd /opt && wget -O ${FASTQ_SCREEN_DIR}.tar.gz -nv https://github.com/StevenWingett/FastQ-Screen/archive/v${FASTQ_SCREEN_VERSION}.tar.gz && \
+        tar -zxf ${FASTQ_SCREEN_DIR}.tar.gz && \
+        cd ${FASTQ_SCREEN_DIR} &&
+        ln -sf /opt/${FASTQ_SCREEN_DIR}/fastq_screen /opt/bin/fastq_screen && \
+        cd /opt && rm -r ${FASTQ_SCREEN_DIR}.tar.gz
+ 
+    ###############
+    # picardtools #
+    ###############
+    
+    PICARDTOOLS_VERSION="2.23.8"
+    PICARDTOOLS_DIR=picard-${PICARDTOOLS_VERSION}
+    
+    cd /opt && mkdir ${PICARDTOOLS_DIR} && wget -O /opt/${PICARDTOOLS_DIR}/${PICARDTOOLS_DIR}.jar -nv https://github.com/broadinstitute/picard/releases/download/2.23.8/picard.jar && \
+    echo "#!/usr/bin/env bash" > /opt/bin/picard && echo >> /opt/bin/picard  && echo "java -jar /opt/${PICARDTOOLS_DIR}/${PICARDTOOLS_DIR}.jar \$@" >> /opt/bin/picard && chmod +x /opt/bin/picard
+    
+    ###################
+    # RNA-SeQC v1.1.8 #
+    ###################
+    
+    RNASEQCV1_VERSION="1.1.8"
+    RNASEQCV1_DIR=rnaseqc-${RNASEQCV1_VERSION}
+    
+    cd /opt && mkdir ${RNASEQCV1_DIR} && wget -O /opt/${RNASEQCV1_DIR}/${RNASEQCV1_DIR}.jar -nv https://data.broadinstitute.org/cancer/cga/tools/rnaseqc/RNA-SeQC_v${RNASEQCV1_VERSION}.jar && \
+    echo "#!/usr/bin/env bash" > /opt/bin/rna-seqc && echo >> /opt/bin/rna-seqc && echo "java -jar /opt/${RNASEQCV1_DIR}/${RNASEQCV1_DIR}.jar \$@" >> /opt/bin/rna-seqc && chmod +x /opt/bin/rna-seqc
+    
+    ##############
+    # gmap/gsnap #
+    ##############
+    
+    # note: we need to disable memory-mapping since it causes problems with the cluster
+    GSNAP_VERSION="2020-12-17"
+    GSNAP_DIR=gmap-${GSNAP_VERSION}
+    
+    cd /opt && wget -O ${GSNAP_DIR}.tar.gz -nv http://research-pub.gene.com/gmap/src/gmap-gsnap-${GSNAP_VERSION}.tar.gz && \
+    tar -xvf ${GSNAP_DIR}.tar.gz && \
+    cd ${GSNAP_DIR} && \
+    ./configure --prefix=/opt --disable-mmap && \
+    make -j $COMPILE_CPUS -k && make install && \
+    cd /opt && rm -rf ${GSNAP_DIR}.tar.gz ${GSNAP_DIR}
+
+    #############
+    # bcl2fastq #
+    #############
+    
+    # for bcl2fastq, there are two possiblities 
+    if [ -f "/opt/bcl2fastq.zip" ]
+    then
+      # built most recent version from source: downloaded manually and pass via BCL2FASTQ_SOURCE (see %setup section)
+      BCL2FASTQ_VERSION="2.20.0"
+      BCL2FASTQ_DIR=bcl2fastq-${BCL2FASTQ_VERSION}
+      cd /opt && unzip -p bcl2fastq.zip | tar -zxvf - --no-same-owner && \
+      cd bcl2fastq && \
+      src/configure --prefix=/opt/${BCL2FASTQ_DIR} && \
+      make -j $COMPILE_CPUS -k && \
+      make install && \
+      ln -sf /opt/${BCL2FASTQ_DIR}/bin/bcl2fastq /opt/bin/bcl2fastq && \
+      cd /opt && rm -rf bcl2fastq bcl2fastq.zip
+    else
+      # obtain from conda/mamba (may not be the most recent version)
+      mamba install -c dranew bcl2fastq
+    fi
+    
+    ###############
+    # RNA-SeQC v2 #
+    ###############
+    
+    RNASEQCV2_VERSION="2.4.2"
+    RNASEQCV2_DIR=rnaseqc-${RNASEQCV2_VERSION}
+    
+    cd /opt && wget -O ${RNASEQCV2_DIR}.tar.gz -nv https://github.com/getzlab/rnaseqc/releases/download/v2.4.2/rnaseqc.v${RNASEQCV2_VERSION}.full_source.tar.gz && \
+        tar -zxf ${RNASEQCV2_DIR}.tar.gz && \
+        mv rnaseqc/rnaseqc ${RNASEQCV2_DIR} && \
+        cd ${RNASEQCV2_DIR}  && \
+        make && \
+        cp /opt/${RNASEQCV2_DIR}/rnaseqc /opt/bin/rnaseqc && \
+        pip install -e python && \
+        cd /opt/ && rm -rf ${RNASEQCV2_DIR}.tar.gz ${RNASEQCV2_DIR}
+        
+    ############
+    # xengsort #
+    ############
+    
+    cd /opt/lib && git clone https://gitlab.com/genomeinformatics/xengsort.git && \
+    cd xengsort && \
+    python setup.py develop
+    
+    ########
+    # gatk #
+    ########
+    
+    GATK_VERSION="4.2.0.0"
+    GATK_DIR=gatk-${GATK_VERSION}
+    
+    cd /opt && wget -O ${GATK_DIR}.zip https://github.com/broadinstitute/gatk/releases/download/${GATK_VERSION}/gatk-${GATK_VERSION}.zip && \
+    unzip ${GATK_DIR}.zip && \
+    ln -s /opt/${GATK_DIR}/gatk /opt/bin/gatk && \
+    rm ${GATK_DIR}.zip
+    
+    ##############
+    # cellranger #
+    ##############
+    
+    # cellranger can only be built from source: downloaded manually and pass via CELLRANGER_SOURCE (see %setup section)
+    #if [ -f "/opt/cellranger.tar.gz" ]
+    #then
+    #  # built most recent version from source
+    #  CELLRANGER_VERSION="5.0.1"
+    #  CELLRANGER_DIR=cellranger-${CELLRANGER_VERSION}
+    #  tar -xzvf /opt/cellranger.tar.gz && rm cellranger.tar.gz
+    #fi
+    # NOT WORKING YET
