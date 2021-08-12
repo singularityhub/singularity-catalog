@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: continuumio/miniconda3:latest
+%files
+/home/ejoshi/DEseq_analysis_RNA_seq/environments/environment.yml /environment.yml
+/home/ejoshi/DEseq_analysis_RNA_seq/environments/extras.yml /extras.yml
+%post
+
+apt-get update && apt-get install -y g++ git make procps rsync && apt-get clean -y
+/opt/conda/bin/conda env create -f /environment.yml
+/opt/conda/bin/conda env update -f /extras.yml -n de-rnaseq
+PATH=/opt/conda/envs/de-rnaseq/bin:$PATH
+
+%environment
+export PATH=/opt/conda/envs/de-rnaseq/bin:$PATH

@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%setup
+    REPO_ROOT=`dirname $SINGULARITY_BUILDDEF`
+    cp -r $REPO_ROOT/ $SINGULARITY_ROOTFS/planner
+
+%post
+    ## Install all dependencies.
+    apt update
+    apt install -y --no-install-recommends cmake g++ make python
+
+    cd /planner
+
+    ## Build the planner.
+    ./build.py
+
+    ## Strip binaries.
+    strip --strip-all /planner/builds/release/bin/downward
+
+    ## Remove packages unneeded for running the planner.
+    apt-get -y autoremove cmake g++ make
+    rm -rf /var/lib/apt/lists/*
+
+    ## Only keep essential binaries.
+    mkdir -p /compiled-planner/builds/release
+    mv /planner/driver /planner/fast-downward.py /compiled-planner
+    mv /planner/builds/release/bin /compiled-planner/builds/release
+    rm -rf /planner
+    mv /compiled-planner /planner
+
+%runscript
+    DOMAINFILE=$1
+    PROBLEMFILE=$2
+    PLANFILE=$3
+
+    ## Originally without time limit.
+    /planner/fast-downward.py --plan-file $PLANFILE $DOMAINFILE $PROBLEMFILE --search "astar(merge_and_shrink(merge_strategy=merge_precomputed(merge_tree=linear(variable_order=reverse_level)),shrink_strategy=shrink_bisimulation(greedy=true),label_reduction=exact(before_shrinking=true,before_merging=false),max_states=infinity,threshold_before_merge=1,main_loop_max_time=60))"

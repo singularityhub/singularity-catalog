@@ -41,7 +41,7 @@ From: ubuntu:18.04
 	perl -MCPAN -e 'foreach (@ARGV) { CPAN::Shell->rematein("notest", "install", $_) }' Module::Build DBI Try::Tiny JSON Data::Dumper File::Basename Getopt::Long Data::Types File::Path
 
 	cd /usr/local/bin
-	git clone --depth 1 --branch v1.5.2 https://github.com/hmgu-itg/burden_testing
+	git clone --depth 1 --branch v1.5.3 https://github.com/hmgu-itg/burden_testing
 		
 	cd /usr/local/bin
 	mkdir UCSC.tools
@@ -81,7 +81,7 @@ From: ubuntu:18.04
 
 %labels
 	Author Arthur Gilly, Andrei Barysenka, Daniel Suveges, Young-Chan Park
-	Version v1.5.2
+	Version v1.5.3
 
 %help
 	This container allows you to run rare variant aggregation tests using MONSTER and SMMAT; for more information run this container with the help command line option.

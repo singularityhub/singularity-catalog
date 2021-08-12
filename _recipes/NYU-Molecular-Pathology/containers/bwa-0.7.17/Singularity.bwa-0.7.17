@@ -1,0 +1,25 @@
+BootStrap: docker
+From: alpine:3.8
+
+%post
+    apk update && \
+    apk add wget \
+    bzip2 \
+    gcc \
+    make \
+    zlib-dev \
+    libc-dev \
+    bash
+
+    cd /usr/local/bin && \
+    wget https://github.com/lh3/bwa/releases/download/v0.7.17/bwa-0.7.17.tar.bz2 && \
+    tar xvfj bwa-0.7.17.tar.bz2 && \
+    rm -f bwa-0.7.17.tar.bz2 && \
+    cd bwa-0.7.17 && \
+    make
+
+%test
+    which bwa
+
+%environment
+    export PATH="/usr/local/bin/bwa-0.7.17:${PATH}"

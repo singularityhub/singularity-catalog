@@ -1,0 +1,71 @@
+# =============================================================================
+# Definition file for a singularity container
+# =============================================================================
+Bootstrap: library
+From: ubuntu:20.04
+
+
+# -----------------------------------------------------------------------------
+# - Runtime environment variables -
+# Define environment variables that will be set at runtime.
+# -----------------------------------------------------------------------------
+%environment
+  export CONDA_PATH="/usr/local/miniconda3"
+  export CONDA_SH="$CONDA_PATH/etc/profile.d/conda.sh"
+  export PATH=${CONDA_PATH}/bin:${PATH}
+  export PATH=${CONDA_PATH}/envs/test/bin:${PATH}
+
+
+# -----------------------------------------------------------------------------
+# - Built commands -
+# Commands to be executed at build time after the base OS has been installed.
+# These commands are executed as root in /root inside the container.
+# -----------------------------------------------------------------------------
+%post
+  echo 'Install OS packages ...'
+
+  # Update Ubuntu packages and install necessary packages
+  apt-get update && apt-get install -y git wget vim
+
+  # Fix locale bugs see https://github.com/hpcng/singularity/issues/11
+  apt-get install -y locales && \
+  echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && \
+  locale-gen && update-locale LANG=en_US.UTF-8
+
+  apt-get clean
+
+  # DONE with OS install and update
+
+  # Define environment variables for install paths
+  INSTALL_PATH="/usr/local"
+  CONDA_PATH="$INSTALL_PATH/miniconda3"
+  CONDA_SH="$CONDA_PATH/etc/profile.d/conda.sh"
+
+  echo 'Install conda ...'
+  # Download and install miniconda
+  cd $INSTALL_PATH && \
+  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+  bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_PATH && \
+  rm Miniconda3-latest-Linux-x86_64.sh
+
+  echo 'Update conda ...'
+  # Make conda executable available during build and update.
+  # This does not make the executable available during runtime.
+  . $CONDA_SH && conda update -n base conda
+
+  # Create `hera1` enviroment and install dependencies for HEREA packages.
+  conda create -n test -y -c conda-forge python=3.8 ipython ipykernel numpy \
+    scipy matplotlib
+
+  # Activate the Python environment
+  conda activate test
+
+  echo 'Done building container'
+
+
+%labels
+  Author Piyanat Kittiwisit
+
+
+%help
+  Test container

@@ -7,7 +7,7 @@ From:nfcore/base
 	VERSION 0.0.1
 
 %environment
-	PATH=/opt/cellranger-atac-2.0.0:/opt/bin:$PATH
+	PATH=/opt/conda/envs/ngs-tools/bin/:/opt/cellranger-atac-2.0.0:/opt/bin:$PATH
 
 %files
 	/data/bnf/sw/bcl2fastq2-v2.20.0.422-Source.tar.gz /opt   
@@ -42,7 +42,9 @@ From:nfcore/base
 	cd /opt
 	
 	# download and install cellranger atac v2.0
-	wget -O cellranger-atac-2.0.0.tar.gz "https://cf.10xgenomics.com/releases/cell-atac/cellranger-atac-2.0.0.tar.gz?Expires=1628118222&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1hdGFjL2NlbGxyYW5nZXItYXRhYy0yLjAuMC50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MjgxMTgyMjJ9fX1dfQ__&Signature=MZ2mbdv9jci4JGTgBOcpouD4SKSApOrYKslqJqQ234vl2yXPOdBWZSIZZx8wd~giuvC4SlQ5QyL0mU7FSfWbjLU398cL5Ml83mklheFZt0eW7A8yH6K7uDSrwkZxHBVtu5LoZeKz5XinPkKChRC98yCiO9BcOkyRsunJwmTVhFLHLfgyjCAj0vVwWKhtpGwg05O5YnUVj8FSvvJqB6xODaj6TAgFhpxyfFoTTuSYCTuabne-~FF-SIayHB1nPKdqGRg9IXaPtoLoLb3VWK7ZsM3ibQk66rIPEtApu-tQOdlrTC02GKwDNedFpUy4TxFNEfGKXsl9hEfylIXz1YP~TQ__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"
+	wget -O cellranger-atac-2.0.0.tar.gz "https://cf.10xgenomics.com/releases/cell-atac/cellranger-atac-2.0.0.tar.gz?Expires=1628199513&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1hdGFjL2NlbGxyYW5nZXItYXRhYy0yLjAuMC50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MjgxOTk1MTN9fX1dfQ__&Signature=mck5lfvROWeKZfW0Rk3oShH7r0tKrDNCuAIYwk6oJiNeer0bgirKtGaiJrOpjEKRDmyvzE98o1cFm4Jf9WMaRBun4-qQN3QGCN0NR2ZcRR6EiK57FK0f5kol0k55AE3Dl5lgLnfa02OgK~hbgoT~99uUUFgbkNffRFkz2RJfJvEls9vQo1j8NmOR23T5APKKOsKgsB7gQqAVT~7km6DiGEzgA2o5C-g-q7rUkGhOCWjvUWJ8x3sosuMHePfFoGRb1MNl98s76ppWh9RM7ETPb~ESccpEv7V7J56rUwTn-AD~trRzdwQ5KQTU1h4Ufve5oDbN~NGt-2M13Xp5cRcNWQ__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"
+
+
 
 
 	tar -zxvf cellranger-atac-2.0.0.tar.gz

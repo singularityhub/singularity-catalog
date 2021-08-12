@@ -32,7 +32,8 @@ From: biocorecrg/debian-perlbrew-pyenv3-java:buster
 	
 	ln -s /usr/local/interproscan-${IPSCAN_VERSION} /usr/local/interproscan
 	cp /usr/local/interproscan.properties /usr/local/interproscan
-	
+	chmod a+r /usr/local/interproscan-${IPSCAN_VERSION}/interproscan.properties
+
 	# Hardcoded Data
 	cd /usr/local/interproscan; rm -rf data; ln -s ${IPSCAN_DATA} data
 	chmod -R a+rx /usr/local/interproscan/bin

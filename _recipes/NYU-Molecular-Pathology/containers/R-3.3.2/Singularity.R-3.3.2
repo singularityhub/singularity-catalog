@@ -1,0 +1,35 @@
+BootStrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%post
+    # ~~~~~ BASIC SETUP ~~~~~ #
+    apt-get update && \
+    apt-get install -y wget \
+    bzip2 \
+    make \
+    gcc \
+    g++ \
+    gfortran \
+    libxml2-dev \
+    libcairo2-dev
+
+
+    # ~~~~~ MINICONDA ~~~~~ #
+    wget https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86_64.sh && \
+    bash Miniconda3-4.4.10-Linux-x86_64.sh -b -p /conda && \
+    rm -f Miniconda3-4.4.10-Linux-x86_64.sh
+    conda config --add channels defaults && \
+    conda config --add channels bioconda && \
+    conda config --add channels r
+
+    # ~~~~~ R ~~~~~ #
+    conda install -y -c r -c bioconda \
+    r-base=3.3.2 \
+    r=3.3.2 \
+    r-venndiagram=1.6.16
+
+%environment
+    export PATH="/conda/bin:${PATH}"
+    export LC_ALL="C.UTF-8"
+    export LANG="C.UTF-8"

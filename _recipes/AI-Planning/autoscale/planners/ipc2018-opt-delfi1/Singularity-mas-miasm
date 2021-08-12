@@ -1,0 +1,58 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%setup
+     ## The "%setup"-part of this script is called to bootstrap an empty
+     ## container. It copies the source files from the branch of your
+     ## repository where this file is located into the container to the
+     ## directory "/planner". Do not change this part unless you know
+     ## what you are doing and you are certain that you have to do so.
+
+    REPO_ROOT=`dirname $SINGULARITY_BUILDDEF`
+    cp -r $REPO_ROOT/ $SINGULARITY_ROOTFS/planner
+
+%post
+
+    ## The "%post"-part of this script is called after the container has
+    ## been created with the "%setup"-part above and runs "inside the
+    ## container". Most importantly, it is used to install dependencies
+    ## and build the planner. Add all commands that have to be executed
+    ## once before the planner runs in this part of the script.
+
+    ## Install all necessary dependencies.
+    apt update
+    apt -y install cmake g++ make python
+
+    ## Build your planner
+    cd /planner
+    ./build.py release64 -j4
+
+    ## Strip binaries.
+    strip --strip-all /planner/builds/release64/bin/downward \
+        /planner/builds/release64/bin/preprocess \
+
+    ## Remove packages unneeded for running the planner.
+    apt-get -y autoremove cmake g++ make
+    rm -rf /var/lib/apt/lists/*
+
+    ## Only keep essential binaries.
+    mkdir -p /compiled-planner/builds/release64
+    mv /planner/driver /compiled-planner
+    mv /planner/fast-downward.py /planner/plan-ipc.py /planner/create-image-from-graph.py /planner/timers.py /compiled-planner
+    mv /planner/dl_model /compiled-planner
+    rm -rf /compiled-planner/dl_model/model_creation /compiled-planner/dl_model/model.h5 /compiled-planner/dl_model/model.json
+    mv /planner/builds/release64/bin /compiled-planner/builds/release64
+    rm -rf /planner
+    mv /compiled-planner /planner
+
+%runscript
+    ## The runscript is called whenever the container is used to solve
+    ## an instance.
+
+    DOMAINFILE=$1
+    PROBLEMFILE=$2
+    PLANFILE=$3
+
+    ## Call your planner.
+    # h2-simpless-dks-900masb50ksbmiasm
+    /planner/fast-downward.py --build release64 --transform-task preprocess --plan-file $PLANFILE $DOMAINFILE $PROBLEMFILE --symmetries 'sym=structural_symmetries(search_symmetries=dks)' --search 'astar(merge_and_shrink(shrink_strategy=shrink_bisimulation(greedy=false),merge_strategy=merge_stateless(merge_selector=score_based_filtering(scoring_functions=[sf_miasm(shrink_strategy=shrink_bisimulation,max_states=50000),total_order(atomic_before_product=true,atomic_ts_order=reverse_level,product_ts_order=old_to_new)])),label_reduction=exact(before_shrinking=true,before_merging=false),max_states=50000,threshold_before_merge=1,max_time=60),symmetries=sym,pruning=stubborn_sets_simple(minimum_pruning_ratio=0.01),num_por_probes=1000)'

@@ -1,0 +1,77 @@
+Bootstrap: docker
+From: ubuntu:xenial
+
+%setup
+     ## The "%setup"-part of this script is called to bootstrap an empty
+     ## container. It copies the source files from the branch of your
+     ## repository where this file is located into the container to the
+     ## directory "/planner". Do not change this part unless you know
+     ## what you are doing and you are certain that you have to do so.
+
+    REPO_ROOT=`dirname $SINGULARITY_BUILDDEF`
+    cp -r $REPO_ROOT/ $SINGULARITY_ROOTFS/planner
+
+%post
+
+    ## The "%post"-part of this script is called after the container has
+    ## been created with the "%setup"-part above and runs "inside the
+    ## container". Most importantly, it is used to install dependencies
+    ## and build the planner. Add all commands that have to be executed
+    ## once before the planner runs in this part of the script.
+
+    ## Install all necessary dependencies.
+    apt-get update
+    apt-get -y install --no-install-recommends cmake g++ make python autotools-dev automake gcc g++-multilib
+
+    ## Build your planner
+    cd /planner
+    ./build.py release64 -j6
+
+    ## Strip binaries.
+    strip --strip-all /planner/builds/release64/bin/downward
+
+    ## Remove packages unneeded for running the planner.
+    apt -y autoremove cmake g++ make autotools-dev automake gcc g++-multilib
+    rm -rf /var/lib/apt/lists/*
+
+    ## Only keep essential binaries.
+    mkdir -p /compiled-planner/builds/release64
+    mv /planner/driver /planner/fast-downward.py /compiled-planner
+    mv /planner/builds/release64/bin /compiled-planner/builds/release64
+    rm -rf /planner
+    mv /compiled-planner /planner
+
+%runscript
+    ## The runscript is called whenever the container is used to solve
+    ## an instance.
+
+    DOMAINFILE=$1
+    PROBLEMFILE=$2
+    PLANFILE=$3
+
+    ## Call your planner.
+    ## Original time limits.
+    #/planner/fast-downward.py \
+    #    --build=release64 \
+    #    --plan-file $PLANFILE \
+    #    $DOMAINFILE \
+    #    $PROBLEMFILE \
+    #    --search "astar(cpdbs_symbolic(genetic_ss(use_ucb=true,num_episodes=10000000,num_collections=1,pdb_factory=symbolic(termination_time_ms=30000),genetic_time_limit=900,time_limit=1.0,create_perimeter=true,use_first_goal_vars=true,use_norm_dist=true,perimeter_time_ms=250000)))"
+    ## Short time limits.
+    /planner/fast-downward.py \
+        --build=release64 \
+        --plan-file $PLANFILE \
+        $DOMAINFILE \
+        $PROBLEMFILE \
+        --search "astar(cpdbs_symbolic(genetic_ss(use_ucb=true,num_episodes=10000000,num_collections=1,pdb_factory=symbolic(termination_time_ms=3000),genetic_time_limit=60,time_limit=1.0,create_perimeter=true,use_first_goal_vars=true,use_norm_dist=true,perimeter_time_ms=10000)))"
+
+
+## Update the following fields with meta data about your submission.
+## Please use the same field names and use only one line for each value.
+%labels
+Name        Complementary2
+Description PDB heuristic which learns in situ how to adapt its pattern selection parameteres to maximize chance of finding "good" patterns as seach progresses and also complements any input heuristic.  This is an implementation of the complementary heuristic with an input perimeter PDB and symbolic PDBs, as described in the IJCAI paper: https://www.ijcai.org/proceedings/2017/601
+Authors Santiago Franco<santiago.franco@gmail.com>, Levi H S Lelis<levilelis@gmail.com> and Mike W Barley<m.barley@auckland.ac.nz>
+SupportsDerivedPredicates no
+SupportsQuantifiedPreconditions no
+SupportsQuantifiedEffects yes

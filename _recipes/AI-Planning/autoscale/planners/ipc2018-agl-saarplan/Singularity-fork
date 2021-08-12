@@ -1,0 +1,89 @@
+bootstrap: docker
+From:      fedora:28
+
+%setup
+     ## The "%setup"-part of this script is called to bootstrap an empty
+     ## container. It copies the source files from the branch of your
+     ## repository where this file is located into the container to the
+     ## directory "/planner". Do not change this part unless you know
+     ## what you are doing and you are certain that you have to do so.
+
+    REPO_ROOT=`dirname $SINGULARITY_BUILDDEF`
+    cp -r $REPO_ROOT/ $SINGULARITY_ROOTFS/planner
+
+%post
+
+    ## The "%post"-part of this script is called after the container has
+    ## been created with the "%setup"-part above and runs "inside the
+    ## container". Most importantly, it is used to install dependencies
+    ## and build the planner. Add all commands that have to be executed
+    ## once before the planner runs in this part of the script.
+
+    ## Install all necessary dependencies.
+    dnf upgrade -y
+    dnf group install -y "Development Tools"
+    dnf install -y python gcc-c++ cmake boost boost-devel glibc-static libstdc++-static clang
+
+    ## Build your planner
+    cd /planner/fast-downward-conjunctions
+    ./build.py release64clangpgonative -j4
+
+    cd /planner/fast-downward-decoupled
+    ./build_all -j4
+
+    ## Strip binaries.
+    strip --strip-all /planner/fast-downward-conjunctions/builds/release64clangpgonative/bin/preprocess
+    strip --strip-all /planner/fast-downward-decoupled/search/downward-release
+
+    ## Remove packages unneeded for running the planner.
+    dnf remove -y gcc-c++ cmake boost boost-devel glibc-static libstdc++-static clang
+    dnf autoremove -y
+    dnf clean all
+
+    ## Only keep essential binaries (we only need the decoupled search, but
+    ## translator and preprocessor of conjunctions).
+    ## fast-downward-conjunctions.
+    mkdir -p /compiled-planner/fast-downward-conjunctions/builds/release64clangpgonative/bin
+    mkdir -p /compiled-planner/fast-downward-conjunctions/src
+    mv /planner/fast-downward-conjunctions/src/translate /compiled-planner/fast-downward-conjunctions/src
+    mv /planner/fast-downward-conjunctions/builds/release64clangpgonative/bin/preprocess /compiled-planner/fast-downward-conjunctions/builds/release64clangpgonative/bin
+
+    ## fast-downward-decoupled.
+    mkdir -p /compiled-planner/search
+    mv /planner/fast-downward-decoupled/search/downward-release /compiled-planner/search
+
+    ## rest
+    mv /planner/driver /planner/fast-downward.py /compiled-planner
+    rm -rf /planner
+    mv /compiled-planner /planner
+
+%runscript
+    ## The runscript is called whenever the container is used to solve
+    ## an instance.
+
+    SEED=42
+
+    DOMAINFILE=$1
+    PROBLEMFILE=$2
+    PLANFILE=$3
+
+    ## Call your planner.
+    /planner/fast-downward.py \
+        --plan-file $PLANFILE \
+        $DOMAINFILE \
+        $PROBLEMFILE \
+        --preprocess-options --h2_time_limit 10 \
+        --search-options \
+        --decoupling "fork(search_type=sat, pruning=cost_frontier(irrelevance=TRANSITIONS), max_leaf_size=1000000)" \
+        --heuristic "hff=ff(cost_type=ONE)" \
+        --search "lazy_greedy(hff, preferred=hff, cost_type=ONE)"
+
+## Update the following fields with meta data about your submission.
+## Please use the same field names and use only one line for each value.
+%labels
+Name        Saarplan
+Description Grey Planning, Decoupled Search, Conjunctions -- Saarland's greatest planning techniques combined!
+Authors     Maximilian Fickert <fickert@cs.uni-saarland.de> and Daniel Gnad <gnad@cs.uni-saarland.de> and Patrick Speicher <speicher@cs.uni-saarland.de> and Jörg Hoffmann <hoffmann@cs.uni-saarland.de>
+SupportsDerivedPredicates no
+SupportsQuantifiedPreconditions no
+SupportsQuantifiedEffects yes

@@ -1,0 +1,40 @@
+Bootstrap: docker
+From: i386/ubuntu:18.04
+
+%setup
+    REPO_ROOT=`dirname $SINGULARITY_BUILDDEF`
+    cp -r $REPO_ROOT/ $SINGULARITY_ROOTFS/planner
+
+%post
+    ## Install all dependencies.
+    apt update
+    apt -y install bison flex make g++
+
+    ## Build the planner.
+    cd /planner
+    ## It is unclear why the following three lines are necessary, but
+    ## compilation sometimes fails without them.
+    ./makedate
+    bison -d parser.y
+    flex lexer.lex
+    make -j4
+
+    ## Strip binary.
+    strip --strip-all /planner/MpC
+
+    ## Remove packages unneeded for running the planner.
+    apt-get -y autoremove bison flex make g++
+    rm -rf /var/lib/apt/lists/*
+
+    ## Only keep binary.
+    mkdir -p /compiled-planner/
+    mv /planner/MpC /compiled-planner
+    rm -rf /planner
+    mv /compiled-planner /planner
+
+%runscript
+    DOMAINFILE=$1
+    PROBLEMFILE=$2
+    PLANFILE=$3
+
+    /planner/MpC $DOMAINFILE $PROBLEMFILE -o $PLANFILE -Q

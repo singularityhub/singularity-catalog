@@ -70,7 +70,7 @@ from: debian:buster-20201012
     
     # install basic system tools and libs
     apt-get clean && apt-get update -y && apt-get upgrade -y
-    apt-get install -y build-essential gnupg2 software-properties-common  wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl
+    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-serial-dev
     apt-get clean
         
     # this is where the binaries go
@@ -138,7 +138,7 @@ from: debian:buster-20201012
     MINICONDA_VERSION="4.9.2"
     MINICONDA_DIR=conda
     
-    cd /opt/ && wget -O ${MINICONDA_DIR}.sh -nv  https://repo.anaconda.com/miniconda/Miniconda3-py39_${MINICONDA_VERSION}-Linux-x86_64.sh && \
+    cd /opt/ && wget -O ${MINICONDA_DIR}.sh -nv  https://repo.anaconda.com/miniconda/Miniconda3-py38_${MINICONDA_VERSION}-Linux-x86_64.sh && \
     bash ${MINICONDA_DIR}.sh -b -p /opt/${MINICONDA_DIR} && \
     rm ${MINICONDA_DIR}.sh
     export PATH="/opt/bin:/opt/conda/bin:$PATH"
@@ -163,7 +163,10 @@ from: debian:buster-20201012
     leidenalg \
     numpy \
     numba \
-    pytest
+    pytest \
+    cython \
+    matplotlib \
+    click
     
     mamba clean -ai
     
@@ -357,7 +360,7 @@ from: debian:buster-20201012
     ##############
     
     # note: we need to disable memory-mapping since it causes problems with the cluster
-    GSNAP_VERSION="2020-12-17"
+    GSNAP_VERSION="2021-07-23"
     GSNAP_DIR=gmap-${GSNAP_VERSION}
     
     cd /opt && wget -O ${GSNAP_DIR}.tar.gz -nv http://research-pub.gene.com/gmap/src/gmap-gsnap-${GSNAP_VERSION}.tar.gz && \
@@ -424,6 +427,26 @@ from: debian:buster-20201012
     unzip ${GATK_DIR}.zip && \
     ln -s /opt/${GATK_DIR}/gatk /opt/bin/gatk && \
     rm ${GATK_DIR}.zip
+    
+    ############
+    # kallisto #
+    ############
+    
+    KALLISTO_VERSION="0.46.1"
+    KALLISTO_DIR=kallisto-${KALLISTO_VERSION}
+    
+    cd /opt && wget -O ${KALLISTO_DIR}.tar.gz -nv https://github.com/pachterlab/kallisto/archive/v${KALLISTO_VERSION}.tar.gz && \
+    tar -zxf ${KALLISTO_DIR}.tar.gz && \
+    cd /opt/${KALLISTO_DIR}/ext/htslib && autoheader && autoconf && \
+    cd /opt/${KALLISTO_DIR} && mkdir build && cd build && \
+    cmake -DCMAKE_INSTALL_PREFIX:PATH=/opt .. && make && make install && \
+    cd /opt && rm -rf ${KALLISTO_DIR}.tar.gz ${KALLISTO_DIR}
+
+    ############
+    # velocyto #
+    ############
+    
+    pip install velocyto
     
     ##############
     # cellranger #

@@ -1,0 +1,20 @@
+BootStrap: docker
+From: python:2.7-slim
+
+%post
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+    g++ \
+    git \
+    wget && \
+    wget --quiet -O /opt/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
+    python /opt/get-pip.py && \
+    rm -rf /var/lib/apt/lists/* /opt/get-pip.py && \
+    pip install multiqc==1.5
+
+%test
+    multiqc --version
+
+%environment
+    export LC_ALL="C.UTF-8"
+    export LANG="C.UTF-8"

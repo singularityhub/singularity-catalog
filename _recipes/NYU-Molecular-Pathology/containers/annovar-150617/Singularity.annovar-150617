@@ -1,0 +1,22 @@
+BootStrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%post
+    # ~~~~~ BASIC SETUP ~~~~~ #
+    apt-get update && \
+    apt-get install -y wget \
+    perl
+
+    # download ANNOVAR
+    cd /opt && \
+    wget http://www.openbioinformatics.org/annovar/download/0wgxR2rIVP/annovar.revision150617.tar.gz && \
+    tar -vzxf annovar.revision150617.tar.gz && \
+    rm -f annovar.revision150617.tar.gz
+
+    # location to mount reference database dir:
+    mkdir -p /opt/annovar/db
+
+%environment
+    export PATH="/opt:${PATH}"
+    export PATH="/opt/annovar:${PATH}"

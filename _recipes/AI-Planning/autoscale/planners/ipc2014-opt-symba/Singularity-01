@@ -1,0 +1,42 @@
+Bootstrap: docker
+From: i386/ubuntu:18.04
+
+%setup
+    REPO_ROOT=`dirname $SINGULARITY_BUILDDEF`
+    cp -r $REPO_ROOT/ $SINGULARITY_ROOTFS/planner
+
+%post
+    ## Install all dependencies.
+    apt update
+    apt -y install cmake gawk g++ make python
+
+    ## Build the planner.
+    cd /planner
+    ./build -j4
+
+    ## Strip binaries.
+    strip --strip-all /planner/src/preprocess/preprocess \
+        /planner/src/search/downward-1 \
+        /planner/src/search/downward-2 \
+        /planner/src/search/downward-4
+
+    ## Remove packages unneeded for running the planner.
+    apt-get -y autoremove cmake g++ make
+    rm -rf /var/lib/apt/lists/*
+
+    ## Only keep essential binaries.
+    mkdir -p /compiled-planner/src/preprocess
+    mkdir -p /compiled-planner/src/search
+    mv /planner/plan /compiled-planner
+    mv /planner/src/plan-ipc /planner/src/plan /planner/src/translate /compiled-planner/src
+    mv /planner/src/preprocess/preprocess /compiled-planner/src/preprocess
+    mv /planner/src/search/dispatch /planner/src/search/unitcost /planner/src/search/downward /planner/src/search/downward-1 /planner/src/search/downward-2 /planner/src/search/downward-4 /planner/src/search/cudd-2.5.0 /compiled-planner/src/search
+    rm -rf /planner
+    mv /compiled-planner /planner
+
+%runscript
+    DOMAINFILE=$1
+    PROBLEMFILE=$2
+    PLANFILE=$3
+
+    /planner/plan seq-opt-symba-1 $DOMAINFILE $PROBLEMFILE $PLANFILE

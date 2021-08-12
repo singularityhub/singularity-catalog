@@ -1,0 +1,103 @@
+# Ubuntu 20.04 - Ros noetic franka ros container
+Bootstrap: docker
+From: osrf/ros:noetic-desktop-full
+
+%help
+    A container used for controlling the panda_franka robot using ros-noetic.
+%labels
+    Maintainer: Rick Staa
+    Github: https://github.com/rickstaa/COR-robotics-lab-reference
+    Version: v0.0.0
+    Type: Private
+%environment
+    # Set language options
+    export LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+    # Set ROS vars
+    export ROS_DISTRO=noetic
+    export ROBOT_IP="172.16.0.2"
+    robot_net_base=`echo ${ROBOT_IP} | sed 's/\.[0-9]*$//'`
+    machine_ip=`hostname -I | grep -oh "${robot_net_base}.[0-9]*"`
+    export ROS_MASTER_URI="http://${machine_ip}:11311"
+    export ROS_IP=${machine_ip}
+%post
+    # Install extra system package dependencies
+    apt update --fix-missing
+    apt install -q -y \
+        vim \
+        git \
+        bash-completion \
+        wget \
+        lsb-release \
+        iputils-ping
+    apt upgrade -y
+
+    # Install ros build tools
+    apt install -q -y python3-catkin-tools \
+       python3-rosdep \
+       python3-rosinstall \
+       python3-rosinstall-generator \
+       python3-wstool \
+       build-essential
+    # NOTE: Needed because of a catkin-tools bug https://github.com/catkin/catkin_tools/issues/594)
+    apt install -q -y python3-osrf-pycommon
+
+    # Install libfranka from source
+    # NOTE: Uncomment if you want to install from source
+    apt update
+    apt install -q -y \
+       cmake \
+       libpoco-dev \
+       libeigen3-dev
+    bash -c "cd / \
+       && apt remove -y \"*libfranka*\" \
+       && git clone --recursive https://github.com/frankaemika/libfranka.git \
+       && cd libfranka \
+       && mkdir build \
+       && cd build \
+       && cmake -DCMAKE_BUILD_TYPE=Release .. \
+       && cmake --build ."
+
+    # Install libfranka binary packages
+    # NOTE: Uncomment the code below when you want to install the binary packages
+    apt install -y ros-noetic-libfranka
+
+    # Create the catkin workspace
+    mkdir -p /panda_ws/src; cd /panda_ws/src
+
+    # Install the noetic panda_moveit_config branch
+    # NOTE: Needed since panda_moveit_config is not yet released for noetic (see
+    # https://github.com/ros-planning/panda_moveit_config/pull/74)
+    git clone https://github.com/tylerjw/panda_moveit_config.git
+    cd panda_moveit_config; git checkout p/update_latest; cd -
+
+    # Install ros_franka from the repository
+    # NOTE: Uncomment if you want to install franka_ros from the repository
+    git clone --recursive https://github.com/frankaemika/franka_ros franka_ros
+    cd franka_ros; git checkout noetic-devel; cd ../..
+    rosdep install --from-paths src --ignore-src --rosdistro noetic -y --skip-keys libfranka
+    # . /opt/ros/noetic/setup.sh; catkin_make -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=/libfranka/build
+    . /opt/ros/noetic/setup.sh; catkin build -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=/libfranka/build
+
+    # Install ros_franka binary packages
+    # NOTE: Uncomment the code below when you want to install the binary packages
+    # apt install -y ros-noetic-franka-ros
+
+    # Install extra ROS packages
+    apt install -y \
+        ros-noetic-ros-controllers \
+        ros-noetic-moveit
+
+    # Add container resources to the container
+    bash -c "cd / \
+        && git clone https://github.com/rickstaa/COR-robot-lab-reference.git \
+        && cp ./COR-robot-lab-reference/containers/singularity/resources/.singularity_bashrc /.singularity_bashrc \
+        && cp ./COR-robot-lab-reference/containers/singularity/resources/welcome_msgs/.ros-noetic.txt /.welcome_msg \
+        && cp ./COR-robot-lab-reference/containers/singularity/resources/bash_aliases/.singularity_bash_aliases /.singularity_bash_aliases \
+        && rm -rf /COR-robot-lab-reference"
+%runscript
+	# Execute the .singularity_bashrc file
+	OCI_CMD='/bin/bash'
+	OCI_ARGS='-rcfile /.singularity_bashrc'
+	SINGULARITY_OCI_RUN="${OCI_CMD} ${OCI_ARGS}"
+	exec $SINGULARITY_OCI_RUN

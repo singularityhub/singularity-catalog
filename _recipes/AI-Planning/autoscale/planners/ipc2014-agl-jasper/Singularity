@@ -1,0 +1,48 @@
+Bootstrap: docker
+From: i386/ubuntu:18.04
+
+%setup
+    REPO_ROOT=`dirname $SINGULARITY_BUILDDEF`
+    cp -r $REPO_ROOT/ $SINGULARITY_ROOTFS/planner
+
+%post
+    ## Install all dependencies.
+    apt-get update
+    apt-get -y install bison flex make g++ g++-multilib python gawk
+
+    ## Build the planner.
+    cd /planner
+    ./build
+
+    ## Strip binary.
+    strip --strip-all /planner/preprocess/preprocess
+    strip --strip-all /planner/search/downward-1
+    strip --strip-all /planner/search/downward-2
+    strip --strip-all /planner/search/downward-4
+
+    ## Remove packages unneeded for running the planner.
+    apt-get -y autoremove bison flex make g++
+    rm -rf /var/lib/apt/lists/*
+
+    ## Keep binaries and scripts.
+    mkdir -p /compiled-planner
+    cp -r /planner/translate /compiled-planner/
+    mkdir -p /compiled-planner/preprocess
+    cp /planner/preprocess/preprocess /compiled-planner/preprocess
+    mkdir -p /compiled-planner/search
+    cp /planner/search/downward* /compiled-planner/search/
+    cp /planner/search/unitcost /compiled-planner/search/
+    cp /planner/search/dispatch /compiled-planner/search/
+    cp /planner/plan /compiled-planner/
+    cp /planner/plan-ipc /compiled-planner/
+    cp -r /planner/one_run_aras /compiled-planner/
+
+    rm -rf /planner
+    mv /compiled-planner /planner
+
+%runscript
+    DOMAINFILE=$1
+    PROBLEMFILE=$2
+    PLANFILE=$3
+
+    /planner/plan $DOMAINFILE $PROBLEMFILE $PLANFILE

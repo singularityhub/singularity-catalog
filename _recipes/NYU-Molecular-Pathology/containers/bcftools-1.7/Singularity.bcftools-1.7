@@ -1,0 +1,28 @@
+BootStrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%post
+    apt-get update && \
+    apt-get install -y wget \
+    bzip2 \
+    gcc \
+    make \
+    zlib1g-dev \
+    libbz2-dev \
+    liblzma-dev
+
+    cd /opt/ && \
+    wget https://github.com/samtools/bcftools/releases/download/1.7/bcftools-1.7.tar.bz2 && \
+    tar xvfj bcftools-1.7.tar.bz2 && \
+    rm -f bcftools-1.7.tar.bz2 && \
+    cd /opt/bcftools-1.7 && \
+    ./configure && \
+    make && \
+    make install
+
+%test
+    bcftools --version
+
+%environment
+    export PATH="/opt/bcftools-1.7:${PATH}"
