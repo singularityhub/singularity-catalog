@@ -1,0 +1,121 @@
+# NOTE: THIS SINGULARITY DEFINITION FILE IS GENERATED VIA "update.py"
+BootStrap: docker
+From: rocker/r-ver:4.1.1
+
+
+
+%apprun R
+  exec R "${@}"
+
+%apprun Rscript
+  exec Rscript "${@}"
+
+%runscript
+  exec R "${@}"
+
+%post
+    DEBIAN_FRONTEND=noninteractive
+
+
+   apt-get update -qq \
+      && apt-get install -y --no-install-recommends \
+        curl \
+        wget \
+        texinfo \
+        apt-utils \
+        ghostscript
+
+    TINYTEX_DIR='/opt/tinytex'
+
+    install2.r -n -1 --skipinstalled --error \
+        tinytex
+
+
+    wget -qO- \
+      "https://github.com/yihui/tinytex/raw/master/tools/install-unx.sh" | \
+      TINYTEX_DIR=${TINYTEX_DIR} sh -s - --admin --no-path \
+    && ${TINYTEX_DIR}/bin/*/tlmgr path add
+
+    Rscript -e "tinytex::tlmgr_install(c('pdfcrop', \
+      'koma-script', \
+      'setspace', \
+      'colortbl', \
+      'footnotebackref', \
+      'multirow', \
+      'wrapfig', \
+      'pdflscape', \
+      'tabu', \
+      'varwidth', \
+      'threeparttable', \
+      'threeparttablex', \
+      'environ', \
+      'trimspaces', \
+      'ulem', \
+      'makecell', \
+      'lineno', \
+      'babel-english', \
+      'csquotes', \
+      'caption', \
+      'mdframed', \
+      'zref', \
+      'needspace', \
+      'sourcesanspro', \
+      'ly1', \
+      'sourcecodepro', \
+      'titling', \
+      'fancyhdr', \
+      'bookmark'))"
+
+    tlmgr path add \
+      && Rscript -e "tinytex::r_texmf()" \
+      && chown -R root:staff ${TINYTEX_DIR} \
+      && chown -R root:staff /usr/local/lib/R/site-library \
+      && chmod -R g+w ${TINYTEX_DIR} \
+      && chmod -R g+wx "${TINYTEX_DIR}/bin"
+
+    echo "PATH=${PATH}" >> ${R_HOME}/etc/Renviron
+
+
+
+    rm -rf /usr/lib/rstudio-server/bin/pandoc/pandoc \
+    usr/local/bin/pandoc \
+    usr/lib/rstudio-server/bin/pandoc/pandoc-citeproc \
+    usr/local/bin/pandoc-citeproc
+
+    PANDOC_DL_URL=$(wget -qO- https://api.github.com/repos/jgm/pandoc/releases/latest | grep -oP "(?<=\"browser_download_url\":\s\")https.*amd64.deb") \
+    && wget ${PANDOC_DL_URL} -O pandoc-amd64.deb \
+    && dpkg -i pandoc-amd64.deb \
+    && rm pandoc-amd64.deb
+
+    ## Symlink pandoc & standard pandoc templates for use system-wide
+    PANDOC_TEMPLATES_VERSION=`pandoc -v | grep -oP "(?<=pandoc\s)[0-9\.]+$"` \
+    && wget https://github.com/jgm/pandoc-templates/archive/${PANDOC_TEMPLATES_VERSION}.tar.gz -O pandoc-templates.tar.gz \
+    && rm -fr /opt/pandoc/templates \
+    && mkdir -p /opt/pandoc/templates \
+    && tar xvf pandoc-templates.tar.gz \
+    && cp -r pandoc-templates*/* /opt/pandoc/templates && rm -rf pandoc-templates* \
+    && rm -fr /root/.pandoc \
+    && mkdir /root/.pandoc && ln -s /opt/pandoc/templates /root/.pandoc/templates
+
+    CROSSREF_DL_URL=$(wget -qO- https://api.github.com/repos/lierdakil/pandoc-crossref/releases/latest | grep -oP "(?<=\"browser_download_url\":\s\")https.*tar\.xz" | grep Linux) \
+    && wget -O - ${CROSSREF_DL_URL} | \
+    tar Jxf - \
+    && mv pandoc-crossref /usr/local/bin \
+    && rm -rf pandoc-crossref.1
+
+
+
+
+
+    install2.r -n -2 --skipinstalled --error \
+    --deps TRUE \
+        rmarkdown \
+        methods \
+        bookdown \
+        knitr \
+        kableExtra \
+        png \
+        grid \
+        pander \
+        kfigr \
+    && rm -rf /tmp/downloaded_packages

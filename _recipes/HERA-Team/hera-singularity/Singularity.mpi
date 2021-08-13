@@ -74,12 +74,12 @@ From: ubuntu:20.04
   echo "DONE with OS install and update"
 
   # Define environment variables for install paths
-  ROOT_INSTALL_PATH="/usr/local"
-  CONDA_PATH="$ROOT_INSTALL_PATH/miniconda3"
+  INSTALL_PATH="/usr/local"
+  CONDA_PATH="$INSTALL_PATH/miniconda3"
   CONDA_SH="$CONDA_PATH/etc/profile.d/conda.sh"
 
   # Download and install miniconda
-  cd $ROOT_INSTALL_PATH && \
+  cd $INSTALL_PATH && \
   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
   bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_PATH && \
   rm Miniconda3-latest-Linux-x86_64.sh
@@ -91,17 +91,15 @@ From: ubuntu:20.04
   # Create `hera1` enviroment and install dependencies for HEREA packages.
   conda create -n mpi -y -c conda-forge python=3.8 ipython ipykernel numpy scipy \
     scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
-    aipy healpy pyuvdata h5py pyyaml click python-casacore cartopy \
+    aipy healpy pyuvdata=2.1.5 h5py pyyaml click python-casacore cartopy \
     xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl \
-    psutil line_profiler spiceypy pytest future
+    psutil pytest future
 
   # Activate the Python environment
   conda activate mpi
 
-  # Install pyuvsim and dependencies
-  pip install lunarsky
-  pip install pyradiosky[all]
-  pip install pyuvsim[all]
+  # Install pyuvsim and pyradiosky
+  pip install pyuvsim[sim]
 
   # Install pygdsm
   pip install git+https://github.com/telegraphic/pygdsm

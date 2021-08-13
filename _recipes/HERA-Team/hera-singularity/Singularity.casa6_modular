@@ -34,9 +34,13 @@ From: ubuntu:18.04
 # Define environment variables that will be set at runtime.
 # -----------------------------------------------------------------------------
 %environment
-  export CONDA_INSTALL_PATH="/usr/local/miniconda3"
-  export CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
-  export PATH=$PATH:"$CONDA_INSTALL_PATH/condabin"
+  # conda install path
+  export CONDA_PATH="/usr/local/miniconda3"
+  # conda initialization script
+  export CONDA_SH="$CONDA_PATH/etc/profile.d/conda.sh"
+  # Prepend PATH with conda/python bin
+  export PATH=${CONDA_PATH}/bin:${PATH}
+  export PATH=${CONDA_PATH}/envs/casa6_modular/bin:${PATH}
 
 
 # -----------------------------------------------------------------------------
@@ -62,36 +66,34 @@ From: ubuntu:18.04
   # DONE with OS install and update
 
   # Define environment variables for install paths
-  ROOT_INSTALL_PATH="/usr/local"
-  CONDA_INSTALL_PATH="$ROOT_INSTALL_PATH/miniconda3"
-  CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
+  INSTALL_PATH="/usr/local"
+  CONDA_PATH="$INSTALL_PATH/miniconda3"
+  CONDA_SH="$CONDA_PATH/etc/profile.d/conda.sh"
 
   # Download and install miniconda
-  cd $ROOT_INSTALL_PATH && \
+  cd $INSTALL_PATH && \
   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-  bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_INSTALL_PATH && \
+  bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_PATH && \
   rm Miniconda3-latest-Linux-x86_64.sh
 
   # Make conda executable available during build and update.
   # This does not make the executable available during runtime.
-  . $CONDA_INIT_SCRIPT && conda update -n base conda
+  . $CONDA_SH && conda update -n base conda
 
   # Create `casa6_modular` enviroment and install dependencies for HEREA packages.
   # All dependencies are available in conda although the conda ephem
   # package seems to be too old for hera_cal.
   conda create -n casa6_modular -c conda-forge python=3.6 ipython ipykernel numpy scipy \
     scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
-    aipy healpy pyuvdata h5py pyyaml click python-casacore cartopy \
+    aipy healpy pyuvdata=2.1.5 h5py pyyaml click python-casacore cartopy \
     xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl aplpy \
-    psutil line_profiler spiceypy pytest future
+    psutil pytest future
 
   # Activate the Python environment
   conda activate casa6_modular
 
-  # Install pyuvsim and dependencies
-  pip install lunarsky
-  pip install pyradiosky[all]
-  pip install pyuvsim[all]
+  # Install pyuvsim and pyradiosky
+  pip install pyuvsim[sim]
 
   # Install pygdsm
   pip install git+https://github.com/telegraphic/pygdsm

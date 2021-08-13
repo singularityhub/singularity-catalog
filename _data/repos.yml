@@ -352,10 +352,10 @@ AI-Planning/autoscale:
     \ data</h1>\n<p>The optimization/results folder contains JSON files with the results\
     \ of the experiments.\nThe results table in the paper is generated via the scripts\
     \ <code>report-gather-dataset.py</code> and\n<code>report-create-table.py</code>.</p>\n"
-  stargazers_count: 0
+  stargazers_count: 2
   subscribers_count: 4
   topics: []
-  updated_at: 1628744201.0
+  updated_at: 1628798705.0
 APSIMInitiative/APSIMClassic:
   data_format: 2
   description: APSIM
@@ -3225,7 +3225,7 @@ Characterisation-Virtual-Laboratory/CharacterisationVL-Software:
   stargazers_count: 6
   subscribers_count: 5
   topics: []
-  updated_at: 1627344846.0
+  updated_at: 1628817721.0
 ChunCun/container:
   data_format: 2
   description: null
@@ -7799,7 +7799,7 @@ HERA-Team/hera-singularity:
     <p><a name=\"user-content-myfootnote1\">1</a>: With CASA measurement sets, HEALPix\
     \ beam, and CST beam functionalities, see <a href=\"https://github.com/RadioAstronomySoftwareGroup/pyuvdata%5C\"\
     >https://github.com/RadioAstronomySoftwareGroup/pyuvdata\\</a>\n<a name=\"user-content-myfootnote2\"\
-    >2</a>: With profiling and full simulator, see <a href=\"https://github.com/RadioAstronomySoftwareGroup/pyuvsim\"\
+    >2</a>: without line profiler and lunar capability, see <a href=\"https://github.com/RadioAstronomySoftwareGroup/pyuvsim\"\
     >https://github.com/RadioAstronomySoftwareGroup/pyuvsim</a>\n<a name=\"user-content-myfootnote3\"\
     >3</a>: See <a href=\"https://github.com/mwilensky768/SSINS\">https://github.com/mwilensky768/SSINS</a></p>\n\
     <h3>\n<a id=\"user-content-variances\" class=\"anchor\" href=\"#variances\" aria-hidden=\"\
@@ -7836,10 +7836,10 @@ HERA-Team/hera-singularity:
     <h3>\n<a id=\"user-content-environment-variables\" class=\"anchor\" href=\"#environment-variables\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
     ></span></a>Environment Variables</h3>\n<p>The following environment variables\
-    \ are also exported in all containers:</p>\n<pre><code>CONDA_INSTALL_PATH=\"/usr/local/miniconda3\"\
-    \nCONDA_INIT_SCRIPT=\"$CONDA_INSTALL_PATH/etc/profile.d/conda.sh\"\n</code></pre>\n\
-    <p>The latter is especially useful to make the <code>conda</code> command available\
-    \ inside the container (see the section on <a href=\"####-%60shell%60\"><code>singularly\
+    \ are also exported in all containers:</p>\n<pre><code>CONDA_PATH=\"/usr/local/miniconda3\"\
+    \nCONDA_SH=\"$CONDA_PATH/etc/profile.d/conda.sh\"\n</code></pre>\n<p>The latter\
+    \ is especially useful to make the <code>conda</code> command available inside\
+    \ the container (see the section on <a href=\"####-%60shell%60\"><code>singularly\
     \ shell</code> usage</a> below).</p>\n<p>The <code>rtp</code> container has an\
     \ additional environment variable that point to <code>hera_pipelines</code>.</p>\n\
     <pre><code>HERA_PIPELINES_PATH=\"/usr/local/hera_pipelines\"\n</code></pre>\n\
@@ -7867,37 +7867,36 @@ HERA-Team/hera-singularity:
     bin\\bash</code> (as in our Ubuntu build), <code>.bashrc</code> will be read.</p>\n\
     <pre><code>$ singularity shell rtp.sif\nSingularity&gt; exec $SHELL\n</code></pre>\n\
     <p>b) Manually execute the conda initialization script inside singularity shell.\
-    \ The <code>CONDA_INIT_SCRIPT</code> environment variable pointing to the absolute\
-    \ path of the script (<code>/usr/local/miniconda3/etc/profile.d/conda.sh</code>),\
-    \ is made available for this purpose. Note that <code>.</code> must be used as\
-    \ <code>source</code> won't work under <code>sh</code>.</p>\n<pre><code>$ singularity\
-    \ shell rtp.sif\nSingularity&gt; . $CONDA_INIT_SCRIPT\n</code></pre>\n<p>b) Specify\
-    \ <code>\\bin\\bash</code> as a shell to use when executing the <code>shell</code>\
-    \ command, either by using the <code>SINGULARITY_SHELL</code> environment variable,</p>\n\
-    <pre><code>$ SINGULARITY_SHELL=/bin/bash singularity shell hera-rtp.sif\n</code></pre>\n\
-    <p>or <code>-s</code> option,</p>\n<pre><code>$ singularity shell -s /bin/bash\
-    \ hera-rtp.sif\n</code></pre>\n<h4>\n<a id=\"user-content-exec\" class=\"anchor\"\
-    \ href=\"#exec\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
-    \ octicon-link\"></span></a><code>exec</code>\n</h4>\n<p>The <code>singularity\
-    \ exec</code> command allows you to execute a custom command within a container\
-    \ by specifying the image file.</p>\n<pre><code>$ singularity exec rtp.sif echo\
-    \ \"Hello World!\"\nHello World!\n</code></pre>\n<pre><code>$ cat myscript.sh\n\
-    Hello World!\n$ singularity exec rtp.sif bash myscript.sh\nHello World!\n</code></pre>\n\
-    <h3>\n<a id=\"user-content-file-permission-and-bind-path\" class=\"anchor\" href=\"\
-    #file-permission-and-bind-path\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>File Permission and Bind Path</h3>\n\
-    <p>Singularity containers run as the user and share host services. When Singularity\
-    \ \u2018switch\u2019 from the host operating system to the containerized operating\
-    \ system, the OS-level system files on the host becomes inaccessible. (the root\
-    \ user on the host system is also different from the root in the container!)</p>\n\
-    <h3>\n<a id=\"user-content-specific-usages-for-ilifu\" class=\"anchor\" href=\"\
-    #specific-usages-for-ilifu\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>Specific Usages for Ilifu</h3>\n<p>Plese see\
-    \ the relevant page on the HERA wiki.</p>\n"
+    \ The <code>CONDA_SH</code> environment variable pointing to the absolute path\
+    \ of the script (<code>/usr/local/miniconda3/etc/profile.d/conda.sh</code>), is\
+    \ made available for this purpose. Note that <code>.</code> must be used as <code>source</code>\
+    \ won't work under <code>sh</code>.</p>\n<pre><code>$ singularity shell rtp.sif\n\
+    Singularity&gt; . $CONDA_SH\n</code></pre>\n<p>b) Specify <code>\\bin\\bash</code>\
+    \ as a shell to use when executing the <code>shell</code> command, either by using\
+    \ the <code>SINGULARITY_SHELL</code> environment variable,</p>\n<pre><code>$ SINGULARITY_SHELL=/bin/bash\
+    \ singularity shell hera-rtp.sif\n</code></pre>\n<p>or <code>-s</code> option,</p>\n\
+    <pre><code>$ singularity shell -s /bin/bash hera-rtp.sif\n</code></pre>\n<h4>\n\
+    <a id=\"user-content-exec\" class=\"anchor\" href=\"#exec\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a><code>exec</code>\n\
+    </h4>\n<p>The <code>singularity exec</code> command allows you to execute a custom\
+    \ command within a container by specifying the image file.</p>\n<pre><code>$ singularity\
+    \ exec rtp.sif echo \"Hello World!\"\nHello World!\n</code></pre>\n<pre><code>$\
+    \ cat myscript.sh\nHello World!\n$ singularity exec rtp.sif bash myscript.sh\n\
+    Hello World!\n</code></pre>\n<h3>\n<a id=\"user-content-file-permission-and-bind-path\"\
+    \ class=\"anchor\" href=\"#file-permission-and-bind-path\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>File Permission\
+    \ and Bind Path</h3>\n<p>Singularity containers run as the user and share host\
+    \ services. When Singularity \u2018switch\u2019 from the host operating system\
+    \ to the containerized operating system, the OS-level system files on the host\
+    \ becomes inaccessible. (the root user on the host system is also different from\
+    \ the root in the container!)</p>\n<h3>\n<a id=\"user-content-specific-usages-for-ilifu\"\
+    \ class=\"anchor\" href=\"#specific-usages-for-ilifu\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Specific Usages\
+    \ for Ilifu</h3>\n<p>Plese see the relevant page on the HERA wiki.</p>\n"
   stargazers_count: 0
   subscribers_count: 13
   topics: []
-  updated_at: 1628694695.0
+  updated_at: 1628792583.0
 HanLabUNLV/hanlab_singularity_defs:
   data_format: 2
   description: definition files for containers used in Hanlab
@@ -12777,10 +12776,10 @@ NIH-HPC/singularity-def-files:
     \ href=\"/utilities/uropa\">uropa</a></li>\n<li><a href=\"/utilities/vcf2db\"\
     >vcf2db</a></li>\n<li><a href=\"/utilities/visidata\">visidata</a></li>\n<li><a\
     \ href=\"/utilities/whatshap\">whatshap</a></li>\n</ul>\n"
-  stargazers_count: 9
+  stargazers_count: 10
   subscribers_count: 7
   topics: []
-  updated_at: 1625108554.0
+  updated_at: 1628795414.0
 NOAA-GFDL/AM4:
   data_format: 2
   description: null
@@ -27996,7 +27995,7 @@ datalad/datalad:
   - data-storage
   - dataset
   - usable
-  updated_at: 1628255987.0
+  updated_at: 1628776751.0
 davecwright3/bart-singularity:
   data_format: 2
   description: Bayesian Atmospheric Radiative Transfer (BART) packaged in a Singularity
@@ -34240,7 +34239,7 @@ gpuhackathons-org/gpubootcamp:
   - rapidsai
   - openmp
   - ai4hpc
-  updated_at: 1628608628.0
+  updated_at: 1628777516.0
 granek/jupyter-MIC-2021:
   data_format: 2
   description: null
@@ -35778,7 +35777,7 @@ hmgu-itg/peakplotter:
   filenames:
   - Singularity
   full_name: hmgu-itg/peakplotter
-  latest_release: v0.3.1
+  latest_release: v0.4.0
   readme: "<h1>\n<a id=\"user-content-peakplotter--automatically-annotate-hits-from-genome-wide-association-results\"\
     \ class=\"anchor\" href=\"#peakplotter--automatically-annotate-hits-from-genome-wide-association-results\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
@@ -35804,68 +35803,68 @@ hmgu-itg/peakplotter:
     ></span></a>Prerequisites</h2>\n<p>PeakPlotter has has non-python dependencies.<br>\n\
     In order to run PeakPlotter you need to install the following tools and add the\
     \ executables to your <code>PATH</code>:</p>\n<ul>\n<li>Plink 1.9 or newer (<a\
-    \ href=\"https://www.cog-genomics.org/plink2/index\" rel=\"nofollow\">available\
+    \ href=\"https://www.cog-genomics.org/plink/1.9/\" rel=\"nofollow\">available\
     \ here</a>)</li>\n<li>LocusZoom Standalone 1.4 or newer (<a href=\"http://genome.sph.umich.edu/wiki/LocusZoom_Standalone\"\
     \ rel=\"nofollow\">available here</a>)</li>\n<li>Tabix (<a href=\"https://github.com/samtools/htslib\"\
-    >available here</a>)</li>\n<li>Moreutils (for <code>sponge</code>)</li>\n</ul>\n\
-    <p>PeakPlotter will throw a <code>MissingExecutableError</code> if you have any\
-    \ of the above tools missing in your <code>PATH</code> environment variable.<br>\n\
-    Add the necessary tools to your <code>PATH</code> like below:</p>\n<div class=\"\
-    highlight highlight-source-shell\"><pre><span class=\"pl-k\">export</span> PATH=/path/to/locuszoom:/path/to/plink:<span\
-    \ class=\"pl-smi\">$PATH</span></pre></div>\n<p>If you want to make these changes\
-    \ permanent, do:</p>\n<div class=\"highlight highlight-source-shell\"><pre><span\
-    \ class=\"pl-c1\">echo</span> <span class=\"pl-s\"><span class=\"pl-pds\">'</span>export\
-    \ PATH=/path/to/locuszoom:/path/to/plink:$PATH<span class=\"pl-pds\">'</span></span>\
-    \ <span class=\"pl-k\">&gt;&gt;</span> <span class=\"pl-k\">~</span>/.bashrc</pre></div>\n\
-    <h2>\n<a id=\"user-content-usage\" class=\"anchor\" href=\"#usage\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Usage</h2>\n\
-    <div class=\"highlight highlight-source-shell\"><pre>$ peakplotter --help\nUsage:\
-    \ peakplotter [OPTIONS]\n\n  PeakPlotter\n\nOptions:\n  -a, --assoc-file FILE\
-    \    Path to the association file. It can be gzipped,\n                      \
-    \     provided that it bears the .gz extension. Its first\n                  \
-    \         line must be a header, coherent with the name\n                    \
-    \       arguments below. It must be tab-separated, bgzipped\n                \
-    \           and tabixed (tabix is available as part of\n                     \
-    \      bcftools)  [required]\n  -f, --bfiles TEXT        Binary PLINK (.bed/.bim/.fam)\
-    \ file base name. This\n                           should contain the genotypes\
-    \ <span class=\"pl-k\">for</span> at least all the\n                         \
-    \  variants <span class=\"pl-k\">in</span> the assoc_file, but it can contain\n\
-    \                           more. Please note that this is the base name,\n  \
-    \                         without the .bed/.bim/.fam extension.  [required]\n\
-    \  -o, --out DIRECTORY      Output directory to store all output files.\n    \
-    \                       [required]\n  -chr, --chr-col TEXT     Name of the column\
-    \ <span class=\"pl-k\">for</span> chromosome names.\n                        \
-    \   [required]\n  -ps, --pos-col TEXT      Name of the column <span class=\"pl-k\"\
-    >for</span> chromosomal position.\n                           [required]\n  -rs,\
-    \ --rs-col TEXT       Name of the column <span class=\"pl-k\">for</span> unique\
-    \ SNP ids (RS-id or\n                           chr:pos).  [required]\n  -p, --pval-col\
-    \ TEXT      Name of the column <span class=\"pl-k\">for</span> p-values.  [required]\n\
-    \  -a1, --a1-col TEXT       Name of the column <span class=\"pl-k\">for</span>\
-    \ reference or major allele\n                           (used <span class=\"pl-k\"\
-    >for</span> predicting consequence).  [required]\n  -a2, --a2-col TEXT       Name\
-    \ of the column <span class=\"pl-k\">for</span> alternate or minor allele.\n \
-    \                          [required]\n  -maf, --maf-col TEXT     Name of the\
-    \ column <span class=\"pl-k\">for</span> non-reference or minor\n            \
-    \               allele frequency.  [required]\n  -b, --build INTEGER      Assembly\
-    \ build (37 or 38)  [default: 38]\n  -s, --signif FLOAT       The significance\
-    \ level above which to <span class=\"pl-k\">declare</span> a\n               \
-    \            variant significant. Scientific notation (such as\n             \
-    \              5e-8) is fine.\n  -bp, --flank-bp INTEGER  Flanking size <span\
-    \ class=\"pl-k\">in</span> base pairs <span class=\"pl-k\">for</span> drawing\
-    \ plots\n                           (defaults to 500kb, i.e. 1Mbp plots) around\
-    \ lead\n                           SNPs.\n  --overwrite              Overwrite\
+    >available here</a>)</li>\n</ul>\n<p>PeakPlotter will throw a <code>MissingExecutableError</code>\
+    \ if you have any of the above tools missing in your <code>PATH</code> environment\
+    \ variable.<br>\nAdd the necessary tools to your <code>PATH</code> like below:</p>\n\
+    <div class=\"highlight highlight-source-shell\"><pre><span class=\"pl-k\">export</span>\
+    \ PATH=/path/to/locuszoom:/path/to/plink:<span class=\"pl-smi\">$PATH</span></pre></div>\n\
+    <p>If you want to make these changes permanent, do:</p>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre><span class=\"pl-c1\">echo</span> <span class=\"\
+    pl-s\"><span class=\"pl-pds\">'</span>export PATH=/path/to/locuszoom:/path/to/plink:$PATH<span\
+    \ class=\"pl-pds\">'</span></span> <span class=\"pl-k\">&gt;&gt;</span> <span\
+    \ class=\"pl-k\">~</span>/.bashrc</pre></div>\n<h2>\n<a id=\"user-content-usage\"\
+    \ class=\"anchor\" href=\"#usage\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Usage</h2>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre>$ peakplotter --help\nUsage: peakplotter [OPTIONS]\n\
+    \n  PeakPlotter\n\nOptions:\n  -a, --assoc-file FILE    Path to the association\
+    \ file. It can be gzipped,\n                           provided that it bears\
+    \ the .gz extension. Its first\n                           line must be a header,\
+    \ coherent with the name\n                           arguments below. It must\
+    \ be tab-separated, bgzipped\n                           and tabixed (tabix is\
+    \ available as part of\n                           bcftools)  [required]\n  -f,\
+    \ --bfiles TEXT        Binary PLINK (.bed/.bim/.fam) file base name. This\n  \
+    \                         should contain the genotypes <span class=\"pl-k\">for</span>\
+    \ at least all the\n                           variants <span class=\"pl-k\">in</span>\
+    \ the assoc_file, but it can contain\n                           more. Please\
+    \ note that this is the base name,\n                           without the .bed/.bim/.fam\
+    \ extension.  [required]\n  -o, --out DIRECTORY      Output directory to store\
+    \ all output files.\n                           [required]\n  -chr, --chr-col\
+    \ TEXT     Name of the column <span class=\"pl-k\">for</span> chromosome names.\n\
+    \                           [required]\n  -ps, --pos-col TEXT      Name of the\
+    \ column <span class=\"pl-k\">for</span> chromosomal position.\n             \
+    \              [required]\n  -rs, --rs-col TEXT       Name of the column <span\
+    \ class=\"pl-k\">for</span> unique SNP ids (RS-id or\n                       \
+    \    chr:pos).  [required]\n  -p, --pval-col TEXT      Name of the column <span\
+    \ class=\"pl-k\">for</span> p-values.  [required]\n  -a1, --a1-col TEXT      \
+    \ Name of the column <span class=\"pl-k\">for</span> reference or major allele\n\
+    \                           (used <span class=\"pl-k\">for</span> predicting consequence).\
+    \  [required]\n  -a2, --a2-col TEXT       Name of the column <span class=\"pl-k\"\
+    >for</span> alternate or minor allele.\n                           [required]\n\
+    \  -maf, --maf-col TEXT     Name of the column <span class=\"pl-k\">for</span>\
+    \ non-reference or minor\n                           allele frequency.  [required]\n\
+    \  -b, --build INTEGER      Assembly build (37 or 38)  [default: 38]\n  -s, --signif\
+    \ FLOAT       The significance level above which to <span class=\"pl-k\">declare</span>\
+    \ a\n                           variant significant. Scientific notation (such\
+    \ as\n                           5e-8) is fine.\n  -bp, --flank-bp INTEGER  Flanking\
+    \ size <span class=\"pl-k\">in</span> base pairs <span class=\"pl-k\">for</span>\
+    \ drawing plots\n                           (defaults to 500kb, i.e. 1Mbp plots)\
+    \ around lead\n                           SNPs.\n  --overwrite              Overwrite\
     \ output directory <span class=\"pl-k\">if</span> it already exists.\n  --help\
     \                   Show this message and exit.</pre></div>\n<h2>\n<a id=\"user-content-testing\"\
     \ class=\"anchor\" href=\"#testing\" aria-hidden=\"true\"><span aria-hidden=\"\
     true\" class=\"octicon octicon-link\"></span></a>Testing</h2>\n<p>Run <code>pytest</code>\
-    \ at the root of the repository to run the testsuite.</p>\n<p>There aren't a lot\
-    \ of tests right now, and this is a work in progress. If you encounter any bugs,\
-    \ please raise an issue at the <a href=\"https://github.com/hmgu-itg/peakplotter/issues\"\
+    \ at the root of the repository to run the testsuite.</p>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre>git clone git@github.com:hmgu-itg/peakplotter.git\n\
+    <span class=\"pl-c1\">cd</span> peakplotter\npytest</pre></div>\n<p>If you encounter\
+    \ any bugs, please raise an issue at the <a href=\"https://github.com/hmgu-itg/peakplotter/issues\"\
     >issue page</a>.</p>\n"
   stargazers_count: 2
   subscribers_count: 2
   topics: []
-  updated_at: 1626939397.0
+  updated_at: 1628681971.0
 housw/BlendIt:
   data_format: 2
   description: null
@@ -35976,7 +35975,7 @@ hpcng/singularity:
   - examples/library/Singularity
   - e2e/testdata/Singularity
   full_name: hpcng/singularity
-  latest_release: v3.8.1
+  latest_release: v3.8.0
   readme: '<h1>
 
     <a id="user-content-singularity" class="anchor" href="#singularity" aria-hidden="true"><span
@@ -36115,8 +36114,8 @@ hpcng/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 2161
-  subscribers_count: 91
+  stargazers_count: 2162
+  subscribers_count: 90
   topics:
   - containers
   - container
@@ -36132,7 +36131,7 @@ hpcng/singularity:
   - portability
   - rootless-containers
   - cloud-native
-  updated_at: 1628717177.0
+  updated_at: 1628792330.0
 humanconnectome/hcp-pipelines-singularity:
   data_format: 2
   description: The definition files for creating singularity containers that can run
@@ -39308,6 +39307,142 @@ jstutters/nicpython36:
   subscribers_count: 0
   topics: []
   updated_at: 1624933808.0
+kaczmarj/container-examples:
+  data_format: 2
+  description: Examples of Dockerfiles and Singularity recipes
+  filenames:
+  - python-env/Singularity
+  full_name: kaczmarj/container-examples
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-container-examples" class="anchor" href="#container-examples"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>container
+    examples</h1>
+
+    <h1>
+
+    <a id="user-content-build-with-docker" class="anchor" href="#build-with-docker"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>build
+    with docker</h1>
+
+    <h2>
+
+    <a id="user-content-bedtoolsdockerfile" class="anchor" href="#bedtoolsdockerfile"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>bedtools.Dockerfile</h2>
+
+    <pre><code>docker build --tag bedtools --file bedtools.Dockerfile .
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-condadockerfile" class="anchor" href="#condadockerfile" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>conda.Dockerfile</h2>
+
+    <pre><code>docker build --tag conda --file conda.Dockerfile .
+
+    </code></pre>
+
+    <h3>
+
+    <a id="user-content-running-jupyter-notebook" class="anchor" href="#running-jupyter-notebook"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>running
+    jupyter notebook</h3>
+
+    <p>please note that we set <code>--ip 0.0.0.0</code>. and we need to publish the
+    port from the
+
+    container onto the host. otherwise, the port is only accessible inside the container
+
+    and will not be seen by our web browser (which is outside of the container).</p>
+
+    <pre><code>docker run --rm -it --publish 8888:8888 conda --port 8888 --ip 0.0.0.0
+    --no-browser
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-tensorflow24dockerfile" class="anchor" href="#tensorflow24dockerfile"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>tensorflow24.Dockerfile</h2>
+
+    <pre><code>docker build --tag tensorflow:2.4 --file tensorflow24.Dockerfile .
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-python-env" class="anchor" href="#python-env" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>python-env</h2>
+
+    <p>this is an example of building a docker image for a python environment. that
+    directory
+
+    includes a <code>requirements.txt</code> file, which lists dependencies. we copy
+    that file into
+
+    the docker image when it is being built, and we install the python packages listed
+
+    there.</p>
+
+    <pre><code>docker build --tag mypyenv python-env
+
+    </code></pre>
+
+    <h1>
+
+    <a id="user-content-build-with-singularity" class="anchor" href="#build-with-singularity"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>build
+    with singularity</h1>
+
+    <h2>
+
+    <a id="user-content-python-env-1" class="anchor" href="#python-env-1" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>python-env</h2>
+
+    <p>this example builds a singularity image of <code>python-env</code>.</p>
+
+    <pre><code>cd python-env
+
+    sudo singularity build python-env.sif Singularity
+
+    </code></pre>
+
+    <p>example of running the image. arguments after the image name are passed to
+    the
+
+    entrypoint. because our entrypoint is <code>python</code>, the command-line arguments
+    are passed
+
+    to that.</p>
+
+    <pre><code>$ singularity run python-env.sif -c ''import numpy; print(numpy.__version__)''
+
+    1.21.1
+
+    </code></pre>
+
+    <p>and here''s an example to show that users stay themselves in containers...</p>
+
+    <p>remember, just be yourself.</p>
+
+    <pre><code>$ singularity exec python-env.sif whoami
+
+    jakub
+
+    </code></pre>
+
+    <p>this is not the case in docker. you need <code>sudo</code> to run the containers,
+    so inside the
+
+    container, you can be root. this is not ideal, especially on shared clusters.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1628778703.0
 kalibera/rchk:
   data_format: 2
   description: null
@@ -40924,7 +41059,7 @@ lscsoft/bilby:
   stargazers_count: 22
   subscribers_count: 6
   topics: []
-  updated_at: 1627648850.0
+  updated_at: 1628778318.0
 lxwgcool/singularity:
   data_format: 2
   description: singularity-recipe-share
@@ -41440,6 +41575,97 @@ matt-sd-watson/nextflow_for_bioinformatics:
   subscribers_count: 1
   topics: []
   updated_at: 1627503736.0
+mattocci27/r-containers:
+  data_format: 2
+  description: docker and singularity containers for R
+  filenames:
+  - images/myenv_4.1.1/Singularity.def
+  - images/rstan_4.1.1/Singularity.def
+  - images/rmd-light_4.1.1/Singularity.def
+  full_name: mattocci27/r-containers
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-docker-and-singularity-images-for-r" class="anchor" href="#docker-and-singularity-images-for-r"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Docker
+    and singularity images for R</h1>
+
+    <p><a href="https://opensource.org/licenses/MIT" rel="nofollow"><img src="https://camo.githubusercontent.com/45b4ffbd594af47fe09a3432f9f8e122c6518aa6352b4ce453a1a2563da2905c/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d4d49542d677265656e2e737667"
+    alt="GitHub License" data-canonical-src="https://img.shields.io/badge/license-MIT-green.svg"
+    style="max-width:100%;"></a></p>
+
+    <h2>
+
+    <a id="user-content-images" class="anchor" href="#images" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Images</h2>
+
+    <table>
+
+    <thead>
+
+    <tr>
+
+    <th>docker</th>
+
+    <th>singularity</th>
+
+    <th>description</th>
+
+    <th>r-ver</th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr>
+
+    <td><a href="https://hub.docker.com/repository/docker/mattocci/rstan" rel="nofollow">rstan</a></td>
+
+    <td><a href="https://cloud.sylabs.io/library/mattocci27/default/rstan" rel="nofollow">rstan</a></td>
+
+    <td>adds rstan on <a href="https://hub.docker.com/r/rocker/geospatial" rel="nofollow">geospatial</a>
+
+    </td>
+
+    <td>3.6.3, 4.1.0-1</td>
+
+    </tr>
+
+    <tr>
+
+    <td><a href="https://hub.docker.com/repository/docker/mattocci/myenv" rel="nofollow">myenv</a></td>
+
+    <td><a href="https://cloud.sylabs.io/library/mattocci27/default/myenv" rel="nofollow">myenv</a></td>
+
+    <td>adds a bunch of packages on ''rstan''</td>
+
+    <td>3.6.3, 4.1.0-1</td>
+
+    </tr>
+
+    <tr>
+
+    <td><a href="https://hub.docker.com/repository/docker/mattocci/rmd-light" rel="nofollow">rmd-light</a></td>
+
+    <td>-</td>
+
+    <td>R markdown + TinyTex + pandoc-crossref without Rstudio and Tidyverse</td>
+
+    <td>4.1.0-1</td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    '
+  stargazers_count: 1
+  subscribers_count: 1
+  topics: []
+  updated_at: 1628762172.0
 maxpkatz/singularity_image_files:
   data_format: 2
   description: null
@@ -42981,6 +43207,7 @@ mkandes/naked-singularity:
   - definition-files/anaconda/Singularity.anaconda3-py38-2020.11-ubuntu-18.04
   - definition-files/pytorch/Singularity.pytorch-1.8.1-ubuntu-18.04-cuda-11.2-openmpi-4.0.5
   - definition-files/pytorch/Singularity.pytorch-1.5.0-ubuntu-18.04-cuda-10.1.168-openmpi-3.1.4
+  - definition-files/ubuntu/Singularity.ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0-mvapich-2.3.6
   - definition-files/ubuntu/Singularity.ubuntu-18.04-openmpi-3.1.4
   - definition-files/ubuntu/Singularity.ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0
   - definition-files/ubuntu/Singularity.ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0-openmpi-3.1.6
@@ -43028,6 +43255,7 @@ mkandes/naked-singularity:
   - definition-files/omb/Singularity.omb-5.6.3-centos-7.9.2009-openmpi-3.1.4
   - definition-files/omb/Singularity.omb-5.7-ubuntu-18.04-openmpi-4.0.5
   - definition-files/omb/Singularity.omb-5.7-centos-7.7.1908-cuda-11.0-openmpi-3.1.6
+  - definition-files/omb/Singularity.omb-5.7-ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0-mvapich-2.3.6
   - definition-files/omb/Singularity.omb-5.6.3-ubuntu-18.04-openmpi-3.1.6
   - definition-files/omb/Singularity.omb-5.6.3-ubuntu-18.04-mvapich-2.3.2
   - definition-files/omb/Singularity.omb-5.7-ubuntu-18.04-cuda-11.2-openmpi-4.0.5
@@ -43153,20 +43381,20 @@ mkandes/naked-singularity:
     <a id="user-content-version" class="anchor" href="#version" aria-hidden="true"><span
     aria-hidden="true" class="octicon octicon-link"></span></a>Version</h2>
 
-    <p>1.8.1</p>
+    <p>1.8.4</p>
 
     <h2>
 
     <a id="user-content-last-updated" class="anchor" href="#last-updated" aria-hidden="true"><span
     aria-hidden="true" class="octicon octicon-link"></span></a>Last Updated</h2>
 
-    <p>Wednesday, August 4th, 2021</p>
+    <p>Thursday, August 12th, 2021</p>
 
     '
   stargazers_count: 34
   subscribers_count: 2
   topics: []
-  updated_at: 1628112856.0
+  updated_at: 1628802369.0
 ml4ai/UA-hpc-containers:
   data_format: 2
   description: Container recipes for use with the U of A HPC resources
@@ -43560,11 +43788,16 @@ mwanakijiji/rrlyrae_metallicity:
     <p>This is a package for determining metallicities from med-res RRab spectroscopy.
     See --- for documentation.</p>
 
+    <p><a href="https://camo.githubusercontent.com/3392a3e31e4b95617f485c953c6f20ad42f5c156e2c95f498a68bf6213a3320c/68747470733a2f2f696d672e736869656c64732e696f2f636f766572616c6c732f6769746875622f6d77616e616b696a696a692f72726c797261655f6d6574616c6c69636974793f6c6f676f3d476974487562267374796c653d706c6173746963"
+    target="_blank" rel="nofollow"><img src="https://camo.githubusercontent.com/3392a3e31e4b95617f485c953c6f20ad42f5c156e2c95f498a68bf6213a3320c/68747470733a2f2f696d672e736869656c64732e696f2f636f766572616c6c732f6769746875622f6d77616e616b696a696a692f72726c797261655f6d6574616c6c69636974793f6c6f676f3d476974487562267374796c653d706c6173746963"
+    alt="Coveralls" data-canonical-src="https://img.shields.io/coveralls/github/mwanakijiji/rrlyrae_metallicity?logo=GitHub&amp;style=plastic"
+    style="max-width:100%;"></a></p>
+
     '
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1628558569.0
+  updated_at: 1628805830.0
 nbcrrolls/electrostatics-singularity:
   data_format: 2
   description: Molecular electrostatics singularity image
@@ -44359,7 +44592,7 @@ nservant/HiC-Pro:
   stargazers_count: 247
   subscribers_count: 20
   topics: []
-  updated_at: 1627644950.0
+  updated_at: 1628760876.0
 nuKs/preprocessing:
   data_format: 2
   description: null
@@ -49060,7 +49293,7 @@ pscedu/singularity-abyss:
   topics:
   - singularity
   - bioinformatics
-  updated_at: 1628193790.0
+  updated_at: 1628788079.0
 pscedu/singularity-asciinema:
   data_format: 2
   description: asciinema [as-kee-nuh-muh] is a free and open source solution for recording
@@ -49208,7 +49441,7 @@ pscedu/singularity-bamtools:
   - 2.5.2/Singularity
   - 2.5.1/Singularity
   full_name: pscedu/singularity-bamtools
-  latest_release: null
+  latest_release: v2.5.2
   readme: "<p><a href=\"https://github.com/pscedu/singularity-bamtools/actions/workflows/main.yml/badge.svg\"\
     \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-bamtools/actions/workflows/main.yml/badge.svg\"\
     \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/43cc1554b9e51a28dfa82673f6a9629d4b3f4151419378b68631040a1a5f52a2/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d62616d746f6f6c73\"\
@@ -49259,7 +49492,7 @@ pscedu/singularity-bamtools:
   topics:
   - singularity
   - bioinformatics
-  updated_at: 1628104763.0
+  updated_at: 1628785394.0
 pscedu/singularity-bat:
   data_format: 2
   description: A cat(1) clone with syntax highlighting and Git integration.
@@ -49716,14 +49949,20 @@ pscedu/singularity-busco:
     \ class=\"anchor\" href=\"#singularity-busco\" aria-hidden=\"true\"><span aria-hidden=\"\
     true\" class=\"octicon octicon-link\"></span></a>singularity-busco</h1>\n<p>Singularity\
     \ recipe for <a href=\"https://busco.ezlab.org/\" rel=\"nofollow\">busco</a>.</p>\n\
-    <h2>\n<a id=\"user-content-building-the-image-using-the-recipe\" class=\"anchor\"\
-    \ href=\"#building-the-image-using-the-recipe\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Building the image using the\
-    \ recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\" class=\"\
-    anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>To build the image locally</h3>\n\
-    <p>Run the script <code>build.sh</code> to build image locally.</p>\n<pre><code>bash\
-    \ ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    <h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\" class=\"anchor\"\
+    \ href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Installing the container on Bridges\
+    \ 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code> file</li>\n<li>and the\
+    \ <code>busco</code> script</li>\n</ul>\n<p>to <code>/opt/packages/busco/5.0.0</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/busco</code>\
+    \ as <code>5.0.0.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
     \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
     ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
     \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
@@ -49742,7 +49981,7 @@ pscedu/singularity-busco:
   topics:
   - singularity
   - bioinformatics
-  updated_at: 1628652229.0
+  updated_at: 1628832692.0
 pscedu/singularity-bwa:
   data_format: 2
   description: 'BWA is a program for aligning sequencing reads against a large reference
@@ -50156,9 +50395,10 @@ pscedu/singularity-gatk:
   description: 'The GATK is the industry standard for identifying SNPs and indels
     in germline DNA and RNAseq data. '
   filenames:
+  - 4.2.0.0/Singularity
   - 4.1.9.0/Singularity
   full_name: pscedu/singularity-gatk
-  latest_release: v4.1.9.0
+  latest_release: v4.2.0.0
   readme: "<p><a href=\"https://github.com/pscedu/singularity-gatk/actions/workflows/main.yml/badge.svg\"\
     \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-gatk/actions/workflows/main.yml/badge.svg\"\
     \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/93c4f349e621f15ffd8933b4c7d4ea8eea7b6f9156528a6b483b1b47d8064a91/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d6761746b\"\
@@ -50212,7 +50452,7 @@ pscedu/singularity-gatk:
   topics:
   - singularity
   - bioinformatics
-  updated_at: 1628105166.0
+  updated_at: 1628783632.0
 pscedu/singularity-gent:
   data_format: 2
   description: 'This program computes the cross entropy for groups of sequences  that
@@ -51086,7 +51326,7 @@ pscedu/singularity-picard:
     \ href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"true\"><span aria-hidden=\"\
     true\" class=\"octicon octicon-link\"></span></a>Installing the container on Bridges\
     \ 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code> file</li>\n<li>and the\
-    \ Perl scripts</li>\n</ul>\n<p>to <code>/opt/packages/picard/2.23.2</code>.</p>\n\
+    \ <code>picard</code> script</li>\n</ul>\n<p>to <code>/opt/packages/picard/2.23.2</code>.</p>\n\
     <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/picard</code>\
     \ as <code>2.23.2.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
     \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
@@ -51111,7 +51351,7 @@ pscedu/singularity-picard:
   topics:
   - bioinformatics
   - singularity
-  updated_at: 1628105253.0
+  updated_at: 1628785221.0
 pscedu/singularity-prodigal:
   data_format: 2
   description: Fast, reliable protein-coding gene prediction for prokaryotic genomes.
@@ -56978,7 +57218,7 @@ sylabs/singularity:
   - containers
   - hpc
   - linux
-  updated_at: 1628700011.0
+  updated_at: 1628807827.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '

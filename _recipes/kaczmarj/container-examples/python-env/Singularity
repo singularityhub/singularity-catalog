@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: python:3.9.6
+
+%files
+. /opt/mypackage
+
+%post
+cd /opt/mypackage
+pip install --no-cache-dir --requirement requirements.txt
+
+%runscript
+# Note we need to explicitly allow command-line arguments here with $@.
+exec python3 "$@"
