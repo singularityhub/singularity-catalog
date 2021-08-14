@@ -4,21 +4,24 @@ MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/BaseOS/$bas
 Include: yum
 
 %environment
-PATH=/opt/conda/bin:$PATH
+PATH=/opt/conda/bin:/opt/conda/condabin:$PATH
 export PATH
-source activate qiime2-2019.10
 
 %post
 yum update -y
-yum  install -y @"Development Tools"
+yum install -y @"Development Tools"
 yum install -y git curl which python3 python3-devel vim wget tar bzip2 gzip mesa-libGL mesa-libGLU
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
 bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda
 export PATH=/opt/conda/bin:$PATH
 conda install -y conda
 conda update -y conda
-wget https://data.qiime2.org/distro/core/qiime2-2019.10-py36-linux-conda.yml
-conda env create -n qiime2-2019.10 --file qiime2-2019.10-py36-linux-conda.yml
+wget https://raw.githubusercontent.com/qiime2/environment-files/master/2021.4/release/qiime2-2021.4-py38-linux-conda.yml
+conda env create -n qiime2-2021.4 --file qiime2-2021.4-py38-linux-conda.yml
+conda shell.posix activate qiime2-2021.4 > /etc/profile.d/conda.sh
+rm -f Miniconda3-latest-Linux-x86_64.sh qiime2-2021.4-py38-linux-conda.yml
+yum clean all
 
 %runscript
+source /etc/profile.d/conda.sh
 exec qiime "$@"
