@@ -25558,14 +25558,53 @@ chenhongluo/horovord:
   - Singularity
   full_name: chenhongluo/horovord
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-supernova" class="anchor" href="#supernova" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>supernova</h1>
-
-    <p>Singularity container script for 10x Genomics SuperNova software</p>
-
-    '
+  readme: "<h1>\n<a id=\"user-content-singularity-container-for-molecular-electrostatic-calculations-using-pdb2pqrapbs-and-brownian-dynamics-with-browndye\"\
+    \ class=\"anchor\" href=\"#singularity-container-for-molecular-electrostatic-calculations-using-pdb2pqrapbs-and-brownian-dynamics-with-browndye\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Singularity container for molecular electrostatic calculations using\
+    \ PDB2PQR/APBS and Brownian dynamics with BrownDye.</h1>\n<p>This singularity\
+    \ image contains a complete software environment for running <a href=\"http://browndye.ucsd.edu/\"\
+    \ rel=\"nofollow\">BrownDye (version 1 and 2)</a> simulations. It also includes\
+    \ <a href=\"http://www.poissonboltzmann.org/\" rel=\"nofollow\">PDB2PQR</a> and\
+    \ <a href=\"http://www.poissonboltzmann.org/\" rel=\"nofollow\">APBS</a>.</p>\n\
+    <p>Please <a href=\"http://eepurl.com/by4eQr\" rel=\"nofollow\">register</a> your\
+    \ use of APBS and PDB2PQR.</p>\n<p>The image has been verified to work on XSEDE\
+    \ <a href=\"https://portal.xsede.org/sdsc-comet\" rel=\"nofollow\">comet</a> and\
+    \ <a href=\"https://www.sdsc.edu/support/user_guides/tscc-quick-start.html\" rel=\"\
+    nofollow\">TSCC</a> shared cluster at SDSC. It will automatically bind <code>/cvmfs</code>\
+    \ <code>/oasis</code> <code>/projects</code> <code>/scratch</code> directories,\
+    \ if available on the host.</p>\n<h2>\n<a id=\"user-content-using-the-container\"\
+    \ class=\"anchor\" href=\"#using-the-container\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Using the container</h2>\n<p>Pull\
+    \ the singularity image:</p>\n<pre><code>singularity pull shub://nbcrrolls/electrostatics-singularity\n\
+    </code></pre>\n<p>Start bash shell in the container:</p>\n<pre><code>singularity\
+    \ shell nbcrrolls-electrostatics-singularity-master-latest.simg\n</code></pre>\n\
+    <p>Now the container is running and we can start a BrownDye2 job (using the Thrombin\
+    \ example):</p>\n<pre><code>module load browndye2\ncp -ai $BD2_PATH/examples/thrombin\
+    \ .\ncd thrombin\nsed -i 's/-PE0//g' *\nsed -i 's/&lt;n_trajectories&gt; 10000\
+    \ /&lt;n_trajectories&gt; 1000 /' t_m_simulation.xml.bak\nmake all # takes about\
+    \ min to run\nmodule unload browndye2\n</code></pre>\n<p>And if you want to use\
+    \ BrownDye version 1:</p>\n<pre><code>module load browndye1\ncp -ai $BD1_PATH/thrombin-example\
+    \ .\ncd thrombin-example\nsed -i 's/-PE0//g' *\nsed -i 's/&lt;n-trajectories&gt;\
+    \ 10000 /&lt;n-trajectories&gt; 1000 /' input.xml.bak # limit the number of calculated\
+    \ trajectories\nmake all\nbd_top input.xml\nnam_simulation t-m-simulation.xml\
+    \ # this takes about 3 min to run\ncat results.xml\nmodule unload browndye1\n\
+    </code></pre>\n<p>After we are finished we can quit the container:</p>\n<pre><code>exit\n\
+    </code></pre>\n<p>You can also access individual applications from the electrostatics\
+    \ container.</p>\n<p>To list available applications:</p>\n<pre><code>$ singularity\
+    \ apps nbcrrolls-electrostatics-singularity-master-latest.simg \napbs\npdb2pqr\n\
+    nam_simulation\nwe_simulation\n</code></pre>\n<p>To run, for example, apbs calculation:</p>\n\
+    <pre><code>singularity exec nbcrrolls-electrostatics-singularity-master-latest.simg\
+    \ apbs input.in\n</code></pre>\n<p>or</p>\n<pre><code>singularity run --app apbs\
+    \ nbcrrolls-electrostatics-singularity-master-latest.simg input.in\n</code></pre>\n\
+    <p>This Singularity image is hosted on Singularity Hub: <a href=\"https://singularity-hub.org/collections/2497\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667\"\
+    \ alt=\"https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg\"\
+    \ data-canonical-src=\"https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h6>\n<a id=\"user-content-this-project-is-supported-by-nbcr\"\
+    \ class=\"anchor\" href=\"#this-project-is-supported-by-nbcr\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>This\
+    \ project is supported by <a href=\"http://nbcr.ucsd.edu\" rel=\"nofollow\">NBCR</a>.</h6>\n"
   stargazers_count: 0
   subscribers_count: 0
   topics: []
@@ -31880,30 +31919,75 @@ funkelab/funlib.run:
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Usage</h2>\n\
     <p>There are three useful ways to use funlib.run:</p>\n<ol>\n<li>Direct usage\
     \ via command line arguments (overwrites config file defaults):</li>\n</ol>\n\
-    <pre lang=\"bash\"><code>python run.py -p \"python train.py\" -c 5 -g 1 -q normal\
-    \ -s path-to-singularity-image\n\npython run_singularity.py -p \"python mknet.py\"\
-    \ -s path-to-singularity-image\n</code></pre>\n<ol start=\"2\">\n<li>Indirect\
-    \ call via another script:</li>\n</ol>\n<pre lang=\"python\"><code>from funlib.run\
-    \ import run, run_singularity\n\nrun(command=\"python train.py\",\n    num_cpus=5,\n\
-    \    num_gpus=1,\n    queue=\"normal\",\n    execute=True)\n\nrun_singularity(command=\"\
-    python mknet.py\",\n                singularity_image=\"path_to_image\",\n   \
-    \             execute=True)\n</code></pre>\n<ol start=\"3\">\n<li>Command creation\
-    \ and subsequent call:</li>\n</ol>\n<pre lang=\"python\"><code>from funlib.run\
-    \ import run, run_singularity\nfrom subprocess import check_call\n\nrun_command\
-    \ = run(command=\"python train.py\",\n                  num_cpus=5,\n        \
-    \          num_gpus=1,\n                  queue=\"normal\",\n                \
-    \  execute=False)\n\ncheck_call(run_command,\n           shell=True)\n\nrun_singularity_command\
-    \ = run_singularity(command=\"python mknet.py\",\n                           \
-    \               singularity_image=\"path_to_image\",\n                       \
-    \                   execute=False)\n\ncheck_call(run_singularity_command,\n  \
-    \         shell=True)\n</code></pre>\n<h2>\n<a id=\"user-content-usage-with-daisy\"\
-    \ class=\"anchor\" href=\"#usage-with-daisy\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Usage with Daisy</h2>\n<p>When\
-    \ used with daisy.call do not expand the cmd to a string via setting expand=False:</p>\n\
-    <pre lang=\"python\"><code>cmd = run(command=base_command,\n          queue=queue,\n\
-    \          num_gpus=1,\n          num_cpus=num_cpus,\n          singularity_image=singularity_container,\n\
-    \          mount_dirs=mount_dirs,\n          execute=False,\n          expand=False)\n\
-    \ndaisy.call(cmd, log_out=log_out, log_err=log_err)\n</code></pre>\n"
+    <div class=\"highlight highlight-source-shell\"><pre>python run.py -p <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>python train.py<span class=\"pl-pds\">\"\
+    </span></span> -c 5 -g 1 -q normal -s path-to-singularity-image\n\npython run_singularity.py\
+    \ -p <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>python mknet.py<span\
+    \ class=\"pl-pds\">\"</span></span> -s path-to-singularity-image</pre></div>\n\
+    <ol start=\"2\">\n<li>Indirect call via another script:</li>\n</ol>\n<div class=\"\
+    highlight highlight-source-python\"><pre><span class=\"pl-k\">from</span> <span\
+    \ class=\"pl-s1\">funlib</span>.<span class=\"pl-s1\">run</span> <span class=\"\
+    pl-k\">import</span> <span class=\"pl-s1\">run</span>, <span class=\"pl-s1\">run_singularity</span>\n\
+    \n<span class=\"pl-en\">run</span>(<span class=\"pl-s1\">command</span><span class=\"\
+    pl-c1\">=</span><span class=\"pl-s\">\"python train.py\"</span>,\n    <span class=\"\
+    pl-s1\">num_cpus</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\">5</span>,\n\
+    \    <span class=\"pl-s1\">num_gpus</span><span class=\"pl-c1\">=</span><span\
+    \ class=\"pl-c1\">1</span>,\n    <span class=\"pl-s1\">queue</span><span class=\"\
+    pl-c1\">=</span><span class=\"pl-s\">\"normal\"</span>,\n    <span class=\"pl-s1\"\
+    >execute</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\">True</span>)\n\
+    \n<span class=\"pl-en\">run_singularity</span>(<span class=\"pl-s1\">command</span><span\
+    \ class=\"pl-c1\">=</span><span class=\"pl-s\">\"python mknet.py\"</span>,\n \
+    \               <span class=\"pl-s1\">singularity_image</span><span class=\"pl-c1\"\
+    >=</span><span class=\"pl-s\">\"path_to_image\"</span>,\n                <span\
+    \ class=\"pl-s1\">execute</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\"\
+    >True</span>)</pre></div>\n<ol start=\"3\">\n<li>Command creation and subsequent\
+    \ call:</li>\n</ol>\n<div class=\"highlight highlight-source-python\"><pre><span\
+    \ class=\"pl-k\">from</span> <span class=\"pl-s1\">funlib</span>.<span class=\"\
+    pl-s1\">run</span> <span class=\"pl-k\">import</span> <span class=\"pl-s1\">run</span>,\
+    \ <span class=\"pl-s1\">run_singularity</span>\n<span class=\"pl-k\">from</span>\
+    \ <span class=\"pl-s1\">subprocess</span> <span class=\"pl-k\">import</span> <span\
+    \ class=\"pl-s1\">check_call</span>\n\n<span class=\"pl-s1\">run_command</span>\
+    \ <span class=\"pl-c1\">=</span> <span class=\"pl-en\">run</span>(<span class=\"\
+    pl-s1\">command</span><span class=\"pl-c1\">=</span><span class=\"pl-s\">\"python\
+    \ train.py\"</span>,\n                  <span class=\"pl-s1\">num_cpus</span><span\
+    \ class=\"pl-c1\">=</span><span class=\"pl-c1\">5</span>,\n                  <span\
+    \ class=\"pl-s1\">num_gpus</span><span class=\"pl-c1\">=</span><span class=\"\
+    pl-c1\">1</span>,\n                  <span class=\"pl-s1\">queue</span><span class=\"\
+    pl-c1\">=</span><span class=\"pl-s\">\"normal\"</span>,\n                  <span\
+    \ class=\"pl-s1\">execute</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\"\
+    >False</span>)\n\n<span class=\"pl-en\">check_call</span>(<span class=\"pl-s1\"\
+    >run_command</span>,\n           <span class=\"pl-s1\">shell</span><span class=\"\
+    pl-c1\">=</span><span class=\"pl-c1\">True</span>)\n\n<span class=\"pl-s1\">run_singularity_command</span>\
+    \ <span class=\"pl-c1\">=</span> <span class=\"pl-en\">run_singularity</span>(<span\
+    \ class=\"pl-s1\">command</span><span class=\"pl-c1\">=</span><span class=\"pl-s\"\
+    >\"python mknet.py\"</span>,\n                                          <span\
+    \ class=\"pl-s1\">singularity_image</span><span class=\"pl-c1\">=</span><span\
+    \ class=\"pl-s\">\"path_to_image\"</span>,\n                                 \
+    \         <span class=\"pl-s1\">execute</span><span class=\"pl-c1\">=</span><span\
+    \ class=\"pl-c1\">False</span>)\n\n<span class=\"pl-en\">check_call</span>(<span\
+    \ class=\"pl-s1\">run_singularity_command</span>,\n           <span class=\"pl-s1\"\
+    >shell</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\">True</span>)</pre></div>\n\
+    <h2>\n<a id=\"user-content-usage-with-daisy\" class=\"anchor\" href=\"#usage-with-daisy\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Usage with Daisy</h2>\n<p>When used with daisy.call do not expand\
+    \ the cmd to a string via setting expand=False:</p>\n<div class=\"highlight highlight-source-python\"\
+    ><pre><span class=\"pl-s1\">cmd</span> <span class=\"pl-c1\">=</span> <span class=\"\
+    pl-en\">run</span>(<span class=\"pl-s1\">command</span><span class=\"pl-c1\">=</span><span\
+    \ class=\"pl-s1\">base_command</span>,\n          <span class=\"pl-s1\">queue</span><span\
+    \ class=\"pl-c1\">=</span><span class=\"pl-s1\">queue</span>,\n          <span\
+    \ class=\"pl-s1\">num_gpus</span><span class=\"pl-c1\">=</span><span class=\"\
+    pl-c1\">1</span>,\n          <span class=\"pl-s1\">num_cpus</span><span class=\"\
+    pl-c1\">=</span><span class=\"pl-s1\">num_cpus</span>,\n          <span class=\"\
+    pl-s1\">singularity_image</span><span class=\"pl-c1\">=</span><span class=\"pl-s1\"\
+    >singularity_container</span>,\n          <span class=\"pl-s1\">mount_dirs</span><span\
+    \ class=\"pl-c1\">=</span><span class=\"pl-s1\">mount_dirs</span>,\n         \
+    \ <span class=\"pl-s1\">execute</span><span class=\"pl-c1\">=</span><span class=\"\
+    pl-c1\">False</span>,\n          <span class=\"pl-s1\">expand</span><span class=\"\
+    pl-c1\">=</span><span class=\"pl-c1\">False</span>)\n\n<span class=\"pl-s1\">daisy</span>.<span\
+    \ class=\"pl-en\">call</span>(<span class=\"pl-s1\">cmd</span>, <span class=\"\
+    pl-s1\">log_out</span><span class=\"pl-c1\">=</span><span class=\"pl-s1\">log_out</span>,\
+    \ <span class=\"pl-s1\">log_err</span><span class=\"pl-c1\">=</span><span class=\"\
+    pl-s1\">log_err</span>)</pre></div>\n"
   stargazers_count: 0
   subscribers_count: 4
   topics: []
@@ -45277,7 +45361,7 @@ openhpc/ohpc:
 
     '
   stargazers_count: 580
-  subscribers_count: 91
+  subscribers_count: 92
   topics:
   - hpc
   - scientific-computing
