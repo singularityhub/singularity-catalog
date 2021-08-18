@@ -3,11 +3,11 @@ bases:
   name: ubuntu
 - count: 239
   name: nvidia/cuda
-- count: 176
+- count: 178
   name: debian
-- count: 119
+- count: 118
   name: centos
-- count: 80
+- count: 85
   name: alpine
 - count: 70
   name: continuumio/miniconda3
@@ -17,7 +17,7 @@ bases:
   name: mkandes/naked-singularity
 - count: 47
   name: tensorflow/tensorflow
-- count: 43
+- count: 45
   name: python
 - count: 41
   name: nfcore/base
@@ -29,24 +29,26 @@ bases:
   name: godloved/secure/ubuntu-bionic
 - count: 28
   name: aibasel/downward
-- count: 26
+- count: 27
   name: neurodebian
 - count: 19
   name: osrf/ros
+- count: 19
+  name: khanlab/tar2bids
 - count: 18
   name: vitchyr/railrl_v12_cuda10-1_mj2-0-2-2_torch1-1-0_gym0-12-5_py3-6-5
-- count: 18
-  name: khanlab/tar2bids
 - count: 18
   name: modakopt/modak
 - count: 18
   name: bilbydev/bilby-test-suite-python37
 - count: 17
-  name: ezlabgva/busco
+  name: poldracklab/fmriprep
 - count: 17
   name: cokelaer/damona/conda
 - count: 16
   name: busybox
+- count: 16
+  name: ezlabgva/busco
 - count: 13
   name: nvcr.io/nvidia/pytorch
 - count: 12
@@ -56,7 +58,11 @@ bases:
 - count: 12
   name: khanlab/heudiconv
 - count: 11
+  name: bids/validator
+- count: 11
   name: deeplearnphysics/larcv2
+- count: 11
+  name: pennbbl/qsiprep
 - count: 11
   name: nitishnarula/secure/ubuntu-focal
 - count: 11
@@ -70,6 +76,8 @@ bases:
 - count: 10
   name: hariszaf/pema
 - count: 10
+  name: poldracklab/mriqc
+- count: 10
   name: dcgc-bfx/dcgc-jupyter-rstudio
 - count: 10
   name: nvcr.io/nvidia/tensorflow
@@ -77,14 +85,16 @@ bases:
   name: ghcr.io/mkandes/naked-singularity
 - count: 9
   name: continuumio/miniconda
+- count: 9
+  name: r-base
 - count: 8
   name: quay.io/vgteam/vg
 - count: 8
   name: ewels/multiqc
 - count: 8
-  name: r-base
-- count: 8
   name: slaclab/relion
+- count: 7
+  name: bids/rshrf
 - count: 7
   name: jekriske/r-base
 - count: 7
@@ -116,15 +126,13 @@ bases:
 - count: 6
   name: provarepro/openvino
 - count: 5
+  name: neuronets/kwyk
+- count: 5
   name: sequana.img
 - count: 5
   name: anibali/pytorch
 - count: 5
   name: 'GodloveD/busybox   '
-- count: 5
-  name: poldracklab/fmriprep
-- count: 5
-  name: poldracklab/mriqc
 - count: 5
   name: drneavin/SingularityBaseImages
 - count: 5
@@ -150,8 +158,6 @@ bases:
 - count: 4
   name: danabl/glimslib
 - count: 4
-  name: letaylor/sc_qc_cluster
-- count: 4
   name: golang
 - count: 4
   name: finalduty/archlinux
@@ -169,6 +175,10 @@ bases:
   name: slaclab/slac-jupyterlab
 - count: 3
   name: openresty/openresty
+- count: 3
+  name: bids/hcppipelines
+- count: 3
+  name: bids/mrtrix3_connectome
 - count: 3
   name: quay.io/biocontainers/gatk4
 - count: 3
@@ -202,13 +212,21 @@ bases:
 - count: 3
   name: mattocci/rstan
 - count: 3
+  name: bids/example
+- count: 3
   name: pennbbl/xcpengine
+- count: 3
+  name: nipreps/fmriprep
+- count: 3
+  name: bids/baracus
 - count: 3
   name: google/deepvariant
 - count: 3
   name: library/ubuntu
 - count: 3
   name: NuWro/builds
+- count: 3
+  name: bids/freesurfer
 - count: 3
   name: willgpaik/centos8_roar
 - count: 3
@@ -232,9 +250,21 @@ bases:
 - count: 2
   name: quay.io/biocontainers/bamtools
 - count: 2
+  name: quay.io/biocontainers/star
+- count: 2
+  name: quay.io/biocontainers/bwa
+- count: 2
+  name: gnuoctave/octave
+- count: 2
   name: quay.io/biocontainers/spades
 - count: 2
   name: perl
+- count: 2
+  name: bids/pymvpa
+- count: 2
+  name: peerherholz/bidsonym
+- count: 2
+  name: bids/spm
 - count: 2
   name: quay.io/biocontainers/hisat2
 - count: 2
@@ -253,6 +283,8 @@ bases:
   name: powerPlant/open-mpi-srf
 - count: 2
   name: opendronemap/odm@sha256
+- count: 2
+  name: marcchpc/pytorch_cuda9
 - count: 2
   name: nistmni/minc-toolkit-min
 - count: 2
@@ -344,11 +376,11 @@ bases:
 - count: 2
   name: modakopt/containers
 - count: 2
-  name: bids/example
-- count: 2
   name: uhrigs/arriba
 - count: 2
   name: brentp/smoove
+- count: 2
+  name: bids/broccoli
 - count: 2
   name: poldracklab/fitlins
 - count: 2
@@ -418,9 +450,15 @@ bases:
 - count: 1
   name: thinca/vim
 - count: 1
+  name: quay.io/biocontainers/homer
+- count: 1
+  name: quay.io/biocontainers/viennarna
+- count: 1
   name: spack/ubuntu-bionic
 - count: 1
   name: quay.io/biocontainers/prodigal
+- count: 1
+  name: quay.io/biocontainers/bedops
 - count: 1
   name: quay.io/biocontainers/raxml
 - count: 1
@@ -428,13 +466,13 @@ bases:
 - count: 1
   name: quay.io/biocontainers/picard
 - count: 1
-  name: quay.io/biocontainers/star
-- count: 1
   name: quay.io/biocontainers/kraken2
 - count: 1
-  name: quay.io/biocontainers/bwa
-- count: 1
   name: quay.io/biocontainers/cutadapt
+- count: 1
+  name: quay.io/biocontainers/fastqc
+- count: 1
+  name: quay.io/biocontainers/fastx_toolkit
 - count: 1
   name: quay.io/biocontainers/blast
 - count: 1
@@ -456,9 +494,49 @@ bases:
 - count: 1
   name: dota
 - count: 1
-  name: kkelchte/ros_gazebo_tensorflow
+  name: bids/ndmg
 - count: 1
-  name: bids/validator
+  name: bids/niak
+- count: 1
+  name: bids/aa
+- count: 1
+  name: sebastientourbier/multiscalebrainparcellator
+- count: 1
+  name: bids/dparsf
+- count: 1
+  name: bids/cpac
+- count: 1
+  name: bids/afni_proc
+- count: 1
+  name: sebastientourbier/connectomemapper-bidsapp
+- count: 1
+  name: bids/oppni
+- count: 1
+  name: bids/brainiak-srm
+- count: 1
+  name: bids/magetbrain
+- count: 1
+  name: bids/antscorticalthickness
+- count: 1
+  name: bids/rs_signal_extract
+- count: 1
+  name: sebastientourbier/mialsuperresolutiontoolkit
+- count: 1
+  name: bids/fibredensityandcrosssection
+- count: 1
+  name: bids/mindboggle
+- count: 1
+  name: khanlab/hippunfold
+- count: 1
+  name: bids/tracula
+- count: 1
+  name: bids/nipypelines
+- count: 1
+  name: poldracklab/ds003-example
+- count: 1
+  name: repronim/simple_workflow
+- count: 1
+  name: kkelchte/ros_gazebo_tensorflow
 - count: 1
   name: pinellolab/haystack_bio
 - count: 1
@@ -551,6 +629,8 @@ bases:
   name: thinkplayhack/python_jupyter
 - count: 1
   name: weatherhub/metview
+- count: 1
+  name: letaylor/sc_qc_cluster
 - count: 1
   name: thakk/bioinformatics
 - count: 1
@@ -764,19 +844,11 @@ bases:
 - count: 1
   name: godloved/secure/ubuntu-xenial
 - count: 1
-  name: nipreps/fmriprep
-- count: 1
   name: mcin/civet
 - count: 1
   name: nistmni/minc-toolkit
 - count: 1
   name: vfonov/minc-toolkit-containers
-- count: 1
-  name: bids/broccoli
-- count: 1
-  name: pennbbl/qsiprep
-- count: 1
-  name: bids/baracus
 - count: 1
   name: caffe2ai/caffe2
 - count: 1
@@ -880,8 +952,6 @@ bases:
 - count: 1
   name: mustxyk/fsl
 - count: 1
-  name: bids/freesurfer
-- count: 1
   name: asciinema/asciinema
 - count: 1
   name: ro47014
@@ -984,7 +1054,7 @@ bases:
 - count: 1
   name: conda/conda_4.9.1.img
 bootstraps:
-- count: 2535
+- count: 2643
   name: docker
 - count: 267
   name: debootstrap
@@ -1013,8 +1083,10 @@ bootstraps:
 - count: 1
   name: tensorflow
 orgs:
-- count: 24
+- count: 29
   name: quay.io/biocontainers
+- count: 25
+  name: bids
 - count: 14
   name: registry.gitlab.com/rode0day
 - count: 11
@@ -1028,11 +1100,13 @@ orgs:
 - count: 6
   name: slaclab
 - count: 5
-  name: bids
-- count: 5
   name: nvidia
 - count: 4
   name: willprice
+- count: 4
+  name: khanlab
+- count: 4
+  name: poldracklab
 - count: 4
   name: library
 - count: 4
@@ -1046,13 +1120,13 @@ orgs:
 - count: 3
   name: iarcbioinfo
 - count: 3
+  name: sebastientourbier
+- count: 3
   name: lizhen0909
 - count: 3
   name: spellrun
 - count: 3
   name: granek
-- count: 3
-  name: khanlab
 - count: 3
   name: darachm
 - count: 3
@@ -1061,8 +1135,6 @@ orgs:
   name: vuiiscci
 - count: 3
   name: jcsda
-- count: 3
-  name: poldracklab
 - count: 3
   name: godlovedc
 - count: 3
@@ -1158,6 +1230,8 @@ orgs:
 - count: 1
   name: spack
 - count: 1
+  name: gnuoctave
+- count: 1
   name: staphb
 - count: 1
   name: wangyoucao577
@@ -1169,6 +1243,12 @@ orgs:
   name: stimong
 - count: 1
   name: openfoamplus
+- count: 1
+  name: peerherholz
+- count: 1
+  name: neuronets
+- count: 1
+  name: repronim
 - count: 1
   name: kkelchte
 - count: 1
@@ -1206,6 +1286,8 @@ orgs:
 - count: 1
   name: adigenova
 - count: 1
+  name: marcchpc
+- count: 1
   name: miccourse
 - count: 1
   name: libatomsquip
@@ -1231,6 +1313,8 @@ orgs:
   name: TomHarrop
 - count: 1
   name: weatherhub
+- count: 1
+  name: letaylor
 - count: 1
   name: thakk
 - count: 1
@@ -1343,8 +1427,6 @@ orgs:
   name: nipype
 - count: 1
   name: ncbi
-- count: 1
-  name: letaylor
 - count: 1
   name: deeplearnphysics
 - count: 1
@@ -1544,8 +1626,8 @@ orgs:
 - count: 1
   name: semc
 tags:
-  latest: 256
-  other: 2318
+  latest: 259
+  other: 2419
 versions:
   APPIAN-PET/APPIAN:
     ants: 1
@@ -1590,8 +1672,8 @@ versions:
     '3.6': 2
     '3.7': 2
     '3.8': 4
-    edge: 28
-    latest: 13
+    edge: 29
+    latest: 16
   alpine/git:
     1.0.4: 1
   amazon/aws-cli:
@@ -1628,14 +1710,81 @@ versions:
     cuda9.0-cudnn7: 1
   bgruening/busybox-bash:
     '0.1': 1
+  bids/aa:
+    v0.2.0: 1
+  bids/afni_proc:
+    v0.0.2: 1
+  bids/antscorticalthickness:
+    v2.2.0-1: 1
   bids/baracus:
     latest: 1
+    v1.1.2: 1
+    v1.1.4: 1
+  bids/brainiak-srm:
+    latest: 1
   bids/broccoli:
-    v1.0.1: 1
+    v1.0.1: 2
+  bids/cpac:
+    v1.1.0_14: 1
+  bids/dparsf:
+    v4.3.12: 1
+  bids/example:
+    0.0.7: 1
+  bids/fibredensityandcrosssection:
+    v0.0.1: 1
   bids/freesurfer:
     latest: 1
-  bids/validator:
+    v6.0.1-5: 1
+    v6.0.1-6.1: 1
+  bids/hcppipelines:
+    v3.17.0-18: 1
+    v4.1.3-1: 1
+    v4.3.0-2: 1
+  bids/magetbrain:
+    v0.3: 1
+  bids/mindboggle:
+    0.0.4: 1
+  bids/mrtrix3_connectome:
+    0.4.1: 1
+    0.4.2: 1
+    0.5.0: 1
+  bids/ndmg:
+    v0.1.0: 1
+  bids/niak:
+    latest: 1
+  bids/nipypelines:
+    0.3.0: 1
+  bids/oppni:
+    v0.7.0-1: 1
+  bids/pymvpa:
+    v1.0.2: 1
+    v2.0.2: 1
+  bids/rs_signal_extract:
+    '0.1': 1
+  bids/rshrf:
+    1.0.0: 1
+    1.0.1: 1
+    1.0.8: 1
     1.3.1: 1
+    1.3.6: 1
+    1.4.4: 1
+    1.5.7: 1
+  bids/spm:
+    v0.0.15: 1
+    v0.0.20: 1
+  bids/tracula:
+    v6.0.0.beta-0: 1
+  bids/validator:
+    1.2.3: 1
+    1.2.4: 1
+    1.2.5: 1
+    1.3.1: 2
+    1.3.12: 1
+    v1.4.2: 1
+    v1.5.2: 1
+    v1.5.4: 1
+    v1.5.7: 1
+    v1.8.1-dev.0: 1
   bigdatalabteam/hcp-prefreesurfer:
     exec-centos7-reprozip.fslbuild-centos5: 1
   biobb_cmip:
@@ -1697,7 +1846,7 @@ versions:
     7.4.1708: 4
     7.6.1810: 2
     7.7.1908: 2
-    '8': 16
+    '8': 15
     8.2.2004: 1
     8.3.2011: 2
     centos6: 3
@@ -1783,13 +1932,13 @@ versions:
     9-slim: 7
     bullseye: 1
     bullseye-slim: 1
-    buster: 58
+    buster: 59
     buster-20200908-slim: 2
     buster-20201012: 1
     buster-slim: 16
     jessie: 7
     jessie-slim: 4
-    latest: 15
+    latest: 16
     stretch: 42
     stretch-slim: 6
     testing: 1
@@ -1847,7 +1996,7 @@ versions:
     v4.1.1_cv1: 1
     v4.1.2_cv1: 1
     v4.1.4_cv1: 2
-    v5.0.0_cv1: 2
+    v5.0.0_cv1: 1
     v5.1.2_cv1: 1
     v5.2.2_cv1: 2
   faustus123/hddeps:
@@ -1882,6 +2031,9 @@ versions:
     latest: 6
   gitlab.archlinux.org:
     5050/archlinux/archlinux-docker:base-master: 1
+  gnuoctave/octave:
+    6.2.0: 1
+    6.3.0: 1
   godloved/secure/centos8:
     20200805.0.0: 4
   godlovedc/ascatngs:
@@ -1969,6 +2121,8 @@ versions:
   khanlab/heudiconv:
     0.4.3: 5
     0.4.3a: 7
+  khanlab/hippunfold:
+    v0.5.11: 1
   khanlab/neuroglia-core-minc:
     v1.0.0: 1
   khanlab/tar2bids:
@@ -1989,6 +2143,7 @@ versions:
     v0.0.5f: 1
     v0.0.5g: 1
     v0.0.5h: 1
+    v0.0.6: 1
     v0.05a: 1
   kkelchte/ros_gazebo_tensorflow:
     latest: 1
@@ -2008,7 +2163,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 4
+    latest: 1
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2096,12 +2251,18 @@ versions:
     artful-non-free: 3
     bullseye: 1
     buster: 1
+    buster-non-free: 1
     focal-non-free: 1
     jessie: 5
     latest: 7
     nd90: 1
     non-free: 3
     stretch-non-free: 4
+  neuronets/kwyk:
+    0.5.0-gpu: 1
+    version-0.2-cpu: 1
+    version-0.2-gpu: 1
+    version-0.4-gpu: 2
   nfcore/base:
     '1.7': 3
     '1.8': 6
@@ -2112,7 +2273,8 @@ versions:
   nickjer/singularity-rstudio:
     3.6.2: 2
   nipreps/fmriprep:
-    20.2.1: 1
+    20.2.1: 2
+    20.2.3: 1
   nipy/heudiconv:
     latest: 1
   nipype/nipype:
@@ -2284,8 +2446,20 @@ versions:
     '20190226': 1
   pdal/pdal:
     latest: 1
+  peerherholz/bidsonym:
+    v0.0.2: 1
+    v0.0.4: 1
   pennbbl/qsiprep:
-    0.8.0: 1
+    0.11.5: 1
+    0.12.1: 1
+    0.13.0RC1: 1
+    0.14.2: 1
+    0.6.4: 1
+    0.6.6: 1
+    0.7.2: 1
+    0.8.0: 2
+    0.8.0RC2: 1
+    0.8.0RC3: 1
   pennbbl/xcpengine:
     '1.0': 1
     1.2.1: 1
@@ -2296,19 +2470,33 @@ versions:
     latest: 1
   pkrusche/hap.py:
     v0.3.9: 1
+  poldracklab/ds003-example:
+    0.0.3: 1
   poldracklab/fitlins:
     0.7.0: 1
     0.8.0: 1
   poldracklab/fmriprep:
+    1.3.2: 1
+    1.4.0: 1
+    1.4.1: 1
+    1.5.0: 1
+    1.5.3: 1
+    1.5.4: 1
+    1.5.8: 1
+    1.5.9: 1
     20.0.5: 1
-    20.1.1: 1
+    20.0.6: 1
+    20.1.0: 1
+    20.1.1: 2
     20.1.3: 1
-    20.2.0: 1
+    20.2.0: 2
     latest: 1
   poldracklab/mriqc:
-    0.15.1: 1
-    0.15.2: 2
-    0.16.1: 1
+    0.15.0: 1
+    0.15.1: 2
+    0.15.2: 3
+    0.16.0: 1
+    0.16.1: 2
     latest: 1
   postgres:
     '12': 1
@@ -2355,6 +2543,7 @@ versions:
     3.9.5: 1
     3.9.6: 1
     alpine3.6: 3
+    slim-buster: 2
   pytorch/pytorch:
     1.2-cuda10.0-cudnn7-devel: 1
     1.2-cuda10.0-cudnn7-runtime: 1
@@ -2378,6 +2567,8 @@ versions:
     2.5.1--he513fc3_6: 2
   quay.io/biocontainers/bcftools:
     1.10.2--h4f4756c_2: 1
+  quay.io/biocontainers/bedops:
+    2.4.39--hc9558a2_0: 1
   quay.io/biocontainers/bismark:
     0.22.3--0: 1
   quay.io/biocontainers/blast:
@@ -2388,17 +2579,24 @@ versions:
     2.4.2--py38h1c8e9b9_0: 1
     2.4.4--py39hbb4e92a_0: 1
   quay.io/biocontainers/bwa:
+    0.7.17--pl5.22.0_2: 1
     0.7.3a--hed695b0_5: 1
   quay.io/biocontainers/cutadapt:
     2.10--py37hf01694f_1: 1
   quay.io/biocontainers/edta:
     1.8.3--0: 1
     1.9.0--0: 2
+  quay.io/biocontainers/fastqc:
+    0.11.9--0: 1
+  quay.io/biocontainers/fastx_toolkit:
+    0.0.14--he1b5a44_8: 1
   quay.io/biocontainers/gatk4:
     4.1.9.0--py39_0: 2
     4.2.0.0--hdfd78af_1: 1
   quay.io/biocontainers/hisat2:
     2.2.1--he1b5a44_2: 2
+  quay.io/biocontainers/homer:
+    4.11--pl526hc9558a2_3: 1
   quay.io/biocontainers/kraken2:
     2.1.2--pl5262h7d875b9_0: 1
   quay.io/biocontainers/longshot:
@@ -2422,8 +2620,11 @@ versions:
     3.15.3--h95f258a_0: 1
   quay.io/biocontainers/star:
     2.7.6a--0: 1
+    2.7.9a--h9ee0642_0: 1
   quay.io/biocontainers/uropa:
     3.5.0--py_0: 1
+  quay.io/biocontainers/viennarna:
+    2.4.14--py27heb12742_3: 1
   quay.io/biocontainers/whatshap:
     0.18--py37h6bb024c_0: 1
   quay.io/comparative-genomics-toolkit/cactus:
@@ -2498,6 +2699,8 @@ versions:
     '20.04': 1
   registry.scicore.unibas.ch/schwede/openstructure:
     2.0.0: 1
+  repronim/simple_workflow:
+    1.1.0: 1
   richelbilderbeek/default/plinkr:
     v0.15.2: 1
   ro47014:
@@ -2539,6 +2742,12 @@ versions:
     latest: 1
   scr.svc.stanford.edu/deisseroth-lab/bruker-rip:
     latest: 1
+  sebastientourbier/connectomemapper-bidsapp:
+    v3.0.0-diffcourse: 1
+  sebastientourbier/mialsuperresolutiontoolkit:
+    v2.0.1: 1
+  sebastientourbier/multiscalebrainparcellator:
+    v1.1.1: 1
   semc/appion-protomo:
     latest: 1
   shengwei/das_tool:

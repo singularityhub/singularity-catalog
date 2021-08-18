@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: debian:buster
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-asciigenome
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    VERSION 1.16.0
+
+%post
+    apt update
+    apt install -y wget unzip default-jdk
+    wget https://github.com/dariober/ASCIIGenome/releases/download/v1.16.0/ASCIIGenome-1.16.0.zip
+unzip ASCIIGenome-1.16.0.zip
+    cd ASCIIGenome-1.16.0/
+    chmod a+x ASCIIGenome
+    cp ASCIIGenome.jar /usr/local/bin/
+    cp ASCIIGenome /usr/local/bin/

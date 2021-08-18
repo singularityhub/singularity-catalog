@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: ezlabgva/busco:v5.0.0_cv1
+From: python:slim-buster
 
 %labels
     MAINTAINER icaoberg
@@ -8,3 +8,13 @@ From: ezlabgva/busco:v5.0.0_cv1
     REPOSITORY http://github.com/pscedu/singularity-busco
     COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved. 
     VERSION 5.0.0
+%post
+    apt-get update
+    apt-get install -y wget
+    wget -nc https://gitlab.com/ezlab/busco/-/archive/5.0.0/busco-5.0.0.tar.gz
+    tar -xvf busco-5.0.0.tar.gz
+    rm busco-5.0.0.tar.gz
+    cd busco-5.0.0
+    python setup.py install
+    cd ..
+    rm -rfv busco-5.0.0

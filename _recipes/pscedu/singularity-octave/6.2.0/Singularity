@@ -1,51 +1,26 @@
-Bootstrap:docker
-From:centos:8
+Bootstrap: docker
+From: gnuoctave/octave:6.2.0
 
 %labels
-MAINTAINER baber@iastate.edu
-spack
-SUPPORT help@psc.edu
-REPOSITORY http://github.com/pscedu/singularity-octave
-COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved. 
-VERSION 6.2.0
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    WEBSITE http://github.com/pscedu/singularity-octave
+    COPYRIGHT Copyright © 2021, Pittsburgh Supercomputing Center. All Rights Reserved. 
+    VERSION 6.2.0
 
 %environment
-SPACK_ROOT=/opt/spack
-export SPACK_ROOT
-export PATH=$SPACK_ROOT/bin:$PATH
-source /etc/profile.d/modules.sh
-source $SPACK_ROOT/share/spack/setup-env.sh
+    export DISPLAY=hostname:0.0
 
 %post
-export SPACK_ROOT=/opt/spack
-export SPACK_ROOT
-export PATH=$SPACK_ROOT/bin:$PATH
+    apt-get update
+    apt-get install -y gnuplot pandoc
 
-#spack dependencies
-yum -y install git python3 \
-gcc gcc-c++ gcc-gfortran curl \
-gnupg2 sed patch \
-unzip gzip bzip2 \
-findutils make vim \
-environment-modules
-
-yum clean all
-
-#get spack
-git clone https://github.com/spack/spack.git $SPACK_ROOT
-
-#setup compilers.yaml
-spack compiler find --scope system $(which gcc)
-spack compiler find --scope system $(which g++)
-spack compiler find --scope system $(which gfortran)
-
-#setup modules config file
-echo "modules:" >> /opt/spack/etc/spack/modules.yaml
-echo "  tcl:" >> /opt/spack/etc/spack/modules.yaml
-echo "    naming_scheme: '\${PACKAGE}/\${VERSION}'" >> /opt/spack/etc/spack/modules.yaml
-
-source $SPACK_ROOT/share/spack/setup-env.sh
-spack install gnuplot@5.2.8
-
-%runscript
-spack help
+    octave --eval "pkg install https://octave.sourceforge.io/download.php?package=general-2.1.1.tar.gz"
+    octave --eval "pkg install https://octave.sourceforge.io/download.php?package=image-2.12.0.tar.gz"
+    octave --eval "pkg install https://octave.sourceforge.io/download.php?package=io-2.6.3.tar.gz"
+    octave --eval "pkg install https://octave.sourceforge.io/download.php?package=control-3.3.1.tar.gz"
+    octave --eval "pkg install https://octave.sourceforge.io/download.php?package=signal-1.4.1.tar.gz"
+    octave --eval "pkg install https://octave.sourceforge.io/download.php?package=struct-1.0.17.tar.gz"
+    octave --eval "pkg install https://octave.sourceforge.io/download.php?package=parallel-4.0.1.tar.gz"
+    octave --eval "pkg install https://octave.sourceforge.io/download.php?package=splines-1.3.4.tar.gz"

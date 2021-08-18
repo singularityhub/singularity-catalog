@@ -2,9 +2,11 @@ Bootstrap: docker
 From: debian:latest
 
 %labels
-    AUTHOR icaoberg
+    MAINTAINER icaoberg
     EMAIL icaoberg@psc.edu
-    WEBSITE http://gitlab.psc.edu/icaoberg/singularity-aspera-connect
+    SUPPORT help@psc.edu
+    REPOSITORY http://github.com/pscedu/singularity-aspera-connect
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved. 
     VERSION 3.11.0.5
 
 %files
@@ -14,5 +16,3 @@ From: debian:latest
     ln -s /opt/aspera/connect/bin/ascp /usr/bin/ascp
     ln -s /opt/aspera/connect/bin/asperaconnect /usr/bin/asperaconnect
     ln -s /opt/aspera/connect/bin/asperacrypt /usr/bin/asperacrypt
-
-####################################################################################

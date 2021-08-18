@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: alpine
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY https://github.com/icaoberg/singularity-bat
+    VERSION 0.18.1
+
+%post
+    apk update
+    apk add bat
