@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: debian:latest
+
+%labels
+     MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://github.com/pscedu/singularity-sra-toolkit
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved. 
+    VERSION 2.10.9
+
+%environment
+    PATH=$PATH:/opt/sratoolkit.2.10.9-ubuntu64/bin/
+
+%post
+   apt update && apt install -y wget
+   wget http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.10.9/sratoolkit.2.10.9-ubuntu64.tar.gz
+   tar -xvf sratoolkit.2.10.9-ubuntu64.tar.gz && \
+       rm -f sratoolkit.2.10.9-ubuntu64.tar.gz
+   mkdir -p /opt && mv -v sratoolkit.2.10.9-ubuntu64 /opt/
+
+####################################################################################

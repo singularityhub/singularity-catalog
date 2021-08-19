@@ -5788,7 +5788,7 @@ EngeLab/CIMseq:
   stargazers_count: 3
   subscribers_count: 2
   topics: []
-  updated_at: 1628860272.0
+  updated_at: 1629278126.0
 EnriqueDoster/bioinformatic-nextflow-pipelines:
   data_format: 2
   description: Collection of bioinformatic pipelines written in nextflow
@@ -12098,6 +12098,197 @@ Martybird/7TBEaST:
   subscribers_count: 1
   topics: []
   updated_at: 1530840788.0
+MatthiasEb/neurovista_evaluation:
+  data_format: 2
+  description: code for evaluation on full neurovista trial data
+  filenames:
+  - Singularity.nv_eval
+  full_name: MatthiasEb/neurovista_evaluation
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-neurovista_evaluation" class="anchor" href="#neurovista_evaluation"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>neurovista_evaluation</h1>
+
+    <p>code for evaluation on full neurovista trial data following the <a href="https://github.com/epilepsyecosystem/CodeEvaluationDocs">instructions</a>
+    (commit 20e6f0f, dated 16/06/2020).</p>
+
+    <h2>
+
+    <a id="user-content-settings" class="anchor" href="#settings" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Settings</h2>
+
+    <p>Settings can be adjusted in SETTINGS.json</p>
+
+    <h2>
+
+    <a id="user-content-using-a-virtual-environment" class="anchor" href="#using-a-virtual-environment"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using
+    a virtual environment</h2>
+
+    <h3>
+
+    <a id="user-content-requirements" class="anchor" href="#requirements" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>requirements</h3>
+
+    <ol>
+
+    <li>python3</li>
+
+    <li>cuda toolbox 10, nvidia-drivers</li>
+
+    </ol>
+
+    <h3>
+
+    <a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>installation</h3>
+
+    <p>Install requirements by running:</p>
+
+    <p><code>pip install -r requirements.txt</code></p>
+
+    <h3>
+
+    <a id="user-content-execution" class="anchor" href="#execution" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>execution</h3>
+
+    <p>Run training by executing:</p>
+
+    <p><code>python run.py</code></p>
+
+    <h2>
+
+    <a id="user-content-using-docker" class="anchor" href="#using-docker" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Using Docker</h2>
+
+    <h3>
+
+    <a id="user-content-requirements-1" class="anchor" href="#requirements-1" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>requirements</h3>
+
+    <p>Tested with Docker version 19.03.6, build 369ce74a3c on Ubuntu 18.04</p>
+
+    <h3>
+
+    <a id="user-content-build-image" class="anchor" href="#build-image" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Build Image</h3>
+
+    <p>Build Docker Image by running:</p>
+
+    <p><code>docker build --tag nv1x16_eval .</code></p>
+
+    <h3>
+
+    <a id="user-content-execution-1" class="anchor" href="#execution-1" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Execution</h3>
+
+    <p>Specify the directory of your data segments by</p>
+
+    <p><code>export DATA_DIR=YOUR_DATA_DIRECTORY</code>,</p>
+
+    <p>replacing <code>YOUR_DATA_DIRECTORY</code> with your specific directory.</p>
+
+    <p>Run training by executing</p>
+
+    <p><code>docker run --gpus 1 -v $PWD:/code -v /$DATA_DIR:/$DATA_DIR:ro nv1x16_eval
+    python ./run.py</code></p>
+
+    <h2>
+
+    <a id="user-content-using-singularity" class="anchor" href="#using-singularity"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using
+    Singularity</h2>
+
+    <p>Singularity recipe is included. SingularityHub URI of the Image is MatthiasEb/neurovista_evaluation:nv_eval.</p>
+
+    <h2>
+
+    <a id="user-content-remarks" class="anchor" href="#remarks" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Remarks</h2>
+
+    <p>You should use a GPU for training. I used an RTX 2080 Ti, run_on_contest_data=1,
+    mode=1 took about 4.5 h.
+
+    If you use a GPU with much less RAM, you might have to reduce the batch size,
+    I did not try that though.
+
+    I ran the code with run_on_contest_data=1, the results seemed to be comparable
+    to the version on the ecosystem leaderboard.
+
+    Sparse tests with run_on_contest_data=0 have been executed, maybe there is something
+    I missed here.
+
+    I did not yet try to run it within a singularity container, docker should work
+    though.
+
+    Do not hesitate to contact me if you run into problems, have any questions or
+    remarks.</p>
+
+    <h3>
+
+    <a id="user-content-algorithm" class="anchor" href="#algorithm" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Algorithm</h3>
+
+    <p>This is a pretty naive approach on a 2D-Convolution Deep Neural Network, applied
+    to the raw time series.
+
+    As described in the <a href="https://ieeexplore.ieee.org/abstract/document/8621225"
+    rel="nofollow">paper</a>, the Network expects standardized 15 s segments, sampeled
+    at 200 Hz.
+
+    tensorflow.keras (2.0.1) was used as Deep Learning API.
+
+    In order to avoid the need to either load the whole training set at once or to
+    save the preprocessed time series, this is a different implementation than the
+    one used in the paper.
+
+    In order to allow training on arbitrary large datasets, this implementation does
+    not perfectly reproduce the results shown in the paper.
+
+    I did a few testruns on the contest data, ROC AUC of the private Set should be
+    around .25, .7 and .8 for Patient 1, 2 and 3 respectively.
+
+    However, considerable variations are conceivable, see section below.</p>
+
+    <h3>
+
+    <a id="user-content-implementation" class="anchor" href="#implementation" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Implementation</h3>
+
+    <p>Loading the original (~ 400 Hz) .mat files, resampling to 200 Hz, standardizing
+    (optionally, if <code>subtract_mean==1</code>), splitting them in 15 s segments
+    is done asynchronously on the fly by the dataloader in 5 different threads.
+
+    The 15s Segments are enqueued in a buffer with the size of 400 10-min-sequences,
+    implemented as a tf.queue.RandomShuffleQueue.
+
+    The data is therefore dequeued in random order, although not perfectly uniformly
+    shuffeled, depending on the buffer size and the size of the data set.
+
+    I did some experiments that showed that the buffersize can have considerable impact
+    on the performance of the algorithm.
+
+    The bigger the buffer size, the closer are the results to the ones shown in the
+    paper.
+
+    The intention of this procedure was to ensure a reasonably shuffeled training
+    set of 15 s segments while minimizing IO, working on the .mat files and having
+    the possibility for standardization.<br>
+
+    If the IO-Bandwidth of the filesystem is reasonably high, this should not slow
+    down the training too much.</p>
+
+    <p>As described in the paper, if run_on_contest_data==1, 3 networks (one for each
+    patient) are trained and evaluated individually.
+
+    Subsequently, the solution file is concatenated.</p>
+
+    '
+  stargazers_count: 1
+  subscribers_count: 1
+  topics: []
+  updated_at: 1629316259.0
 MicroSTM/singularity_containers:
   data_format: 2
   description: Singularity containers
@@ -28409,7 +28600,7 @@ datalad/datalad:
   - data-storage
   - dataset
   - usable
-  updated_at: 1629186749.0
+  updated_at: 1629295655.0
 davecwright3/bart-singularity:
   data_format: 2
   description: Bayesian Atmospheric Radiative Transfer (BART) packaged in a Singularity
@@ -34431,7 +34622,18 @@ gpuhackathons-org/gpubootcamp:
   - misc/jupyter_lab_template/appName/Singularity
   full_name: gpuhackathons-org/gpubootcamp
   latest_release: null
-  readme: '<h1>
+  readme: '<p><a href="https://opensource.org/licenses/Apache-2.0" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/2a2157c971b7ae1deb8eb095799440551c33dcf61ea3d965d86b496a5a65df55/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d417061636865253230322e302d626c75652e737667"
+    alt="License" data-canonical-src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"
+    style="max-width:100%;"></a> <a href="https://github.com/gpuhackathons-org/gpubootcamp/releases/latest"><img
+    src="https://camo.githubusercontent.com/3c9b218d70e8d6d68c4b3f8473a900d73fe973b874d008398d92837894850b29/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f762f72656c656173652f6770756861636b6174686f6e732d6f72672f677075626f6f7463616d703f696e636c7564655f70726572656c6561736573"
+    alt="GitHub release (latest by date including pre-releases)" data-canonical-src="https://img.shields.io/github/v/release/gpuhackathons-org/gpubootcamp?include_prereleases"
+    style="max-width:100%;"></a> <a href="https://github.com/gpuhackathons-org/gpubootcamp/issues"><img
+    src="https://camo.githubusercontent.com/6b89fa02abe62d4047054d00dd9e49a7fb25630d4d6b848311b92fd76d06fc77/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f6770756861636b6174686f6e732d6f72672f677075626f6f7463616d70"
+    alt="GitHub issues" data-canonical-src="https://img.shields.io/github/issues/gpuhackathons-org/gpubootcamp"
+    style="max-width:100%;"></a></p>
+
+    <h1>
 
     <a id="user-content-gpubootcamp-official-training-materials" class="anchor" href="#gpubootcamp-official-training-materials"
     aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>GPUBootcamp
@@ -34478,9 +34680,9 @@ gpuhackathons-org/gpubootcamp:
     <td><a href="https://github.com/gpuhackathons-org/gpubootcamp/tree/master/hpc/nways">N-Ways</a></td>
 
     <td>This lab will cover multiple GPU programming models and choose the one that
-    best fits your needs. The material supports different programmin glangauges including
+    best fits your needs. The material supports different programming langauges including
     C ( CUDA C, OpenACC C, OpenMP C, C++ stdpar ),  Fortran ( CUDA Fortran, OpenACC
-    Fortran, OpenMP Fortran, ISO DO CONCURRENT</td>
+    Fortran, OpenMP Fortran, ISO DO CONCURRENT ) Python ( Numba, CuPy )</td>
 
     </tr>
 
@@ -34544,6 +34746,16 @@ gpuhackathons-org/gpubootcamp:
 
     <td>This Bootcamp will introduce developers to fundamentals of AI and how they
     can be applied to CFD (Computational Fluid Dynamics)</td>
+
+    </tr>
+
+    <tr>
+
+    <td><a href="https://github.com/gpuhackathons-org/gpubootcamp/tree/master/hpc_ai/ai_science_cfd">PINN</a></td>
+
+    <td>This Bootcamp will introduce developers to fundamentals of using Physics Informed
+    Neural Network and how they can be applied to different scientific domains using
+    Nvidia SimNet</td>
 
     </tr>
 
@@ -34631,6 +34843,15 @@ gpuhackathons-org/gpubootcamp:
 
     </ul>
 
+    <h2>
+
+    <a id="user-content-authors-and-acknowledgment" class="anchor" href="#authors-and-acknowledgment"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors
+    and Acknowledgment</h2>
+
+    <p>See <a href="https://github.com/gpuhackathons-org/gpubootcamp/graphs/contributors">Contributors</a>
+    for a list of contributors towards this Bootcamp.</p>
+
     <h1>
 
     <a id="user-content-feature-request-or-filing-issues" class="anchor" href="#feature-request-or-filing-issues"
@@ -34651,15 +34872,16 @@ gpuhackathons-org/gpubootcamp:
 
     <h2>
 
-    <a id="user-content-questions" class="anchor" href="#questions" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Questions?</h2>
+    <a id="user-content-join-openacc-community" class="anchor" href="#join-openacc-community"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Join
+    OpenACC Community</h2>
 
     <p>Please join <a href="https://openacclang.slack.com/messages/openaccusergroup"
-    rel="nofollow">OpenACC Slack Channel</a> for questions.</p>
+    rel="nofollow">OpenACC Slack Channel</a>.</p>
 
     '
-  stargazers_count: 88
-  subscribers_count: 7
+  stargazers_count: 89
+  subscribers_count: 8
   topics:
   - machine-learning
   - deep-learning
@@ -34673,7 +34895,7 @@ gpuhackathons-org/gpubootcamp:
   - rapidsai
   - openmp
   - ai4hpc
-  updated_at: 1628777516.0
+  updated_at: 1629286079.0
 granek/jupyter-MIC-2021:
   data_format: 2
   description: null
@@ -43858,20 +44080,20 @@ mkandes/naked-singularity:
     <a id="user-content-version" class="anchor" href="#version" aria-hidden="true"><span
     aria-hidden="true" class="octicon octicon-link"></span></a>Version</h2>
 
-    <p>1.8.4</p>
+    <p>1.8.6</p>
 
     <h2>
 
     <a id="user-content-last-updated" class="anchor" href="#last-updated" aria-hidden="true"><span
     aria-hidden="true" class="octicon octicon-link"></span></a>Last Updated</h2>
 
-    <p>Thursday, August 12th, 2021</p>
+    <p>Wednesday, August 18th, 2021</p>
 
     '
   stargazers_count: 34
   subscribers_count: 2
   topics: []
-  updated_at: 1628802369.0
+  updated_at: 1629344816.0
 ml4ai/UA-hpc-containers:
   data_format: 2
   description: Container recipes for use with the U of A HPC resources
@@ -50143,7 +50365,7 @@ pscedu/singularity-bat:
   topics:
   - singularity
   - utilities
-  updated_at: 1628979427.0
+  updated_at: 1629308743.0
 pscedu/singularity-bcftools:
   data_format: 2
   description: "bcftools \u2014 utilities for variant calling and manipulating VCFs\
@@ -50257,88 +50479,67 @@ pscedu/singularity-bedops:
   updated_at: 1628877680.0
 pscedu/singularity-bedtools:
   data_format: 2
-  description: A powerful toolset for genome arithmetic
+  description: A powerful toolset for genome arithmetic.
   filenames:
+  - 2.30.0/Singularity
   - 2.29.2/Singularity
   full_name: pscedu/singularity-bedtools
-  latest_release: v2.29.2
-  readme: "<h1>\n<a id=\"user-content-singularity-bedtools\" class=\"anchor\" href=\"\
-    #singularity-bedtools\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>singularity-bedtools</h1>\n<p><a href=\"https://cloud.sylabs.io/library/icaoberg/default/bedtools\"\
-    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/2747e70595bc577024d908f158c1c8b1d458085960e3bdd70770858769cdf396/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f686f737465642d73796c6162732e696f2d677265656e2e737667\"\
-    \ alt=\"Hosted\" data-canonical-src=\"https://img.shields.io/badge/hosted-sylabs.io-green.svg\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/8025f5254ec80610d1aa2daad722b5f63139d443fc969f0e566b87230d2519c5/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f72656c656173652d76322e32392e322d677265656e2e737667\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/8025f5254ec80610d1aa2daad722b5f63139d443fc969f0e566b87230d2519c5/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f72656c656173652d76322e32392e322d677265656e2e737667\"\
-    \ alt=\"Release\" data-canonical-src=\"https://img.shields.io/badge/release-v2.29.2-green.svg\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://travis-ci.org/icaoberg/singularity-bedtools\"\
-    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/4bd5a5797e0eea5576a22f0d6438bb219e7e9d1165583a395f84114bcdf8d56e/68747470733a2f2f7472617669732d63692e6f72672f6963616f626572672f73696e67756c61726974792d626564746f6f6c732e7376673f6272616e63683d6d6173746572\"\
-    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.org/icaoberg/singularity-bedtools.svg?branch=master\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://github.com/icaoberg/singularity-bedtools/issues\"\
-    ><img src=\"https://camo.githubusercontent.com/8daa37ea52a8b910d7804b0dea5e36dc1ea51550f4d4d7e83fa044b7785964a3/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f6963616f626572672f73696e67756c61726974792d626564746f6f6c732e737667\"\
-    \ alt=\"GitHub issues\" data-canonical-src=\"https://img.shields.io/github/issues/icaoberg/singularity-bedtools.svg\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://github.com/icaoberg/singularity-bedtools/network\"\
-    ><img src=\"https://camo.githubusercontent.com/ea5237be05f56a481118a0905c976d88658d70a95b16af6c060101aea4e73a98/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f6963616f626572672f73696e67756c61726974792d626564746f6f6c732e737667\"\
-    \ alt=\"GitHub forks\" data-canonical-src=\"https://img.shields.io/github/forks/icaoberg/singularity-bedtools.svg\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://github.com/icaoberg/singularity-bedtools/stargazers\"\
-    ><img src=\"https://camo.githubusercontent.com/192b2d7fbd67aa10f3c8f5535205f7be9d07653cb29eb16d34176d9dc6b541a0/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f6963616f626572672f73696e67756c61726974792d626564746f6f6c732e737667\"\
-    \ alt=\"GitHub stars\" data-canonical-src=\"https://img.shields.io/github/stars/icaoberg/singularity-bedtools.svg\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://www.gnu.org/licenses/quick-guide-gplv3.en.html\"\
-    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/0b6758422f85bc2599288b346c7de30c6b7b217112c0a877ae4b25a7009722e4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d47504c76332d626c75652e737667\"\
-    \ alt=\"GitHub license\" data-canonical-src=\"https://img.shields.io/badge/license-GPLv3-blue.svg\"\
-    \ style=\"max-width:100%;\"></a></p>\n<p><a href=\"images/logo.png\" target=\"\
-    _blank\" rel=\"noopener noreferrer\"><img src=\"images/logo.png\" alt=\"Logo\"\
-    \ style=\"max-width:100%;\"></a></p>\n<p>Collectively, the <a href=\"https://bedtools.readthedocs.io/en/latest/\"\
-    \ rel=\"nofollow\">bedtools</a> utilities are a swiss-army knife of tools for\
-    \ a wide-range of genomics analysis tasks. The most widely-used tools enable genome\
-    \ arithmetic: that is, set theory on the genome. For example, bedtools allows\
-    \ one to intersect, merge, count, complement, and shuffle genomic intervals from\
-    \ multiple files in widely-used genomic file formats such as BAM, BED, GFF/GTF,\
-    \ VCF. While each individual tool is designed to do a relatively simple task (e.g.,\
-    \ intersect two interval files), quite sophisticated analyses can be conducted\
-    \ by combining multiple bedtools operations on the UNIX command line.</p>\n<h2>\n\
-    <a id=\"user-content-pre-requisites\" class=\"anchor\" href=\"#pre-requisites\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Pre-requisites</h2>\n<ul>\n<li>\n<a href=\"https://sylabs.io/docs/\"\
-    \ rel=\"nofollow\">Singularity v3.5.+</a>.</li>\n</ul>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+  latest_release: v2.30.0
+  readme: "<p><a href=\"https://github.com/pscedu/singularity-bedtools/actions/workflows/main.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-bedtools/actions/workflows/main.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://github.com/pscedu/singularity-bedtools/actions/workflows/pretty.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-bedtools/actions/workflows/pretty.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/22f661e5e94b3846e5f54afaf85c1023c03126e1750ee8026abcc863f0440822/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d626564746f6f6c73\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/22f661e5e94b3846e5f54afaf85c1023c03126e1750ee8026abcc863f0440822/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d626564746f6f6c73\"\
+    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-bedtools\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/215e7058c975fe33562a88d720a2d615ed22430b54ce020a97e7d35ae59bea21/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d626564746f6f6c73\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/215e7058c975fe33562a88d720a2d615ed22430b54ce020a97e7d35ae59bea21/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d626564746f6f6c73\"\
+    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-bedtools\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/645b58875deba1ebd7ec091eade1c85984090c2733a2582ae0eb4d5dc25ebdb8/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d626564746f6f6c73\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/645b58875deba1ebd7ec091eade1c85984090c2733a2582ae0eb4d5dc25ebdb8/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d626564746f6f6c73\"\
+    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-bedtools\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/0f0e78a9c8323c2222fcb5d8d3acc383e7ebeef75933d388482e97b0b7ce6584/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d626564746f6f6c73\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/0f0e78a9c8323c2222fcb5d8d3acc383e7ebeef75933d388482e97b0b7ce6584/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d626564746f6f6c73\"\
+    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-bedtools\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-singularity-bedtools\"\
+    \ class=\"anchor\" href=\"#singularity-bedtools\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>singularity-bedtools</h1>\n<p><a\
+    \ href=\"https://camo.githubusercontent.com/c477879255fc6a4ecf10f46c416998a1d4cb8bb316920074503c7cfc17b11364/687474703a2f2f7777772e616e647265772e636d752e6564752f757365722f6963616f626572672f706f73742f73696e67756c61726974792d626564746f6f6c732d7570646174652f6c6f676f2e706e67\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/c477879255fc6a4ecf10f46c416998a1d4cb8bb316920074503c7cfc17b11364/687474703a2f2f7777772e616e647265772e636d752e6564752f757365722f6963616f626572672f706f73742f73696e67756c61726974792d626564746f6f6c732d7570646174652f6c6f676f2e706e67\"\
+    \ width=\"20%\" data-canonical-src=\"http://www.andrew.cmu.edu/user/icaoberg/post/singularity-bedtools-update/logo.png\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\"\
+    \ class=\"anchor\" href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installing\
+    \ the container on Bridges 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code>\
+    \ file</li>\n<li>and the <code>bedtools</code> script</li>\n</ul>\n<p>to <code>/opt/packages/bedtools/2.29.2</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/bedtools</code>\
+    \ as <code>2.29.2.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
     \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
     \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
     \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
     \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
     \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
-    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely-remotely\"\
-    \ class=\"anchor\" href=\"#to-build-the-image-remotely-remotely\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To\
-    \ build the image remotely remotely</h3>\n<p>Run the script <code>rbuild.sh</code>\
-    \ to build image remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<p>You\
-    \ will need to edit the script above to match your account on <a href=\"https://sylabs.io/\"\
-    \ rel=\"nofollow\">SyLabs.io</a>.</p>\n<h3>\n<a id=\"user-content-pulling-from-the-repository\"\
-    \ class=\"anchor\" href=\"#pulling-from-the-repository\" aria-hidden=\"true\"\
-    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Pulling\
-    \ from the repository</h3>\n<p>If you have the client installed and cannot build\
-    \ the image locally nor remotely, simply run</p>\n<pre><code>singularity pull\
-    \ --arch amd64 library://icaoberg/default/bedtools:v2.29.2\n</code></pre>\n<h2>\n\
-    <a id=\"user-content-disclaimer\" class=\"anchor\" href=\"#disclaimer\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Disclaimer</h2>\n\
-    <p>I am nothing but a humble programmer creating the container for this wonderful\
-    \ app. <a href=\"https://bedtools.readthedocs.io/en/latest/\" rel=\"nofollow\"\
-    >bedtools</a> is developed in the <a href=\"http://quinlanlab.org/\" rel=\"nofollow\"\
-    >Quinlan laboratory</a> at the <a href=\"https://www.utah.edu/\" rel=\"nofollow\"\
-    >University of Utah</a> and benefits from fantastic contributions made by scientists\
-    \ worldwide.</p>\n<hr>\n<p><a href=\"http://www.cbd.cmu.edu\" rel=\"nofollow\"\
-    ><img src=\"https://camo.githubusercontent.com/47fafd631a30ef553735a724705fea74cb02d1bb0b9eab22c64aca8c41885f3d/687474703a2f2f7777772e6362642e636d752e6564752f77702d636f6e74656e742f75706c6f6164732f323031372f30372f776f726470726573732d64656661756c742e706e67\"\
-    \ alt=\"CBD\" data-canonical-src=\"http://www.cbd.cmu.edu/wp-content/uploads/2017/07/wordpress-default.png\"\
-    \ style=\"max-width:100%;\"></a></p>\n<p>Copyleft \xA9 2019-2020 <a href=\"http://www.andrew.cmu.edu/~icaoberg\"\
-    \ rel=\"nofollow\">icaoberg</a> at the <a href=\"http://www.cbd.cmu.edu\" rel=\"\
-    nofollow\">Computational Biology Department</a> in <a href=\"http://www.cmu.edu\"\
-    \ rel=\"nofollow\">Carnegie Mellon University</a></p>\n"
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
+    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/tigers/\"\
+    \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
+    \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics:
   - singularity
-  - singularity-container
-  - bedtools
-  updated_at: 1628104841.0
+  - bioinformatics
+  updated_at: 1629215618.0
 pscedu/singularity-bismark:
   data_format: 2
   description: 'Bismark is a program to map bisulfite treated sequencing reads to
@@ -51600,12 +51801,12 @@ pscedu/singularity-homer:
     \ rel=\"nofollow\">Pittsburgh Supercomputing Center</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
     \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
     \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
-  stargazers_count: 0
+  stargazers_count: 1
   subscribers_count: 1
   topics:
   - singularity
   - bioinformatics
-  updated_at: 1629082169.0
+  updated_at: 1629321829.0
 pscedu/singularity-htslib:
   data_format: 2
   description: 'HTSlib A C library for reading/writing high-throughput sequencing
@@ -52175,7 +52376,7 @@ pscedu/singularity-octave:
   topics:
   - singularity
   - numerical-computation
-  updated_at: 1629210654.0
+  updated_at: 1629324957.0
 pscedu/singularity-pandoc:
   data_format: 2
   description: Pandoc is a free and open-source document converter, widely used as
@@ -52959,6 +53160,69 @@ pscedu/singularity-spades:
   - singularity
   - bioinformatics
   updated_at: 1628991927.0
+pscedu/singularity-sra-toolkit:
+  data_format: 2
+  description: Magic-BLAST is a tool for mapping large next-generation RNA or DNA
+    sequencing runs against a whole genome or transcriptome.
+  filenames:
+  - 2.11.0/Singularity
+  - 2.10.8/Singularity
+  - 2.10.9/Singularity
+  full_name: pscedu/singularity-sra-toolkit
+  latest_release: v2.11.0
+  readme: "<p><a href=\"https://github.com/pscedu/singularity-sra-toolkit/actions/workflows/main.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-sra-toolkit/actions/workflows/main.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://github.com/pscedu/singularity-sra-toolkit/actions/workflows/pretty.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-sra-toolkit/actions/workflows/pretty.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/31e3cb09d81e6fb61f9191e5ce617c6808d24498265a7a0c0f5b82303b18306d/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d7372612d746f6f6c6b6974\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/31e3cb09d81e6fb61f9191e5ce617c6808d24498265a7a0c0f5b82303b18306d/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d7372612d746f6f6c6b6974\"\
+    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-sra-toolkit\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/829e9dae945b99db01be6a45bd00195069d38a971309a3673faa34fcc622e860/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d7372612d746f6f6c6b6974\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/829e9dae945b99db01be6a45bd00195069d38a971309a3673faa34fcc622e860/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d7372612d746f6f6c6b6974\"\
+    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-sra-toolkit\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/ab0f5d5286d9642bb3b041fca0d27ceef55d8806e1f752c89fb699f6f7794e03/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d7372612d746f6f6c6b6974\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/ab0f5d5286d9642bb3b041fca0d27ceef55d8806e1f752c89fb699f6f7794e03/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d7372612d746f6f6c6b6974\"\
+    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-sra-toolkit\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/753805fc4e3f4b095bd00c1a208047377e71c91f500b66d8730044e6298c3a8d/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d7372612d746f6f6c6b6974\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/753805fc4e3f4b095bd00c1a208047377e71c91f500b66d8730044e6298c3a8d/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d7372612d746f6f6c6b6974\"\
+    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-sra-toolkit\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-singularity-sra-toolkit\"\
+    \ class=\"anchor\" href=\"#singularity-sra-toolkit\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>singularity-sra-toolkit</h1>\n\
+    <p>Singularity recipe for <a href=\"https://github.com/ncbi/sra-tools\">sra-toolkit</a>.</p>\n\
+    <h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\" class=\"anchor\"\
+    \ href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Installing the container on Bridges\
+    \ 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code> file</li>\n<li>and the\
+    \ <code>sra-toolkit</code> script</li>\n</ul>\n<p>to <code>/opt/packages/sra-toolkit/2.11.0</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/sra-toolkit</code>\
+    \ as <code> 2.11.0.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
+    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
+    \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
+    \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 2
+  topics:
+  - singularity
+  - bioinformatics
+  updated_at: 1629226848.0
 pscedu/singularity-star:
   data_format: 2
   description: Spliced Transcripts Alignment to a Reference.
@@ -54797,7 +55061,7 @@ ropensci/beastier:
   filenames:
   - Singularity
   full_name: ropensci/beastier
-  latest_release: v2.4.4
+  latest_release: v2.4.5
   readme: "<h1>\n<a id=\"user-content-beastier\" class=\"anchor\" href=\"#beastier\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
     ></span></a>beastier</h1>\n<p><a href=\"https://github.com/ropensci/onboarding/issues/209\"\
@@ -54982,7 +55246,346 @@ ropensci/beastier:
   - r
   - r-package
   - rstats
-  updated_at: 1629208732.0
+  updated_at: 1629288080.0
+ropensci/mauricer:
+  data_format: 2
+  description: Install BEAST2 packages from R
+  filenames:
+  - Singularity
+  full_name: ropensci/mauricer
+  latest_release: v2.5.1
+  readme: '<h1>
+
+    <a id="user-content-mauricer" class="anchor" href="#mauricer" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>mauricer</h1>
+
+    <p><a href="https://github.com/ropensci/onboarding/issues/209"><img src="https://camo.githubusercontent.com/34962aada576bd5457cefa8c40985c4e48e5eb46e231763014a50e66a9c5bfc6/68747470733a2f2f6261646765732e726f70656e7363692e6f72672f3230395f7374617475732e737667"
+    alt="Peer Review Status" data-canonical-src="https://badges.ropensci.org/209_status.svg"
+    style="max-width:100%;"></a>
+
+    <a href="https://cran.r-project.org/package=mauricer" rel="nofollow"><img src="https://camo.githubusercontent.com/db60f4111c3f85297581f01b03d0a05e7600825970d79f59012101572cafceaa/687474703a2f2f7777772e722d706b672e6f72672f6261646765732f76657273696f6e2f6d61757269636572"
+    alt="CRAN_Status_Badge" data-canonical-src="http://www.r-pkg.org/badges/version/mauricer"
+    style="max-width:100%;"></a>
+
+    <a href="https://CRAN.R-project.org/package=mauricer" rel="nofollow"><img src="https://camo.githubusercontent.com/d0d718d904cf67742f27d18379b49c3f8c6f77a1a2e4389b7b185339519a2e1b/687474703a2f2f6372616e6c6f67732e722d706b672e6f72672f6261646765732f6772616e642d746f74616c2f6d61757269636572"
+    alt="" data-canonical-src="http://cranlogs.r-pkg.org/badges/grand-total/mauricer"
+    style="max-width:100%;"></a>
+
+    <a href="https://CRAN.R-project.org/package=mauricer" rel="nofollow"><img src="https://camo.githubusercontent.com/8e1cd1f5ed4dfb4047f5d6cceac0f1e8a2712a9a5d2f8136d58c0d4575cb2b1d/687474703a2f2f6372616e6c6f67732e722d706b672e6f72672f6261646765732f6d61757269636572"
+    alt="" data-canonical-src="http://cranlogs.r-pkg.org/badges/mauricer" style="max-width:100%;"></a></p>
+
+    <table>
+
+    <thead>
+
+    <tr>
+
+    <th>Branch</th>
+
+    <th><a href="https://github.com/ropensci/mauricer/actions"><img src="man/figures/GitHubActions.png"
+    alt="GitHub Actions logo" style="max-width:100%;"></a></th>
+
+    <th><a href="https://travis-ci.com" rel="nofollow"><img src="man/figures/TravisCI.png"
+    alt="Travis CI logo" style="max-width:100%;"></a></th>
+
+    <th><a href="https://www.codecov.io" rel="nofollow"><img src="man/figures/Codecov.png"
+    alt="Codecov logo" style="max-width:100%;"></a></th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr>
+
+    <td><code>master</code></td>
+
+    <td><a href="https://github.com/ropensci/mauricer/workflows/R-CMD-check/badge.svg?branch=master"
+    target="_blank" rel="noopener noreferrer"><img src="https://github.com/ropensci/mauricer/workflows/R-CMD-check/badge.svg?branch=master"
+    alt="R-CMD-check" style="max-width:100%;"></a></td>
+
+    <td><a href="https://travis-ci.com/ropensci/mauricer" rel="nofollow"><img src="https://camo.githubusercontent.com/8d0c7df06887811a1a476ede44d38600189d0f5a4222281b0f5625e396bebe0f/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f6d617572696365722e7376673f6272616e63683d6d6173746572"
+    alt="Build Status" data-canonical-src="https://travis-ci.com/ropensci/mauricer.svg?branch=master"
+    style="max-width:100%;"></a></td>
+
+    <td><a href="https://codecov.io/github/ropensci/mauricer/branch/master" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/7c49b609a4f88e3bcfec9cca58ec05df862a50e0db5aa91255286c09d35fa205/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f6d617572696365722f636f7665726167652e7376673f6272616e63683d6d6173746572"
+    alt="codecov.io" data-canonical-src="https://codecov.io/github/ropensci/mauricer/coverage.svg?branch=master"
+    style="max-width:100%;"></a></td>
+
+    </tr>
+
+    <tr>
+
+    <td><code>develop</code></td>
+
+    <td><a href="https://github.com/ropensci/mauricer/workflows/R-CMD-check/badge.svg?branch=develop"
+    target="_blank" rel="noopener noreferrer"><img src="https://github.com/ropensci/mauricer/workflows/R-CMD-check/badge.svg?branch=develop"
+    alt="R-CMD-check" style="max-width:100%;"></a></td>
+
+    <td><a href="https://travis-ci.com/ropensci/mauricer" rel="nofollow"><img src="https://camo.githubusercontent.com/0d63126f80d7b2bf63604224199d01682cda4b12b323a40cfd980aac2d12dffb/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f6d617572696365722e7376673f6272616e63683d646576656c6f70"
+    alt="Build Status" data-canonical-src="https://travis-ci.com/ropensci/mauricer.svg?branch=develop"
+    style="max-width:100%;"></a></td>
+
+    <td><a href="https://codecov.io/github/ropensci/mauricer/branch/develop" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/e1a5e1a83ab27ae237c8816a584bf2c3680b4328d40c23ade4c1392d45edfe1d/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f6d617572696365722f636f7665726167652e7376673f6272616e63683d646576656c6f70"
+    alt="codecov.io" data-canonical-src="https://codecov.io/github/ropensci/mauricer/coverage.svg?branch=develop"
+    style="max-width:100%;"></a></td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    <p>Work with BEAST2 packages from R.</p>
+
+    <p>Related packages:</p>
+
+    <ul>
+
+    <li>
+
+    <a href="https://github.com/ropensci/babette">babette</a> do a full BEAST2 workflow.</li>
+
+    <li>
+
+    <a href="https://github.com/ropensci/beautier">beautier</a> creates BEAST2 input
+    (<code>.xml</code>) files.</li>
+
+    <li>
+
+    <a href="https://github.com/ropensci/beastier">beastier</a> runs BEAST2</li>
+
+    <li>
+
+    <a href="https://github.com/ropensci/lumier">lumier</a> helps to create the <code>babette</code>
+    function call needed</li>
+
+    <li>
+
+    <a href="https://github.com/ropensci/tracerer">tracerer</a> parses BEAST2 output
+    (<code>.log</code>, <code>.trees</code>, etc) files.</li>
+
+    </ul>
+
+    <p>Non-CRAN extensions:</p>
+
+    <ul>
+
+    <li>
+
+    <a href="https://github.com/richelbilderbeek/beastierinstall">beastierinstall</a>
+    Install and uninstall BEAST2</li>
+
+    <li>
+
+    <a href="https://github.com/richelbilderbeek/mauricerinstall">mauricerinstall</a>
+    Install and uninstall BEAST2 packages</li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-examples" class="anchor" href="#examples" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Examples</h2>
+
+    <p>To install the BEAST2 NS package:</p>
+
+    <pre><code>remotes::install_github("richelbilderbeek/mauricerinstall")
+
+    mauricerinstall::install_beast2_pkg("NS")
+
+    </code></pre>
+
+    <p>An introduction video:</p>
+
+    <ul>
+
+    <li><a href="https://youtu.be/Yk737gorcrw" rel="nofollow">YouTube video about
+    mauricer</a></li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-package-dependencies" class="anchor" href="#package-dependencies"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Package
+    dependencies</h2>
+
+    <table>
+
+    <thead>
+
+    <tr>
+
+    <th>Package</th>
+
+    <th><a href="https://travis-ci.com" rel="nofollow"><img src="man/figures/TravisCI.png"
+    alt="Travis CI logo" style="max-width:100%;"></a></th>
+
+    <th><a href="https://www.codecov.io" rel="nofollow"><img src="man/figures/Codecov.png"
+    alt="Codecov logo" style="max-width:100%;"></a></th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr>
+
+    <td><a href="https://github.com/ropensci/beastier">beastier</a></td>
+
+    <td><a href="https://travis-ci.com/ropensci/beastier" rel="nofollow"><img src="https://camo.githubusercontent.com/99e6881096ca8519b64030f50c7e8a6cc599474c2b01ff4c86157513f85b82dc/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f62656173746965722e7376673f6272616e63683d6d6173746572"
+    alt="Build Status" data-canonical-src="https://travis-ci.com/ropensci/beastier.svg?branch=master"
+    style="max-width:100%;"></a></td>
+
+    <td><a href="https://codecov.io/github/ropensci/beastier/branch/master" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/c63ca071d5e17ab427b0940b3a8e8ff140fc7464bd93d8e5c7cd6737596d513e/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f62656173746965722f636f7665726167652e7376673f6272616e63683d6d6173746572"
+    alt="codecov.io" data-canonical-src="https://codecov.io/github/ropensci/beastier/coverage.svg?branch=master"
+    style="max-width:100%;"></a></td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    <h2>
+
+    <a id="user-content-related-packages" class="anchor" href="#related-packages"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Related
+    packages</h2>
+
+    <table>
+
+    <thead>
+
+    <tr>
+
+    <th>Package</th>
+
+    <th><a href="https://travis-ci.com" rel="nofollow"><img src="man/figures/TravisCI.png"
+    alt="Travis CI logo" style="max-width:100%;"></a></th>
+
+    <th><a href="https://www.codecov.io" rel="nofollow"><img src="man/figures/Codecov.png"
+    alt="Codecov logo" style="max-width:100%;"></a></th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr>
+
+    <td><a href="https://github.com/ropensci/babette">babette</a></td>
+
+    <td><a href="https://travis-ci.com/ropensci/babette" rel="nofollow"><img src="https://camo.githubusercontent.com/82193e9a4b9360f4ebda92c45d949febdeab82bbc950715b374055cb2340c99c/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f626162657474652e7376673f6272616e63683d6d6173746572"
+    alt="Build Status" data-canonical-src="https://travis-ci.com/ropensci/babette.svg?branch=master"
+    style="max-width:100%;"></a></td>
+
+    <td><a href="https://codecov.io/github/ropensci/babette/branch/master" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/efca5f3d8233fc656117425ee5f9b275a30210f1d30a8e6e7dedca03983a9c42/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f626162657474652f636f7665726167652e7376673f6272616e63683d6d6173746572"
+    alt="codecov.io" data-canonical-src="https://codecov.io/github/ropensci/babette/coverage.svg?branch=master"
+    style="max-width:100%;"></a></td>
+
+    </tr>
+
+    <tr>
+
+    <td><a href="https://github.com/ropensci/beautier">beautier</a></td>
+
+    <td><a href="https://travis-ci.com/ropensci/beautier" rel="nofollow"><img src="https://camo.githubusercontent.com/715e4e61b1ebd73b3a52ef0166effdb1d90652b97d7835605849b98aba822e90/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f62656175746965722e7376673f6272616e63683d6d6173746572"
+    alt="Build Status" data-canonical-src="https://travis-ci.com/ropensci/beautier.svg?branch=master"
+    style="max-width:100%;"></a></td>
+
+    <td><a href="https://codecov.io/github/ropensci/beautier/branch/master" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/011707c588b637427fb7fd26e3ac40d7d2603f03d5c99ae6fd868f0ef6e0cd0e/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f62656175746965722f636f7665726167652e7376673f6272616e63683d6d6173746572"
+    alt="codecov.io" data-canonical-src="https://codecov.io/github/ropensci/beautier/coverage.svg?branch=master"
+    style="max-width:100%;"></a></td>
+
+    </tr>
+
+    <tr>
+
+    <td><a href="https://github.com/ropensci/lumier">lumier</a></td>
+
+    <td><a href="https://travis-ci.com/ropensci/lumier" rel="nofollow"><img src="https://camo.githubusercontent.com/8d6a176fcd54fd2ef588a4b86a41041906e6d7c9cc8c61131dd85786742ff4df/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f6c756d6965722e7376673f6272616e63683d6d6173746572"
+    alt="Build Status" data-canonical-src="https://travis-ci.com/ropensci/lumier.svg?branch=master"
+    style="max-width:100%;"></a></td>
+
+    <td><a href="https://codecov.io/github/ropensci/lumier/branch/master" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/e24ac5f3f1a9e3c2c13a7e115d98d4d5b58a7d0278d1cae777207ec7f8c4e04e/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f6c756d6965722f636f7665726167652e7376673f6272616e63683d6d6173746572"
+    alt="codecov.io" data-canonical-src="https://codecov.io/github/ropensci/lumier/coverage.svg?branch=master"
+    style="max-width:100%;"></a></td>
+
+    </tr>
+
+    <tr>
+
+    <td><a href="https://github.com/ropensci/tracerer">tracerer</a></td>
+
+    <td><a href="https://travis-ci.com/ropensci/tracerer" rel="nofollow"><img src="https://camo.githubusercontent.com/0120e8a72e60ac7530a30ac3761940113d52348070fe26e07886c492e893e9c7/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f74726163657265722e7376673f6272616e63683d6d6173746572"
+    alt="Build Status" data-canonical-src="https://travis-ci.com/ropensci/tracerer.svg?branch=master"
+    style="max-width:100%;"></a></td>
+
+    <td><a href="https://codecov.io/github/ropensci/tracerer/branch/master" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/8bf59765a8998e08ff65c2542f37d4a91270ddd8fd0e8d54206a25cebba34095/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f74726163657265722f636f7665726167652e7376673f6272616e63683d6d6173746572"
+    alt="codecov.io" data-canonical-src="https://codecov.io/github/ropensci/tracerer/coverage.svg?branch=master"
+    style="max-width:100%;"></a></td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    <table>
+
+    <thead>
+
+    <tr>
+
+    <th>Package</th>
+
+    <th>Status</th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr>
+
+    <td><a href="https://github.com/richelbilderbeek/mauricer_on_windows">mauricer_on_windows</a></td>
+
+    <td><a href="https://ci.appveyor.com/project/richelbilderbeek/mauricer-on-windows/branch/master"
+    rel="nofollow"><img src="https://camo.githubusercontent.com/1cf94645736f89346af01252332b07e9863765253054e1e109eb211dffa0b593/68747470733a2f2f63692e6170707665796f722e636f6d2f6170692f70726f6a656374732f7374617475732f626334336977703638786f32646475682f6272616e63682f6d61737465723f7376673d74727565"
+    alt="Build status" data-canonical-src="https://ci.appveyor.com/api/projects/status/bc43iwp68xo2dduh/branch/master?svg=true"
+    style="max-width:100%;"></a></td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    <p><a href="https://ropensci.org" rel="nofollow"><img src="https://camo.githubusercontent.com/2210c5afe29fad80dd5573f3a462877889e5d078b38f2a5f36511472156fe3e7/68747470733a2f2f726f70656e7363692e6f72672f7075626c69635f696d616765732f726f70656e7363695f666f6f7465722e706e67"
+    alt="ropensci_footer" data-canonical-src="https://ropensci.org/public_images/ropensci_footer.png"
+    style="max-width:100%;"></a></p>
+
+    '
+  stargazers_count: 2
+  subscribers_count: 2
+  topics:
+  - r
+  - r-package
+  - rstats
+  updated_at: 1629292811.0
 sailfish009/openstructure:
   data_format: 2
   description: Open-Source Computational Structural Biology Framework
@@ -58798,7 +59401,7 @@ sylabs/singularity:
   - containers
   - hpc
   - linux
-  updated_at: 1629210674.0
+  updated_at: 1629325929.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
@@ -60998,6 +61601,107 @@ vibaotram/singularity-container:
   topics:
   - singularity
   updated_at: 1626013391.0
+vigo332/singularity-rstudio-r4:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: vigo332/singularity-rstudio-r4
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-singularity-rstudio-server\" class=\"anchor\"\
+    \ href=\"#singularity-rstudio-server\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Singularity RStudio Server</h1>\n\
+    <p>R 4.0.3\nRStudio 1.3.1903</p>\n<p>Based on repo <a href=\"https://github.com/nickjer/singularity-rstudio\"\
+    >https://github.com/nickjer/singularity-rstudio</a>\nSingularity image for <a\
+    \ href=\"https://www.rstudio.com/products/rstudio/\" rel=\"nofollow\">RStudio\
+    \ Server</a>. It was built on top of the base\nSingularity image <a href=\"https://github.com/nickjer/singularity-r\"\
+    >nickjer/singularity-r</a>.</p>\n<p>This is still a work in progress.</p>\n<h2>\n\
+    <a id=\"user-content-build\" class=\"anchor\" href=\"#build\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Build</h2>\n\
+    <p>You can build a local Singularity image named <code>singularity-rstudio.simg</code>\
+    \ with:</p>\n<div class=\"highlight highlight-source-shell\"><pre>sudo singularity\
+    \ build singularity-rstudio.simg rstudio.def</pre></div>\n<h2>\n<a id=\"user-content-deploy\"\
+    \ class=\"anchor\" href=\"#deploy\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Deploy</h2>\n<p>Instead of building\
+    \ it yourself you can download the pre-built image from\n<a href=\"https://www.singularity-hub.org\"\
+    \ rel=\"nofollow\">Singularity Hub</a> with:</p>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>singularity pull --arch amd64 library://vigo332/default/singularity-rstudio-r4:v0.01</pre></div>\n\
+    <h2>\n<a id=\"user-content-run\" class=\"anchor\" href=\"#run\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Run</h2>\n\
+    <h3>\n<a id=\"user-content-rstudio-server\" class=\"anchor\" href=\"#rstudio-server\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>RStudio Server</h3>\n<p>The <code>rserver</code> command is launched\
+    \ using the default run command:</p>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>singularity run singularity-rstudio.simg</pre></div>\n<p>or as an explicit\
+    \ app:</p>\n<div class=\"highlight highlight-source-shell\"><pre>singularity run\
+    \ --app rserver singularity-rstudio.simg</pre></div>\n<p>Example:</p>\n<div class=\"\
+    highlight highlight-text-shell-session\"><pre>$ <span class=\"pl-s1\">singularity\
+    \ run --app rserver singularity-rstudio.simg --help</span>\n<span class=\"pl-c1\"\
+    >command-line options:</span>\n\n<span class=\"pl-c1\">verify:</span>\n<span class=\"\
+    pl-c1\">  --verify-installation arg (=0)        verify the current installation</span>\n\
+    \n<span class=\"pl-c1\">server:</span>\n<span class=\"pl-c1\">  --server-working-dir\
+    \ arg (=/)         program working directory</span>\n<span class=\"pl-c1\">  --server-user\
+    \ arg (=rstudio-server)   program user</span>\n<span class=\"pl-c1\">  --server-daemonize\
+    \ arg (=0)           run program as daemon</span>\n<span class=\"pl-c1\">  --server-app-armor-enabled\
+    \ arg (=1)   is app armor enabled for this session</span>\n<span class=\"pl-c1\"\
+    >  --server-set-umask arg (=1)           set the umask to 022 on startup</span>\n\
+    \n<span class=\"pl-c1\">...</span></pre></div>\n<h4>\n<a id=\"user-content-simple-password-authentication\"\
+    \ class=\"anchor\" href=\"#simple-password-authentication\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Simple Password\
+    \ Authentication</h4>\n<p>To secure the RStudio Server you will need to:</p>\n\
+    <ol>\n<li>Launch the container with the environment variable <code>RSTUDIO_PASSWORD</code>\
+    \ set to\na password of your choosing.</li>\n<li>Launch the <code>rserver</code>\
+    \ command with the PAM helper script <code>rstudio_auth</code>.</li>\n</ol>\n\
+    <p>An example is given as:</p>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>RSTUDIO_PASSWORD=<span class=\"pl-s\"><span class=\"pl-pds\">\"</span>password<span\
+    \ class=\"pl-pds\">\"</span></span> singularity run singularity-rstudio.simg \\\
+    \n  --auth-none 0 \\\n  --auth-pam-helper-path=pam-helper \\\n  --server-data-dir=/tmp</pre></div>\n\
+    <p>Now when you attempt to access the RStudio Server you will be presented with\
+    \ a\nlog in form. You can log in with your current user name and password you\
+    \ set in\n<code>RSTUDIO_PASSWORD</code>.</p>\n<h4>\n<a id=\"user-content-ldap-authentication----to-be-verified\"\
+    \ class=\"anchor\" href=\"#ldap-authentication----to-be-verified\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>LDAP\
+    \ Authentication -- To be verified</h4>\n<p>Another option is using an LDAP (or\
+    \ Active Directory) server for\nauthentication. Configuration of the LDAP authentication\
+    \ script <code>ldap_auth</code> is\nhandled through the following environment\
+    \ variables:</p>\n<ul>\n<li>\n<code>LDAP_HOST</code> - the host name of the LDAP\
+    \ server</li>\n<li>\n<code>LDAP_USER_DN</code> - the formatted string (where <code>%s</code>\
+    \ is replaced with the\nusername supplied during log in) of the bind DN used for\
+    \ LDAP authentication</li>\n<li>\n<code>LDAP_CERT_FILE</code> - the file containing\
+    \ the CA certificates used by\nthe LDAP server (default: use system CA certificates)</li>\n\
+    </ul>\n<p>An example for an LDAP server with signed SSL certificate from a trusted\
+    \ CA:</p>\n<div class=\"highlight highlight-source-shell\"><pre><span class=\"\
+    pl-k\">export</span> LDAP_HOST=ldap.example.com\n<span class=\"pl-k\">export</span>\
+    \ LDAP_USER_DN=<span class=\"pl-s\"><span class=\"pl-pds\">'</span>cn=%s,dc=example,dc=com<span\
+    \ class=\"pl-pds\">'</span></span>\nsingularity run singularity-rstudio.simg \\\
+    \n  --auth-none 0 \\\n  --auth-pam-helper-path ldap_auth</pre></div>\n<p>An example\
+    \ for an LDAP server with a self-signed SSL certificate:</p>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre><span class=\"pl-k\">export</span> LDAP_HOST=ldap.example.com\n\
+    <span class=\"pl-k\">export</span> LDAP_USER_DN=<span class=\"pl-s\"><span class=\"\
+    pl-pds\">'</span>cn=%s,dc=example,dc=com<span class=\"pl-pds\">'</span></span>\n\
+    <span class=\"pl-k\">export</span> LDAP_CERT_FILE=/ca-certs.pem\nsingularity run\
+    \ \\\n  --bind /path/to/ca-certs.pem:/ca-certs.pem \\\n  singularity-rstudio.simg\
+    \ \\\n    --auth-none 0 \\\n    --auth-pam-helper-path ldap_auth</pre></div>\n\
+    <p>Note that we had to bind mount the CA certificates file from the host machine\n\
+    into the container and specify the container's path in <code>LDAP_CERT_FILE</code>\
+    \ (not\nthe host's path).</p>\n<h3>\n<a id=\"user-content-r-and-rscript\" class=\"\
+    anchor\" href=\"#r-and-rscript\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>R and Rscript</h3>\n<p>See <a href=\"\
+    https://github.com/nickjer/singularity-r\">nickjer/singularity-r</a> for more\
+    \ information on how to run <code>R</code> and\n<code>Rscript</code> from within\
+    \ this Singularity image.</p>\n<h2>\n<a id=\"user-content-contributing\" class=\"\
+    anchor\" href=\"#contributing\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Contributing</h2>\n<p>Bug reports\
+    \ and pull requests are welcome on GitHub at\n<a href=\"https://github.com/nickjer/singularity-rstudio\"\
+    >https://github.com/nickjer/singularity-rstudio</a>.</p>\n<h2>\n<a id=\"user-content-license\"\
+    \ class=\"anchor\" href=\"#license\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>License</h2>\n<p>The code is\
+    \ available as open source under the terms of the <a href=\"http://opensource.org/licenses/MIT\"\
+    \ rel=\"nofollow\">MIT License</a>.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1629302451.0
 vincent-noel/pc4ecm:
   data_format: 2
   description: PhysiCell Invasion Model

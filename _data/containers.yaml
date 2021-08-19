@@ -1,9 +1,9 @@
 bases:
-- count: 818
+- count: 819
   name: ubuntu
 - count: 239
   name: nvidia/cuda
-- count: 178
+- count: 181
   name: debian
 - count: 118
   name: centos
@@ -15,7 +15,7 @@ bases:
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
 - count: 59
   name: mkandes/naked-singularity
-- count: 47
+- count: 48
   name: tensorflow/tensorflow
 - count: 45
   name: python
@@ -82,11 +82,11 @@ bases:
 - count: 10
   name: nvcr.io/nvidia/tensorflow
 - count: 10
+  name: r-base
+- count: 10
   name: ghcr.io/mkandes/naked-singularity
 - count: 9
   name: continuumio/miniconda
-- count: 9
-  name: r-base
 - count: 8
   name: quay.io/vgteam/vg
 - count: 8
@@ -471,6 +471,8 @@ bases:
   name: quay.io/biocontainers/cutadapt
 - count: 1
   name: quay.io/biocontainers/fastqc
+- count: 1
+  name: quay.io/biocontainers/sra-tools
 - count: 1
   name: quay.io/biocontainers/fastx_toolkit
 - count: 1
@@ -1054,7 +1056,7 @@ bases:
 - count: 1
   name: conda/conda_4.9.1.img
 bootstraps:
-- count: 2643
+- count: 2650
   name: docker
 - count: 267
   name: debootstrap
@@ -1083,7 +1085,7 @@ bootstraps:
 - count: 1
   name: tensorflow
 orgs:
-- count: 29
+- count: 30
   name: quay.io/biocontainers
 - count: 25
   name: bids
@@ -1626,8 +1628,8 @@ orgs:
 - count: 1
   name: semc
 tags:
-  latest: 259
-  other: 2419
+  latest: 261
+  other: 2423
 versions:
   APPIAN-PET/APPIAN:
     ants: 1
@@ -1932,13 +1934,13 @@ versions:
     9-slim: 7
     bullseye: 1
     bullseye-slim: 1
-    buster: 59
+    buster: 60
     buster-20200908-slim: 2
     buster-20201012: 1
     buster-slim: 16
     jessie: 7
     jessie-slim: 4
-    latest: 16
+    latest: 18
     stretch: 42
     stretch-slim: 6
     testing: 1
@@ -2618,6 +2620,8 @@ versions:
   quay.io/biocontainers/spades:
     3.14.1--h2d02072_0: 1
     3.15.3--h95f258a_0: 1
+  quay.io/biocontainers/sra-tools:
+    2.10.8--pl526haddd2b5_0: 1
   quay.io/biocontainers/star:
     2.7.6a--0: 1
     2.7.9a--h9ee0642_0: 1
@@ -2811,7 +2815,7 @@ versions:
     1.7.0-devel-gpu-py3: 1
     2.0.0-gpu-py3: 1
     2.0.0a0-gpu-py3: 2
-    2.0.1-gpu-py3: 1
+    2.0.1-gpu-py3: 2
     2.1.0-gpu-py3: 1
     2.3.0-custom-op-gpu-ubuntu16: 1
     2.3.3-gpu: 1
@@ -2865,7 +2869,7 @@ versions:
     '18.04': 180
     '19.04': 7
     '19.10': 4
-    '20.04': 140
+    '20.04': 141
     '20.10': 1
     '21.04': 1
     artful: 7
