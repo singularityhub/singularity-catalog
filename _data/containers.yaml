@@ -68,6 +68,8 @@ bases:
 - count: 11
   name: rocker/r-ver
 - count: 11
+  name: nvcr.io/nvidia/tensorflow
+- count: 11
   name: conda/miniconda2
 - count: 10
   name: nvcr.io/nvidia/cuda
@@ -79,8 +81,6 @@ bases:
   name: poldracklab/mriqc
 - count: 10
   name: dcgc-bfx/dcgc-jupyter-rstudio
-- count: 10
-  name: nvcr.io/nvidia/tensorflow
 - count: 10
   name: r-base
 - count: 10
@@ -100,6 +100,8 @@ bases:
 - count: 7
   name: tpall/singularity-r
 - count: 7
+  name: nvcr.io/nvidia/nvhpc
+- count: 7
   name: pytorch/pytorch
 - count: 6
   name: trinityrnaseq/trinityrnaseq
@@ -115,8 +117,6 @@ bases:
   name: i386/ubuntu
 - count: 6
   name: pranithavangala/singularity
-- count: 6
-  name: nvcr.io/nvidia/nvhpc
 - count: 6
   name: gipert/default/arch-base
 - count: 6
@@ -157,6 +157,8 @@ bases:
   name: intel/oneapi-hpckit
 - count: 4
   name: danabl/glimslib
+- count: 4
+  name: letaylor/sc_qc_cluster
 - count: 4
   name: golang
 - count: 4
@@ -632,8 +634,6 @@ bases:
 - count: 1
   name: weatherhub/metview
 - count: 1
-  name: letaylor/sc_qc_cluster
-- count: 1
   name: thakk/bioinformatics
 - count: 1
   name: anair17/railrl-hand-v1a
@@ -1056,7 +1056,7 @@ bases:
 - count: 1
   name: conda/conda_4.9.1.img
 bootstraps:
-- count: 2650
+- count: 2655
   name: docker
 - count: 267
   name: debootstrap
@@ -1316,8 +1316,6 @@ orgs:
 - count: 1
   name: weatherhub
 - count: 1
-  name: letaylor
-- count: 1
   name: thakk
 - count: 1
   name: scr.svc.stanford.edu
@@ -1429,6 +1427,8 @@ orgs:
   name: nipype
 - count: 1
   name: ncbi
+- count: 1
+  name: letaylor
 - count: 1
   name: deeplearnphysics
 - count: 1
@@ -1628,8 +1628,8 @@ orgs:
 - count: 1
   name: semc
 tags:
-  latest: 261
-  other: 2423
+  latest: 264
+  other: 2425
 versions:
   APPIAN-PET/APPIAN:
     ants: 1
@@ -2165,7 +2165,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 1
+    latest: 4
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2311,6 +2311,7 @@ versions:
   nvcr.io/nvidia/nvhpc:
     20.11-devel-cuda_multi-ubuntu20.04: 4
     20.9-devel-ubuntu20.04: 2
+    21.3-devel-cuda_multi-ubuntu20.04: 1
   nvcr.io/nvidia/pytorch:
     19.03-py3: 1
     19.04-py3: 1
@@ -2327,6 +2328,7 @@ versions:
     20.10-tf2-py3: 1
     21.03-tf2-py3: 1
     21.05-tf2-py3: 2
+    21.07-tf2-py3: 1
   nvidia/container-toolkit:
     1.0.0-alpha1: 1
   nvidia/cuda:
