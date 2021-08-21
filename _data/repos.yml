@@ -4221,7 +4221,7 @@ ComputationalRadiationPhysics/picongpu:
     our strong scaling" title="Strong Scaling" style="max-width:100%;"></a></p>
 
     '
-  stargazers_count: 488
+  stargazers_count: 489
   subscribers_count: 47
   topics:
   - laser
@@ -4234,7 +4234,7 @@ ComputationalRadiationPhysics/picongpu:
   - particle-in-cell
   - pic
   - research
-  updated_at: 1628775768.0
+  updated_at: 1629505785.0
 D-Lo/bambi:
   data_format: 2
   description: R wrapper for bamdb
@@ -5485,7 +5485,7 @@ DiamondLightSource/Savu:
   stargazers_count: 28
   subscribers_count: 15
   topics: []
-  updated_at: 1629280371.0
+  updated_at: 1629460818.0
 DoaneAS/atacflow:
   data_format: 2
   description: Analysis pipeline for ATACseq data using Nextflow
@@ -19367,7 +19367,7 @@ UniversalDataTool/universal-data-tool:
     </g-emoji></a>\n</td>\n  </tr>\n</table>\n\n\n\n<p>This project follows the <a\
     \ href=\"https://github.com/all-contributors/all-contributors\">all-contributors</a>\
     \ specification. Contributions of any kind welcome!</p>\n"
-  stargazers_count: 1470
+  stargazers_count: 1472
   subscribers_count: 33
   topics:
   - computer-vision
@@ -19390,7 +19390,7 @@ UniversalDataTool/universal-data-tool:
   - labeling
   - labeling-tool
   - hacktoberfest
-  updated_at: 1629394912.0
+  updated_at: 1629459067.0
 VIB-CBD/scanpy-images:
   data_format: 2
   description: Docker and Singularity images for Scanpy
@@ -25425,7 +25425,7 @@ bobeobibo/phigaro:
     <li>bioRxiv, 2019; doi: <a href=\"https://doi.org/10.1101/598243\" rel=\"nofollow\"\
     >https://doi.org/10.1101/598243</a>\n</li>\n</ul>\n<p>(c) E.Starikova, P. Tikhonova,\
     \ N.Pryanichnikov, 2019</p>\n"
-  stargazers_count: 25
+  stargazers_count: 26
   subscribers_count: 3
   topics:
   - bioinformatics
@@ -25439,7 +25439,7 @@ bobeobibo/phigaro:
   - genomics
   - genomic-data-analysis
   - genomic-regions
-  updated_at: 1622668825.0
+  updated_at: 1629230747.0
 bow/crimson:
   data_format: 2
   description: Bioinformatics tool outputs converter to JSON or YAML
@@ -26923,64 +26923,56 @@ cschu/dada2_container:
   - Singularity.latest
   full_name: cschu/dada2_container
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-centos8_roar" class="anchor" href="#centos8_roar" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>centos8_roar</h1>
-
-    <p>Centos 8 base image for Roar</p>
-
-    <h3>
-
-    <a id="user-content-note" class="anchor" href="#note" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>NOTE</h3>
-
-    <ul>
-
-    <li>This recipe may include unnecessary packages for certain software installation</li>
-
-    <li>More packages will be added in the future</li>
-
-    </ul>
-
-    <h2>
-
-    <a id="user-content-updates" class="anchor" href="#updates" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Updates</h2>
-
-    <ul>
-
-    <li>
-
-    <p>2020/11/13</p>
-
-    <ul>
-
-    <li>Initial recipe added</li>
-
-    </ul>
-
-    </li>
-
-    <li>
-
-    <p>2021/03/22</p>
-
-    <ul>
-
-    <li>Default Python3 is updated to Python 3.8</li>
-
-    <li>Lapack, BLAS, OpenBLAS, ATLAS, and NetCDF are added</li>
-
-    <li>CMake 3.19.7, Boost 1.75.0, and R 4.0.4 are added</li>
-
-    </ul>
-
-    </li>
-
-    </ul>
-
-    '
+  readme: "<h1>\n<a id=\"user-content-create-study-specific-roi-image-in-mni-space\"\
+    \ class=\"anchor\" href=\"#create-study-specific-roi-image-in-mni-space\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Create\
+    \ study-specific ROI image in MNI space</h1>\n<p>PMAT resting state connectivity\
+    \ study.</p>\n<h2>\n<a id=\"user-content-inputs\" class=\"anchor\" href=\"#inputs\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Inputs:</h2>\n<p>All should be matched to the same T1 image.</p>\n\
+    <ul>\n<li>T1 image in atlas space (typically BIAS_NORM resource of cat12 assessor)</li>\n\
+    <li>Deformation from T1 subject space to atlas space (typically DEF_FWD resource\
+    \ of cat12 assessor)</li>\n<li>SUBJECT directory of Freesurfer output (typically\
+    \ SUBJECT resource of freesurfer_dev assessor)</li>\n<li>Temporal lobe segmentation\
+    \ (typically SEG resource of Temporal_Lobe assessor)</li>\n</ul>\n<h2>\n<a id=\"\
+    user-content-outputs\" class=\"anchor\" href=\"#outputs\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Outputs</h2>\n\
+    <pre><code>rois_PMAT.nii.gz            Region of interest image\nrois_PMAT-labels.csv\
+    \        Region labels and volumes\nmakerois-PMAT.pdf           Visual report\
+    \ of final ROI image\n</code></pre>\n<h2>\n<a id=\"user-content-regions-of-interest\"\
+    \ class=\"anchor\" href=\"#regions-of-interest\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Regions of interest</h2>\n<h3>\n\
+    <a id=\"user-content-spheres-atlas-space\" class=\"anchor\" href=\"#spheres-atlas-space\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Spheres (atlas space)</h3>\n<p>Source: <em>Libby LA, Ekstrom AD, Ragland\
+    \ JD, Ranganath C. Differential connectivity of perirhinal and parahippocampal\
+    \ cortices within human hippocampal subregions revealed by high-resolution functional\
+    \ imaging. J Neurosci. 2012;32(19):6550-6560. doi:10.1523/JNEUROSCI.3711-11.2012</em></p>\n\
+    <p>Method: <em>Schr\xF6der TN, Haak K V., Jimenez NIZ, et al. Functional topography\
+    \ of the human entorhinal cortex. Elife. 2015;4(October 2016):1-17. doi:10.7554/eLife.06738</em></p>\n\
+    <h3>\n<a id=\"user-content-entorhinal-cortex-atlas-space\" class=\"anchor\" href=\"\
+    #entorhinal-cortex-atlas-space\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Entorhinal cortex (atlas space)</h3>\n\
+    <p>Anterior lateral and posterior medial sections. Source and method: <em>Schr\xF6\
+    der TN, Haak K V., Jimenez NIZ, et al. Functional topography of the human entorhinal\
+    \ cortex. Elife. 2015;4(October 2016):1-17. doi:10.7554/eLife.06738</em></p>\n\
+    <h3>\n<a id=\"user-content-temporal-lobe-subject-space-warped\" class=\"anchor\"\
+    \ href=\"#temporal-lobe-subject-space-warped\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Temporal lobe (Subject space,\
+    \ warped)</h3>\n<p>Head for anterior hippocampus; body and tail combined for posterior\
+    \ hippocampus. Method: <em>Plassard AJ, McHugo M, Heckers S, Landman BA. Multi-Scale\
+    \ Hippocampal Parcellation Improves Atlas-Based Segmentation Accuracy. Proc SPIE\
+    \ Int Soc Opt Eng. 2017 Feb 11;10133:101332D. doi: 10.1117/12.2254425. Epub 2017\
+    \ Feb 24. PMID: 28781411; PMCID: PMC5544133.</em></p>\n<h3>\n<a id=\"user-content-parahippocampal-perirhinal-subject-space-warped\"\
+    \ class=\"anchor\" href=\"#parahippocampal-perirhinal-subject-space-warped\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Parahippocampal,\
+    \ perirhinal (Subject space, warped)</h3>\n<p>Generated by Freesurfer 6. Parahippocampal\
+    \ (1016,2016) and perirhinal (surface patch resampled to volume, overlap with\
+    \ parahippocampus was assigned to perirhinal). Method: <em>Bruce Fischl, Andre\
+    \ van der Kouwe, Christophe Destrieux, Eric Halgren, Florent Segonne, David H.\
+    \ Salat, Evelina Busa, Larry J. Seidman, Jill Goldstein, David Kennedy, Verne\
+    \ Caviness, Nikos Makris, Bruce Rosen, and Anders M. Dale. Automatically Parcellating\
+    \ the Human Cerebral Cortex. Cerebral Cortex January 2004; 14:11-22.</em></p>\n"
   stargazers_count: 1
   subscribers_count: 2
   topics: []
@@ -34890,7 +34882,7 @@ gpuhackathons-org/gpubootcamp:
 
     '
   stargazers_count: 89
-  subscribers_count: 7
+  subscribers_count: 8
   topics:
   - machine-learning
   - deep-learning
@@ -36089,7 +36081,80 @@ heathsc/gemBS-rs:
   - texlive/Singularity.tex
   full_name: heathsc/gemBS-rs
   latest_release: v4.0
-  readme: '{"message":"API rate limit exceeded for installation ID 633759.","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}'
+  readme: "<h1>\n<a id=\"user-content-gembs-rs\" class=\"anchor\" href=\"#gembs-rs\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>gemBS-rs</h1>\n<p>A rewrite of the <a href=\"https://github.com/heathsc/gemBS\"\
+    >gemBS</a> pipeline\nframework from Python/C into Rust.</p>\n<p>gemBS is a high\
+    \ performance bioinformatic pipeline designed for highthroughput analysis\nof\
+    \ DNA methylation data from whole genome bisulfites sequencing data\n(WGBS). It\
+    \ combines GEM3, a high performance read aligner and\nbs_call, a high performance\
+    \ variant and methyation caller, into a streamlined and efficient pipeline for\n\
+    bisulfite sequence analysis.</p>\n<p>The manuscript describing the original gemBS\
+    \ pipeline is available\n<a href=\"https://doi.org/10.1093/bioinformatics/bty690\"\
+    \ rel=\"nofollow\">here</a></p>\n<p>The rewrite of the pipeline into Rust has\
+    \ two aims: (1) to have a more\nrobust pipeline and (2) to provide a more flexible\
+    \ platform for future\ndevelopments.  All of the tools developed for the pipeline\
+    \ except for the GEM3 mapper (being an external project that is also very stable!)\
+    \ have now been re-written in Rust. These include bs_call, the methylation and\
+    \ SNV-variant caller, and the methylation and SNP extractions tools mextr and\
+    \ snpxtr.  In all cases the running times are comparable to the original C versions.</p>\n\
+    <hr>\n<h2>\n<a id=\"user-content-dependencies\" class=\"anchor\" href=\"#dependencies\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Dependencies</h2>\n<p>The pipeline uses samtools for generating sorted\
+    \ BAM/CRAM files from GEM3 and bcftools for merging and indexing BCF files produced\
+    \ by bs_call.  In addition, many of the tools link to htslb to enable reading\
+    \ of BAM/CRAM and reading/writing of BCF files.  Samtools and htslib are automatically\
+    \ installed during the installation of the gemBS pipeline.   There is also an\
+    \ optional dependency on TeXLive which is used to produce pdf versions of the\
+    \ QC reports.  If requested by the user this is also installed with the pipeline.</p>\n\
+    <hr>\n<h2>\n<a id=\"user-content-licensing\" class=\"anchor\" href=\"#licensing\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Licensing</h2>\n<p>gemBS is licensed under the GPL.</p>\n<hr>\n<h2>\n\
+    <a id=\"user-content-download\" class=\"anchor\" href=\"#download\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Download</h2>\n\
+    <p>Use <code>git clone --recursive</code> to retrieve the complete source code\
+    \ including the code from external projects such as <code>gem3-mapper</code>.</p>\n\
+    <pre><code>git clone --recursive https://github.com/heathsc/gemBS-rs.git\n</code></pre>\n\
+    <hr>\n<h2>\n<a id=\"user-content-configure--install\" class=\"anchor\" href=\"\
+    #configure--install\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Configure &amp; Install</h2>\n<p>Before starting\
+    \ the installation of gemBS, you will need to install\nor check the installation\
+    \ of several packages.</p>\n<p>a) gcc with development libraries</p>\n<p>b) rust\
+    \ (for installation instructions see <a href=\"https://www.rust-lang.org/learn/get-started\"\
+    \ rel=\"nofollow\">here</a>).  Note that if you have rust already installed you\
+    \ should update it using <code>rustup update</code> before trying to compile gemBS.</p>\n\
+    <p>c) zlib, libz2, lzma, openssl, libcurl, libncurses, wget, expat, ncurses, openssl,\
+    \ freetype, fontconfig</p>\n<p>If you are working on a clean (fairly recent) Ubuntu\
+    \ installation, you\ncan install everything required with the following commands:</p>\n\
+    <pre><code>apt-get install -y build-essential git autoconf wget lbzip2 pkg-config\
+    \ cmake\napt-get install -y zlib1g-dev libbz2-dev libexpat1-dev\napt-get install\
+    \ -y libncurses5-dev liblzma-dev libssl-dev libcurl4-openssl-dev curl\napt-get\
+    \ install -y libfreetype6-dev libfontconfig1-dev\ncurl https://sh.rustup.rs -sSf\
+    \ &gt; rust.sh &amp;&amp; sh rust.sh -y\n</code></pre>\n<p>Download the gemBS\
+    \ distribution if you haven't already done so:</p>\n<pre><code>git clone --recursive\
+    \ https://github.com/heathsc/gemBS-rs.git\n</code></pre>\n<p>From the main gemBS-rs\
+    \ directory type the following to make the default config file:</p>\n<pre><code>make\
+    \ gemBS_config.mk\n</code></pre>\n<p>Then look at the file gemBS_config.mk and\
+    \ make any changes that are required.  When the file is OK the pipeline and components\
+    \ can be built and installed by typing:</p>\n<pre><code>make install\n</code></pre>\n\
+    <p>If the make and install process is successful, a shell script called gemBS\
+    \ will be created in the main gemBS-rs directory.  This file should be copied\
+    \ to a directory that is in your PATH so that gemBS can be invoked from anywhere.</p>\n\
+    <hr>\n<h2>\n<a id=\"user-content-check-your-installation\" class=\"anchor\" href=\"\
+    #check-your-installation\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Check your installation</h2>\n<p>For checking\
+    \ your installation follow this\n<a href=\"http://statgen.cnag.cat/gemBS/UserGuide/_build/html/example.html\"\
+    \ rel=\"nofollow\">worked example</a>.</p>\n<hr>\n<h2>\n<a id=\"user-content-documentation\"\
+    \ class=\"anchor\" href=\"#documentation\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Documentation</h2>\n<p>Documentation\
+    \ can be found at\n<a href=\"http://statgen.cnag.cat/gemBS/\" rel=\"nofollow\"\
+    >gemBS</a>.</p>\n<hr>\n<h2>\n<a id=\"user-content-changelog\" class=\"anchor\"\
+    \ href=\"#changelog\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Changelog:</h2>\n<pre><code>4.0 First release\
+    \ of gemBS-rs (4th release of gemBS)\n4.0.1 Correct bug preventing that caused\
+    \ non-stranded mapping to fail\n4.0.2 Move to versions 1.12 of htslib/samtools/bcftools\n\
+    4.0.2 Change way we iterate over SAM/BAM/CRAM files to the same way used in samtools\
+    \ \n      view (the old way did not always work with cram files)\n</code></pre>\n"
   stargazers_count: 2
   subscribers_count: 2
   topics: []
@@ -38940,64 +39005,47 @@ jganong/singularity-test:
   - Singularity
   full_name: jganong/singularity-test
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-centos8_roar" class="anchor" href="#centos8_roar" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>centos8_roar</h1>
-
-    <p>Centos 8 base image for Roar</p>
-
-    <h3>
-
-    <a id="user-content-note" class="anchor" href="#note" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>NOTE</h3>
-
-    <ul>
-
-    <li>This recipe may include unnecessary packages for certain software installation</li>
-
-    <li>More packages will be added in the future</li>
-
-    </ul>
-
-    <h2>
-
-    <a id="user-content-updates" class="anchor" href="#updates" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Updates</h2>
-
-    <ul>
-
-    <li>
-
-    <p>2020/11/13</p>
-
-    <ul>
-
-    <li>Initial recipe added</li>
-
-    </ul>
-
-    </li>
-
-    <li>
-
-    <p>2021/03/22</p>
-
-    <ul>
-
-    <li>Default Python3 is updated to Python 3.8</li>
-
-    <li>Lapack, BLAS, OpenBLAS, ATLAS, and NetCDF are added</li>
-
-    <li>CMake 3.19.7, Boost 1.75.0, and R 4.0.4 are added</li>
-
-    </ul>
-
-    </li>
-
-    </ul>
-
-    '
+  readme: "<h1>\n<a id=\"user-content--cgo21_yasksite_ad-\" class=\"anchor\" href=\"\
+    #-cgo21_yasksite_ad-\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a><ins> CGO21_YaskSite_AD </ins>\n</h1>\n<h1>\n\
+    <a id=\"user-content-setup-phase\" class=\"anchor\" href=\"#setup-phase\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Setup\
+    \ phase</h1>\n<p>Steps 1 to 3 guide you through setting up.</p>\n<h2>\n<a id=\"\
+    user-content-step-11\" class=\"anchor\" href=\"#step-11\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Step 1.1</h2>\n\
+    <p>Clone this repository and go to the cloned directory.</p>\n<pre><code>git clone\
+    \ https://github.com/seasite-project/CGO21_YaskSite_AD.git\ncd CGO21_YaskSite_AD\n\
+    git checkout CGO21v0.3\n</code></pre>\n<h2>\n<a id=\"user-content-step-12\" class=\"\
+    anchor\" href=\"#step-12\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Step 1.2</h2>\n<p>For the next steps we need\
+    \ singularity v 3.6.4 or higher.\nIf singularity is not installed, you can install\
+    \ singularity with the following script if you have root access.</p>\n<pre><code>./install_singularity.sh\n\
+    </code></pre>\n<h2>\n<a id=\"user-content-step-2\" class=\"anchor\" href=\"#step-2\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Step 2</h2>\n<p>Download the singularity container.</p>\n<p>The pre-build\
+    \ container is available under the following link <a href=\"https://doi.org/10.5281/zenodo.4415558\"\
+    \ rel=\"nofollow\">https://doi.org/10.5281/zenodo.4415558</a>\nand can be installed\
+    \ using:</p>\n<pre><code>wget https://zenodo.org/record/4415558/files/YS_CGO.sif?download=1\
+    \ -O YS_CGO.sif\n</code></pre>\n<h2>\n<a id=\"user-content-step-3\" class=\"anchor\"\
+    \ href=\"#step-3\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>Step 3</h2>\n<p>Once singularity image is downloaded\
+    \ on the benchmarking system the first step is to run the app called build.\n\
+    This installs YaskSite. It should be done at runtime since the YaskSite does machine\
+    \ specific configuration\nat build time. Run the following to do this:</p>\n<pre><code>singularity\
+    \ run --app build YS_CGO.sif \n</code></pre>\n<h1>\n<a id=\"user-content-run-phase\"\
+    \ class=\"anchor\" href=\"#run-phase\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Run phase</h1>\n<p>Step 4 illustrates\
+    \ how to run the app to reproduce results.\nIt is recommended the settings in\
+    \ the paper are followed to get comparable results.</p>\n<h2>\n<a id=\"user-content-step-4\"\
+    \ class=\"anchor\" href=\"#step-4\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Step 4</h2>\n<p>Run the apps\
+    \ corresponding to YaskSite and Offsite. There are also pre-configured apps that\
+    \ helps to\nreproduce data in figures of the paper. To see the list of available\
+    \ apps use:</p>\n<pre><code>singularity run-help YS_CGO.sif\n</code></pre>\n<p>The\
+    \ method to run each apps are described in corresponding app's help. For example\
+    \ help on how to run Fig4 app\n(reproduces results in Fig4 of the paper) can be\
+    \ obtained using:</p>\n<pre><code>singularity run-help --app Fig4 YS_CGO.sif\n\
+    </code></pre>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -39009,64 +39057,47 @@ jganong/ubuntu-bionic-R-4.0.3-foieGras:
   - Singularity
   full_name: jganong/ubuntu-bionic-R-4.0.3-foieGras
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-centos8_roar" class="anchor" href="#centos8_roar" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>centos8_roar</h1>
-
-    <p>Centos 8 base image for Roar</p>
-
-    <h3>
-
-    <a id="user-content-note" class="anchor" href="#note" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>NOTE</h3>
-
-    <ul>
-
-    <li>This recipe may include unnecessary packages for certain software installation</li>
-
-    <li>More packages will be added in the future</li>
-
-    </ul>
-
-    <h2>
-
-    <a id="user-content-updates" class="anchor" href="#updates" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Updates</h2>
-
-    <ul>
-
-    <li>
-
-    <p>2020/11/13</p>
-
-    <ul>
-
-    <li>Initial recipe added</li>
-
-    </ul>
-
-    </li>
-
-    <li>
-
-    <p>2021/03/22</p>
-
-    <ul>
-
-    <li>Default Python3 is updated to Python 3.8</li>
-
-    <li>Lapack, BLAS, OpenBLAS, ATLAS, and NetCDF are added</li>
-
-    <li>CMake 3.19.7, Boost 1.75.0, and R 4.0.4 are added</li>
-
-    </ul>
-
-    </li>
-
-    </ul>
-
-    '
+  readme: "<h1>\n<a id=\"user-content--cgo21_yasksite_ad-\" class=\"anchor\" href=\"\
+    #-cgo21_yasksite_ad-\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a><ins> CGO21_YaskSite_AD </ins>\n</h1>\n<h1>\n\
+    <a id=\"user-content-setup-phase\" class=\"anchor\" href=\"#setup-phase\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Setup\
+    \ phase</h1>\n<p>Steps 1 to 3 guide you through setting up.</p>\n<h2>\n<a id=\"\
+    user-content-step-11\" class=\"anchor\" href=\"#step-11\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Step 1.1</h2>\n\
+    <p>Clone this repository and go to the cloned directory.</p>\n<pre><code>git clone\
+    \ https://github.com/seasite-project/CGO21_YaskSite_AD.git\ncd CGO21_YaskSite_AD\n\
+    git checkout CGO21v0.3\n</code></pre>\n<h2>\n<a id=\"user-content-step-12\" class=\"\
+    anchor\" href=\"#step-12\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Step 1.2</h2>\n<p>For the next steps we need\
+    \ singularity v 3.6.4 or higher.\nIf singularity is not installed, you can install\
+    \ singularity with the following script if you have root access.</p>\n<pre><code>./install_singularity.sh\n\
+    </code></pre>\n<h2>\n<a id=\"user-content-step-2\" class=\"anchor\" href=\"#step-2\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Step 2</h2>\n<p>Download the singularity container.</p>\n<p>The pre-build\
+    \ container is available under the following link <a href=\"https://doi.org/10.5281/zenodo.4415558\"\
+    \ rel=\"nofollow\">https://doi.org/10.5281/zenodo.4415558</a>\nand can be installed\
+    \ using:</p>\n<pre><code>wget https://zenodo.org/record/4415558/files/YS_CGO.sif?download=1\
+    \ -O YS_CGO.sif\n</code></pre>\n<h2>\n<a id=\"user-content-step-3\" class=\"anchor\"\
+    \ href=\"#step-3\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>Step 3</h2>\n<p>Once singularity image is downloaded\
+    \ on the benchmarking system the first step is to run the app called build.\n\
+    This installs YaskSite. It should be done at runtime since the YaskSite does machine\
+    \ specific configuration\nat build time. Run the following to do this:</p>\n<pre><code>singularity\
+    \ run --app build YS_CGO.sif \n</code></pre>\n<h1>\n<a id=\"user-content-run-phase\"\
+    \ class=\"anchor\" href=\"#run-phase\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Run phase</h1>\n<p>Step 4 illustrates\
+    \ how to run the app to reproduce results.\nIt is recommended the settings in\
+    \ the paper are followed to get comparable results.</p>\n<h2>\n<a id=\"user-content-step-4\"\
+    \ class=\"anchor\" href=\"#step-4\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Step 4</h2>\n<p>Run the apps\
+    \ corresponding to YaskSite and Offsite. There are also pre-configured apps that\
+    \ helps to\nreproduce data in figures of the paper. To see the list of available\
+    \ apps use:</p>\n<pre><code>singularity run-help YS_CGO.sif\n</code></pre>\n<p>The\
+    \ method to run each apps are described in corresponding app's help. For example\
+    \ help on how to run Fig4 app\n(reproduces results in Fig4 of the paper) can be\
+    \ obtained using:</p>\n<pre><code>singularity run-help --app Fig4 YS_CGO.sif\n\
+    </code></pre>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -39078,64 +39109,56 @@ jganong/ubuntu-focal-foiegras:
   - Singularity
   full_name: jganong/ubuntu-focal-foiegras
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-centos8_roar" class="anchor" href="#centos8_roar" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>centos8_roar</h1>
-
-    <p>Centos 8 base image for Roar</p>
-
-    <h3>
-
-    <a id="user-content-note" class="anchor" href="#note" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>NOTE</h3>
-
-    <ul>
-
-    <li>This recipe may include unnecessary packages for certain software installation</li>
-
-    <li>More packages will be added in the future</li>
-
-    </ul>
-
-    <h2>
-
-    <a id="user-content-updates" class="anchor" href="#updates" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Updates</h2>
-
-    <ul>
-
-    <li>
-
-    <p>2020/11/13</p>
-
-    <ul>
-
-    <li>Initial recipe added</li>
-
-    </ul>
-
-    </li>
-
-    <li>
-
-    <p>2021/03/22</p>
-
-    <ul>
-
-    <li>Default Python3 is updated to Python 3.8</li>
-
-    <li>Lapack, BLAS, OpenBLAS, ATLAS, and NetCDF are added</li>
-
-    <li>CMake 3.19.7, Boost 1.75.0, and R 4.0.4 are added</li>
-
-    </ul>
-
-    </li>
-
-    </ul>
-
-    '
+  readme: "<h1>\n<a id=\"user-content-create-study-specific-roi-image-in-mni-space\"\
+    \ class=\"anchor\" href=\"#create-study-specific-roi-image-in-mni-space\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Create\
+    \ study-specific ROI image in MNI space</h1>\n<p>PMAT resting state connectivity\
+    \ study.</p>\n<h2>\n<a id=\"user-content-inputs\" class=\"anchor\" href=\"#inputs\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Inputs:</h2>\n<p>All should be matched to the same T1 image.</p>\n\
+    <ul>\n<li>T1 image in atlas space (typically BIAS_NORM resource of cat12 assessor)</li>\n\
+    <li>Deformation from T1 subject space to atlas space (typically DEF_FWD resource\
+    \ of cat12 assessor)</li>\n<li>SUBJECT directory of Freesurfer output (typically\
+    \ SUBJECT resource of freesurfer_dev assessor)</li>\n<li>Temporal lobe segmentation\
+    \ (typically SEG resource of Temporal_Lobe assessor)</li>\n</ul>\n<h2>\n<a id=\"\
+    user-content-outputs\" class=\"anchor\" href=\"#outputs\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Outputs</h2>\n\
+    <pre><code>rois_PMAT.nii.gz            Region of interest image\nrois_PMAT-labels.csv\
+    \        Region labels and volumes\nmakerois-PMAT.pdf           Visual report\
+    \ of final ROI image\n</code></pre>\n<h2>\n<a id=\"user-content-regions-of-interest\"\
+    \ class=\"anchor\" href=\"#regions-of-interest\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Regions of interest</h2>\n<h3>\n\
+    <a id=\"user-content-spheres-atlas-space\" class=\"anchor\" href=\"#spheres-atlas-space\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Spheres (atlas space)</h3>\n<p>Source: <em>Libby LA, Ekstrom AD, Ragland\
+    \ JD, Ranganath C. Differential connectivity of perirhinal and parahippocampal\
+    \ cortices within human hippocampal subregions revealed by high-resolution functional\
+    \ imaging. J Neurosci. 2012;32(19):6550-6560. doi:10.1523/JNEUROSCI.3711-11.2012</em></p>\n\
+    <p>Method: <em>Schr\xF6der TN, Haak K V., Jimenez NIZ, et al. Functional topography\
+    \ of the human entorhinal cortex. Elife. 2015;4(October 2016):1-17. doi:10.7554/eLife.06738</em></p>\n\
+    <h3>\n<a id=\"user-content-entorhinal-cortex-atlas-space\" class=\"anchor\" href=\"\
+    #entorhinal-cortex-atlas-space\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Entorhinal cortex (atlas space)</h3>\n\
+    <p>Anterior lateral and posterior medial sections. Source and method: <em>Schr\xF6\
+    der TN, Haak K V., Jimenez NIZ, et al. Functional topography of the human entorhinal\
+    \ cortex. Elife. 2015;4(October 2016):1-17. doi:10.7554/eLife.06738</em></p>\n\
+    <h3>\n<a id=\"user-content-temporal-lobe-subject-space-warped\" class=\"anchor\"\
+    \ href=\"#temporal-lobe-subject-space-warped\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Temporal lobe (Subject space,\
+    \ warped)</h3>\n<p>Head for anterior hippocampus; body and tail combined for posterior\
+    \ hippocampus. Method: <em>Plassard AJ, McHugo M, Heckers S, Landman BA. Multi-Scale\
+    \ Hippocampal Parcellation Improves Atlas-Based Segmentation Accuracy. Proc SPIE\
+    \ Int Soc Opt Eng. 2017 Feb 11;10133:101332D. doi: 10.1117/12.2254425. Epub 2017\
+    \ Feb 24. PMID: 28781411; PMCID: PMC5544133.</em></p>\n<h3>\n<a id=\"user-content-parahippocampal-perirhinal-subject-space-warped\"\
+    \ class=\"anchor\" href=\"#parahippocampal-perirhinal-subject-space-warped\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Parahippocampal,\
+    \ perirhinal (Subject space, warped)</h3>\n<p>Generated by Freesurfer 6. Parahippocampal\
+    \ (1016,2016) and perirhinal (surface patch resampled to volume, overlap with\
+    \ parahippocampus was assigned to perirhinal). Method: <em>Bruce Fischl, Andre\
+    \ van der Kouwe, Christophe Destrieux, Eric Halgren, Florent Segonne, David H.\
+    \ Salat, Evelina Busa, Larry J. Seidman, Jill Goldstein, David Kennedy, Verne\
+    \ Caviness, Nikos Makris, Bruce Rosen, and Anders M. Dale. Automatically Parcellating\
+    \ the Human Cerebral Cortex. Cerebral Cortex January 2004; 14:11-22.</em></p>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -39446,10 +39469,10 @@ jkulhanek/a2cat-vn-pytorch:
     in Pytorch</p>
 
     '
-  stargazers_count: 1
+  stargazers_count: 2
   subscribers_count: 1
   topics: []
-  updated_at: 1607415822.0
+  updated_at: 1629464866.0
 jkulhanek/deep-rl-pytorch:
   data_format: 2
   description: Popular Deep RL algorithms implemented in PyTorch
@@ -44183,7 +44206,7 @@ ml4ai/automates:
   stargazers_count: 17
   subscribers_count: 10
   topics: []
-  updated_at: 1629433612.0
+  updated_at: 1629490185.0
 mmirko/singularitytest:
   data_format: 2
   description: null
@@ -46064,7 +46087,7 @@ openhpc/ohpc:
     Form</a>.</p>
 
     '
-  stargazers_count: 584
+  stargazers_count: 586
   subscribers_count: 92
   topics:
   - hpc
@@ -46074,7 +46097,7 @@ openhpc/ohpc:
   - devtools
   - mpi
   - linuxfoundation
-  updated_at: 1629306324.0
+  updated_at: 1629522949.0
 pbranson/pangeo-hpc-singularity:
   data_format: 2
   description: Scripts to run dask and jupyter lab on Singularity using the pangeo-notebook
@@ -53698,79 +53721,86 @@ radio1988/OneStopRNAseq:
   - snakemake/workflow/envs/Singularity
   full_name: radio1988/OneStopRNAseq
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-singularity-molgfx" class="anchor" href="#singularity-molgfx"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Singularity
-    Molgfx</h1>
-
-    <p><a href="https://singularity-hub.org/collections/4301" rel="nofollow"><img
-    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
-    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    style="max-width:100%;"></a>
-
-    <a href="https://opensource.org/licenses/MIT" rel="nofollow"><img src="https://camo.githubusercontent.com/45b4ffbd594af47fe09a3432f9f8e122c6518aa6352b4ce453a1a2563da2905c/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d4d49542d677265656e2e737667"
-    alt="GitHub License" data-canonical-src="https://img.shields.io/badge/license-MIT-green.svg"
-    style="max-width:100%;"></a></p>
-
-    <p>Singularity image for <a href="https://github.com/OpenChemistry">Open Chemistry</a>,
-    Gabedit and Jmol. It was built on top of the base Docker image <a href="https://hub.docker.com/_/ubuntu"
-    rel="nofollow">ubuntu</a>.</p>
-
-    <h2>
-
-    <a id="user-content-build" class="anchor" href="#build" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Build</h2>
-
-    <p>You can build a local Singularity image named <code>molgfx.sif</code> with:</p>
-
-    <div class="highlight highlight-source-shell"><pre>sudo singularity build molgfx.sif
-    Singularity</pre></div>
-
-    <h2>
-
-    <a id="user-content-deploy" class="anchor" href="#deploy" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Deploy</h2>
-
-    <p>Instead of building it yourself you can download the pre-built image from <a
-    href="https://www.singularity-hub.org" rel="nofollow">Singularity Hub</a> with:</p>
-
-    <div class="highlight highlight-source-shell"><pre>singularity pull molgfx.sif
-    shub://OSC/sa_singularity_molgfx</pre></div>
-
-    <h2>
-
-    <a id="user-content-run" class="anchor" href="#run" aria-hidden="true"><span aria-hidden="true"
-    class="octicon octicon-link"></span></a>Run</h2>
-
-    <h3>
-
-    <a id="user-content-find-versions-of-molecular-graphics-systems" class="anchor"
-    href="#find-versions-of-molecular-graphics-systems" aria-hidden="true"><span aria-hidden="true"
-    class="octicon octicon-link"></span></a>Find versions of molecular graphics systems</h3>
-
-    <div class="highlight highlight-source-shell"><pre>singularity inspect -H molgfx.sif</pre></div>
-
-    <h3>
-
-    <a id="user-content-start-avogadro2" class="anchor" href="#start-avogadro2" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Start Avogadro2</h3>
-
-    <p>Avogadro2 is started using the default exec command:</p>
-
-    <div class="highlight highlight-source-shell"><pre>singularity <span class="pl-c1">exec</span>
-    molgfx.sif avogadro2</pre></div>
-
-    <h2>
-
-    <a id="user-content-license" class="anchor" href="#license" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
-
-    <p>The code is available as open source under the terms of the <a href="http://opensource.org/licenses/MIT"
-    rel="nofollow">MIT License</a>.</p>
-
-    '
+  readme: "<h1>\n<a id=\"user-content-csci5980\" class=\"anchor\" href=\"#csci5980\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>csci5980</h1>\n<p>Final project for CSci 5980: deep learning for automatic\
+    \ music translation.</p>\n<p>Follow theses steps to install all package dependencies\
+    \ for running the model:</p>\n<p>We first install software dependencies for manipulating\
+    \ raw audio (<code>ffmpeg</code>):</p>\n<ol>\n<li>\n<p>Create a local software\
+    \ directory\n<code>mkdir ~/software</code></p>\n</li>\n<li>\n<p>Install the NASM\
+    \ assembler (dependency of ffmpeg):</p>\n</li>\n</ol>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre><span class=\"pl-c1\">cd</span> <span class=\"\
+    pl-k\">~</span>/software\nwget https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/nasm-2.14.02.tar.bz2\n\
+    tar -xvf nasm-2.14.02.tar.bz2\n<span class=\"pl-c1\">cd</span> nasm-2.14.02\n\
+    ./configure --prefix=<span class=\"pl-k\">~</span>/software/nasm/\nmake install\n\
+    <span class=\"pl-k\">export</span> PATH=<span class=\"pl-smi\">$PATH</span>:<span\
+    \ class=\"pl-k\">~</span>/software/nasm/bin/</pre></div>\n<ol start=\"3\">\n<li>Make\
+    \ sure that NASM assembler installed correctly:</li>\n</ol>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre>nasm -v</pre></div>\n<p>The output should look\
+    \ something like:\n<code>NASM version 2.14.02 compiled on Mar 11 2020</code></p>\n\
+    <ol start=\"4\">\n<li>Install ffmpeg:</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre><span class=\"pl-c1\">cd</span> <span class=\"pl-k\">~</span>/software\n\
+    wget https://ffmpeg.org/releases/ffmpeg-4.2.2.tar.bz2\ntar -xvf ffmpeg-4.2.2.tar.bz2\n\
+    <span class=\"pl-c1\">cd</span> ffmpeg-4.2.2\n./configure --prefix=<span class=\"\
+    pl-k\">~</span>/software/ffmpeg/\nmake install\n<span class=\"pl-k\">export</span>\
+    \ PATH=<span class=\"pl-smi\">$PATH</span>:<span class=\"pl-k\">~</span>/software/ffmpeg/bin/</pre></div>\n\
+    <ol start=\"5\">\n<li>Make sure that ffmpeg installed correctly:</li>\n</ol>\n\
+    <div class=\"highlight highlight-source-shell\"><pre>ffmpeg -version</pre></div>\n\
+    <p>The output should look something like:</p>\n<pre><code>ffmpeg version 4.2.2\
+    \ Copyright (c) 2000-2019 the FFmpeg developers\nbuilt with gcc 4.4.7 (GCC) 20120313\
+    \ (Red Hat 4.4.7-23)\nconfiguration: --prefix=/home/csci5980/piehl008/software/ffmpeg/\n\
+    libavutil      56. 31.100 / 56. 31.100\nlibavcodec     58. 54.100 / 58. 54.100\n\
+    libavformat    58. 29.100 / 58. 29.100\nlibavdevice    58.  8.100 / 58.  8.100\n\
+    libavfilter     7. 57.100 /  7. 57.100\nlibswscale      5.  5.100 /  5.  5.100\n\
+    libswresample   3.  5.100 /  3.  5.100\n</code></pre>\n<ol start=\"6\">\n<li>Now,\
+    \ we can make the virtual environment and install python packages.  First, create\
+    \ the virtual environment by running:</li>\n</ol>\n<p><code>conda create --name\
+    \ audio-proj python=3.7</code></p>\n<ol start=\"7\">\n<li>Next, install packages\
+    \ by running</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"><pre><span\
+    \ class=\"pl-c1\">cd</span> <span class=\"pl-k\">~</span>/csci5980\nconda install\
+    \ --name audio-proj --file requirements.txt --channel defaults --channel conda-forge</pre></div>\n\
+    <p>(Note: this can take a while - and you need to say yes to installing everything\
+    \ after it solves the environment)</p>\n<ol start=\"8\">\n<li>To activate the\
+    \ virtual environment, you can now run <code>source activate audio-proj</code>.\
+    \ Note: you should do this to test that you can activate the virtual evironment,\
+    \ but you probably shouldn't run a lot unless you are submitting jobs to the queue.\
+    \  If you want to use this virtual environment through the MSI notebooks, check\
+    \ out the tutorial at <a href=\"https://sunju.org/teach/DL-Spring-2020/TensorFlowPyTorch.html\"\
+    \ rel=\"nofollow\">https://sunju.org/teach/DL-Spring-2020/TensorFlowPyTorch.html</a>.</li>\n\
+    </ol>\n<h3>\n<a id=\"user-content-adding-the-virtual-environment-to-jupyter-notebooks\"\
+    \ class=\"anchor\" href=\"#adding-the-virtual-environment-to-jupyter-notebooks\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Adding the Virtual Environment to Jupyter Notebooks</h3>\n<p>Now that\
+    \ we have created the virtual environment, we can add it to the Jupyter notebook\
+    \ kernels so that we can use the virtual environment through MSI's notebook server.\
+    \ To do this, we have to add the kernel specifications to the known Jupyter kernels\
+    \ for our user:</p>\n<ol start=\"9\">\n<li>If you haven't already, activate your\
+    \ virtual environment by running <code>source activate audio-proj</code>. Then\
+    \ enter</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"><pre>which\
+    \ python</pre></div>\n<p>Your output should tell you where the python executable\
+    \ for this virtual environment lives - the output for me displays <code>~/.conda/envs/audio-proj/bin/python</code>.\
+    \  If you see something that looks like <code>/panfs/roc/msisoft/anaconda/anaconda3-2018.12/bin/python</code>,\
+    \ go back and make sure that you have the virtual environment active and try again.\
+    \ After you have an ouput that clearly has the name of the virtual environment\
+    \ in the directory path (i.e. contains audio-proj in it), continue to the next\
+    \ step.</p>\n<ol start=\"10\">\n<li>Now, we need to create the kernel configuration.\
+    \ To do this run</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>mkdir <span class=\"pl-k\">~</span>/.local/share/jupyter/kernels/audio-proj\n\
+    nano <span class=\"pl-k\">~</span>/.local/share/jupyter/kernels/audio-proj/kernel.json</pre></div>\n\
+    <p>The nano command will open a very basic text editor that you can navigate with\
+    \ the arrow keys. Enter the following:</p>\n<pre lang=\"text\"><code>{\n \"argv\"\
+    : [\n  \"~/.conda/envs/audio-proj/bin/python\", #replace this with your path from\
+    \ step 9 above! (and delete this comment)\n  \"-m\",\n  \"ipykernel_launcher\"\
+    ,\n  \"-f\",\n  \"{connection_file}\"\n ],\n \"display_name\": \"Audio Project\
+    \ Kernel\",\n \"language\": \"python\"\n}\n</code></pre>\n<p>where you replace\
+    \ the first line of the argv array with whatever executable path was output from\
+    \ step 9 above (it likely will be identical to this). To exit the nano text editor,\
+    \ type <code>Ctrl-x &lt;RETURN&gt;</code> and then type <code>Y &lt;RETURN&gt;</code>\
+    \ to save the file.</p>\n<ol start=\"11\">\n<li>Now that you have saved the kernel\
+    \ file, you should be able to go to <code>https://notebooks.msi.umn.edu/</code>\
+    \ and when you click on the <code>New</code> tab to create a new file, you should\
+    \ be able to select <code>Audio Project Kernel</code> as an available kernel to\
+    \ run your newly created file in.</li>\n</ol>\n"
   stargazers_count: 2
   subscribers_count: 1
   topics: []
@@ -59371,13 +59401,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 68
+  stargazers_count: 69
   subscribers_count: 10
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1629394600.0
+  updated_at: 1629490697.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
