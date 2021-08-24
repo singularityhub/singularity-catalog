@@ -4221,7 +4221,7 @@ ComputationalRadiationPhysics/picongpu:
     our strong scaling" title="Strong Scaling" style="max-width:100%;"></a></p>
 
     '
-  stargazers_count: 489
+  stargazers_count: 490
   subscribers_count: 47
   topics:
   - laser
@@ -4234,7 +4234,7 @@ ComputationalRadiationPhysics/picongpu:
   - particle-in-cell
   - pic
   - research
-  updated_at: 1629505785.0
+  updated_at: 1629634136.0
 D-Lo/bambi:
   data_format: 2
   description: R wrapper for bamdb
@@ -5485,7 +5485,7 @@ DiamondLightSource/Savu:
   stargazers_count: 28
   subscribers_count: 15
   topics: []
-  updated_at: 1629460818.0
+  updated_at: 1629722401.0
 DoaneAS/atacflow:
   data_format: 2
   description: Analysis pipeline for ATACseq data using Nextflow
@@ -15293,7 +15293,7 @@ OSC/bc_osc_rstudio_server:
   stargazers_count: 4
   subscribers_count: 10
   topics: []
-  updated_at: 1629387184.0
+  updated_at: 1629737758.0
 OSC/bc_osc_rstudio_server_pitzer:
   data_format: 2
   description: Batch Connect - OSC RStudio Server - Pitzer
@@ -19367,7 +19367,7 @@ UniversalDataTool/universal-data-tool:
     </g-emoji></a>\n</td>\n  </tr>\n</table>\n\n\n\n<p>This project follows the <a\
     \ href=\"https://github.com/all-contributors/all-contributors\">all-contributors</a>\
     \ specification. Contributions of any kind welcome!</p>\n"
-  stargazers_count: 1472
+  stargazers_count: 1474
   subscribers_count: 33
   topics:
   - computer-vision
@@ -19390,7 +19390,7 @@ UniversalDataTool/universal-data-tool:
   - labeling
   - labeling-tool
   - hacktoberfest
-  updated_at: 1629459067.0
+  updated_at: 1629689110.0
 VIB-CBD/scanpy-images:
   data_format: 2
   description: Docker and Singularity images for Scanpy
@@ -39662,10 +39662,10 @@ jkulhanek/deep-rl-pytorch:
     arXiv:1312.6120.</p>
 
     '
-  stargazers_count: 5
+  stargazers_count: 6
   subscribers_count: 1
   topics: []
-  updated_at: 1626571356.0
+  updated_at: 1629464882.0
 jmurga/bgd-pic:
   data_format: 2
   description: null
@@ -44880,14 +44880,14 @@ nextgenusfs/funannotate:
     </code></pre>
 
     '
-  stargazers_count: 168
+  stargazers_count: 169
   subscribers_count: 13
   topics:
   - genome-annotation
   - gene-models
   - comparative-genomics
   - ncbi-submission
-  updated_at: 1629416124.0
+  updated_at: 1629703631.0
 nhoffman/dada2-nf:
   data_format: 2
   description: A Nextflow pipeline for processing 16S rRNA sequences using dada2
@@ -55599,306 +55599,10 @@ sailfish009/openstructure:
   - singularity/Singularity
   full_name: sailfish009/openstructure
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-description" class="anchor" href="#description" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Description</h1>
-
-    <p>This README is pulled from a default template for workflows.</p>
-
-    <h1>
-
-    <a id="user-content-workflow-template-setup" class="anchor" href="#workflow-template-setup"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Workflow
-    template setup</h1>
-
-    <h2>
-
-    <a id="user-content-lib" class="anchor" href="#lib" aria-hidden="true"><span aria-hidden="true"
-    class="octicon octicon-link"></span></a>lib</h2>
-
-    <ul>
-
-    <li>The <code>lib</code> directory contains general libraries that may be referenced
-    by multiple workflows, for instance cromwell configs and python configs. Currently
-    nothing in this directory is used.</li>
-
-    </ul>
-
-    <h2>
-
-    <a id="user-content-pipelines" class="anchor" href="#pipelines" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>pipelines</h2>
-
-    <ul>
-
-    <li>
-
-    <p>Each pipeline is a full analysis. Think of it like the heading of a methods
-    section in a paper. For instance if this were genetic summary statistics workflow,
-    a pipeline might be "fine-mapping" that does both conditional and credible set
-    analysis. Another pipeline may be "colocalization".</p>
-
-    </li>
-
-    <li>
-
-    <p>Pipelines may have numbers prior to their name (e.g., <code>example_pipeline_1</code>
-    to <code>0025-example_pipeline_1</code>). These numbers do not mean anything,
-    but merely used to keep pipelines in their general order of execution. These are
-    optional.</p>
-
-    </li>
-
-    <li>
-
-    <p>A pipeline consists of :</p>
-
-    </li>
-
-    </ul>
-
-    <ol>
-
-    <li>A workflow.</li>
-
-    <li>A <code>scripts</code> directory with <em>all</em> scripts referenced by that
-    workflow (unless a general lib script is called). Scripts may have numbers prior
-    to their name. These numbers do not mean anything, but merely used to keep scripts
-    in their general order of execution. These are optional.</li>
-
-    <li>A <code>docs</code> directory that contains a documentation of the default
-    parameters written in a style that is publishable as methods in a paper (including
-    citations). Within the <code>docs</code> directory there may be a <code>reference</code>
-    with any additional reference materials.</li>
-
-    <li>An <code>example_runtime_setup</code> directory contains files that give an
-    example of actual config files and any other files used to run the pipeline.</li>
-
-    </ol>
-
-    <h2>
-
-    <a id="user-content-studies" class="anchor" href="#studies" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>studies</h2>
-
-    <ul>
-
-    <li>A studies directory should either exist within the workflow repo or be a separate
-    repo that has the same name as the workflow repo, but with <code>studies</code>
-    appended to it (e.g. <code>template-workflow</code> becomes <code>template-workflow-studies</code>).</li>
-
-    <li>If there is a standard set of plots that will always look the same way, a
-    pipeline should generate such plots. Otherwise, all code to analyze the results
-    of a pipeline run should be in the <code>studies</code> directory. For instance
-    if this were genetic summary statistics workflow, <code>studies</code> may contain
-    a <code>t2d</code> directory and a <code>weight</code> directory.</li>
-
-    <li>Within a study is either an Jupyter notebook (either python or R kernel) or
-    an R markdown file. Nearly all plots / analysis of the results of running the
-    various pipelines should be done in the notebook / markdown file.</li>
-
-    <li>A study may also contain a scripts directory with scripts to aggregate data
-    for a one off analysis (if the analysis is going to be repeated, consider making
-    a new pipeline or adding it to an existing pipeline) or for special plots that
-    cannot be done in the notebook / markdown file.</li>
-
-    </ul>
-
-    <h1>
-
-    <a id="user-content-new-workflow-reminders" class="anchor" href="#new-workflow-reminders"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>New
-    workflow reminders</h1>
-
-    <ul>
-
-    <li>[ ] Documentation</li>
-
-    <li>[ ] Environment version control</li>
-
-    <li>[ ] Pipeline version control</li>
-
-    <li>[ ] Git branches</li>
-
-    <li>[ ] Code review</li>
-
-    </ul>
-
-    <h1>
-
-    <a id="user-content-documentation" class="anchor" href="#documentation" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h1>
-
-    <p>Be sure to document your code!</p>
-
-    <h1>
-
-    <a id="user-content-environment-version-control" class="anchor" href="#environment-version-control"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Environment
-    version control</h1>
-
-    <p>Analysis environment is controlled using conda. Each pipeline should have an
-    <code>environment.yml</code> file with all of the packages used. If a required
-    package or library is missing from conda (and therefore not in the <code>environment.yml</code>),
-    it should be noted in the <code>README.md</code> of the pipeline.</p>
-
-    <div class="highlight highlight-source-shell"><pre>conda env <span class="pl-k">export</span>
-    --no-builds <span class="pl-k">|</span> grep -v prefix <span class="pl-k">|</span>
-    grep -v name <span class="pl-k">&gt;</span> environment.yml</pre></div>
-
-    <h1>
-
-    <a id="user-content-pipeline-version-control" class="anchor" href="#pipeline-version-control"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pipeline
-    version control</h1>
-
-    <p>Each pipeline within this workflow uses <a href="https://pypi.org/project/bumpversion"
-    rel="nofollow">bumpversion</a> for automatic <a href="https://semver.org" rel="nofollow">semantic
-    versioning</a>.</p>
-
-    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
-    bump the appropriate increment</span>
-
-    bumpversion patch --verbose --dry-run
-
-    bumpversion minor --verbose --dry-run
-
-    bumpversion major --verbose --dry-run
-
-
-    <span class="pl-c"><span class="pl-c">#</span> commit with tags</span>
-
-    git push --tags</pre></div>
-
-    <h1>
-
-    <a id="user-content-github-forks" class="anchor" href="#github-forks" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>GitHub forks</h1>
-
-    <p>Forking the repository allows developers to work independently while retaining
-    well-maintained code on the master fork. For instructions on how to fork, follow
-    the <a href="https://help.github.com/en/articles/fork-a-repo">Fork a repo</a>
-    instructions.</p>
-
-    <p>After forking the repo, clone the repo to your local desktop:</p>
-
-    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
-    to use SSH</span>
-
-    git clone git@github.com:<span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>/template-workflow.git
-
-
-    <span class="pl-c"><span class="pl-c">#</span> to use Https</span>
-
-    git clone https://github.com/<span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>/template-workflow.git</pre></div>
-
-    <p>This creates a replica of the remote repository on your local desktop. <em>Note</em>:
-    When you create your local repository, it will also make a local clone of the
-    remote repository (typically as <code>origin</code>). So, your local master branch
-    would simply be <code>master</code>. But, your remote master branch will be <code>origin/master</code>.
-    You can also add multiple remote repositories. For instance, let us say our main
-    repository is under the remote repository <code>my_repo</code>. We will want to
-    add it as a remote repository, so we can fetch the most up-to-date code. You could
-    add it by:</p>
-
-    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
-    Add the my_repo remote repo to your local desktop -- this will allow you to pull
-    and push to branches on the my_repo repository</span>
-
-    git remote add my_repo git@github.com:my_repo/template-workflow.git</pre></div>
-
-    <h1>
-
-    <a id="user-content-git-branches" class="anchor" href="#git-branches" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Git branches</h1>
-
-    <p>Branching is how git actually tracks code development. For more information,
-    see the <a href="https://www.atlassian.com/git/tutorials/using-branches" rel="nofollow">Git
-    Branch Tutorial</a> on Atlassian. If you want to add a new feature, pipeline,
-    or fix a bug, a common work flow would look like this:</p>
-
-    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
-    Update your local copy of the master branch to make sure you are getting the most
-    up-to-date code</span>
-
-    git pull
-
-
-    <span class="pl-c"><span class="pl-c">#</span> Create the branch on your local
-    machine and switch in this branch </span>
-
-    git checkout -b [name_of_your_new_branch]
-
-
-    <span class="pl-c"><span class="pl-c">#</span> Push the branch on github</span>
-
-    git push origin [name_of_your_new_branch]</pre></div>
-
-    <p>As you develop, you want to commit your work to your branch, so you don''t
-    lose it all if something happens!</p>
-
-    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
-    Confirm we''re on the right branch</span>
-
-    git branch -a
-
-
-    <span class="pl-c"><span class="pl-c">#</span> Add all your work to be tracked
-    (Note: there are many ways to add specific files, etc. See https://git-scm.com/docs/git-add
-    for more information). The following command adds everything in your currently
-    directory.</span>
-
-    git add <span class="pl-c1">.</span>
-
-
-    <span class="pl-c"><span class="pl-c">#</span> Commit your work to the branch
-    with a message describing what''s in the commit</span>
-
-    git commit -m <span class="pl-s"><span class="pl-pds">"</span>Created the scATAC-seq
-    pipeline!<span class="pl-pds">"</span></span>
-
-
-    <span class="pl-c"><span class="pl-c">#</span> You can add a -u parameter to set-upstream
-    for a push</span>
-
-    <span class="pl-c"><span class="pl-c">#</span> Alternatively, git will also automatically
-    query you when you do your first push.</span>
-
-    <span class="pl-c"><span class="pl-c">#</span> You can also set this manually
-    by adding a new remote for your branch:</span>
-
-    <span class="pl-c"><span class="pl-c">#</span>git remote add [name_of_your_remote]
-    [name_of_your_new_branch]</span>
-
-
-    <span class="pl-c"><span class="pl-c">#</span> Here is another push where we specify
-    HEAD</span>
-
-    <span class="pl-c"><span class="pl-c">#</span>git push origin HEAD # HEAD pushes
-    everything up to the most recent commit</span></pre></div>
-
-    <h1>
-
-    <a id="user-content-code-review" class="anchor" href="#code-review" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Code review</h1>
-
-    <p>Create a <a href="https://help.github.com/en/articles/creating-a-pull-request">GitHub
-    Pull Request</a>. A PR allows other developers a chance to go through and comment
-    on lines of code they believe can be improved. In addition, it will tell you if
-    the code you are trying to merge into the <code>my_repo</code> branch actually
-    conflicts with code that already exists in the branch, so you don''t overwrite
-    someone else''s work.</p>
-
-    <p>Once another developer approves the PR, you have the go-ahead to merge your
-    code! Congrats, you finished your feature!</p>
-
-    <p><em>Note</em>: There are some cases where you may just want to push directly
-    to the my_repo fork, thereby avoiding code reviews. For instance, if you''re working
-    on a one-off project that you want people to be able to see, but no one else is
-    necessarily working on, you can always push directly to the branches on my_repo
-    fork. Or, you could also still go through the steps of a PR, but simply merge
-    your own code without CR.</p>
+  readme: '<p>Singularity recipe files for the BEDOPS open-source command-line toolkit
+    that performs highly efficient and scalable Boolean and other set operations,
+    statistical calculations, archiving, conversion and other management of genomic
+    data of arbitrary scale.</p>
 
     '
   stargazers_count: 0
@@ -56536,105 +56240,16 @@ seb-mueller/singularity_dropSeqPipe:
   - Singularity
   full_name: seb-mueller/singularity_dropSeqPipe
   latest_release: null
-  readme: "<p><a href=\"https://mybinder.org/v2/gh/BiomedicalMachineLearning/HEMnet/master?filepath=Development\"\
-    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/581c077bdbc6ca6899c86d0acc6145ae85e9d80e6f805a1071793dbe48917982/68747470733a2f2f6d7962696e6465722e6f72672f62616467655f6c6f676f2e737667\"\
-    \ alt=\"Binder\" data-canonical-src=\"https://mybinder.org/badge_logo.svg\" style=\"\
-    max-width:100%;\"></a>\n<a href=\"https://imjoy.io/#/app?plugin=https://github.com/BiomedicalMachineLearning/HEMnet/blob/master/Demo/HEMnet_Tile_Predictor.imjoy.html\"\
-    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/3f085c08b146a17bddb97fdd1f4258df4bc1c24a0435364e4856b7fbe8471e61/68747470733a2f2f696d6a6f792e696f2f7374617469632f62616467652f6c61756e63682d696d6a6f792d62616467652e737667\"\
-    \ alt=\"launch ImJoy\" data-canonical-src=\"https://imjoy.io/static/badge/launch-imjoy-badge.svg\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://colab.research.google.com/github/BiomedicalMachineLearning/HEMnet/blob/master/Demo/TCGA_Inference.ipynb\"\
-    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/84f0493939e0c4de4e6dbe113251b4bfb5353e57134ffd9fcab6b8714514d4d1/68747470733a2f2f636f6c61622e72657365617263682e676f6f676c652e636f6d2f6173736574732f636f6c61622d62616467652e737667\"\
-    \ alt=\"Open In Colab\" data-canonical-src=\"https://colab.research.google.com/assets/colab-badge.svg\"\
-    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-hemnet---haematoxylin--eosin-and-molecular-neural-network\"\
-    \ class=\"anchor\" href=\"#hemnet---haematoxylin--eosin-and-molecular-neural-network\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>HEMnet - Haematoxylin &amp; Eosin and Molecular neural network</h1>\n\
-    <h2>\n<a id=\"user-content-description\" class=\"anchor\" href=\"#description\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Description</h2>\n<p>A deep learning automated cancer diagnosis software\
-    \ using molecular labelling to improve pathological annotation of\nHaematoxylin\
-    \ and Eosin (H&amp;E) stained tissue.</p>\n<h2>\n<a id=\"user-content-installation\"\
-    \ class=\"anchor\" href=\"#installation\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Installation</h2>\n<ol>\n<li>\n\
-    <p>Docker</p>\n<p>You can download and run the docker image using the following\
-    \ commands:</p>\n<pre><code>docker pull andrewsu1/hemnet    \ndocker run -it andrewsu1/hemnet\n\
-    </code></pre>\n</li>\n<li>\n<p>Conda</p>\n<p>Install Openslide (this is necessary\
-    \ to open whole slide images) - download it <a href=\"https://openslide.org/download/\"\
-    \ rel=\"nofollow\">here</a></p>\n<p>Create a conda environment from the <code>environment.yml</code>\
-    \ file</p>\n<pre><code>conda env create -f environment.yml\nconda activate HEMnet\n\
-    </code></pre>\n</li>\n</ol>\n<h2>\n<a id=\"user-content-usage\" class=\"anchor\"\
-    \ href=\"#usage\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
-    \ octicon-link\"></span></a>Usage</h2>\n<h3>\n<a id=\"user-content-slide-preparation\"\
-    \ class=\"anchor\" href=\"#slide-preparation\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Slide Preparation</h3>\n<p>Name\
-    \ slides in the format: <code>slide_id_TP53</code> for TP53 slides and <code>slide_id_HandE</code>\
-    \ for H&amp;E slides\nThe <code>TP53</code> and <code>HandE</code> suffix is used\
-    \ by HEMnet to identify the stain used.</p>\n<h3>\n<a id=\"user-content-1-generate-training-and-testing-datasets\"\
-    \ class=\"anchor\" href=\"#1-generate-training-and-testing-datasets\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>1.\
-    \ Generate training and testing datasets</h3>\n<p>a. Generate train dataset</p>\n\
-    <p><code>python HEMnet_train_dataset.py -b /path/to/base/directory -s relative/path/to/slides\
-    \ -o relative/path/to/output/directory  -t relative/path/to/template_slide.svs\
-    \ -v</code></p>\n<p>b. Generate test dataset</p>\n<p><code>python HEMnet_test_dataset.py\
-    \ -b /path/to/base/directory -s /relative/path/to/slides -o /relative/path/to/output/directory\
-    \ -t relative/path/to/template_slide -m tile_mag -a align_mag -c cancer_thresh\
-    \ -n non_cancer_thresh</code></p>\n<p>Other parameters:</p>\n<ul>\n<li>\n<code>-t</code>\
-    \ is the relative path to the template slide from which all other slides will\
-    \ be normalised against. The template\nslide should be the same for each step.</li>\n\
-    <li>\n<code>-m</code> is the tile magnification. e.g. if  the input is <code>10</code>\
-    \ then the tiles will be output at 10x</li>\n<li>\n<code>-a</code> is the align\
-    \ magnification. Paired TP53 and H&amp;E slides will be registered at this magnification.\n\
-    To reduce computation time we recommend this be less than the tile magnification\
-    \ - a five times downscale generally works well.</li>\n<li>\n<code>-c</code> cancer\
-    \ threshold to apply to the DAB channel. DAB intensities less than this threshold\
-    \ indicate cancer.</li>\n<li>\n<code>-n</code> non-cancer threshold to apply to\
-    \ the DAB channel. DAB intensities greater than this threshold indicate no cancer.</li>\n\
-    </ul>\n<h3>\n<a id=\"user-content-2-train-and-evaluate-model\" class=\"anchor\"\
-    \ href=\"#2-train-and-evaluate-model\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>2. Train and evaluate model</h3>\n\
-    <p>a. Training model</p>\n<p><code>python train.py -b /path/to/base/directory\
-    \ -t relative/path/to/training_tile_directory -l relative/path/to/validation_tile_directory\
-    \ -o /relative/path/to/output/directory -m cnn_base -g num_gpus -e epochs -a batch_size\
-    \ -s -w -f -v</code></p>\n<p>Other parameters:</p>\n<ul>\n<li>\n<code>-m</code>\
-    \ is CNN base model. eg. <code>resnet50</code>, <code>vgg16</code>, <code>vgg19</code>,\
-    \ <code>inception_v3</code> and <code>xception</code>.</li>\n<li>\n<code>-g</code>\
-    \ is number of GPUs for training.</li>\n<li>\n<code>-e</code> is training epochs.\
-    \ Default is <code>100</code> epochs.</li>\n<li>\n<code>-a</code> is batch size.\
-    \ Default is <code>32</code>\n</li>\n<li>\n<code>-s</code> is option to save the\
-    \ trained model weights.</li>\n<li>\n<code>-w</code> is option to used transfer\
-    \ learning. Model will used pre-trained weights from ImageNet at the initial stage.</li>\n\
-    <li>\n<code>-f</code> is fine-tuning option. Model will re-train CNN base.</li>\n\
-    </ul>\n<p>b. Test model prediction</p>\n<p><code>python test.py  -b /path/to/base/directory\
-    \ -t relative/path/to/test_tile_directory -o /relative/path/to/output/directory\
-    \ -w model_weights -m cnn_base -g num_gpus -v</code></p>\n<p>Other parameters:</p>\n\
-    <ul>\n<li>\n<code>-w</code> is path to trained model. eg. <code>trained_model.h5</code>.</li>\n\
-    <li>\n<code>-m</code> is CNN base model (same to training step).</li>\n<li>\n\
-    <code>-g</code> is number of GPUs for prediction.</li>\n</ul>\n<p>c. Evaluate\
-    \ model performance and visualise model prediction</p>\n<p><code>python visualisation.py\
-    \ -b /path/to/base/directory -t /relative/path/to/training_output_directory -p\
-    \ /relative/path/to/test_output_directory  -o /relative/path/to/output/directory\
-    \ -i sample</code></p>\n<p>Other parameters:</p>\n<ul>\n<li>\n<code>-t</code>\
-    \ is path to training outputs.</li>\n<li>\n<code>-p</code> is path to test outputs.</li>\n\
-    <li>\n<code>-i</code> is name of Whole Slide Image for visualisation.</li>\n</ul>\n\
-    <h3>\n<a id=\"user-content-3-apply-model-to-diagnose-new-images\" class=\"anchor\"\
-    \ href=\"#3-apply-model-to-diagnose-new-images\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>3. Apply model to diagnose new\
-    \ images</h3>\n<p><code>python HEMnet_inference.py -s '/path/to/new/HE/Slides/'\
-    \ -o '/path/to/output/directory/' -t '/path/to/template/slide/' -nn '/path/to/trained/model/'\
-    \ -v</code></p>\n<p>Predict on TCGA images with our pretrained model for colorectal\
-    \ cancer using <a href=\"https://colab.research.google.com/github/BiomedicalMachineLearning/HEMnet/blob/master/Demo/TCGA_Inference.ipynb\"\
-    \ rel=\"nofollow\">google colab</a></p>\n<h2>\n<a id=\"user-content-results\"\
-    \ class=\"anchor\" href=\"#results\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Results</h2>\n<h2>\n<a id=\"\
-    user-content-citing-hemnet\" class=\"anchor\" href=\"#citing-hemnet\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Citing\
-    \ HEMnet</h2>\n<h2>\n<a id=\"user-content-the-team\" class=\"anchor\" href=\"\
-    #the-team\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>The Team</h2>\n<p>Please contact Dr Quan Nguyen (<a href=\"mailto:quan.nguyen@uq.edu.au\"\
-    >quan.nguyen@uq.edu.au</a>), Andrew Su (<a href=\"mailto:a.su@uqconnect.edu.au\"\
-    >a.su@uqconnect.edu.au</a>),\nand Xiao Tan (<a href=\"mailto:xiao.tan@uqconnect.edu.au\"\
-    >xiao.tan@uqconnect.edu.au</a>) for issues, suggestions,\nand we are very welcome\
-    \ to collaboration opportunities.</p>\n"
+  readme: '<p><a href="https://singularity-hub.org/collections/3399" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
+    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    style="max-width:100%;"></a></p>
+
+    <p>Singularity recipe files for the PAML tool for phylogenetic analyses of DNA
+    or protein sequences using maximum likelihood.</p>
+
+    '
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -56691,163 +56306,10 @@ shreyaskamathkm/Cluster_Images:
   - Singularity_Ubuntu_18_04_Cuda_10_2
   full_name: shreyaskamathkm/Cluster_Images
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-examples-with-drake-and-ros-2" class="anchor" href="#examples-with-drake-and-ros-2"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples
-    with Drake and ROS 2</h1>
-
-    <p>This repo shows examples of using <a href="https://drake.mit.edu/" rel="nofollow">Drake</a>
-    and <a href="https://www.ros.org/" rel="nofollow">ROS 2</a> together.
-
-    It uses the pydrake API and is of prototype quality.
-
-    For a similar effort in ROS 1, see <a href="https://github.com/EricCousineau-TRI/repro/tree/master/ros/drake_ros1_hacks">EricCousineau-TRI/repro
-    <code>drake_ros1_hacks</code></a>.</p>
-
-    <h2>
-
-    <a id="user-content-prerequisites" class="anchor" href="#prerequisites" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Prerequisites</h2>
-
-    <ul>
-
-    <li>Ubuntu Focal (20.04)</li>
-
-    <li><a href="https://index.ros.org/doc/ros2/Installation/Rolling/" rel="nofollow">ROS
-    2 Rolling</a></li>
-
-    <li><a href="https://drake.mit.edu/from_binary.html" rel="nofollow">Some Drake
-    binary installation from October 2020</a></li>
-
-    </ul>
-
-    <p>Install ROS 2 Rolling using the <a href="https://index.ros.org/doc/ros2/Installation/Rolling/Linux-Install-Debians/"
-    rel="nofollow">Linux binary instructions</a> and <a href="https://index.ros.org/doc/ros2/Installation/Prerelease-Testing/"
-    rel="nofollow">enable the ROS 2 testing apt repo</a>.
-
-    Install the apt packages <code>ros-rolling-desktop</code> and <code>ros-rolling-sdformat-urdf</code>.
-
-    Extract the Drake binary installation, install it''s prerequisites, and <a href="https://drake.mit.edu/python_bindings.html#inside-virtualenv"
-    rel="nofollow">use this Python virutalenv trick</a>.</p>
-
-    <h2>
-
-    <a id="user-content-setup" class="anchor" href="#setup" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Setup</h2>
-
-    <p>Once the prerequisites are met, install <code>drake_ros</code> into the Drake
-    virtualenv.</p>
-
-    <pre><code>. path/to/drake/bin/activate
-
-    cd path/to/this/repo
-
-    cd drake_ros/
-
-    python setup.py develop
-
-    </code></pre>
-
-    <h2>
-
-    <a id="user-content-ros-2-tf-and-robot-model-demo" class="anchor" href="#ros-2-tf-and-robot-model-demo"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ROS
-    2 tf and Robot Model Demo</h2>
-
-    <p>This demo shows RViz visualizing a single UR10 robot being simulated by Drake.
-
-    Set up two terminals: one for launching RViz, and another for launching the Drake
-    simulation.</p>
-
-    <pre><code>. /opt/ros/rolling/setup.bash
-
-    cd path/to/this/repo
-
-    AMENT_PREFIX_PATH="$AMENT_PREFIX_PATH:$(pwd)" rviz2 -d view.rviz
-
-    </code></pre>
-
-    <pre><code>. /opt/ros/rolling/setup.bash
-
-    . path/to/drake/bin/activate
-
-    cd path/to/this/repo
-
-    AMENT_PREFIX_PATH="$AMENT_PREFIX_PATH:$(pwd)" ./ros2_demo.py
-
-    </code></pre>
-
-    <p><a href="https://user-images.githubusercontent.com/4175662/90415417-e7976980-e065-11ea-9564-96c820f51680.gif"
-    target="_blank" rel="nofollow"><img src="https://user-images.githubusercontent.com/4175662/90415417-e7976980-e065-11ea-9564-96c820f51680.gif"
-    alt="ur10_rviz_drake" style="max-width:100%;"></a></p>
-
-    <h2>
-
-    <a id="user-content-interactive-markers-demo" class="anchor" href="#interactive-markers-demo"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Interactive
-    Markers Demo</h2>
-
-    <p>This demonstrates using interactive markers to control an iiwa14 being simulated
-    by Drake.
-
-    Set up two terminals: one for launching RViz, and another for launching the Drake
-    simulation.</p>
-
-    <pre><code>. /opt/ros/rolling/setup.bash
-
-    cd path/to/this/repo
-
-    AMENT_PREFIX_PATH="$AMENT_PREFIX_PATH:$(pwd)" rviz2 -d interactive_demo.rviz
-
-    </code></pre>
-
-    <pre><code>. /opt/ros/rolling/setup.bash
-
-    . path/to/drake/bin/activate
-
-    cd path/to/this/repo
-
-    AMENT_PREFIX_PATH="$AMENT_PREFIX_PATH:$(pwd)" ./interactive_demo.py
-
-    </code></pre>
-
-    <p><a href="https://user-images.githubusercontent.com/4175662/96510753-dcea8380-1212-11eb-89ca-4a9019a8a9cd.gif"
-    target="_blank" rel="nofollow"><img src="https://user-images.githubusercontent.com/4175662/96510753-dcea8380-1212-11eb-89ca-4a9019a8a9cd.gif"
-    alt="iiwa14_interactive_drake" style="max-width:100%;"></a></p>
-
-    <h2>
-
-    <a id="user-content-using-a-container" class="anchor" href="#using-a-container"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using
-    a Container</h2>
-
-    <p>There is a definition file for a <a href="https://sylabs.io/singularity/" rel="nofollow">Singularity</a>
-    container.</p>
-
-    <p>First <a href="https://sylabs.io/guides/3.7/user-guide/quick_start.html#quick-installation-steps"
-    rel="nofollow">build and install Singularity</a>.
-
-    Afterwards, build a Singularity sandbox from the definition file.</p>
-
-    <pre><code>singularity build --fakeroot --sandbox ~/drake-ros2-demos.sandbox demos.singularity.def
-
-    </code></pre>
-
-    <p>Create a shell with access to an NVidia graphics card and run one of the RViz
-    configs for your chosen demo.</p>
-
-    <div class="highlight highlight-text-shell-session"><pre>$ <span class="pl-s1">singularity
-    shell --nv --writable-tmpfs <span class="pl-k">~</span>/drake-ros2-demos.sandbox</span>
-
-    <span class="pl-c1">Singularity&gt; rviz2 -d view.rviz</span></pre></div>
-
-    <p>Create a shell into the sandbox and run one of the demos.</p>
-
-    <div class="highlight highlight-text-shell-session"><pre>$ <span class="pl-s1">singularity
-    shell --writable <span class="pl-k">~</span>/drake-ros2-demos.sandbox</span>
-
-    <span class="pl-c1">Singularity&gt; ./ros2_demo.py</span></pre></div>
+  readme: '<p>Singularity recipe files for the BEDOPS open-source command-line toolkit
+    that performs highly efficient and scalable Boolean and other set operations,
+    statistical calculations, archiving, conversion and other management of genomic
+    data of arbitrary scale.</p>
 
     '
   stargazers_count: 0
@@ -59401,13 +58863,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 69
+  stargazers_count: 70
   subscribers_count: 10
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1629490697.0
+  updated_at: 1629767686.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
@@ -60649,7 +60111,7 @@ tpall/geo-htseq-paper:
 
     '
   stargazers_count: 0
-  subscribers_count: 1
+  subscribers_count: 2
   topics: []
   updated_at: 1619076381.0
 tpall/htseq-paper-singularity:
@@ -60666,7 +60128,7 @@ tpall/htseq-paper-singularity:
 
     '
   stargazers_count: 0
-  subscribers_count: 1
+  subscribers_count: 2
   topics: []
   updated_at: 1604657436.0
 tpall/singularity-stan:
@@ -60814,7 +60276,7 @@ tpall/singularity-tidyverse:
 
     '
   stargazers_count: 0
-  subscribers_count: 1
+  subscribers_count: 2
   topics: []
   updated_at: 1608284812.0
 uf-icbr-bioinformatics/biocontainers:
