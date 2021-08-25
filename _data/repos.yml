@@ -4234,7 +4234,7 @@ ComputationalRadiationPhysics/picongpu:
   - particle-in-cell
   - pic
   - research
-  updated_at: 1629634136.0
+  updated_at: 1629818123.0
 D-Lo/bambi:
   data_format: 2
   description: R wrapper for bamdb
@@ -5485,7 +5485,7 @@ DiamondLightSource/Savu:
   stargazers_count: 28
   subscribers_count: 15
   topics: []
-  updated_at: 1629722401.0
+  updated_at: 1629805331.0
 DoaneAS/atacflow:
   data_format: 2
   description: Analysis pipeline for ATACseq data using Nextflow
@@ -11075,16 +11075,130 @@ LuisBonillaR/singularity:
   - Singularity.pyhon3
   full_name: LuisBonillaR/singularity
   latest_release: null
-  readme: '<p><a href="https://singularity-hub.org/collections/3399" rel="nofollow"><img
-    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
-    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    style="max-width:100%;"></a></p>
-
-    <p>Singularity recipe files for the PAML tool for phylogenetic analyses of DNA
-    or protein sequences using maximum likelihood.</p>
-
-    '
+  readme: "<h1>\n<a id=\"user-content-lshvec-a-vector-representation-of-dna-sequences-using-locality-sensitive-hashing\"\
+    \ class=\"anchor\" href=\"#lshvec-a-vector-representation-of-dna-sequences-using-locality-sensitive-hashing\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>LSHVec: A Vector Representation of DNA Sequences Using Locality Sensitive\
+    \ Hashing</h1>\n<h3>\n<a id=\"user-content-july-2021-checkout-lshvec-upcxx-which-is-a-pure-c-implementation\"\
+    \ class=\"anchor\" href=\"#july-2021-checkout-lshvec-upcxx-which-is-a-pure-c-implementation\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>July 2021: checkout <a href=\"https://github.com/bochen0909/lshvec-upcxx\"\
+    >lshvec-upcxx</a> which is a pure c++ implementation.</h3>\n<h2>\n<a id=\"user-content-summary\"\
+    \ class=\"anchor\" href=\"#summary\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Summary</h2>\n<p>LSHVec is a\
+    \ k-mer/sequence embedding/classfication software which extends <a href=\"https://fasttext.cc/\"\
+    \ rel=\"nofollow\">FastText</a> . It applies LSH (Locality Sensitive Hashing)\
+    \ to reduce the size of k-mer vocabulary and improve the performance of embedding.</p>\n\
+    <p>Besides building from source code, LSHVec can run using docker or singularity.</p>\n\
+    <p>Please refer to <a href=\"https://www.biorxiv.org/content/10.1101/726729v1\"\
+    \ rel=\"nofollow\">A Vector Representation of DNA Sequences Using Locality Sensitive\
+    \ Hashing</a> for the idea and experiments.</p>\n<p>There are also some pretained\
+    \ models that can be used, please see <a href=\"https://github.com/Lizhen0909/PyLSHvec/blob/master/README.md\"\
+    >PyLSHvec</a> for details.</p>\n<h2>\n<a id=\"user-content-requirements\" class=\"\
+    anchor\" href=\"#requirements\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Requirements</h2>\n<p>Here is the\
+    \ environment I worked on.  Other versions may also work. Python 3 should work,\
+    \ but I don't use it a lot.</p>\n<ol>\n<li>Linux, gcc with C++11</li>\n<li>Python\
+    \ 2.7 or Python 3.6 or 3.7\n<ul>\n<li>joblib 0.12.4</li>\n<li>tqdm 4.28.1</li>\n\
+    <li>numpy 1.15.0</li>\n<li>pandas 0.23.4</li>\n<li>sklearn 0.19.1 (only for evaluation)</li>\n\
+    <li>MulticoreTSNE (only for visualization)</li>\n<li>cython 0.28.5</li>\n<li>csparc\
+    \ (included)</li>\n</ul>\n</li>\n</ol>\n<h2>\n<a id=\"user-content-build-from-source\"\
+    \ class=\"anchor\" href=\"#build-from-source\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Build from Source</h2>\n<ul>\n\
+    <li>\n<p>clone from git</p>\n<p><code>git clone https://LizhenShi@bitbucket.org/LizhenShi/lshvec.git</code></p>\n\
+    <p><code>cd lshvec</code></p>\n</li>\n<li>\n<p>install csparc which wraps a c\
+    \ version of k-mer generator I used in another project</p>\n<p>for python 2.7</p>\n\
+    <p><code>pip install pysparc-0.1-cp27-cp27mu-linux_x86_64.whl</code></p>\n<p>or\
+    \ for python 3.6</p>\n<p><code>pip install pysparc-0.1-cp36-cp36m-linux_x86_64.whl</code></p>\n\
+    <p>or for python 3.7</p>\n<p><code>pip install pysparc-0.1-cp37-cp37m-linux_x86_64.whl</code></p>\n\
+    </li>\n<li>\n<p>make</p>\n<p><code>make</code></p>\n</li>\n</ul>\n<h2>\n<a id=\"\
+    user-content-jupyter-notebook-examples\" class=\"anchor\" href=\"#jupyter-notebook-examples\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Jupyter Notebook Examples</h2>\n<p>A toy example, which is laptop\
+    \ friendly and should finish in 10 minutes,  can be found in <a href=\"notebook/Tutorial_Toy_Example.ipynb\"\
+    >Tutorial_Toy_Example.ipynb</a>. Because of randomness the result may be different.</p>\n\
+    <p><a href=\"notebook/Tutorial_Toy_Example.png\" target=\"_blank\" rel=\"noopener\
+    \ noreferrer\"><img src=\"notebook/Tutorial_Toy_Example.png\" alt=\"Tutorial_Toy_Example\"\
+    \ style=\"max-width:100%;\"></a></p>\n<p>A practical example which uses ActinoMock\
+    \ Nanopore data can be found at <a href=\"notebook/Tutorial_ActinoMock_Nanopore.ipynb\"\
+    >Tutorial_ActinoMock_Nanopore.ipynb</a>. The notebook ran on a 16-core 64G-mem\
+    \ node and took a few hours (I think 32G mem should work too).</p>\n<p>\u200B\t\
+    \t\t\t\t\t <a href=\"notebook/Tutorial_ActinoMock_Nanopore.png\" target=\"_blank\"\
+    \ rel=\"noopener noreferrer\"><img src=\"notebook/Tutorial_ActinoMock_Nanopore.png\"\
+    \ alt=\"Tutorial_ActinoMock_Nanopore\" style=\"max-width:100%;\"></a></p>\n<h2>\n\
+    <a id=\"user-content-command-line-options\" class=\"anchor\" href=\"#command-line-options\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Command line options</h2>\n<h3>\n<a id=\"user-content-fastqtoseqpy\"\
+    \ class=\"anchor\" href=\"#fastqtoseqpy\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>fastqToSeq.py</h3>\n<p>convert\
+    \ a fastq file to a seq file</p>\n<pre><code>python fastqToSeq.py -i &lt;fastq_file&gt;\
+    \ -o &lt;out seq file&gt; -s &lt;1 to shuffle, 0 otherwise&gt;\n</code></pre>\n\
+    <h3>\n<a id=\"user-content-hashseqpy\" class=\"anchor\" href=\"#hashseqpy\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>hashSeq.py</h3>\n\
+    <p>Encode reads in a seq file use an encoding method.</p>\n<pre><code>python hashSeq.py\
+    \ -i &lt;seq_file&gt; --hash &lt;fnv or lsh&gt; -o &lt;outfile&gt; [-k &lt;kmer_size&gt;]\
+    \ [--n_thread &lt;n&gt;] [--hash_size &lt;m&gt;] [--batch_size &lt;n&gt;] [--bucket\
+    \ &lt;n&gt;] [--lsh_file &lt;file&gt;] [--create_lsh_only]\n\n  --hash_size &lt;m&gt;:\
+    \        only used by lsh which defines 2^m bucket.\n  --bucket &lt;n&gt;:   \
+    \        number of bucket for hash trick, useless for onehot.\n   \t\t\t\t   \
+    \       For fnv and lsh it limits the max number of words.\n   \t\t\t\t      \
+    \    For lsh the max number of words is min(2^m, n).\n  --batch_size &lt;b&gt;:\
+    \       how many reads are processed at a time. A small value uses less memory.\n\
+    </code></pre>\n<h3>\n<a id=\"user-content-lshvec\" class=\"anchor\" href=\"#lshvec\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>lshvec</h3>\n<p>Please refer to <a href=\"https://fasttext.cc/docs/en/options.html\"\
+    \ rel=\"nofollow\">fasttext options</a>.  However note that options of <code>wordNgrams</code>,\
+    \ <code>minn</code>,<code>maxn</code> does not work with lshvec.</p>\n<h2>\n<a\
+    \ id=\"user-content-example-of-docker-run\" class=\"anchor\" href=\"#example-of-docker-run\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Example of Docker Run</h2>\n<p>Pull from docker hub:</p>\n<pre><code>docker\
+    \ pull lizhen0909/lshvec:latest\n</code></pre>\n<p>Assume <code>data.fastq</code>\
+    \ file is in folder <code>/path/in/host</code>.</p>\n<p>convert fastq to a seq\
+    \ file:</p>\n<pre><code>docker run -v /path/in/host:/host lshvec:latest bash -c\
+    \ \"cd /host &amp;&amp; fastqToSeq.py  -i data.fastq -o data.seq\"\n</code></pre>\n\
+    <p>create LSH:</p>\n<pre><code>docker run -v /path/in/host:/host lshvec:latest\
+    \ bash -c \"cd /host &amp;&amp; hashSeq.py -i data.seq --hash lsh -o data.hash\
+    \ -k 15\"\n</code></pre>\n<p>run lshvec:</p>\n<pre><code>docker run -v /path/in/host:/host\
+    \ lshvec:latest bash -c \"cd /host &amp;&amp; lshvec skipgram -input data.hash\
+    \ -output model\"\n</code></pre>\n<h2>\n<a id=\"user-content-example-of-singularity-run\"\
+    \ class=\"anchor\" href=\"#example-of-singularity-run\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Example of Singularity\
+    \ Run</h2>\n<p>When running using Singularity, it is probably in an HPC environment.\
+    \ The running is similar to docker. However depending on the version of singularity,\
+    \ commands and paths might be different, especially from 2.x to 3.x. Here is an\
+    \ example for version 2.5.0.</p>\n<p>Also it is better to specify number of threads,\
+    \ otherwise max number of cores will be used which is not desired in HPC environment.</p>\n\
+    <p>Pull from docker hub:</p>\n<pre><code>singularity pull --name lshvec.sif shub://Lizhen0909/LSHVec\n\
+    </code></pre>\n<p>Put <code>data.fastq</code> file is in host <code>/tmp</code>,\
+    \  since Singularity automatically mount <code>/tmp</code> folder.</p>\n<p>convert\
+    \ fastq to a seq file:</p>\n<pre><code>singularity run /path/to/lshvec.sif bash\
+    \ -c \"cd /tmp &amp;&amp; fastqToSeq.py  -i data.fastq -o data.seq\"\n</code></pre>\n\
+    <p>create LSH:</p>\n<pre><code>singularity run /path/to/lshvec.sif bash -c \"\
+    cd /tmp &amp;&amp; hashSeq.py -i data.seq --hash lsh -o data.hash -k 15 --n_thread\
+    \ 12\"\n</code></pre>\n<p>run lshvec:</p>\n<pre><code>singularity run /path/to/lshvec.sif\
+    \ bash -c \"cd /tmp &amp;&amp; lshvec skipgram -input data.hash -output model\
+    \ -thread 12\"\n</code></pre>\n<h2>\n<a id=\"user-content-questions\" class=\"\
+    anchor\" href=\"#questions\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Questions</h2>\n<ul>\n<li>\n<code>lshvec</code>\
+    \ gets stuck at <code>Read xxxM words</code>\n</li>\n</ul>\n<p>Search <code>MAX_VOCAB_SIZE</code>\
+    \ in the source code and change it to a bigger one.  When a word's index is bigger\
+    \ than that number, a loop is carried to query it, which is costly. The number\
+    \ is 30M in FastText which is good for languages. But it is too small for k-mers.\
+    \ The number has been already increased to 300M in FastSeq. But for large and/or\
+    \ high-error-rate data, it may be still not enough.</p>\n<ul>\n<li>\n<p>I have\
+    \ big data</p>\n<p>hashSeq reads all data into memory to sample k-mers for hyperplanes.\
+    \ If data is too big it may not fit into memory. One can</p>\n<ol>\n<li>Try sampling.\
+    \ DNA reads generally have high coverage. Such high coverage may not be necessary.</li>\n\
+    <li>Or use <code>create_hash_only</code> to create lsh on a small (sampled) data;\
+    \ then split your data into multiple files and run hashSeq with <code>lsh_file</code>\
+    \ option on many nodes.</li>\n</ol>\n</li>\n<li>\n<p>core dumped when hashing</p>\n\
+    <p>Error like</p>\n<pre><code>terminate called after throwing an instance of 'std::out_of_range'\n\
+    what(): map::at\nAborted (core dumped)\n</code></pre>\n<p>mostly because a sequence\
+    \ contains characters other than ACGTN. So please convert non-ACGT characters\
+    \ to N's.</p>\n</li>\n</ul>\n<h2>\n<a id=\"user-content-license\" class=\"anchor\"\
+    \ href=\"#license\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>License</h2>\n<p>Inherit license from FastText which\
+    \ is BSD License</p>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -20947,14 +21061,14 @@ aertslab/pySCENIC:
     <p>Please be aware of FSL''s strict license regarding non-commercial use.</p>
 
     '
-  stargazers_count: 167
-  subscribers_count: 14
+  stargazers_count: 168
+  subscribers_count: 15
   topics:
   - single-cell
   - transcriptomics
   - gene-regulatory-network
   - transcription-factors
-  updated_at: 1629289247.0
+  updated_at: 1629800747.0
 agaveplatform/SC17-container-tutorial:
   data_format: 2
   description: 'SC17 tutorial - "HPC via HTTP: Portable, Scalable Computing using
@@ -44206,7 +44320,7 @@ ml4ai/automates:
   stargazers_count: 17
   subscribers_count: 10
   topics: []
-  updated_at: 1629490185.0
+  updated_at: 1629857065.0
 mmirko/singularitytest:
   data_format: 2
   description: null
@@ -53721,86 +53835,30 @@ radio1988/OneStopRNAseq:
   - snakemake/workflow/envs/Singularity
   full_name: radio1988/OneStopRNAseq
   latest_release: null
-  readme: "<h1>\n<a id=\"user-content-csci5980\" class=\"anchor\" href=\"#csci5980\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>csci5980</h1>\n<p>Final project for CSci 5980: deep learning for automatic\
-    \ music translation.</p>\n<p>Follow theses steps to install all package dependencies\
-    \ for running the model:</p>\n<p>We first install software dependencies for manipulating\
-    \ raw audio (<code>ffmpeg</code>):</p>\n<ol>\n<li>\n<p>Create a local software\
-    \ directory\n<code>mkdir ~/software</code></p>\n</li>\n<li>\n<p>Install the NASM\
-    \ assembler (dependency of ffmpeg):</p>\n</li>\n</ol>\n<div class=\"highlight\
-    \ highlight-source-shell\"><pre><span class=\"pl-c1\">cd</span> <span class=\"\
-    pl-k\">~</span>/software\nwget https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/nasm-2.14.02.tar.bz2\n\
-    tar -xvf nasm-2.14.02.tar.bz2\n<span class=\"pl-c1\">cd</span> nasm-2.14.02\n\
-    ./configure --prefix=<span class=\"pl-k\">~</span>/software/nasm/\nmake install\n\
-    <span class=\"pl-k\">export</span> PATH=<span class=\"pl-smi\">$PATH</span>:<span\
-    \ class=\"pl-k\">~</span>/software/nasm/bin/</pre></div>\n<ol start=\"3\">\n<li>Make\
-    \ sure that NASM assembler installed correctly:</li>\n</ol>\n<div class=\"highlight\
-    \ highlight-source-shell\"><pre>nasm -v</pre></div>\n<p>The output should look\
-    \ something like:\n<code>NASM version 2.14.02 compiled on Mar 11 2020</code></p>\n\
-    <ol start=\"4\">\n<li>Install ffmpeg:</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"\
-    ><pre><span class=\"pl-c1\">cd</span> <span class=\"pl-k\">~</span>/software\n\
-    wget https://ffmpeg.org/releases/ffmpeg-4.2.2.tar.bz2\ntar -xvf ffmpeg-4.2.2.tar.bz2\n\
-    <span class=\"pl-c1\">cd</span> ffmpeg-4.2.2\n./configure --prefix=<span class=\"\
-    pl-k\">~</span>/software/ffmpeg/\nmake install\n<span class=\"pl-k\">export</span>\
-    \ PATH=<span class=\"pl-smi\">$PATH</span>:<span class=\"pl-k\">~</span>/software/ffmpeg/bin/</pre></div>\n\
-    <ol start=\"5\">\n<li>Make sure that ffmpeg installed correctly:</li>\n</ol>\n\
-    <div class=\"highlight highlight-source-shell\"><pre>ffmpeg -version</pre></div>\n\
-    <p>The output should look something like:</p>\n<pre><code>ffmpeg version 4.2.2\
-    \ Copyright (c) 2000-2019 the FFmpeg developers\nbuilt with gcc 4.4.7 (GCC) 20120313\
-    \ (Red Hat 4.4.7-23)\nconfiguration: --prefix=/home/csci5980/piehl008/software/ffmpeg/\n\
-    libavutil      56. 31.100 / 56. 31.100\nlibavcodec     58. 54.100 / 58. 54.100\n\
-    libavformat    58. 29.100 / 58. 29.100\nlibavdevice    58.  8.100 / 58.  8.100\n\
-    libavfilter     7. 57.100 /  7. 57.100\nlibswscale      5.  5.100 /  5.  5.100\n\
-    libswresample   3.  5.100 /  3.  5.100\n</code></pre>\n<ol start=\"6\">\n<li>Now,\
-    \ we can make the virtual environment and install python packages.  First, create\
-    \ the virtual environment by running:</li>\n</ol>\n<p><code>conda create --name\
-    \ audio-proj python=3.7</code></p>\n<ol start=\"7\">\n<li>Next, install packages\
-    \ by running</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"><pre><span\
-    \ class=\"pl-c1\">cd</span> <span class=\"pl-k\">~</span>/csci5980\nconda install\
-    \ --name audio-proj --file requirements.txt --channel defaults --channel conda-forge</pre></div>\n\
-    <p>(Note: this can take a while - and you need to say yes to installing everything\
-    \ after it solves the environment)</p>\n<ol start=\"8\">\n<li>To activate the\
-    \ virtual environment, you can now run <code>source activate audio-proj</code>.\
-    \ Note: you should do this to test that you can activate the virtual evironment,\
-    \ but you probably shouldn't run a lot unless you are submitting jobs to the queue.\
-    \  If you want to use this virtual environment through the MSI notebooks, check\
-    \ out the tutorial at <a href=\"https://sunju.org/teach/DL-Spring-2020/TensorFlowPyTorch.html\"\
-    \ rel=\"nofollow\">https://sunju.org/teach/DL-Spring-2020/TensorFlowPyTorch.html</a>.</li>\n\
-    </ol>\n<h3>\n<a id=\"user-content-adding-the-virtual-environment-to-jupyter-notebooks\"\
-    \ class=\"anchor\" href=\"#adding-the-virtual-environment-to-jupyter-notebooks\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Adding the Virtual Environment to Jupyter Notebooks</h3>\n<p>Now that\
-    \ we have created the virtual environment, we can add it to the Jupyter notebook\
-    \ kernels so that we can use the virtual environment through MSI's notebook server.\
-    \ To do this, we have to add the kernel specifications to the known Jupyter kernels\
-    \ for our user:</p>\n<ol start=\"9\">\n<li>If you haven't already, activate your\
-    \ virtual environment by running <code>source activate audio-proj</code>. Then\
-    \ enter</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"><pre>which\
-    \ python</pre></div>\n<p>Your output should tell you where the python executable\
-    \ for this virtual environment lives - the output for me displays <code>~/.conda/envs/audio-proj/bin/python</code>.\
-    \  If you see something that looks like <code>/panfs/roc/msisoft/anaconda/anaconda3-2018.12/bin/python</code>,\
-    \ go back and make sure that you have the virtual environment active and try again.\
-    \ After you have an ouput that clearly has the name of the virtual environment\
-    \ in the directory path (i.e. contains audio-proj in it), continue to the next\
-    \ step.</p>\n<ol start=\"10\">\n<li>Now, we need to create the kernel configuration.\
-    \ To do this run</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"\
-    ><pre>mkdir <span class=\"pl-k\">~</span>/.local/share/jupyter/kernels/audio-proj\n\
-    nano <span class=\"pl-k\">~</span>/.local/share/jupyter/kernels/audio-proj/kernel.json</pre></div>\n\
-    <p>The nano command will open a very basic text editor that you can navigate with\
-    \ the arrow keys. Enter the following:</p>\n<pre lang=\"text\"><code>{\n \"argv\"\
-    : [\n  \"~/.conda/envs/audio-proj/bin/python\", #replace this with your path from\
-    \ step 9 above! (and delete this comment)\n  \"-m\",\n  \"ipykernel_launcher\"\
-    ,\n  \"-f\",\n  \"{connection_file}\"\n ],\n \"display_name\": \"Audio Project\
-    \ Kernel\",\n \"language\": \"python\"\n}\n</code></pre>\n<p>where you replace\
-    \ the first line of the argv array with whatever executable path was output from\
-    \ step 9 above (it likely will be identical to this). To exit the nano text editor,\
-    \ type <code>Ctrl-x &lt;RETURN&gt;</code> and then type <code>Y &lt;RETURN&gt;</code>\
-    \ to save the file.</p>\n<ol start=\"11\">\n<li>Now that you have saved the kernel\
-    \ file, you should be able to go to <code>https://notebooks.msi.umn.edu/</code>\
-    \ and when you click on the <code>New</code> tab to create a new file, you should\
-    \ be able to select <code>Audio Project Kernel</code> as an available kernel to\
-    \ run your newly created file in.</li>\n</ol>\n"
+  readme: '<p>Singularity recipe files for the APSIM Classic version of the Agricultural
+    Production Systems sIMulator</p>
+
+    <h2>
+
+    <a id="user-content-maintainer-notes" class="anchor" href="#maintainer-notes"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Maintainer
+    Notes</h2>
+
+    <ul>
+
+    <li>Recipes for APSIM 7.9 use the upstream SVN repository (no longer available)</li>
+
+    <li>Please see comments inside the recipes for the reasons why some upstream files
+    are overwritten during the build process</li>
+
+    <li>The Cotton Model requires a password, which needs to be obtained by the model
+    owner and placed under <code>files/CottonPassword.txt</code>
+
+    </li>
+
+    </ul>
+
+    '
   stargazers_count: 2
   subscribers_count: 1
   topics: []
@@ -55599,10 +55657,306 @@ sailfish009/openstructure:
   - singularity/Singularity
   full_name: sailfish009/openstructure
   latest_release: null
-  readme: '<p>Singularity recipe files for the BEDOPS open-source command-line toolkit
-    that performs highly efficient and scalable Boolean and other set operations,
-    statistical calculations, archiving, conversion and other management of genomic
-    data of arbitrary scale.</p>
+  readme: '<h1>
+
+    <a id="user-content-description" class="anchor" href="#description" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Description</h1>
+
+    <p>This README is pulled from a default template for workflows.</p>
+
+    <h1>
+
+    <a id="user-content-workflow-template-setup" class="anchor" href="#workflow-template-setup"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Workflow
+    template setup</h1>
+
+    <h2>
+
+    <a id="user-content-lib" class="anchor" href="#lib" aria-hidden="true"><span aria-hidden="true"
+    class="octicon octicon-link"></span></a>lib</h2>
+
+    <ul>
+
+    <li>The <code>lib</code> directory contains general libraries that may be referenced
+    by multiple workflows, for instance cromwell configs and python configs. Currently
+    nothing in this directory is used.</li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-pipelines" class="anchor" href="#pipelines" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>pipelines</h2>
+
+    <ul>
+
+    <li>
+
+    <p>Each pipeline is a full analysis. Think of it like the heading of a methods
+    section in a paper. For instance if this were genetic summary statistics workflow,
+    a pipeline might be "fine-mapping" that does both conditional and credible set
+    analysis. Another pipeline may be "colocalization".</p>
+
+    </li>
+
+    <li>
+
+    <p>Pipelines may have numbers prior to their name (e.g., <code>example_pipeline_1</code>
+    to <code>0025-example_pipeline_1</code>). These numbers do not mean anything,
+    but merely used to keep pipelines in their general order of execution. These are
+    optional.</p>
+
+    </li>
+
+    <li>
+
+    <p>A pipeline consists of :</p>
+
+    </li>
+
+    </ul>
+
+    <ol>
+
+    <li>A workflow.</li>
+
+    <li>A <code>scripts</code> directory with <em>all</em> scripts referenced by that
+    workflow (unless a general lib script is called). Scripts may have numbers prior
+    to their name. These numbers do not mean anything, but merely used to keep scripts
+    in their general order of execution. These are optional.</li>
+
+    <li>A <code>docs</code> directory that contains a documentation of the default
+    parameters written in a style that is publishable as methods in a paper (including
+    citations). Within the <code>docs</code> directory there may be a <code>reference</code>
+    with any additional reference materials.</li>
+
+    <li>An <code>example_runtime_setup</code> directory contains files that give an
+    example of actual config files and any other files used to run the pipeline.</li>
+
+    </ol>
+
+    <h2>
+
+    <a id="user-content-studies" class="anchor" href="#studies" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>studies</h2>
+
+    <ul>
+
+    <li>A studies directory should either exist within the workflow repo or be a separate
+    repo that has the same name as the workflow repo, but with <code>studies</code>
+    appended to it (e.g. <code>template-workflow</code> becomes <code>template-workflow-studies</code>).</li>
+
+    <li>If there is a standard set of plots that will always look the same way, a
+    pipeline should generate such plots. Otherwise, all code to analyze the results
+    of a pipeline run should be in the <code>studies</code> directory. For instance
+    if this were genetic summary statistics workflow, <code>studies</code> may contain
+    a <code>t2d</code> directory and a <code>weight</code> directory.</li>
+
+    <li>Within a study is either an Jupyter notebook (either python or R kernel) or
+    an R markdown file. Nearly all plots / analysis of the results of running the
+    various pipelines should be done in the notebook / markdown file.</li>
+
+    <li>A study may also contain a scripts directory with scripts to aggregate data
+    for a one off analysis (if the analysis is going to be repeated, consider making
+    a new pipeline or adding it to an existing pipeline) or for special plots that
+    cannot be done in the notebook / markdown file.</li>
+
+    </ul>
+
+    <h1>
+
+    <a id="user-content-new-workflow-reminders" class="anchor" href="#new-workflow-reminders"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>New
+    workflow reminders</h1>
+
+    <ul>
+
+    <li>[ ] Documentation</li>
+
+    <li>[ ] Environment version control</li>
+
+    <li>[ ] Pipeline version control</li>
+
+    <li>[ ] Git branches</li>
+
+    <li>[ ] Code review</li>
+
+    </ul>
+
+    <h1>
+
+    <a id="user-content-documentation" class="anchor" href="#documentation" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h1>
+
+    <p>Be sure to document your code!</p>
+
+    <h1>
+
+    <a id="user-content-environment-version-control" class="anchor" href="#environment-version-control"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Environment
+    version control</h1>
+
+    <p>Analysis environment is controlled using conda. Each pipeline should have an
+    <code>environment.yml</code> file with all of the packages used. If a required
+    package or library is missing from conda (and therefore not in the <code>environment.yml</code>),
+    it should be noted in the <code>README.md</code> of the pipeline.</p>
+
+    <div class="highlight highlight-source-shell"><pre>conda env <span class="pl-k">export</span>
+    --no-builds <span class="pl-k">|</span> grep -v prefix <span class="pl-k">|</span>
+    grep -v name <span class="pl-k">&gt;</span> environment.yml</pre></div>
+
+    <h1>
+
+    <a id="user-content-pipeline-version-control" class="anchor" href="#pipeline-version-control"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pipeline
+    version control</h1>
+
+    <p>Each pipeline within this workflow uses <a href="https://pypi.org/project/bumpversion"
+    rel="nofollow">bumpversion</a> for automatic <a href="https://semver.org" rel="nofollow">semantic
+    versioning</a>.</p>
+
+    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
+    bump the appropriate increment</span>
+
+    bumpversion patch --verbose --dry-run
+
+    bumpversion minor --verbose --dry-run
+
+    bumpversion major --verbose --dry-run
+
+
+    <span class="pl-c"><span class="pl-c">#</span> commit with tags</span>
+
+    git push --tags</pre></div>
+
+    <h1>
+
+    <a id="user-content-github-forks" class="anchor" href="#github-forks" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>GitHub forks</h1>
+
+    <p>Forking the repository allows developers to work independently while retaining
+    well-maintained code on the master fork. For instructions on how to fork, follow
+    the <a href="https://help.github.com/en/articles/fork-a-repo">Fork a repo</a>
+    instructions.</p>
+
+    <p>After forking the repo, clone the repo to your local desktop:</p>
+
+    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
+    to use SSH</span>
+
+    git clone git@github.com:<span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>/template-workflow.git
+
+
+    <span class="pl-c"><span class="pl-c">#</span> to use Https</span>
+
+    git clone https://github.com/<span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>/template-workflow.git</pre></div>
+
+    <p>This creates a replica of the remote repository on your local desktop. <em>Note</em>:
+    When you create your local repository, it will also make a local clone of the
+    remote repository (typically as <code>origin</code>). So, your local master branch
+    would simply be <code>master</code>. But, your remote master branch will be <code>origin/master</code>.
+    You can also add multiple remote repositories. For instance, let us say our main
+    repository is under the remote repository <code>my_repo</code>. We will want to
+    add it as a remote repository, so we can fetch the most up-to-date code. You could
+    add it by:</p>
+
+    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
+    Add the my_repo remote repo to your local desktop -- this will allow you to pull
+    and push to branches on the my_repo repository</span>
+
+    git remote add my_repo git@github.com:my_repo/template-workflow.git</pre></div>
+
+    <h1>
+
+    <a id="user-content-git-branches" class="anchor" href="#git-branches" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Git branches</h1>
+
+    <p>Branching is how git actually tracks code development. For more information,
+    see the <a href="https://www.atlassian.com/git/tutorials/using-branches" rel="nofollow">Git
+    Branch Tutorial</a> on Atlassian. If you want to add a new feature, pipeline,
+    or fix a bug, a common work flow would look like this:</p>
+
+    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
+    Update your local copy of the master branch to make sure you are getting the most
+    up-to-date code</span>
+
+    git pull
+
+
+    <span class="pl-c"><span class="pl-c">#</span> Create the branch on your local
+    machine and switch in this branch </span>
+
+    git checkout -b [name_of_your_new_branch]
+
+
+    <span class="pl-c"><span class="pl-c">#</span> Push the branch on github</span>
+
+    git push origin [name_of_your_new_branch]</pre></div>
+
+    <p>As you develop, you want to commit your work to your branch, so you don''t
+    lose it all if something happens!</p>
+
+    <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span>
+    Confirm we''re on the right branch</span>
+
+    git branch -a
+
+
+    <span class="pl-c"><span class="pl-c">#</span> Add all your work to be tracked
+    (Note: there are many ways to add specific files, etc. See https://git-scm.com/docs/git-add
+    for more information). The following command adds everything in your currently
+    directory.</span>
+
+    git add <span class="pl-c1">.</span>
+
+
+    <span class="pl-c"><span class="pl-c">#</span> Commit your work to the branch
+    with a message describing what''s in the commit</span>
+
+    git commit -m <span class="pl-s"><span class="pl-pds">"</span>Created the scATAC-seq
+    pipeline!<span class="pl-pds">"</span></span>
+
+
+    <span class="pl-c"><span class="pl-c">#</span> You can add a -u parameter to set-upstream
+    for a push</span>
+
+    <span class="pl-c"><span class="pl-c">#</span> Alternatively, git will also automatically
+    query you when you do your first push.</span>
+
+    <span class="pl-c"><span class="pl-c">#</span> You can also set this manually
+    by adding a new remote for your branch:</span>
+
+    <span class="pl-c"><span class="pl-c">#</span>git remote add [name_of_your_remote]
+    [name_of_your_new_branch]</span>
+
+
+    <span class="pl-c"><span class="pl-c">#</span> Here is another push where we specify
+    HEAD</span>
+
+    <span class="pl-c"><span class="pl-c">#</span>git push origin HEAD # HEAD pushes
+    everything up to the most recent commit</span></pre></div>
+
+    <h1>
+
+    <a id="user-content-code-review" class="anchor" href="#code-review" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Code review</h1>
+
+    <p>Create a <a href="https://help.github.com/en/articles/creating-a-pull-request">GitHub
+    Pull Request</a>. A PR allows other developers a chance to go through and comment
+    on lines of code they believe can be improved. In addition, it will tell you if
+    the code you are trying to merge into the <code>my_repo</code> branch actually
+    conflicts with code that already exists in the branch, so you don''t overwrite
+    someone else''s work.</p>
+
+    <p>Once another developer approves the PR, you have the go-ahead to merge your
+    code! Congrats, you finished your feature!</p>
+
+    <p><em>Note</em>: There are some cases where you may just want to push directly
+    to the my_repo fork, thereby avoiding code reviews. For instance, if you''re working
+    on a one-off project that you want people to be able to see, but no one else is
+    necessarily working on, you can always push directly to the branches on my_repo
+    fork. Or, you could also still go through the steps of a PR, but simply merge
+    your own code without CR.</p>
 
     '
   stargazers_count: 0
@@ -56306,10 +56660,163 @@ shreyaskamathkm/Cluster_Images:
   - Singularity_Ubuntu_18_04_Cuda_10_2
   full_name: shreyaskamathkm/Cluster_Images
   latest_release: null
-  readme: '<p>Singularity recipe files for the BEDOPS open-source command-line toolkit
-    that performs highly efficient and scalable Boolean and other set operations,
-    statistical calculations, archiving, conversion and other management of genomic
-    data of arbitrary scale.</p>
+  readme: '<h1>
+
+    <a id="user-content-examples-with-drake-and-ros-2" class="anchor" href="#examples-with-drake-and-ros-2"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples
+    with Drake and ROS 2</h1>
+
+    <p>This repo shows examples of using <a href="https://drake.mit.edu/" rel="nofollow">Drake</a>
+    and <a href="https://www.ros.org/" rel="nofollow">ROS 2</a> together.
+
+    It uses the pydrake API and is of prototype quality.
+
+    For a similar effort in ROS 1, see <a href="https://github.com/EricCousineau-TRI/repro/tree/master/ros/drake_ros1_hacks">EricCousineau-TRI/repro
+    <code>drake_ros1_hacks</code></a>.</p>
+
+    <h2>
+
+    <a id="user-content-prerequisites" class="anchor" href="#prerequisites" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Prerequisites</h2>
+
+    <ul>
+
+    <li>Ubuntu Focal (20.04)</li>
+
+    <li><a href="https://index.ros.org/doc/ros2/Installation/Rolling/" rel="nofollow">ROS
+    2 Rolling</a></li>
+
+    <li><a href="https://drake.mit.edu/from_binary.html" rel="nofollow">Some Drake
+    binary installation from October 2020</a></li>
+
+    </ul>
+
+    <p>Install ROS 2 Rolling using the <a href="https://index.ros.org/doc/ros2/Installation/Rolling/Linux-Install-Debians/"
+    rel="nofollow">Linux binary instructions</a> and <a href="https://index.ros.org/doc/ros2/Installation/Prerelease-Testing/"
+    rel="nofollow">enable the ROS 2 testing apt repo</a>.
+
+    Install the apt packages <code>ros-rolling-desktop</code> and <code>ros-rolling-sdformat-urdf</code>.
+
+    Extract the Drake binary installation, install it''s prerequisites, and <a href="https://drake.mit.edu/python_bindings.html#inside-virtualenv"
+    rel="nofollow">use this Python virutalenv trick</a>.</p>
+
+    <h2>
+
+    <a id="user-content-setup" class="anchor" href="#setup" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Setup</h2>
+
+    <p>Once the prerequisites are met, install <code>drake_ros</code> into the Drake
+    virtualenv.</p>
+
+    <pre><code>. path/to/drake/bin/activate
+
+    cd path/to/this/repo
+
+    cd drake_ros/
+
+    python setup.py develop
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-ros-2-tf-and-robot-model-demo" class="anchor" href="#ros-2-tf-and-robot-model-demo"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ROS
+    2 tf and Robot Model Demo</h2>
+
+    <p>This demo shows RViz visualizing a single UR10 robot being simulated by Drake.
+
+    Set up two terminals: one for launching RViz, and another for launching the Drake
+    simulation.</p>
+
+    <pre><code>. /opt/ros/rolling/setup.bash
+
+    cd path/to/this/repo
+
+    AMENT_PREFIX_PATH="$AMENT_PREFIX_PATH:$(pwd)" rviz2 -d view.rviz
+
+    </code></pre>
+
+    <pre><code>. /opt/ros/rolling/setup.bash
+
+    . path/to/drake/bin/activate
+
+    cd path/to/this/repo
+
+    AMENT_PREFIX_PATH="$AMENT_PREFIX_PATH:$(pwd)" ./ros2_demo.py
+
+    </code></pre>
+
+    <p><a href="https://user-images.githubusercontent.com/4175662/90415417-e7976980-e065-11ea-9564-96c820f51680.gif"
+    target="_blank" rel="nofollow"><img src="https://user-images.githubusercontent.com/4175662/90415417-e7976980-e065-11ea-9564-96c820f51680.gif"
+    alt="ur10_rviz_drake" style="max-width:100%;"></a></p>
+
+    <h2>
+
+    <a id="user-content-interactive-markers-demo" class="anchor" href="#interactive-markers-demo"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Interactive
+    Markers Demo</h2>
+
+    <p>This demonstrates using interactive markers to control an iiwa14 being simulated
+    by Drake.
+
+    Set up two terminals: one for launching RViz, and another for launching the Drake
+    simulation.</p>
+
+    <pre><code>. /opt/ros/rolling/setup.bash
+
+    cd path/to/this/repo
+
+    AMENT_PREFIX_PATH="$AMENT_PREFIX_PATH:$(pwd)" rviz2 -d interactive_demo.rviz
+
+    </code></pre>
+
+    <pre><code>. /opt/ros/rolling/setup.bash
+
+    . path/to/drake/bin/activate
+
+    cd path/to/this/repo
+
+    AMENT_PREFIX_PATH="$AMENT_PREFIX_PATH:$(pwd)" ./interactive_demo.py
+
+    </code></pre>
+
+    <p><a href="https://user-images.githubusercontent.com/4175662/96510753-dcea8380-1212-11eb-89ca-4a9019a8a9cd.gif"
+    target="_blank" rel="nofollow"><img src="https://user-images.githubusercontent.com/4175662/96510753-dcea8380-1212-11eb-89ca-4a9019a8a9cd.gif"
+    alt="iiwa14_interactive_drake" style="max-width:100%;"></a></p>
+
+    <h2>
+
+    <a id="user-content-using-a-container" class="anchor" href="#using-a-container"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using
+    a Container</h2>
+
+    <p>There is a definition file for a <a href="https://sylabs.io/singularity/" rel="nofollow">Singularity</a>
+    container.</p>
+
+    <p>First <a href="https://sylabs.io/guides/3.7/user-guide/quick_start.html#quick-installation-steps"
+    rel="nofollow">build and install Singularity</a>.
+
+    Afterwards, build a Singularity sandbox from the definition file.</p>
+
+    <pre><code>singularity build --fakeroot --sandbox ~/drake-ros2-demos.sandbox demos.singularity.def
+
+    </code></pre>
+
+    <p>Create a shell with access to an NVidia graphics card and run one of the RViz
+    configs for your chosen demo.</p>
+
+    <div class="highlight highlight-text-shell-session"><pre>$ <span class="pl-s1">singularity
+    shell --nv --writable-tmpfs <span class="pl-k">~</span>/drake-ros2-demos.sandbox</span>
+
+    <span class="pl-c1">Singularity&gt; rviz2 -d view.rviz</span></pre></div>
+
+    <p>Create a shell into the sandbox and run one of the demos.</p>
+
+    <div class="highlight highlight-text-shell-session"><pre>$ <span class="pl-s1">singularity
+    shell --writable <span class="pl-k">~</span>/drake-ros2-demos.sandbox</span>
+
+    <span class="pl-c1">Singularity&gt; ./ros2_demo.py</span></pre></div>
 
     '
   stargazers_count: 0
