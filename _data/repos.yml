@@ -11075,130 +11075,16 @@ LuisBonillaR/singularity:
   - Singularity.pyhon3
   full_name: LuisBonillaR/singularity
   latest_release: null
-  readme: "<h1>\n<a id=\"user-content-lshvec-a-vector-representation-of-dna-sequences-using-locality-sensitive-hashing\"\
-    \ class=\"anchor\" href=\"#lshvec-a-vector-representation-of-dna-sequences-using-locality-sensitive-hashing\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>LSHVec: A Vector Representation of DNA Sequences Using Locality Sensitive\
-    \ Hashing</h1>\n<h3>\n<a id=\"user-content-july-2021-checkout-lshvec-upcxx-which-is-a-pure-c-implementation\"\
-    \ class=\"anchor\" href=\"#july-2021-checkout-lshvec-upcxx-which-is-a-pure-c-implementation\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>July 2021: checkout <a href=\"https://github.com/bochen0909/lshvec-upcxx\"\
-    >lshvec-upcxx</a> which is a pure c++ implementation.</h3>\n<h2>\n<a id=\"user-content-summary\"\
-    \ class=\"anchor\" href=\"#summary\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Summary</h2>\n<p>LSHVec is a\
-    \ k-mer/sequence embedding/classfication software which extends <a href=\"https://fasttext.cc/\"\
-    \ rel=\"nofollow\">FastText</a> . It applies LSH (Locality Sensitive Hashing)\
-    \ to reduce the size of k-mer vocabulary and improve the performance of embedding.</p>\n\
-    <p>Besides building from source code, LSHVec can run using docker or singularity.</p>\n\
-    <p>Please refer to <a href=\"https://www.biorxiv.org/content/10.1101/726729v1\"\
-    \ rel=\"nofollow\">A Vector Representation of DNA Sequences Using Locality Sensitive\
-    \ Hashing</a> for the idea and experiments.</p>\n<p>There are also some pretained\
-    \ models that can be used, please see <a href=\"https://github.com/Lizhen0909/PyLSHvec/blob/master/README.md\"\
-    >PyLSHvec</a> for details.</p>\n<h2>\n<a id=\"user-content-requirements\" class=\"\
-    anchor\" href=\"#requirements\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>Requirements</h2>\n<p>Here is the\
-    \ environment I worked on.  Other versions may also work. Python 3 should work,\
-    \ but I don't use it a lot.</p>\n<ol>\n<li>Linux, gcc with C++11</li>\n<li>Python\
-    \ 2.7 or Python 3.6 or 3.7\n<ul>\n<li>joblib 0.12.4</li>\n<li>tqdm 4.28.1</li>\n\
-    <li>numpy 1.15.0</li>\n<li>pandas 0.23.4</li>\n<li>sklearn 0.19.1 (only for evaluation)</li>\n\
-    <li>MulticoreTSNE (only for visualization)</li>\n<li>cython 0.28.5</li>\n<li>csparc\
-    \ (included)</li>\n</ul>\n</li>\n</ol>\n<h2>\n<a id=\"user-content-build-from-source\"\
-    \ class=\"anchor\" href=\"#build-from-source\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Build from Source</h2>\n<ul>\n\
-    <li>\n<p>clone from git</p>\n<p><code>git clone https://LizhenShi@bitbucket.org/LizhenShi/lshvec.git</code></p>\n\
-    <p><code>cd lshvec</code></p>\n</li>\n<li>\n<p>install csparc which wraps a c\
-    \ version of k-mer generator I used in another project</p>\n<p>for python 2.7</p>\n\
-    <p><code>pip install pysparc-0.1-cp27-cp27mu-linux_x86_64.whl</code></p>\n<p>or\
-    \ for python 3.6</p>\n<p><code>pip install pysparc-0.1-cp36-cp36m-linux_x86_64.whl</code></p>\n\
-    <p>or for python 3.7</p>\n<p><code>pip install pysparc-0.1-cp37-cp37m-linux_x86_64.whl</code></p>\n\
-    </li>\n<li>\n<p>make</p>\n<p><code>make</code></p>\n</li>\n</ul>\n<h2>\n<a id=\"\
-    user-content-jupyter-notebook-examples\" class=\"anchor\" href=\"#jupyter-notebook-examples\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Jupyter Notebook Examples</h2>\n<p>A toy example, which is laptop\
-    \ friendly and should finish in 10 minutes,  can be found in <a href=\"notebook/Tutorial_Toy_Example.ipynb\"\
-    >Tutorial_Toy_Example.ipynb</a>. Because of randomness the result may be different.</p>\n\
-    <p><a href=\"notebook/Tutorial_Toy_Example.png\" target=\"_blank\" rel=\"noopener\
-    \ noreferrer\"><img src=\"notebook/Tutorial_Toy_Example.png\" alt=\"Tutorial_Toy_Example\"\
-    \ style=\"max-width:100%;\"></a></p>\n<p>A practical example which uses ActinoMock\
-    \ Nanopore data can be found at <a href=\"notebook/Tutorial_ActinoMock_Nanopore.ipynb\"\
-    >Tutorial_ActinoMock_Nanopore.ipynb</a>. The notebook ran on a 16-core 64G-mem\
-    \ node and took a few hours (I think 32G mem should work too).</p>\n<p>\u200B\t\
-    \t\t\t\t\t <a href=\"notebook/Tutorial_ActinoMock_Nanopore.png\" target=\"_blank\"\
-    \ rel=\"noopener noreferrer\"><img src=\"notebook/Tutorial_ActinoMock_Nanopore.png\"\
-    \ alt=\"Tutorial_ActinoMock_Nanopore\" style=\"max-width:100%;\"></a></p>\n<h2>\n\
-    <a id=\"user-content-command-line-options\" class=\"anchor\" href=\"#command-line-options\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Command line options</h2>\n<h3>\n<a id=\"user-content-fastqtoseqpy\"\
-    \ class=\"anchor\" href=\"#fastqtoseqpy\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>fastqToSeq.py</h3>\n<p>convert\
-    \ a fastq file to a seq file</p>\n<pre><code>python fastqToSeq.py -i &lt;fastq_file&gt;\
-    \ -o &lt;out seq file&gt; -s &lt;1 to shuffle, 0 otherwise&gt;\n</code></pre>\n\
-    <h3>\n<a id=\"user-content-hashseqpy\" class=\"anchor\" href=\"#hashseqpy\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>hashSeq.py</h3>\n\
-    <p>Encode reads in a seq file use an encoding method.</p>\n<pre><code>python hashSeq.py\
-    \ -i &lt;seq_file&gt; --hash &lt;fnv or lsh&gt; -o &lt;outfile&gt; [-k &lt;kmer_size&gt;]\
-    \ [--n_thread &lt;n&gt;] [--hash_size &lt;m&gt;] [--batch_size &lt;n&gt;] [--bucket\
-    \ &lt;n&gt;] [--lsh_file &lt;file&gt;] [--create_lsh_only]\n\n  --hash_size &lt;m&gt;:\
-    \        only used by lsh which defines 2^m bucket.\n  --bucket &lt;n&gt;:   \
-    \        number of bucket for hash trick, useless for onehot.\n   \t\t\t\t   \
-    \       For fnv and lsh it limits the max number of words.\n   \t\t\t\t      \
-    \    For lsh the max number of words is min(2^m, n).\n  --batch_size &lt;b&gt;:\
-    \       how many reads are processed at a time. A small value uses less memory.\n\
-    </code></pre>\n<h3>\n<a id=\"user-content-lshvec\" class=\"anchor\" href=\"#lshvec\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>lshvec</h3>\n<p>Please refer to <a href=\"https://fasttext.cc/docs/en/options.html\"\
-    \ rel=\"nofollow\">fasttext options</a>.  However note that options of <code>wordNgrams</code>,\
-    \ <code>minn</code>,<code>maxn</code> does not work with lshvec.</p>\n<h2>\n<a\
-    \ id=\"user-content-example-of-docker-run\" class=\"anchor\" href=\"#example-of-docker-run\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Example of Docker Run</h2>\n<p>Pull from docker hub:</p>\n<pre><code>docker\
-    \ pull lizhen0909/lshvec:latest\n</code></pre>\n<p>Assume <code>data.fastq</code>\
-    \ file is in folder <code>/path/in/host</code>.</p>\n<p>convert fastq to a seq\
-    \ file:</p>\n<pre><code>docker run -v /path/in/host:/host lshvec:latest bash -c\
-    \ \"cd /host &amp;&amp; fastqToSeq.py  -i data.fastq -o data.seq\"\n</code></pre>\n\
-    <p>create LSH:</p>\n<pre><code>docker run -v /path/in/host:/host lshvec:latest\
-    \ bash -c \"cd /host &amp;&amp; hashSeq.py -i data.seq --hash lsh -o data.hash\
-    \ -k 15\"\n</code></pre>\n<p>run lshvec:</p>\n<pre><code>docker run -v /path/in/host:/host\
-    \ lshvec:latest bash -c \"cd /host &amp;&amp; lshvec skipgram -input data.hash\
-    \ -output model\"\n</code></pre>\n<h2>\n<a id=\"user-content-example-of-singularity-run\"\
-    \ class=\"anchor\" href=\"#example-of-singularity-run\" aria-hidden=\"true\"><span\
-    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Example of Singularity\
-    \ Run</h2>\n<p>When running using Singularity, it is probably in an HPC environment.\
-    \ The running is similar to docker. However depending on the version of singularity,\
-    \ commands and paths might be different, especially from 2.x to 3.x. Here is an\
-    \ example for version 2.5.0.</p>\n<p>Also it is better to specify number of threads,\
-    \ otherwise max number of cores will be used which is not desired in HPC environment.</p>\n\
-    <p>Pull from docker hub:</p>\n<pre><code>singularity pull --name lshvec.sif shub://Lizhen0909/LSHVec\n\
-    </code></pre>\n<p>Put <code>data.fastq</code> file is in host <code>/tmp</code>,\
-    \  since Singularity automatically mount <code>/tmp</code> folder.</p>\n<p>convert\
-    \ fastq to a seq file:</p>\n<pre><code>singularity run /path/to/lshvec.sif bash\
-    \ -c \"cd /tmp &amp;&amp; fastqToSeq.py  -i data.fastq -o data.seq\"\n</code></pre>\n\
-    <p>create LSH:</p>\n<pre><code>singularity run /path/to/lshvec.sif bash -c \"\
-    cd /tmp &amp;&amp; hashSeq.py -i data.seq --hash lsh -o data.hash -k 15 --n_thread\
-    \ 12\"\n</code></pre>\n<p>run lshvec:</p>\n<pre><code>singularity run /path/to/lshvec.sif\
-    \ bash -c \"cd /tmp &amp;&amp; lshvec skipgram -input data.hash -output model\
-    \ -thread 12\"\n</code></pre>\n<h2>\n<a id=\"user-content-questions\" class=\"\
-    anchor\" href=\"#questions\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>Questions</h2>\n<ul>\n<li>\n<code>lshvec</code>\
-    \ gets stuck at <code>Read xxxM words</code>\n</li>\n</ul>\n<p>Search <code>MAX_VOCAB_SIZE</code>\
-    \ in the source code and change it to a bigger one.  When a word's index is bigger\
-    \ than that number, a loop is carried to query it, which is costly. The number\
-    \ is 30M in FastText which is good for languages. But it is too small for k-mers.\
-    \ The number has been already increased to 300M in FastSeq. But for large and/or\
-    \ high-error-rate data, it may be still not enough.</p>\n<ul>\n<li>\n<p>I have\
-    \ big data</p>\n<p>hashSeq reads all data into memory to sample k-mers for hyperplanes.\
-    \ If data is too big it may not fit into memory. One can</p>\n<ol>\n<li>Try sampling.\
-    \ DNA reads generally have high coverage. Such high coverage may not be necessary.</li>\n\
-    <li>Or use <code>create_hash_only</code> to create lsh on a small (sampled) data;\
-    \ then split your data into multiple files and run hashSeq with <code>lsh_file</code>\
-    \ option on many nodes.</li>\n</ol>\n</li>\n<li>\n<p>core dumped when hashing</p>\n\
-    <p>Error like</p>\n<pre><code>terminate called after throwing an instance of 'std::out_of_range'\n\
-    what(): map::at\nAborted (core dumped)\n</code></pre>\n<p>mostly because a sequence\
-    \ contains characters other than ACGTN. So please convert non-ACGT characters\
-    \ to N's.</p>\n</li>\n</ul>\n<h2>\n<a id=\"user-content-license\" class=\"anchor\"\
-    \ href=\"#license\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
-    \ octicon-link\"></span></a>License</h2>\n<p>Inherit license from FastText which\
-    \ is BSD License</p>\n"
+  readme: '<p><a href="https://singularity-hub.org/collections/3399" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
+    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    style="max-width:100%;"></a></p>
+
+    <p>Singularity recipe files for the PAML tool for phylogenetic analyses of DNA
+    or protein sequences using maximum likelihood.</p>
+
+    '
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -19481,7 +19367,7 @@ UniversalDataTool/universal-data-tool:
     </g-emoji></a>\n</td>\n  </tr>\n</table>\n\n\n\n<p>This project follows the <a\
     \ href=\"https://github.com/all-contributors/all-contributors\">all-contributors</a>\
     \ specification. Contributions of any kind welcome!</p>\n"
-  stargazers_count: 1474
+  stargazers_count: 1475
   subscribers_count: 33
   topics:
   - computer-vision
@@ -19504,7 +19390,7 @@ UniversalDataTool/universal-data-tool:
   - labeling
   - labeling-tool
   - hacktoberfest
-  updated_at: 1629689110.0
+  updated_at: 1629941999.0
 VIB-CBD/scanpy-images:
   data_format: 2
   description: Docker and Singularity images for Scanpy
@@ -21061,14 +20947,14 @@ aertslab/pySCENIC:
     <p>Please be aware of FSL''s strict license regarding non-commercial use.</p>
 
     '
-  stargazers_count: 168
+  stargazers_count: 169
   subscribers_count: 15
   topics:
   - single-cell
   - transcriptomics
   - gene-regulatory-network
   - transcription-factors
-  updated_at: 1629800747.0
+  updated_at: 1629917501.0
 agaveplatform/SC17-container-tutorial:
   data_format: 2
   description: 'SC17 tutorial - "HPC via HTTP: Portable, Scalable Computing using
@@ -53835,30 +53721,86 @@ radio1988/OneStopRNAseq:
   - snakemake/workflow/envs/Singularity
   full_name: radio1988/OneStopRNAseq
   latest_release: null
-  readme: '<p>Singularity recipe files for the APSIM Classic version of the Agricultural
-    Production Systems sIMulator</p>
-
-    <h2>
-
-    <a id="user-content-maintainer-notes" class="anchor" href="#maintainer-notes"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Maintainer
-    Notes</h2>
-
-    <ul>
-
-    <li>Recipes for APSIM 7.9 use the upstream SVN repository (no longer available)</li>
-
-    <li>Please see comments inside the recipes for the reasons why some upstream files
-    are overwritten during the build process</li>
-
-    <li>The Cotton Model requires a password, which needs to be obtained by the model
-    owner and placed under <code>files/CottonPassword.txt</code>
-
-    </li>
-
-    </ul>
-
-    '
+  readme: "<h1>\n<a id=\"user-content-csci5980\" class=\"anchor\" href=\"#csci5980\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>csci5980</h1>\n<p>Final project for CSci 5980: deep learning for automatic\
+    \ music translation.</p>\n<p>Follow theses steps to install all package dependencies\
+    \ for running the model:</p>\n<p>We first install software dependencies for manipulating\
+    \ raw audio (<code>ffmpeg</code>):</p>\n<ol>\n<li>\n<p>Create a local software\
+    \ directory\n<code>mkdir ~/software</code></p>\n</li>\n<li>\n<p>Install the NASM\
+    \ assembler (dependency of ffmpeg):</p>\n</li>\n</ol>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre><span class=\"pl-c1\">cd</span> <span class=\"\
+    pl-k\">~</span>/software\nwget https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/nasm-2.14.02.tar.bz2\n\
+    tar -xvf nasm-2.14.02.tar.bz2\n<span class=\"pl-c1\">cd</span> nasm-2.14.02\n\
+    ./configure --prefix=<span class=\"pl-k\">~</span>/software/nasm/\nmake install\n\
+    <span class=\"pl-k\">export</span> PATH=<span class=\"pl-smi\">$PATH</span>:<span\
+    \ class=\"pl-k\">~</span>/software/nasm/bin/</pre></div>\n<ol start=\"3\">\n<li>Make\
+    \ sure that NASM assembler installed correctly:</li>\n</ol>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre>nasm -v</pre></div>\n<p>The output should look\
+    \ something like:\n<code>NASM version 2.14.02 compiled on Mar 11 2020</code></p>\n\
+    <ol start=\"4\">\n<li>Install ffmpeg:</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre><span class=\"pl-c1\">cd</span> <span class=\"pl-k\">~</span>/software\n\
+    wget https://ffmpeg.org/releases/ffmpeg-4.2.2.tar.bz2\ntar -xvf ffmpeg-4.2.2.tar.bz2\n\
+    <span class=\"pl-c1\">cd</span> ffmpeg-4.2.2\n./configure --prefix=<span class=\"\
+    pl-k\">~</span>/software/ffmpeg/\nmake install\n<span class=\"pl-k\">export</span>\
+    \ PATH=<span class=\"pl-smi\">$PATH</span>:<span class=\"pl-k\">~</span>/software/ffmpeg/bin/</pre></div>\n\
+    <ol start=\"5\">\n<li>Make sure that ffmpeg installed correctly:</li>\n</ol>\n\
+    <div class=\"highlight highlight-source-shell\"><pre>ffmpeg -version</pre></div>\n\
+    <p>The output should look something like:</p>\n<pre><code>ffmpeg version 4.2.2\
+    \ Copyright (c) 2000-2019 the FFmpeg developers\nbuilt with gcc 4.4.7 (GCC) 20120313\
+    \ (Red Hat 4.4.7-23)\nconfiguration: --prefix=/home/csci5980/piehl008/software/ffmpeg/\n\
+    libavutil      56. 31.100 / 56. 31.100\nlibavcodec     58. 54.100 / 58. 54.100\n\
+    libavformat    58. 29.100 / 58. 29.100\nlibavdevice    58.  8.100 / 58.  8.100\n\
+    libavfilter     7. 57.100 /  7. 57.100\nlibswscale      5.  5.100 /  5.  5.100\n\
+    libswresample   3.  5.100 /  3.  5.100\n</code></pre>\n<ol start=\"6\">\n<li>Now,\
+    \ we can make the virtual environment and install python packages.  First, create\
+    \ the virtual environment by running:</li>\n</ol>\n<p><code>conda create --name\
+    \ audio-proj python=3.7</code></p>\n<ol start=\"7\">\n<li>Next, install packages\
+    \ by running</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"><pre><span\
+    \ class=\"pl-c1\">cd</span> <span class=\"pl-k\">~</span>/csci5980\nconda install\
+    \ --name audio-proj --file requirements.txt --channel defaults --channel conda-forge</pre></div>\n\
+    <p>(Note: this can take a while - and you need to say yes to installing everything\
+    \ after it solves the environment)</p>\n<ol start=\"8\">\n<li>To activate the\
+    \ virtual environment, you can now run <code>source activate audio-proj</code>.\
+    \ Note: you should do this to test that you can activate the virtual evironment,\
+    \ but you probably shouldn't run a lot unless you are submitting jobs to the queue.\
+    \  If you want to use this virtual environment through the MSI notebooks, check\
+    \ out the tutorial at <a href=\"https://sunju.org/teach/DL-Spring-2020/TensorFlowPyTorch.html\"\
+    \ rel=\"nofollow\">https://sunju.org/teach/DL-Spring-2020/TensorFlowPyTorch.html</a>.</li>\n\
+    </ol>\n<h3>\n<a id=\"user-content-adding-the-virtual-environment-to-jupyter-notebooks\"\
+    \ class=\"anchor\" href=\"#adding-the-virtual-environment-to-jupyter-notebooks\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Adding the Virtual Environment to Jupyter Notebooks</h3>\n<p>Now that\
+    \ we have created the virtual environment, we can add it to the Jupyter notebook\
+    \ kernels so that we can use the virtual environment through MSI's notebook server.\
+    \ To do this, we have to add the kernel specifications to the known Jupyter kernels\
+    \ for our user:</p>\n<ol start=\"9\">\n<li>If you haven't already, activate your\
+    \ virtual environment by running <code>source activate audio-proj</code>. Then\
+    \ enter</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"><pre>which\
+    \ python</pre></div>\n<p>Your output should tell you where the python executable\
+    \ for this virtual environment lives - the output for me displays <code>~/.conda/envs/audio-proj/bin/python</code>.\
+    \  If you see something that looks like <code>/panfs/roc/msisoft/anaconda/anaconda3-2018.12/bin/python</code>,\
+    \ go back and make sure that you have the virtual environment active and try again.\
+    \ After you have an ouput that clearly has the name of the virtual environment\
+    \ in the directory path (i.e. contains audio-proj in it), continue to the next\
+    \ step.</p>\n<ol start=\"10\">\n<li>Now, we need to create the kernel configuration.\
+    \ To do this run</li>\n</ol>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>mkdir <span class=\"pl-k\">~</span>/.local/share/jupyter/kernels/audio-proj\n\
+    nano <span class=\"pl-k\">~</span>/.local/share/jupyter/kernels/audio-proj/kernel.json</pre></div>\n\
+    <p>The nano command will open a very basic text editor that you can navigate with\
+    \ the arrow keys. Enter the following:</p>\n<pre lang=\"text\"><code>{\n \"argv\"\
+    : [\n  \"~/.conda/envs/audio-proj/bin/python\", #replace this with your path from\
+    \ step 9 above! (and delete this comment)\n  \"-m\",\n  \"ipykernel_launcher\"\
+    ,\n  \"-f\",\n  \"{connection_file}\"\n ],\n \"display_name\": \"Audio Project\
+    \ Kernel\",\n \"language\": \"python\"\n}\n</code></pre>\n<p>where you replace\
+    \ the first line of the argv array with whatever executable path was output from\
+    \ step 9 above (it likely will be identical to this). To exit the nano text editor,\
+    \ type <code>Ctrl-x &lt;RETURN&gt;</code> and then type <code>Y &lt;RETURN&gt;</code>\
+    \ to save the file.</p>\n<ol start=\"11\">\n<li>Now that you have saved the kernel\
+    \ file, you should be able to go to <code>https://notebooks.msi.umn.edu/</code>\
+    \ and when you click on the <code>New</code> tab to create a new file, you should\
+    \ be able to select <code>Audio Project Kernel</code> as an available kernel to\
+    \ run your newly created file in.</li>\n</ol>\n"
   stargazers_count: 2
   subscribers_count: 1
   topics: []
@@ -56594,16 +56536,105 @@ seb-mueller/singularity_dropSeqPipe:
   - Singularity
   full_name: seb-mueller/singularity_dropSeqPipe
   latest_release: null
-  readme: '<p><a href="https://singularity-hub.org/collections/3399" rel="nofollow"><img
-    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
-    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    style="max-width:100%;"></a></p>
-
-    <p>Singularity recipe files for the PAML tool for phylogenetic analyses of DNA
-    or protein sequences using maximum likelihood.</p>
-
-    '
+  readme: "<p><a href=\"https://mybinder.org/v2/gh/BiomedicalMachineLearning/HEMnet/master?filepath=Development\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/581c077bdbc6ca6899c86d0acc6145ae85e9d80e6f805a1071793dbe48917982/68747470733a2f2f6d7962696e6465722e6f72672f62616467655f6c6f676f2e737667\"\
+    \ alt=\"Binder\" data-canonical-src=\"https://mybinder.org/badge_logo.svg\" style=\"\
+    max-width:100%;\"></a>\n<a href=\"https://imjoy.io/#/app?plugin=https://github.com/BiomedicalMachineLearning/HEMnet/blob/master/Demo/HEMnet_Tile_Predictor.imjoy.html\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/3f085c08b146a17bddb97fdd1f4258df4bc1c24a0435364e4856b7fbe8471e61/68747470733a2f2f696d6a6f792e696f2f7374617469632f62616467652f6c61756e63682d696d6a6f792d62616467652e737667\"\
+    \ alt=\"launch ImJoy\" data-canonical-src=\"https://imjoy.io/static/badge/launch-imjoy-badge.svg\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://colab.research.google.com/github/BiomedicalMachineLearning/HEMnet/blob/master/Demo/TCGA_Inference.ipynb\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/84f0493939e0c4de4e6dbe113251b4bfb5353e57134ffd9fcab6b8714514d4d1/68747470733a2f2f636f6c61622e72657365617263682e676f6f676c652e636f6d2f6173736574732f636f6c61622d62616467652e737667\"\
+    \ alt=\"Open In Colab\" data-canonical-src=\"https://colab.research.google.com/assets/colab-badge.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-hemnet---haematoxylin--eosin-and-molecular-neural-network\"\
+    \ class=\"anchor\" href=\"#hemnet---haematoxylin--eosin-and-molecular-neural-network\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>HEMnet - Haematoxylin &amp; Eosin and Molecular neural network</h1>\n\
+    <h2>\n<a id=\"user-content-description\" class=\"anchor\" href=\"#description\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Description</h2>\n<p>A deep learning automated cancer diagnosis software\
+    \ using molecular labelling to improve pathological annotation of\nHaematoxylin\
+    \ and Eosin (H&amp;E) stained tissue.</p>\n<h2>\n<a id=\"user-content-installation\"\
+    \ class=\"anchor\" href=\"#installation\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Installation</h2>\n<ol>\n<li>\n\
+    <p>Docker</p>\n<p>You can download and run the docker image using the following\
+    \ commands:</p>\n<pre><code>docker pull andrewsu1/hemnet    \ndocker run -it andrewsu1/hemnet\n\
+    </code></pre>\n</li>\n<li>\n<p>Conda</p>\n<p>Install Openslide (this is necessary\
+    \ to open whole slide images) - download it <a href=\"https://openslide.org/download/\"\
+    \ rel=\"nofollow\">here</a></p>\n<p>Create a conda environment from the <code>environment.yml</code>\
+    \ file</p>\n<pre><code>conda env create -f environment.yml\nconda activate HEMnet\n\
+    </code></pre>\n</li>\n</ol>\n<h2>\n<a id=\"user-content-usage\" class=\"anchor\"\
+    \ href=\"#usage\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>Usage</h2>\n<h3>\n<a id=\"user-content-slide-preparation\"\
+    \ class=\"anchor\" href=\"#slide-preparation\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Slide Preparation</h3>\n<p>Name\
+    \ slides in the format: <code>slide_id_TP53</code> for TP53 slides and <code>slide_id_HandE</code>\
+    \ for H&amp;E slides\nThe <code>TP53</code> and <code>HandE</code> suffix is used\
+    \ by HEMnet to identify the stain used.</p>\n<h3>\n<a id=\"user-content-1-generate-training-and-testing-datasets\"\
+    \ class=\"anchor\" href=\"#1-generate-training-and-testing-datasets\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>1.\
+    \ Generate training and testing datasets</h3>\n<p>a. Generate train dataset</p>\n\
+    <p><code>python HEMnet_train_dataset.py -b /path/to/base/directory -s relative/path/to/slides\
+    \ -o relative/path/to/output/directory  -t relative/path/to/template_slide.svs\
+    \ -v</code></p>\n<p>b. Generate test dataset</p>\n<p><code>python HEMnet_test_dataset.py\
+    \ -b /path/to/base/directory -s /relative/path/to/slides -o /relative/path/to/output/directory\
+    \ -t relative/path/to/template_slide -m tile_mag -a align_mag -c cancer_thresh\
+    \ -n non_cancer_thresh</code></p>\n<p>Other parameters:</p>\n<ul>\n<li>\n<code>-t</code>\
+    \ is the relative path to the template slide from which all other slides will\
+    \ be normalised against. The template\nslide should be the same for each step.</li>\n\
+    <li>\n<code>-m</code> is the tile magnification. e.g. if  the input is <code>10</code>\
+    \ then the tiles will be output at 10x</li>\n<li>\n<code>-a</code> is the align\
+    \ magnification. Paired TP53 and H&amp;E slides will be registered at this magnification.\n\
+    To reduce computation time we recommend this be less than the tile magnification\
+    \ - a five times downscale generally works well.</li>\n<li>\n<code>-c</code> cancer\
+    \ threshold to apply to the DAB channel. DAB intensities less than this threshold\
+    \ indicate cancer.</li>\n<li>\n<code>-n</code> non-cancer threshold to apply to\
+    \ the DAB channel. DAB intensities greater than this threshold indicate no cancer.</li>\n\
+    </ul>\n<h3>\n<a id=\"user-content-2-train-and-evaluate-model\" class=\"anchor\"\
+    \ href=\"#2-train-and-evaluate-model\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>2. Train and evaluate model</h3>\n\
+    <p>a. Training model</p>\n<p><code>python train.py -b /path/to/base/directory\
+    \ -t relative/path/to/training_tile_directory -l relative/path/to/validation_tile_directory\
+    \ -o /relative/path/to/output/directory -m cnn_base -g num_gpus -e epochs -a batch_size\
+    \ -s -w -f -v</code></p>\n<p>Other parameters:</p>\n<ul>\n<li>\n<code>-m</code>\
+    \ is CNN base model. eg. <code>resnet50</code>, <code>vgg16</code>, <code>vgg19</code>,\
+    \ <code>inception_v3</code> and <code>xception</code>.</li>\n<li>\n<code>-g</code>\
+    \ is number of GPUs for training.</li>\n<li>\n<code>-e</code> is training epochs.\
+    \ Default is <code>100</code> epochs.</li>\n<li>\n<code>-a</code> is batch size.\
+    \ Default is <code>32</code>\n</li>\n<li>\n<code>-s</code> is option to save the\
+    \ trained model weights.</li>\n<li>\n<code>-w</code> is option to used transfer\
+    \ learning. Model will used pre-trained weights from ImageNet at the initial stage.</li>\n\
+    <li>\n<code>-f</code> is fine-tuning option. Model will re-train CNN base.</li>\n\
+    </ul>\n<p>b. Test model prediction</p>\n<p><code>python test.py  -b /path/to/base/directory\
+    \ -t relative/path/to/test_tile_directory -o /relative/path/to/output/directory\
+    \ -w model_weights -m cnn_base -g num_gpus -v</code></p>\n<p>Other parameters:</p>\n\
+    <ul>\n<li>\n<code>-w</code> is path to trained model. eg. <code>trained_model.h5</code>.</li>\n\
+    <li>\n<code>-m</code> is CNN base model (same to training step).</li>\n<li>\n\
+    <code>-g</code> is number of GPUs for prediction.</li>\n</ul>\n<p>c. Evaluate\
+    \ model performance and visualise model prediction</p>\n<p><code>python visualisation.py\
+    \ -b /path/to/base/directory -t /relative/path/to/training_output_directory -p\
+    \ /relative/path/to/test_output_directory  -o /relative/path/to/output/directory\
+    \ -i sample</code></p>\n<p>Other parameters:</p>\n<ul>\n<li>\n<code>-t</code>\
+    \ is path to training outputs.</li>\n<li>\n<code>-p</code> is path to test outputs.</li>\n\
+    <li>\n<code>-i</code> is name of Whole Slide Image for visualisation.</li>\n</ul>\n\
+    <h3>\n<a id=\"user-content-3-apply-model-to-diagnose-new-images\" class=\"anchor\"\
+    \ href=\"#3-apply-model-to-diagnose-new-images\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>3. Apply model to diagnose new\
+    \ images</h3>\n<p><code>python HEMnet_inference.py -s '/path/to/new/HE/Slides/'\
+    \ -o '/path/to/output/directory/' -t '/path/to/template/slide/' -nn '/path/to/trained/model/'\
+    \ -v</code></p>\n<p>Predict on TCGA images with our pretrained model for colorectal\
+    \ cancer using <a href=\"https://colab.research.google.com/github/BiomedicalMachineLearning/HEMnet/blob/master/Demo/TCGA_Inference.ipynb\"\
+    \ rel=\"nofollow\">google colab</a></p>\n<h2>\n<a id=\"user-content-results\"\
+    \ class=\"anchor\" href=\"#results\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Results</h2>\n<h2>\n<a id=\"\
+    user-content-citing-hemnet\" class=\"anchor\" href=\"#citing-hemnet\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Citing\
+    \ HEMnet</h2>\n<h2>\n<a id=\"user-content-the-team\" class=\"anchor\" href=\"\
+    #the-team\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>The Team</h2>\n<p>Please contact Dr Quan Nguyen (<a href=\"mailto:quan.nguyen@uq.edu.au\"\
+    >quan.nguyen@uq.edu.au</a>), Andrew Su (<a href=\"mailto:a.su@uqconnect.edu.au\"\
+    >a.su@uqconnect.edu.au</a>),\nand Xiao Tan (<a href=\"mailto:xiao.tan@uqconnect.edu.au\"\
+    >xiao.tan@uqconnect.edu.au</a>) for issues, suggestions,\nand we are very welcome\
+    \ to collaboration opportunities.</p>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -59376,7 +59407,7 @@ sylabs/singularity:
   - containers
   - hpc
   - linux
-  updated_at: 1629767686.0
+  updated_at: 1629898193.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
