@@ -1,0 +1,23 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://archive.ubuntu.com/ubuntu/
+Include: build-essential language-pack-en wget libncurses5-dev zlib1g-dev libbz2-dev liblzma-dev
+
+
+%labels
+
+	MAINTAINER "Marissa Le Lec"
+	VERSION "samtools 1.9"
+
+%post
+	
+		wget https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2 --no-check-certificate
+		tar -xvf samtools-1.9.tar.bz2 
+		cd samtools-1.9 || exit 1
+		./configure --prefix=/samtools
+		make
+		make install
+
+
+%environment
+    export PATH="${PATH}:/samtools/bin"

@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: bioconductor/release_base2:R3.6.0_Bioc3.9
+
+
+%help
+
+    R 3.5.0 with Bioconductor 3.9
+    
+%labels
+
+    MAINTAINER "Marissa Le Lec"
+    VERSION "Bioconductor 3.9"
+
+%post
+    # install packages from bioconductor
+    Rscript -e "options(Ncpus=8); \
+        BiocManager::install(pkgs = c('data.table', \
+        'tidyverse', \
+        'scales'), ask=FALSE)"
+
+%runscript
+
+    exec /usr/local/bin/R "$@"

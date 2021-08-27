@@ -1,0 +1,73 @@
+BootStrap: library
+From: ubuntu:20.04
+
+%labels
+MAINTAINER Christoph Blessing <chris24.blessing@gmail.com>
+
+%post
+    apt update && apt install -y software-properties-common
+    add-apt-repository universe
+
+    apt update && apt install -y \
+        build-essential \
+        git \
+        wget \
+        vim \
+        curl \
+        zip \
+        zlib1g-dev \
+        unzip \
+        pkg-config \
+        libblas-dev \
+        liblapack-dev \
+        python3-tk \
+        python3-wheel \
+        graphviz \
+        libhdf5-dev \
+        python3.8 \
+        python3.8-dev \
+        python3.8-distutils \
+        swig
+    apt-get clean
+
+    ln -s /usr/bin/python3.8 /usr/local/bin/python
+    ln -s /usr/bin/python3.8 /usr/local/bin/python3
+
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    python3.8 get-pip.py
+    rm get-pip.py
+
+    python3.8 -m pip --no-cache-dir install \
+        blackcellmagic\
+        pytest \
+        pytest-cov \
+        numpy \
+        matplotlib \
+        scipy \
+        pandas \
+        jupyter \
+        scikit-learn \
+        scikit-image \
+        seaborn \
+        graphviz \
+        gpustat \
+        h5py \
+        gitpython \
+        Pillow==8.0.1 \
+        jupyterlab \
+        datajoint==0.13.2
+    
+    python3.8 -m pip --no-cache-dir  install \
+        torch==1.9.0+cu111 \
+        torchvision==0.10.0+cu111 \
+        torchaudio==0.9.0 \
+        -f https://download.pytorch.org/whl/torch_stable.html
+
+%environment
+    export SHELL=/bin/sh
+
+%runscript
+    exec /bin/sh -c "$@"
+
+%startscript
+    jupyter lab

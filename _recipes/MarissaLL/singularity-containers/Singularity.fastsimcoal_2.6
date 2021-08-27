@@ -1,0 +1,22 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://archive.ubuntu.com/ubuntu/
+Include: build-essential language-pack-en wget unzip
+
+%labels
+
+	MAINTAINER "Marissa Le Lec"
+	VERSION "fastsimcoal 2.6"
+
+%post
+
+	wget http://cmpg.unibe.ch/software/fastsimcoal2/downloads/fsc26_linux64.zip
+	unzip fsc26_linux64.zip
+	cd fsc26_linux64 || exit 1
+	chmod +x fsc26
+	cp fsc26 /usr/local/bin/fsc26
+	cd .. || exit 1
+	rm -rf fsc26_linux64
+
+%runscript
+	exec /usr/local/bin/fsc26 "$@"

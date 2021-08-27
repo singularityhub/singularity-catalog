@@ -1,0 +1,27 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://archive.ubuntu.com/ubuntu/
+Include: build-essential language-pack-en wget autoconf automake pkg-config zlib1g-dev
+
+%labels
+
+	MAINTAINER "Marissa Le Lec"
+	VERSION "STAR 2.7.1a"
+
+%post
+
+	
+	wget https://github.com/alexdobin/STAR/archive/2.7.1a.tar.gz --no-check-certificate
+	tar -xzf 2.7.1a.tar.gz
+	cd STAR-2.7.1a/source || exit 1
+	make STAR
+	cp STAR /usr/local/bin/
+	cd ../.. || exit 1
+	rm -rf STAR-2.7.1a/
+
+
+%runscript
+
+	exec /usr/local/bin/STAR "$@"
+
+

@@ -1,0 +1,40 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+
+    MAINTAINER "Marissa Le Lec"
+    VERSION "plink 1.9"
+
+%post
+
+    # install dependencies
+    apt-get update
+    apt-get install -y \
+        build-essential \
+        curl \
+        language-pack-en \
+        libatlas-base-dev \
+        libblas-dev \
+        wget
+
+    # install plink
+    wget -O "plink.tar.gz" \
+        --no-check-certificate \
+        https://github.com/chrchang/plink-ng/archive/b15c19f.tar.gz
+    mkdir plink
+    tar -zxf plink.tar.gz \
+        -C plink \
+        --strip-components 1
+
+    cd plink/1.9 || exit 1
+    ./plink_first_compile
+
+    mv plink /usr/local/bin
+
+    cd ../../ || exit 1
+    rm -rf plink plink.tar.gz
+
+%runscript
+
+    exec /usr/bin/plink "$@"

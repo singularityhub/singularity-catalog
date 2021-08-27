@@ -1,0 +1,40 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+
+    MAINTAINER "Marissa Le Lec"
+    VERSION "longshot 22nd March 2021"
+
+%environment
+   export RUSTUP_HOME=/opt/rust
+   export CARGO_HOME=/opt/rust
+   export PATH=/opt/rust/bin:$PATH
+
+%post
+ # install dependencies
+    apt-get update
+    apt-get install -y \
+        build-essential \
+        language-pack-en \
+        cargo \
+        zlib1g-dev \
+        xz-utils \
+        libclang-dev \
+        clang \
+        curl \
+        git \
+
+
+    # install longshot
+    git clone https://github.com/pjedge/longshot
+    cd longshot || exit 1
+    mkdir /opt/rust
+    export RUSTUP_HOME=/opt/rust
+    export CARGO_HOME=/opt/rust
+    cargo install --path .
+    cd ../ || exit 1
+    rm -r longshot/
+
+%runscript
+    exec /opt/rust/bin/longshot "$@"

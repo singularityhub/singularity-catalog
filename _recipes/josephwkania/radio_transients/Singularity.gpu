@@ -4,7 +4,7 @@ From:  nvidia/cuda:10.2-devel # Needed for fetch
 
 %post
     apt-get update # update and install packages we need for the build
-    apt-get -y install autoconf build-essential csh git htop libboost-dev libtool libtool-bin python2.7 software-properties-common wget
+    apt-get -y install autoconf build-essential csh git htop libboost-dev libtool libtool-bin software-properties-common wget
  
     # I can't get your to build in ubuntu's python3.7, llvmlite fails and there is no clear way around this
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh -q
@@ -67,18 +67,14 @@ From:  nvidia/cuda:10.2-devel # Needed for fetch
     export PATH=$PATH:/usr/local/cuda
     echo "Building Heimdall"
     cd ~/source
-    ln -s /usr/bin/python2.7 /usr/bin/python # needs py27 to build
     git clone git://git.code.sf.net/p/heimdall-astro/code heimdall
     cd heimdall
     ./bootstrap
     ./configure --prefix=$HOME/software/heimdall/linux_64 --with-psrdada-dir=$HOME/software/psrdada --with-dedisp-dir=$HOME/software/dedisp --with-cuda-dir=/usr/local/cuda
-    sed -i -e 's+-I/root/software/psrdada/include -fopenmp+-I/root/software/psrdada/include+' Pipeline/Makefile
-    # sed -n 92p Pipeline/Makefile check if line is changed
     make install
     mv ~/software/heimdall/linux_64/bin/* /usr/local/bin
     echo "Heimdall Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)" >> "$SINGULARITY_LABELS"
  
-    rm /usr/bin/python # don't need python linked after heimdall is built
     rm -rf software source # clean up after heimdall build
     
     echo "Installing psrdada-python"
@@ -102,7 +98,7 @@ From:  nvidia/cuda:10.2-devel # Needed for fetch
     echo "your Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)" >> "$SINGULARITY_LABELS"
     cd ~ && rm -rf your
 
-    apt-get -y purge autoconf build-essential git python2.7 wget # remove build time dependencies
+    apt-get -y purge autoconf build-essential git wget # remove build time dependencies
     apt-get -y autoremove 
     apt-get -y clean # /var/cache/apt/archives is not emptied on its own, 
     conda clean --all
@@ -152,4 +148,4 @@ These pulses can be classified with FETCH.
 %labels
     Author Joseph W Kania 
     Version v0.0.4
-    Build-date 21-Jun-2021
+    Build-date 26-Aug-2021

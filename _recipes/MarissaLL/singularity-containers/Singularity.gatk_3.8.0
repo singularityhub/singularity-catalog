@@ -1,0 +1,10 @@
+Bootstrap: docker
+From: broadinstitute/gatk3:3.8-0 
+
+
+%labels
+    VERSION "GATK 3.8.0"
+
+%runscript
+    java -jar /usr/GenomeAnalysisTK.jar "$@"
+

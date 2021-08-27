@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+
+    MAINTAINER "Marissa Le Lec"
+    VERSION "plink 2.0"
+
+%post
+
+    # install dependencies
+    apt-get update
+    apt-get install -y \
+        build-essential \
+        language-pack-en \
+        wget \
+        unzip
+
+    # install plink
+    wget http://s3.amazonaws.com/plink2-assets/plink2_linux_avx2_20201028.zip
+    unzip plink2_linux_avx2_20201028.zip
+
+    mv plink2 /usr/bin
+
+    rm plink2_linux_avx2_20201028.zip
+
+%runscript
+
+     exec /usr/bin/plink2 "$@"

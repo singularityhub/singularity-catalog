@@ -352,10 +352,10 @@ AI-Planning/autoscale:
     \ data</h1>\n<p>The optimization/results folder contains JSON files with the results\
     \ of the experiments.\nThe results table in the paper is generated via the scripts\
     \ <code>report-gather-dataset.py</code> and\n<code>report-create-table.py</code>.</p>\n"
-  stargazers_count: 2
-  subscribers_count: 4
+  stargazers_count: 3
+  subscribers_count: 5
   topics: []
-  updated_at: 1628798705.0
+  updated_at: 1629389344.0
 APSIMInitiative/APSIMClassic:
   data_format: 2
   description: APSIM
@@ -4340,9 +4340,9 @@ DeepLearningItalia/NLP-HandsOn-2:
 
     <h1>
 
-    <a id="user-content-autoreduction-v201" class="anchor" href="#autoreduction-v201"
+    <a id="user-content-autoreduction-service-description" class="anchor" href="#autoreduction-service-description"
     aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Autoreduction
-    v20.1</h1>
+    service description</h1>
 
     <p>A service for automated batch processing of jobs specifically design for use
     at <a href="https://www.isis.stfc.ac.uk" rel="nofollow">ISIS Neutron and Muon
@@ -4354,17 +4354,10 @@ DeepLearningItalia/NLP-HandsOn-2:
     target="_blank" rel="noopener noreferrer"><img src="documentation/assets/main_components/Autoreduction_main_components.png"
     alt="Example Table" style="max-width:100%;"></a></p>
 
-    <p>The code for monitors of experiments, i.e. that send messages to the Messenging
-    server when experiments are ready to be reduced (processed) is in monitors folder.
-    The code for processors which consume/subscribe to Messenging queues and run jobs
-    on the compute nodes are in the QueueProcessors folder. Finally, the code for
-    the WebApp, which is used to monitor the system by both users and those who support
-    the service is located in the WebApp folder.</p>
-
-    <p>This service discovers raw data automatically, reduces it (performs some processing
-    on them) and stores the result. The results are rendered by the web application
-    which allows the user and support staff to monitor the system and rerun jobs manually
-    as needed.</p>
+    <p>This repository contains only the backend service code, also named the <code>queue
+    processor</code> service. Repositories for the rest of the microservices can be
+    found in the <a href="https://github.com/ISISScientificComputing">GitHub organisation
+    page</a></p>
 
     '
   stargazers_count: 0
@@ -12079,6 +12072,40 @@ MRtrix3/mrtrix3:
   subscribers_count: 33
   topics: []
   updated_at: 1628023088.0
+MarissaLL/singularity-containers:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity.FastQC_0.11.5
+  - Singularity.longshot
+  - Singularity.BBMap_37.92
+  - Singularity.vcflib
+  - Singularity.R_3.6.0
+  - Singularity.plink_2.0
+  - Singularity.AdapterRemoval
+  - Singularity.fastsimcoal_2.6
+  - Singularity.BCFtools_1.9
+  - Singularity.minimap2_2.17
+  - Singularity.PGDSpider_2.1.1.5
+  - Singularity.plink_1.9
+  - Singularity.samtools_1.9
+  - Singularity.gatk_3.8.0
+  - Singularity.VCFtools_0.1.17
+  - Singularity.BayeScan_2.1
+  - Singularity.R_3.5.0
+  - Singularity.STAR_2.7.1a
+  full_name: MarissaLL/singularity-containers
+  latest_release: null
+  readme: '<p>Recipes for Singularity containers, which are hosted on SingularityHub
+    at
+
+    <a href="https://www.singularity-hub.org/collections/1290" rel="nofollow">https://www.singularity-hub.org/collections/1290</a></p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 0
+  topics: []
+  updated_at: 1629949124.0
 Martybird/7TBEaST:
   data_format: 2
   description: Adapt the BEaST skull stripping method for 7T MRI as a BIDS app
@@ -13023,7 +13050,7 @@ NOAA-GFDL/AM4:
   - container/Singularity.intel_netcdf
   - container/Singularity.gnu
   full_name: NOAA-GFDL/AM4
-  latest_release: '2021.02'
+  latest_release: '2021.03'
   readme: '<h1>
 
     <a id="user-content-gfdl-am4-model" class="anchor" href="#gfdl-am4-model" aria-hidden="true"><span
@@ -13217,6 +13244,24 @@ NOAA-GFDL/AM4:
 
     <a id="user-content-building-am4" class="anchor" href="#building-am4" aria-hidden="true"><span
     aria-hidden="true" class="octicon octicon-link"></span></a>Building AM4</h2>
+
+    <p>###Containers
+
+    The <a href="container">container folder</a> provides example Dockerfiles and
+    Signularity
+
+    definition files to use to build AM4 containers using either GCC/GFORTAN or
+
+    Intel oneAPI. There is a script that can be used to build the intel
+
+    singularity containers, and the first step of this script can be used with the
+
+    other GFDL climate models.</p>
+
+    <h3>
+
+    <a id="user-content-from-source" class="anchor" href="#from-source" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>From source</h3>
 
     <p>The <a href="exec">exec</a> directory contains Makefiles that can be used to
 
@@ -13454,7 +13499,383 @@ NOAA-GFDL/AM4:
   - jupyter-notebook
   - shell-script
   - ncl
-  updated_at: 1628201751.0
+  updated_at: 1629811549.0
+NOAA-GFDL/CM4:
+  data_format: 2
+  description: null
+  filenames:
+  - container/Singularity.intel_cm4
+  - container/Singularity.cm4
+  - container/Singularity.intel_netcdf
+  full_name: NOAA-GFDL/CM4
+  latest_release: '2021.03'
+  readme: '<h1>
+
+    <a id="user-content-gfdl-cm4-model" class="anchor" href="#gfdl-cm4-model" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>GFDL CM4 Model</h1>
+
+    <p><a href="https://www.gfdl.noaa.gov" rel="nofollow">Geophysical Fluid Dynamics
+    Laboratory
+
+    (GFDL)</a>.</p>
+
+    <p>The layout of this package includes the following directories:</p>
+
+    <ul>
+
+    <li>src - The source code for the CM4 model</li>
+
+    <li>exec - The build directory with Makefiles for building the model executable</li>
+
+    <li>run - Sample run script</li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-cloning-instructions" class="anchor" href="#cloning-instructions"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Cloning
+    Instructions</h2>
+
+    <p>This repository uses <a href="https://git-scm.com/book/en/v2/Git-Tools-Submodules"
+    rel="nofollow">git
+
+    submodules</a> to
+
+    point to other repositories.  Thus, care should be taken when cloning,
+
+    and updating the source to ensure all source.  To obtain all source,
+
+    use the following git command</p>
+
+    <pre><code>git clone --recursive https://github.com/NOAA-GFDL/CM4.git
+
+    </code></pre>
+
+    <p>The <code>--recursive</code> option to <code>git clone</code> instructs git
+    to recursively
+
+    clone all submodules.  In the event the repository was not cloned
+
+    using the <code>--recursive</code> option, the following step must be taken to
+
+    obtain all sources:</p>
+
+    <pre><code># From within the CM4 parent directory
+
+    git submodule update --init --recursive
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-source-code" class="anchor" href="#source-code" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Source Code</h2>
+
+    <p>All model source is contained in the <a href="src">src</a> directory.  GFDL
+
+    tracks code using the git version control system.  This package
+
+    includes a single version of the following GFDL model components.  The
+
+    git hash listed corresponds to the commit hash in the internal GFDL
+
+    git repository.</p>
+
+    <table>
+
+    <thead>
+
+    <tr>
+
+    <th>Component</th>
+
+    <th>Commit Hash</th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr>
+
+    <td>atmos_cubed_sphere</td>
+
+    <td>b8b05bf650c0d3293b538bdaceb894ba0fd6910b</td>
+
+    </tr>
+
+    <tr>
+
+    <td>atmos_drivers</td>
+
+    <td>3be6ed406de2db29766746a69115fd6a47048692</td>
+
+    </tr>
+
+    <tr>
+
+    <td>atmos_param</td>
+
+    <td>4fe4ca54a0224ef5c4cf9ebf1010d5b869930a3f</td>
+
+    </tr>
+
+    <tr>
+
+    <td>atmos_shared</td>
+
+    <td>2e9d8b770cdb2d70d8d9264e4b2de24213ae21bd</td>
+
+    </tr>
+
+    <tr>
+
+    <td>land_lad2</td>
+
+    <td>154bd2b4bf523f3e699de5017679b156242ec13f</td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    <p>The following components are available in the
+
+    <a href="https://github.com/NOAA-GFDL">NOAA-GFDL</a> github organization:</p>
+
+    <ul>
+
+    <li><a href="https://github.com/NOAA-GFDL/MOM6">MOM6</a></li>
+
+    <li><a href="https://github.com/NOAA-GFDL/SIS2">SIS2</a></li>
+
+    <li>
+
+    <a href="https://github.com/NOAA-GFDL/GFDL_atmos_cubed_sphere/tree/AM4.0">GFDL_atmos_cubed_sphere</a>
+    (as <a href="src/atmos_cubed_sphere">atmos_cubed_sphere</a>)</li>
+
+    <li><a href="https://github.com/NOAA-GFDL/icebergs">icebergs</a></li>
+
+    <li><a href="https://github.com/NOAA-GFDL/ice_param">ice_param</a></li>
+
+    <li><a href="https://github.com/NOAA-GFDL/ocean_BGC">ocean_BGC</a></li>
+
+    <li><a href="https://github.com/NOAA-GFDL/FMScoupler">coupler</a></li>
+
+    <li>
+
+    <a href="https://github.com/NOAA-GFDL/FMS">FMS</a> (as <a href="src/shared">shared</a>)</li>
+
+    <li><a href="https://github.com/NOAA-GFDL/mocsy">mocsy</a></li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-building-cm4" class="anchor" href="#building-cm4" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Building CM4</h2>
+
+    <h3>
+
+    <a id="user-content-containers" class="anchor" href="#containers" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Containers</h3>
+
+    <p>The <a href="container">container folder</a> provides example Dockerfiles and
+    Signularity
+
+    definition files to use to build AM4 containers using either GCC/GFORTAN or
+
+    Intel oneAPI. There is a script that can be used to build the intel
+
+    singularity containers, and the first step of this script can be used with the
+
+    other GFDL climate models.</p>
+
+    <h3>
+
+    <a id="user-content-from-source" class="anchor" href="#from-source" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>From source</h3>
+
+    <p>The <a href="exec">exec</a> directory contains Makefiles that can be used to
+
+    build the CM4 executable.  These Makefiles were generated using the
+
+    <a href="https://github.com/NOAA-GFDL/mkmf">Make Makefile (mkmf)</a> program.
+
+    Included in the exec direcgtory is a sample make template file for the
+
+    Intel compilers (<a href="exec/templates/intel.mk">intel.mk</a>).  This make
+
+    template can be used on any system with a relatively recent version of
+
+    the Intel compilers, the netCDF 4 library and the MPICH2 MPI library.
+
+    Included in the <a href="exec/templates/intel.mk">intel.mk</a> file are
+
+    additional settings that can be modified during the build.</p>
+
+    <p>To run the default build (-O3 -msse2), go to the exec directory and
+
+    enter the command</p>
+
+    <pre><code>make HDF_INCLUDE=-I/path/to/hdf5/include
+
+    </code></pre>
+
+    <p>Where <em>/path/to/hdf5/include</em> is the path to your HDF5 include folder
+    where hdf5.mod
+
+    is.</p>
+
+    <p>If you would like to change some of the compiler options, there are several
+    different
+
+    options to add to the make command.  For example</p>
+
+    <pre><code>make ISA=-xhost REPRO=on
+
+    </code></pre>
+
+    <p>will replace -msse with -xhost and -O3 with -O2.  The three options for
+
+    building are<br>
+
+    <code>PROD=on</code> (-O3) Default
+
+    <code>REPRO=on</code> (-O2)<br>
+
+    <code>DEBUG=on</code> (-O0 and other traps)<br>
+
+    All of the make line options can be
+
+    found in the <a href="exec/templates/intel.mk">intel.mk</a> file.</p>
+
+    <p>To build with GNU compilers, add <code>gcc=on</code> to the <code>make</code>
+    line. The make line
+
+    options can be found in the <a href="exec/templates/gnu.mk">gnu.mk</a> file.</p>
+
+    <h2>
+
+    <a id="user-content-obtaining-the-input-data" class="anchor" href="#obtaining-the-input-data"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Obtaining
+    the input data</h2>
+
+    <p>The input data required for running the CM4 model can be found on
+
+    <a href="http://data1.gfdl.noaa.gov/nomads/forms/cm4/" rel="nofollow">GFDL''s
+    data
+
+    portal</a> .</p>
+
+    <p>The file <code>CM4_runDir.tar.gz</code> contains a configured run directory
+    to run a
+
+    sample experiment of the CM4 model.  Included in the tar file is a
+
+    README.CM4 with more instructions on how to configure the CM4 run
+
+    directory.</p>
+
+    <h2>
+
+    <a id="user-content-running-cm4" class="anchor" href="#running-cm4" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Running CM4</h2>
+
+    <p>Included in the run directory is a sample run script for reference.
+
+    To run the CM4 sample experiment, first download the data file
+
+    mentioned in <a href="#obtaining-the-input-data">Obtaining the Input data</a>
+
+    section.  Modify the variables in the configuration section in the
+
+    sample run script, and then run the script.</p>
+
+    <p>The sample data and run script are configured to run on a total of 8127
+
+    processors (864 cores 4 threads for the atmosphere and 4671 ocean cores).<br>
+
+    To run on a different number of processors, or modify the
+
+    experiment, refer to the <code>README.CM4</code> file included in the CM4
+
+    data tarball.</p>
+
+    <p>Note: The <code>input.nml</code> file (found in the CM4 data tarball) contains
+
+    Fortran namelists and namelist variables that modify, at run time, the
+
+    model.  To learn more about the settings in the <code>input.nml</code> file,
+
+    please refer to source code where the namelist/variable are defined.</p>
+
+    <h2>
+
+    <a id="user-content-model-output-and-other-references" class="anchor" href="#model-output-and-other-references"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Model
+    output and Other References</h2>
+
+    <p>Please refer to the <a href="http://data1.gfdl.noaa.gov/nomads/forms/cm4/"
+    rel="nofollow">CM4 data and code
+
+    site</a> for details
+
+    about where to find model and OBS data used in the papers.</p>
+
+    <p>For all analysis figures and pertaining data, please use the CM4
+
+    documentation papers as the original reference.</p>
+
+    <p>Please direct your questions and feedback to
+
+    <a href="mailto:gfdl.climate.model.info@noaa.gov">gfdl.climate.model.info@noaa.gov</a></p>
+
+    <h2>
+
+    <a id="user-content-disclaimer" class="anchor" href="#disclaimer" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Disclaimer</h2>
+
+    <p>The United States Department of Commerce (DOC) GitHub project code is
+
+    provided on an ''as is'' basis and the user assumes responsibility for
+
+    its use.  DOC has relinquished control of the information and no
+
+    longer has responsibility to protect the integrity, confidentiality,
+
+    or availability of the information.  Any claims against the Department
+
+    of Commerce stemming from the use of its GitHub project will be
+
+    governed by all applicable Federal law.  Any reference to specific
+
+    commercial products, processes, or services by service mark,
+
+    trademark, manufacturer, or otherwise, does not constitute or imply
+
+    their endorsement, recommendation or favoring by the Department of
+
+    Commerce.  The Department of Commerce seal and logo, or the seal and
+
+    logo of a DOC bureau, shall not be used in any manner to imply
+
+    endorsement of any commercial product or activity by DOC or the United
+
+    States Government.</p>
+
+    <p>This project code is made available through GitHub but is managed by
+
+    NOAA-GFDL at <a href="https://gitlab.gfdl.noaa.gov" rel="nofollow">https://gitlab.gfdl.noaa.gov</a>.</p>
+
+    '
+  stargazers_count: 2
+  subscribers_count: 4
+  topics: []
+  updated_at: 1629830676.0
 NOC-MSM/CoNES:
   data_format: 2
   description: Containerisation of NEMO Employing Singularity
@@ -17875,6 +18296,23 @@ SCXsunchenxi/Auto-Pytorch:
   subscribers_count: 1
   topics: []
   updated_at: 1609655576.0
+SETAP2021/setapDocker:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity.def
+  full_name: SETAP2021/setapDocker
+  latest_release: latest
+  readme: '<h1>
+
+    <a id="user-content-setapdocker" class="anchor" href="#setapdocker" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>setapDocker</h1>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 2
+  topics: []
+  updated_at: 1629535140.0
 SODALITE-EU/application-optimisation:
   data_format: 2
   description: null
@@ -17942,7 +18380,7 @@ SODALITE-EU/application-optimisation:
   stargazers_count: 0
   subscribers_count: 6
   topics: []
-  updated_at: 1628595518.0
+  updated_at: 1629996066.0
 Sarah145/batch_correct:
   data_format: 2
   description: Comparison of batch correction methods for scRNA-seq data - basically
@@ -20706,6 +21144,25 @@ adamlabadorf/bf550:
   subscribers_count: 1
   topics: []
   updated_at: 1628214043.0
+adriansev/alienpy.sing:
+  data_format: 2
+  description: Singularity image for alienpy
+  filenames:
+  - Singularity
+  full_name: adriansev/alienpy.sing
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-alienpysing" class="anchor" href="#alienpysing" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>alienpy.sing</h1>
+
+    <p>Singularity image for alienpy</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1629840214.0
 aertslab/SCope:
   data_format: 2
   description: Fast visualization tool for large-scale and high dimensional single-cell
@@ -21361,9 +21818,9 @@ airbert-vln/bnb-dataset:
     \ fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f3d8.png\"\
     >\U0001F3D8\uFE0F</g-emoji>\n</h1>\n<p><a href=\"./LICENSE.md\"><img src=\"https://camo.githubusercontent.com/2b802816c8f54fe93a3d0b3319660a1426c20d6205bfa22b29370f70941685ab/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f616972626572742d766c6e2f626e622d64617461736574\"\
     \ alt=\"MIT\" data-canonical-src=\"https://img.shields.io/github/license/airbert-vln/bnb-dataset\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://arxiv.org/abs/%3CINDEX%3E\"\
-    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/eb533236263be4e38d813d687cf3d166d68063a6becd2f33c906114ea354e17a/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f61725869762d253343494e4445582533452d677265656e2e737667\"\
-    \ alt=\"arXiv\" data-canonical-src=\"https://img.shields.io/badge/arXiv-%3CINDEX%3E-green.svg\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://arxiv.org/abs/2108.09105\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/90f31e19cd5af82f12098fc37a1893cfe582900268bfe94119fed981e2cf9fbf/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f61725869762d323130382e30393130352d7265642e737667\"\
+    \ alt=\"arXiv\" data-canonical-src=\"https://img.shields.io/badge/arXiv-2108.09105-red.svg\"\
     \ style=\"max-width:100%;\"></a>\n<a href=\"https://eval.ai/web/challenges/challenge-page/97/leaderboard/270\"\
     \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/cb6009fa3ba3b5c590d659c03d727f85bdd941198648cf7c85e5e09b6910c9c7/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f5232522d2546302539462541352538372d677265656e2e737667\"\
     \ alt=\"R2R 1st\" data-canonical-src=\"https://img.shields.io/badge/R2R-%F0%9F%A5%87-green.svg\"\
@@ -21398,10 +21855,10 @@ airbert-vln/bnb-dataset:
     \ is building a TSV file with 4 columns: listing ID, photo ID, image URL, image\
     \ caption.\nA too high request rate would induce a rejection from Airbnb. Instead,\
     \ it is advised to split the job among different IP addresses.</p>\n<p>You can\
-    \ use the pre-computed TSV file used in our paper <a href=\"./data/bnb-train.tsv\"\
-    >for training</a> and <a href=\"./data/bnb-test.tsv\">for testing</a>.\nNote that\
-    \ this file contains only a portion from Airbnb listings, and some images might\
-    \ not be available anymore.</p>\n<h3>\n<a id=\"user-content-21-create-a-list-of-regions\"\
+    \ use the pre-computed TSV file used in our paper <a href=\"./data/airbnb-train-indoor-filtered.tsv\"\
+    >for training</a> and <a href=\"./data/airbnb-train-indoor-filtered.tsv\">for\
+    \ testing</a>.\nNote that this file contains only a portion from Airbnb listings,\
+    \ and some images might not be available anymore.</p>\n<h3>\n<a id=\"user-content-21-create-a-list-of-regions\"\
     \ class=\"anchor\" href=\"#21-create-a-list-of-regions\" aria-hidden=\"true\"\
     ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>2.1. Create\
     \ a list of regions</h3>\n<p>Airbnb listings are searched among a specific region.\n\
@@ -21478,6 +21935,8 @@ airbert-vln/bnb-dataset:
     \ help you with that.\nNote that this step is also extremely slow and you might\
     \ want to use multiple GPUs.</p>\n<div class=\"highlight highlight-source-shell\"\
     ><pre>python scripts/precompute_airbnb_img_features_with_butd.py  --images data/images</pre></div>\n\
+    <p>If this step is too difficult, open an issue and I'll try to use the <a href=\"\
+    https://github.com/MILVLG/bottom-up-attention.pytorch\">PyTorch version</a> instead.</p>\n\
     <h3>\n<a id=\"user-content-43-build-an-lmdb-file\" class=\"anchor\" href=\"#43-build-an-lmdb-file\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
     ></span></a>4.3. Build an LMDB file</h3>\n<div class=\"highlight highlight-source-shell\"\
@@ -21540,7 +21999,7 @@ airbert-vln/bnb-dataset:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1627653513.0
+  updated_at: 1629708046.0
 alestarbucks/ofappdl:
   data_format: 2
   description: null
@@ -21901,7 +22360,7 @@ arabnejad/FabSim4:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1628681132.0
+  updated_at: 1629389757.0
 arcsUVA/R:
   data_format: 2
   description: R containers
@@ -24639,6 +25098,76 @@ baxpr/naleg-roi:
   subscribers_count: 2
   topics: []
   updated_at: 1594830481.0
+baxpr/sct-fmri:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: baxpr/sct-fmri
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-sct-fmri-processing" class="anchor" href="#sct-fmri-processing"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>SCT
+    fMRI processing</h1>
+
+    <h2>
+
+    <a id="user-content-inputs" class="anchor" href="#inputs" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Inputs</h2>
+
+    <p>See <code>test_container.sh</code> for an example run command.</p>
+
+    <pre><code>--fmri_niigz     4D spinal cord fMRI, fully qualified path and filename
+
+    --masksize       Size of mask to create in mm
+
+    --label_info     Text to label the PDF, e.g. from XNAT project/subject
+
+    --out_dir        Outputs directory (and working directory)
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-pipeline" class="anchor" href="#pipeline" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Pipeline</h2>
+
+    <p>See <code>src/main.sh</code>.</p>
+
+    <h2>
+
+    <a id="user-content-outputs" class="anchor" href="#outputs" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Outputs</h2>
+
+    <pre><code>fmri0.nii.gz              First volume of fMRI
+
+
+    fmri_mask??.nii.gz        Created analysis mask
+
+
+    fmri_centerline.nii.gz    Cord centerline
+
+    fmri_centerline.csv
+
+
+    fmri_moco.nii.gz          Moco outputs
+
+    fmri_moco_mean.nii.gz
+
+    moco_params.tsv
+
+    moco_params_x.nii.gz
+
+    moco_params_y.nii.gz
+
+    </code></pre>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1629493665.0
 baxpr/segwarp:
   data_format: 2
   description: null
@@ -25338,11 +25867,13 @@ bmichanderson/singularity-containers:
   - Singularity.faststructure
   - Singularity.stacks
   - Singularity.kat
+  - Singularity.qiime
   - Singularity.quast
   - Singularity.gapfiller
   - Singularity.ipyrad
   - Singularity.unicycler
   - Singularity.trinity
+  - Singularity.yamp
   - Singularity.igv
   full_name: bmichanderson/singularity-containers
   latest_release: null
@@ -25360,7 +25891,7 @@ bmichanderson/singularity-containers:
   stargazers_count: 0
   subscribers_count: 0
   topics: []
-  updated_at: 1625130034.0
+  updated_at: 1629440171.0
 bobeobibo/phigaro:
   data_format: 2
   description: Phigaro is a scalable command-line tool for predicting phages and prophages
@@ -25789,7 +26320,26 @@ cfe-lab/MiCall:
   - python
   - resistance
   - genotype
-  updated_at: 1629225700.0
+  updated_at: 1629908390.0
+cgjosephlee/My_scripts:
+  data_format: 2
+  description: Simple scripts for analysis
+  filenames:
+  - Dockerfiles/guppy/Singularity.v5.0.11
+  full_name: cgjosephlee/My_scripts
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-my_scripts" class="anchor" href="#my_scripts" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>My_scripts</h1>
+
+    <p>Simple scripts for analysis</p>
+
+    '
+  stargazers_count: 1
+  subscribers_count: 1
+  topics: []
+  updated_at: 1630035243.0
 chaotic-aur/toolbox:
   data_format: 2
   description: Unified kit with all the scripts required for maintaining the repository.
@@ -26214,6 +26764,23 @@ chenhongluo/horovord:
   subscribers_count: 0
   topics: []
   updated_at: 1553181936.0
+cidgoh/nf-ncov-voc:
+  data_format: 2
+  description: nf-ncov-voc
+  filenames:
+  - environments/Singularity
+  full_name: cidgoh/nf-ncov-voc
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-nf-ncov-voc" class="anchor" href="#nf-ncov-voc" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>nf-ncov-voc</h1>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1629845783.0
 cjknight/singularity_test:
   data_format: 2
   description: null
@@ -28280,7 +28847,7 @@ darachm/containers:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1628113760.0
+  updated_at: 1630011420.0
 datalad/datalad:
   data_format: 2
   description: Keep code, data, containers under control with git  and git-annex
@@ -28593,14 +29160,14 @@ datalad/datalad:
     ><g-emoji class=\"g-emoji\" alias=\"computer\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f4bb.png\"\
     >\U0001F4BB</g-emoji></a>\n</td>\n  </tr>\n</table>\n\n\n\n"
   stargazers_count: 253
-  subscribers_count: 22
+  subscribers_count: 23
   topics:
   - python
   - git-annex
   - data-storage
   - dataset
   - usable
-  updated_at: 1629295655.0
+  updated_at: 1629937957.0
 davecwright3/bart-singularity:
   data_format: 2
   description: Bayesian Atmospheric Radiative Transfer (BART) packaged in a Singularity
@@ -28972,7 +29539,7 @@ dcgc-bfx/singularity-base:
   stargazers_count: 0
   subscribers_count: 4
   topics: []
-  updated_at: 1628684011.0
+  updated_at: 1629369469.0
 dcgc-bfx/singularity-base-conda:
   data_format: 2
   description: null
@@ -30983,7 +31550,7 @@ dt-np/raser:
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1629096176.0
+  updated_at: 1629992417.0
 duke-chsi-informatics/singularity-rnaseq:
   data_format: 2
   description: Singularity Image for RNA-Seq analysis
@@ -32626,6 +33193,94 @@ funkelab/funlib.run:
   subscribers_count: 4
   topics: []
   updated_at: 1594370552.0
+funkelab/linajea:
+  data_format: 2
+  description: null
+  filenames:
+  - singularity/Singularity
+  - singularity/pylp_base/Singularity
+  full_name: funkelab/linajea
+  latest_release: v1.3
+  readme: '<h1>
+
+    <a id="user-content-nextflow-pipeline-for-atac-seq-data" class="anchor" href="#nextflow-pipeline-for-atac-seq-data"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>NextFlow
+    pipeline for ATAC-seq data</h1>
+
+    <h2>
+
+    <a id="user-content-dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Dependencies</h2>
+
+    <p>If you have Singularity installed, you can use the config provided here (''Singularity'')
+    to build a container with all the dependencies.</p>
+
+    <p>Otherwise, you''ll need to have the following installed:</p>
+
+    <ol>
+
+    <li>cta</li>
+
+    <li>bedtools</li>
+
+    <li>bwa</li>
+
+    <li>picardtools</li>
+
+    <li>fastqc</li>
+
+    <li>samtools</li>
+
+    <li>ataqv</li>
+
+    </ol>
+
+    <p>This pipeline works with NextFlow versions &gt;= 20.07.1</p>
+
+    <h2>
+
+    <a id="user-content-configuration" class="anchor" href="#configuration" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h2>
+
+    <p>Paths to various generic files (e.g., bwa indices) must be included in the
+    nextflow.config file -- check that file and change paths accordingly. These include:</p>
+
+    <ol>
+
+    <li>Blacklist bed files for each genome</li>
+
+    <li>Chrom size files for each genome</li>
+
+    <li>BWA indices</li>
+
+    <li>TSS files (BED6 files denoting TSS positions)</li>
+
+    </ol>
+
+    <p>You''ll also need to set the params.results variable -- either in the nextflow.config
+    file itself, or on the command line when you run the pipeline (''--results /path/to/results'').</p>
+
+    <p>Lastly, you''ll need to include information about each ATAC-seq library, including
+    the genome that each library should be mapped to and the paths to the fastq files
+    for each readgroup. Organize this information in a JSON file, as in library-config.json.</p>
+
+    <h2>
+
+    <a id="user-content-running" class="anchor" href="#running" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Running</h2>
+
+    <p>Once you have all of the above information, you can run the pipeline as follows
+    (in this case, indicating the path to the results on the command line):</p>
+
+    <div class="highlight highlight-source-shell"><pre>nextflow run -with-singularity
+    /path/to/Singularity.simg -with-trace -with-report -with-dag -with-timeline -params-file
+    library-config.json --results /path/to/results /path/to/main.nf</pre></div>
+
+    '
+  stargazers_count: 1
+  subscribers_count: 7
+  topics: []
+  updated_at: 1629481574.0
 funkelab/lsd:
   data_format: 2
   description: "\U0001F308"
@@ -34612,6 +35267,7 @@ gpuhackathons-org/gpubootcamp:
   filenames:
   - hpc/nways/Singularity_python
   - hpc/nways/Singularity
+  - hpc/multi_gpu_nways/Singularity
   - hpc/openacc/Singularity
   - hpc/miniprofiler/Singularity
   - hpc_ai/ai_science_climate/Singularity
@@ -34680,10 +35336,10 @@ gpuhackathons-org/gpubootcamp:
 
     <td><a href="https://github.com/gpuhackathons-org/gpubootcamp/tree/master/hpc/nways">N-Ways</a></td>
 
-    <td>This lab will cover multiple GPU programming models and choose the one that
-    best fits your needs. The material supports different programming langauges including
-    C ( CUDA C, OpenACC C, OpenMP C, C++ stdpar ),  Fortran ( CUDA Fortran, OpenACC
-    Fortran, OpenMP Fortran, ISO DO CONCURRENT ) Python ( Numba, CuPy )</td>
+    <td>This Bootcamp will cover multiple GPU programming models and choose the one
+    that best fits your needs. The material supports different programming langauges
+    including C ( CUDA C, OpenACC C, OpenMP C, C++ stdpar ),  Fortran ( CUDA Fortran,
+    OpenACC Fortran, OpenMP Fortran, ISO DO CONCURRENT ) Python ( Numba, CuPy )</td>
 
     </tr>
 
@@ -34691,9 +35347,21 @@ gpuhackathons-org/gpubootcamp:
 
     <td><a href="https://github.com/gpuhackathons-org/gpubootcamp/tree/master/hpc/openacc">OpenACC</a></td>
 
-    <td>The lab will cover how to write portable parallel program that can run on
-    multicore CPUs and accelerators like GPUs and how to apply incremental parallelization
+    <td>The Bootcamp will cover how to write portable parallel program that can run
+    on multicore CPUs and accelerators like GPUs and how to apply incremental parallelization
     strategies using OpenACC</td>
+
+    </tr>
+
+    <tr>
+
+    <td><a href="https://github.com/gpuhackathons-org/gpubootcamp/tree/master/hpc/multi_gpu_nways">Multi
+    GPU Programming Model</a></td>
+
+    <td>This bootcamp will cover scaling applications to multiple GPUs across multiple
+    nodes. Moreover, understanding of the underlying technologies and communication
+    topology will help us utilize high-performance NVIDIA libraries to extract more
+    performance out of the system</td>
 
     </tr>
 
@@ -34815,6 +35483,17 @@ gpuhackathons-org/gpubootcamp:
 
     </tr>
 
+    <tr>
+
+    <td><a href="https://github.com/gpuhackathons-org/gpubootcamp/tree/master/ai/Distributed_Deep_Learning">Distributed
+    Deep Learning</a></td>
+
+    <td>This bootcamp will introduce participants to fundamentals of Distributed deep
+    learning and give a hands-on experience on methods that can be applied to Deep
+    learning models for faster model training</td>
+
+    </tr>
+
     </tbody>
 
     </table>
@@ -34881,7 +35560,7 @@ gpuhackathons-org/gpubootcamp:
     rel="nofollow">OpenACC Slack Channel</a>.</p>
 
     '
-  stargazers_count: 89
+  stargazers_count: 91
   subscribers_count: 8
   topics:
   - machine-learning
@@ -34896,7 +35575,7 @@ gpuhackathons-org/gpubootcamp:
   - rapidsai
   - openmp
   - ai4hpc
-  updated_at: 1629409519.0
+  updated_at: 1629928412.0
 granek/jupyter-MIC-2021:
   data_format: 2
   description: null
@@ -36434,7 +37113,7 @@ hmgu-itg/peakplotter:
   filenames:
   - Singularity
   full_name: hmgu-itg/peakplotter
-  latest_release: v0.4.0
+  latest_release: v0.4.1
   readme: "<h1>\n<a id=\"user-content-peakplotter--automatically-annotate-hits-from-genome-wide-association-results\"\
     \ class=\"anchor\" href=\"#peakplotter--automatically-annotate-hits-from-genome-wide-association-results\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
@@ -36521,7 +37200,7 @@ hmgu-itg/peakplotter:
   stargazers_count: 2
   subscribers_count: 2
   topics: []
-  updated_at: 1628681971.0
+  updated_at: 1630042515.0
 housw/BlendIt:
   data_format: 2
   description: null
@@ -36920,9 +37599,8 @@ huynhngoc/head-neck-analysis:
 
     <p>To continue an experiment</p>
 
-    <pre><code>sbatch slurm_cont.sh config/3d_vnet_32_normalize/model/model.030.h5
-    3d_vnet_32_normalize 100 --model_checkpoint_period 5 --prediction_checkpoint_period
-    5
+    <pre><code>sbatch slurm_cont.sh model.030.h5 3d_vnet_32_normalize 100 --model_checkpoint_period
+    5 --prediction_checkpoint_period 5
 
     </code></pre>
 
@@ -36934,7 +37612,13 @@ huynhngoc/head-neck-analysis:
 
     <p>To run test</p>
 
-    <pre><code>sbatch slurm_test.sh 3d_vnet_32/model/model.030.h5 3d_vnet_32
+    <pre><code>sbatch slurm_test.sh 3d_vnet_32
+
+    </code></pre>
+
+    <p>or</p>
+
+    <pre><code>sbatch slurm_test.sh 3d_vnet_32 --best_epoch &lt;BEST_EPOCH_NUMBER&gt;
 
     </code></pre>
 
@@ -36962,7 +37646,7 @@ huynhngoc/head-neck-analysis:
   stargazers_count: 1
   subscribers_count: 1
   topics: []
-  updated_at: 1627632144.0
+  updated_at: 1629888198.0
 ianjamesx/DeepCAM_Singularity:
   data_format: 2
   description: Experimental Singularity container for MLCommons DeepCAM Climate Segmentation
@@ -39917,7 +40601,7 @@ josephwkania/radio_transients:
     \ built on a E5 v3 family machine and uploaded to Sylabs Cloud at\n<a href=\"\
     https://cloud.sylabs.io/library/josephwkania/radio_transients/radio_transients\"\
     \ rel=\"nofollow\">https://cloud.sylabs.io/library/josephwkania/radio_transients/radio_transients</a>\n\
-    They where last built on 21-Jun-2021</p>\n<p>If your processor your processor\
+    They where last built on 26-Aug-2021</p>\n<p>If your processor your processor\
     \ is significantly older than this, you may run into problems with\nthe older\
     \ processor not having the whole instruction set needed. In this case, you should\
     \ build\nuse singularity to build the image locally.</p>\n<p>An archival version\
@@ -39940,7 +40624,7 @@ josephwkania/radio_transients:
   - fast-radio-bursts
   - psrdada
   - radio-astronomy
-  updated_at: 1624333236.0
+  updated_at: 1630022942.0
 jstutters/nicpython36:
   data_format: 2
   description: modified version of nicMSlesions
@@ -40919,6 +41603,7 @@ khanlab/tar2bids:
   data_format: 2
   description: null
   filenames:
+  - Singularity.v0.0.6a
   - Singularity.v0.0.5d
   - Singularity.v0.05a
   - Singularity.v0.0.3a
@@ -40951,7 +41636,7 @@ khanlab/tar2bids:
   - Singularity.0.0.2g
   - Singularity.v0.0.3
   full_name: khanlab/tar2bids
-  latest_release: v0.0.6
+  latest_release: v0.0.6a
   readme: "<h1>\n<a id=\"user-content-tar2bids\" class=\"anchor\" href=\"#tar2bids\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
     ></span></a>tar2bids</h1>\n<pre><code>Runs dicom tarball(s) to BIDS conversion\
@@ -40969,7 +41654,7 @@ khanlab/tar2bids:
   stargazers_count: 4
   subscribers_count: 2
   topics: []
-  updated_at: 1629256082.0
+  updated_at: 1629601700.0
 klm122/w2l:
   data_format: 2
   description: w2l
@@ -40990,6 +41675,79 @@ klm122/w2l:
   subscribers_count: 1
   topics: []
   updated_at: 1583870496.0
+lakinsm/bear-wgs:
+  data_format: 2
+  description: USDA ARS BEARRU Whole Genome Sequencing Workflow
+  filenames:
+  - containers/Singularity
+  full_name: lakinsm/bear-wgs
+  latest_release: null
+  readme: '<h2>
+
+    <a id="user-content-overview" class="anchor" href="#overview" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Overview</h2>
+
+    <p><a href="https://opensource.org/licenses/MIT" rel="nofollow"><img src="https://camo.githubusercontent.com/78f47a09877ba9d28da1887a93e5c3bc2efb309c1e910eb21135becd2998238a/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d79656c6c6f772e737667"
+    alt="License: MIT" data-canonical-src="https://img.shields.io/badge/License-MIT-yellow.svg"
+    style="max-width:100%;"></a>
+
+    <a href="https://www.nextflow.io/" rel="nofollow"><img src="https://camo.githubusercontent.com/6b7af09ab5d3e54feb3acda4c7b70aef9718f2928a49a50c92ea6ce95e96b2f7/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4e657874666c6f772d254532253839254135302e32352e312d627269676874677265656e2e737667"
+    alt="Nextflow" data-canonical-src="https://img.shields.io/badge/Nextflow-%E2%89%A50.25.1-brightgreen.svg"
+    style="max-width:100%;"></a>
+
+    <a href="https://singularity-hub.org/collections/706" rel="nofollow"><img src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
+    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    style="max-width:100%;"></a></p>
+
+    <p>Whole genome sequencing for the characterization of bacterial genomes presents
+    several bioinformatics challenges.  Primary outcomes include determining sequencing
+    read quality, performing alignment and de novo assembly of the bacterial genome,
+    annotating the processed genomes, and discovering genomic features of interest.  Due
+    to the specificity of genetic elements within each bacterial genus, separate workflows
+    must be utilized for each bacterial species of interest.  This Nextflow pipeline
+    aims to characterize bacteria of interest to food safety in poultry broiler production
+    systems, specifically Salmonella enterica Heidelberg, Enterococcus faecalis, and
+    their respective plasmids.  Alignment, de novo assembly, and marker-based detection
+    of genetic elements of interest are included in the pipeline, and a variety of
+    custom databases have been created to aid in the annotation of the resulting genomic
+    sequences.  For more information, explore the pipeline through the links below.</p>
+
+    <h2>
+
+    <a id="user-content-more-information" class="anchor" href="#more-information"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>More
+    Information</h2>
+
+    <ul>
+
+    <li><a href="https://github.com/lakinsm/bear-wgs/blob/master/docs/requirements.md">Software
+    Requirements</a></li>
+
+    <li><a href="https://github.com/lakinsm/bear-wgs/blob/master/docs/process.md">Process
+    Overview</a></li>
+
+    <li><a href="https://github.com/lakinsm/bear-wgs/blob/master/docs/installation.md">Installation</a></li>
+
+    <li><a href="https://github.com/lakinsm/bear-wgs/blob/master/docs/usage.md">Usage</a></li>
+
+    <li><a href="https://github.com/lakinsm/bear-wgs/blob/master/docs/configuration.md">Configuration</a></li>
+
+    <li><a href="https://github.com/lakinsm/bear-wgs/blob/master/docs/output.md">Output</a></li>
+
+    <li><a href="https://github.com/lakinsm/bear-wgs/blob/master/docs/dependencies.md">Dependencies</a></li>
+
+    <li><a href="https://github.com/lakinsm/bear-wgs/blob/master/docs/contact.md">Contact</a></li>
+
+    <li><a href="https://github.com/lakinsm/bear-wgs/blob/master/docs/acknowledgements.md">Acknowledgements</a></li>
+
+    </ul>
+
+    '
+  stargazers_count: 2
+  subscribers_count: 1
+  topics: []
+  updated_at: 1561739100.0
 lamps24/neural_network_project:
   data_format: 2
   description: null
@@ -41408,6 +42166,96 @@ lhutton1/ga-dqn-tuner:
   subscribers_count: 2
   topics: []
   updated_at: 1628544168.0
+liluacrobat/Shotgun_inStrain:
+  data_format: 2
+  description: null
+  filenames:
+  - singularity/Singularity.example_recipe
+  - singularity/Singularity.align
+  - singularity/Singularity.plotting
+  full_name: liluacrobat/Shotgun_inStrain
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-bhattlab-workflows" class="anchor" href="#bhattlab-workflows"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Bhattlab
+    workflows</h1>
+
+    <p>Computational workflows for metagenomics tasks, packaged with Snakemake, Singularity
+    and Conda.</p>
+
+    <h3>
+
+    <a id="user-content-table-of-contents" class="anchor" href="#table-of-contents"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Table
+    of contents</h3>
+
+    <ol>
+
+    <li><a href="manual/setup.md">Setup</a></li>
+
+    <li><a href="manual/running.md">Running a workflow</a></li>
+
+    <li>Available workflows
+
+    <ul>
+
+    <li><a href="manual/preprocessing.md"><strong>Preprocessing</strong> metagenomic
+    data</a></li>
+
+    <li><a href="manual/assembly.md">Metagenomic <strong>Assembly</strong></a></li>
+
+    <li><a href="manual/binning.md">Metagenomic <strong>Binning</strong></a></li>
+
+    <li><a href="manual/dRep.md"><strong>DeReplication</strong> of binned genomes</a></li>
+
+    <li><a href="manual/inStrain.md"><strong>inStrain</strong> strain-diversity aware
+    comparison of samples</a></li>
+
+    <li><a href="https://github.com/bhattlab/kraken2_classification">Metagenomic classification
+    with <strong>Kraken2</strong></a></li>
+
+    <li><a href="manual/sourmash.md"><strong>Sourmash</strong> read comparison</a></li>
+
+    <li><a href="manual/download_sra.md"><strong>Download SRA</strong> data</a></li>
+
+    <li><a href="manual/arg.md"><strong>ARG detection</strong> with RGI</a></li>
+
+    <li><a href="manual/viral.md"><strong>Viral</strong> contig prediction</a></li>
+
+    <li><a href="manual/comparative_genomics.md">Comparative microbial genomics pipelines</a></li>
+
+    </ul>
+
+    </li>
+
+    </ol>
+
+    <h3>
+
+    <a id="user-content-quickstart" class="anchor" href="#quickstart" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Quickstart</h3>
+
+    <p>If you''re in the Bhatt lab and working on SCG, this command is an example
+    of how to run the workflows. Other users will need to change these options (see
+    <a href="manual/running.md">Running a workflow</a>)</p>
+
+    <pre><code>snakemake --configfile config_preprocessing.yaml \
+
+    --snakefile ~/projects/bhattlab_workflows/preprocessing/preprocessing.snakefile
+    \
+
+    --profile scg --jobs 100 --use-singularity \
+
+    --singularity-args ''--bind /labs/,/oak/,/home/''
+
+    </code></pre>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1629397031.0
 lkirk/nb-env:
   data_format: 2
   description: null
@@ -42267,7 +43115,7 @@ matmu/vep:
   updated_at: 1614861605.0
 matt-sd-watson/nextflow_for_bioinformatics:
   data_format: 2
-  description: Nextflow pipelines for routine bioinformatics analyses
+  description: Nextflow pipelines for a variety of bioinformatics outputs
   filenames:
   - nextstrain/environments/Singularity
   full_name: matt-sd-watson/nextflow_for_bioinformatics
@@ -42279,11 +43127,29 @@ matt-sd-watson/nextflow_for_bioinformatics:
 
     <p>Nextflow pipelines for routine bioinformatics analyses</p>
 
+    <h2>
+
+    <a id="user-content-nextstrain" class="anchor" href="#nextstrain" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>nextstrain</h2>
+
+    <p>The nextstrain workflow is the most up-to-date and maintained pipeline in this
+    repo. It can be used to generate a serie sof parallel nextstrain builds or for
+    parameter testing. A specific README for this pipeline is provided in the named
+    directory.</p>
+
+    <h2>
+
+    <a id="user-content-rna-seq-and-tree_annotation" class="anchor" href="#rna-seq-and-tree_annotation"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>rna-seq
+    and tree_annotation</h2>
+
+    <p>In development.</p>
+
     '
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1627503736.0
+  updated_at: 1629726178.0
 mattocci27/r-containers:
   data_format: 2
   description: docker and singularity containers for R
@@ -44100,10 +44966,10 @@ mkandes/naked-singularity:
     <p>Wednesday, August 18th, 2021</p>
 
     '
-  stargazers_count: 34
+  stargazers_count: 35
   subscribers_count: 2
   topics: []
-  updated_at: 1629344816.0
+  updated_at: 1629765072.0
 ml4ai/UA-hpc-containers:
   data_format: 2
   description: Container recipes for use with the U of A HPC resources
@@ -44506,7 +45372,7 @@ mwanakijiji/rrlyrae_metallicity:
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1629236729.0
+  updated_at: 1629754697.0
 nbcrrolls/electrostatics-singularity:
   data_format: 2
   description: Molecular electrostatics singularity image
@@ -45298,10 +46164,10 @@ nservant/HiC-Pro:
     Logs: logs/dixon_2M/ice_1000000.log\nLogs: logs/dixon_2M_2/ice_500000.log\nLogs:\
     \ logs/dixon_2M_2/ice_1000000.log\n\nreal\t2m15,736s\nuser\t4m3,277s\nsys\t0m24,423s\n\
     \n</code></pre>\n"
-  stargazers_count: 247
+  stargazers_count: 248
   subscribers_count: 20
   topics: []
-  updated_at: 1628760876.0
+  updated_at: 1629789106.0
 nuKs/preprocessing:
   data_format: 2
   description: null
@@ -46466,431 +47332,135 @@ perllb/ctg-sc-atac-10x:
   - container/Singularity_sc-atac-10x-builder
   full_name: perllb/ctg-sc-atac-10x
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-ctg-sc-atac-10x" class="anchor" href="#ctg-sc-atac-10x" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>ctg-sc-atac-10x</h1>
-
-    <h2>
-
-    <a id="user-content-nextflow-pipeline-for-preprocessing-of-10x-chromium-sc-atac-data-with-cellranger"
-    class="anchor" href="#nextflow-pipeline-for-preprocessing-of-10x-chromium-sc-atac-data-with-cellranger"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Nextflow
-    pipeline for preprocessing of 10x chromium sc-ATAC data with cellranger.</h2>
-
-    <ul>
-
-    <li>Designed to handle multiple projects in one sequencing run (but also works
-    with only one project)</li>
-
-    <li>Supports mm10 and hg38 references, but can also be run with custom reference
-    genome and annotation (must be added via nextflow.config). See custom genome below.</li>
-
-    <li>Supports nuclei samples</li>
-
-    </ul>
-
-    <h2>
-
-    <a id="user-content-dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Dependencies</h2>
-
-    <ul>
-
-    <li>nextflow version 19.04.1.5072</li>
-
-    <li>Singularity (v 3.7.0-1.el7)</li>
-
-    <li>java (openjdk version "10.0.2" 2018-07-17)</li>
-
-    <li>OpenJDK Runtime Environment Zulu10.3+5 (build 10.0.2+13)</li>
-
-    <li>OpenJDK 64-Bit Server VM Zulu10.3+5 (build 10.0.2+13, mixed mode)</li>
-
-    <li>Singularity container (<a href="https://github.com/perllb/ctg-sc-atac-10x/blob/main/container/Singularity_sc-atac-10x-builder">https://github.com/perllb/ctg-sc-atac-10x/blob/main/container/Singularity_sc-atac-10x-builder</a>)</li>
-
-    <li>Cellranger 10x ATAC or ARC references (e.g. refdata-cellranger-arc-GRCh38-2020-A-2.0.0
-    and refdata-cellranger-arc-mm10-2020-A-2.0.0)</li>
-
-    </ul>
-
-    <h2>
-
-    <a id="user-content-usage" class="anchor" href="#usage" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>USAGE</h2>
-
-    <ol>
-
-    <li>Clone and build the Singularity container for this pipeline: <a href="https://github.com/perllb/ctg-sc-atac-10x/tree/master/container/ctg-sc-atac-10x">https://github.com/perllb/ctg-sc-atac-10x/tree/master/container/ctg-sc-atac-10x</a>
-
-    </li>
-
-    <li>Edit your samplesheet to match the example samplesheet. See section <code>SampleSheet</code>
-    below</li>
-
-    <li>Edit the nextflow.config file to fit your project and system.</li>
-
-    <li>Run pipeline</li>
-
-    </ol>
-
-    <pre><code>nohup nextflow run pipe-sc-atac-10x.nf &gt; log.pipe-sc-atac-10x.txt
-    &amp;
-
-    </code></pre>
-
-    <h2>
-
-    <a id="user-content-input" class="anchor" href="#input" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Input</h2>
-
-    <ul>
-
-    <li>Samplesheet (see <code>SampleSheet</code> section below)</li>
-
-    </ul>
-
-    <h3>
-
-    <a id="user-content-pipeline-steps" class="anchor" href="#pipeline-steps" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Pipeline steps:</h3>
-
-    <p>Cellranger version: cellranger atac v2.0.0</p>
-
-    <ul>
-
-    <li>
-
-    <code>Demultiplexing</code> (cellranger mkfastq): Converts raw basecalls to fastq,
-    and demultiplex samples based on index (<a href="https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/mkfastq"
-    rel="nofollow">https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/mkfastq</a>).</li>
-
-    <li>
-
-    <code>FastQC</code>: FastQC calculates quality metrics on raw sequencing reads
-    (<a href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/" rel="nofollow">https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a>).
-    MultiQC summarizes FastQC reports into one document (<a href="https://multiqc.info/"
-    rel="nofollow">https://multiqc.info/</a>).</li>
-
-    <li>
-
-    <code>Align</code> + <code>Counts</code> (cellranger count): Aligns fastq files
-    to reference genome, counts genes for each cell/barcode, perform secondary analysis
-    such as clustering and generates the cloupe files (<a href="https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/count"
-    rel="nofollow">https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/count</a>).</li>
-
-    <li>
-
-    <code>Aggregation</code> (cellranger aggr): Automatically creates the input csv
-    pointing to molecule_info.h5 files for each sample to be aggregated and executes
-    aggregation (<a href="https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/aggr"
-    rel="nofollow">https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/aggr</a>).
-    This is only run if there is more than one sample pr project.</li>
-
-    <li>
-
-    <code>Cellranger count metrics</code> (bin/ctg-sc-count-metrics-concat.py): Collects
-    main count metrics (#cells and #reads/cell etc.) from each sample and collect
-    in table</li>
-
-    <li>
-
-    <code>multiQC</code>: Compile fastQC and cellranger count metrics in multiqc report</li>
-
-    <li>
-
-    <code>md5sum</code>: md5sum of all generated files</li>
-
-    </ul>
-
-    <h3>
-
-    <a id="user-content-output" class="anchor" href="#output" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Output:</h3>
-
-    <ul>
-
-    <li>ctg-PROJ_ID-output
-
-    <ul>
-
-    <li>
-
-    <code>qc</code>: Quality control output.
-
-    <ul>
-
-    <li>cellranger metrics: Main metrics summarising the count / cell output</li>
-
-    <li>fastqc output (<a href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/"
-    rel="nofollow">https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a>)</li>
-
-    <li>multiqc output: Summarizing FastQC output and demultiplexing (<a href="https://multiqc.info/"
-    rel="nofollow">https://multiqc.info/</a>)</li>
-
-    </ul>
-
-    </li>
-
-    <li>
-
-    <code>fastq</code>: Contains raw fastq files from cellranger mkfastq.</li>
-
-    <li>
-
-    <code>count-cr</code>: Cellranger count output. Here you find gene/cell count
-    matrices, secondary analysis output, and more. See (<a href="https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/count"
-    rel="nofollow">https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/count</a>)
-    for more information on the output files.</li>
-
-    <li>
-
-    <code>summaries</code>:
-
-    <ul>
-
-    <li>web-summary files which provide an overview of essential metrics from the
-    10x run.</li>
-
-    <li>cloupe files which can be used to explore the data interactively in the Loupe
-    browser (<a href="https://support.10xgenomics.com/single-cell-atac/software/visualization/latest/what-is-loupe-cell-browser"
-    rel="nofollow">https://support.10xgenomics.com/single-cell-atac/software/visualization/latest/what-is-loupe-cell-browser</a>)</li>
-
-    </ul>
-
-    </li>
-
-    <li>
-
-    <code>aggregate</code>:
-
-    <ul>
-
-    <li>Output from cellranger aggregation. This is only run if there is more than
-    one sample pr project.</li>
-
-    </ul>
-
-    </li>
-
-    <li>
-
-    <code>ctg-md5.PROJ_ID.txt</code>: text file with md5sum recursively from output
-    dir root</li>
-
-    </ul>
-
-    </li>
-
-    </ul>
-
-    <h3>
-
-    <a id="user-content-samplesheet-requirements" class="anchor" href="#samplesheet-requirements"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Samplesheet
-    requirements:</h3>
-
-    <p>Note: no header! only the rows shown below, starting with the column names.</p>
-
-    <table>
-
-    <thead>
-
-    <tr>
-
-    <th>Sample_ID</th>
-
-    <th>Sample_Name</th>
-
-    <th>index</th>
-
-    <th>Sample_Project</th>
-
-    <th>Sample_Species</th>
-
-    </tr>
-
-    </thead>
-
-    <tbody>
-
-    <tr>
-
-    <td>Si1</td>
-
-    <td>Sn1</td>
-
-    <td>SI-GA-D9</td>
-
-    <td>proj_2021_012</td>
-
-    <td>human</td>
-
-    </tr>
-
-    <tr>
-
-    <td>Si2</td>
-
-    <td>Sn2</td>
-
-    <td>SI-GA-H9</td>
-
-    <td>proj_2021_012</td>
-
-    <td>human</td>
-
-    </tr>
-
-    <tr>
-
-    <td>Sample1</td>
-
-    <td>S1</td>
-
-    <td>SI-GA-C9</td>
-
-    <td>proj_2021_013</td>
-
-    <td>mouse</td>
-
-    </tr>
-
-    <tr>
-
-    <td>Sample2</td>
-
-    <td>S23</td>
-
-    <td>SI-GA-C9</td>
-
-    <td>proj_2021_013</td>
-
-    <td>mouse</td>
-
-    </tr>
-
-    </tbody>
-
-    </table>
-
-    <pre><code>
-
-    The nf-pipeline takes the following Columns from samplesheet to use in channels:
-
-
-    - `Sample_ID` (''Sample_Name'' will be ignored)
-
-    - `Index` (Must use index ID!)
-
-    - `Sample_Project` (Project ID)
-
-    - `Sample_Species` (human/mouse/custom - if custom, see below how to edit the
-    config file)
-
-
-    </code></pre>
-
-    <h3>
-
-    <a id="user-content-container" class="anchor" href="#container" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Container</h3>
-
-    <h3>
-
-    <a id="user-content-custom-genome" class="anchor" href="#custom-genome" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Custom genome</h3>
-
-    <p>If custom genome (not hg38 or mm10) is used</p>
-
-    <ol>
-
-    <li>Set "Sample_Species" column to ''custom'' in samplesheet:</li>
-
-    </ol>
-
-    <p>Example:</p>
-
-    <table>
-
-    <thead>
-
-    <tr>
-
-    <th>Sample_ID</th>
-
-    <th>Sample_Name</th>
-
-    <th>index</th>
-
-    <th>Sample_Project</th>
-
-    <th>Sample_Species</th>
-
-    </tr>
-
-    </thead>
-
-    <tbody>
-
-    <tr>
-
-    <td>Si1</td>
-
-    <td>Sn1</td>
-
-    <td>SI-GA-D9</td>
-
-    <td>proj_2021_012</td>
-
-    <td><strong>custom</strong></td>
-
-    </tr>
-
-    <tr>
-
-    <td>Si2</td>
-
-    <td>Sn2</td>
-
-    <td>SI-GA-H9</td>
-
-    <td>proj_2021_012</td>
-
-    <td><strong>custom</strong></td>
-
-    </tr>
-
-    </tbody>
-
-    </table>
-
-    <ol start="2">
-
-    <li>In nextflow.config, set
-
-    <code>custom_genome=/PATH/TO/CUSTOMGENOME</code>
-
-    </li>
-
-    </ol>
-
-    <h3>
-
-    <a id="user-content-add-custom-genes-eg-reporters-to-cellranger-annotation" class="anchor"
-    href="#add-custom-genes-eg-reporters-to-cellranger-annotation" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Add custom genes (e.g.
-    reporters) to cellranger annotation</h3>
-
-    <p>You can use this script to add custom genes to the cellranger ref
-
-    <a href="https://github.com/perllb/ctg-cellranger-add2ref">https://github.com/perllb/ctg-cellranger-add2ref</a></p>
-
-    '
+  readme: "<h1>\n<a id=\"user-content-ctg-sc-atac-10x\" class=\"anchor\" href=\"#ctg-sc-atac-10x\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>ctg-sc-atac-10x</h1>\n<h2>\n<a id=\"user-content-nextflow-pipeline-for-preprocessing-of-10x-chromium-sc-atac-data-with-cellranger\"\
+    \ class=\"anchor\" href=\"#nextflow-pipeline-for-preprocessing-of-10x-chromium-sc-atac-data-with-cellranger\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Nextflow pipeline for preprocessing of 10x chromium sc-ATAC data with\
+    \ cellranger.</h2>\n<ul>\n<li>Designed to handle multiple projects in one sequencing\
+    \ run (but also works with only one project)</li>\n<li>Supports mm10 and hg38\
+    \ references, but can also be run with custom reference genome and annotation\
+    \ (must be added via nextflow.config). See custom genome below.</li>\n<li>Supports\
+    \ nuclei samples</li>\n</ul>\n<h2>\n<a id=\"user-content-usage\" class=\"anchor\"\
+    \ href=\"#usage\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>USAGE</h2>\n<ol>\n<li>Clone and build the Singularity\
+    \ container for this pipeline: <a href=\"https://github.com/perllb/ctg-sc-atac-10x/tree/master/container/ctg-sc-atac-10x\"\
+    >https://github.com/perllb/ctg-sc-atac-10x/tree/master/container/ctg-sc-atac-10x</a>\n\
+    </li>\n<li>Edit your samplesheet to match the example samplesheet. See section\
+    \ <code>SampleSheet</code> below</li>\n<li>Edit the nextflow.config file to fit\
+    \ your project and system.</li>\n<li>Run pipeline</li>\n</ol>\n<pre><code>nohup\
+    \ nextflow run pipe-sc-atac-10x.nf &gt; log.pipe-sc-atac-10x.txt &amp;\n</code></pre>\n\
+    <h2>\n<a id=\"user-content-input-files\" class=\"anchor\" href=\"#input-files\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Input files</h2>\n<p>The following files must be in the runfolder\
+    \ to start pipeline successfully.</p>\n<ol>\n<li>Samplesheet  (<code>CTG_SampleSheet.sc-atac-10x.csv</code>)</li>\n\
+    </ol>\n<h3>\n<a id=\"user-content-samplesheet-requirements\" class=\"anchor\"\
+    \ href=\"#samplesheet-requirements\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Samplesheet requirements:</h3>\n\
+    <p>Note: no header! only the rows shown below, starting with the column names.\n\
+    Note: Must be in comma-separated values format (.csv)</p>\n<table>\n<thead>\n\
+    <tr>\n<th>Sample_ID</th>\n<th>index</th>\n<th>Sample_Project</th>\n<th>Sample_Species</th>\n\
+    </tr>\n</thead>\n<tbody>\n<tr>\n<td>Si1</td>\n<td>SI-GA-D9</td>\n<td>2021_012</td>\n\
+    <td>human</td>\n</tr>\n<tr>\n<td>Si2</td>\n<td>SI-GA-H9</td>\n<td>2021_012</td>\n\
+    <td>human</td>\n</tr>\n<tr>\n<td>Sample1</td>\n<td>SI-GA-C9</td>\n<td>2021_013</td>\n\
+    <td>mouse</td>\n</tr>\n<tr>\n<td>Sample2</td>\n<td>SI-GA-C9</td>\n<td>2021_013</td>\n\
+    <td>mouse</td>\n</tr>\n</tbody>\n</table>\n<h4>\n<a id=\"user-content-the-nf-pipeline-takes-the-following-columns-from-samplesheet-to-use-in-channels\"\
+    \ class=\"anchor\" href=\"#the-nf-pipeline-takes-the-following-columns-from-samplesheet-to-use-in-channels\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>The nf-pipeline takes the following Columns from samplesheet to use\
+    \ in channels:</h4>\n<ul>\n<li>\n<code>Sample_ID</code> : ID of sample. Sample_ID\
+    \ can only contain a-z, A-Z and \"_\".  E.g space and hyphen (\"-\") are not allowed!\
+    \ If 'Sample_Name' is present, it will be ignored.</li>\n<li>\n<code>index</code>\
+    \ : Must use index ID (10x ID) if dual index. For single index, the index sequence\
+    \ works too.</li>\n<li>\n<code>Sample_Project</code> : Project ID. E.g. 2021_033,\
+    \ 2021_192.</li>\n<li>\n<code>Sample_Species</code> : Only 'human'/'mouse'/'custom'\
+    \ are accepted. If species is not human or mouse, set 'custom'. This custom reference\
+    \ genome has to be specified in the nextflow config file. See below how to edit\
+    \ the config file.</li>\n</ul>\n<h3>\n<a id=\"user-content-samplesheet-template\"\
+    \ class=\"anchor\" href=\"#samplesheet-template\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Samplesheet template</h3>\n<ul>\n\
+    <li>Samplesheet name <code>CTG_SampleSheet.sc-atac-10x.csv</code>\n</li>\n</ul>\n\
+    <pre><code>Sample_ID,index,Sample_Project,Sample_Species \nSi1,Sn1,SI-GA-D9,2021_012,human\
+    \ \nSi2,Sn2,SI-GA-H9,2021_012,human \nSample1,S1,SI-GA-C9,2021_013,mouse \nSample2,S23,SI-GA-C9,2021_013,mouse\n\
+    </code></pre>\n<h2>\n<a id=\"user-content-pipeline-steps\" class=\"anchor\" href=\"\
+    #pipeline-steps\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>Pipeline steps:</h2>\n<p>Cellranger version: cellranger\
+    \ atac v2.0.0</p>\n<ul>\n<li>\n<code>Demultiplexing</code> (cellranger mkfastq):\
+    \ Converts raw basecalls to fastq, and demultiplex samples based on index (<a\
+    \ href=\"https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/mkfastq\"\
+    \ rel=\"nofollow\">https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/mkfastq</a>).</li>\n\
+    <li>\n<code>FastQC</code>: FastQC calculates quality metrics on raw sequencing\
+    \ reads (<a href=\"https://www.bioinformatics.babraham.ac.uk/projects/fastqc/\"\
+    \ rel=\"nofollow\">https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a>).\
+    \ MultiQC summarizes FastQC reports into one document (<a href=\"https://multiqc.info/\"\
+    \ rel=\"nofollow\">https://multiqc.info/</a>).</li>\n<li>\n<code>Align</code>\
+    \ + <code>Counts</code> (cellranger count): Aligns fastq files to reference genome,\
+    \ counts genes for each cell/barcode, perform secondary analysis such as clustering\
+    \ and generates the cloupe files (<a href=\"https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/count\"\
+    \ rel=\"nofollow\">https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/count</a>).</li>\n\
+    <li>\n<code>Aggregation</code> (cellranger aggr): Automatically creates the input\
+    \ csv pointing to molecule_info.h5 files for each sample to be aggregated and\
+    \ executes aggregation (<a href=\"https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/aggr\"\
+    \ rel=\"nofollow\">https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/aggr</a>).\
+    \ This is only run if there is more than one sample pr project.</li>\n<li>\n<code>Cellranger\
+    \ count metrics</code> (bin/ctg-sc-count-metrics-concat.py): Collects main count\
+    \ metrics (#cells and #reads/cell etc.) from each sample and collect in table</li>\n\
+    <li>\n<code>multiQC</code>: Compile fastQC and cellranger count metrics in multiqc\
+    \ report</li>\n<li>\n<code>md5sum</code>: md5sum of all generated files</li>\n\
+    </ul>\n<h2>\n<a id=\"user-content-output\" class=\"anchor\" href=\"#output\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Output:</h2>\n\
+    <ul>\n<li>ctg-PROJ_ID-output\n<ul>\n<li>\n<code>qc</code>: Quality control output.\n\
+    <ul>\n<li>cellranger metrics: Main metrics summarising the count / cell output</li>\n\
+    <li>fastqc output (<a href=\"https://www.bioinformatics.babraham.ac.uk/projects/fastqc/\"\
+    \ rel=\"nofollow\">https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a>)</li>\n\
+    <li>multiqc output: Summarizing FastQC output and demultiplexing (<a href=\"https://multiqc.info/\"\
+    \ rel=\"nofollow\">https://multiqc.info/</a>)</li>\n</ul>\n</li>\n<li>\n<code>fastq</code>:\
+    \ Contains raw fastq files from cellranger mkfastq.</li>\n<li>\n<code>count-cr</code>:\
+    \ Cellranger count output. Here you find gene/cell count matrices, secondary analysis\
+    \ output, and more. See (<a href=\"https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/count\"\
+    \ rel=\"nofollow\">https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/count</a>)\
+    \ for more information on the output files.</li>\n<li>\n<code>summaries</code>:\n\
+    <ul>\n<li>web-summary files which provide an overview of essential metrics from\
+    \ the 10x run.</li>\n<li>cloupe files which can be used to explore the data interactively\
+    \ in the Loupe browser (<a href=\"https://support.10xgenomics.com/single-cell-atac/software/visualization/latest/what-is-loupe-cell-browser\"\
+    \ rel=\"nofollow\">https://support.10xgenomics.com/single-cell-atac/software/visualization/latest/what-is-loupe-cell-browser</a>)</li>\n\
+    </ul>\n</li>\n<li>\n<code>aggregate</code>:\n<ul>\n<li>Output from cellranger\
+    \ aggregation. This is only run if there is more than one sample pr project.</li>\n\
+    </ul>\n</li>\n<li>\n<code>ctg-md5.PROJ_ID.txt</code>: text file with md5sum recursively\
+    \ from output dir root</li>\n</ul>\n</li>\n</ul>\n<h2>\n<a id=\"user-content-container\"\
+    \ class=\"anchor\" href=\"#container\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Container</h2>\n<h2>\n<a id=\"\
+    user-content-custom-genome\" class=\"anchor\" href=\"#custom-genome\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Custom\
+    \ genome</h2>\n<p>If custom genome (not hg38 or mm10) is used</p>\n<ol>\n<li>Set\
+    \ \"Sample_Species\" column to 'custom' in samplesheet:</li>\n</ol>\n<p>Example:</p>\n\
+    <table>\n<thead>\n<tr>\n<th>Sample_ID</th>\n<th>Sample_Name</th>\n<th>index</th>\n\
+    <th>Sample_Project</th>\n<th>Sample_Species</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n\
+    <td>Si1</td>\n<td>Sn1</td>\n<td>SI-GA-D9</td>\n<td>proj_2021_012</td>\n<td><strong>custom</strong></td>\n\
+    </tr>\n<tr>\n<td>Si2</td>\n<td>Sn2</td>\n<td>SI-GA-H9</td>\n<td>proj_2021_012</td>\n\
+    <td><strong>custom</strong></td>\n</tr>\n</tbody>\n</table>\n<ol start=\"2\">\n\
+    <li>In nextflow.config, set\n<code>custom_genome=/PATH/TO/CUSTOMGENOME</code>\n\
+    </li>\n</ol>\n<h3>\n<a id=\"user-content-add-custom-genes-eg-reporters-to-cellranger-annotation\"\
+    \ class=\"anchor\" href=\"#add-custom-genes-eg-reporters-to-cellranger-annotation\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Add custom genes (e.g. reporters) to cellranger annotation</h3>\n\
+    <p>You can use this script to add custom genes to the cellranger ref\n<a href=\"\
+    https://github.com/perllb/ctg-cellranger-add2ref\">https://github.com/perllb/ctg-cellranger-add2ref</a></p>\n\
+    <h2>\n<a id=\"user-content-dependencies\" class=\"anchor\" href=\"#dependencies\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Dependencies</h2>\n<ul>\n<li>nextflow version 19.04.1.5072</li>\n\
+    <li>Singularity (v 3.7.0-1.el7)</li>\n<li>java (openjdk version \"10.0.2\" 2018-07-17)</li>\n\
+    <li>OpenJDK Runtime Environment Zulu10.3+5 (build 10.0.2+13)</li>\n<li>OpenJDK\
+    \ 64-Bit Server VM Zulu10.3+5 (build 10.0.2+13, mixed mode)</li>\n<li>Singularity\
+    \ container (<a href=\"https://github.com/perllb/ctg-sc-atac-10x/blob/main/container/Singularity_sc-atac-10x-builder\"\
+    >https://github.com/perllb/ctg-sc-atac-10x/blob/main/container/Singularity_sc-atac-10x-builder</a>)</li>\n\
+    <li>Cellranger 10x ATAC or ARC references (e.g. refdata-cellranger-arc-GRCh38-2020-A-2.0.0\
+    \ and refdata-cellranger-arc-mm10-2020-A-2.0.0)</li>\n</ul>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1628582618.0
+  updated_at: 1629907530.0
 perminaa/SingularityHPC:
   data_format: 2
   description: 'This repository will hold: the build script to install singularity
@@ -48562,6 +49132,93 @@ pnplab/preprocessing:
   subscribers_count: 0
   topics: []
   updated_at: 1626495060.0
+porchard/ATACseq-NextFlow:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: porchard/ATACseq-NextFlow
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-nextflow-pipeline-for-atac-seq-data" class="anchor" href="#nextflow-pipeline-for-atac-seq-data"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>NextFlow
+    pipeline for ATAC-seq data</h1>
+
+    <h2>
+
+    <a id="user-content-dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Dependencies</h2>
+
+    <p>If you have Singularity installed, you can use the config provided here (''Singularity'')
+    to build a container with all the dependencies.</p>
+
+    <p>Otherwise, you''ll need to have the following installed:</p>
+
+    <ol>
+
+    <li>cta</li>
+
+    <li>bedtools</li>
+
+    <li>bwa</li>
+
+    <li>picardtools</li>
+
+    <li>fastqc</li>
+
+    <li>samtools</li>
+
+    <li>ataqv</li>
+
+    </ol>
+
+    <p>This pipeline works with NextFlow versions &gt;= 20.07.1</p>
+
+    <h2>
+
+    <a id="user-content-configuration" class="anchor" href="#configuration" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h2>
+
+    <p>Paths to various generic files (e.g., bwa indices) must be included in the
+    nextflow.config file -- check that file and change paths accordingly. These include:</p>
+
+    <ol>
+
+    <li>Blacklist bed files for each genome</li>
+
+    <li>Chrom size files for each genome</li>
+
+    <li>BWA indices</li>
+
+    <li>TSS files (BED6 files denoting TSS positions)</li>
+
+    </ol>
+
+    <p>You''ll also need to set the params.results variable -- either in the nextflow.config
+    file itself, or on the command line when you run the pipeline (''--results /path/to/results'').</p>
+
+    <p>Lastly, you''ll need to include information about each ATAC-seq library, including
+    the genome that each library should be mapped to and the paths to the fastq files
+    for each readgroup. Organize this information in a JSON file, as in library-config.json.</p>
+
+    <h2>
+
+    <a id="user-content-running" class="anchor" href="#running" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Running</h2>
+
+    <p>Once you have all of the above information, you can run the pipeline as follows
+    (in this case, indicating the path to the results on the command line):</p>
+
+    <div class="highlight highlight-source-shell"><pre>nextflow run -with-singularity
+    /path/to/Singularity.simg -with-trace -with-report -with-dag -with-timeline -params-file
+    library-config.json --results /path/to/results /path/to/main.nf</pre></div>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1629490022.0
 powellgenomicslab/SingularityBaseImages:
   data_format: 2
   description: Singularity base images that will be build on singularity hub and can
@@ -49834,6 +50491,82 @@ powerPlant/vg-srf:
   subscribers_count: 1
   topics: []
   updated_at: 1549578706.0
+ppaquette/img.mujoco:
+  data_format: 2
+  description: Mujoco Singularity container
+  filenames:
+  - Singularity
+  full_name: ppaquette/img.mujoco
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-containers-related-files-for-scilus-flows" class="anchor"
+    href="#containers-related-files-for-scilus-flows" aria-hidden="true"><span aria-hidden="true"
+    class="octicon octicon-link"></span></a>Containers related files for SCILUS flows</h1>
+
+    <p><a href="https://github.com/scilus/containers-scilus/actions/workflows/main.yml"><img
+    src="https://github.com/scilus/containers-scilus/actions/workflows/main.yml/badge.svg"
+    alt="Build Docker and Singularity" style="max-width:100%;"></a>
+
+    <a href="https://github.com/scilus/containers-scilus/actions/workflows/release.yml"><img
+    src="https://github.com/scilus/containers-scilus/actions/workflows/release.yml/badge.svg"
+    alt="Release container" style="max-width:100%;"></a>
+
+    <a href="https://github.com/scilus/containers-scilus/releases"><img src="https://camo.githubusercontent.com/d71dfcebc7f168a9d02e58cea25811431dae2aa1085026f7a237dd4d41abd192/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f762f72656c656173652f7363696c75732f636f6e7461696e6572732d7363696c7573"
+    alt="GitHub release (latest by date)" data-canonical-src="https://img.shields.io/github/v/release/scilus/containers-scilus"
+    style="max-width:100%;"></a></p>
+
+    <h2>
+
+    <a id="user-content-containers-update" class="anchor" href="#containers-update"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Containers
+    update</h2>
+
+    <p>When updating <code>Scilpy</code>, you will need to modify the SHA of the file,
+    as well as
+
+    the <code>SCILPY_VERSION</code> variable in <code>Dockerfile</code>.</p>
+
+    <h2>
+
+    <a id="user-content-docker" class="anchor" href="#docker" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Docker</h2>
+
+    <p>To build the docker use the following command:</p>
+
+    <p><code>sudo docker build -t docker_scilus .</code></p>
+
+    <h2>
+
+    <a id="user-content-singularity" class="anchor" href="#singularity" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Singularity</h2>
+
+    <p>The image for Singularity can be built using <code>singularity_scilus.def</code>
+    with the command:
+
+    <code>sudo singularity build scilus_${SCILPY_VERSION}.img singularity_scilus.def</code>.</p>
+
+    <p>Singularity container is built from the Docker stored on dockerhub.</p>
+
+    <p>It can be used to run any SCILUS flows with the option
+
+    <code>-with-singularity scilus_${SCILPY_VERSION}.img</code> of Nextflow.</p>
+
+    <p>If you use this singularity, please cite:</p>
+
+    <pre><code>Kurtzer GM, Sochat V, Bauer MW (2017)
+
+    Singularity: Scientific containers for mobility of compute.
+
+    PLoS ONE 12(5): e0177459. https://doi.org/10.1371/journal.pone.0177459
+
+    </code></pre>
+
+    '
+  stargazers_count: 1
+  subscribers_count: 1
+  topics: []
+  updated_at: 1550708786.0
 pranithavangala/singularity:
   data_format: 2
   description: null
@@ -50370,12 +51103,12 @@ pscedu/singularity-bat:
     \ rel=\"nofollow\">Pittsburgh Supercomputing Center</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
     \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
     \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
-  stargazers_count: 0
+  stargazers_count: 1
   subscribers_count: 1
   topics:
   - singularity
   - utilities
-  updated_at: 1629308743.0
+  updated_at: 1629429567.0
 pscedu/singularity-bcftools:
   data_format: 2
   description: "bcftools \u2014 utilities for variant calling and manipulating VCFs\
@@ -51160,7 +51893,7 @@ pscedu/singularity-fastqc:
   topics:
   - singularity
   - bioinformatics
-  updated_at: 1629226114.0
+  updated_at: 1629829019.0
 pscedu/singularity-fasttree:
   data_format: 2
   description: 'FastTree infers approximately-maximum-likelihood phylogenetic trees
@@ -51816,7 +52549,7 @@ pscedu/singularity-homer:
   topics:
   - singularity
   - bioinformatics
-  updated_at: 1629321829.0
+  updated_at: 1629830938.0
 pscedu/singularity-htslib:
   data_format: 2
   description: 'HTSlib A C library for reading/writing high-throughput sequencing
@@ -52126,12 +52859,12 @@ pscedu/singularity-lazygit:
     \ rel=\"nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
     \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
     \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
-  stargazers_count: 0
+  stargazers_count: 1
   subscribers_count: 2
   topics:
   - singularity
   - utilities
-  updated_at: 1628970648.0
+  updated_at: 1629429605.0
 pscedu/singularity-mc:
   data_format: 2
   description: GNU Midnight Commander is a visual file manager, licensed under GNU
@@ -52321,6 +53054,69 @@ pscedu/singularity-ncdu:
   - singularity
   - utilities
   updated_at: 1628970688.0
+pscedu/singularity-ncview:
+  data_format: 2
+  description: ncview is a visual browser for netCDF format files.
+  filenames:
+  - 2.1.8/Singularity
+  full_name: pscedu/singularity-ncview
+  latest_release: v2.1.8
+  readme: "<p><a href=\"https://github.com/pscedu/singularity-ncview/actions/workflows/main.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-ncview/actions/workflows/main.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://github.com/pscedu/singularity-ncview/actions/workflows/pretty.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-ncview/actions/workflows/pretty.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/078735c35a2795b43bd4bdc7ab941803171b24344aa592b9c8bd7d7d1bba7221/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d6e6376696577\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/078735c35a2795b43bd4bdc7ab941803171b24344aa592b9c8bd7d7d1bba7221/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d6e6376696577\"\
+    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-ncview\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/25165f651b26a524506cc56ccdbfcdfb97c48c6b84d8baf7016fed0b32771324/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d6e6376696577\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/25165f651b26a524506cc56ccdbfcdfb97c48c6b84d8baf7016fed0b32771324/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d6e6376696577\"\
+    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-ncview\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/fffca3f62ad7fb0cda362fe6fbc4371af9b46beffbf0ae5a28de1ebd0b8b19de/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d6e6376696577\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/fffca3f62ad7fb0cda362fe6fbc4371af9b46beffbf0ae5a28de1ebd0b8b19de/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d6e6376696577\"\
+    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-ncview\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/3414f4df962eb61cbd24b68bf74e6f6b52ee2e464ae75b041c0ae325d1e05871/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d6e6376696577\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/3414f4df962eb61cbd24b68bf74e6f6b52ee2e464ae75b041c0ae325d1e05871/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d6e6376696577\"\
+    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-ncview\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-singularity-ncview\"\
+    \ class=\"anchor\" href=\"#singularity-ncview\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>singularity-ncview</h1>\n<p><a\
+    \ href=\"https://camo.githubusercontent.com/860d26f4013e6d592a8d87c7f2d7ab10117b8d2e5591566dbe6fbb3ec4be3c3e/687474703a2f2f6369727275732e756373642e6564752f7e7069657263652f736f6674776172652f6e63766965772f636f6e74726f6c5f322e676966\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/860d26f4013e6d592a8d87c7f2d7ab10117b8d2e5591566dbe6fbb3ec4be3c3e/687474703a2f2f6369727275732e756373642e6564752f7e7069657263652f736f6674776172652f6e63766965772f636f6e74726f6c5f322e676966\"\
+    \ data-canonical-src=\"http://cirrus.ucsd.edu/~pierce/software/ncview/control_2.gif\"\
+    \ style=\"max-width:100%;\"></a></p>\n<p>Singularity recipe for <a href=\"https://www.hpc.cineca.it/software/ncview#:~:text=Ncview%20is%20a%20visual%20browser,%2C%20invert%20the%20data%2C%20etc\"\
+    \ rel=\"nofollow\">ncview</a>.</p>\n<h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\"\
+    \ class=\"anchor\" href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installing\
+    \ the container on Bridges 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code>\
+    \ file</li>\n<li>and the <code>ncview</code> script</li>\n</ul>\n<p>to <code>/opt/packages/ncview/0.17.1</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/ncview</code>\
+    \ as <code>0.17.1.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
+    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing Center</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
+    \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
+    \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 2
+  topics:
+  - singularity
+  - oceanography
+  updated_at: 1629939098.0
 pscedu/singularity-octave:
   data_format: 2
   description: GNU Octave is software featuring a high-level programming language,
@@ -52386,7 +53182,7 @@ pscedu/singularity-octave:
   topics:
   - singularity
   - numerical-computation
-  updated_at: 1629324957.0
+  updated_at: 1629828935.0
 pscedu/singularity-pandoc:
   data_format: 2
   description: Pandoc is a free and open-source document converter, widely used as
@@ -53291,7 +54087,7 @@ pscedu/singularity-star:
   topics:
   - singularity
   - bioinformatics
-  updated_at: 1629226328.0
+  updated_at: 1629828765.0
 pscedu/singularity-tiger:
   data_format: 2
   description: Target/Integrative Genetic Element Retriever
@@ -54849,16 +55645,20 @@ rohitfarmer/singularity-defs:
   description: Definition (recipe) files for singularity containers.
   filenames:
   - cytof-deep-cnn/Singularity.def
+  - diffnets/diffnets.def
   - H5N1/Singularity_R_3.6.def
+  - H5N1/h5n1day100.def
   - H5N1/Singularity.def
   - cite-seq/Singularity_xenial.def
   - cite-seq/Singularity_3.def
   - cite-seq/Singularity_rocker.def
   - cite-seq/Singularity_AJM_COVID.def
   - cite-seq/Singularity_publish.def
+  - comet/chemlab-comet.def
   - comet/Singularity.def
   - bittersweet/Singularity.def
-  - tf-gpu-chemistry/Singularity
+  - r-dev/r_4.0.3.def
+  - r-dev/r_3.6.1.def
   - generic/Singularity.def
   - cytof-workflow-v3/Singularity_SCS.def
   - cytof-workflow-v3/Singularity.def
@@ -57348,6 +58148,23 @@ shub-fuzz/qsym:
   subscribers_count: 2
   topics: []
   updated_at: 1623682731.0
+shubavarshini/microbiome:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity.def
+  full_name: shubavarshini/microbiome
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-microbiome" class="anchor" href="#microbiome" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>microbiome</h1>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1629889722.0
 simarocchi/openmpi_centos7_x86_64:
   data_format: 2
   description: a Singularity recipe with openmpi 2.1.1 on base centos 7 to run on
@@ -57712,21 +58529,23 @@ singularityhub/github-ci:
     \ registries.</li>\n<li>The action matrix can be extended to run builds on multiple\
     \ platforms.</li>\n<li>You can also do the same, but test multiple versions of\
     \ Singularity.</li>\n</ul>\n<p>Have fun!</p>\n"
-  stargazers_count: 24
-  subscribers_count: 2
+  stargazers_count: 27
+  subscribers_count: 3
   topics:
   - singularity-ci
   - github-ci
   - singularity
   - container
-  updated_at: 1629148060.0
+  updated_at: 1629875816.0
 sinzlab/pytorch-singularity:
   data_format: 2
   description: null
   filenames:
   - Singularity.v3.8-torch1.9.0-dj0.12.7
   - Singularity.v3.8-torch1.5.0-dj0.12.4
+  - Singularity.v3.8-torch1.9.0-dj0.13.2
   - Singularity.v3.8-torch1.7.0-dj0.12.7
+  - Singularity.v3.8-torch1.9.0-dj0.12.9
   full_name: sinzlab/pytorch-singularity
   latest_release: null
   readme: '<h1>
@@ -57747,7 +58566,7 @@ sinzlab/pytorch-singularity:
   stargazers_count: 2
   subscribers_count: 5
   topics: []
-  updated_at: 1625646389.0
+  updated_at: 1629715166.0
 slaclab/folding-at-home-gpu:
   data_format: 2
   description: gpu image for folding at home
@@ -59401,13 +60220,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 70
+  stargazers_count: 73
   subscribers_count: 10
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1629898193.0
+  updated_at: 1630028403.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
@@ -60315,7 +61134,7 @@ tikk3r/lofar-grid-hpccloud:
   stargazers_count: 2
   subscribers_count: 3
   topics: []
-  updated_at: 1628105938.0
+  updated_at: 1629363312.0
 timkphd/Containers:
   data_format: 2
   description: null
@@ -61339,6 +62158,58 @@ vardigroup/TensorOrder:
   subscribers_count: 3
   topics: []
   updated_at: 1628034348.0
+vdclab/simg-PA_tools:
+  data_format: 2
+  description: 'Singularity image for the presence_absence pipeline '
+  filenames:
+  - Singularity
+  full_name: vdclab/simg-PA_tools
+  latest_release: 0.0.2
+  readme: '<h1>
+
+    <a id="user-content-singularity-presence_absence-tools-image" class="anchor" href="#singularity-presence_absence-tools-image"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Singularity
+    presence_absence tools image</h1>
+
+    <p>Singularity image for the presence_absence pipeline.</p>
+
+    <p>This repository is created to be able to not depend on instalation or module
+    loading for the presence abscence pipeline.</p>
+
+    <p>In this Singularity container the following software and python library are
+    installed :</p>
+
+    <p>Softwares:</p>
+
+    <ul>
+
+    <li>NCBI BLAST+ == 2.10.1</li>
+
+    <li>silix == 1.2.11</li>
+
+    </ul>
+
+    <p>Python libraries:</p>
+
+    <ul>
+
+    <li>ncbi-genome-download == 0.3.0</li>
+
+    <li>ete3 == 3.1.2</li>
+
+    <li>matplotlib == 3.3.3</li>
+
+    <li>pandas == 1.1.5</li>
+
+    <li>biopython == 1.78</li>
+
+    </ul>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1629657667.0
 veos-sxarr-NEC/singularity:
   data_format: 2
   description: Singularity Recipes for SX-Aurora TSUBASA
@@ -62298,6 +63169,32 @@ yee379/uresnet-tomo-seg:
   subscribers_count: 1
   topics: []
   updated_at: 1577150888.0
+yh549848/singularity-ngsplot:
+  data_format: 2
+  description: null
+  filenames:
+  - 2.63/Singularity
+  full_name: yh549848/singularity-ngsplot
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-pytorch-singularity" class="anchor" href="#pytorch-singularity"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>pytorch-singularity</h1>
+
+    <p><a href="https://singularity-hub.org/collections/4939" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
+    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    style="max-width:100%;"></a></p>
+
+    <p>This repository contains Singularity definition files used for PyTorch development
+    in the Sinzlab.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1629677826.0
 yh549848/singularity-rsem:
   data_format: 2
   description: null
@@ -62670,6 +63567,32 @@ yh549848/singularity-rstudio-rnaseqde:
   subscribers_count: 1
   topics: []
   updated_at: 1623388496.0
+yh549848/singularity-sicer2:
+  data_format: 2
+  description: null
+  filenames:
+  - 1.0.3/Singularity
+  full_name: yh549848/singularity-sicer2
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-pytorch-singularity" class="anchor" href="#pytorch-singularity"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>pytorch-singularity</h1>
+
+    <p><a href="https://singularity-hub.org/collections/4939" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
+    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
+    style="max-width:100%;"></a></p>
+
+    <p>This repository contains Singularity definition files used for PyTorch development
+    in the Sinzlab.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1629665658.0
 yngvem/ntnu-analysis:
   data_format: 2
   description: null

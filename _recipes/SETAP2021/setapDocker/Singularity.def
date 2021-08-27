@@ -1,0 +1,86 @@
+Bootstrap: library
+From: nitishnarula/secure/ubuntu-focal:20210121
+
+%post
+ export DEBIAN_FRONTEND=noninteractive
+# Updates
+ apt-get update
+ apt-get -y upgrade
+# Core tools
+# Beware tzdata prompts for input
+ apt-get install -y tzdata
+ apt-get install -y apt-utils
+ apt-get install -y software-properties-common rsync
+
+
+# ===== Tools======
+ apt-get install -y gnupg2
+ apt-get install -y tree
+ apt-get install -y nano
+ apt-get install -y git
+ apt-get install -y wget
+ apt-get install -y curl
+ apt-get install -y pdftk
+
+# ====== GH CLI ======
+ apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+ apt-add-repository https://cli.github.com/packages
+ apt-get update
+ apt-get install -y gh
+
+#==========github==============
+ curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
+ apt-get install -y git-lfs
+ git lfs install
+
+# ====== Markdown lint ======
+ apt-get install -y ruby
+ gem install mdl
+
+# ====== Python ======
+ apt-get install -y python3
+ apt-get install -y python3-pip
+ pip3 install -U pytest
+ apt-get install -y pep8
+
+# == Java===
+ apt-get install -y openjdk-14-jdk-headless
+
+#======NPM=====
+ apt-get install -y npm
+# npm i --save-dev eslint eslint-config-portsoc
+ npm i eslint eslint-config-portsoc
+ npm install log4js
+
+# ===== Pandoc Stuff ======
+ apt-get install -y texlive-xetex
+ apt-get install -y pandoc
+ wget https://github.com/jgm/pandoc/releases/download/2.11.3.2/pandoc-2.11.3.2-1-amd64.deb
+ dpkg -i pandoc-2.11.3.2-1-amd64.deb
+# For svg files
+ apt-get install -y librsvg2-bin
+
+#=========GO - Singularity=========
+ wget https://dl.google.com/go/go1.15.11.linux-amd64.tar.gz
+ tar -C /usr/local -xzvf go1.15.11.linux-amd64.tar.gz
+ rm go1.15.11.linux-amd64.tar.gz
+ echo 'export GOPATH=${HOME}/go' >> ~/.bashrc
+export GOPATH=${HOME}/go
+ echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc
+export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin
+ go version
+
+#========== Singularity===========
+cd /root
+ wget https://github.com/hpcng/singularity/releases/download/v3.7.3/singularity-3.7.3.tar.gz
+ tar -xzf singularity-3.7.3.tar.gz
+ rm -f singularity-3.7.3.tar.gz
+ cd singularity && \
+./mconfig && \
+make -C ./builddir  && \
+make -C ./builddir install
+ rm -rf singularity/
+ singularity --version
+
+# Clean up a bit
+ apt-get clean

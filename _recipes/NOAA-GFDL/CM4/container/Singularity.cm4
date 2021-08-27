@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: thomasrobinson/centos7-netcdff:4.5.3-c4.7.4-gcc-mpich
+
+Stage: build
+
+%post
+  # Install all the required software
+  . /opt/spack/share/spack/setup-env.sh
+  # Install CM4
+  git clone --recursive -b 2021.03 https://github.com/NOAA-GFDL/CM4.git && cd CM4/exec
+  make gcc=on OPENMP=on SH=sh CLUBB=off
+  mkdir -p /opt/CM4
+  cp cm4.x /opt/CM4
+  cp -r fms /opt
+
+%environment
+  export PATH=/opt/CM4:$PATH
+  export LD_LIBRARY_PATH=/opt/fms/build/libFMS/.libs:${LD_LIBRARY_PATH}
+  export LIBRARY_PATH=/opt/fms/build/libFMS/.libs:${LIBRARY_PATH}
+%runscript
+  ulimit -s unlimited
+  /opt/CM4/cm4.x
+

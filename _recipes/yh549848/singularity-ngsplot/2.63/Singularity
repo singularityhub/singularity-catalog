@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: quay.io/biocontainers/r-ngsplot:2.63--hdfd78af_7
+
+%apprun ngs.plot.r
+  exec ngs.plot.r "${@}"
+
+%apprun ngsplotdb.py
+  exec ngsplotdb.py "${@}"
+
+%apprun replot.r
+  exec replot.r "${@}"
+
+%apprun plotCorrGram.r
+  exec plotCorrGram.r "${@}"
+
+%files
+  files/database /opt
+
+%post
+  for d in $(find /opt/database -name "*.tar.gz"); do
+    sh -c '/bin/echo -e y' | ngsplotdb.py install $d;
+  done &&
+  rm -rf /opt/database

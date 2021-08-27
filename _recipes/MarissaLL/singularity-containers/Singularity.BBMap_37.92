@@ -1,0 +1,29 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://archive.ubuntu.com/ubuntu/
+Include: default-jre wget
+
+%labels
+
+    MAINTAINER "Marissa Le Lec"
+    VERSION "BBMap 37.92"
+
+%post
+
+    wget -O "bbmap.tar.gz" \
+        "https://sourceforge.net/projects/bbmap/files/BBMap_37.92.tar.gz/download"
+    mkdir bbmap-install
+    tar -zxf bbmap.tar.gz \
+        -C bbmap-install \
+        --strip-components 1
+    cp -r bbmap-install/resources/* /
+    cp -r bbmap-install/* /usr/local/bin/
+    rm -rf bbmap.tar.gz bbmap-install
+
+
+
+
+
+
+
+

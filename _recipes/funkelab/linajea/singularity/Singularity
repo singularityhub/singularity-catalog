@@ -1,0 +1,116 @@
+Bootstrap: localimage
+From: /nrs/funke/singularity/linajea/pylp_base:v1.3.img
+
+%help
+This container contains linajea lineage tracking software.
+
+%labels
+
+Maintainer Jan Funke
+Name linajea
+
+%setup
+mkdir -p ${SINGULARITY_ROOTFS}/src/linajea
+
+%files
+../linajea /src/linajea/linajea
+../requirements.txt /src/linajea/requirements.txt
+../setup.py /src/linajea/setup.py
+
+%labels
+maintainer funkej@janelia.hhmi.org
+
+%post
+
+PATH="/miniconda/bin:$PATH"
+
+pip install zarr
+
+# install gunpowder
+
+GUNPOWDER_ROOT=/src/gunpowder
+GUNPOWDER_REPOSITORY=https://github.com/funkey/gunpowder.git
+GUNPOWDER_REVISION=b7bd287e82553fa6d1d667a474e3e5457577060e
+
+mkdir -p ${GUNPOWDER_ROOT}
+cd ${GUNPOWDER_ROOT}
+git clone ${GUNPOWDER_REPOSITORY} . && \
+git checkout ${GUNPOWDER_REVISION}
+pip install -r requirements.txt
+PYTHONPATH=${GUNPOWDER_ROOT}:$PYTHONPATH
+
+# install linajea dependencies
+
+DAISY_ROOT=/src/daisy
+DAISY_REPOSITORY=https://github.com/funkey/daisy
+DAISY_REVISION=3d7826e7e4ab5844d55debac9bbb00b4e43a998b
+
+mkdir -p ${DAISY_ROOT}
+cd ${DAISY_ROOT}
+git clone ${DAISY_REPOSITORY} . && \
+git checkout ${DAISY_REVISION}
+pip install -r requirements.txt
+pip install .
+
+COMATCH_ROOT=/src/comatch
+COMATCH_REPOSITORY=https://github.com/funkey/comatch
+COMATCH_REVISION=193ca3072ae27666c54939f4bb0a4911404f33d7
+
+mkdir -p ${COMATCH_ROOT}
+cd ${COMATCH_ROOT}
+git clone ${COMATCH_REPOSITORY} . && \
+git checkout ${COMATCH_REVISION}
+python setup.py install
+
+#install funlib.tensorflow.learn
+
+FUNLIB_LEARN_TF_ROOT=/src/funlib.learn.tensorflow
+FUNLIB_LEARN_TF_REPOSITORY=https://github.com/funkelab/funlib.learn.tensorflow.git
+FUNLIB_LEARN_TF_REVISION=bb08e4ee3bab498d80dfdfee9e8f7fd6fd8975a0
+
+mkdir -p ${FUNLIB_LEARN_TF_ROOT}
+cd ${FUNLIB_LEARN_TF_ROOT}
+git clone ${FUNLIB_LEARN_TF_REPOSITORY} . && \
+git checkout ${FUNLIB_LEARN_TF_REVISION}
+pip install -r requirements.txt
+PYTHONPATH=${FUNLIB_LEARN_TF_ROOT}:$PYTHONPATH
+
+# install linajea
+
+cd /src/linajea
+pip install -r requirements.txt
+python setup.py install
+
+pip install plotly
+pip install toml
+
+#install funlib.run
+
+FUNLIB_RUN_ROOT=/src/funlib.run
+FUNLIB_RUN_REPOSITORY=https://github.com/funkelab/funlib.run.git
+FUNLIB_RUN_REVISION=8e1501e8a44dd7cf7ed7f2f534a09c87a2562953
+
+mkdir -p ${FUNLIB_RUN_ROOT}
+cd ${FUNLIB_RUN_ROOT}
+git clone ${FUNLIB_RUN_REPOSITORY} . && \
+git checkout ${FUNLIB_RUN_REVISION}
+pip install -r requirements.txt
+PYTHONPATH=${FUNLIB_RUN_ROOT}:$PYTHONPATH
+
+
+%environment
+export DAISY_ROOT=/src/daisy
+export PYTHONPATH=${DAISY_ROOT}:$PYTHONPATH
+export GUNPOWDER_ROOT=/src/gunpowder
+export PYTHONPATH=${GUNPOWDER_ROOT}:$PYTHONPATH
+export FUNLIB_LEARN_TF_ROOT=/src/funlib.learn.tensorflow
+export PYTHONPATH=${FUNLIB_LEARN_TF_ROOT}:$PYTHONPATH
+# ignore locally installed python modules (in ~/.local)
+export PYTHONNOUSERSITE=True
+# prevent multithreading in numpy
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+
+%runscript
+exec /bin/bash "$@"

@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+
+	MAINTAINER "Marissa Le Lec"
+	VERSION "PGDSpider 2.1.1.5"
+
+%post
+
+	apt-get update
+	apt-get install -y build-essential language-pack-en wget unzip openjdk-8-jre
+	wget http://www.cmpg.unibe.ch/software/PGDSpider/PGDSpider_2.1.1.5.zip
+	unzip PGDSpider_2.1.1.5.zip
+	cp -r PGDSpider_2.1.1.5 /opt/pgdspider
+	rm -r PGDSpider_2.1.1.5
+
+%environment
+	
+	export PATH="${PATH}:/opt/pgdspider"
+
+%runscript
+
+	/usr/bin/java -jar /opt/pgdspider/PGDSpider2-cli.jar "$@"
+
+

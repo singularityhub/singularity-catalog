@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+
+        MAINTAINER "Marissa Le Lec"
+        VERSION "FastQC 0.11.5"
+
+%post
+ 	
+	# install fastqc with apt
+    apt-get update
+    apt-get install -y \
+    	build-essential \
+    	language-pack-en \
+    	fastqc
+
+%runscript
+
+	exec /usr/bin/fastqc "$@"

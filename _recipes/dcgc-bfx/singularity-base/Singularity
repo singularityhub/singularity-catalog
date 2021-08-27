@@ -68,9 +68,12 @@ from: debian:buster-20201012
     locale-gen --purge en_US.UTF-8
     dpkg-reconfigure --frontend=noninteractive locales
     
-    # install basic system tools and libs
+    # install basic system tools and libs 
     apt-get clean && apt-get update -y && apt-get upgrade -y
-    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-serial-dev
+    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc pandoc-citeproc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-serial-dev
+    
+    # no texlive-fonts-extra due to mmap
+    
     apt-get clean
         
     # this is where the binaries go
@@ -89,7 +92,7 @@ from: debian:buster-20201012
     cd /opt && wget -O R-${R_VERSION}.tar.gz -nv https://cran.rstudio.com/src/base/R-4/R-${R_VERSION}.tar.gz && \
     tar -zxf R-${R_VERSION}.tar.gz  && \
     cd R-${R_VERSION} && \
-    ./configure --prefix=/opt/R/${R_VERSION} --enable-memory-profiling --enable-R-shlib --with-blas --with-lapack --with-readline --with-pcre2 --with-tcltk --with-cairo --with-libpng --with-jpeglib --with-libtiff && \
+    ./configure --prefix=/opt/R/${R_VERSION} --with-blas --with-lapack --with-readline --with-pcre2 --with-tcltk --with-cairo --with-libpng --with-jpeglib --with-libtiff && \
     make -j $COMPILE_CPUS -k && \
     make install && \
     ln -s /opt/R/${R_VERSION}/bin/R /opt/bin/R && \
@@ -166,7 +169,8 @@ from: debian:buster-20201012
     pytest \
     cython \
     matplotlib \
-    click
+    click \
+    bx-python
     
     mamba clean -ai
     
@@ -175,6 +179,24 @@ from: debian:buster-20201012
     pysam \
     numpy \
     mysql-python
+    
+    ###############
+    # RNA-SeQC v2 #
+    ###############
+    
+    RNASEQCV2_VERSION="2.4.2"
+    RNASEQCV2_DIR=rnaseqc-${RNASEQCV2_VERSION}
+    
+    cd /opt && wget -O ${RNASEQCV2_DIR}.tar.gz -nv https://github.com/getzlab/rnaseqc/releases/download/v2.4.2/rnaseqc.v${RNASEQCV2_VERSION}.full_source.tar.gz && \
+    tar -zxf ${RNASEQCV2_DIR}.tar.gz && \
+    mv rnaseqc/rnaseqc ${RNASEQCV2_DIR} && \
+    cd ${RNASEQCV2_DIR}  && \
+    make && \
+    cp /opt/${RNASEQCV2_DIR}/rnaseqc /opt/bin/rnaseqc && \
+    pip install python && \
+    cd /opt/ && rm -rf ${RNASEQCV2_DIR}.tar.gz rnaseqc
+
+    cd /opt/bin && wget https://raw.githubusercontent.com/broadinstitute/gtex-pipeline/master/gene_model/collapse_annotation.py && chmod +x collapse_annotation.py
     
     ###########
     # subread #
@@ -195,7 +217,7 @@ from: debian:buster-20201012
     # htslib #
     ##########
 
-    HTSLIB_VERSION="1.11"
+    HTSLIB_VERSION="1.13"
     HTSLIB_DIR=htslib-${HTSLIB_VERSION}
     
     cd /opt && wget -nv https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/${HTSLIB_DIR}.tar.bz2 && \
@@ -210,7 +232,7 @@ from: debian:buster-20201012
     # samtools #
     ############
     
-    SAMTOOLS_VERSION="1.11"
+    SAMTOOLS_VERSION="1.13"
     SAMTOOLS_DIR=samtools-${SAMTOOLS_VERSION}
     
     cd /opt && wget -nv https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/${SAMTOOLS_DIR}.tar.bz2 && \
@@ -391,22 +413,6 @@ from: debian:buster-20201012
       # obtain from conda/mamba (may not be the most recent version)
       mamba install -c dranew bcl2fastq
     fi
-    
-    ###############
-    # RNA-SeQC v2 #
-    ###############
-    
-    RNASEQCV2_VERSION="2.4.2"
-    RNASEQCV2_DIR=rnaseqc-${RNASEQCV2_VERSION}
-    
-    cd /opt && wget -O ${RNASEQCV2_DIR}.tar.gz -nv https://github.com/getzlab/rnaseqc/releases/download/v2.4.2/rnaseqc.v${RNASEQCV2_VERSION}.full_source.tar.gz && \
-        tar -zxf ${RNASEQCV2_DIR}.tar.gz && \
-        mv rnaseqc/rnaseqc ${RNASEQCV2_DIR} && \
-        cd ${RNASEQCV2_DIR}  && \
-        make && \
-        cp /opt/${RNASEQCV2_DIR}/rnaseqc /opt/bin/rnaseqc && \
-        pip install -e python && \
-        cd /opt/ && rm -rf ${RNASEQCV2_DIR}.tar.gz ${RNASEQCV2_DIR}
         
     ############
     # xengsort #

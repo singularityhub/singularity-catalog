@@ -1,0 +1,105 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+Maintainer jfunke@iri.upc.edu
+Name pylb_base
+Version v1.5
+
+%post
+
+apt update
+apt install -y --no-install-recommends \
+build-essential \
+ca-certificates \
+cmake \
+git \
+wget \
+libboost-all-dev && \
+rm -rf /var/lib/apt/lists/*
+
+# install conda
+
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+bash miniconda.sh -b -p /miniconda
+PATH="/miniconda/bin:$PATH"
+conda config --set always_yes yes --set changeps1 no
+conda update -q conda
+conda info -a
+conda install python=3.6
+
+# install tensorflow
+conda install gast=0.2.2
+conda install tensorflow-gpu=1.14 cudatoolkit=10.0
+
+# install dependencies for gunpowder
+
+# malis
+MALIS_ROOT=/src/malis
+MALIS_REPOSITORY=https://github.com/TuragaLab/malis.git
+MALIS_REVISION=2206fe01bd2d10c3bc6a861897820731d1ae131b
+
+pip install cython
+mkdir -p ${MALIS_ROOT}
+cd ${MALIS_ROOT}
+git clone ${MALIS_REPOSITORY} . && \
+git checkout ${MALIS_REVISION}
+python setup.py build_ext --inplace
+PYTHONPATH=${MALIS_ROOT}:$PYTHONPATH
+
+# augment
+AUGMENT_ROOT=/src/augment
+AUGMENT_REPOSITORY=https://github.com/funkey/augment.git
+AUGMENT_REVISION=4a42b01ccad7607b47a1096e904220729dbcb80a
+
+mkdir -p ${AUGMENT_ROOT}
+cd ${AUGMENT_ROOT}
+git clone ${AUGMENT_REPOSITORY} . && \
+git checkout ${AUGMENT_REVISION}
+pip install -r requirements.txt
+PYTHONPATH=${AUGMENT_ROOT}:$PYTHONPATH
+
+# waterz
+WATERZ_ROOT=/src/waterz
+WATERZ_REPOSITORY=https://github.com/funkey/waterz
+WATERZ_REVISION=d2bede846391c56a54365c13d5b2f2f4e6db4ecd
+
+mkdir -p ${WATERZ_ROOT}
+cd ${WATERZ_ROOT}
+git clone ${WATERZ_REPOSITORY} . && \
+git checkout ${WATERZ_REVISION}
+mkdir -p /.cython/inline
+PYTHONPATH=${WATERZ_ROOT}:$PYTHONPATH
+
+# install pylp and gurobi
+conda install boost=1.67.0
+conda install -c funkey pylp
+
+# install python wrapper for KLB reader
+PYKLB_ROOT=/src/pyklb
+PYKLB_REPOSITORY=https://github.com/bhoeckendorf/pyklb
+PYKLB_REVISION=870874e26129411382323467d62038456bcb0385
+
+pip install wheel
+mkdir -p ${PYKLB_ROOT}
+cd ${PYKLB_ROOT}
+git clone ${PYKLB_REPOSITORY} . && \
+git checkout ${PYKLB_REVISION}
+python setup.py bdist_wheel
+pip install .
+cp build/lib/libklb.so /lib
+
+%environment
+export GRB_LICENSE_FILE=/opt/gurobi.lic
+export GUROBI_ROOT_DIR=/opt/gurobi810/linux64
+export GUROBI_HOME=/opt/gurobi810/linux64
+export MALIS_ROOT=/src/malis
+export AUGMENT_ROOT=/src/augment
+export WATERZ_ROOT=/src/waterz
+export PYTHONPATH=${MALIS_ROOT}:$PYTHONPATH
+export PYTHONPATH=${AUGMENT_ROOT}:$PYTHONPATH
+export PYTHONPATH=${WATERZ_ROOT}:$PYTHONPATH
+export PATH=/miniconda/bin:$PATH
+
+%runscript
+exec /bin/bash "$@"

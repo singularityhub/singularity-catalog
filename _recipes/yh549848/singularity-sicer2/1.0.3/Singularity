@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: quay.io/biocontainers/sicer2:1.0.3--py36h4f025d9_1
+
+%apprun sicer
+  exec sicer "${@}"
+
+%apprun recognicer
+  exec recognicer "${@}"
+
+%apprun recognicer
+  exec recognicer "${@}"
+
+%apprun sicer_df
+  exec sicer_df "${@}"
+
+%files
+  files/GenomeData.py /usr/local/lib/python3.6/site-packages/sicer/lib/GenomeData.py
+
+%post
+  URI="https://github.com/arq5x/bedtools2/releases/download/v2.30.0/bedtools.static.binary" &&
+  cd /tmp &&
+  wget $URI &&
+  mv bedtools.static.binary bedtools &&
+  chmod a+x bedtools &&
+  mv bedtools /usr/local/bin

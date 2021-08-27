@@ -1,0 +1,61 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for dependencies of YAMP
+
+
+Bootstrap: docker
+From: continuumio/miniconda3
+
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM	bbmap,fastqc,multiqc,humann
+
+%post
+	# set frontend for package installation
+	export DEBIAN_FRONTEND=noninteractive
+
+
+	# update conda
+	conda update conda
+
+
+	# add channels
+	conda config --add channels bioconda
+	conda config --add channels conda-forge
+	conda config --add channels biobakery
+
+
+	# install dependencies
+	conda install -c bioconda -c conda-forge bbmap fastqc multiqc
+	conda install -c biobakery humann
+	conda clean -ay
+
+
+%test
+	# test that the program works
+	bbmap.sh --version
+	fastqc --version
+	multiqc --version
+	humann --version
+
+
+%environment
+	# Set up environmental variables within the container
+
+
+%runscript
+	# This will be executed when the container is run (singularity run [container])
+
+
+%help
+	# This message is displayed when called as: singularity run-help [container]
+
+	******************************************************************************
+
+	This container is for running YAMP dependencies
+
+	To use: singularity exec yamp.sif [command, e.g. bbmap.sh ...]
+	
+	Check contents by entering it as: singularity shell yamp.sif
+
+	******************************************************************************

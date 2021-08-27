@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+	MAINTAINER "Marissa Le Lec"
+	VERSION "minimap2 2.177-r974-dirty"
+
+%post
+	# dependencies
+    apt-get update
+    apt-get install -y \
+        build-essential \
+        language-pack-en \
+        git \
+        zlib1g-dev 
+
+    # minimap2
+	export GIT_SSL_NO_VERIFY=1
+	git clone https://github.com/lh3/minimap2
+	cd minimap2 || exit 1
+	make
+	cp minimap2 /usr/bin/
+	cd ../.. || exit 1
+	rm -rf minimap2/
+
+%runscript
+	exec /usr/bin/minimap2 "$@"

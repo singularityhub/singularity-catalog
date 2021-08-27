@@ -1,0 +1,211 @@
+Bootstrap: docker
+From: debian:jessie-slim
+
+
+%files
+    data/databases/Salmonella.tar.xz /opt
+    data/databases/Plasmid.tar.xz /opt
+    data/databases/Efaecalis.tar.xz /opt
+    data/databases/Ecoli.tar.xz /opt
+    data/databases/out.card.prepareref /opt
+    data/databases/out.megares.prepareref /opt
+    data/databases/out.plasmidfinder.prepareref /opt
+    data/databases/out.virulencefinder.prepareref /opt
+
+
+%post
+    apt-get update \
+    && apt-get install -y --no-install-recommends \
+    build-essential \
+    ca-certificates \
+    git \
+    wget \
+    unzip \
+    zlib1g-dev \
+    libbz2-dev \
+    liblzma-dev \
+    libncurses-dev \
+    bowtie2 \
+    ncbi-blast+ \
+    gcc \
+    openjdk-7-jre \
+    python-dev \
+    python-pip \
+    python3-dev \
+    python3-pip \
+    python-numpy \
+    python-matplotlib \
+    python-setuptools \
+    libfreetype6-dev \
+    libpng-dev \
+    pkg-config \
+    dh-autoreconf \
+    tabix \
+    perl \
+    libdatetime-perl \
+    libxml-simple-perl \
+    libdigest-md5-perl \
+    bioperl \
+    xz-utils \
+    bowtie2 \
+    mummer \
+    cd-hit \
+    && apt-get update \
+    && apt-get upgrade \
+    && rm -rf /var/lib/apt/lists/*
+    pip3 install --upgrade pip setuptools wheel
+    pip3 install requests
+    pip3 install ariba
+    pip install multiqc=="1.0"
+    cd /opt
+    wget http://www.cmake.org/files/v3.2/cmake-3.2.2.tar.gz
+    tar -xvf cmake-3.2.2.tar.gz
+    cd cmake-3.2.2
+    ./configure
+    make
+    make install
+    cd /
+    cd /usr/local/bin
+    ln -s /usr/lib/jvm/java-7-openjdk-amd64/bin/java ./java
+    cd /
+    CDHIT_SOURCE="cd-hit-v4.6.8-2017-1208-source.tar.gz"
+    CDHIT_VERSION="4.6.8"
+    CDHIT_DIR="cd-hit-v4.6.8-2017-1208"
+    cd /opt
+    wget https://github.com/weizhongli/cdhit/releases/download/V$CDHIT_VERSION/$CDHIT_SOURCE
+    tar -xzvf $CDHIT_SOURCE
+    cd $CDHIT_DIR
+    make
+    make install
+    rm /opt/$CDHIT_SOURCE
+    cd /
+    cd /usr/local/bin
+    wget https://github.com/broadinstitute/pilon/releases/download/v1.22/pilon-1.22.jar
+    cd /
+    BEDTOOLS2_SOURCE="bedtools-2.26.0.tar.gz" \
+    BEDTOOLS2_VERSION="2.26.0" \
+    BEDTOOLS2_BIN="/opt/bedtools2/bin/*" \
+    BEDTOOLS2_DEST="/usr/local/bin"
+    wget https://github.com/arq5x/bedtools2/releases/download/v$BEDTOOLS2_VERSION/$BEDTOOLS2_SOURCE -O /opt/$BEDTOOLS2_SOURCE \
+    && tar -xvf /opt/$BEDTOOLS2_SOURCE -C /opt \
+    && cd /opt/bedtools2 \
+    && make \
+    && cp $BEDTOOLS2_BIN $BEDTOOLS2_DEST \
+    && rm /opt/$BEDTOOLS2_SOURCE
+    cd /
+    BWA_SOURCE="bwa-0.7.15.tar.bz2" \
+    BWA_VERSION="0.7.15" \
+    BWA_BIN="bwa" \
+    BWA_DEST="/usr/local/bin/bwa"
+    wget https://github.com/lh3/bwa/releases/download/v$BWA_VERSION/$BWA_SOURCE -O /opt/$BWA_SOURCE \
+    && tar -xvf /opt/$BWA_SOURCE -C /opt \
+    && cd /opt/bwa-$BWA_VERSION \
+    && make \
+    && ln -s /opt/bwa-$BWA_VERSION/$BWA_BIN $BWA_DEST \
+    && rm /opt/$BWA_SOURCE
+    cd /
+    FASTQC_BIN="fastqc_v0.11.5.zip"
+    wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/$FASTQC_BIN -O /opt/$FASTQC_BIN \
+    && unzip /opt/$FASTQC_BIN -d /opt/ \
+    && chmod 755 /opt/FastQC/fastqc \
+    && ln -s /opt/FastQC/fastqc /usr/local/bin/fastqc \
+    && rm /opt/$FASTQC_BIN
+    cd /
+    cd /opt
+    git clone --recursive https://github.com/ekg/freebayes.git \
+    && cd freebayes \
+    && make \
+    && make install
+    cd /
+    cd /opt
+  	git clone git://github.com/tseemann/prokka.git
+  	mv /opt/Plasmid.tar.xz /opt/prokka/db/genus/
+  	mv /opt/Salmonella.tar.xz /opt/prokka/db/genus/
+  	mv /opt/Efaecalis.tar.xz /opt/prokka/db/genus/
+  	mv /opt/Ecoli.tar.xz /opt/prokka/db/genus/
+  	xz -d /opt/prokka/db/genus/Plasmid.tar.xz
+  	xz -d /opt/prokka/db/genus/Salmonella.tar.xz
+  	xz -d /opt/prokka/db/genus/Efaecalis.tar.xz
+  	xz -d /opt/prokka/db/genus/Ecoli.tar.xz
+  	tar -xvf /opt/prokka/db/genus/Plasmid.tar -C /opt/prokka/db/genus/
+  	tar -xvf /opt/prokka/db/genus/Salmonella.tar -C /opt/prokka/db/genus/
+  	tar -xvf /opt/prokka/db/genus/Efaecalis.tar -C /opt/prokka/db/genus/
+  	tar -xvf /opt/prokka/db/genus/Ecoli.tar -C /opt/prokka/db/genus/
+  	rm /opt/prokka/db/genus/Plasmid.tar
+  	rm /opt/prokka/db/genus/Salmonella.tar
+  	rm /opt/prokka/db/genus/Efaecalis.tar
+  	rm /opt/prokka/db/genus/Ecoli.tar
+  	/opt/prokka/bin/prokka --setupdb
+    ln -s /opt/prokka/bin/* /usr/bin/
+    cd /
+    QUAST_SOURCE="quast_4.5.tar.gz"
+    QUAST_VERSION="quast_4.5"
+    wget https://github.com/ablab/quast/archive/$QUAST_SOURCE -O /opt/$QUAST_SOURCE \
+    && tar -xvf /opt/$QUAST_SOURCE -C /opt \
+    && cd /opt/quast-$QUAST_VERSION \
+    && ./setup.py install \
+    && rm /opt/$QUAST_SOURCE
+    cd /
+    SAMTOOLS_SOURCE="samtools-1.4.1.tar.bz2" \
+    SAMTOOLS_VERSION="1.4.1" \
+    SAMTOOLS_BIN="samtools" \
+    SAMTOOLS_DEST="/usr/local/bin/samtools"
+    wget https://github.com/samtools/samtools/releases/download/$SAMTOOLS_VERSION/$SAMTOOLS_SOURCE -O /opt/$SAMTOOLS_SOURCE \
+    && tar -xvf /opt/$SAMTOOLS_SOURCE -C /opt \
+    && cd /opt/samtools-$SAMTOOLS_VERSION \
+    && ./configure \
+    && make \
+    && ln -s /opt/samtools-$SAMTOOLS_VERSION/$SAMTOOLS_BIN $SAMTOOLS_DEST \
+    && rm /opt/$SAMTOOLS_SOURCE
+    cd /
+    SPADES_SOURCE="SPAdes-3.11.1-Linux.tar.gz" \
+    SPADES_VERSION="3.11.1" \
+    SPADES_BIN="bin/spades.py" \
+    SPADES_DEST="/usr/local/bin/spades.py"
+    wget http://cab.spbu.ru/files/release$SPADES_VERSION/$SPADES_SOURCE -O /opt/$SPADES_SOURCE \
+    && tar -xvf /opt/$SPADES_SOURCE -C /opt \
+    && cd /opt/SPAdes-$SPADES_VERSION-Linux \
+    && ln -s /opt/SPAdes-$SPADES_VERSION-Linux/$SPADES_BIN $SPADES_DEST \
+    && rm /opt/$SPADES_SOURCE
+    cd /
+    TRIMMOMATIC_SOURCE="Trimmomatic-0.36.zip" \
+    TRIMMOMATIC_HOME="/opt/trimmomatic"
+    wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.36.zip -O /opt/trimmomatic.zip && \
+    unzip /opt/trimmomatic.zip -d /opt/ && \
+    rm /opt/trimmomatic.zip
+    cd /
+    VCF_SOURCE="vcftools-0.1.15.tar.gz" \
+    VCF_VERSION="0.1.15" \
+    VCF_BIN="src/cpp/vcftools" \
+    VCF_DEST="/usr/local/bin/vcftools" \
+    PERL5LIB="/opt/vcftools-$VCF_VERSION/src/perl/"
+    wget https://github.com/vcftools/vcftools/releases/download/v$VCF_VERSION/$VCF_SOURCE -O /opt/$VCF_SOURCE \
+    && tar -xvf /opt/$VCF_SOURCE -C /opt \
+    && cd /opt/vcftools-$VCF_VERSION \
+    && ./autogen.sh \
+    && ./configure \
+    && make \
+    && ln -s /opt/vcftools-$VCF_VERSION/$VCF_BIN $VCF_DEST \
+    && rm /opt/$VCF_SOURCE
+    cd /
+    cd /opt
+    git clone --recursive https://github.com/isovic/racon.git racon
+    cd racon
+    mkdir build
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=Release -Dracon_build_wrapper=ON ..
+    make
+    make install
+    cd /
+    cd /opt
+    git clone https://github.com/rrwick/Unicycler.git
+    cd Unicycler
+    python3 setup.py install
+    cd /
+    cd /opt
+    wget https://github.com/broadinstitute/gatk/releases/download/4.0.8.1/gatk-4.0.8.1.zip
+    unzip gatk-4.0.8.1.zip
+    cd /usr/local/bin
+    ln -s /opt/gatk-4.0.8.1/gatk
+    cd /
+    

@@ -1,0 +1,17 @@
+BootStrap: docker
+From: ubuntu:xenial  # 16.04
+
+%help
+    Guppy v5.0.11 GPU version
+    Usage: singularity exec --nv --bind <local_dir>:<virtual_dir> <img> guppy_basecaller <agrs>
+
+%post
+    apt-get update
+    apt-get -y install wget apt-transport-https
+    wget -O- https://mirror.oxfordnanoportal.com/apt/ont-repo.pub | apt-key add -
+    echo "deb http://mirror.oxfordnanoportal.com/apt xenial-stable non-free" | tee /etc/apt/sources.list.d/nanoporetech.sources.list
+    apt-get update
+    apt-get -y install ont-guppy=5.0.11-1~xenial
+
+%test
+    guppy_basecaller --version

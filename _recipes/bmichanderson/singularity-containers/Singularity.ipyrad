@@ -4,6 +4,7 @@
 # see: https://github.com/PawseySC/pawsey-containers/blob/master/hpc-python/intel/Dockerfile
 # see: https://github.com/PawseySC/pawsey-containers/blob/master/openmpi-base/Dockerfile
 
+
 Bootstrap: docker
 From: continuumio/miniconda3
 
@@ -57,14 +58,16 @@ From: continuumio/miniconda3
 
 
 	# install ipyrad with conda along with packages for analysis
-	conda install ipyrad scikit-learn -c conda-forge -c bioconda
-	#conda install scikit-learn -c conda-forge -c bioconda		# for pca
-	#conda install tetrad -c eaton-lab -c conda-forge
-	#conda install -c ipyrad structure clumpp
-	#conda install sratools -c bioconda
-	#conda install treemix -c bioconda -c conda-forge
-	#conda install raxml -c bioconda
-	#conda install mrbayes -c bioconda -c conda-forge
+	conda install -c conda-forge -c bioconda ipyrad
+
+	conda install -c bioconda scikit-learn
+
+	conda install -c eaton-lab toyplot
+
+	#conda install -c eaton-lab -c conda-forge tetrad
+	# NOTE: trying to install tetrad as well leads to conflicts, so may have to create a different container
+
+	conda install -c bioconda -c ipyrad structure clumpp
 
 	conda clean -ay
 

@@ -1,0 +1,26 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://archive.ubuntu.com/ubuntu/
+Include: build-essential language-pack-en wget autoconf automake pkg-config zlib1g-dev
+
+
+%labels
+
+        MAINTAINER "Marissa Le Lec"
+        VERSION "VCFtools 0.1.17"
+
+%post
+        
+        wget https://github.com/vcftools/vcftools/tarball/master --no-check-certificate
+        tar -xvf master
+        cd vcftools-vcftools-d0c95c5/ || exit 1
+        ./autogen.sh
+        ./configure
+        make
+        make install
+        cd .. || exit 1
+        rm -r vcftools-vcftools-d0c95c5/
+
+%runscript
+
+        exec /usr/local/bin/vcftools "$@"
