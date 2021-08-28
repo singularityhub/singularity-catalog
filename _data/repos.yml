@@ -13492,14 +13492,14 @@ NOAA-GFDL/AM4:
     NOAA-GFDL at <a href="https://gitlab.gfdl.noaa.gov" rel="nofollow">https://gitlab.gfdl.noaa.gov</a>.</p>
 
     '
-  stargazers_count: 9
+  stargazers_count: 10
   subscribers_count: 6
   topics:
   - fortran
   - jupyter-notebook
   - shell-script
   - ncl
-  updated_at: 1629811549.0
+  updated_at: 1630084582.0
 NOAA-GFDL/CM4:
   data_format: 2
   description: null
@@ -18380,7 +18380,7 @@ SODALITE-EU/application-optimisation:
   stargazers_count: 0
   subscribers_count: 6
   topics: []
-  updated_at: 1629996066.0
+  updated_at: 1630051466.0
 Sarah145/batch_correct:
   data_format: 2
   description: Comparison of batch correction methods for scRNA-seq data - basically
@@ -23524,7 +23524,7 @@ automl/HPOBench:
     \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/86b984292042d233294c09940c1b7dade7c877c1220bc419f2e2227eb0f775f0/68747470733a2f2f636f6465636f762e696f2f67682f6175746f6d6c2f48504f42656e63682f6272616e63682f646576656c6f706d656e742f67726170682f62616467652e737667\"\
     \ alt=\"codecov\" data-canonical-src=\"https://codecov.io/gh/automl/HPOBench/branch/development/graph/badge.svg\"\
     \ style=\"max-width:100%;\"></a></p>\n"
-  stargazers_count: 36
+  stargazers_count: 37
   subscribers_count: 7
   topics:
   - hyperparameter-optimization
@@ -23533,7 +23533,7 @@ automl/HPOBench:
   - benchmark
   - containerized-benchmarks
   - hpolib
-  updated_at: 1627288050.0
+  updated_at: 1630077125.0
 bananaeat/Cinnamon_assembly:
   data_format: 2
   description: null
@@ -35560,7 +35560,7 @@ gpuhackathons-org/gpubootcamp:
     rel="nofollow">OpenACC Slack Channel</a>.</p>
 
     '
-  stargazers_count: 91
+  stargazers_count: 93
   subscribers_count: 8
   topics:
   - machine-learning
@@ -35575,7 +35575,7 @@ gpuhackathons-org/gpubootcamp:
   - rapidsai
   - openmp
   - ai4hpc
-  updated_at: 1629928412.0
+  updated_at: 1630061967.0
 granek/jupyter-MIC-2021:
   data_format: 2
   description: null
@@ -43240,7 +43240,7 @@ mattocci27/r-containers:
   stargazers_count: 1
   subscribers_count: 1
   topics: []
-  updated_at: 1628762172.0
+  updated_at: 1630048642.0
 maxpkatz/singularity_image_files:
   data_format: 2
   description: null
@@ -45950,7 +45950,7 @@ nservant/HiC-Pro:
   filenames:
   - Singularity
   full_name: nservant/HiC-Pro
-  latest_release: v3.0.0
+  latest_release: v3.1.0
   readme: "<h1>\n<a id=\"user-content-hic-pro\" class=\"anchor\" href=\"#hic-pro\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
     ></span></a>HiC-Pro</h1>\n<h3>\n<a id=\"user-content-an-optimized-and-flexible-pipeline-for-hi-c-data-processing\"\
@@ -46167,7 +46167,7 @@ nservant/HiC-Pro:
   stargazers_count: 248
   subscribers_count: 20
   topics: []
-  updated_at: 1629789106.0
+  updated_at: 1630087537.0
 nuKs/preprocessing:
   data_format: 2
   description: null
@@ -50678,6 +50678,67 @@ provarepro/mlperf_inference:
   subscribers_count: 2
   topics: []
   updated_at: 1627762348.0
+psadil/cat12:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: psadil/cat12
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-cat12" class="anchor" href="#cat12" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>cat12</h1>
+
+    <p>To build, run <code>build_singularity</code> as root e.g.,</p>
+
+    <div class="highlight highlight-source-shell"><pre>sudo ./build_singularity</pre></div>
+
+    <p>Note that the build expects to find <code>./code/main</code>, so this command
+    should be run from the root directory of the github repo.</p>
+
+    <p>The script <code>run_a2cps_segment</code> provides a minimal wrapper around
+    the container.</p>
+
+    <div class="highlight highlight-source-shell"><pre>./run_a2cps_segment mris/NS_northshore/bids/NS043021PVP/sub-043021/ses-PVP/anat/sub-043021_ses-PVP_T1w.nii.gz</pre></div>
+
+    <p>To run cat_standalone with a different template, <code>&lt;template&gt;</code>,
+    on T1w image, <code>&lt;data&gt;</code>, try</p>
+
+    <div class="highlight highlight-source-shell"><pre>singularity run --cleanenv
+    cat12.sif -b <span class="pl-k">&lt;</span>template<span class="pl-k">&gt;</span>
+    <span class="pl-k">&lt;</span>data<span class="pl-k">&gt;</span></pre></div>
+
+    <p>Use the <code>--cleanenv</code> flag may not be necessary, depending on your
+    host. When running with host Ubuntu 20.04, there were environment variables associated
+    with Java that interfered with MATLAB. See the Singularity documentation on <a
+    href="https://sylabs.io/guides/3.8/user-guide/environment_and_metadata.html?highlight=cleanenv#environment-overview"
+    rel="nofollow">environment variables</a></p>
+
+    <h2>
+
+    <a id="user-content-prebuilt-container" class="anchor" href="#prebuilt-container"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Prebuilt
+    container</h2>
+
+    <p>A verison of the container has been prebuilt and shared on <a href="https://cloud.sylabs.io"
+    rel="nofollow">https://cloud.sylabs.io</a>. To use it, replace the container definition
+    with <code>library://psadil/default/cat12</code>, e.g.,</p>
+
+    <div class="highlight highlight-source-shell"><pre>singularity run --cleanenv
+    library://psadil/default/cat12:sha256.008fc10d527c3f797085bb10c7ebbc3492a529f75a9145511906bb4b4a15c1de
+    -b <span class="pl-k">&lt;</span>template<span class="pl-k">&gt;</span> <span
+    class="pl-k">&lt;</span>data<span class="pl-k">&gt;</span></pre></div>
+
+    <p>That is, the container doesn''t need to be downloaded manually; singularity
+    should be able to recognize the location of <code>library://psadil/default/cat12</code>,
+    download it automatically, and then cache the file.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1630100555.0
 pscedu/singularity-abyss:
   data_format: 2
   description: ABySS is a de novo sequence assembler that is designed for very short
@@ -55639,7 +55700,7 @@ rickstaa/real-panda-control-examples:
   - franka-emika
   - control
   - moveit
-  updated_at: 1628613808.0
+  updated_at: 1630059412.0
 rohitfarmer/singularity-defs:
   data_format: 2
   description: Definition (recipe) files for singularity containers.
@@ -58164,7 +58225,7 @@ shubavarshini/microbiome:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1629889722.0
+  updated_at: 1630058726.0
 simarocchi/openmpi_centos7_x86_64:
   data_format: 2
   description: a Singularity recipe with openmpi 2.1.1 on base centos 7 to run on
@@ -60220,13 +60281,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 73
+  stargazers_count: 75
   subscribers_count: 10
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1630028403.0
+  updated_at: 1630100535.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
