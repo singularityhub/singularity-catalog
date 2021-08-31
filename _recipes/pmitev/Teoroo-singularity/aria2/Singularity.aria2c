@@ -1,0 +1,15 @@
+Bootstrap:  docker
+From: ubuntu
+
+
+%environment
+  export PYTHONNOUSERSITE=True
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+
+  apt-get update && apt-get install -y wget curl aria2
+  rm -rf /var/lib/apt/lists/*
+  
+%runscript
+  aria2c $@

@@ -23524,7 +23524,7 @@ automl/HPOBench:
     \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/86b984292042d233294c09940c1b7dade7c877c1220bc419f2e2227eb0f775f0/68747470733a2f2f636f6465636f762e696f2f67682f6175746f6d6c2f48504f42656e63682f6272616e63682f646576656c6f706d656e742f67726170682f62616467652e737667\"\
     \ alt=\"codecov\" data-canonical-src=\"https://codecov.io/gh/automl/HPOBench/branch/development/graph/badge.svg\"\
     \ style=\"max-width:100%;\"></a></p>\n"
-  stargazers_count: 37
+  stargazers_count: 38
   subscribers_count: 7
   topics:
   - hyperparameter-optimization
@@ -23533,7 +23533,7 @@ automl/HPOBench:
   - benchmark
   - containerized-benchmarks
   - hpolib
-  updated_at: 1630077125.0
+  updated_at: 1630337226.0
 bananaeat/Cinnamon_assembly:
   data_format: 2
   description: null
@@ -35560,7 +35560,7 @@ gpuhackathons-org/gpubootcamp:
     rel="nofollow">OpenACC Slack Channel</a>.</p>
 
     '
-  stargazers_count: 94
+  stargazers_count: 95
   subscribers_count: 8
   topics:
   - machine-learning
@@ -35575,7 +35575,7 @@ gpuhackathons-org/gpubootcamp:
   - rapidsai
   - openmp
   - ai4hpc
-  updated_at: 1630244530.0
+  updated_at: 1630352256.0
 granek/jupyter-MIC-2021:
   data_format: 2
   description: null
@@ -37201,6 +37201,204 @@ hmgu-itg/peakplotter:
   subscribers_count: 2
   topics: []
   updated_at: 1630042515.0
+hmgu-itg/single-point-analysis-pipeline:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: hmgu-itg/single-point-analysis-pipeline
+  latest_release: 0.0.1
+  readme: "<h1>\n<a id=\"user-content-ti-hba-mr-preprocessing\" class=\"anchor\" href=\"\
+    #ti-hba-mr-preprocessing\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>TI HBA MR Preprocessing</h1>\n<p>This is a basic\
+    \ preprocessing pipeline for MRI data from the Healthy Brain Ageing Clinic at\
+    \ the Thompson Institute, USC.</p>\n<h2>\n<a id=\"user-content-pipeline-overview\"\
+    \ class=\"anchor\" href=\"#pipeline-overview\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Pipeline overview</h2>\n<p>These\
+    \ are the steps of the pipeline. These steps are explained in more detail below,\
+    \ along with links to helpful resources/documentation and citations.</p>\n<ol>\n\
+    <li>Dicoms are converted to a BIDS compliant dataset with HeuDiConv.</li>\n<li>Automatic\
+    \ QC for the T1-weighted scan using MRIQC.</li>\n<li>Subcortical segmentation\
+    \ and cortical parcellation with FastSurfer (includes QC).</li>\n<li>Brain age\
+    \ prediction with DeepBrainNet.</li>\n<li>WMH segmentation with FSL's BIANCA.</li>\n\
+    <li>DWI preprocessing with QSIprep.</li>\n<li>rsfMRI preprocessing with fMRIprep.</li>\n\
+    </ol>\n<p>Each of these steps should be cited appropriately if used in publication\
+    \ (citations included below).</p>\n<h3>\n<a id=\"user-content-ideas-behind-implementation\"\
+    \ class=\"anchor\" href=\"#ideas-behind-implementation\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Ideas behind\
+    \ implementation</h3>\n<p>The pipeline was developed with the following ideas\
+    \ in mind:</p>\n<ul>\n<li>\n<code>submit_jobs.sh</code> orchestrates the pipeline\
+    \ by submitting a job on the HPC for each participant. For regular use, this is\
+    \ the only file that should need editing, e.g. editing paths and PBS parameters.</li>\n\
+    <li>\n<code>run_pipeline.py</code> includes the main processing pipeline and simply\
+    \ wraps the Singularity commands for each step.</li>\n<li>Each step is implemented\
+    \ in its own container on the HPC. Containers can be built from Dockerfile/Singularity\
+    \ files in the <code>*_src</code> folders or from published containters (noted\
+    \ in each section below).</li>\n</ul>\n<p>To setup it requires building multiple\
+    \ containers, but the idea was for this pipeline to remain 'modular' so that each\
+    \ processing step is independent and can be modified/removed without affecting\
+    \ the rest of the pipeline (with the exception of dicom to BIDS conversion being\
+    \ required for all subsequent steps). Similarly, the pipeline can be extended\
+    \ by adding a container, processing script/command and a function in the <code>run_pipeline.py</code>\
+    \ script.</p>\n<h2>\n<a id=\"user-content-assumed-input-file-structure\" class=\"\
+    anchor\" href=\"#assumed-input-file-structure\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Assumed input file structure</h2>\n\
+    <p>The pipeline takes dicoms as its input with the assumed file structure before\
+    \ processing being:</p>\n<div class=\"highlight highlight-source-shell\"><pre>\u251C\
+    \u2500\u2500 bids\n\u251C\u2500\u2500 derivatives\n\u251C\u2500\u2500 dicom\n\
+    \    \u251C\u2500\u2500 HBA_0001_T1\n        \u251C\u2500\u2500 RESEARCH_PROTOCOLS_<span\
+    \ class=\"pl-k\">*</span>\n            \u251C\u2500\u2500 AAHEAD_SCOUT_64CH_HEAD_COIL_<span\
+    \ class=\"pl-k\">*</span>\n            \u251C\u2500\u2500 MPRAGE_<span class=\"\
+    pl-k\">*</span>\n            \u251C\u2500\u2500 EP2D_DIFF_QBALL96DIR_<span class=\"\
+    pl-k\">*</span>\n            ...\n    \u251C\u2500\u2500 HBA_0002_T1\n       \
+    \ \u251C\u2500\u2500 RESEARCH_PROTOCOLS_<span class=\"pl-k\">*</span>\n      \
+    \      \u251C\u2500\u2500 AAHEAD_SCOUT_64CH_HEAD_COIL_<span class=\"pl-k\">*</span>\n\
+    \            \u251C\u2500\u2500 MPRAGE_<span class=\"pl-k\">*</span>\n       \
+    \     \u251C\u2500\u2500 EP2D_DIFF_QBALL96DIR_<span class=\"pl-k\">*</span>\n\
+    \            ...\n    ...\n\u251C\u2500\u2500 TI-HBA-MRprep</pre></div>\n<p>Where...</p>\n\
+    <ul>\n<li>\n<code>dicom</code> = where the dicoms will be copied for each participant\
+    \ to be processed</li>\n<li>\n<code>bids</code> = the BIDS compliant data converted\
+    \ from <code>dicom</code>\n</li>\n<li>\n<code>derivatives</code> = the pipeline\
+    \ outputs</li>\n<li>\n<code>TI-HBA-MRprep</code> = the code in this repository</li>\n\
+    </ul>\n<h2>\n<a id=\"user-content-intended-usage\" class=\"anchor\" href=\"#intended-usage\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Intended usage</h2>\n<ol>\n<li>Make sure directory structure exists\
+    \ as shown <a href=\"##Assumed-input-file-structure\">above</a> in the analysis\
+    \ directory on the HPC.</li>\n<li>Clone this repo and move to the HPC.</li>\n\
+    <li>Copy dicoms to process into the <code>dicom</code> directory.</li>\n<li>Update/check\
+    \ the schedular parameters in <code>submit_jobs.sh</code>. It might take some\
+    \ testing to get these right, afterwhich they most likely won't need to be changed\
+    \ often.</li>\n<li>Update/check the file paths in <code>submit_jobs.sh</code>\n\
+    </li>\n<li>When ready to run the pipeline, type the following in terminal:</li>\n\
+    </ol>\n<div class=\"highlight highlight-source-shell\"><pre><span class=\"pl-c1\"\
+    >cd</span> /path/on/HPC\n<span class=\"pl-c1\">source</span> submit_jobs.sh</pre></div>\n\
+    <p>...where <code>/path/on/HPC</code> is the appropriate path to the data and\
+    \ code on the HPC.</p>\n<h2>\n<a id=\"user-content-detailed-processing-steps\"\
+    \ class=\"anchor\" href=\"#detailed-processing-steps\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Detailed processing\
+    \ steps</h2>\n<blockquote>\n<p><strong>NOTE:</strong> FastSurfer, QSIprep and\
+    \ fMRIprep require a FreeSurfer license, which can be obtained for free from <a\
+    \ href=\"https://surfer.nmr.mgh.harvard.edu/fswiki/License\" rel=\"nofollow\"\
+    >here</a>. The file needs to be passed to the <code>submit_jobs.sh</code> script.</p>\n\
+    </blockquote>\n<h3>\n<a id=\"user-content-dicom-to-bids\" class=\"anchor\" href=\"\
+    #dicom-to-bids\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>Dicom to BIDS</h3>\n<p>BIDS is a standard for structuring\
+    \ neuroimaging datasets that is being increasingly implemented that allows a consistent\
+    \ interface and documentation of datasets. A number of open source pipelines expect\
+    \ input to be in BIDS format.</p>\n<p>HeuDiConv has been developed to automate\
+    \ the conversion from dicom to BIDS. It requires some setup (i.e. putting together\
+    \ a <code>heuristic.py</code> file to provide the rules for conversion), however\
+    \ this will generally only need to be setup once and has been done (see <code>heudiconv_src/heuristic.py</code>).\
+    \ This would need updating if the MRI sequences change. Example commands to help\
+    \ with the setup are included in the comments in the docstring for the <code>runDcm2BIDS</code>\
+    \ function in the <code>run_pipeline.py</code> file.</p>\n<p>For more info see\
+    \ <a href=\"https://bids.neuroimaging.io/\" rel=\"nofollow\">BIDS</a> and <a href=\"\
+    https://heudiconv.readthedocs.io/en/latest/\" rel=\"nofollow\">HeuDiConv</a> documentation,\
+    \ also this HeuDiConv <a href=\"https://reproducibility.stanford.edu/bids-tutorial-series-part-2a/\"\
+    \ rel=\"nofollow\">walkthrough</a> and <a href=\"https://github.com/bids-standard/bids-starter-kit/wiki/\"\
+    >wiki</a>. The HeuDiConv <a href=\"https://heudiconv.readthedocs.io/en/latest/installation.html#docker\"\
+    \ rel=\"nofollow\">container</a>.</p>\n<h3>\n<a id=\"user-content-mriqc\" class=\"\
+    anchor\" href=\"#mriqc\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>MRIQC</h3>\n<p>This is an automated QC pipeline\
+    \ for T1-weighted, T2-weighted and fMRI sequences (if present in BIDS folder).\
+    \ It produces visual reports and a range of QC metrics that may be useful for\
+    \ further analysis.</p>\n<p>See <a href=\"https://mriqc.readthedocs.io/en/stable/\"\
+    \ rel=\"nofollow\">documentation</a>, <a href=\"https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0184661\"\
+    \ rel=\"nofollow\">citation</a> and the <a href=\"https://hub.docker.com/r/poldracklab/mriqc/\"\
+    \ rel=\"nofollow\">container</a>.</p>\n<h3>\n<a id=\"user-content-fastsurfer\"\
+    \ class=\"anchor\" href=\"#fastsurfer\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>FastSurfer</h3>\n<p>FastSurfer\
+    \ is a deep learning implementation of FreeSurfer. It provides essentially the\
+    \ same output but is faster (as you may have guessed) and more accurate.</p>\n\
+    <p>See the <a href=\"https://deep-mi.org/research/fastsurfer/\" rel=\"nofollow\"\
+    >documentation</a>, <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811920304985\"\
+    \ rel=\"nofollow\">citation</a> and the <a href=\"https://github.com/Deep-MI/FastSurfer\"\
+    >github</a> which also includes <a href=\"https://github.com/Deep-MI/FastSurfer/tree/master/Docker\"\
+    >Dockerfiles</a>.</p>\n<h4>\n<a id=\"user-content-fastsurfer-qc\" class=\"anchor\"\
+    \ href=\"#fastsurfer-qc\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>FastSurfer QC</h4>\n<p>This is just a quick\
+    \ visual QC step for the output of FastSurfer and is run automatically. It produces\
+    \ a CSV file with some QC metrics (some of which overlap with MRIQC) and screenshots\
+    \ to check the segmentation and cortical parcellation.</p>\n<p>This is only designed\
+    \ for quick, preliminary visual QC and full visual QC should be completed before\
+    \ any statistical analysis for publication (see <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811921004511\"\
+    \ rel=\"nofollow\">here</a> for discussion of QC approaches).</p>\n<p>See the\
+    \ <a href=\"https://github.com/Deep-MI/qatools-python\">documentation</a>.</p>\n\
+    <h3>\n<a id=\"user-content-deepbrainnet\" class=\"anchor\" href=\"#deepbrainnet\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>DeepBrainNet</h3>\n<p>This is a deep learning model developed for\
+    \ the prediction of brain age. It produces a single predicted age based on the\
+    \ T1-weighted input, which can then be used to calculate a difference score with\
+    \ chronological age.</p>\n<p>The model has been implemented in <a href=\"https://antsx.github.io/ANTsPyNet/docs/build/html/utilities.html\"\
+    \ rel=\"nofollow\">ANTsPyNet</a>, including the preprocessing steps, which is\
+    \ used in <code>deep-brain-net_src/run_prediction.py</code>. The Dockerfile/Singularity\
+    \ file is also included in the <code>deep-brain-net_src</code> folder.</p>\n<p>See\
+    \ the <a href=\"https://academic.oup.com/brain/article/143/7/2312/5863667?login=true\"\
+    \ rel=\"nofollow\">citation</a> for more info about the model development and\
+    \ interpretation and original <a href=\"https://github.com/vishnubashyam/DeepBrainNet\"\
+    >code</a> from authors.</p>\n<h3>\n<a id=\"user-content-wmh-segmentation-with-bianca\"\
+    \ class=\"anchor\" href=\"#wmh-segmentation-with-bianca\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>WMH segmentation\
+    \ with BIANCA</h3>\n<p>BIANCA requires some pre/post processing. The steps used\
+    \ are:</p>\n<ul>\n<li>Preprocess T1 and FLAIR with <code>fsl_anat</code> (see\
+    \ <a href=\"https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/fsl_anat\" rel=\"nofollow\"\
+    >docs</a>)</li>\n<li>Create a white matter mask with <code>make_bianca_mask</code>\
+    \ (see BIANCA <a href=\"https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/BIANCA/Userguide#Data_preparation\"\
+    \ rel=\"nofollow\">docs</a>)</li>\n<li>Create <code>masterfile.txt</code> as input\
+    \ for BIANCA</li>\n<li>The BIANCA output is a probability image, so apply thresholding\
+    \ (default to 0.9 here)</li>\n<li>Extract the total WMH number and volume'</li>\n\
+    </ul>\n<p>BIANCA also requires some manually labeled WMH masks as training data.\
+    \ A recent <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811921004663?via%3Dihub#bib0013\"\
+    \ rel=\"nofollow\">paper</a> suggested the use of consistent training labels may\
+    \ be beneficial to avoid inter-rater variability between manual segmentations.\
+    \ Currently, this pipeline makes use of manual segmentations provided by those\
+    \ authors (included in container) for the training labels. This could be changed\
+    \ in future if a sample of HBA participants were manually segmented.</p>\n<p>BIANCA\
+    \ <a href=\"https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/BIANCA/Userguide#Data_preparation\"\
+    \ rel=\"nofollow\">documentation</a>, <a href=\"https://fsl.fmrib.ox.ac.uk/fslcourse/lectures/practicals/seg_struc/#bianca\"\
+    \ rel=\"nofollow\">tutorial</a> and <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811916303251?via%3Dihub\"\
+    \ rel=\"nofollow\">citation</a>, as well as the <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811921004663?via%3Dihub#bib0013\"\
+    \ rel=\"nofollow\">citation</a> and discussion for training labels that can be\
+    \ found <a href=\"https://issues.dpuk.org/eugeneduff/wmh_harmonisation/-/tree/master/BIANCA_training_datasets\"\
+    \ rel=\"nofollow\">here</a>.</p>\n<h3>\n<a id=\"user-content-qsiprep\" class=\"\
+    anchor\" href=\"#qsiprep\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>QSIprep</h3>\n<blockquote>\n<p><strong>IMPORTANT:</strong>\
+    \ This step has not been tested extensively. The defaults have been used for almost\
+    \ all options, however these should be checked before using this data in any further\
+    \ analysis.</p>\n</blockquote>\n<p>QSIprep is a BIDS app that runs preprocessing\
+    \ and reconstruction of DWI data. Only preprocessing is completed here but QSIprep\
+    \ is also an excellent tool to use for further analysis. Visual QC reports are\
+    \ also produced which provide and easy way to check the quality of the DWI data.</p>\n\
+    <p>QSIprep utilises a number of software packages that should be references (as\
+    \ well as the QSIprep citation). Example citation information with references\
+    \ in produced as part of processing and can be found in the <code>logs</code>\
+    \ folder of the output.</p>\n<p>Some steps in QSIprep (particularly eddy current\
+    \ correction and disortion correction with TOPUP) are resource intensive. Currently\
+    \ the pipeline is set to allow QSIprep's underlying workflow manager (<a href=\"\
+    https://nipype.readthedocs.io/en/latest/#\" rel=\"nofollow\">Nipype</a>) to manage\
+    \ the CPU and RAM usage by detecting how many CPUs are available and using 90%\
+    \ of available RAM (see MultiProc section <a href=\"https://miykael.github.io/nipype_tutorial/notebooks/basic_plugins.html\"\
+    \ rel=\"nofollow\">here</a>).</p>\n<p><a href=\"https://qsiprep.readthedocs.io/en/latest/index.html\"\
+    \ rel=\"nofollow\">Documentation</a>, <a href=\"https://www.nature.com/articles/s41592-021-01185-5\"\
+    \ rel=\"nofollow\">citation</a>, Docker <a href=\"https://hub.docker.com/r/pennbbl/qsiprep/\"\
+    \ rel=\"nofollow\">image</a> and info for using with <a href=\"https://qsiprep.readthedocs.io/en/latest/installation.html#singularity-container\"\
+    \ rel=\"nofollow\">Singularity</a>.</p>\n<h3>\n<a id=\"user-content-fmriprep\"\
+    \ class=\"anchor\" href=\"#fmriprep\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>fMRIprep</h3>\n<blockquote>\n\
+    <p><strong>IMPORTANT:</strong> This step has not been tested extensively. The\
+    \ defaults have been used for almost all options, however these should be checked\
+    \ before using this data in any further analysis.</p>\n</blockquote>\n<p>fMRIprep\
+    \ is another BIDS app for preprocessing fMRI data. As for QSIprep, fMRIprep uses\
+    \ several software packages that should also be referenced. Visual QC reports\
+    \ are also produced.</p>\n<p><a href=\"https://fmriprep.org/en/latest/index.html\"\
+    \ rel=\"nofollow\">Documentation</a>, <a href=\"https://www.nature.com/articles/s41592-018-0235-4\"\
+    \ rel=\"nofollow\">citation</a>, Docker <a href=\"https://hub.docker.com/r/nipreps/fmriprep\"\
+    \ rel=\"nofollow\">image</a> and info for using with <a href=\"https://fmriprep.org/en/latest/installation.html#containerized-execution-docker-and-singularity\"\
+    \ rel=\"nofollow\">Singularity</a>.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1630311500.0
 housw/BlendIt:
   data_format: 2
   description: null
@@ -39116,6 +39314,207 @@ jacobhepkema/scanem-motif:
   subscribers_count: 1
   topics: []
   updated_at: 1627983632.0
+jakepalmer/TI-HBA-MRprep:
+  data_format: 2
+  description: MR preprocessing for the Healthy Brain Ageing clinic at the Thompson
+    Institute, USC.
+  filenames:
+  - deep-brain-net_src/Singularity
+  - qatools_src/Singularity
+  - lesion-segmentation_src/Singularity
+  full_name: jakepalmer/TI-HBA-MRprep
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-ti-hba-mr-preprocessing\" class=\"anchor\" href=\"\
+    #ti-hba-mr-preprocessing\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>TI HBA MR Preprocessing</h1>\n<p>This is a basic\
+    \ preprocessing pipeline for MRI data from the Healthy Brain Ageing Clinic at\
+    \ the Thompson Institute, USC.</p>\n<h2>\n<a id=\"user-content-pipeline-overview\"\
+    \ class=\"anchor\" href=\"#pipeline-overview\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Pipeline overview</h2>\n<p>These\
+    \ are the steps of the pipeline. These steps are explained in more detail below,\
+    \ along with links to helpful resources/documentation and citations.</p>\n<ol>\n\
+    <li>Dicoms are converted to a BIDS compliant dataset with HeuDiConv.</li>\n<li>Automatic\
+    \ QC for the T1-weighted scan using MRIQC.</li>\n<li>Subcortical segmentation\
+    \ and cortical parcellation with FastSurfer (includes QC).</li>\n<li>Brain age\
+    \ prediction with DeepBrainNet.</li>\n<li>WMH segmentation with FSL's BIANCA.</li>\n\
+    <li>DWI preprocessing with QSIprep.</li>\n<li>rsfMRI preprocessing with fMRIprep.</li>\n\
+    </ol>\n<p>Each of these steps should be cited appropriately if used in publication\
+    \ (citations included below).</p>\n<h3>\n<a id=\"user-content-ideas-behind-implementation\"\
+    \ class=\"anchor\" href=\"#ideas-behind-implementation\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Ideas behind\
+    \ implementation</h3>\n<p>The pipeline was developed with the following ideas\
+    \ in mind:</p>\n<ul>\n<li>\n<code>submit_jobs.sh</code> orchestrates the pipeline\
+    \ by submitting a job on the HPC for each participant. For regular use, this is\
+    \ the only file that should need editing, e.g. editing paths and PBS parameters.</li>\n\
+    <li>\n<code>run_pipeline.py</code> includes the main processing pipeline and simply\
+    \ wraps the Singularity commands for each step.</li>\n<li>Each step is implemented\
+    \ in its own container on the HPC. Containers can be built from Dockerfile/Singularity\
+    \ files in the <code>*_src</code> folders or from published containters (noted\
+    \ in each section below).</li>\n</ul>\n<p>To setup it requires building multiple\
+    \ containers, but the idea was for this pipeline to remain 'modular' so that each\
+    \ processing step is independent and can be modified/removed without affecting\
+    \ the rest of the pipeline (with the exception of dicom to BIDS conversion being\
+    \ required for all subsequent steps). Similarly, the pipeline can be extended\
+    \ by adding a container, processing script/command and a function in the <code>run_pipeline.py</code>\
+    \ script.</p>\n<h2>\n<a id=\"user-content-assumed-input-file-structure\" class=\"\
+    anchor\" href=\"#assumed-input-file-structure\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Assumed input file structure</h2>\n\
+    <p>The pipeline takes dicoms as its input with the assumed file structure before\
+    \ processing being:</p>\n<div class=\"highlight highlight-source-shell\"><pre>\u251C\
+    \u2500\u2500 bids\n\u251C\u2500\u2500 derivatives\n\u251C\u2500\u2500 dicom\n\
+    \    \u251C\u2500\u2500 HBA_0001_T1\n        \u251C\u2500\u2500 RESEARCH_PROTOCOLS_<span\
+    \ class=\"pl-k\">*</span>\n            \u251C\u2500\u2500 AAHEAD_SCOUT_64CH_HEAD_COIL_<span\
+    \ class=\"pl-k\">*</span>\n            \u251C\u2500\u2500 MPRAGE_<span class=\"\
+    pl-k\">*</span>\n            \u251C\u2500\u2500 EP2D_DIFF_QBALL96DIR_<span class=\"\
+    pl-k\">*</span>\n            ...\n    \u251C\u2500\u2500 HBA_0002_T1\n       \
+    \ \u251C\u2500\u2500 RESEARCH_PROTOCOLS_<span class=\"pl-k\">*</span>\n      \
+    \      \u251C\u2500\u2500 AAHEAD_SCOUT_64CH_HEAD_COIL_<span class=\"pl-k\">*</span>\n\
+    \            \u251C\u2500\u2500 MPRAGE_<span class=\"pl-k\">*</span>\n       \
+    \     \u251C\u2500\u2500 EP2D_DIFF_QBALL96DIR_<span class=\"pl-k\">*</span>\n\
+    \            ...\n    ...\n\u251C\u2500\u2500 TI-HBA-MRprep</pre></div>\n<p>Where...</p>\n\
+    <ul>\n<li>\n<code>dicom</code> = where the dicoms will be copied for each participant\
+    \ to be processed</li>\n<li>\n<code>bids</code> = the BIDS compliant data converted\
+    \ from <code>dicom</code>\n</li>\n<li>\n<code>derivatives</code> = the pipeline\
+    \ outputs</li>\n<li>\n<code>TI-HBA-MRprep</code> = the code in this repository</li>\n\
+    </ul>\n<h2>\n<a id=\"user-content-intended-usage\" class=\"anchor\" href=\"#intended-usage\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Intended usage</h2>\n<ol>\n<li>Make sure directory structure exists\
+    \ as shown <a href=\"##Assumed-input-file-structure\">above</a> in the analysis\
+    \ directory on the HPC.</li>\n<li>Clone this repo and move to the HPC.</li>\n\
+    <li>Copy dicoms to process into the <code>dicom</code> directory.</li>\n<li>Update/check\
+    \ the schedular parameters in <code>submit_jobs.sh</code>. It might take some\
+    \ testing to get these right, afterwhich they most likely won't need to be changed\
+    \ often.</li>\n<li>Update/check the file paths in <code>submit_jobs.sh</code>\n\
+    </li>\n<li>When ready to run the pipeline, type the following in terminal:</li>\n\
+    </ol>\n<div class=\"highlight highlight-source-shell\"><pre><span class=\"pl-c1\"\
+    >cd</span> /path/on/HPC\n<span class=\"pl-c1\">source</span> submit_jobs.sh</pre></div>\n\
+    <p>...where <code>/path/on/HPC</code> is the appropriate path to the data and\
+    \ code on the HPC.</p>\n<h2>\n<a id=\"user-content-detailed-processing-steps\"\
+    \ class=\"anchor\" href=\"#detailed-processing-steps\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Detailed processing\
+    \ steps</h2>\n<blockquote>\n<p><strong>NOTE:</strong> FastSurfer, QSIprep and\
+    \ fMRIprep require a FreeSurfer license, which can be obtained for free from <a\
+    \ href=\"https://surfer.nmr.mgh.harvard.edu/fswiki/License\" rel=\"nofollow\"\
+    >here</a>. The file needs to be passed to the <code>submit_jobs.sh</code> script.</p>\n\
+    </blockquote>\n<h3>\n<a id=\"user-content-dicom-to-bids\" class=\"anchor\" href=\"\
+    #dicom-to-bids\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>Dicom to BIDS</h3>\n<p>BIDS is a standard for structuring\
+    \ neuroimaging datasets that is being increasingly implemented that allows a consistent\
+    \ interface and documentation of datasets. A number of open source pipelines expect\
+    \ input to be in BIDS format.</p>\n<p>HeuDiConv has been developed to automate\
+    \ the conversion from dicom to BIDS. It requires some setup (i.e. putting together\
+    \ a <code>heuristic.py</code> file to provide the rules for conversion), however\
+    \ this will generally only need to be setup once and has been done (see <code>heudiconv_src/heuristic.py</code>).\
+    \ This would need updating if the MRI sequences change. Example commands to help\
+    \ with the setup are included in the comments in the docstring for the <code>runDcm2BIDS</code>\
+    \ function in the <code>run_pipeline.py</code> file.</p>\n<p>For more info see\
+    \ <a href=\"https://bids.neuroimaging.io/\" rel=\"nofollow\">BIDS</a> and <a href=\"\
+    https://heudiconv.readthedocs.io/en/latest/\" rel=\"nofollow\">HeuDiConv</a> documentation,\
+    \ also this HeuDiConv <a href=\"https://reproducibility.stanford.edu/bids-tutorial-series-part-2a/\"\
+    \ rel=\"nofollow\">walkthrough</a> and <a href=\"https://github.com/bids-standard/bids-starter-kit/wiki/\"\
+    >wiki</a>. The HeuDiConv <a href=\"https://heudiconv.readthedocs.io/en/latest/installation.html#docker\"\
+    \ rel=\"nofollow\">container</a>.</p>\n<h3>\n<a id=\"user-content-mriqc\" class=\"\
+    anchor\" href=\"#mriqc\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>MRIQC</h3>\n<p>This is an automated QC pipeline\
+    \ for T1-weighted, T2-weighted and fMRI sequences (if present in BIDS folder).\
+    \ It produces visual reports and a range of QC metrics that may be useful for\
+    \ further analysis.</p>\n<p>See <a href=\"https://mriqc.readthedocs.io/en/stable/\"\
+    \ rel=\"nofollow\">documentation</a>, <a href=\"https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0184661\"\
+    \ rel=\"nofollow\">citation</a> and the <a href=\"https://hub.docker.com/r/poldracklab/mriqc/\"\
+    \ rel=\"nofollow\">container</a>.</p>\n<h3>\n<a id=\"user-content-fastsurfer\"\
+    \ class=\"anchor\" href=\"#fastsurfer\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>FastSurfer</h3>\n<p>FastSurfer\
+    \ is a deep learning implementation of FreeSurfer. It provides essentially the\
+    \ same output but is faster (as you may have guessed) and more accurate.</p>\n\
+    <p>See the <a href=\"https://deep-mi.org/research/fastsurfer/\" rel=\"nofollow\"\
+    >documentation</a>, <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811920304985\"\
+    \ rel=\"nofollow\">citation</a> and the <a href=\"https://github.com/Deep-MI/FastSurfer\"\
+    >github</a> which also includes <a href=\"https://github.com/Deep-MI/FastSurfer/tree/master/Docker\"\
+    >Dockerfiles</a>.</p>\n<h4>\n<a id=\"user-content-fastsurfer-qc\" class=\"anchor\"\
+    \ href=\"#fastsurfer-qc\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>FastSurfer QC</h4>\n<p>This is just a quick\
+    \ visual QC step for the output of FastSurfer and is run automatically. It produces\
+    \ a CSV file with some QC metrics (some of which overlap with MRIQC) and screenshots\
+    \ to check the segmentation and cortical parcellation.</p>\n<p>This is only designed\
+    \ for quick, preliminary visual QC and full visual QC should be completed before\
+    \ any statistical analysis for publication (see <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811921004511\"\
+    \ rel=\"nofollow\">here</a> for discussion of QC approaches).</p>\n<p>See the\
+    \ <a href=\"https://github.com/Deep-MI/qatools-python\">documentation</a>.</p>\n\
+    <h3>\n<a id=\"user-content-deepbrainnet\" class=\"anchor\" href=\"#deepbrainnet\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>DeepBrainNet</h3>\n<p>This is a deep learning model developed for\
+    \ the prediction of brain age. It produces a single predicted age based on the\
+    \ T1-weighted input, which can then be used to calculate a difference score with\
+    \ chronological age.</p>\n<p>The model has been implemented in <a href=\"https://antsx.github.io/ANTsPyNet/docs/build/html/utilities.html\"\
+    \ rel=\"nofollow\">ANTsPyNet</a>, including the preprocessing steps, which is\
+    \ used in <code>deep-brain-net_src/run_prediction.py</code>. The Dockerfile/Singularity\
+    \ file is also included in the <code>deep-brain-net_src</code> folder.</p>\n<p>See\
+    \ the <a href=\"https://academic.oup.com/brain/article/143/7/2312/5863667?login=true\"\
+    \ rel=\"nofollow\">citation</a> for more info about the model development and\
+    \ interpretation and original <a href=\"https://github.com/vishnubashyam/DeepBrainNet\"\
+    >code</a> from authors.</p>\n<h3>\n<a id=\"user-content-wmh-segmentation-with-bianca\"\
+    \ class=\"anchor\" href=\"#wmh-segmentation-with-bianca\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>WMH segmentation\
+    \ with BIANCA</h3>\n<p>BIANCA requires some pre/post processing. The steps used\
+    \ are:</p>\n<ul>\n<li>Preprocess T1 and FLAIR with <code>fsl_anat</code> (see\
+    \ <a href=\"https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/fsl_anat\" rel=\"nofollow\"\
+    >docs</a>)</li>\n<li>Create a white matter mask with <code>make_bianca_mask</code>\
+    \ (see BIANCA <a href=\"https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/BIANCA/Userguide#Data_preparation\"\
+    \ rel=\"nofollow\">docs</a>)</li>\n<li>Create <code>masterfile.txt</code> as input\
+    \ for BIANCA</li>\n<li>The BIANCA output is a probability image, so apply thresholding\
+    \ (default to 0.9 here)</li>\n<li>Extract the total WMH number and volume'</li>\n\
+    </ul>\n<p>BIANCA also requires some manually labeled WMH masks as training data.\
+    \ A recent <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811921004663?via%3Dihub#bib0013\"\
+    \ rel=\"nofollow\">paper</a> suggested the use of consistent training labels may\
+    \ be beneficial to avoid inter-rater variability between manual segmentations.\
+    \ Currently, this pipeline makes use of manual segmentations provided by those\
+    \ authors (included in container) for the training labels. This could be changed\
+    \ in future if a sample of HBA participants were manually segmented.</p>\n<p>BIANCA\
+    \ <a href=\"https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/BIANCA/Userguide#Data_preparation\"\
+    \ rel=\"nofollow\">documentation</a>, <a href=\"https://fsl.fmrib.ox.ac.uk/fslcourse/lectures/practicals/seg_struc/#bianca\"\
+    \ rel=\"nofollow\">tutorial</a> and <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811916303251?via%3Dihub\"\
+    \ rel=\"nofollow\">citation</a>, as well as the <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811921004663?via%3Dihub#bib0013\"\
+    \ rel=\"nofollow\">citation</a> and discussion for training labels that can be\
+    \ found <a href=\"https://issues.dpuk.org/eugeneduff/wmh_harmonisation/-/tree/master/BIANCA_training_datasets\"\
+    \ rel=\"nofollow\">here</a>.</p>\n<h3>\n<a id=\"user-content-qsiprep\" class=\"\
+    anchor\" href=\"#qsiprep\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>QSIprep</h3>\n<blockquote>\n<p><strong>IMPORTANT:</strong>\
+    \ This step has not been tested extensively. The defaults have been used for almost\
+    \ all options, however these should be checked before using this data in any further\
+    \ analysis.</p>\n</blockquote>\n<p>QSIprep is a BIDS app that runs preprocessing\
+    \ and reconstruction of DWI data. Only preprocessing is completed here but QSIprep\
+    \ is also an excellent tool to use for further analysis. Visual QC reports are\
+    \ also produced which provide and easy way to check the quality of the DWI data.</p>\n\
+    <p>QSIprep utilises a number of software packages that should be references (as\
+    \ well as the QSIprep citation). Example citation information with references\
+    \ in produced as part of processing and can be found in the <code>logs</code>\
+    \ folder of the output.</p>\n<p>Some steps in QSIprep (particularly eddy current\
+    \ correction and disortion correction with TOPUP) are resource intensive. Currently\
+    \ the pipeline is set to allow QSIprep's underlying workflow manager (<a href=\"\
+    https://nipype.readthedocs.io/en/latest/#\" rel=\"nofollow\">Nipype</a>) to manage\
+    \ the CPU and RAM usage by detecting how many CPUs are available and using 90%\
+    \ of available RAM (see MultiProc section <a href=\"https://miykael.github.io/nipype_tutorial/notebooks/basic_plugins.html\"\
+    \ rel=\"nofollow\">here</a>).</p>\n<p><a href=\"https://qsiprep.readthedocs.io/en/latest/index.html\"\
+    \ rel=\"nofollow\">Documentation</a>, <a href=\"https://www.nature.com/articles/s41592-021-01185-5\"\
+    \ rel=\"nofollow\">citation</a>, Docker <a href=\"https://hub.docker.com/r/pennbbl/qsiprep/\"\
+    \ rel=\"nofollow\">image</a> and info for using with <a href=\"https://qsiprep.readthedocs.io/en/latest/installation.html#singularity-container\"\
+    \ rel=\"nofollow\">Singularity</a>.</p>\n<h3>\n<a id=\"user-content-fmriprep\"\
+    \ class=\"anchor\" href=\"#fmriprep\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>fMRIprep</h3>\n<blockquote>\n\
+    <p><strong>IMPORTANT:</strong> This step has not been tested extensively. The\
+    \ defaults have been used for almost all options, however these should be checked\
+    \ before using this data in any further analysis.</p>\n</blockquote>\n<p>fMRIprep\
+    \ is another BIDS app for preprocessing fMRI data. As for QSIprep, fMRIprep uses\
+    \ several software packages that should also be referenced. Visual QC reports\
+    \ are also produced.</p>\n<p><a href=\"https://fmriprep.org/en/latest/index.html\"\
+    \ rel=\"nofollow\">Documentation</a>, <a href=\"https://www.nature.com/articles/s41592-018-0235-4\"\
+    \ rel=\"nofollow\">citation</a>, Docker <a href=\"https://hub.docker.com/r/nipreps/fmriprep\"\
+    \ rel=\"nofollow\">image</a> and info for using with <a href=\"https://fmriprep.org/en/latest/installation.html#containerized-execution-docker-and-singularity\"\
+    \ rel=\"nofollow\">Singularity</a>.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1630381276.0
 james20141606/exSeek:
   data_format: 2
   description: 'exSeek: extracellular RNA analysis tool for noninvasive biomarker'
@@ -48338,6 +48737,7 @@ pmitev/Teoroo-singularity:
   - MD2-lab/Singularity.md2-lab
   - obabel/Singularity.obabel
   - pp/Singularity.pp2
+  - aria2/Singularity.aria2c
   - texlive/Singularity.texlive
   - tools/Singularity.meld
   - tools/Singularity.gnuplot
@@ -48379,7 +48779,7 @@ pmitev/Teoroo-singularity:
   topics:
   - singularity
   - singularity-containers
-  updated_at: 1623074518.0
+  updated_at: 1630305583.0
 pmitev/UPPMAX-Singularity:
   data_format: 2
   description: UPPMAX Singularity builds
@@ -57291,7 +57691,7 @@ sc-eQTLgen-consortium/WG1-pipeline-QC:
   stargazers_count: 2
   subscribers_count: 2
   topics: []
-  updated_at: 1623743752.0
+  updated_at: 1630383376.0
 sdsc/sdsc-summer-institute-2021:
   data_format: 2
   description: San Diego Supercomputer Center Summer Institute
@@ -61361,6 +61761,25 @@ timo-singularity/rivet:
   subscribers_count: 1
   topics: []
   updated_at: 1622810530.0
+tin6150/r4eta:
+  data_format: 2
+  description: Container for R with libraries for LBNL Energy Technology Area project
+  filenames:
+  - Singularity
+  full_name: tin6150/r4eta
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-codefmab" class="anchor" href="#codefmab" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>CodeFMAB</h1>
+
+    <p>Code and supplementary documents supporting the FMAB book project</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1630368702.0
 tjhendrickson/BIDS_scripts:
   data_format: 2
   description: null
@@ -62904,6 +63323,25 @@ vivekkatial/qaoa-three-sat:
   subscribers_count: 1
   topics: []
   updated_at: 1607596883.0
+vpbrendel/CodeFMAB:
+  data_format: 2
+  description: code  and supplementary documents supporting the FMAB book project
+  filenames:
+  - BSKL/SingularityFMAB
+  full_name: vpbrendel/CodeFMAB
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-codefmab" class="anchor" href="#codefmab" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>CodeFMAB</h1>
+
+    <p>Code and supplementary documents supporting the FMAB book project</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1630363835.0
 weatherlab/metview:
   data_format: 2
   description: null

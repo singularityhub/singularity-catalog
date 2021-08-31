@@ -1,0 +1,37 @@
+bootstrap: docker
+From: fedora:34
+
+%post
+    dnf -y update
+    dnf -y install bc git tcsh tzdata unzip zip wget which bzip2
+    dnf -y install gcc gcc-c++ gcc-gfortran make
+
+
+    echo 'Installing BLAST+ version 2.12.0 from NCBI '
+    #### Prerequisites
+    #### Install
+    cd /opt
+    wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.12.0/ncbi-blast-2.12.0+-x64-linux.tar.gz
+    tar -xzf ncbi-blast-2.12.0+-x64-linux.tar.gz
+    rm ncbi-blast-2.12.0+-x64-linux.tar.gz
+    ln -s ncbi-blast-2.12.0+ BLAST
+
+    echo 'Installing VMATCH aligner version 2.3.1 from http://vmatch.de '
+    #### Prerequisites
+    #### Install
+    cd /opt
+    wget http://vmatch.de/distributions/vmatch-2.3.1-Linux_x86_64-64bit.tar.gz
+    tar -xzf vmatch-2.3.1-Linux_x86_64-64bit.tar.gz
+    rm vmatch-2.3.1-Linux_x86_64-64bit.tar.gz
+    ln -s vmatch-2.3.1-Linux_x86_64-64bit VMATCH
+
+
+%environment
+    export LC_ALL=C
+    export PATH=$PATH:/opt/bin
+    export PATH=$PATH:/opt/VMATCH
+    export PATH=$PATH:/opt/BLAST/bin
+
+%labels
+    Maintainer vpbrendel
+    Version v1.1.0
