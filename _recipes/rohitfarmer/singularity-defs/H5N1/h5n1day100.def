@@ -104,7 +104,7 @@ From: ubuntu:bionic
 
 # Install R packages
         # CRAN Packages
-        R --quite --slave -e 'install.packages("devtools", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'install.packages("devtools", repos="https://cloud.r-project.org/")'
         R --quiet --slave -e 'library(devtools); install_version("caTools", version = "1.17.1.2", repos="https://cloud.r-project.org/")' 
         R --quiet --slave -e 'library(devtools); install_version("tidyverse", version = "1.2.1", repos="https://cloud.r-project.org/")' 
         R --quiet --slave -e 'library(devtools); install_version("feather", version = "0.3.2", repos="https://cloud.r-project.org/")' 
