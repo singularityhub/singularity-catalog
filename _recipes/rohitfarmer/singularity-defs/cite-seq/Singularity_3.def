@@ -98,7 +98,7 @@ From: ubuntu:xenial
 
 # Install R packages
         # CRAN Packages
-        R --quite --slave -e 'install.packages("devtools", repos="https://cloud.r-project.org/")'
+        R --quiet --slave -e 'install.packages("devtools", repos="https://cloud.r-project.org/")'
         R --quiet --slave -e 'library(devtools); install_version("tidyverse", version = "1.2.1", repos="https://cloud.r-project.org/")'
         R --quiet --slave -e 'library(devtools); install_version("parallelDist", version = "0.2.4", repos="https://cloud.r-project.org/")'
         R --quiet --slave -e 'library(devtools); install_version("MASS", version = "7.3-51.1", repos="https://cloud.r-project.org/")' 

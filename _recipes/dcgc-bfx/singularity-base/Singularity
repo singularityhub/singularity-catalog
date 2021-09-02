@@ -70,7 +70,7 @@ from: debian:buster-20201012
     
     # install basic system tools and libs 
     apt-get clean && apt-get update -y && apt-get upgrade -y
-    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc pandoc-citeproc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-serial-dev
+    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc pandoc-citeproc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpango1.0-dev  libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-serial-dev
     
     # no texlive-fonts-extra due to mmap
     
@@ -92,7 +92,7 @@ from: debian:buster-20201012
     cd /opt && wget -O R-${R_VERSION}.tar.gz -nv https://cran.rstudio.com/src/base/R-4/R-${R_VERSION}.tar.gz && \
     tar -zxf R-${R_VERSION}.tar.gz  && \
     cd R-${R_VERSION} && \
-    ./configure --prefix=/opt/R/${R_VERSION} --with-blas --with-lapack --with-readline --with-pcre2 --with-tcltk --with-cairo --with-libpng --with-jpeglib --with-libtiff && \
+    ./configure --prefix=/opt/R/${R_VERSION} --with-blas --with-lapack --with-readline=no --with-pcre2 --with-tcltk --with-cairo --with-libpng --with-jpeglib --with-libtiff && \
     make -j $COMPILE_CPUS -k && \
     make install && \
     ln -s /opt/R/${R_VERSION}/bin/R /opt/bin/R && \
@@ -100,6 +100,8 @@ from: debian:buster-20201012
     cd /opt && \
     rm -r R-${R_VERSION}.tar.gz R-${R_VERSION}
     
+    # R set time zone manually
+    echo "TZ=Europe/Berlin" >> /opt/R/${R_VERSION}/lib/R/etc/Renviron.site 
 
     # CRAN packages
 	# --no-init-file prevents R from loading user settings since all should be independent from the user
@@ -121,8 +123,8 @@ from: debian:buster-20201012
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');devtools::install_github("cboettig/knitcitations")'
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');remotes::install_github("rstudio/DT")'
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');devtools::install_github("rstudio/bookdown")'
-
-
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');devtools::install_github("ROpenSci/bibtex")'
+    
     ###########
     # RStudio #
     ###########

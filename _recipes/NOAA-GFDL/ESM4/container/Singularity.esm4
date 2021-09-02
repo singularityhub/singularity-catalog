@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: thomasrobinson/centos7-netcdff:4.5.3-c4.7.4-gcc-mpich
+
+Stage: build
+
+%post
+  # Install all the required software
+  . /opt/spack/share/spack/setup-env.sh
+  # Install ESM4
+  git clone --recursive -b 2021.03 https://github.com/NOAA-GFDL/ESM4.git && cd ESM4/exec
+  make gcc=on OPENMP=on SH=sh CLUBB=off
+  mkdir -p /opt/ESM4
+  cp esm4.1.x /opt/ESM4
+
+%environment
+  export PATH=/opt/ESM4:$PATH
+
+%runscript
+  ulimit -s unlimited
+  /opt/ESM4/esm4.1.x
+

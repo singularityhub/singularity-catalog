@@ -13,7 +13,7 @@ From: ubuntu:18.04
     export TZ=Europe/Berlin
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
     
-    apt install -y tabix moreutils git wget zip unzip python3-pip r-base sqlite3
+    apt install -y tabix moreutils git wget zip unzip python3-pip r-base sqlite3 python-dev python-pip
 
 
 # locuszoom    
@@ -37,12 +37,6 @@ From: ubuntu:18.04
 	GWAS_CATS={"b38":{}}
 	LD_DB={"b38":{}}
 	EOF
-
-
-# Bedtools
-    apt install -y python-pip
-    apt-get install -y zlib1g zlib1g-dev firefox python-dev emacs
-    pip install scipy pandas numpy scikit-learn==0.14.1
 
 # PLINK
     cd /opt

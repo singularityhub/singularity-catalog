@@ -120,8 +120,8 @@ From: ubuntu:xenial
 
 # Install R packages
         echo "Installing R packages"
-        R --quite --slave -e 'install.packages("devtools", repos="https://cloud.r-project.org/")' > /dev/null
-        R --quite --slave -e 'install.packages("devtools", repos="https://cloud.r-project.org/")' > /dev/null
+        R --quiet --slave -e 'install.packages("devtools", repos="https://cloud.r-project.org/")' > /dev/null
+        R --quiet --slave -e 'install.packages("devtools", repos="https://cloud.r-project.org/")' > /dev/null
         R --quiet --slave -e 'library(devtools); install_version("tidyverse", version = "1.2.1", repos="https://cloud.r-project.org/")' > /dev/null
         R --quiet --slave -e 'library(devtools); install_version("Seurat", version = "2.3.4", repos="https://cloud.r-project.org/")' > /dev/null
         R --quiet --slave -e 'library(devtools); install_version("parallelDist", version = "0.2.4", repos="https://cloud.r-project.org/")' > /dev/null

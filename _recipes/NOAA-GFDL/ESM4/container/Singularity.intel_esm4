@@ -1,0 +1,41 @@
+Bootstrap: localimage
+From: intel2021.2_netcdfc4.7.4_ubuntu.sif
+Stage: build
+## Singularity def file used to create ESM4
+
+%post
+ cd /opt
+## Build the ESM4 from github
+ git clone --recursive https://github.com/NOAA-GFDL/ESM4.git -b 2021.03
+     cd ESM4/exec 
+     make -j 20 HDF_INCLUDE=-I/opt/hdf5/include HDF_LIBS="-L/opt/hdf5/lib -lhdf5 -lhdf5_fortran -lhdf5_hl -lhdf5hl_fortran"
+     cp esm4.1.x /opt/ESM4 
+ chmod 777 /opt/ESM4/esm4.1.x
+
+## Move FMS to opt
+cp -r fms /opt
+
+Bootstrap: docker
+From: intel/oneapi-runtime:ubuntu18.04
+Stage: final
+
+%files from build
+/opt/hdf5
+/opt/netcdf-c
+/opt/netcdf-fortran
+/opt/fms
+/opt/ESM4/esm4.1.x
+## Add the ESM4 executable to the path
+%environment
+PATH=/opt/ESM4:/opt/netcdf-c/bin:/opt/netcdf-fortran/bin:${PATH}
+LD_LIBRARY_PATH=/opt/fms/build/libFMS/.libs:/opt/netcdf-c/lib:/opt/netcdf-fortran/lib:/opt/hdf5/lib:/opt/intel/oneapi/lib:/opt/intel/oneapi/lib/intel64/:/opt/intel/oneapi/lib/intel64/lib:/opt/intel/oneapi/lib/intel64/libfabric:${LD_LIBRARY_PATH}
+export LIBRARY_PATH=/opt/fms/build/libFMS/.libs:/opt/netcdf-c/lib:/opt/netcdf-fortran/lib:/opt/hdf5/lib:/opt/intel/oneapi/lib:/opt/intel/oneapi/lib/intel64/:/opt/intel/oneapi/lib/intel64/lib:/opt/intel/oneapi/lib/intel64/libfabric
+export KMP_STACKSIZE=512m
+export NC_BLKSZ=1M
+export F_UFMTENDIAN=big
+
+## Run ESM4
+%runscript
+ ulimit -s unlimited
+ /opt/ESM4/esm4.1.x
+
