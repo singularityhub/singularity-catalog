@@ -1,0 +1,42 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+  Author pmitev@gmail.com
+
+%environment
+  export LC_ALL=C
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export LC_ALL=C
+  export NCPU=$(grep -c ^processor /proc/cpuinfo)
+
+  mkdir -p /tmp/apt
+  echo "Dir::Cache "/tmp/apt";" > /etc/apt/apt.conf.d/singularity-cache.conf
+
+  apt-get update && \
+  apt-get  -y --no-install-recommends install less vim nano wget curl gawk git gnupg2 ca-certificates \
+#           libx11-xcb-dev libxkbcommon-dev libwayland-dev libxrandr-dev libegl1-mesa-dev mesa-vulkan-drivers
+
+  wget -qO - http://packages.lunarg.com/lunarg-signing-key-pub.asc | apt-key add -
+  wget -qO /etc/apt/sources.list.d/lunarg-vulkan-focal.list http://packages.lunarg.com/vulkan/lunarg-vulkan-focal.list
+  apt-get update 
+  apt-get -y install vulkan-sdk
+
+# injecting Rackham's /usr/share/vulkan/icd.d/nvidia_icd.x86_64.json into the image
+mkdir -p /etc/vulkan/icd.d
+cat <<EOF > /etc/vulkan/icd.d/nvidia_icd.json
+{
+    "file_format_version" : "1.0.0",
+    "ICD": {
+        "library_path": "libGLX_nvidia.so.0",
+        "api_version" : "1.2.175"
+    }
+}
+EOF
+
+  rm /etc/apt/apt.conf.d/singularity-cache.conf
+  #rm -rf /var/lib/apt/lists/*
+%runscript
+  /bin/bash $@

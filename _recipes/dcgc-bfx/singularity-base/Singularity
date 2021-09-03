@@ -38,16 +38,37 @@ from: debian:buster-20201012
     else
       echo "IMPORTANT: BCL2FASTQ_SOURCE variable not defined, bcl2fastq will not be built from source but obtained from conda/mamba. However, this may not be the most recent version!"
     fi
-    # if cellranger source is passed via CELLRANGER_SOURCE, copy it
-    if [ -f "${CELLRANGER_SOURCE}" ]
-    then
-      cp ${CELLRANGER_SOURCE} ${SINGULARITY_ROOTFS}/opt/cellranger.tar.gz
-    else
-      echo "IMPORTANT: CELLRANGER_SOURCE variable not defined, cellranger will not be available!"
-    fi
 
 %post
     set -eu
+    
+    # Build date (when building, pass via SINGULARITYENV_CONTAINER_BUILD_DATE otherwise date when building)
+    if [ -z ${CONTAINER_BUILD_DATE+x} ]
+    then
+      CONTAINER_BUILD_DATE=$(date)
+    fi
+    echo "export CONTAINER_BUILD_DATE=\"${CONTAINER_BUILD_DATE}\"" >> $SINGULARITY_ENVIRONMENT
+    
+    # Git repository names (when building, pass via SINGULARITYENV_CONTAINER_GIT_NAME otherwise empty)
+    if [ -z ${CONTAINER_GIT_NAME+x} ]
+    then
+      CONTAINER_GIT_NAME=''
+    fi
+    echo "export CONTAINER_GIT_NAME=\"${CONTAINER_GIT_NAME}\"" >> $SINGULARITY_ENVIRONMENT
+    
+    # Git repository url (when building, pass via SINGULARITYENV_CONTAINER_GIT_URL otherwise empty)
+    if [ -z ${CONTAINER_GIT_URL+x} ]
+    then
+      CONTAINER_GIT_URL=''
+    fi
+    echo "export CONTAINER_GIT_URL=\"${CONTAINER_GIT_URL}\"" >> $SINGULARITY_ENVIRONMENT
+    
+    # Git repository commit id (when building, pass via SINGULARITYENV_CONTAINER_GIT_COMMIT_ID otherwise empty)
+    if [ -z ${CONTAINER_GIT_COMMIT_ID+x} ]
+    then
+      CONTAINER_GIT_COMMIT_ID=''
+    fi
+    echo "export CONTAINER_GIT_COMMIT_ID=\"${CONTAINER_GIT_COMMIT_ID}\"" >> $SINGULARITY_ENVIRONMENT
     
     # the linux command 'make' supports the compilation of independent targets in parallel; this is also passed to R 'install.packages' since it uses 'make' internally
     COMPILE_CPUS=4
@@ -70,7 +91,7 @@ from: debian:buster-20201012
     
     # install basic system tools and libs 
     apt-get clean && apt-get update -y && apt-get upgrade -y
-    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc pandoc-citeproc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpango1.0-dev  libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-serial-dev
+    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc pandoc-citeproc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpango1.0-dev  libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-dev
     
     # no texlive-fonts-extra due to mmap
     

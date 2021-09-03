@@ -2,7 +2,7 @@ Bootstrap: shub
 From: shub://drneavin/SingularityBaseImages:r363_python368
 
 %environment
-    export PATH=/opt/plink2:/opt/plink:/opt:/usr/games:/opt/conda/envs/py36/bin:/opt/conda/bin:/opt/ancestry_viz:/opt/Eagle_v2.4.1:/opt/Minimac4:/opt/GenotypeHarmonizer-1.4.23:$PATH
+    export PATH=/opt/plink2:/opt/plink:/opt:/usr/games:/opt/conda/envs/py36/bin:/opt/conda/bin:/opt/ancestry_viz:/opt/Eagle_v2.4.1:/opt/Minimac4:/opt/GenotypeHarmonizer-1.4.23:/opt/picard/build/libs:$PATH
     export PYTHONPATH=/opt/conda/envs/py36/lib/python3.6/site-packages/
     export LC_ALL=C 
     alias python=python3
@@ -25,17 +25,6 @@ From: shub://drneavin/SingularityBaseImages:r363_python368
     apt install -y dirmngr --install-recommends
     apt install -y software-properties-common
     apt install -y apt-transport-https
-    # add-apt-repository 'deb http://deb.debian.org/debian buster-backports main'
-    # yes | apt-get update
-    # yes | apt-get upgrade
-    # apt install -y ca-certificates gnupg2
-    # apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
-    # add-apt-repository 'deb https://cloud.r-project.org/bin/linux/debian buster-cran35/'
-    # apt-get update
-    # apt install -y r-base
-    # apt install -y r-base-dev
-    # apt install -y r-cran-tidyr
-    # apt install -y r-cran-tidyverse
     apt-get update
     apt-get install -y libv8-dev
     apt-get update
@@ -43,7 +32,7 @@ From: shub://drneavin/SingularityBaseImages:r363_python368
     apt-get install -y openjdk-11-jdk
     java -version
 
-    # yes | /opt/conda/bin/conda create -n py36 python=3.6.8
+
     cd /opt
     yes | apt-get install git
     /opt/conda/bin/conda init bash
@@ -85,6 +74,8 @@ From: shub://drneavin/SingularityBaseImages:r363_python368
     /opt/conda/envs/py36/bin/pip install matplotlib
     /opt/conda/envs/py36/bin/pip install numpy
 	/opt/conda/envs/py36/bin/pip install CrossMap
+	/opt/conda/envs/py36/bin/pip install cget
+
 	
 	yes | conda install -c bioconda csvtk
 
@@ -104,9 +95,9 @@ From: shub://drneavin/SingularityBaseImages:r363_python368
 		tar -xzf Eagle_v2.4.1.tar.gz
 
 	cd /opt
-		git clone https://github.com/statgen/Minimac4.git
-		cd Minimac4
-		bash install.sh
+		wget https://github.com/statgen/Minimac4/releases/download/v1.0.2/minimac4-1.0.2-Linux.sh
+        bash minimac4-1.0.2-Linux.sh --skip-license TRUE
+
 
 	cd /opt
 		wget https://github.com/molgenis/systemsgenetics/releases/download/1.4.0_20-8.1/GenotypeHarmonizer-1.4.23-dist.tar.gz
@@ -128,15 +119,6 @@ From: shub://drneavin/SingularityBaseImages:r363_python368
         ./configure
         make
         make install
-
-    # cd /opt
-    #     wget https://github.com/samtools/samtools/releases/download/1.10/samtools-1.10.tar.bz2
-    #     tar xvfj samtools-1.10.tar.bz2
-    #     rm samtools-1.10.tar.bz2
-    #     cd samtools-1.10
-    #     ./configure
-    #     make
-    #     make install
     
     cd /opt
         wget https://github.com/samtools/bcftools/releases/download/1.10.2/bcftools-1.10.2.tar.bz2
@@ -158,6 +140,11 @@ From: shub://drneavin/SingularityBaseImages:r363_python368
         cd plink2
 			wget https://s3.amazonaws.com/plink2-assets/plink2_linux_x86_64_20210826.zip
             unzip plink2_linux_x86_64_20210826.zip
+
+    cd /opt
+        git clone https://github.com/broadinstitute/picard.git
+        cd picard/
+        ./gradlew shadowJar
 
     cd /opt
         git clone https://github.com/sc-eQTLgen-consortium/WG1-pipeline-QC.git

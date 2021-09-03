@@ -1,15 +1,15 @@
 bases:
-- count: 845
+- count: 851
   name: ubuntu
 - count: 239
   name: nvidia/cuda
-- count: 183
+- count: 182
   name: debian
 - count: 118
   name: centos
 - count: 85
   name: alpine
-- count: 74
+- count: 76
   name: continuumio/miniconda3
 - count: 65
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
@@ -95,12 +95,12 @@ bases:
   name: slaclab/relion
 - count: 8
   name: ewels/multiqc
+- count: 8
+  name: pytorch/pytorch
 - count: 7
   name: jekriske/r-base
 - count: 7
   name: tpall/singularity-r
-- count: 7
-  name: pytorch/pytorch
 - count: 7
   name: bids/rshrf
 - count: 6
@@ -176,6 +176,8 @@ bases:
 - count: 4
   name: anair17/railrl_hand_v2
 - count: 4
+  name: bioconductor/bioconductor_docker
+- count: 4
   name: bids/hcppipelines
 - count: 4
   name: golang
@@ -235,8 +237,6 @@ bases:
   name: library/ubuntu
 - count: 3
   name: bioconductor/bioconductor_full
-- count: 3
-  name: bioconductor/bioconductor_docker
 - count: 3
   name: bids/example
 - count: 3
@@ -696,6 +696,8 @@ bases:
 - count: 1
   name: rstatstartu/rstanverse
 - count: 1
+  name: nvidia/vulkan
+- count: 1
   name: thinca/vim
 - count: 1
   name: alantrrs/py-faster-rcnn
@@ -1068,13 +1070,13 @@ bases:
 - count: 1
   name: arcsi-base-mpi
 bootstraps:
-- count: 2697
+- count: 2706
   name: docker
 - count: 276
   name: debootstrap
 - count: 234
   name: shub
-- count: 166
+- count: 167
   name: library
 - count: 76
   name: yum
@@ -1113,7 +1115,7 @@ orgs:
   name: slaclab
 - count: 6
   name: continuumio
-- count: 5
+- count: 6
   name: nvidia
 - count: 4
   name: willprice
@@ -1645,7 +1647,7 @@ orgs:
   name: jncc
 tags:
   latest: 264
-  other: 2468
+  other: 2476
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -1819,6 +1821,7 @@ versions:
   bioconductor/bioconductor_docker:
     RELEASE_3_10: 2
     RELEASE_3_12: 1
+    devel: 1
   bioconductor/bioconductor_full:
     RELEASE_3_10: 1
     RELEASE_3_8: 1
@@ -1959,7 +1962,7 @@ versions:
     9-slim: 7
     bullseye: 1
     bullseye-slim: 1
-    buster: 60
+    buster: 59
     buster-20200908-slim: 2
     buster-20201012: 1
     buster-slim: 17
@@ -2439,6 +2442,8 @@ versions:
     runtime: 1
   nvidia/opengl:
     1.0-glvnd-devel-ubuntu18.04: 1
+  nvidia/vulkan:
+    1.1.121: 1
   opendronemap/odm@sha256:
     07a17c8668397272cd85f3a9fea8756cb9b51aa0850d27e525944ec37042cc74: 2
   opendronemap/opendronemap:
@@ -2576,7 +2581,7 @@ versions:
     alpine3.6: 3
     slim-buster: 2
   pytorch/pytorch:
-    1.2-cuda10.0-cudnn7-devel: 1
+    1.2-cuda10.0-cudnn7-devel: 2
     1.2-cuda10.0-cudnn7-runtime: 1
     1.6.0-cuda10.1-cudnn7-runtime: 1
     1.8.0-cuda11.1-cudnn8-devel: 1
@@ -2900,12 +2905,13 @@ versions:
     '14.04': 10
     '16.04': 124
     '17.04': 6
-    '18.04': 190
+    '18.04': 192
     '19.04': 10
     '19.10': 4
-    '20.04': 146
+    '20.04': 148
     '20.10': 1
     '21.04': 1
+    '21.10': 1
     artful: 7
     bionic: 155
     'bionic   ': 1
@@ -2915,7 +2921,7 @@ versions:
     cosmic: 4
     disco: 2
     eoan-20200410: 2
-    focal: 13
+    focal: 14
     focal-20200729: 1
     focal-20200925: 3
     latest: 60

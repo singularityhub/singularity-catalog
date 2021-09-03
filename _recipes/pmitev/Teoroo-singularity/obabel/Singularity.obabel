@@ -1,21 +1,13 @@
 Bootstrap:  docker
-From: debian:buster
-
-%runscript
-  obabel $*
-
-%setup
-
-%files
-
-%environment
-
-%labels
+From: ubuntu:21.10
 
 %post
-  echo 'deb http://deb.debian.org/debian experimental main' >> /etc/apt/sources.list
+  export DEBIAN_FRONTEND=noninteractive
 
   apt-get update -y && apt-get upgrade -y &&\
   apt-get install -y --no-install-recommends zip unzip &&\
-  apt-get install -y -t experimental openbabel python-openbabel &&\
+  apt-get install -y openbabel python3-openbabel &&\
   apt-get clean
+
+%runscript
+  obabel "$@"

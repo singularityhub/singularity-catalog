@@ -1,0 +1,45 @@
+Bootstrap: docker
+From: ubuntu:focal
+
+%labels
+
+AUTHOR Mainak
+
+%post
+ 
+apt update
+apt upgrade -y
+apt-get -y install net-tools
+apt-get -y install curl wget \
+    nano vim python3-pip python3-venv \
+    build-essential python3-dev \
+    git
+
+pip3 install numpy
+pip3 install \
+    jupyter \
+    jupyterlab \
+    scipy \
+    pandas \
+    statsmodels \
+    scikit-learn \
+    nltk \
+    spacy \
+    fasttext \
+    transformers==3.1.0 \
+    pyarrow \
+    jsonmerge
+
+pip3 install torch==1.7.1+cu101 torchvision==0.8.2+cu101 torchaudio===0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
+
+pip3 install contractions \
+    emot \
+    demoji \
+    networkx \
+    yellowbrick
+
+python3 -m pip install "dask[complete]" 
+
+rm -R /root/.cache
+apt clean
+rm -rf /var/lib/apt/lists/*

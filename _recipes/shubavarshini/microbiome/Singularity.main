@@ -1,0 +1,12 @@
+Bootstrap: docker
+
+From: continuumio/miniconda3
+
+%files
+    environment_testing.yml
+
+%post
+    /opt/conda/bin/conda env create -f environment_testing.yml
+
+%runscript
+    exec /opt/conda/envs/$(head -n 1 environment_testing.yml | cut -f 2 -d ' ')/bin/"$@"

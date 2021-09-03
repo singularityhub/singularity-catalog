@@ -13,11 +13,39 @@ from: bdgenomics/rhapsody:1.9.1
 %post
     set -eu
     
+    # Build date (when building, pass via SINGULARITYENV_CONTAINER_BUILD_DATE otherwise date when building)
+    if [ -z ${CONTAINER_BUILD_DATE+x} ]
+    then
+      CONTAINER_BUILD_DATE=$(date)
+    fi
+    echo "export CONTAINER_BUILD_DATE=\"${CONTAINER_BUILD_DATE}\"" >> $SINGULARITY_ENVIRONMENT
+    
+    # Git repository names (when building, pass via SINGULARITYENV_CONTAINER_GIT_NAME otherwise empty)
+    if [ -z ${CONTAINER_GIT_NAME+x} ]
+    then
+      CONTAINER_GIT_NAME=''
+    fi
+    echo "export CONTAINER_GIT_NAME=\"${CONTAINER_GIT_NAME}\"" >> $SINGULARITY_ENVIRONMENT
+    
+    # Git repository url (when building, pass via SINGULARITYENV_CONTAINER_GIT_URL otherwise empty)
+    if [ -z ${CONTAINER_GIT_URL+x} ]
+    then
+      CONTAINER_GIT_URL=''
+    fi
+    echo "export CONTAINER_GIT_URL=\"${CONTAINER_GIT_URL}\"" >> $SINGULARITY_ENVIRONMENT
+    
+    # Git repository commit id (when building, pass via SINGULARITYENV_CONTAINER_GIT_COMMIT_ID otherwise empty)
+    if [ -z ${CONTAINER_GIT_COMMIT_ID+x} ]
+    then
+      CONTAINER_GIT_COMMIT_ID=''
+    fi
+    echo "export CONTAINER_GIT_COMMIT_ID=\"${CONTAINER_GIT_COMMIT_ID}\"" >> $SINGULARITY_ENVIRONMENT
+    
     # so that apt-get can be run non-interactively
     export DEBIAN_FRONTEND=noninteractive
     
     # install nodejs
-    apt-get clean && apt-get update -y && apt-get upgrade -y
+    apt-get clean && apt-get --allow-releaseinfo-change update -y && apt-get upgrade -y
     apt-get install -y nodejs git
     
     # install cwltool (use pip to get newest version)

@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: bioconductor/bioconductor_docker:devel
+
+%files
+    . /GenomicBreaksSource
+
+%post
+    apt update
+    apt upgrade -y
+    apt install last-align -y
+    R -e 'BiocManager::install(c("rtracklayer", "S4Vectors", "heatmaps", "GenomicRanges", "IRanges", "GenomeInfoDb", "Biostrings", "BSgenome"))'
+    R -e 'BiocManager::install(c("CNEr"))'
+    R -e 'BiocManager::install(c("rmarkdown"))'
+    R -e 'BiocManager::install(c("ggplot2"))'
+    R -e 'BiocManager::install(c("weights"))'
+    R CMD INSTALL /GenomicBreaksSource

@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: nvidia/vulkan:1.1.121
+
+%labels
+  Author pmitev@gmail.com
+
+%environment
+  export LC_ALL=C
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export LC_ALL=C
+
+  apt-get update && \
+  apt-get -y install vulkan-utils libvulkan-dev libvulkan1 
+
+  rm -rf /var/lib/apt/lists/*
+%runscript
+  /bin/bash $@
