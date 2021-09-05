@@ -242,6 +242,8 @@ def main():
         if repo.full_name in skiplist:
             continue
 
+        # assume no readme to start
+        readme = None
         with tempfile.TemporaryDirectory() as tmp:
             tmp = Path(tmp)
 
