@@ -435,16 +435,14 @@ AdamWilsonLab/singularity-geospatial-r:
     <a id=\"user-content-setting-up-the-singularity-instance\" class=\"anchor\" href=\"\
     #setting-up-the-singularity-instance\" aria-hidden=\"true\"><span aria-hidden=\"\
     true\" class=\"octicon octicon-link\"></span></a>Setting up the Singularity Instance</h2>\n\
-    <ol>\n<li>SSH to the server</li>\n<li>Run the following lines to create a new\
-    \ directory in the scratch drive and pull the desired container from the Singularity\
-    \ Hub (or other source):</li>\n</ol>\n<pre><code>mkdir -p /panasas/scratch/grp-adamw/singularity/$USER\n\
-    cd /panasas/scratch/grp-adamw/singularity/$USER;\nsingularity pull -F shub://AdamWilsonLab/singularity-geospatial-r\n\
-    </code></pre>\n<p>Or if you are downloading from github, use something like this:</p>\n\
-    <pre><code>cd /panasas/scratch/grp-adamw/singularity/$USER;\nwget -O singularity-geospatial-r_latest.sif\
-    \ https://github.com/AdamWilsonLab/singularity-geospatial-r/releases/download/0.0.1/AdamWilsonLab-singularity-geospatial-r.latest.sif\n\
+    <ol>\n<li>SSH to the server</li>\n<li>Run the following to select the target folder\
+    \ and download the current version of this container:</li>\n</ol>\n<pre><code>#\
+    \ cd to user singularity directory\ncd /panasas/scratch/grp-adamw/singularity/$USER;\n\
+    # download the most recent version of the container\nwget -O singularity-geospatial-r_latest.sif\
+    \ \\\n   https://github.com/AdamWilsonLab/singularity-geospatial-r/releases/download/0.0.1/AdamWilsonLab-singularity-geospatial-r.latest.sif\n\
     </code></pre>\n<ol start=\"3\">\n<li>Create symlinks to singularity folder in\
-    \ project storage to prevent disk space problems in the home directory.</li>\n\
-    </ol>\n<pre><code>mkdir -p /projects/academic/adamw/singularity/$USER/.singularity\n\
+    \ project storage to prevent disk space problems in the home directory. You should\
+    \ only have to do this once.</li>\n</ol>\n<pre><code>cd ~\nmkdir -p /projects/academic/adamw/singularity/$USER/.singularity\n\
     ln -s /projects/academic/adamw/singularity/$USER/.singularity .singularity\n\n\
     # Symlinks for RStudio\nmkdir -p /projects/academic/adamw/rstudio/$USER/rstudio\n\
     mv .local/share/rstudio /projects/academic/adamw/rstudio/$USER/\n\nmkdir -p ~/.local/share\n\
@@ -480,28 +478,29 @@ AdamWilsonLab/singularity-geospatial-r:
     ></span></a>*NIX systems (Mac and Linux)</h2>\n<p>Use terminal to ssh to the server\
     \ as explained in <a href=\"https://github.com/AdamWilsonLab/singularity-geospatial-r/blob/main/singularity_start.sh\"\
     >singularity_start.sh</a>.\nAdd something like the following to your .ssh/config\
-    \ file to simplify connecting with port forwarding via ssh.</p>\n<pre><code>Host\
-    \ rserver\nHostName HOST\nLocalForward 8787 HOST:PORT_NUMBER\nUser adamw\nForwardX11\
-    \ yes\nForwardAgent yes\n</code></pre>\n<h2>\n<a id=\"user-content-windows\" class=\"\
-    anchor\" href=\"#windows\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>Windows</h2>\n<h3>\n<a id=\"user-content-putty-instructions\"\
-    \ class=\"anchor\" href=\"#putty-instructions\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>PuTTY Instructions</h3>\n<p>On\
-    \ Windows you will need to use PuTTY or a similar terminal program.</p>\n<ol>\n\
-    <li>In PuTTY, enter the server address (host name) and \"22\" (port) on the \"\
-    Session\" tab.</li>\n<li>On the \"SSH/Tunnels\" tab, enter the port number of\
-    \ the rsession  under \u201CSource port\u201D and type in HOST:PORT (replace with\
-    \ the actual server IP address + the port number) as the destination address.\
-    \ Then, click \"Add\".</li>\n<li>Connect and login as usual in the terminal.</li>\n\
-    <li>Point the web browser to <code>http://localhost:PORT</code> (where PORT is\
-    \ the port number)\" and log in with the user name and the previously generated\
-    \ password.</li>\n</ol>\n<h1>\n<a id=\"user-content-todos\" class=\"anchor\" href=\"\
-    #todos\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>TODOs</h1>\n<ol>\n<li>Separate container from startup and monitor\
-    \ script</li>\n<li>Switch to a docker image</li>\n</ol>\n<h1>\n<a id=\"user-content-development-notes\"\
-    \ class=\"anchor\" href=\"#development-notes\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Development Notes</h1>\n<p>I\
-    \ started with <a href=\"https://github.com/nickjer/singularity-rstudio/blob/master/.travis.yml\"\
+    \ file to simplify connecting with port forwarding via ssh.  You will then have\
+    \ to update HOST to the host address and PORT_NUMBER to the updated port number.</p>\n\
+    <pre><code>Host rserver\nHostName HOST\nLocalForward 8787 HOST:PORT_NUMBER\nUser\
+    \ $USER\nForwardX11 yes\nForwardAgent yes\n</code></pre>\n<h2>\n<a id=\"user-content-windows\"\
+    \ class=\"anchor\" href=\"#windows\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Windows</h2>\n<h3>\n<a id=\"\
+    user-content-putty-instructions\" class=\"anchor\" href=\"#putty-instructions\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>PuTTY Instructions</h3>\n<p>On Windows you will need to use PuTTY\
+    \ or a similar terminal program.</p>\n<ol>\n<li>In PuTTY, enter the server address\
+    \ (host name) and \"22\" (port) on the \"Session\" tab.</li>\n<li>On the \"SSH/Tunnels\"\
+    \ tab, enter the port number of the rsession  under \u201CSource port\u201D and\
+    \ type in HOST:PORT (replace with the actual server IP address + the port number)\
+    \ as the destination address. Then, click \"Add\".</li>\n<li>Connect and login\
+    \ as usual in the terminal.</li>\n<li>Point the web browser to <code>http://localhost:PORT</code>\
+    \ (where PORT is the port number)\" and log in with the user name and the previously\
+    \ generated password.</li>\n</ol>\n<h1>\n<a id=\"user-content-todos\" class=\"\
+    anchor\" href=\"#todos\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>TODOs</h1>\n<ol>\n<li>Separate container from\
+    \ startup and monitor script</li>\n<li>Switch to a docker image</li>\n</ol>\n\
+    <h1>\n<a id=\"user-content-development-notes\" class=\"anchor\" href=\"#development-notes\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Development Notes</h1>\n<p>I started with <a href=\"https://github.com/nickjer/singularity-rstudio/blob/master/.travis.yml\"\
     >nickjer's very helpful example</a> and updated it to pull from the geospatial\
     \ version of the versioned rocker stack instead of the repository based R.  This\
     \ should make it easier to keep up to date.</p>\n<h2>\n<a id=\"user-content-errors\"\
@@ -551,7 +550,7 @@ AdamWilsonLab/singularity-geospatial-r:
   stargazers_count: 1
   subscribers_count: 1
   topics: []
-  updated_at: 1627671966.0
+  updated_at: 1630683178.0
 Amjadhpc/PHEnix:
   data_format: 2
   description: This is singularity 2.6.0 image for PHEnix -1.4a
@@ -4329,37 +4328,6 @@ DeepLearningItalia/NLP-HandsOn-2:
   - singularity/examples/scratch/Singularity.alpine
   full_name: DeepLearningItalia/NLP-HandsOn-2
   latest_release: null
-  readme: '<p><a href="https://github.com/ISISScientificComputing/autoreduce/actions?query=workflow%3ATests+branch%3Amaster"><img
-    src="https://github.com/ISISScientificComputing/autoreduce/workflows/Tests/badge.svg?branch=master"
-    alt="Build Status" style="max-width:100%;"></a>
-
-    <a href="https://codecov.io/gh/ISISScientificComputing/autoreduce" rel="nofollow"><img
-    src="https://camo.githubusercontent.com/20d5310c83aa9ce3bd003ef55fffcbbaf18c87c1ed859a334bedc818cd9ad3af/68747470733a2f2f636f6465636f762e696f2f67682f49534953536369656e7469666963436f6d707574696e672f6175746f7265647563652f6272616e63682f6d61737465722f67726170682f62616467652e7376673f746f6b656e3d5a4a314335564535574e"
-    alt="codecov" data-canonical-src="https://codecov.io/gh/ISISScientificComputing/autoreduce/branch/master/graph/badge.svg?token=ZJ1C5VE5WN"
-    style="max-width:100%;"></a></p>
-
-    <h1>
-
-    <a id="user-content-autoreduction-service-description" class="anchor" href="#autoreduction-service-description"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Autoreduction
-    service description</h1>
-
-    <p>A service for automated batch processing of jobs specifically design for use
-    at <a href="https://www.isis.stfc.ac.uk" rel="nofollow">ISIS Neutron and Muon
-    Facility</a>. For further documentation see also <a href="https://github.com/ISISScientificComputing/autoreduce/wiki">Wiki</a>.</p>
-
-    <p>In one (not complete) picture the Autoreduction service is:</p>
-
-    <p><a href="documentation/assets/main_components/Autoreduction_main_components.png"
-    target="_blank" rel="noopener noreferrer"><img src="documentation/assets/main_components/Autoreduction_main_components.png"
-    alt="Example Table" style="max-width:100%;"></a></p>
-
-    <p>This repository contains only the backend service code, also named the <code>queue
-    processor</code> service. Repositories for the rest of the microservices can be
-    found in the <a href="https://github.com/ISISScientificComputing">GitHub organisation
-    page</a></p>
-
-    '
   stargazers_count: 0
   subscribers_count: 2
   topics: []
@@ -8240,7 +8208,7 @@ HERA-Team/hera-singularity:
   stargazers_count: 0
   subscribers_count: 13
   topics: []
-  updated_at: 1630605280.0
+  updated_at: 1630687011.0
 HanLabUNLV/hanlab_singularity_defs:
   data_format: 2
   description: definition files for containers used in Hanlab
@@ -8258,21 +8226,6 @@ HanLabUNLV/hanlab_singularity_defs:
   - singularity.Rconda/R.3.6.3.def
   full_name: HanLabUNLV/hanlab_singularity_defs
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-hpc_mpi_cuda_singu_def_file" class="anchor" href="#hpc_mpi_cuda_singu_def_file"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>hpc_mpi_cuda_singu_def_file</h1>
-
-    <p>A collect of definition files to build images for singularity containers, which
-    includes hpc benchmarks and mpis with cuda support.</p>
-
-    <p><a href="https://singularity-hub.org/collections/4181" rel="nofollow"><img
-    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
-    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    style="max-width:100%;"></a></p>
-
-    '
   stargazers_count: 0
   subscribers_count: 2
   topics: []
@@ -25731,6 +25684,17 @@ baxpr/segwarp:
   subscribers_count: 2
   topics: []
   updated_at: 1605062943.0
+bayesianbrad/openmalaria_probprog:
+  data_format: 2
+  description: PPX protocols for open malaria
+  filenames:
+  - code/Singularity
+  full_name: bayesianbrad/openmalaria_probprog
+  latest_release: null
+  stargazers_count: 0
+  subscribers_count: 2
+  topics: []
+  updated_at: 1630852596.0
 bbglab/boostdm-analyses:
   data_format: 2
   description: Source code to reproduce the figures of the boostDM paper
@@ -26655,93 +26619,32 @@ caoky8989/LVAD:
   - Singularity
   full_name: caoky8989/LVAD
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-nix-container-python-mandle" class="anchor" href="#nix-container-python-mandle"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>nix-container-python-mandle</h1>
-
-    <p>This directory is a full example of using the docker-centos-nix-python template
-    to
-
-    containerize a very simple Python3 app.</p>
-
-    <p>This app allows you to create a GIF file with a straight-line zoom-in of the
-    Mandlebrot set.
-
-    Running the bare container will show the various commandline options available,
-    which
-
-    may be confusing, as this was written immediately following in-depth perusal of
-
-    <a href="https://en.wikipedia.org/wiki/Mandelbrot_set" rel="nofollow">The Wikipedia
-    article on the Mandlebrot Set</a>.
-
-    If you have some time available and are interested in this sort of thing, please
-    go down
-
-    the rabbithole, but otherwise view this as a somewhat helpful example.</p>
-
-    <p>The following steps should allow you to test this out on a system with docker
-    and singularity installed:</p>
-
-    <ol>
-
-    <li>
-
-    <p><code>docker build -t $USER/python-mandle .</code></p>
-
-    </li>
-
-    <li>
-
-    <p><code>docker run -v $PWD:$PWD -it $USER/python-mandle $PWD/mandle_ex.gif</code></p>
-
-    </li>
-
-    <li>
-
-    <p><code>sudo singularity build mandle.sif mandle.def</code></p>
-
-    </li>
-
-    <li>
-
-    <p><code>singularity run mandle.sif -n 2 sing_mandle_ex.gif</code></p>
-
-    </li>
-
-    </ol>
-
-    <p>For submission on an HPC system using SLURM, you could use the following:
-
-    (Assuming you''ve uploaded this .sif file locally to APPDIR)</p>
-
-    <pre><code>#/bin/bash
-
-    #SBATCH -N 1
-
-    #SBATCH -n 24
-
-    #SBATCH -o mandle_%A.out
-
-
-    module load singularity/3.5 #Versions above 3.6 are incompatible with lower versions!
-
-
-    WORKDIR=/scratch/myuser
-
-    APPDIR=/home/myuser/images/
-
-
-    singularity run $APPDIR/mandle.sif -n 24 $WORKDIR/my_mandle.gif
-
-    </code></pre>
-
-    '
   stargazers_count: 0
   subscribers_count: 1
   topics: []
   updated_at: 1628703776.0
+cclerget/demo-precis:
+  data_format: 2
+  description: "D\xE9mo conteneur PRECIS"
+  filenames:
+  - Singularity
+  full_name: cclerget/demo-precis
+  latest_release: null
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1494259937.0
+cclerget/test-wh:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: cclerget/test-wh
+  latest_release: null
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1547670364.0
 cfe-lab/MiCall:
   data_format: 2
   description: Pipeline for processing FASTQ data from an Illumina MiSeq to genotype
@@ -29707,7 +29610,7 @@ datalad/datalad:
     \ href=\"https://github.com/datalad/datalad/commits?author=AKSoo\" title=\"Code\"\
     ><g-emoji class=\"g-emoji\" alias=\"computer\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f4bb.png\"\
     >\U0001F4BB</g-emoji></a>\n</td>\n  </tr>\n</table>\n\n\n\n"
-  stargazers_count: 253
+  stargazers_count: 252
   subscribers_count: 23
   topics:
   - python
@@ -29715,7 +29618,7 @@ datalad/datalad:
   - data-storage
   - dataset
   - usable
-  updated_at: 1630646254.0
+  updated_at: 1630809991.0
 davecwright3/bart-singularity:
   data_format: 2
   description: Bayesian Atmospheric Radiative Transfer (BART) packaged in a Singularity
@@ -32094,11 +31997,36 @@ dt-np/raser:
 
     </blockquote>
 
+    <h1>
+
+    <a id="user-content-raser-unit-test-after-you-change-some-codes" class="anchor"
+    href="#raser-unit-test-after-you-change-some-codes" aria-hidden="true"><span aria-hidden="true"
+    class="octicon octicon-link"></span></a>Raser unit test after you change some
+    codes</h1>
+
+    <blockquote>
+
+    <p>./singularity_run.sh</p>
+
+    </blockquote>
+
+    <blockquote>
+
+    <p>raser&gt; ./run 0.1.5
+
+    raser&gt; ./run 0.2.5</p>
+
+    </blockquote>
+
+    <p>If the output is "Successful", the code your changed is OK.
+
+    Otherwise, you should check the code your changed.</p>
+
     '
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1630286906.0
+  updated_at: 1630661539.0
 duke-chsi-informatics/singularity-rnaseq:
   data_format: 2
   description: Singularity Image for RNA-Seq analysis
@@ -33749,82 +33677,6 @@ funkelab/linajea:
   - singularity/pylp_base/Singularity
   full_name: funkelab/linajea
   latest_release: v1.3
-  readme: '<h1>
-
-    <a id="user-content-nextflow-pipeline-for-atac-seq-data" class="anchor" href="#nextflow-pipeline-for-atac-seq-data"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>NextFlow
-    pipeline for ATAC-seq data</h1>
-
-    <h2>
-
-    <a id="user-content-dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Dependencies</h2>
-
-    <p>If you have Singularity installed, you can use the config provided here (''Singularity'')
-    to build a container with all the dependencies.</p>
-
-    <p>Otherwise, you''ll need to have the following installed:</p>
-
-    <ol>
-
-    <li>cta</li>
-
-    <li>bedtools</li>
-
-    <li>bwa</li>
-
-    <li>picardtools</li>
-
-    <li>fastqc</li>
-
-    <li>samtools</li>
-
-    <li>ataqv</li>
-
-    </ol>
-
-    <p>This pipeline works with NextFlow versions &gt;= 20.07.1</p>
-
-    <h2>
-
-    <a id="user-content-configuration" class="anchor" href="#configuration" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h2>
-
-    <p>Paths to various generic files (e.g., bwa indices) must be included in the
-    nextflow.config file -- check that file and change paths accordingly. These include:</p>
-
-    <ol>
-
-    <li>Blacklist bed files for each genome</li>
-
-    <li>Chrom size files for each genome</li>
-
-    <li>BWA indices</li>
-
-    <li>TSS files (BED6 files denoting TSS positions)</li>
-
-    </ol>
-
-    <p>You''ll also need to set the params.results variable -- either in the nextflow.config
-    file itself, or on the command line when you run the pipeline (''--results /path/to/results'').</p>
-
-    <p>Lastly, you''ll need to include information about each ATAC-seq library, including
-    the genome that each library should be mapped to and the paths to the fastq files
-    for each readgroup. Organize this information in a JSON file, as in library-config.json.</p>
-
-    <h2>
-
-    <a id="user-content-running" class="anchor" href="#running" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Running</h2>
-
-    <p>Once you have all of the above information, you can run the pipeline as follows
-    (in this case, indicating the path to the results on the command line):</p>
-
-    <div class="highlight highlight-source-shell"><pre>nextflow run -with-singularity
-    /path/to/Singularity.simg -with-trace -with-report -with-dag -with-timeline -params-file
-    library-config.json --results /path/to/results /path/to/main.nf</pre></div>
-
-    '
   stargazers_count: 1
   subscribers_count: 7
   topics: []
@@ -35888,7 +35740,7 @@ ghoshmainak/singularity-recipe:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1630596937.0
+  updated_at: 1630653049.0
 gipert/Singularity.def:
   data_format: 2
   description: My Singularity recipe files
@@ -36293,7 +36145,7 @@ gpuhackathons-org/gpubootcamp:
   - rapidsai
   - openmp
   - ai4hpc
-  updated_at: 1630642678.0
+  updated_at: 1630857225.0
 granek/jupyter-MIC-2021:
   data_format: 2
   description: null
@@ -37926,197 +37778,10 @@ hmgu-itg/single-point-analysis-pipeline:
   - Singularity
   full_name: hmgu-itg/single-point-analysis-pipeline
   latest_release: 0.0.1
-  readme: "<h1>\n<a id=\"user-content-ti-hba-mr-preprocessing\" class=\"anchor\" href=\"\
-    #ti-hba-mr-preprocessing\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>TI HBA MR Preprocessing</h1>\n<p>This is a basic\
-    \ preprocessing pipeline for MRI data from the Healthy Brain Ageing Clinic at\
-    \ the Thompson Institute, USC.</p>\n<h2>\n<a id=\"user-content-pipeline-overview\"\
-    \ class=\"anchor\" href=\"#pipeline-overview\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Pipeline overview</h2>\n<p>These\
-    \ are the steps of the pipeline. These steps are explained in more detail below,\
-    \ along with links to helpful resources/documentation and citations.</p>\n<ol>\n\
-    <li>Dicoms are converted to a BIDS compliant dataset with HeuDiConv.</li>\n<li>Automatic\
-    \ QC for the T1-weighted scan using MRIQC.</li>\n<li>Subcortical segmentation\
-    \ and cortical parcellation with FastSurfer (includes QC).</li>\n<li>Brain age\
-    \ prediction with DeepBrainNet.</li>\n<li>WMH segmentation with FSL's BIANCA.</li>\n\
-    <li>DWI preprocessing with QSIprep.</li>\n<li>rsfMRI preprocessing with fMRIprep.</li>\n\
-    </ol>\n<p>Each of these steps should be cited appropriately if used in publication\
-    \ (citations included below).</p>\n<h3>\n<a id=\"user-content-ideas-behind-implementation\"\
-    \ class=\"anchor\" href=\"#ideas-behind-implementation\" aria-hidden=\"true\"\
-    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Ideas behind\
-    \ implementation</h3>\n<p>The pipeline was developed with the following ideas\
-    \ in mind:</p>\n<ul>\n<li>\n<code>submit_jobs.sh</code> orchestrates the pipeline\
-    \ by submitting a job on the HPC for each participant. For regular use, this is\
-    \ the only file that should need editing, e.g. editing paths and PBS parameters.</li>\n\
-    <li>\n<code>run_pipeline.py</code> includes the main processing pipeline and simply\
-    \ wraps the Singularity commands for each step.</li>\n<li>Each step is implemented\
-    \ in its own container on the HPC. Containers can be built from Dockerfile/Singularity\
-    \ files in the <code>*_src</code> folders or from published containters (noted\
-    \ in each section below).</li>\n</ul>\n<p>To setup it requires building multiple\
-    \ containers, but the idea was for this pipeline to remain 'modular' so that each\
-    \ processing step is independent and can be modified/removed without affecting\
-    \ the rest of the pipeline (with the exception of dicom to BIDS conversion being\
-    \ required for all subsequent steps). Similarly, the pipeline can be extended\
-    \ by adding a container, processing script/command and a function in the <code>run_pipeline.py</code>\
-    \ script.</p>\n<h2>\n<a id=\"user-content-assumed-input-file-structure\" class=\"\
-    anchor\" href=\"#assumed-input-file-structure\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Assumed input file structure</h2>\n\
-    <p>The pipeline takes dicoms as its input with the assumed file structure before\
-    \ processing being:</p>\n<div class=\"highlight highlight-source-shell\"><pre>\u251C\
-    \u2500\u2500 bids\n\u251C\u2500\u2500 derivatives\n\u251C\u2500\u2500 dicom\n\
-    \    \u251C\u2500\u2500 HBA_0001_T1\n        \u251C\u2500\u2500 RESEARCH_PROTOCOLS_<span\
-    \ class=\"pl-k\">*</span>\n            \u251C\u2500\u2500 AAHEAD_SCOUT_64CH_HEAD_COIL_<span\
-    \ class=\"pl-k\">*</span>\n            \u251C\u2500\u2500 MPRAGE_<span class=\"\
-    pl-k\">*</span>\n            \u251C\u2500\u2500 EP2D_DIFF_QBALL96DIR_<span class=\"\
-    pl-k\">*</span>\n            ...\n    \u251C\u2500\u2500 HBA_0002_T1\n       \
-    \ \u251C\u2500\u2500 RESEARCH_PROTOCOLS_<span class=\"pl-k\">*</span>\n      \
-    \      \u251C\u2500\u2500 AAHEAD_SCOUT_64CH_HEAD_COIL_<span class=\"pl-k\">*</span>\n\
-    \            \u251C\u2500\u2500 MPRAGE_<span class=\"pl-k\">*</span>\n       \
-    \     \u251C\u2500\u2500 EP2D_DIFF_QBALL96DIR_<span class=\"pl-k\">*</span>\n\
-    \            ...\n    ...\n\u251C\u2500\u2500 TI-HBA-MRprep</pre></div>\n<p>Where...</p>\n\
-    <ul>\n<li>\n<code>dicom</code> = where the dicoms will be copied for each participant\
-    \ to be processed</li>\n<li>\n<code>bids</code> = the BIDS compliant data converted\
-    \ from <code>dicom</code>\n</li>\n<li>\n<code>derivatives</code> = the pipeline\
-    \ outputs</li>\n<li>\n<code>TI-HBA-MRprep</code> = the code in this repository</li>\n\
-    </ul>\n<h2>\n<a id=\"user-content-intended-usage\" class=\"anchor\" href=\"#intended-usage\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Intended usage</h2>\n<ol>\n<li>Make sure directory structure exists\
-    \ as shown <a href=\"##Assumed-input-file-structure\">above</a> in the analysis\
-    \ directory on the HPC.</li>\n<li>Clone this repo and move to the HPC.</li>\n\
-    <li>Copy dicoms to process into the <code>dicom</code> directory.</li>\n<li>Update/check\
-    \ the schedular parameters in <code>submit_jobs.sh</code>. It might take some\
-    \ testing to get these right, afterwhich they most likely won't need to be changed\
-    \ often.</li>\n<li>Update/check the file paths in <code>submit_jobs.sh</code>\n\
-    </li>\n<li>When ready to run the pipeline, type the following in terminal:</li>\n\
-    </ol>\n<div class=\"highlight highlight-source-shell\"><pre><span class=\"pl-c1\"\
-    >cd</span> /path/on/HPC\n<span class=\"pl-c1\">source</span> submit_jobs.sh</pre></div>\n\
-    <p>...where <code>/path/on/HPC</code> is the appropriate path to the data and\
-    \ code on the HPC.</p>\n<h2>\n<a id=\"user-content-detailed-processing-steps\"\
-    \ class=\"anchor\" href=\"#detailed-processing-steps\" aria-hidden=\"true\"><span\
-    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Detailed processing\
-    \ steps</h2>\n<blockquote>\n<p><strong>NOTE:</strong> FastSurfer, QSIprep and\
-    \ fMRIprep require a FreeSurfer license, which can be obtained for free from <a\
-    \ href=\"https://surfer.nmr.mgh.harvard.edu/fswiki/License\" rel=\"nofollow\"\
-    >here</a>. The file needs to be passed to the <code>submit_jobs.sh</code> script.</p>\n\
-    </blockquote>\n<h3>\n<a id=\"user-content-dicom-to-bids\" class=\"anchor\" href=\"\
-    #dicom-to-bids\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
-    \ octicon-link\"></span></a>Dicom to BIDS</h3>\n<p>BIDS is a standard for structuring\
-    \ neuroimaging datasets that is being increasingly implemented that allows a consistent\
-    \ interface and documentation of datasets. A number of open source pipelines expect\
-    \ input to be in BIDS format.</p>\n<p>HeuDiConv has been developed to automate\
-    \ the conversion from dicom to BIDS. It requires some setup (i.e. putting together\
-    \ a <code>heuristic.py</code> file to provide the rules for conversion), however\
-    \ this will generally only need to be setup once and has been done (see <code>heudiconv_src/heuristic.py</code>).\
-    \ This would need updating if the MRI sequences change. Example commands to help\
-    \ with the setup are included in the comments in the docstring for the <code>runDcm2BIDS</code>\
-    \ function in the <code>run_pipeline.py</code> file.</p>\n<p>For more info see\
-    \ <a href=\"https://bids.neuroimaging.io/\" rel=\"nofollow\">BIDS</a> and <a href=\"\
-    https://heudiconv.readthedocs.io/en/latest/\" rel=\"nofollow\">HeuDiConv</a> documentation,\
-    \ also this HeuDiConv <a href=\"https://reproducibility.stanford.edu/bids-tutorial-series-part-2a/\"\
-    \ rel=\"nofollow\">walkthrough</a> and <a href=\"https://github.com/bids-standard/bids-starter-kit/wiki/\"\
-    >wiki</a>. The HeuDiConv <a href=\"https://heudiconv.readthedocs.io/en/latest/installation.html#docker\"\
-    \ rel=\"nofollow\">container</a>.</p>\n<h3>\n<a id=\"user-content-mriqc\" class=\"\
-    anchor\" href=\"#mriqc\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>MRIQC</h3>\n<p>This is an automated QC pipeline\
-    \ for T1-weighted, T2-weighted and fMRI sequences (if present in BIDS folder).\
-    \ It produces visual reports and a range of QC metrics that may be useful for\
-    \ further analysis.</p>\n<p>See <a href=\"https://mriqc.readthedocs.io/en/stable/\"\
-    \ rel=\"nofollow\">documentation</a>, <a href=\"https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0184661\"\
-    \ rel=\"nofollow\">citation</a> and the <a href=\"https://hub.docker.com/r/poldracklab/mriqc/\"\
-    \ rel=\"nofollow\">container</a>.</p>\n<h3>\n<a id=\"user-content-fastsurfer\"\
-    \ class=\"anchor\" href=\"#fastsurfer\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>FastSurfer</h3>\n<p>FastSurfer\
-    \ is a deep learning implementation of FreeSurfer. It provides essentially the\
-    \ same output but is faster (as you may have guessed) and more accurate.</p>\n\
-    <p>See the <a href=\"https://deep-mi.org/research/fastsurfer/\" rel=\"nofollow\"\
-    >documentation</a>, <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811920304985\"\
-    \ rel=\"nofollow\">citation</a> and the <a href=\"https://github.com/Deep-MI/FastSurfer\"\
-    >github</a> which also includes <a href=\"https://github.com/Deep-MI/FastSurfer/tree/master/Docker\"\
-    >Dockerfiles</a>.</p>\n<h4>\n<a id=\"user-content-fastsurfer-qc\" class=\"anchor\"\
-    \ href=\"#fastsurfer-qc\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>FastSurfer QC</h4>\n<p>This is just a quick\
-    \ visual QC step for the output of FastSurfer and is run automatically. It produces\
-    \ a CSV file with some QC metrics (some of which overlap with MRIQC) and screenshots\
-    \ to check the segmentation and cortical parcellation.</p>\n<p>This is only designed\
-    \ for quick, preliminary visual QC and full visual QC should be completed before\
-    \ any statistical analysis for publication (see <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811921004511\"\
-    \ rel=\"nofollow\">here</a> for discussion of QC approaches).</p>\n<p>See the\
-    \ <a href=\"https://github.com/Deep-MI/qatools-python\">documentation</a>.</p>\n\
-    <h3>\n<a id=\"user-content-deepbrainnet\" class=\"anchor\" href=\"#deepbrainnet\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>DeepBrainNet</h3>\n<p>This is a deep learning model developed for\
-    \ the prediction of brain age. It produces a single predicted age based on the\
-    \ T1-weighted input, which can then be used to calculate a difference score with\
-    \ chronological age.</p>\n<p>The model has been implemented in <a href=\"https://antsx.github.io/ANTsPyNet/docs/build/html/utilities.html\"\
-    \ rel=\"nofollow\">ANTsPyNet</a>, including the preprocessing steps, which is\
-    \ used in <code>deep-brain-net_src/run_prediction.py</code>. The Dockerfile/Singularity\
-    \ file is also included in the <code>deep-brain-net_src</code> folder.</p>\n<p>See\
-    \ the <a href=\"https://academic.oup.com/brain/article/143/7/2312/5863667?login=true\"\
-    \ rel=\"nofollow\">citation</a> for more info about the model development and\
-    \ interpretation and original <a href=\"https://github.com/vishnubashyam/DeepBrainNet\"\
-    >code</a> from authors.</p>\n<h3>\n<a id=\"user-content-wmh-segmentation-with-bianca\"\
-    \ class=\"anchor\" href=\"#wmh-segmentation-with-bianca\" aria-hidden=\"true\"\
-    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>WMH segmentation\
-    \ with BIANCA</h3>\n<p>BIANCA requires some pre/post processing. The steps used\
-    \ are:</p>\n<ul>\n<li>Preprocess T1 and FLAIR with <code>fsl_anat</code> (see\
-    \ <a href=\"https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/fsl_anat\" rel=\"nofollow\"\
-    >docs</a>)</li>\n<li>Create a white matter mask with <code>make_bianca_mask</code>\
-    \ (see BIANCA <a href=\"https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/BIANCA/Userguide#Data_preparation\"\
-    \ rel=\"nofollow\">docs</a>)</li>\n<li>Create <code>masterfile.txt</code> as input\
-    \ for BIANCA</li>\n<li>The BIANCA output is a probability image, so apply thresholding\
-    \ (default to 0.9 here)</li>\n<li>Extract the total WMH number and volume'</li>\n\
-    </ul>\n<p>BIANCA also requires some manually labeled WMH masks as training data.\
-    \ A recent <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811921004663?via%3Dihub#bib0013\"\
-    \ rel=\"nofollow\">paper</a> suggested the use of consistent training labels may\
-    \ be beneficial to avoid inter-rater variability between manual segmentations.\
-    \ Currently, this pipeline makes use of manual segmentations provided by those\
-    \ authors (included in container) for the training labels. This could be changed\
-    \ in future if a sample of HBA participants were manually segmented.</p>\n<p>BIANCA\
-    \ <a href=\"https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/BIANCA/Userguide#Data_preparation\"\
-    \ rel=\"nofollow\">documentation</a>, <a href=\"https://fsl.fmrib.ox.ac.uk/fslcourse/lectures/practicals/seg_struc/#bianca\"\
-    \ rel=\"nofollow\">tutorial</a> and <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811916303251?via%3Dihub\"\
-    \ rel=\"nofollow\">citation</a>, as well as the <a href=\"https://www.sciencedirect.com/science/article/pii/S1053811921004663?via%3Dihub#bib0013\"\
-    \ rel=\"nofollow\">citation</a> and discussion for training labels that can be\
-    \ found <a href=\"https://issues.dpuk.org/eugeneduff/wmh_harmonisation/-/tree/master/BIANCA_training_datasets\"\
-    \ rel=\"nofollow\">here</a>.</p>\n<h3>\n<a id=\"user-content-qsiprep\" class=\"\
-    anchor\" href=\"#qsiprep\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>QSIprep</h3>\n<blockquote>\n<p><strong>IMPORTANT:</strong>\
-    \ This step has not been tested extensively. The defaults have been used for almost\
-    \ all options, however these should be checked before using this data in any further\
-    \ analysis.</p>\n</blockquote>\n<p>QSIprep is a BIDS app that runs preprocessing\
-    \ and reconstruction of DWI data. Only preprocessing is completed here but QSIprep\
-    \ is also an excellent tool to use for further analysis. Visual QC reports are\
-    \ also produced which provide and easy way to check the quality of the DWI data.</p>\n\
-    <p>QSIprep utilises a number of software packages that should be references (as\
-    \ well as the QSIprep citation). Example citation information with references\
-    \ in produced as part of processing and can be found in the <code>logs</code>\
-    \ folder of the output.</p>\n<p>Some steps in QSIprep (particularly eddy current\
-    \ correction and disortion correction with TOPUP) are resource intensive. Currently\
-    \ the pipeline is set to allow QSIprep's underlying workflow manager (<a href=\"\
-    https://nipype.readthedocs.io/en/latest/#\" rel=\"nofollow\">Nipype</a>) to manage\
-    \ the CPU and RAM usage by detecting how many CPUs are available and using 90%\
-    \ of available RAM (see MultiProc section <a href=\"https://miykael.github.io/nipype_tutorial/notebooks/basic_plugins.html\"\
-    \ rel=\"nofollow\">here</a>).</p>\n<p><a href=\"https://qsiprep.readthedocs.io/en/latest/index.html\"\
-    \ rel=\"nofollow\">Documentation</a>, <a href=\"https://www.nature.com/articles/s41592-021-01185-5\"\
-    \ rel=\"nofollow\">citation</a>, Docker <a href=\"https://hub.docker.com/r/pennbbl/qsiprep/\"\
-    \ rel=\"nofollow\">image</a> and info for using with <a href=\"https://qsiprep.readthedocs.io/en/latest/installation.html#singularity-container\"\
-    \ rel=\"nofollow\">Singularity</a>.</p>\n<h3>\n<a id=\"user-content-fmriprep\"\
-    \ class=\"anchor\" href=\"#fmriprep\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>fMRIprep</h3>\n<blockquote>\n\
-    <p><strong>IMPORTANT:</strong> This step has not been tested extensively. The\
-    \ defaults have been used for almost all options, however these should be checked\
-    \ before using this data in any further analysis.</p>\n</blockquote>\n<p>fMRIprep\
-    \ is another BIDS app for preprocessing fMRI data. As for QSIprep, fMRIprep uses\
-    \ several software packages that should also be referenced. Visual QC reports\
-    \ are also produced.</p>\n<p><a href=\"https://fmriprep.org/en/latest/index.html\"\
-    \ rel=\"nofollow\">Documentation</a>, <a href=\"https://www.nature.com/articles/s41592-018-0235-4\"\
-    \ rel=\"nofollow\">citation</a>, Docker <a href=\"https://hub.docker.com/r/nipreps/fmriprep\"\
-    \ rel=\"nofollow\">image</a> and info for using with <a href=\"https://fmriprep.org/en/latest/installation.html#containerized-execution-docker-and-singularity\"\
-    \ rel=\"nofollow\">Singularity</a>.</p>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1630311500.0
+  updated_at: 1630674689.0
 housw/BlendIt:
   data_format: 2
   description: null
@@ -39818,16 +39483,6 @@ ifurther/flair-def:
   - flair.def
   full_name: ifurther/flair-def
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-singularity-recipe-files" class="anchor" href="#singularity-recipe-files"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Singularity
-    recipe files</h1>
-
-    <p><a href="https://github.com/sylabs/singularity">Singularity</a> containers
-    I use the most on HPC clusters.</p>
-
-    '
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -40032,6 +39687,31 @@ jacobhepkema/scanem-motif:
   subscribers_count: 1
   topics: []
   updated_at: 1627983632.0
+jacobhepkema/scanem-r:
+  data_format: 2
+  description: R docker container for scanem
+  filenames:
+  - Singularity
+  full_name: jacobhepkema/scanem-r
+  latest_release: null
+  readme: '<p><a href="https://quay.io/repository/jacobhepkema/scanem-r" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/85a1c7b34a5e0ff0bab3c5a2d59f5bdb663afbcd0fecbe64eeaea4d3cb247771/68747470733a2f2f717561792e696f2f7265706f7369746f72792f6a61636f626865706b656d612f7363616e656d2d722f737461747573"
+    alt="Docker Repository on Quay" title="Docker Repository on Quay" data-canonical-src="https://quay.io/repository/jacobhepkema/scanem-r/status"
+    style="max-width:100%;"></a></p>
+
+    <h1>
+
+    <a id="user-content-scanem-r" class="anchor" href="#scanem-r" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>scanem-r</h1>
+
+    <p>R docker/singularity container for scanem. Docker container on quay.io (see
+    above), singularity container at <code>shub://jacobhepkema/scanem-r:latest</code></p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1630677641.0
 jakepalmer/TI-HBA-MRprep:
   data_format: 2
   description: MR preprocessing for the Healthy Brain Ageing clinic at the Thompson
@@ -41818,7 +41498,7 @@ jordancaraballo/slump-detection:
   stargazers_count: 1
   subscribers_count: 1
   topics: []
-  updated_at: 1630544551.0
+  updated_at: 1630690224.0
 josephwkania/radio_transients:
   data_format: 2
   description: 'Singularity containers with common radio transient search software.  '
@@ -46114,20 +45794,14 @@ mkandes/naked-singularity:
   - definition-files/mxnet/Singularity.mxnet-1.7.0-ubuntu-18.04-cuda-10.1.168-openmpi-3.1.4
   - definition-files/spark/Singularity.spark-3.1.2-hadoop-3.2-ubuntu-18.04
   - definition-files/spark/Singularity.spark-2.3.1-hadoop-2.7-ubuntu-18.04
-  - definition-files/ubuntu/Singularity.ubuntu-18.04-cuda-10.1.168-openmpi-3.1.4
   - definition-files/ubuntu/Singularity.ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0-mvapich-2.3.6
-  - definition-files/ubuntu/Singularity.ubuntu-18.04-mvapich-2.3.2
   - definition-files/ubuntu/Singularity.ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0-openmpi-4.0.5
   - definition-files/ubuntu/Singularity.ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0-openmpi-3.1.6
   - definition-files/ubuntu/Singularity.ubuntu-18.04-cuda-10.1.168
-  - definition-files/ubuntu/Singularity.ubuntu-18.04-openmpi-3.1.6
-  - definition-files/ubuntu/Singularity.ubuntu-18.04-cuda-10.2-openmpi-3.1.6
   - definition-files/ubuntu/Singularity.ubuntu-18.04-cuda-11.2
   - definition-files/ubuntu/Singularity.ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0
   - definition-files/ubuntu/Singularity.ubuntu-18.04-cuda-10.2
-  - definition-files/ubuntu/Singularity.ubuntu-18.04-openmpi-4.0.5
-  - definition-files/ubuntu/Singularity.ubuntu-18.04-openmpi-3.1.4
-  - definition-files/ubuntu/Singularity.ubuntu-18.04-cuda-11.2-openmpi-4.0.5
+  - definition-files/ubuntu/Singularity.ubuntu-18.04-cuda-11.2-mlnx-ofed-4.7-3.2.9.0
   - definition-files/ubuntu/Singularity.ubuntu-18.04
   - definition-files/ubuntu/Singularity.ubuntu-20.04
   - definition-files/singularity/Singularity.singularity-3.5.3
@@ -46254,20 +45928,20 @@ mkandes/naked-singularity:
     <a id="user-content-version" class="anchor" href="#version" aria-hidden="true"><span
     aria-hidden="true" class="octicon octicon-link"></span></a>Version</h2>
 
-    <p>1.8.6</p>
+    <p>1.9.1</p>
 
     <h2>
 
     <a id="user-content-last-updated" class="anchor" href="#last-updated" aria-hidden="true"><span
     aria-hidden="true" class="octicon octicon-link"></span></a>Last Updated</h2>
 
-    <p>Wednesday, August 18th, 2021</p>
+    <p>Friday, September 3rd, 2021</p>
 
     '
   stargazers_count: 35
   subscribers_count: 2
   topics: []
-  updated_at: 1630465996.0
+  updated_at: 1630707994.0
 ml4ai/UA-hpc-containers:
   data_format: 2
   description: Container recipes for use with the U of A HPC resources
@@ -46585,12 +46259,6 @@ mmore500/tag-olympics:
   - Singularity
   full_name: mmore500/tag-olympics
   latest_release: null
-  readme: '<p>Singularity recipe for RATTLE : Reference-free reconstruction and quantification
-    of transcriptomes from long-read sequencing
-
-    <a href="https://github.com/comprna/RATTLE">https://github.com/comprna/RATTLE</a></p>
-
-    '
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -46682,16 +46350,6 @@ mvdoc/singularity-def:
   - hauntedhouse_freesurfer/Singularity
   full_name: mvdoc/singularity-def
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-singularity-recipe-files" class="anchor" href="#singularity-recipe-files"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Singularity
-    recipe files</h1>
-
-    <p><a href="https://github.com/sylabs/singularity">Singularity</a> containers
-    I use the most on HPC clusters.</p>
-
-    '
   stargazers_count: 0
   subscribers_count: 2
   topics: []
@@ -46720,7 +46378,7 @@ mwanakijiji/rrlyrae_metallicity:
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1630534715.0
+  updated_at: 1630696593.0
 nbcrrolls/electrostatics-singularity:
   data_format: 2
   description: Molecular electrostatics singularity image
@@ -47655,32 +47313,33 @@ oist/GenomicBreaks:
     \ pipeline</a>.</p>\n<h2>\n<a id=\"user-content-installation\" class=\"anchor\"\
     \ href=\"#installation\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
     octicon octicon-link\"></span></a>Installation</h2>\n<p>The following should work:</p>\n\
-    <pre><code>devtools::install_github('oist/GenomicBreaks')\n</code></pre>\n<h2>\n\
-    <a id=\"user-content-in-brief\" class=\"anchor\" href=\"#in-brief\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>In\
-    \ brief:</h2>\n<p>A pairwise alignment of two genomes is loaded in <code>GBreaks</code>\
-    \ objects wrapping\nthe <code>GRanges</code> class.  Here is an example:</p>\n\
-    <pre><code>GRanges object with 11 ranges and 2 metadata columns:\n       seqnames\
-    \            ranges strand |                  query     score\n          &lt;Rle&gt;\
-    \         &lt;IRanges&gt;  &lt;Rle&gt; |              &lt;GRanges&gt; &lt;integer&gt;\n\
-    \   [1]     chr1 11234702-11242676      + |   Chr1:7691083-7699807      7975\n\
-    \   [2]     chr1 11242764-11256464      - |   Chr1:7714830-7733148     13701\n\
-    \   [3]     chr1 11256821-11271214      - |   Chr1:7699877-7713142     14394\n\
-    \   [4]     chr1 11271261-11272159      - |   Chr1:7975442-7976321       899\n\
-    \   [5]     chr1 11272246-11274272      + |   Chr1:7686802-7688942      2027\n\
-    \   [6]     chr1 11275227-11276200      - |   Chr1:7491169-7492136       974\n\
-    \   [7]     chr1 11276902-11281111      - |   Chr1:7850371-7855204      4210\n\
-    \   [8]     chr1 11281154-11281731      + |  PAR:10891068-10891635       578\n\
-    \   [9]     chr1 11281946-11288799      + |   Chr2:9359434-9367027      6854\n\
-    \  [10]     chr1 11288839-11299743      - | Chr1:10912857-10921537     10905\n\
-    \  [11]     chr1 11300902-11301564      - |   Chr1:9597979-9599493       663\n\
-    \  -------\n  seqinfo: 19 sequences from OKI2018_I69 genome\n</code></pre>\n<p>See\
-    \ <a href=\"https://oist.github.io/GenomicBreaks\" rel=\"nofollow\">https://oist.github.io/GenomicBreaks</a>\
-    \ for further details.</p>\n"
+    <pre><code>devtools::install_github('oist/GenomicBreaks')\n</code></pre>\n<p>You\
+    \ may need to install Bioconductor packages directly with commands such as:</p>\n\
+    <pre><code>BiocManager::install('GenomicBreaks')\n</code></pre>\n<h2>\n<a id=\"\
+    user-content-in-brief\" class=\"anchor\" href=\"#in-brief\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>In brief:</h2>\n\
+    <p>A pairwise alignment of two genomes is loaded in <code>GBreaks</code> objects\
+    \ wrapping\nthe <code>GRanges</code> class.  Here is an example:</p>\n<pre><code>GRanges\
+    \ object with 11 ranges and 2 metadata columns:\n       seqnames            ranges\
+    \ strand |                  query     score\n          &lt;Rle&gt;         &lt;IRanges&gt;\
+    \  &lt;Rle&gt; |              &lt;GRanges&gt; &lt;integer&gt;\n   [1]     chr1\
+    \ 11234702-11242676      + |   Chr1:7691083-7699807      7975\n   [2]     chr1\
+    \ 11242764-11256464      - |   Chr1:7714830-7733148     13701\n   [3]     chr1\
+    \ 11256821-11271214      - |   Chr1:7699877-7713142     14394\n   [4]     chr1\
+    \ 11271261-11272159      - |   Chr1:7975442-7976321       899\n   [5]     chr1\
+    \ 11272246-11274272      + |   Chr1:7686802-7688942      2027\n   [6]     chr1\
+    \ 11275227-11276200      - |   Chr1:7491169-7492136       974\n   [7]     chr1\
+    \ 11276902-11281111      - |   Chr1:7850371-7855204      4210\n   [8]     chr1\
+    \ 11281154-11281731      + |  PAR:10891068-10891635       578\n   [9]     chr1\
+    \ 11281946-11288799      + |   Chr2:9359434-9367027      6854\n  [10]     chr1\
+    \ 11288839-11299743      - | Chr1:10912857-10921537     10905\n  [11]     chr1\
+    \ 11300902-11301564      - |   Chr1:9597979-9599493       663\n  -------\n  seqinfo:\
+    \ 19 sequences from OKI2018_I69 genome\n</code></pre>\n<p>See <a href=\"https://oist.github.io/GenomicBreaks\"\
+    \ rel=\"nofollow\">https://oist.github.io/GenomicBreaks</a> for further details.</p>\n"
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1630586934.0
+  updated_at: 1630908802.0
 onuryukselen/singularity:
   data_format: 2
   description: null
@@ -51892,71 +51551,6 @@ ppaquette/img.mujoco:
   - Singularity
   full_name: ppaquette/img.mujoco
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-containers-related-files-for-scilus-flows" class="anchor"
-    href="#containers-related-files-for-scilus-flows" aria-hidden="true"><span aria-hidden="true"
-    class="octicon octicon-link"></span></a>Containers related files for SCILUS flows</h1>
-
-    <p><a href="https://github.com/scilus/containers-scilus/actions/workflows/main.yml"><img
-    src="https://github.com/scilus/containers-scilus/actions/workflows/main.yml/badge.svg"
-    alt="Build Docker and Singularity" style="max-width:100%;"></a>
-
-    <a href="https://github.com/scilus/containers-scilus/actions/workflows/release.yml"><img
-    src="https://github.com/scilus/containers-scilus/actions/workflows/release.yml/badge.svg"
-    alt="Release container" style="max-width:100%;"></a>
-
-    <a href="https://github.com/scilus/containers-scilus/releases"><img src="https://camo.githubusercontent.com/d71dfcebc7f168a9d02e58cea25811431dae2aa1085026f7a237dd4d41abd192/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f762f72656c656173652f7363696c75732f636f6e7461696e6572732d7363696c7573"
-    alt="GitHub release (latest by date)" data-canonical-src="https://img.shields.io/github/v/release/scilus/containers-scilus"
-    style="max-width:100%;"></a></p>
-
-    <h2>
-
-    <a id="user-content-containers-update" class="anchor" href="#containers-update"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Containers
-    update</h2>
-
-    <p>When updating <code>Scilpy</code>, you will need to modify the SHA of the file,
-    as well as
-
-    the <code>SCILPY_VERSION</code> variable in <code>Dockerfile</code>.</p>
-
-    <h2>
-
-    <a id="user-content-docker" class="anchor" href="#docker" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Docker</h2>
-
-    <p>To build the docker use the following command:</p>
-
-    <p><code>sudo docker build -t docker_scilus .</code></p>
-
-    <h2>
-
-    <a id="user-content-singularity" class="anchor" href="#singularity" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Singularity</h2>
-
-    <p>The image for Singularity can be built using <code>singularity_scilus.def</code>
-    with the command:
-
-    <code>sudo singularity build scilus_${SCILPY_VERSION}.img singularity_scilus.def</code>.</p>
-
-    <p>Singularity container is built from the Docker stored on dockerhub.</p>
-
-    <p>It can be used to run any SCILUS flows with the option
-
-    <code>-with-singularity scilus_${SCILPY_VERSION}.img</code> of Nextflow.</p>
-
-    <p>If you use this singularity, please cite:</p>
-
-    <pre><code>Kurtzer GM, Sochat V, Bauer MW (2017)
-
-    Singularity: Scientific containers for mobility of compute.
-
-    PLoS ONE 12(5): e0177459. https://doi.org/10.1371/journal.pone.0177459
-
-    </code></pre>
-
-    '
   stargazers_count: 1
   subscribers_count: 1
   topics: []
@@ -52626,51 +52220,6 @@ pscedu/singularity-bedops:
   - 2.4.39/Singularity
   full_name: pscedu/singularity-bedops
   latest_release: null
-  readme: "<p><a href=\"https://github.com/pscedu/singularity-star/actions/workflows/main.yml/badge.svg\"\
-    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-star/actions/workflows/main.yml/badge.svg\"\
-    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/20882b7d30c437aaa54b3f20556d8c7f04d76904ca2b8ed42ce00a9aee8d3b08/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d73746172\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/20882b7d30c437aaa54b3f20556d8c7f04d76904ca2b8ed42ce00a9aee8d3b08/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d73746172\"\
-    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-star\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/442b099c81c8089cf67564d6a5dc93f8e2795f32e0be7ed6d7f9c28b9dbb31c4/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d73746172\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/442b099c81c8089cf67564d6a5dc93f8e2795f32e0be7ed6d7f9c28b9dbb31c4/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d73746172\"\
-    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-star\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/c06cd2ffe5b81657c3314018c33547d52072a17824cb6d499309f8a2cc198f1f/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d73746172\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/c06cd2ffe5b81657c3314018c33547d52072a17824cb6d499309f8a2cc198f1f/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d73746172\"\
-    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-star\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/02565c7478b51e35df15b8757b0b27feebe3cee39aae59be69231cd51e6cb159/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d73746172\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/02565c7478b51e35df15b8757b0b27feebe3cee39aae59be69231cd51e6cb159/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d73746172\"\
-    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-star\"\
-    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-singularity-star\"\
-    \ class=\"anchor\" href=\"#singularity-star\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>singularity-star</h1>\n<p>Singularity\
-    \ recipe for <a href=\"https://github.com/alexdobin/STAR\">star</a>.</p>\n<h2>\n\
-    <a id=\"user-content-installing-the-container-on-bridges-2\" class=\"anchor\"\
-    \ href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Installing the container on Bridges\
-    \ 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code> file</li>\n<li>and the\
-    \ <code>star</code> script</li>\n</ul>\n<p>to <code>/opt/packages/star/2.7.6a</code>.</p>\n\
-    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/star</code>\
-    \ as <code>2.7.6a.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
-    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
-    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
-    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
-    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
-    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
-    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
-    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
-    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
-    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
-    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
-    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
-    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
-    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
-    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
-    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
-    \ rel=\"nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
-    \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
-    \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
   stargazers_count: 0
   subscribers_count: 2
   topics: []
@@ -53418,44 +52967,6 @@ pscedu/singularity-fastx-toolkit:
   - 0.0.14/Singularity
   full_name: pscedu/singularity-fastx-toolkit
   latest_release: null
-  readme: "<p><a href=\"https://github.com/icaoberg/singularity-boxes/actions/workflows/main.yml/badge.svg\"\
-    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/icaoberg/singularity-boxes/actions/workflows/main.yml/badge.svg\"\
-    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://github.com/icaoberg/singularity-boxes/actions/workflows/pretty.yml/badge.svg\"\
-    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/icaoberg/singularity-boxes/actions/workflows/pretty.yml/badge.svg\"\
-    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/a3f198a87deb5330effce45fa5f8a588e4f8f261b175507874e098ebd9458adf/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f6963616f626572672f73696e67756c61726974792d626f786573\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/a3f198a87deb5330effce45fa5f8a588e4f8f261b175507874e098ebd9458adf/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f6963616f626572672f73696e67756c61726974792d626f786573\"\
-    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/icaoberg/singularity-boxes\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/6d68d10803a8f101a59999b34c1be8b23084c82097bd1506f6b69eca3546ed7b/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f6963616f626572672f73696e67756c61726974792d626f786573\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/6d68d10803a8f101a59999b34c1be8b23084c82097bd1506f6b69eca3546ed7b/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f6963616f626572672f73696e67756c61726974792d626f786573\"\
-    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/icaoberg/singularity-boxes\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/699ba19f5376b37177283fe5acc1e075c4a846491fedbbedc3fc349b3693bc30/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f6963616f626572672f73696e67756c61726974792d626f786573\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/699ba19f5376b37177283fe5acc1e075c4a846491fedbbedc3fc349b3693bc30/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f6963616f626572672f73696e67756c61726974792d626f786573\"\
-    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/icaoberg/singularity-boxes\"\
-    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/0e74e828eef6e3d5d7627cf27223de60469083957af4cdf436c4b767a7e870d6/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f6963616f626572672f73696e67756c61726974792d626f786573\"\
-    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/0e74e828eef6e3d5d7627cf27223de60469083957af4cdf436c4b767a7e870d6/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f6963616f626572672f73696e67756c61726974792d626f786573\"\
-    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/icaoberg/singularity-boxes\"\
-    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-singularity-boxes\"\
-    \ class=\"anchor\" href=\"#singularity-boxes\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>singularity-boxes</h1>\n<p>Singularity\
-    \ recipe for <a href=\"https://boxes.thomasjensen.com/\" rel=\"nofollow\">boxes</a>.</p>\n\
-    <h2>\n<a id=\"user-content-building-the-image-using-the-recipe\" class=\"anchor\"\
-    \ href=\"#building-the-image-using-the-recipe\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Building the image using the\
-    \ recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\" class=\"\
-    anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>To build the image locally</h3>\n\
-    <p>Run the script <code>build.sh</code> to build image locally.</p>\n<pre><code>bash\
-    \ ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
-    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
-    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
-    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
-    \ locally.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<hr>\n<p>Copyright\
-    \ \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights Reserved.</p>\n\
-    <p><a href=\"http://www.andrew.cmu.edu/~icaoberg\" rel=\"nofollow\">icaoberg</a>\
-    \ at the <a href=\"http://www.psc.edu\" rel=\"nofollow\">Pittsburgh Supercomputing\n\
-    Center</a> in the <a href=\"https://www.cmu.edu/mcs/\" rel=\"nofollow\">Mellon\
-    \ College of Science</a> at <a href=\"http://www.cmu.edu\" rel=\"nofollow\">Carnegie\
-    \ Mellon University</a>.</p>\n"
   stargazers_count: 0
   subscribers_count: 2
   topics:
@@ -57094,7 +56605,7 @@ rickstaa/real-panda-control-examples:
   - franka-emika
   - control
   - moveit
-  updated_at: 1630590753.0
+  updated_at: 1630669467.0
 rohitfarmer/singularity-defs:
   data_format: 2
   description: Definition (recipe) files for singularity containers.
@@ -59616,7 +59127,7 @@ shubavarshini/microbiome:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1630593266.0
+  updated_at: 1630678051.0
 simarocchi/openmpi_centos7_x86_64:
   data_format: 2
   description: a Singularity recipe with openmpi 2.1.1 on base centos 7 to run on
@@ -62762,14 +62273,6 @@ tin6150/r4eta:
   - Singularity
   full_name: tin6150/r4eta
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-codefmab" class="anchor" href="#codefmab" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>CodeFMAB</h1>
-
-    <p>Code and supplementary documents supporting the FMAB book project</p>
-
-    '
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -64788,21 +64291,6 @@ yh549848/singularity-ngsplot:
   - 2.63/Singularity
   full_name: yh549848/singularity-ngsplot
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-pytorch-singularity" class="anchor" href="#pytorch-singularity"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>pytorch-singularity</h1>
-
-    <p><a href="https://singularity-hub.org/collections/4939" rel="nofollow"><img
-    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
-    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    style="max-width:100%;"></a></p>
-
-    <p>This repository contains Singularity definition files used for PyTorch development
-    in the Sinzlab.</p>
-
-    '
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -65186,21 +64674,6 @@ yh549848/singularity-sicer2:
   - 1.0.3/Singularity
   full_name: yh549848/singularity-sicer2
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-pytorch-singularity" class="anchor" href="#pytorch-singularity"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>pytorch-singularity</h1>
-
-    <p><a href="https://singularity-hub.org/collections/4939" rel="nofollow"><img
-    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
-    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    style="max-width:100%;"></a></p>
-
-    <p>This repository contains Singularity definition files used for PyTorch development
-    in the Sinzlab.</p>
-
-    '
   stargazers_count: 0
   subscribers_count: 1
   topics: []

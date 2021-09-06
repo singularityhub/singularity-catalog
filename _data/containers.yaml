@@ -1,11 +1,11 @@
 bases:
-- count: 851
+- count: 852
   name: ubuntu
 - count: 239
   name: nvidia/cuda
 - count: 182
   name: debian
-- count: 118
+- count: 119
   name: centos
 - count: 85
   name: alpine
@@ -13,7 +13,7 @@ bases:
   name: continuumio/miniconda3
 - count: 65
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 59
+- count: 58
   name: mkandes/naked-singularity
 - count: 48
   name: tensorflow/tensorflow
@@ -45,10 +45,10 @@ bases:
   name: bilbydev/bilby-test-suite-python37
 - count: 17
   name: poldracklab/fmriprep
+- count: 17
+  name: busybox
 - count: 16
   name: ezlabgva/busco
-- count: 16
-  name: busybox
 - count: 13
   name: nvcr.io/nvidia/pytorch
 - count: 12
@@ -58,13 +58,15 @@ bases:
 - count: 12
   name: khanlab/heudiconv
 - count: 12
+  name: ghcr.io/mkandes/naked-singularity
+- count: 12
   name: nitishnarula/secure/ubuntu-focal
+- count: 12
+  name: rocker/r-ver
 - count: 11
   name: deeplearnphysics/larcv2
 - count: 11
   name: nvcr.io/nvidia/tensorflow
-- count: 11
-  name: rocker/r-ver
 - count: 11
   name: conda/miniconda2
 - count: 11
@@ -77,8 +79,6 @@ bases:
   name: nvcr.io/nvidia/cuda
 - count: 10
   name: images/common.simg
-- count: 10
-  name: ghcr.io/mkandes/naked-singularity
 - count: 10
   name: continuumio/miniconda
 - count: 10
@@ -151,8 +151,6 @@ bases:
   name: quay.io/biocontainers/bowtie2
 - count: 4
   name: rust
-- count: 4
-  name: letaylor/sc_qc_cluster
 - count: 4
   name: registry.gitlab.com/rode0day/fuzzer-testing/aflpp_runner
 - count: 4
@@ -499,6 +497,8 @@ bases:
   name: opendronemap/opendronemap
 - count: 1
   name: trlandet/fenics-dev
+- count: 1
+  name: letaylor/sc_qc_cluster
 - count: 1
   name: andresquintero/bratwurst_tensorflow2
 - count: 1
@@ -1070,11 +1070,11 @@ bases:
 - count: 1
   name: arcsi-base-mpi
 bootstraps:
-- count: 2709
+- count: 2710
   name: docker
 - count: 276
   name: debootstrap
-- count: 234
+- count: 233
   name: shub
 - count: 168
   name: library
@@ -1083,9 +1083,9 @@ bootstraps:
 - count: 69
   name: localimage
 - count: 12
-  name: scratch
-- count: 10
   name: oras
+- count: 12
+  name: scratch
 - count: 9
   name: zypper
 - count: 7
@@ -1270,6 +1270,8 @@ orgs:
 - count: 1
   name: jekriske
 - count: 1
+  name: letaylor
+- count: 1
   name: andresquintero
 - count: 1
   name: arm32v7
@@ -1423,8 +1425,6 @@ orgs:
   name: tikhonovapolly
 - count: 1
   name: rbartelme
-- count: 1
-  name: letaylor
 - count: 1
   name: registry.gitlab.com/fuzzing
 - count: 1
@@ -1646,8 +1646,8 @@ orgs:
 - count: 1
   name: jncc
 tags:
-  latest: 267
-  other: 2477
+  latest: 264
+  other: 2481
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -1871,7 +1871,7 @@ versions:
     '6.10': 1
     '6.8': 1
     '6.9': 1
-    '7': 53
+    '7': 54
     7.4.1708: 4
     7.6.1810: 2
     7.7.1908: 2
@@ -2051,7 +2051,8 @@ versions:
   gcr.io/deepvariant-docker/deepvariant_gpu:
     0.9.0: 1
   ghcr.io/mkandes/naked-singularity:
-    ubuntu-18.04: 3
+    ubuntu-18.04: 4
+    ubuntu-18.04-cuda-11.2: 1
     ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0: 3
     ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0-mvapich-2.3.6: 1
     ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0-openmpi-3.1.6: 1
@@ -2194,7 +2195,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 4
+    latest: 1
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2246,7 +2247,7 @@ versions:
     centos-7.9.2009: 3
     centos-7.9.2009-mvapich-2.3.2: 1
     centos-7.9.2009-openmpi-3.1.4: 1
-    ubuntu-18.04: 19
+    ubuntu-18.04: 18
     ubuntu-18.04-cuda-10.1.168: 6
     ubuntu-18.04-cuda-10.1.168-openmpi-3.1.4: 7
     ubuntu-18.04-cuda-10.2: 1
@@ -2755,6 +2756,7 @@ versions:
     '20.04': 2
   rocker/r-ver:
     3.5.3: 2
+    3.6.0: 1
     4.0.0: 1
     4.0.3: 2
     4.0.4: 3
@@ -2905,7 +2907,7 @@ versions:
     '14.04': 10
     '16.04': 124
     '17.04': 6
-    '18.04': 192
+    '18.04': 193
     '19.04': 10
     '19.10': 4
     '20.04': 148

@@ -2,22 +2,26 @@
 # Definition file for singularity containers for the HERA software stack.
 # All containers come standard with the following Python packages:
 #
-# |----------------------------------------------------|
-# |  Data Analysis |  Astronomical    |  HERA          |
-# |----------------|------------------|----------------|
-# |  dask	         |  aipy	          |  linsolve      |
-# |  jupyterlab	   |  astropy	        |  uvtools       |
-# |  matplotlib	   |  astropy-healpix	|  hera_qm       |
-# |  numpy	       |  astroquery	    |  hera_cal      |
-# |  pandas	       |  cartopy	        |  hera_sim      |
-# |  scipy	       |  healpy	        |  hera_psepc    |
-# |  scikit-learn	 |  pyuvdata1       |	 mwa_preprocess|
-# |  xarray	       |  pyuvsim         |  calamity      |
-# |  SSINS3        |                  |                |
-# |  tensorflow    |                  |                |
-# |----------------------------------------------------|
+# |-------------------------------------------------|
+# |  Data Analysis |  Astronomical    |  HERA       |
+# |----------------|------------------|-------------|
+# |  dask	         |  aipy	          |  linsolve   |
+# |  jupyterlab	   |  astropy	        |  uvtools    |
+# |  matplotlib	   |  astropy-healpix	|  hera_qm    |
+# |  numpy	       |  astroquery	    |  hera_cal   |
+# |  pandas	       |  cartopy	        |  hera_sim   |
+# |  scipy	       |  healpy	        |  hera_psepc |
+# |  scikit-learn	 |  pyuvdata1       |	            |
+# |  xarray	       |  pyuvsim         |             |
+# |                |  SSINS3          |             |
+# |-------------------------------------------------|
 #
-# This container is intended for general purpose work.
+# This container is built for running the HERA OMP pipeline and come with the
+# following addition:
+# - hera_opm
+# - hera_mc
+# - hera_notebook_templates.
+# - hera_pipelines cloned to /usr/local
 # =============================================================================
 Bootstrap: library
 From: ubuntu:20.04
@@ -35,6 +39,8 @@ From: ubuntu:20.04
   # Prepend PATH with conda/python bin
   export PATH=${CONDA_PATH}/bin:${PATH}
   export PATH=${CONDA_PATH}/envs/calamity/bin:${PATH}
+  # hera_pipelines path
+  export HERA_PIPELINES_PATH="/usr/local/hera_pipelines"
 
 
 # -----------------------------------------------------------------------------
@@ -71,11 +77,12 @@ From: ubuntu:20.04
   . $CONDA_SH && conda update -n base conda
 
   # Create `calamity` enviroment and install dependencies for HEREA packages.
-  conda create -n calamity -y -c conda-forge python=3.8 ipython ipykernel numpy scipy \
+  conda create -n calamity -c conda-forge python=3.8 ipython ipykernel numpy scipy \
     scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
     aipy healpy pyuvdata=2.1.5 h5py pyyaml click python-casacore cartopy \
     xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl \
-    psutil pytest future tensorflow
+    psutil pytest future \
+    alembic psycopg2 redis-py tensorflow
 
   # Activate the Python environment
   conda activate calamity
@@ -92,18 +99,21 @@ From: ubuntu:20.04
   # Install HERA packages.
   # linsolve is used in most hera software and should be installed first
   # hera_qm should be installed before hera_cal
-  for pkg in linsolve uvtools hera_qm hera_cal vis_cpu hera_sim hera_pspec
+  for pkg in linsolve uvtools hera_qm hera_cal vis_cpu hera_sim hera_pspec hera_opm hera_mc hera_notebook_templates
   do
     pip install git+https://github.com/HERA-Team/$pkg
   done
 
-  # custom packages.
 
   for pkg in calamity mwa_preprocess
   do
     pip install git+https://github.com/aewallwi/$pkg
   done
 
+
+
+  # Clone hera_pipelines
+  cd /usr/local && git clone https://github.com/HERA-Team/hera_pipelines
 
   echo "== Done building container =="
 
@@ -113,5 +123,6 @@ From: ubuntu:20.04
 
 
 %help
-  This container is intended for general purpose work on the HERA software stack.
-  It contain most scientific Python packages and HERA software.
+  This container is equivalent to `hera1` with an addition of a few other
+  HERA software packages for running the HERA RTP pipeline and
+  `makeflow` analysis.
