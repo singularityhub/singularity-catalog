@@ -1,25 +1,25 @@
 bases:
-- count: 852
+- count: 855
   name: ubuntu
 - count: 239
   name: nvidia/cuda
-- count: 182
+- count: 185
   name: debian
-- count: 119
+- count: 120
   name: centos
 - count: 85
   name: alpine
-- count: 76
+- count: 77
   name: continuumio/miniconda3
 - count: 65
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
 - count: 58
   name: mkandes/naked-singularity
+- count: 49
+  name: python
 - count: 48
   name: tensorflow/tensorflow
-- count: 45
-  name: python
-- count: 41
+- count: 43
   name: nfcore/base
 - count: 35
   name: conda/miniconda3
@@ -43,10 +43,10 @@ bases:
   name: modakopt/modak
 - count: 18
   name: bilbydev/bilby-test-suite-python37
+- count: 18
+  name: busybox
 - count: 17
   name: poldracklab/fmriprep
-- count: 17
-  name: busybox
 - count: 16
   name: ezlabgva/busco
 - count: 13
@@ -68,6 +68,8 @@ bases:
 - count: 11
   name: nvcr.io/nvidia/tensorflow
 - count: 11
+  name: r-base
+- count: 11
   name: conda/miniconda2
 - count: 11
   name: pennbbl/qsiprep
@@ -81,8 +83,6 @@ bases:
   name: images/common.simg
 - count: 10
   name: continuumio/miniconda
-- count: 10
-  name: r-base
 - count: 10
   name: hariszaf/pema
 - count: 10
@@ -151,8 +151,6 @@ bases:
   name: quay.io/biocontainers/bowtie2
 - count: 4
   name: rust
-- count: 4
-  name: letaylor/sc_qc_cluster
 - count: 4
   name: registry.gitlab.com/rode0day/fuzzer-testing/aflpp_runner
 - count: 4
@@ -499,6 +497,8 @@ bases:
   name: opendronemap/opendronemap
 - count: 1
   name: trlandet/fenics-dev
+- count: 1
+  name: letaylor/sc_qc_cluster
 - count: 1
   name: andresquintero/bratwurst_tensorflow2
 - count: 1
@@ -1070,7 +1070,7 @@ bases:
 - count: 1
   name: arcsi-base-mpi
 bootstraps:
-- count: 2713
+- count: 2727
   name: docker
 - count: 276
   name: debootstrap
@@ -1078,7 +1078,7 @@ bootstraps:
   name: shub
 - count: 168
   name: library
-- count: 76
+- count: 77
   name: yum
 - count: 69
   name: localimage
@@ -1086,7 +1086,7 @@ bootstraps:
   name: oras
 - count: 12
   name: scratch
-- count: 9
+- count: 10
   name: zypper
 - count: 7
   name: busybox
@@ -1270,6 +1270,8 @@ orgs:
 - count: 1
   name: jekriske
 - count: 1
+  name: letaylor
+- count: 1
   name: andresquintero
 - count: 1
   name: arm32v7
@@ -1423,8 +1425,6 @@ orgs:
   name: tikhonovapolly
 - count: 1
   name: rbartelme
-- count: 1
-  name: letaylor
 - count: 1
   name: registry.gitlab.com/fuzzing
 - count: 1
@@ -1647,7 +1647,7 @@ orgs:
   name: jncc
 tags:
   latest: 267
-  other: 2481
+  other: 2491
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -1860,7 +1860,7 @@ versions:
     latest: 2
   busybox:
     1.31.1: 3
-    latest: 4
+    latest: 5
     'latest   ': 6
   bvlc/caffe:
     gpu: 1
@@ -1871,7 +1871,7 @@ versions:
     '6.10': 1
     '6.8': 1
     '6.9': 1
-    '7': 54
+    '7': 55
     7.4.1708: 4
     7.6.1810: 2
     7.7.1908: 2
@@ -1925,7 +1925,7 @@ versions:
     4.7.12: 7
     4.8.2: 11
     4.9.2: 1
-    latest: 19
+    latest: 20
   cornellcac/presto:
     latest: 1
   cornellcac/pulsar-pipeline:
@@ -1962,7 +1962,7 @@ versions:
     9-slim: 7
     bullseye: 1
     bullseye-slim: 1
-    buster: 59
+    buster: 62
     buster-20200908-slim: 2
     buster-20201012: 1
     buster-slim: 17
@@ -2195,7 +2195,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 4
+    latest: 1
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2565,14 +2565,14 @@ versions:
     3.5.1: 1
     '3.6': 1
     '3.7': 1
-    3.7-slim: 14
+    3.7-slim: 16
     3.7.4-slim: 1
     3.7.7-slim-buster: 1
     3.7.9: 1
     '3.8': 1
     3.8-alpine: 1
     3.8-buster: 1
-    3.8-slim: 1
+    3.8-slim: 3
     3.8.2: 1
     3.9-alpine: 1
     3.9-slim: 1
@@ -2910,7 +2910,7 @@ versions:
     '18.04': 193
     '19.04': 10
     '19.10': 4
-    '20.04': 148
+    '20.04': 149
     '20.10': 1
     '21.04': 1
     '21.10': 1
@@ -2926,12 +2926,12 @@ versions:
     focal: 14
     focal-20200729: 1
     focal-20200925: 3
-    latest: 60
+    latest: 61
     rolling: 1
     sha256.21678b2846063434e2009dee535d3e28ded35774ca72722e1d62b37077de30da: 5
     sha256.80c52afadf3e7c3f9573de4fe79b7dca57fb3290df6c8dc46a75b02768a81146: 3
     trusty: 4
-    xenial: 37
+    xenial: 38
     'xenial  ': 1
     xenial-20180525: 1
     xenial-20190610: 1

@@ -149,6 +149,9 @@ From: shub://drneavin/SingularityBaseImages:r363_python368
     cd /opt
         git clone https://github.com/sc-eQTLgen-consortium/WG1-pipeline-QC.git
 
+	cd /opt
+		wget https://www.dropbox.com/s/fvd4pl8no3ngg0l/hg38exonsUCSC.bed
+
 
 ##############################
 # setup scripts for users
@@ -165,7 +168,7 @@ From: shub://drneavin/SingularityBaseImages:r363_python368
 %apphelp test_dataset
     This function copies pipeline scripts to the user systems from the Singularity image.
 %appenv test_dataset
-    DATASET=/opt/ImputationTestDataset.tar.gz
+    DATASET=/opt/ImputationTestDataset_plink.tar.gz
     export DATASET
 %apprun test_dataset
     exec cp -a ${DATASET} "$PWD"

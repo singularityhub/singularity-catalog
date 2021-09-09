@@ -1,0 +1,54 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+MAINTAINER darachm
+
+%help
+
+    This container is for running FitSeq, specifically "PyFitSeq", similar
+    to as described in:
+
+        F. Li, et al. Unbiased Fitness Estimation of Pooled Barcode or Amplicon
+        Sequencing Studies. Cell Systems, 7: 521-525 (2018)
+        doi.org/10.1016/j.cels.2018.09.004
+
+    The two scripts are linked here in /usr/bin, and that's:
+
+        - evo_simulator.py
+        - pyfitseq.py
+
+    Should be accessible immediately from the exec line, so something like this
+    to use them it:
+
+        singularity exec fitseq_container.simg pyfitseq.py -h
+
+%environment
+
+    export LANG="C.UTF-8"
+    export LANG_ALL="C.UTF-8"
+    export PATH=${PATH}:/PyFitSeq
+
+%post
+
+    export LANG="C.UTF-8"
+    export LANG_ALL="C.UTF-8"
+    export DEBIAN_FRONTEND="noninteractive"
+
+    apt-get -y update
+    apt-get -y install apt-utils git
+    apt-get -y install python3 python3-pip
+
+    apt-get -y install gzip xz-utils bzip2
+    #apt-get -y install gawk mawk perl
+    
+    git clone https://github.com/darachm/PyFitSeq.git /PyFitSeq
+
+    python3 -m pip install -r /PyFitSeq/requirements.txt
+
+    chmod a+x /PyFitSeq/evo_simulator.py /PyFitSeq/pyfitseq.py 
+
+%test
+
+    export PATH=${PATH}:/PyFitSeq
+

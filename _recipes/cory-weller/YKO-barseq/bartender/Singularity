@@ -1,0 +1,13 @@
+BootStrap: docker
+From: ubuntu:xenial
+IncludeCmd: yes
+
+%post
+    # Prerequisites
+    apt-get update
+    apt-get -y install build-essential autoconf git wget unzip libboost-all-dev libreadline-dev libncurses5-dev libncursesw5-dev zlib1g-dev libbz2-dev liblzma-dev
+  
+    git clone https://github.com/LaoZZZZZ/bartender-1.1.git
+    cd bartender-1.1/
+    make all
+    make install

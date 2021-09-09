@@ -5382,7 +5382,7 @@ DrosophilaGenomeEvolution/TrEMOLO:
   filenames:
   - Singularity
   full_name: DrosophilaGenomeEvolution/TrEMOLO
-  latest_release: null
+  latest_release: v0.2.0
   readme: "<p><a href=\"https://singularity-hub.org/collections/5391\" rel=\"nofollow\"\
     ><img src=\"https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667\"\
     \ alt=\"https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg\"\
@@ -5450,7 +5450,8 @@ DrosophilaGenomeEvolution/TrEMOLO:
     \ rel=\"nofollow\">Pandas</a></li>\n<li><a href=\"https://numpy.org/\" rel=\"\
     nofollow\">Numpy</a></li>\n<li><a href=\"https://matplotlib.org/\" rel=\"nofollow\"\
     >pylab</a></li>\n<li><a href=\"https://pypi.org/project/intervaltree/\" rel=\"\
-    nofollow\">intervaltree</a></li>\n</ul>\n</li>\n<li>Perl v5.26.2+</li>\n</ul>\n\
+    nofollow\">intervaltree</a></li>\n<li><a href=\"https://pypi.org/project/pysam/\"\
+    \ rel=\"nofollow\">pysam</a></li>\n</ul>\n</li>\n<li>Perl v5.26.2+</li>\n</ul>\n\
     </li>\n<li>For report\n<ul>\n<li>R 3.3+ libs\n<ul>\n<li><a href=\"https://ggplot2.tidyverse.org/\"\
     \ rel=\"nofollow\">ggplot2</a></li>\n<li><a href=\"https://www.rdocumentation.org/packages/RColorBrewer/versions/1.1-2=\"\
     \ rel=\"nofollow\">RColorBrewer</a></li>\n<li><a href=\"https://cran.r-project.org/web/packages/extrafont/README.html\"\
@@ -5488,15 +5489,14 @@ DrosophilaGenomeEvolution/TrEMOLO:
     \ build TrEMOLO.simg TrEMOLO/Singularity</pre></div>\n<p><strong>YOU MUST BE ROOT\
     \ for compiling</strong></p>\n<p>Test TrEMOLO with singularity</p>\n<div class=\"\
     highlight highlight-source-shell\"><pre>singularity <span class=\"pl-c1\">exec</span>\
-    \ TrEMOLO.simg snakemake --snakefile TrEMOLO/creation_snakefile.snk --configfile\
-    \ TrEMOLO/test/tmp_config.yml</pre></div>\n<h3>\n<a id=\"user-content-pulling-from-singularityhub\"\
-    \ class=\"anchor\" href=\"#pulling-from-singularityhub\" aria-hidden=\"true\"\
-    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Pulling\
-    \ from SingularityHub</h3>\n<p>This option is disabled since Singularity Hub is\
-    \ for the moment in read-only. We are looking for a Singularity repo to ease the\
-    \ use.</p>\n<h1>\n<a id=\"user-content-configuration-of-the-parameter-file\" class=\"\
-    anchor\" href=\"#configuration-of-the-parameter-file\" aria-hidden=\"true\"><span\
-    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Configuration\
+    \ TrEMOLO.simg snakemake --snakefile TrEMOLO/run.snk --configfile TrEMOLO/test/tmp_config.yml</pre></div>\n\
+    <h3>\n<a id=\"user-content-pulling-from-singularityhub\" class=\"anchor\" href=\"\
+    #pulling-from-singularityhub\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Pulling from SingularityHub</h3>\n\
+    <p>This option is disabled since Singularity Hub is for the moment in read-only.\
+    \ We are looking for a Singularity repo to ease the use.</p>\n<h1>\n<a id=\"user-content-configuration-of-the-parameter-file\"\
+    \ class=\"anchor\" href=\"#configuration-of-the-parameter-file\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Configuration\
     \ of the parameter file<a name=\"user-content-configuration\"></a>\n</h1>\n<p>TrEMOLO\
     \ uses <a href=\"https://snakemake-wrappers.readthedocs.io/en/stable/\" rel=\"\
     nofollow\">Snakemake</a> to perform its analyses. You have then first to provide\
@@ -5592,14 +5592,12 @@ DrosophilaGenomeEvolution/TrEMOLO:
     \ : Assembly of the sample of interest (or mix of samples), fasta file.</li>\n\
     <li>\n<code>TE_DB</code>  : A <strong>Multifasta</strong> file containing the\
     \ canonical sequence of transposable elements. You can add also copy sequences\
-    \ but results will be more complex to interpretate. Make sure the headers of this\
-    \ multifasta do not contains characters such as \":\", \"|\" or \"/\", \".\",\
-    \ and \" \\ \".</li>\n<li>\n<code>REFERENCE</code> : Fasta file containing the\
-    \ reference genome of the species of interest.</li>\n<li>\n<code>WORK_DIRECTORY</code>\
-    \ : Directory that will contain the output files. If the directory does not exist\
-    \ it will be created;  default value is <em>output</em>.</li>\n<li>\n<code>SAMPLE</code>\
-    \ : File containing the reads used for the sample assembly.</li>\n</ul>\n<p>You\
-    \ can use <strong>config_INSIDER.yaml</strong> for only <strong>INSIDER</strong>\
+    \ but results will be more complex to interpretate.</li>\n<li>\n<code>REFERENCE</code>\
+    \ : Fasta file containing the reference genome of the species of interest.</li>\n\
+    <li>\n<code>WORK_DIRECTORY</code> : Directory that will contain the output files.\
+    \ If the directory does not exist it will be created;  default value is <em>output</em>.</li>\n\
+    <li>\n<code>SAMPLE</code> : File containing the reads used for the sample assembly.</li>\n\
+    </ul>\n<p>You can use <strong>config_INSIDER.yaml</strong> for only <strong>INSIDER</strong>\
     \ analysis or <strong>config_OUTSIDER.yaml</strong> for only <strong>OUTSIDER</strong>\
     \ analysis.\nTo analyse <strong>INSIDER</strong>, only the <code>REFERENCE</code>\
     \ , the <code>GENOME</code>, the <code>TE_DB</code> and the <code>WORK_DIRECTORY</code>\
@@ -5608,9 +5606,9 @@ DrosophilaGenomeEvolution/TrEMOLO:
     \ are required.</p>\n<h1>\n<a id=\"user-content-usage\" class=\"anchor\" href=\"\
     #usage\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
     ></span></a>Usage<a name=\"user-content-usage\"></a>\n</h1>\n<div class=\"highlight\
-    \ highlight-source-shell\"><pre>snakemake --snakefile /path/to/TrEMOLO/creation_snakefile.snk\
+    \ highlight-source-shell\"><pre>snakemake --snakefile /path/to/TrEMOLO/run.snk\
     \ --configfile /path/to/your_config.yaml</pre></div>\n<p>For running tests</p>\n\
-    <div class=\"highlight highlight-source-shell\"><pre>snakemake --snakefile TrEMOLO/creation_snakefile.snk\
+    <div class=\"highlight highlight-source-shell\"><pre>snakemake --snakefile TrEMOLO/run.snk\
     \ --configfile TrEMOLO/test/tmp_config.yml</pre></div>\n<h1>\n<a id=\"user-content-output-files-summary-open_file_folder\"\
     \ class=\"anchor\" href=\"#output-files-summary-open_file_folder\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Output\
@@ -5668,7 +5666,7 @@ DrosophilaGenomeEvolution/TrEMOLO:
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
     ></span></a>Most useful output</h3>\n<p>The most useful output files are :</p>\n\
     <ul>\n<li>The html report in <strong>your_work_directory/REPORT/report.html</strong>\
-    \ with summary graphics, as shown <a href=\"https://raw.githack.com/DrosophilaGenomeEvolution/TrEMOLO/v2/test/web/index.html\"\
+    \ with summary graphics, as shown <a href=\"https://rawcdn.githack.com/DrosophilaGenomeEvolution/TrEMOLO/4d96ecd7f5699a5d5df6f0bc70eb39bf9c25b80a/test/web/index.html\"\
     \ rel=\"nofollow\">here</a>\n</li>\n</ul>\n<p>The output file <strong>your_work_direcetory/TE_INFO.csv</strong>\
     \ gathers all the necessary information.</p>\n<table>\n<thead>\n<tr>\n<th>chrom</th>\n\
     <th>start</th>\n<th>end</th>\n<th>TE|ID</th>\n<th>strand</th>\n<th>TSD</th>\n\
@@ -5703,7 +5701,7 @@ DrosophilaGenomeEvolution/TrEMOLO:
   stargazers_count: 4
   subscribers_count: 2
   topics: []
-  updated_at: 1630624519.0
+  updated_at: 1631021004.0
 Emresav/popcorn:
   data_format: 2
   description: The source code of POPCORN planner (also a MILP Compilation collaborated
@@ -6002,6 +6000,141 @@ EnriqueDoster/sing_biotools:
   subscribers_count: 1
   topics: []
   updated_at: 1606287922.0
+FangfeiLi05/PyFitSeq:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity.fitseq-latest
+  full_name: FangfeiLi05/PyFitSeq
+  latest_release: null
+  readme: "<p><a href=\"https://www.python.org/\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/06354cf578159f70a065df1e20a2d4478496ffc141f1601ad3cb47b6815b7460/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f707974686f6e2d332e372d677265656e2e737667\"\
+    \ alt=\"Python 3.7\" data-canonical-src=\"https://img.shields.io/badge/python-3.7-green.svg\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://opensource.org/licenses/MIT\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/fd551ba4b042d89480347a0e74e31af63b356b2cac1116c7b80038f41b04a581/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d677265656e2e737667\"\
+    \ alt=\"License: MIT\" data-canonical-src=\"https://img.shields.io/badge/License-MIT-green.svg\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"\"><img src=\"https://camo.githubusercontent.com/a3ba7a7c99609675ae6c2eeee1aa2c5df5620d44abc05a1308ce0c7f1c95e7ad/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f456d61696c2d66616e676665696c693035323540676d61696c2e636f6d2d6f72616e67652e737667\"\
+    \ alt=\"Contact Info\" data-canonical-src=\"https://img.shields.io/badge/Email-fangfeili0525@gmail.com-orange.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h2>\n<a id=\"user-content-pyfitseq\" class=\"\
+    anchor\" href=\"#pyfitseq\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>PyFitSeq</h2>\n<h3>\n<a id=\"user-content-1-what-is-pyfitseq\"\
+    \ class=\"anchor\" href=\"#1-what-is-pyfitseq\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>1. What is PyFitSeq?</h3>\n<p>PyFitSeq\
+    \ is a Python-based fitness estimation tool for pooled amplicon sequencing studies.\
+    \ PyFitSeq is Python re-coded version of the MATLAB tool FitSeq <a href=\"https://github.com/sashaflevy/Fit-Seq\"\
+    >https://github.com/sashaflevy/Fit-Seq</a>. If you use this software, please reference:\
+    \ <a href=\"https://www.sciencedirect.com/science/article/pii/S2405471218303909?via%3Dihub\"\
+    \ rel=\"nofollow\">F. Li, et al. Unbiased Fitness Estimation of Pooled Barcode\
+    \ or Amplicon Sequencing Studies. Cell Systems, 7: 521-525 (2018)</a>. PyFitSeq\
+    \ is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;\
+    \ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR\
+    \ PURPOSE.</p>\n<p>It currently has two main functions:</p>\n<ul>\n<li>\n<code>evo_simulator.py</code>\
+    \ performs simulations of competitve pooled growth of a population of genotypes.</li>\n\
+    <li>\n<code>pyfitseq.py</code> calculates the fitness of each genotype from read-count\
+    \ time-series data.</li>\n</ul>\n<p>A walk-through is included as the jupyter\
+    \ notebook <a href=\"https://github.com/FangfeiLi05/PyFitSeq/blob/master/PyFitSeq_Walk_Through.ipynb\"\
+    >here</a>.</p>\n<h3>\n<a id=\"user-content-2-how-to-install-pyfitseq\" class=\"\
+    anchor\" href=\"#2-how-to-install-pyfitseq\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>2. How to install PyFitSeq?</h3>\n\
+    <ul>\n<li>Python 3 is required. This version has been tested on a MacBook Pro\
+    \ (3.1 GHz Intel Core i5), with Python 3.7.4.</li>\n<li>Clone this repository\
+    \ by running <code>git clone https://github.com/FangfeiLi05/PyFitSeq.git</code>\
+    \ in terminal.</li>\n<li>\n<code>cd</code> to the root directory of the project\
+    \ (the folder containing <code>README.md</code>).</li>\n<li>Install dependencies\
+    \ by running <code>pip install -r requirements.txt</code> in terminal.</li>\n\
+    </ul>\n<h4>\n<a id=\"user-content-2a-alternative-use-in-a-singularity-container\"\
+    \ class=\"anchor\" href=\"#2a-alternative-use-in-a-singularity-container\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>2a\
+    \ Alternative, use in a Singularity container</h4>\n<p>With the closing of Singularity\
+    \ Hub there aren't yet publicly available\ncontainers for this, but you can build\
+    \ your own with a command like:</p>\n<pre><code>singularity build fitseq-latest.simg\
+    \ Singularity.fitseq-latest\n</code></pre>\n<p>Then you can run on any\n<a href=\"\
+    https://sylabs.io/guides/3.8/user-guide/quick_start.html#quick-installation-steps\"\
+    \ rel=\"nofollow\">computer running Singularity</a>,\nsuch as your local HPC,\
+    \ using a command like:</p>\n<pre><code>singularity exec fitseq-latest.simg pyfitseq.py\
+    \ -h\n</code></pre>\n<h3>\n<a id=\"user-content-3-how-to-use-pyfitseq\" class=\"\
+    anchor\" href=\"#3-how-to-use-pyfitseq\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>3. How to use PyFitSeq?</h3>\n\
+    <h4>\n<a id=\"user-content-31-evolution-simulation\" class=\"anchor\" href=\"\
+    #31-evolution-simulation\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>3.1. Evolution Simulation</h4>\n<p><code>evo_simulator.py</code>\
+    \ models competative pooled growth of a population of genotypes with different\
+    \ fitnesses. This simulation can be made to include sources of noise, including\
+    \ growth noise, noise from cell transfers, DNA extraction, PCR, and sequencing.</p>\n\
+    <h5>\n<a id=\"user-content-options\" class=\"anchor\" href=\"#options\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>OPTIONS</h5>\n\
+    <ul>\n<li>\n<code>--input</code> or <code>-i</code>: a .csv file, with\n<ul>\n\
+    <li>1st column of .csv: fitness of each genotype, [x1, x2, ...]</li>\n<li>2nd\
+    \ column .csv: initial cell number of each genotype at generation 0, [n1, n2,\
+    \ ...]</li>\n</ul>\n</li>\n<li>\n<code>--t_seq</code> or <code>-t</code>: time-points\
+    \ evaluated in number of generations (<code>format: 0 t1 t2 ...</code>)</li>\n\
+    <li>\n<code>--read_num_average_seq</code> or <code>-r</code>: average number of\
+    \ reads per genotype for each time-point (<code>format: 0 r1 r2 ...</code>)</li>\n\
+    <li>\n<code>--noise_option</code> or <code>-n</code>: which types of noise to\
+    \ include in the simulation, default is all sources of noise (<code>default: growth\
+    \ bottleneck_transfer DNA_extraction PCR sequencing</code>)</li>\n<li>\n<code>--dna_copies</code>\
+    \ or <code>-d</code>: average genome copy number per genotype used as template\
+    \ in PCR (<code>default: 500</code>)</li>\n<li>\n<code>--pcr_cycles</code> or\
+    \ <code>-p</code>: number of cycles of PCR (<code>default: 25</code>)</li>\n<li>\n\
+    <code>--fitness_type</code> or <code>-f</code>: type of fitness: Wrightian fitness\
+    \ (w), or Malthusian fitness (m)' (<code>default: m</code>)</li>\n<li>\n<code>--output_filename</code>\
+    \ or <code>-o</code>: prefix of output .csv files (<code>default: output</code>)</li>\n\
+    </ul>\n<h5>\n<a id=\"user-content-outputs\" class=\"anchor\" href=\"#outputs\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>OUTPUTS</h5>\n<ul>\n<li>\n<code>output_filename_EvoSimulation_Read_Number.csv</code>:\
+    \ read number per genotype for each time-point</li>\n<li>\n<code>output_filename_EvoSimulation_Mean_Fitness.csv</code>:\
+    \ mean fitness for each time-point</li>\n<li>\n<code>output_filename_EvoSimulation_Input_Log.csv</code>:\
+    \ a record of all inputs</li>\n</ul>\n<h5>\n<a id=\"user-content-for-help\" class=\"\
+    anchor\" href=\"#for-help\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>For Help</h5>\n<pre><code>python evo_simulator.py\
+    \ --help\n</code></pre>\n<h5>\n<a id=\"user-content-examples\" class=\"anchor\"\
+    \ href=\"#examples\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Examples</h5>\n<pre><code>python evo_simulator.py\
+    \ -i input_EvoSimulation.csv -t 0 3 6 9 12 -r 50 50 50 50 50 -o output\npython\
+    \ evo_simulator.py -i input_EvoSimulation.csv -t 0 2 4 6 8 -r 75 75 75 75 50 -n\
+    \ DNA_extraction PCR sequencing -d 300 -p 27 -f w -o output\n</code></pre>\n<h4>\n\
+    <a id=\"user-content-32-fitness-estimation\" class=\"anchor\" href=\"#32-fitness-estimation\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>3.2. Fitness Estimation</h4>\n<p><code>pyfitseq.py</code> estimates\
+    \ the fitness of each genotype from read-count time-series data.</p>\n<h5>\n<a\
+    \ id=\"user-content-options-1\" class=\"anchor\" href=\"#options-1\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>OPTIONS</h5>\n\
+    <ul>\n<li>\n<code>--input</code> or <code>-i</code>: a .csv file, with each column\
+    \ being the read number per genotype at each sequenced time-point</li>\n<li>\n\
+    <code>--t_seq</code> or <code>-t</code>: sequenced time-points in number of generations\
+    \ (<code>format: 0 t1 t2 ...</code>)</li>\n<li>\n<code>--max_iter_num</code> or\
+    \ <code>-m</code>: maximum number of iterations in the optimization (Small numbers\
+    \ can reduce running time and decrease accuracy.) (<code>default: 10</code>)</li>\n\
+    <li>\n<code>--kappa</code> or <code>-k</code>: a noise parameter that characterizes\
+    \ the total noise introduced by growth, cell transfer, DNA extraction, PCR, and\
+    \ sequencing (To measure kappa empirically, see the reference: [S. F. Levy, et\
+    \ al. Quantitative Evolutionary Dynamics Using High-resolution Lineage Tracking.\
+    \ Nature, 519: 181\u2013186 (2015)].) (<code>default: 2.5</code>)</li>\n<li>\n\
+    <code>--regression_num</code> or <code>-g</code>: number of points used in the\
+    \ initial linear-regression-based fitness estimate (<code>default: 2</code>)</li>\n\
+    <li>\n<code>--fitness_type</code> or <code>-f</code>: type of fitness: Wrightian\
+    \ fitness (w), or Malthusian fitness (m) (<code>default: m</code>)</li>\n<li>\n\
+    <code>--output_filename</code> or <code>-o</code>: prefix of output .csv files\
+    \ (<code>default: output</code>)</li>\n</ul>\n<h5>\n<a id=\"user-content-outputs-1\"\
+    \ class=\"anchor\" href=\"#outputs-1\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>OUTPUTS</h5>\n<ul>\n<li>\n<code>output_filename_FitSeq_Result.csv</code>:\
+    \ a .csv file, with\n<ul>\n<li>1st column of .csv: estimated fitness of each genotype,\
+    \ [x1, x2, ...]</li>\n<li>2nd column of .csv: log likelihood value of each genotype,\
+    \ [f1, f2, ...]</li>\n<li>3rd column of .csv: estimated mean fitness per sequenced\
+    \ time-point, [x_mean(0), x_mean(t1), ...]</li>\n<li>4th+ columns of .csv: estimated\
+    \ read number per genotype per time-point, with each time-point being a column</li>\n\
+    </ul>\n</li>\n</ul>\n<h5>\n<a id=\"user-content-for-help-1\" class=\"anchor\"\
+    \ href=\"#for-help-1\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>For Help</h5>\n<pre><code>python pyfitseq.py\
+    \ --help\n</code></pre>\n<h5>\n<a id=\"user-content-examples-1\" class=\"anchor\"\
+    \ href=\"#examples-1\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Examples</h5>\n<pre><code>python pyfitseq.py\
+    \ -i output_EvoSimulation_Read_Number.csv -t 0 3 6 9 12 -o output\npython pyfitseq.py\
+    \ -i output_EvoSimulation_Read_Number2.csv -t 0 2 6 8 -m 12 -k 2 -g 3 -f w -o\
+    \ output\n</code></pre>\n"
+  stargazers_count: 6
+  subscribers_count: 2
+  topics: []
+  updated_at: 1631051818.0
 HALFpipe/HALFpipe:
   data_format: 2
   description: ENIGMA Halfpipe is a user-friendly software that facilitates reproducible
@@ -8021,6 +8154,168 @@ HERA-Team/hera-singularity:
   subscribers_count: 13
   topics: []
   updated_at: 1630687011.0
+Halle-Astra/Frame_Field_Learning_Revised:
+  data_format: 2
+  description: "\u81EA\u5DF1\u4FEE\u6539\u548C\u914D\u7F6E\u540E\u7684FrameFieldLearning\uFF0C\
+    \u4E0E\u539F\u9879\u76EE\u6539\u52A8\u4E0D\u5927"
+  filenames:
+  - singularity/Singularity
+  full_name: Halle-Astra/Frame_Field_Learning_Revised
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-polygonal-building-segmentation-by-frame-field-learning\"\
+    \ class=\"anchor\" href=\"#polygonal-building-segmentation-by-frame-field-learning\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Polygonal Building Segmentation by Frame Field Learning</h1>\n<p>We\
+    \ add a frame field output to an image segmentation neural network to improve\
+    \ segmentation quality\nand provide structural information for the subsequent\
+    \ polygonization step.</p>\n<p align=\"center\">\n    <a href=\"images/frame_field_sample.png\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"images/frame_field_sample.png\"\
+    \ width=\"512\" style=\"max-width:100%;\"></a>\n    <br>\n    Figure 1: Close-up\
+    \ of our additional frame field output on a test image.\n    <br>\n    <br>\n\
+    \    <br>\n    <a href=\"images/model_training.png\" target=\"_blank\" rel=\"\
+    noopener noreferrer\"><img src=\"images/model_training.png\" width=\"768\" style=\"\
+    max-width:100%;\"></a>\n    <br>\n    Figure 2: Given an overhead image, the model\
+    \ outputs an edge mask, an interior mask,\n    and a frame field for buildings.\
+    \ The total loss includes terms that align the masks and\n    frame field to ground\
+    \ truth data as well as regularizers to enforce smoothness of the\n    frame field\
+    \ and consistency between the outputs.\n    <br>\n    <br>\n    <br>\n    <a href=\"\
+    images/schematic_polygonization.png\" target=\"_blank\" rel=\"noopener noreferrer\"\
+    ><img src=\"images/schematic_polygonization.png\" width=\"768\" style=\"max-width:100%;\"\
+    ></a>\n    <br>\n    Figure 3: Given classification maps and a frame field as\
+    \ input, we optimize skeleton polylines to\n    align to the frame field using\
+    \ an Active Skeleton Model (ASM) and detect corners using\n    the frame field,\
+    \ simplifying non-corner vertices.\n</p>\n<p>This repository contains the official\
+    \ code for the paper:</p>\n<p><strong>Polygonal Building Segmentation by Frame\
+    \ Field Learning</strong><br>\n<a href=\"https://www-sop.inria.fr/members/Nicolas.Girard/\"\
+    \ rel=\"nofollow\">Nicolas Girard</a>,\n<a href=\"https://people.csail.mit.edu/smirnov/\"\
+    \ rel=\"nofollow\">Dmitriy Smirnov</a>,\n<a href=\"https://people.csail.mit.edu/jsolomon/\"\
+    \ rel=\"nofollow\">Justin Solomon</a>,\n<a href=\"https://www-sop.inria.fr/members/Yuliya.Tarabalka/\"\
+    \ rel=\"nofollow\">Yuliya Tarabalka</a><br>\nCVPR 2021<br>\n<strong>[<a href=\"\
+    https://arxiv.org/abs/2004.14875\" rel=\"nofollow\">paper</a>, <a href=\"https://www.youtube.com/watch?v=226pPTBsNJ8&amp;t=8s\"\
+    \ rel=\"nofollow\">video</a>]</strong></p>\n<h1>\n<a id=\"user-content-setup\"\
+    \ class=\"anchor\" href=\"#setup\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Setup</h1>\n<h2>\n<a id=\"user-content-git-submodules\"\
+    \ class=\"anchor\" href=\"#git-submodules\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Git submodules</h2>\n<p>This\
+    \ project uses various git submodules that should be cloned too.</p>\n<p>To clone\
+    \ a repository including its submodules execute:</p>\n<pre><code>git clone --recursive\
+    \ --jobs 8 &lt;URL to Git repo&gt;\n</code></pre>\n<p>If you already have cloned\
+    \ the repository and now want to load it\u2019s submodules execute:</p>\n<pre><code>git\
+    \ submodule update --init --recursive --jobs 8\n</code></pre>\n<p>or:</p>\n<pre><code>git\
+    \ submodule update --recursive\n</code></pre>\n<p>For more about explanations\
+    \ about using submodules and git, see <a href=\"SUBMODULES.md\">SUBMODULES.md</a>.</p>\n\
+    <h2>\n<a id=\"user-content-docker\" class=\"anchor\" href=\"#docker\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Docker</h2>\n\
+    <p>The easiest way to setup environment is to use the Docker image provided in\
+    \ the <a href=\"docker\">docker</a> (see README inside the folder).</p>\n<p>Once\
+    \ the docker container is built and launched, execute the <a href=\"setup.sh\"\
+    >setup.sh</a> script inside to install required packages.</p>\n<p>The environment\
+    \ in the container is now ready for use.</p>\n<h2>\n<a id=\"user-content-conda-environment\"\
+    \ class=\"anchor\" href=\"#conda-environment\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Conda environment</h2>\n<p>Alternatively\
+    \ you can install all dependencies in a conda environment.\nI provide my environment\
+    \ specifications in the  <a href=\"environment.yml\">environment.yml</a> which\
+    \ you can use to create your environment own with:</p>\n<pre><code>conda env create\
+    \ -f environment.yml\n</code></pre>\n<h1>\n<a id=\"user-content-data\" class=\"\
+    anchor\" href=\"#data\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Data</h1>\n<p>Several datasets are used in this\
+    \ work.\nWe typically put all datasets in a \"data\" folder which we link to the\
+    \ \"/data\" folder in the container (with the <code>-v</code> argument when running\
+    \ the container).\nEach dataset has it's own sub-folder, usually named with a\
+    \ short version of that dataset's name.\nEach dataset sub-folder should have a\
+    \ \"raw\" folder inside containing all the original folders and files fo the datset.\n\
+    When pre-processing data, \"processed\" folders will be created alongside the\
+    \ \"raw\" folder.</p>\n<p>For example, here is an example working file structure\
+    \ inside the container:</p>\n<pre><code>/data \n|-- AerialImageDataset\n     |--\
+    \ raw\n         |-- train\n         |   |-- aligned_gt_polygons_2\n         |\
+    \   |-- gt\n         |   |-- gt_polygonized\n         |   |-- images\n       \
+    \  `-- test\n             |-- aligned_gt_polygons_2\n             |-- images\n\
+    `-- mapping_challenge_dataset\n     |-- raw\n         |-- train\n         |  \
+    \ |-- images\n         |   |-- annotation.json\n         |   `-- annotation-small.json\n\
+    \         `-- val\n              `-- ...\n</code></pre>\n<p>If however you would\
+    \ like to use a different folder for the datasets (for example while not using\
+    \ Docker),\nyou can change the path to datasets in config files.\nYou can modify\
+    \ the \"data_dir_candidates\" list in the config to only include your path.\n\
+    The training script checks this list of paths one at a time and picks the first\
+    \ one that exists.\nIt then appends the \"data_root_partial_dirpath\" directory\
+    \ to get to the dataset.</p>\n<p>You can find some of the data we used in this\
+    \ shared \"data\" folder: <a href=\"https://drive.google.com/drive/folders/19yqseUsggPEwLFTBl04CmGmzCZAIOYhy?usp=sharing\"\
+    \ rel=\"nofollow\">https://drive.google.com/drive/folders/19yqseUsggPEwLFTBl04CmGmzCZAIOYhy?usp=sharing</a>.</p>\n\
+    <h2>\n<a id=\"user-content-inria-aerial-image-labeling-dataset\" class=\"anchor\"\
+    \ href=\"#inria-aerial-image-labeling-dataset\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Inria Aerial Image Labeling Dataset</h2>\n\
+    <p>Link to the dataset: <a href=\"https://project.inria.fr/aerialimagelabeling/\"\
+    \ rel=\"nofollow\">https://project.inria.fr/aerialimagelabeling/</a></p>\n<p>For\
+    \ the Inria dataset, the original ground truth is just a collection of raster\
+    \ masks.\nAs our method requires annotations to be polygons in order to compute\
+    \ the ground truth angle for the frame field, we made 2 versions of the dataset:</p>\n\
+    <p>The <em>Inria OSM dataset</em> has aligned annotations pulled from OpenStreetMap.</p>\n\
+    <p>The <em>Inria Polygonized dataset</em> has polygon annotations obtained from\
+    \ using our frame field polygonization algorithm on the original raster masks.\n\
+    This was done by running the <code>polygonize_mask.py</code> script like so:\n\
+    <code>python polygonize_mask.py --run_name inria_dataset_osm_mask_only.unet16\
+    \ --filepath ~/data/AerialImageDataset/raw/train/gt/*.tif</code></p>\n<p>You can\
+    \ find this new ground truth for both cases in the shared \"data\" folder (<a\
+    \ href=\"https://drive.google.com/drive/folders/19yqseUsggPEwLFTBl04CmGmzCZAIOYhy?usp=sharing\"\
+    \ rel=\"nofollow\">https://drive.google.com/drive/folders/19yqseUsggPEwLFTBl04CmGmzCZAIOYhy?usp=sharing</a>.).</p>\n\
+    <h1>\n<a id=\"user-content-running-the-mainpy-script\" class=\"anchor\" href=\"\
+    #running-the-mainpy-script\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Running the main.py script</h1>\n<p>Execute\
+    \ <a href=\"main.py\">main.py</a> script to train a model, test a model or use\
+    \ a model on your own image.\nSee the help of the main script with:</p>\n<p><code>python\
+    \ main.py --help</code></p>\n<p>The script can be launched on multiple GPUs for\
+    \ multi-GPU training and evaluation.\nSimply set the <code>--gpus</code> argument\
+    \ to the number of gpus you want to use.\nHowever, for the first launch of the\
+    \ script on a particular dataset (when it will pre-process the data),\nit is best\
+    \ to leave it at 1 as I did not implement multi-GPU synchronization when pre-processing\
+    \ datasets.</p>\n<p>An example use is for training a model with a certain config\
+    \ file, like so:\n<code>python main.py --config configs/config.mapping_dataset.unet_resnet101_pretrained</code>\n\
+    which will train the Unet-Resnet101 on the CrowdAI Mapping Challenge dataset.\n\
+    The batch size can be adjusted like so:\n<code>python main.py --config configs/config.mapping_dataset.unet_resnet101_pretrained\
+    \ -b &lt;new batch size&gt;</code></p>\n<p>When training is done, the script can\
+    \ be launched in eval mode, to evaluate the trained model:\n<code>python main.py\
+    \ --config configs/config.mapping_dataset.unet_resnet101_pretrained --mode eval</code>.\n\
+    Depending on the eval parameters of the config file, running this will output\
+    \ results on the test dataset.</p>\n<p>Finally, if you wish to compute AP and\
+    \ AR metrics with the COCO API, you can run:\n<code>python main.py --config configs/config.mapping_dataset.unet_resnet101_pretrained\
+    \ --mode eval_coco</code>.</p>\n<h2>\n<a id=\"user-content-launch-inference-on-one-image\"\
+    \ class=\"anchor\" href=\"#launch-inference-on-one-image\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Launch inference\
+    \ on one image</h2>\n<p>Make sure the run folder has the correct structure:</p>\n\
+    <pre><code>Polygonization-by-Frame-Field-Learning\n|-- frame_field_learning\n\
+    |   |-- runs\n|   |   |-- &lt;run_name&gt; | &lt;yyyy-mm-dd hh:mm:ss&gt;\n|  \
+    \ |   `-- ...\n|   |-- inference.py\n|   `-- ...\n|-- main.py\n|-- README.md (this\
+    \ file)\n`-- ...\n</code></pre>\n<p>Execute the [main.py] script like so (filling\
+    \ values for arguments run_name and in_filepath):\n<code>python main.py --run_name\
+    \ &lt;run_name&gt; --in_filepath &lt;your_image_filepath&gt;</code></p>\n<p>The\
+    \ outputs will be saved next to the input image</p>\n<h2>\n<a id=\"user-content-download-trained-models\"\
+    \ class=\"anchor\" href=\"#download-trained-models\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Download trained\
+    \ models</h2>\n<p>We provide already-trained models so you can run inference right\
+    \ away.\nDownload here: <a href=\"https://drive.google.com/drive/folders/1poTQbpCz12ra22CsucF_hd_8dSQ1T3eT?usp=sharing\"\
+    \ rel=\"nofollow\">https://drive.google.com/drive/folders/1poTQbpCz12ra22CsucF_hd_8dSQ1T3eT?usp=sharing</a>.\n\
+    Each model was trained in a \"run\", whose folder (named with the format <code>&lt;run_name&gt;\
+    \ | &lt;yyyy-mm-dd hh:mm:ss&gt;</code>) you can download at the provided link.\n\
+    You should then place those runs in a folder named \"runs\" inside the \"frame_field_learning\"\
+    \ folder like so:</p>\n<pre><code>Polygonization-by-Frame-Field-Learning\n|--\
+    \ frame_field_learning\n|   |-- runs\n|   |   |-- inria_dataset_polygonized.unet_resnet101_pretrained.leaderboard\
+    \ | 2020-06-02 07:57:31\n|   |   |-- mapping_dataset.unet_resnet101_pretrained.field_off.train_val\
+    \ | 2020-09-07 11:54:48\n|   |   |-- mapping_dataset.unet_resnet101_pretrained.train_val\
+    \ | 2020-09-07 11:28:51\n|   |   `-- ...\n|   |-- inference.py\n|   `-- ...\n\
+    |-- main.py\n|-- README.md (this file)\n`-- ...\n</code></pre>\n<p>Because Google\
+    \ Drive reformats folder names, you have to rename the run folders as above.</p>\n\
+    <h1>\n<a id=\"user-content-cite\" class=\"anchor\" href=\"#cite\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Cite:</h1>\n\
+    <p>If you use this code for your own research, please cite</p>\n<pre><code>@InProceedings{Girard_2021_CVPR,\n\
+    \    author    = {Girard, Nicolas and Smirnov, Dmitriy and Solomon, Justin and\
+    \ Tarabalka, Yuliya},\n    title     = {Polygonal Building Extraction by Frame\
+    \ Field Learning},\n    booktitle = {Proceedings of the IEEE/CVF Conference on\
+    \ Computer Vision and Pattern Recognition (CVPR)},\n    month     = {June},\n\
+    \    year      = {2021},\n    pages     = {5891-5900}\n}\n</code></pre>\n"
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1630919338.0
 HanLabUNLV/hanlab_singularity_defs:
   data_format: 2
   description: definition files for containers used in Hanlab
@@ -10125,6 +10420,84 @@ Irfanwustl/Research_code:
   subscribers_count: 1
   topics: []
   updated_at: 1627949747.0
+J35P312/fluffy:
+  data_format: 2
+  description: FetaL AneUploidy and FetalFraction analYsis Pipeline
+  filenames:
+  - Singularity
+  full_name: J35P312/fluffy
+  latest_release: 0.8.2
+  readme: "<p><a href=\"https://github.com/Clinical-Genomics/fluffy/workflows/Build/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/Clinical-Genomics/fluffy/workflows/Build/badge.svg\"\
+    \ alt=\"Build\" style=\"max-width:100%;\"></a>\n<a href=\"https://codecov.io/gh/Clinical-Genomics/fluffy\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/5a8950551f5fd61495950779e32145a28a2346b9809af6e347b18f58dce06213/68747470733a2f2f636f6465636f762e696f2f67682f436c696e6963616c2d47656e6f6d6963732f666c756666792f6272616e63682f6d61737465722f67726170682f62616467652e737667\"\
+    \ alt=\"codecov\" data-canonical-src=\"https://codecov.io/gh/Clinical-Genomics/fluffy/branch/master/graph/badge.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-fluffypipe\"\
+    \ class=\"anchor\" href=\"#fluffypipe\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>FluFFyPipe</h1>\n<p>NIPT analysis\
+    \ pipeline, using WisecondorX for detecting aneuplodies and large CNVs, AMYCNE\
+    \ for FFY and PREFACE for FF prediction (optional). FluFFYPipe produces a variety\
+    \ of output files, as well as a per batch csv summary.</p>\n<p align=\"center\"\
+    >\n<a href=\"https://github.com/J35P312/FluFFyPipe/blob/master/logo/IMG_20200320_132001.jpg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/J35P312/FluFFyPipe/raw/master/logo/IMG_20200320_132001.jpg\"\
+    \ width=\"400\" height=\"400\" style=\"max-width:100%;\"></a>\n</p>\n<h1>\n<a\
+    \ id=\"user-content-run-fluffypipe\" class=\"anchor\" href=\"#run-fluffypipe\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Run FluFFyPipe</h1>\n<p>Run NIPT analysis, using a previously comnputed\
+    \ reference:</p>\n<pre><code>fluffy --sample &lt;samplesheet&gt;  --project &lt;input_folder&gt;\
+    \ --out &lt;output_folder&gt; analyse\n</code></pre>\n<p>Run NIPT analysis, using\
+    \ an internally computed reference (i.e the reference is built using all samples\
+    \ listed in samplesheet):</p>\n<pre><code>fluffy --sample &lt;samplesheet&gt;\
+    \  --project &lt;input_folder&gt; --out &lt;output_folder&gt; analyse --batch-ref\n\
+    </code></pre>\n<p>optionally, skip preface:</p>\n<pre><code>fluffy --sample &lt;samplesheet&gt;\
+    \  --project &lt;input_folder&gt; --out &lt;output_folder&gt; --skip_preface analyse\n\
+    </code></pre>\n<p>All output will be written to the output folder, this output\
+    \ includes:</p>\n<pre><code>bam files\nwisecondorX output\ntiddit coverage summary\n\
+    Fetal fraction estimation\n</code></pre>\n<p>as well as a summary csv and multiqc\
+    \ html (per batch)</p>\n<p>the input folder is a project folder containing one\
+    \ folder per sample, each of these subfolders contain the fastq file(s).\nThe\
+    \ samplesheet contains at least a \"sampleID\" column, the sampleID should match\
+    \ the subfolders in the input folder. The samplesheet may contain other columns,\
+    \ such as flowcell and index folder: such columns will be printed to the summary\
+    \ csv.\nIf the samplesheet contains a SampleName column, fluffy will name the\
+    \ output according to SampleName</p>\n<p>Create a WisecondorX reference</p>\n\
+    <pre><code>fluffy --sample &lt;samplesheet&gt;  --project &lt;input_folder&gt;\
+    \ --out &lt;output_folder&gt; reference\n</code></pre>\n<p>samplesheet should\
+    \ contain atleast a \"sampleID\" column. All samples in the samplesheet will be\
+    \ used to construct the reference, visit the WisecondorX manual for more information.</p>\n\
+    <h1>\n<a id=\"user-content-troubleshooting-and-rerun\" class=\"anchor\" href=\"\
+    #troubleshooting-and-rerun\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Troubleshooting and rerun</h1>\n<p>There are\
+    \ three statuses of the fluffy pipeline:\nrunning, complete, and failed</p>\n\
+    <p>The status of a fluffy run is found in the</p>\n<pre><code>&lt;output_folder&gt;/analysis_status.json\n\
+    </code></pre>\n<p>The status of all jobs are listed in</p>\n<pre><code>&lt;output_folder&gt;/sacct/fluffy_&lt;date&gt;.log.status\n\
+    </code></pre>\n<p>Where  is the timepoint when the jobs were submitted\nUse grep\
+    \ to find the failed jobs:</p>\n<pre><code>grep -v COMPLETE &lt;output_folder&gt;/sacct/fluffy_&lt;date&gt;.log.status\n\
+    </code></pre>\n<p>The output logs are stored in:</p>\n<pre><code> &lt;output_folder&gt;/logs\n\
+    </code></pre>\n<p>Before continuing, you may want to generate the summary csv\
+    \ for all completed cases:</p>\n<pre><code>bash &lt;output_folder&gt;/scripts/summarizebatch-&lt;hash&gt;\n\
+    </code></pre>\n<p>where  is a randomly generated string.</p>\n<p>use the rerun\
+    \ module to rerun failed fluffy analyses:</p>\n<pre><code>fluffy --sample &lt;samplesheet&gt;\
+    \  --project &lt;input_folder&gt; --out &lt;output_folder&gt; --skip_preface rerun\n\
+    </code></pre>\n<h1>\n<a id=\"user-content-install-fluffypipe\" class=\"anchor\"\
+    \ href=\"#install-fluffypipe\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Install FluFFyPipe</h1>\n<p>FluFFyPipe\
+    \ requires python 3, slurm, slurmpy, and singularity, python-coloredlogs.</p>\n\
+    <p>fluffy may be installed using pip:</p>\n<pre><code>pip install fluffy-cg\n\
+    </code></pre>\n<p>alternatively, fluffy is cloned and installed from github:\n\
+    git clone <a href=\"https://github.com/Clinical-Genomics/fluffy\">https://github.com/Clinical-Genomics/fluffy</a>\n\
+    cd fluffy\npip install -e .</p>\n<p>Next download the FluFFyPipe singularity container</p>\n\
+    <pre><code> singularity pull library://jeisfeldt/default/fluffy:sha256.dbef92cd5eab8558c2729f73a191d73a7576a24e9bb44dde7372c0cd405c4ef6\
+    \ \n</code></pre>\n<p>copy the example config (found in example_config), and edit\
+    \ the variables.\nYou will need to download/create the following files:</p>\n\
+    <pre><code>Reference fasta (indexed using bwa)\n\nWisecondorX reference files\
+    \ (created using the reference mode)\n\nPREFACE model file (optional)\n\nblacklist\
+    \ bed file (used by wisecondorX)\n\nFluFFyPipe singularity collection (singularity\
+    \ pull --name FluFFyPipe.sif shub://J35P312/FluFFyPipe)\n</code></pre>\n"
+  stargazers_count: 2
+  subscribers_count: 5
+  topics: []
+  updated_at: 1631110609.0
 JCSDA-internal/containers:
   data_format: 2
   description: Contains tools for building and distributing the JEDI/JCSDA Containers
@@ -10347,6 +10720,288 @@ JCSDA-internal/containers:
   subscribers_count: 6
   topics: []
   updated_at: 1627309513.0
+JD2112/AlveolarCellTypeDeconvolution:
+  data_format: 2
+  description: 'DNA methylome-based validation of induced sputum as an effective protocol
+    to study lung immunity: construction of a classifier of pulmonary cell types'
+  filenames:
+  - Singularity
+  full_name: JD2112/AlveolarCellTypeDeconvolution
+  latest_release: v1.4
+  readme: '<h1>
+
+    <a id="user-content-the-r-scripts-to-analyze-the-alveolar-macrophages-hla-drcd3--and-lymphocytes-cd3-specific-cell-types-from-dna-methylation-analysis"
+    class="anchor" href="#the-r-scripts-to-analyze-the-alveolar-macrophages-hla-drcd3--and-lymphocytes-cd3-specific-cell-types-from-dna-methylation-analysis"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The
+    R scripts to analyze the Alveolar macrophages (HLA-DR+/CD3-) and lymphocytes (CD3+)
+    specific cell types from DNA methylation analysis.</h1>
+
+    <h2>
+
+    <a id="user-content-related-publication-accepted-in-epigenetics-2021-08-11" class="anchor"
+    href="#related-publication-accepted-in-epigenetics-2021-08-11" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Related publication:
+    (Accepted in Epigenetics, 2021-08-11)</h2>
+
+    <p><em>Das, J., Idh, N., Paues, J., Sikkeland, L. I. B., &amp; Lerm, M.</em> (2021).
+    <strong>DNA methylome-based validation of induced sputum as an effective protocol
+    to study lung immunity: construction of a classifier of pulmonary cell types.</strong>
+    bioRxiv.<a href="https://www.biorxiv.org/content/10.1101/2021.03.12.435086v1"
+    rel="nofollow">https://doi.org/10.1101/2021.03.12.435086</a></p>
+
+    <h2>
+
+    <a id="user-content-create-package-and-r-script-files-according-to-the-analysis-or-result-in-the-manuscript"
+    class="anchor" href="#create-package-and-r-script-files-according-to-the-analysis-or-result-in-the-manuscript"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create
+    package and R script files according to the analysis (or Result in the manuscript).</h2>
+
+    <ol>
+
+    <li>DNA methylome analysis - till the normalizaed beta value calculation.</li>
+
+    <li>Normality calculation with Anderson''s test (<strong>Table 1</strong>)</li>
+
+    <li>Pearson''s rank correaltion analysis - Figures, Table (<strong>Figure 2 -
+    a. HLA-DR, b. CD3</strong>)</li>
+
+    <li>Beanplot from the beta values of the whole dataset to describe the beta distribution
+    over all samples (<strong>Figure S1a</strong>)</li>
+
+    <li>Mann-Whitney test for the hypothesis - Figures, Table (F<strong>igure 3a -
+    HLA-DR and 3b. CD3</strong>)</li>
+
+    <li>Validation of SI and BAL from Lung compartments (<strong>Figure 4</strong>)</li>
+
+    <li>Testing of 3 reference-free algorithms - algorithms testings, Venn Diagrams
+    (<strong>Figure 5a. HLA-DR and Figrue 5b. CD3</strong>)</li>
+
+    <li>Cell proportion analysis using the EpiDISH package (<strong>Figure 6</strong>)</li>
+
+    </ol>
+
+    <h2>
+
+    <a id="user-content-use-of-docker-image" class="anchor" href="#use-of-docker-image"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Use
+    of Docker image</h2>
+
+    <p>Dockerfile can be used for all R packages and repositories. The image file
+    can be found here</p>
+
+    <pre><code>docker pull jd21/alv-decon:latest
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-functions-present-in-the-package" class="anchor" href="#functions-present-in-the-package"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Functions
+    present in the package</h2>
+
+    <table>
+
+    <thead>
+
+    <tr>
+
+    <th>Functions</th>
+
+    <th>R scripts</th>
+
+    <th>description</th>
+
+    <th>notes</th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr>
+
+    <td><em>ChAMPanalysis450K()</em></td>
+
+    <td><strong>ChAMPanalysis.R</strong></td>
+
+    <td>script for DNA methylation using ChAMP</td>
+
+    <td></td>
+
+    </tr>
+
+    <tr>
+
+    <td><em>StatiscalAnalysisHLADR()</em></td>
+
+    <td><strong>StatisticalAnalysis.R</strong></td>
+
+    <td></td>
+
+    <td></td>
+
+    </tr>
+
+    <tr>
+
+    <td><em>StatiscalAnalysisCD3()</em></td>
+
+    <td><strong>StatisticalAnalysis.R</strong></td>
+
+    <td></td>
+
+    <td></td>
+
+    </tr>
+
+    <tr>
+
+    <td><em>ValidationWithCysticFibrosis()</em></td>
+
+    <td><strong>ValidationWithCF.R</strong></td>
+
+    <td></td>
+
+    <td></td>
+
+    </tr>
+
+    <tr>
+
+    <td><em>CompareAnalysisRingh()</em></td>
+
+    <td><strong>StatisticalAnalysis.R</strong></td>
+
+    <td></td>
+
+    <td></td>
+
+    </tr>
+
+    <tr>
+
+    <td><em>histogramPlot()</em></td>
+
+    <td><strong>Figure2c.R</strong></td>
+
+    <td>histogram analysis for beta values</td>
+
+    <td></td>
+
+    </tr>
+
+    <tr>
+
+    <td><em>AlveolarCellTypeDeconvolutionRefFreeEWAS()</em></td>
+
+    <td><strong>Figure3.R</strong></td>
+
+    <td>Houseman algorithm reference free analysis</td>
+
+    <td></td>
+
+    </tr>
+
+    <tr>
+
+    <td><em>AlveolarCellTypeDeconvolutionSVA()</em></td>
+
+    <td><strong>Figure3.R</strong></td>
+
+    <td>SVA analysis</td>
+
+    <td></td>
+
+    </tr>
+
+    <tr>
+
+    <td><em>AlveolarCellTypeDeconvolutionRefFreeCellMix()</em></td>
+
+    <td><strong>Figure3.R</strong></td>
+
+    <td></td>
+
+    <td></td>
+
+    </tr>
+
+    <tr>
+
+    <td><em>AlveolarCellTypeDeconvolutionTOAST()</em></td>
+
+    <td><strong>Figure3.R</strong></td>
+
+    <td></td>
+
+    <td></td>
+
+    </tr>
+
+    <tr>
+
+    <td><em>ggplotRegression()</em></td>
+
+    <td><strong>Figure4.R</strong></td>
+
+    <td></td>
+
+    <td></td>
+
+    </tr>
+
+    <tr>
+
+    <td><em>sFigure1()</em></td>
+
+    <td><strong>supplementaryFigureS1.R</strong></td>
+
+    <td></td>
+
+    <td></td>
+
+    </tr>
+
+    <tr>
+
+    <td><em>sFigure2()</em></td>
+
+    <td><strong>supplementaryFigureS2.R</strong></td>
+
+    <td></td>
+
+    <td></td>
+
+    </tr>
+
+    <tr>
+
+    <td><em>qqPlot()</em></td>
+
+    <td><strong>supplementaryFigureS3.R</strong></td>
+
+    <td>Q-Q plot for compare DNA methylome data</td>
+
+    <td>a sub-function can also be used; gg_qq()</td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 2
+  topics:
+  - dna-methylation
+  - alveolar-macrophages
+  - alveolar-lymphocytes
+  - hla-dr
+  - cd3
+  - cell-deconvolution
+  updated_at: 1630996544.0
 JiaLonghao1997/Microbiome:
   data_format: 2
   description: "\u5B8F\u57FA\u56E0\u7EC4\u76F8\u5173\u4EE3\u7801"
@@ -16864,6 +17519,291 @@ PGP-UK/GenomeChronicler:
   subscribers_count: 2
   topics: []
   updated_at: 1629439783.0
+Pathogen-Genomics-Cymru/lodestone:
+  data_format: 2
+  description: null
+  filenames:
+  - singularity/Singularity.clockwork
+  - singularity/Singularity.preprocessing
+  full_name: Pathogen-Genomics-Cymru/lodestone
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-tb-pipeline" class="anchor" href="#tb-pipeline" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>TB Pipeline</h1>
+
+    <p>This pipeline takes as input reads presumed to be from one of 10 mycobacterial
+    genomes: abscessus, africanum, avium, bovis, chelonae, chimaera, fortuitum, intracellulare,
+    kansasii, tuberculosis. Input should be in the form of one directory containing
+    pairs of fastq(.gz) or bam files.</p>
+
+    <p>Pipeline cleans and QCs reads with fastp and FastQC, classifies with Kraken2
+    &amp; Mykrobe, removes non-bacterial content, and - by alignment to any minority
+    genomes - disambiguates mixtures of bacterial reads. Cleaned reads are aligned
+    to either of the 10 supported genomes and variants called. Produces as output
+    one directory per sample, containing cleaned fastqs, sorted, indexed BAM, VCF,
+    and summary reports.</p>
+
+    <h2>
+
+    <a id="user-content-quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Quick Start</h2>
+
+    <p>Requires <code>NXF_VER&gt;=20.11.0-edge</code></p>
+
+    <p>The workflow is designed to run with either docker <code>-profile docker</code>
+    or singularity <code>-profile singularity</code>. Before running the workflow,
+    the images will need to be built by running either <code>docker/docker_build.sh</code>
+    or  <code>singularity/singularity_build.sh</code></p>
+
+    <p>E.g. to run the workflow:</p>
+
+    <pre><code>NXF_VER=20.11.0-edge nextflow run main.nf -profile singularity --filetype
+    fastq --input_dir fq_dir --pattern "*_R{1,2}.fastq.gz" --unmix_myco yes \
+
+    --output_dir . --kraken_db /path/to/database --bowtie2_index /path/to/index --bowtie_index_name
+    hg19_1kgmaj
+
+
+    NXF_VER=20.11.0-edge nextflow run main.nf -profile docker --filetype bam --input_dir
+    bam_dir --unmix_myco no \
+
+    --output_dir . --kraken_db /path/to/database --bowtie2_index /path/to/index --bowtie_index_name
+    hg19_1kgmaj
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-params" class="anchor" href="#params" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Params</h2>
+
+    <p>The following parameters should be set in <code>nextflow.config</code> or specified
+    on the command line:</p>
+
+    <ul>
+
+    <li>
+
+    <strong>input_dir</strong><br>
+
+    Directory containing fastq OR bam files</li>
+
+    <li>
+
+    <strong>filetype</strong><br>
+
+    File type in input_dir. Either "fastq" or "bam"</li>
+
+    <li>
+
+    <strong>pattern</strong><br>
+
+    Regex to match fastq files in input_dir, e.g. "*_R{1,2}.fq.gz". Only mandatory
+    if --filetype is "fastq"</li>
+
+    <li>
+
+    <strong>output_dir</strong><br>
+
+    Output directory for results</li>
+
+    <li>
+
+    <strong>unmix_myco</strong><br>
+
+    Do you want to disambiguate mixed-mycobacterial samples by read alignment? Either
+    "yes" or "no":
+
+    <ul>
+
+    <li>If "yes" workflow will remove reads mapping to any minority mycobacterial
+    genomes but in doing so WILL ALMOST CERTAINLY ALSO reduce coverage of the principal
+    species</li>
+
+    <li>If "no" then mixed-mycobacterial samples will be left alone. Mixtures of mycobacteria
+    + non-mycobacteria will still be disambiguated</li>
+
+    </ul>
+
+    </li>
+
+    <li>
+
+    <strong>species</strong><br>
+
+    Principal species in each sample, assuming genus Mycobacterium. Default ''null''.
+    If parameter used, takes 1 of 10 values: abscessus, africanum, avium, bovis, chelonae,
+    chimaera, fortuitum, intracellulare, kansasii, tuberculosis. Using this parameter
+    will apply an additional sanity test to your sample
+
+    <ul>
+
+    <li>If you DO NOT use this parameter (default option), pipeline will determine
+    principal species from the reads and consider any other species a contaminant</li>
+
+    <li>If you DO use this parameter, pipeline will expect this to be the principal
+    species. It will fail the sample if reads from this species are not actually the
+    majority</li>
+
+    </ul>
+
+    </li>
+
+    <li>
+
+    <strong>kraken_db</strong><br>
+
+    Directory containing <code>*.k2d</code> Kraken2 database files (k2_pluspf_16gb_20200919
+    recommended, obtain from <a href="https://benlangmead.github.io/aws-indexes/k2"
+    rel="nofollow">https://benlangmead.github.io/aws-indexes/k2</a>)</li>
+
+    <li>
+
+    <strong>bowtie2_index</strong><br>
+
+    Directory containing Bowtie2 index (obtain from <a href="ftp://ftp.ccb.jhu.edu/pub/data/bowtie2_indexes/hg19_1kgmaj_bt2.zip"
+    rel="nofollow">ftp://ftp.ccb.jhu.edu/pub/data/bowtie2_indexes/hg19_1kgmaj_bt2.zip</a>).
+    The specified path should NOT include the index name</li>
+
+    <li>
+
+    <strong>bowtie_index_name</strong><br>
+
+    Name of the bowtie index, e.g. hg19_1kgmaj<br>
+
+    </li>
+
+    </ul>
+
+    <br>
+
+    <p>For more information on the parameters run <code>nextflow run main.nf --help</code></p>
+
+    <p>The path to the singularity images can also be changed in the singularity profile
+    in <code>nextflow.config</code>. Default value is <code>${baseDir}/singularity</code></p>
+
+    <h2>
+
+    <a id="user-content-stub-run" class="anchor" href="#stub-run" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Stub-run</h2>
+
+    <p>To test the stub run:</p>
+
+    <pre><code>NXF_VER=20.11.0-edge nextflow run main.nf -stub -config testing.config
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-checkpoints" class="anchor" href="#checkpoints" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Checkpoints</h2>
+
+    <p>Checkpoints used throughout this workflow to fail a sample/issue warnings:</p>
+
+    <p>processes preprocessing:checkFqValidity or preprocessing:checkBamValidity</p>
+
+    <ol>
+
+    <li>(Fail) If sample does not pass fqtools ''validate'' or samtools ''quickcheck'',
+    as appropriate.</li>
+
+    </ol>
+
+    <p>process preprocessing:countReads<br>
+
+    2. (Fail) If sample contains &lt; 100k pairs of raw reads.</p>
+
+    <p>process preprocessing:fastp<br>
+
+    3. (Fail) If sample contains &lt; 100k pairs of cleaned reads, required to all
+    be &gt; 50bp (cleaning using fastp with --length_required 50 --average_qual 10
+    --low_complexity_filter --correction --cut_right --cut_tail --cut_tail_window_size
+    1 --cut_tail_mean_quality 20).</p>
+
+    <p>process preprocessing:kraken2<br>
+
+    4. (Fail) If the top family hit is not Mycobacteriaceae<br>
+
+    5. (Fail) If there are fewer than 100k reads classified as Mycobacteriaceae <br>
+
+    6. (Warn) If the top family classification is mycobacterial, but this is not consistent
+    with top genus and species classifications<br>
+
+    7. (Warn) If the top family is Mycobacteriaceae but no G1 (species complex) classifications
+    meet minimum thresholds of &gt; 5000 reads or &gt; 0.5% of the total reads (this
+    is not necessarily a concern as not all mycobacteria have a taxonomic classification
+    at this rank)<br>
+
+    8. (Warn) If sample is mixed or contaminated - defined as containing reads &gt;
+    the 5000/0.5% thresholds from multiple non-human species<br>
+
+    9. (Warn) If sample contains multiple classifications to mycobacterial species
+    complexes, each meeting the &gt; 5000/0.5% thresholds<br>
+
+    10. (Warn) If no species classification meets the 5000/0.5% thresholds<br>
+
+    11. (Warn) If no genus classification meets the 5000/0.5% thresholds</p>
+
+    <p>process preprocessing:identifyBacterialContaminants<br>
+
+    12. (Fail) If regardless of what Kraken reports, Mykrobe does not make a species-level
+    mycobacterial classification (note that we do not use Kraken mycobacterial classifications
+    other than to determine whether 100k reads are family Mycobacteriaceae; for higher-resolution
+    classification, we defer to Mykrobe)<br>
+
+    13. (Fail) If the sample is not contaminated and the top species hit is not one
+    of the 10 supported Mycobacteria: abscessus|africanum|avium|bovis|chelonae|chimaera|fortuitum|intracellulare|kansasii|tuberculosis<br>
+
+    14. (Fail) If the sample is not contaminated and the top species hit is contrary
+    to the species expected (e.g. "avium" rather than "tuberculosis" - only tested
+    if you provide that expectation)<br>
+
+    15. (Warn) If the top Mykrobe species hit, on the basis of highest % coverage,
+    does not also have the highest median depth<br>
+
+    16. (Warn) If we are unable to associate an NCBI taxon ID to any given contaminant
+    species, which means we will not be able to locate its genome, and thereby remove
+    it as a contaminant<br>
+
+    17. (Warn) If we are unable to determine a URL for the latest RefSeq genome associated
+    with a contaminant species'' taxon ID<br>
+
+    18. (Warn) If no complete genome could be found for a contaminant species. The
+    workflow will proceed with alignment-based contaminant removal, but you''re warned
+    that there''s reduced confidence in detecting reads from this species</p>
+
+    <p>process preprocessing:downloadContamGenomes<br>
+
+    19. (Fail) If a contaminant is detected but we are unable to download a representative
+    genome, and thereby remove it</p>
+
+    <p>process preprocessing:summarise<br>
+
+    20. (Fail) If after having taken an alignment-based approach to decontamination,
+    Kraken still detects a contaminant species<br>
+
+    21. (Fail) If after having taken an alignment-based approach to decontamination,
+    the top species hit is not one of the 10 supported Mycobacteria<br>
+
+    22. (Fail) If, after successfully removing contaminants, the top species hit is
+    contrary to the species expected (e.g. "avium" rather than "tuberculosis" - only
+    tested if you provide that expectation)</p>
+
+    <p>process clockwork:alignToRef<br>
+
+    23. (Fail) If &lt; 100k reads could be aligned to the reference genome<br>
+
+    24. (Fail) If, after aligning to the reference genome, the average read mapping
+    quality &lt; 10<br>
+
+    25. (Fail) If &lt; 50% of the reference genome was covered at 10-fold depth</p>
+
+    '
+  stargazers_count: 3
+  subscribers_count: 3
+  topics: []
+  updated_at: 1631015112.0
 Pathogen-Genomics-Cymru/tb-pipeline:
   data_format: 2
   description: null
@@ -18348,7 +19288,7 @@ SODALITE-EU/application-optimisation:
   stargazers_count: 0
   subscribers_count: 6
   topics: []
-  updated_at: 1630051466.0
+  updated_at: 1631168499.0
 Sarah145/batch_correct:
   data_format: 2
   description: Comparison of batch correction methods for scRNA-seq data - basically
@@ -20449,6 +21389,46 @@ XSEDE/singularity-nix-openmpi:
   subscribers_count: 12
   topics: []
   updated_at: 1623177060.0
+Yield10Bio/crispedit:
+  data_format: 2
+  description: Nextflow pipeline for inference of CRISPR edits from NGS (Amplicon
+    Sequencing) data
+  filenames:
+  - Singularity
+  full_name: Yield10Bio/crispedit
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-crispedit\" class=\"anchor\" href=\"#crispedit\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>crispedit</h1>\n<p><strong>Nextflow pipeline for inference of CRISPR\
+    \ edits from NGS (Amplicon Sequencing) data</strong></p>\n<pre><code>run crispedit/crisedit.nf\
+    \ --in_fastq  /Users/ngebremedhin/Downloads/VB26_18_3428_P1087_308811w_BF8.fastq\
+    \  --ref canola_badc_allgenes.fa --out_dir ${PWD}/myProject --project_name LC25\
+    \ --bucket bioinformatics-analysis-netsanet --sgrna \"CCTTCTGAGCCCATGAACAAATC\"\
+    \n</code></pre>\n<pre><code>N E X T F L O W  ~  version 19.04.1\nLaunching `crispedit/crisedit.nf`\
+    \ [hopeful_swanson] - revision: 607eaca8d5\n\n[warm up] executor &gt; local\n\
+    executor &gt;  local (27)\n[a7/a397c1] process &gt; mergeReads            [100%]\
+    \ 1 of 1 \u2714\n[58/d46b33] process &gt; clustering            [100%] 1 of 1\
+    \ \u2714\n[1d/5e8374] process &gt; dereplication         [100%] 1 of 1 \u2714\n\
+    [bb/cc12b3] process &gt; mapHighFrequencyReads [100%] 1 of 1 \u2714\n[44/eec241]\
+    \ process &gt; samToBam              [100%] 1 of 1 \u2714\n[92/c84f30] process\
+    \ &gt; indexBam              [100%] 1 of 1 \u2714\n[d2/119094] process &gt; identiyEdits\
+    \          [100%] 1 of 1 \u2714\n[a2/38c0af] process &gt; prepForPSA         \
+    \   [100%] 1 of 1 \u2714\n[a6/51cabd] process &gt; performPSA            [100%]\
+    \ 9 of 9 \u2714\n[bd/fd96a3] process &gt; combineClustalOut     [100%] 9 of 9\
+    \ \u2714\n[33/0f5567] process &gt; createFinalReport     [100%] 1 of 1 \u2714\n\
+    \nCompleted at: 25-Jul-2019 11:37:08\nDuration    : 12.4s\nCPU hours   : (a few\
+    \ seconds)\nSucceeded   : 27\n</code></pre>\n<h3>\n<a id=\"user-content-dependencies\"\
+    \ class=\"anchor\" href=\"#dependencies\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Dependencies</h3>\n<ul>\n<li>bwa\
+    \ 0.7.17</li>\n<li>vsearch 2.18.0</li>\n<li>bbmap 38.92</li>\n<li>samtools=1.9</li>\n\
+    <li>Biopython</li>\n<li>clustalo 1.2.4</li>\n</ul>\n<h3>\n<a id=\"user-content-credits\"\
+    \ class=\"anchor\" href=\"#credits\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Credits</h3>\n<p>crispedit is\
+    \ written by Netsanet Gebremedhin.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 2
+  topics: []
+  updated_at: 1631063991.0
 Zinoex/hyperverlet:
   data_format: 2
   description: null
@@ -20886,7 +21866,7 @@ adamlabadorf/bf500:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1628613121.0
+  updated_at: 1631103276.0
 adamlabadorf/bf550:
   data_format: 2
   description: null
@@ -21546,7 +22526,7 @@ airbert-vln/bnb-dataset:
     \ class=\"g-emoji\" alias=\"hammer_and_wrench\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f6e0.png\"\
     >\U0001F6E0\uFE0F</g-emoji> 1. Get started</h2>\n<p>You need to have a recent\
     \ version of Python (higher than 3.6) and install dependencies:</p>\n<div class=\"\
-    highlight highlight-source-shell\"><pre>pip install -r requirements</pre></div>\n\
+    highlight highlight-source-shell\"><pre>pip install -r requirements.txt</pre></div>\n\
     <p>Note that typing is extensively used in the script. This was a real time saver\
     \ for detecting errors before runtime. You might want to setup properly your IDE\
     \ to play well with mypy. I  recommend the <a href=\"https://github.com/neoclide/coc.nvim\"\
@@ -21714,7 +22694,7 @@ airbert-vln/bnb-dataset:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1629708046.0
+  updated_at: 1631013721.0
 alestarbucks/ofappdl:
   data_format: 2
   description: null
@@ -22906,8 +23886,12 @@ automl/HPOBench:
   - hpobench/container/recipes/Singularity.template
   - hpobench/container/recipes/rl/Singularity.Cartpole
   - hpobench/container/recipes/rl/Singularity.learnaBenchmark
+  - hpobench/container/recipes/od/Singularity.ODBenchmarks
+  - hpobench/container/recipes/od/Singularity.ODKernelDensityEstimation
   - hpobench/container/recipes/surrogates/Singularity.ParamnetBenchmark
   - hpobench/container/recipes/surrogates/Singularity.SupportVectorMachine
+  - hpobench/container/recipes/ml/Singularity.ml_mmfb
+  - hpobench/container/recipes/ml/Singularity.ml_tabular_benchmark
   - hpobench/container/recipes/ml/Singularity.PyBNN
   - hpobench/container/recipes/ml/Singularity.XGBoostBenchmark
   - hpobench/container/recipes/ml/Singularity.SupportVectorMachine
@@ -22916,19 +23900,30 @@ automl/HPOBench:
   - hpobench/container/recipes/nas/Singularity.TabularBenchmarks
   - hpobench/container/recipes/nas/Singularity.nasbench_101
   full_name: automl/HPOBench
-  latest_release: 0.0.8
+  latest_release: 0.0.9
   readme: "<h1>\n<a id=\"user-content-hpobench\" class=\"anchor\" href=\"#hpobench\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>HPOBench</h1>\n<p>HPOBench is a library for hyperparameter optimization\
-    \ and black-box optimization benchmark with a focus on reproducibility.</p>\n\
-    <p><strong>Note:</strong> HPOBench is under active construction. Stay tuned for\
-    \ more benchmarks. Information on how to contribute a new benchmark will follow\
-    \ shortly.</p>\n<p><strong>Note:</strong> If you are looking for a different or\
-    \ older version of our benchmarking library, you might be looking for\n<a href=\"\
-    https://github.com/automl/HPOlib1.5\">HPOlib1.5</a></p>\n<h2>\n<a id=\"user-content-in-4-lines-of-code\"\
+    ></span></a>HPOBench</h1>\n<p>HPOBench is a library for providing benchmarks for\
+    \ (multi-fidelity) hyperparameter optimization and with a focus on reproducibility.</p>\n\
+    <p>A list of benchmarks can be found in the <a href=\"https://github.com/automl/HPOBench/wiki/Available-Containerized-Benchmarks\"\
+    >wiki</a> and a guide on howto contribute benchmarks is avaiable <a href=\"https://github.com/automl/HPOBench/wiki/https://github.com/automl/HPOBench/wiki/How-to-add-a-new-benchmark-step-by-step\"\
+    >here</a></p>\n<h2>\n<a id=\"user-content-status\" class=\"anchor\" href=\"#status\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Status</h2>\n<p>Status for Master Branch:\n<a href=\"https://https://github.com/automl/HPOBench/actions\"\
+    \ rel=\"nofollow\"><img src=\"https://github.com/automl/HPOBench/workflows/Test%20Pull%20Requests/badge.svg?branch=master\"\
+    \ alt=\"Build Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://codecov.io/gh/automl/HPOBench\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/a034097751613923b89642227271f5932b385694eb079b833b66cc6bce2b924a/68747470733a2f2f636f6465636f762e696f2f67682f6175746f6d6c2f48504f42656e63682f6272616e63682f6d61737465722f67726170682f62616467652e737667\"\
+    \ alt=\"codecov\" data-canonical-src=\"https://codecov.io/gh/automl/HPOBench/branch/master/graph/badge.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n<p>Status for Development Branch:\n<a href=\"\
+    https://https://github.com/automl/HPOBench/actions\" rel=\"nofollow\"><img src=\"\
+    https://github.com/automl/HPOBench/workflows/Test%20Pull%20Requests/badge.svg?branch=development\"\
+    \ alt=\"Build Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://codecov.io/gh/automl/HPOBench\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/86b984292042d233294c09940c1b7dade7c877c1220bc419f2e2227eb0f775f0/68747470733a2f2f636f6465636f762e696f2f67682f6175746f6d6c2f48504f42656e63682f6272616e63682f646576656c6f706d656e742f67726170682f62616467652e737667\"\
+    \ alt=\"codecov\" data-canonical-src=\"https://codecov.io/gh/automl/HPOBench/branch/development/graph/badge.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h2>\n<a id=\"user-content-in-4-lines-of-code\"\
     \ class=\"anchor\" href=\"#in-4-lines-of-code\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>In 4 lines of code</h2>\n<p>Run\
-    \ a random configuration within a singularity container</p>\n<div class=\"highlight\
+    true\" class=\"octicon octicon-link\"></span></a>In 4 lines of code</h2>\n<p>Evaluate\
+    \ a random configuration using a singularity container</p>\n<div class=\"highlight\
     \ highlight-source-python\"><pre><span class=\"pl-k\">from</span> <span class=\"\
     pl-s1\">hpobench</span>.<span class=\"pl-s1\">container</span>.<span class=\"\
     pl-s1\">benchmarks</span>.<span class=\"pl-s1\">ml</span>.<span class=\"pl-s1\"\
@@ -22975,98 +23970,56 @@ automl/HPOBench:
     pl-en\">objective_function</span>(<span class=\"pl-s1\">configuration</span><span\
     \ class=\"pl-c1\">=</span><span class=\"pl-s1\">config</span>, <span class=\"\
     pl-s1\">rng</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\">1</span>)</pre></div>\n\
-    <p>Containerized benchmarks do not rely on external dependencies and thus do not\
-    \ change. To do so, we rely on <a href=\"https://sylabs.io/guides/3.5/user-guide/\"\
-    \ rel=\"nofollow\">Singularity (version 3.5)</a>.</p>\n<p>Further requirements\
-    \ are: <a href=\"https://github.com/automl/ConfigSpace\">ConfigSpace</a>, <em>scipy</em>\
-    \ and <em>numpy</em></p>\n<p><strong>Note:</strong> Each benchmark can also be\
-    \ run locally, but the dependencies must be installed manually and might conflict\
-    \ with other benchmarks.\nThis can be arbitrarily complex and further information\
-    \ can be found in the docstring of the benchmark.</p>\n<p>A simple example is\
-    \ the XGBoost benchmark which can be installed with <code>pip install .[xgboost]</code></p>\n\
-    <div class=\"highlight highlight-source-python\"><pre><span class=\"pl-k\">from</span>\
-    \ <span class=\"pl-s1\">hpobench</span>.<span class=\"pl-s1\">benchmarks</span>.<span\
-    \ class=\"pl-s1\">ml</span>.<span class=\"pl-s1\">xgboost_benchmark</span> <span\
-    \ class=\"pl-k\">import</span> <span class=\"pl-v\">XGBoostBenchmark</span>\n\
-    <span class=\"pl-s1\">b</span> <span class=\"pl-c1\">=</span> <span class=\"pl-v\"\
-    >XGBoostBenchmark</span>(<span class=\"pl-s1\">task_id</span><span class=\"pl-c1\"\
-    >=</span><span class=\"pl-c1\">167149</span>)\n<span class=\"pl-s1\">config</span>\
-    \ <span class=\"pl-c1\">=</span> <span class=\"pl-s1\">b</span>.<span class=\"\
-    pl-en\">get_configuration_space</span>(<span class=\"pl-s1\">seed</span><span\
-    \ class=\"pl-c1\">=</span><span class=\"pl-c1\">1</span>).<span class=\"pl-en\"\
-    >sample_configuration</span>()\n<span class=\"pl-s1\">result_dict</span> <span\
-    \ class=\"pl-c1\">=</span> <span class=\"pl-s1\">b</span>.<span class=\"pl-en\"\
-    >objective_function</span>(<span class=\"pl-s1\">configuration</span><span class=\"\
-    pl-c1\">=</span><span class=\"pl-s1\">config</span>, <span class=\"pl-s1\">fidelity</span><span\
+    <p>For more examples see <code>/example/</code>.</p>\n<h2>\n<a id=\"user-content-installation\"\
+    \ class=\"anchor\" href=\"#installation\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Installation</h2>\n<p>We recommend\
+    \ using a virtual environment. To install HPOBench, please run the following:</p>\n\
+    <pre><code>git clone https://github.com/automl/HPOBench.git\ncd HPOBench \npip\
+    \ install .\n</code></pre>\n<p><strong>Note:</strong> This does not install <em>singularity\
+    \ (version 3.6)</em>. Please follow the steps described here: <a href=\"https://sylabs.io/guides/3.6/user-guide/quick_start.html#quick-installation-steps\"\
+    \ rel=\"nofollow\">user-guide</a>.<br>\nIf you run into problems, using the most\
+    \ recent singularity version might help: <a href=\"https://singularity.hpcng.org/admin-docs/master/installation.html\"\
+    \ rel=\"nofollow\">here</a></p>\n<h2>\n<a id=\"user-content-containerized-benchmarks\"\
+    \ class=\"anchor\" href=\"#containerized-benchmarks\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Containerized\
+    \ Benchmarks</h2>\n<p>We provide all benchmarks as containerized versions to (i)\
+    \ isolate their dependencies and (ii) keep them reproducible. Our containerized\
+    \ benchmarks do not rely on external dependencies and thus do not change over\
+    \ time. For this, we rely on <a href=\"https://sylabs.io/guides/3.6/user-guide/\"\
+    \ rel=\"nofollow\">Singularity (version 3.6)</a> and for now upload all containers\
+    \ to a <a href=\"https://gitlab.tf.uni-freiburg.de/muelleph/hpobench-registry/container_registry\"\
+    \ rel=\"nofollow\">gitlab registry</a></p>\n<p>The only other requirements are:\
+    \ <a href=\"https://github.com/automl/ConfigSpace\">ConfigSpace</a>, <em>scipy</em>\
+    \ and <em>numpy</em></p>\n<h3>\n<a id=\"user-content-run-a-benchmark-locally\"\
+    \ class=\"anchor\" href=\"#run-a-benchmark-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Run a Benchmark\
+    \ Locally</h3>\n<p>Each benchmark can also be run locally, but the dependencies\
+    \ must be installed manually and might conflict with other benchmarks. This can\
+    \ be arbitrarily complex and further information can be found in the docstring\
+    \ of the benchmark.</p>\n<p>A simple example is the XGBoost benchmark which can\
+    \ be installed with <code>pip install .[xgboost]</code></p>\n<div class=\"highlight\
+    \ highlight-source-python\"><pre><span class=\"pl-k\">from</span> <span class=\"\
+    pl-s1\">hpobench</span>.<span class=\"pl-s1\">benchmarks</span>.<span class=\"\
+    pl-s1\">ml</span>.<span class=\"pl-s1\">xgboost_benchmark_old</span> <span class=\"\
+    pl-k\">import</span> <span class=\"pl-v\">XGBoostBenchmark</span>\n\n<span class=\"\
+    pl-s1\">b</span> <span class=\"pl-c1\">=</span> <span class=\"pl-v\">XGBoostBenchmark</span>(<span\
+    \ class=\"pl-s1\">task_id</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\"\
+    >167149</span>)\n<span class=\"pl-s1\">config</span> <span class=\"pl-c1\">=</span>\
+    \ <span class=\"pl-s1\">b</span>.<span class=\"pl-en\">get_configuration_space</span>(<span\
+    \ class=\"pl-s1\">seed</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\"\
+    >1</span>).<span class=\"pl-en\">sample_configuration</span>()\n<span class=\"\
+    pl-s1\">result_dict</span> <span class=\"pl-c1\">=</span> <span class=\"pl-s1\"\
+    >b</span>.<span class=\"pl-en\">objective_function</span>(<span class=\"pl-s1\"\
+    >configuration</span><span class=\"pl-c1\">=</span><span class=\"pl-s1\">config</span>,\n\
+    \                                   <span class=\"pl-s1\">fidelity</span><span\
     \ class=\"pl-c1\">=</span>{<span class=\"pl-s\">\"n_estimators\"</span>: <span\
     \ class=\"pl-c1\">128</span>, <span class=\"pl-s\">\"dataset_fraction\"</span>:\
     \ <span class=\"pl-c1\">0.5</span>}, <span class=\"pl-s1\">rng</span><span class=\"\
-    pl-c1\">=</span><span class=\"pl-c1\">1</span>)</pre></div>\n<h2>\n<a id=\"user-content-installation\"\
-    \ class=\"anchor\" href=\"#installation\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Installation</h2>\n<p>Before\
-    \ we start, we recommend using a virtual environment. To run any benchmark using\
-    \ its singularity container,\nrun the following:</p>\n<pre><code>git clone https://github.com/automl/HPOBench.git\n\
-    cd HPOBench \npip install .\n</code></pre>\n<p><strong>Note:</strong> This does\
-    \ not install <em>singularity (version 3.5)</em>. Please follow the steps described\
-    \ here: <a href=\"https://sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps\"\
-    \ rel=\"nofollow\">user-guide</a>.</p>\n<h2>\n<a id=\"user-content-available-containerized-benchmarks\"\
-    \ class=\"anchor\" href=\"#available-containerized-benchmarks\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Available\
-    \ Containerized Benchmarks</h2>\n<table>\n<thead>\n<tr>\n<th align=\"left\">Benchmark\
-    \ Name</th>\n<th>Container Name</th>\n<th>Additional Info</th>\n</tr>\n</thead>\n\
-    <tbody>\n<tr>\n<td align=\"left\">BNNOn*</td>\n<td>pybnn</td>\n<td>There are 4\
-    \ benchmark in total (ToyFunction, BostonHousing, ProteinStructure, YearPrediction)</td>\n\
-    </tr>\n<tr>\n<td align=\"left\">CartpoleFull</td>\n<td>cartpole</td>\n<td>Not\
-    \ deterministic.</td>\n</tr>\n<tr>\n<td align=\"left\">CartpoleReduced</td>\n\
-    <td>cartpole</td>\n<td>Not deterministic.</td>\n</tr>\n<tr>\n<td align=\"left\"\
-    >SliceLocalizationBenchmark</td>\n<td>tabular_benchmarks</td>\n<td>Loading may\
-    \ take several minutes.</td>\n</tr>\n<tr>\n<td align=\"left\">ProteinStructureBenchmark</td>\n\
-    <td>tabular_benchmarks</td>\n<td>Loading may take several minutes.</td>\n</tr>\n\
-    <tr>\n<td align=\"left\">NavalPropulsionBenchmark</td>\n<td>tabular_benchmarks</td>\n\
-    <td>Loading may take several minutes.</td>\n</tr>\n<tr>\n<td align=\"left\">ParkinsonsTelemonitoringBenchmark</td>\n\
-    <td>tabular_benchmarks</td>\n<td>Loading may take several minutes.</td>\n</tr>\n\
-    <tr>\n<td align=\"left\">NASCifar10*Benchmark</td>\n<td>nasbench_101</td>\n<td>Loading\
-    \ may take several minutes. There are 3 benchmark in total (A, B, C)</td>\n</tr>\n\
-    <tr>\n<td align=\"left\">*NasBench201Benchmark</td>\n<td>nasbench_201</td>\n<td>Loading\
-    \ may take several minutes. There are 3 benchmarks in total (Cifar10Valid, Cifar100,\
-    \ ImageNet)</td>\n</tr>\n<tr>\n<td align=\"left\">NASBench1shot1SearchSpace*Benchmark</td>\n\
-    <td>nasbench_1shot1</td>\n<td>Loading may take several minutes. There are 3 benchmarks\
-    \ in total (1,2,3)</td>\n</tr>\n<tr>\n<td align=\"left\">ParamNet*OnStepsBenchmark</td>\n\
-    <td>paramnet</td>\n<td>There are 6 benchmarks in total (Adult, Higgs, Letter,\
-    \ Mnist, Optdigits, Poker)</td>\n</tr>\n<tr>\n<td align=\"left\">ParamNet*OnTimeBenchmark</td>\n\
-    <td>paramnet</td>\n<td>There are 6 benchmarks in total (Adult, Higgs, Letter,\
-    \ Mnist, Optdigits, Poker)</td>\n</tr>\n<tr>\n<td align=\"left\">SurrogateSVMBenchmark</td>\n\
-    <td>surrogate_svm</td>\n<td>Random Forest Surrogate of a SVM on MNIST</td>\n</tr>\n\
-    <tr>\n<td align=\"left\">Learna\u207A</td>\n<td>learna_benchmark</td>\n<td>Not\
-    \ deterministic.</td>\n</tr>\n<tr>\n<td align=\"left\">MetaLearna\u207A</td>\n\
-    <td>learna_benchmark</td>\n<td>Not deterministic.</td>\n</tr>\n<tr>\n<td align=\"\
-    left\">XGBoostBenchmark\u207A</td>\n<td>xgboost_benchmark</td>\n<td>Works with\
-    \ OpenML task ids.</td>\n</tr>\n<tr>\n<td align=\"left\">XGBoostExtendedBenchmark\u207A\
-    </td>\n<td>xgboost_benchmark</td>\n<td>Works with OpenML task ids + Contains Additional\
-    \ Parameter `Booster</td>\n</tr>\n<tr>\n<td align=\"left\">SupportVectorMachine\u207A\
-    </td>\n<td>svm_benchmark</td>\n<td>Works with OpenML task ids.</td>\n</tr>\n</tbody>\n\
-    </table>\n<p>\u207A these benchmarks are not yet final and might change</p>\n\
-    <p><strong>Note:</strong> All containers are uploaded <a href=\"https://gitlab.tf.uni-freiburg.de/muelleph/hpobench-registry/container_registry\"\
-    \ rel=\"nofollow\">here</a></p>\n<h2>\n<a id=\"user-content-further-notes\" class=\"\
-    anchor\" href=\"#further-notes\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>Further Notes</h2>\n<h3>\n<a id=\"\
-    user-content-configure-the-hpobench\" class=\"anchor\" href=\"#configure-the-hpobench\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Configure the HPOBench</h3>\n<p>All of HPOBench's settings are stored\
-    \ in a file, the <code>hpobenchrc</code>-file.\nIt is a yaml file, which is automatically\
-    \ generated at the first use of HPOBench.\nBy default, it is placed in <code>$XDG_CONFIG_HOME</code>.\
-    \ If <code>$XDG_CONFIG_HOME</code> is not set, then the\n<code>hpobenchrc</code>-file\
-    \ is saved to <code>'~/.config/hpobench'</code>. When using the containerized\
-    \ benchmarks, the Unix socket is\ndefined via <code>$TEMP_DIR</code>. This is\
-    \ by default <code>\\tmp</code>. Make sure to have write permissions in those\
-    \ directories.</p>\n<p>In the <code>hpobenchrc</code>, you can specify for example\
-    \ the directory, in that the benchmark containers are\ndownloaded. We encourage\
-    \ you to take a look into the <code>hpobenchrc</code>, to find out more about\
-    \ all\npossible settings.</p>\n<h3>\n<a id=\"user-content-how-to-build-a-container-locally\"\
+    pl-c1\">=</span><span class=\"pl-c1\">1</span>)</pre></div>\n<h3>\n<a id=\"user-content-how-to-build-a-container-locally\"\
     \ class=\"anchor\" href=\"#how-to-build-a-container-locally\" aria-hidden=\"true\"\
-    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>How to build\
-    \ a container locally</h3>\n<p>With singularity installed run the following to\
-    \ built the xgboost container</p>\n<div class=\"highlight highlight-source-shell\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>How to Build\
+    \ a Container Locally</h3>\n<p>With singularity installed run the following to\
+    \ built the, e.g. xgboost container</p>\n<div class=\"highlight highlight-source-shell\"\
     ><pre><span class=\"pl-c1\">cd</span> hpobench/container/recipes/ml\nsudo singularity\
     \ build xgboost_benchmark Singularity.XGBoostBenchmark</pre></div>\n<p>You can\
     \ use this local image with:</p>\n<div class=\"highlight highlight-source-python\"\
@@ -23090,65 +24043,67 @@ automl/HPOBench:
     pl-s1\">fidelity</span><span class=\"pl-c1\">=</span>{<span class=\"pl-s\">\"\
     n_estimators\"</span>: <span class=\"pl-c1\">128</span>, <span class=\"pl-s\"\
     >\"dataset_fraction\"</span>: <span class=\"pl-c1\">0.5</span>})</pre></div>\n\
-    <h3>\n<a id=\"user-content-remove-all-data-containers-and-caches\" class=\"anchor\"\
-    \ href=\"#remove-all-data-containers-and-caches\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Remove all data, containers,\
-    \ and caches</h3>\n<p>Update: In version 0.0.8, we have added the script <code>hpobench/util/clean_up_script.py</code>.\
-    \ It allows to easily remove all\ndata, downloaded containers, and caches. To\
-    \ get more information, you can use the following command.</p>\n<div class=\"\
-    highlight highlight-source-shell\"><pre>python ./hpobench/util/clean_up_script.py\
-    \ --help</pre></div>\n<p>If you like to delete only specific parts, i.e. a single\
-    \ container,\nyou can find the benchmark's data, container, and caches in the\
-    \ following directories:</p>\n<h4>\n<a id=\"user-content-hpobench-data\" class=\"\
-    anchor\" href=\"#hpobench-data\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>HPOBench data</h4>\n<p>HPOBench stores\
-    \ downloaded containers and datasets at the following locations:</p>\n<div class=\"\
-    highlight highlight-source-shell\"><pre><span class=\"pl-smi\">$XDG_CONFIG_HOME</span>\
-    \ <span class=\"pl-c\"><span class=\"pl-c\">#</span> ~/.config/hpobench</span>\n\
-    <span class=\"pl-smi\">$XDG_CACHE_HOME</span> <span class=\"pl-c\"><span class=\"\
-    pl-c\">#</span> ~/.cache/hpobench</span>\n<span class=\"pl-smi\">$XDG_DATA_HOME</span>\
-    \ <span class=\"pl-c\"><span class=\"pl-c\">#</span> ~/.local/share/hpobench</span></pre></div>\n\
-    <p>For crashes or when not properly shutting down containers, there might be socket\
-    \ files left under <code>/tmp/hpobench_socket</code>.</p>\n<h4>\n<a id=\"user-content-openml-data\"\
-    \ class=\"anchor\" href=\"#openml-data\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>OpenML data</h4>\n<p>OpenML data\
-    \ additionally maintains its cache which is located at <code>~/.openml/</code></p>\n\
-    <h4>\n<a id=\"user-content-singularity-container\" class=\"anchor\" href=\"#singularity-container\"\
+    <h2>\n<a id=\"user-content-configure-hpobench\" class=\"anchor\" href=\"#configure-hpobench\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Singularity container</h4>\n<p>Singularity additionally maintains\
+    ></span></a>Configure HPOBench</h2>\n<p>All of HPOBench's settings are stored\
+    \ in a file, the <code>hpobenchrc</code>-file. It is a .yaml file, which is automatically\
+    \ generated at the first use of HPOBench.\nBy default, it is placed in <code>$XDG_CONFIG_HOME</code>\
+    \ (or if not set this defaults to <code>'~/.config/hpobench'</code>). This file\
+    \ defines where to store containers and datasets and much more. We highly recommend\
+    \ to have a look at this file once it's created. Furthermore, please make sure\
+    \ to have write permission in these directories or adapt if necessary. For more\
+    \ information on where data is stored, please see the section on <code>HPOBench\
+    \ Data</code> below.</p>\n<p>Furthermore, for running containers, we rely on Unix\
+    \ sockets which by default are located in <code>$TEMP_DIR</code> (or if not set\
+    \ this defaults to <code>\\tmp</code>).</p>\n<h3>\n<a id=\"user-content-remove-all-data-containers-and-caches\"\
+    \ class=\"anchor\" href=\"#remove-all-data-containers-and-caches\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Remove\
+    \ all data, containers, and caches</h3>\n<p>Feel free to use <code>hpobench/util/clean_up_script.py</code>\
+    \ to remove all data, downloaded containers and caches:</p>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre>python ./hpobench/util/clean_up_script.py --help</pre></div>\n\
+    <p>If you like to delete only specific parts, i.e. a single container, you can\
+    \ find the benchmark's data, container, and caches in the following directories:</p>\n\
+    <h4>\n<a id=\"user-content-hpobench-data\" class=\"anchor\" href=\"#hpobench-data\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>HPOBench Data</h4>\n<p>HPOBench stores downloaded containers and datasets\
+    \ at the following locations:</p>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre><span class=\"pl-smi\">$XDG_CONFIG_HOME</span> <span class=\"pl-c\"><span\
+    \ class=\"pl-c\">#</span> ~/.config/hpobench</span>\n<span class=\"pl-smi\">$XDG_CACHE_HOME</span>\
+    \ <span class=\"pl-c\"><span class=\"pl-c\">#</span> ~/.cache/hpobench</span>\n\
+    <span class=\"pl-smi\">$XDG_DATA_HOME</span> <span class=\"pl-c\"><span class=\"\
+    pl-c\">#</span> ~/.local/share/hpobench</span></pre></div>\n<p>For crashes or\
+    \ when not properly shutting down containers, there might be socket files left\
+    \ under <code>/tmp/hpobench_socket</code>.</p>\n<h4>\n<a id=\"user-content-openml-data\"\
+    \ class=\"anchor\" href=\"#openml-data\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>OpenML Data</h4>\n<p>OpenML data\
+    \ additionally maintains its cache which is located at <code>~/.openml/</code></p>\n\
+    <h4>\n<a id=\"user-content-singularity-containers\" class=\"anchor\" href=\"#singularity-containers\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Singularity Containers</h4>\n<p>Singularity additionally maintains\
     \ its cache which can be removed with <code>singularity cache clean</code></p>\n\
     <h3>\n<a id=\"user-content-use-hpobench-benchmarks-in-research-projects\" class=\"\
     anchor\" href=\"#use-hpobench-benchmarks-in-research-projects\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Use\
-    \ HPOBench benchmarks in research projects</h3>\n<p>If you use a benchmark in\
+    \ HPOBench Benchmarks in Research Projects</h3>\n<p>If you use a benchmark in\
     \ your experiments, please specify the version number of the HPOBench as well\
-    \ as the version of\nthe used container. When starting an experiment, HPOBench\
-    \ writes automatically the 2 version numbers to the log.</p>\n<h3>\n<a id=\"user-content-troubleshooting\"\
-    \ class=\"anchor\" href=\"#troubleshooting\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Troubleshooting</h3>\n<ul>\n\
-    <li>\n<p><strong>Singularity throws an 'Invalid Image format' exception</strong>\n\
-    Use a singularity version &gt; 3. For users of the Meta-Cluster in Freiburg, you\
-    \ have to set the following path:\n<code>export PATH=/usr/local/kislurm/singularity-3.5/bin/:$PATH</code></p>\n\
-    </li>\n<li>\n<p><strong>A Benchmark fails with <code>SystemError: Could not start\
-    \ an instance of the benchmark. Retried 5 times</code> but the container\ncan\
-    \ be started locally with <code>singularity instance start &lt;pathtocontainer&gt;\
-    \ test</code></strong>\nSee whether in <code>~/.singularity/instances/sing/$HOSTNAME/*/</code>\
-    \ there is a file that does not end with '}'. If yes delete this file and retry.</p>\n\
-    </li>\n</ul>\n<h2>\n<a id=\"user-content-status\" class=\"anchor\" href=\"#status\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Status</h2>\n<p>Status for Master Branch:\n<a href=\"https://https://github.com/automl/HPOBench/actions\"\
-    \ rel=\"nofollow\"><img src=\"https://github.com/automl/HPOBench/workflows/Test%20Pull%20Requests/badge.svg?branch=master\"\
-    \ alt=\"Build Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://codecov.io/gh/automl/HPOBench\"\
-    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/a034097751613923b89642227271f5932b385694eb079b833b66cc6bce2b924a/68747470733a2f2f636f6465636f762e696f2f67682f6175746f6d6c2f48504f42656e63682f6272616e63682f6d61737465722f67726170682f62616467652e737667\"\
-    \ alt=\"codecov\" data-canonical-src=\"https://codecov.io/gh/automl/HPOBench/branch/master/graph/badge.svg\"\
-    \ style=\"max-width:100%;\"></a></p>\n<p>Status for Development Branch:\n<a href=\"\
-    https://https://github.com/automl/HPOBench/actions\" rel=\"nofollow\"><img src=\"\
-    https://github.com/automl/HPOBench/workflows/Test%20Pull%20Requests/badge.svg?branch=development\"\
-    \ alt=\"Build Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://codecov.io/gh/automl/HPOBench\"\
-    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/86b984292042d233294c09940c1b7dade7c877c1220bc419f2e2227eb0f775f0/68747470733a2f2f636f6465636f762e696f2f67682f6175746f6d6c2f48504f42656e63682f6272616e63682f646576656c6f706d656e742f67726170682f62616467652e737667\"\
-    \ alt=\"codecov\" data-canonical-src=\"https://codecov.io/gh/automl/HPOBench/branch/development/graph/badge.svg\"\
-    \ style=\"max-width:100%;\"></a></p>\n"
-  stargazers_count: 38
+    \ as the version of\nthe used container to ensure reproducibility. When starting\
+    \ an experiment, HPOBench writes automatically these two version numbers to the\
+    \ log.</p>\n<h3>\n<a id=\"user-content-troubleshooting-and-further-notes\" class=\"\
+    anchor\" href=\"#troubleshooting-and-further-notes\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Troubleshooting\
+    \ and Further Notes</h3>\n<ul>\n<li>\n<p><strong>Singularity throws an 'Invalid\
+    \ Image format' exception</strong>\nUse a singularity version &gt; 3. For users\
+    \ of the Meta-Cluster in Freiburg, you have to set the following path:\n<code>export\
+    \ PATH=/usr/local/kislurm/singularity-3.5/bin/:$PATH</code></p>\n</li>\n<li>\n\
+    <p><strong>A Benchmark fails with <code>SystemError: Could not start an instance\
+    \ of the benchmark. Retried 5 times</code> but the container\ncan be started locally\
+    \ with <code>singularity instance start &lt;pathtocontainer&gt; test</code></strong>\n\
+    See whether in <code>~/.singularity/instances/sing/$HOSTNAME/*/</code> there is\
+    \ a file that does not end with '}'. If yes delete this file and retry.</p>\n\
+    </li>\n</ul>\n<p><strong>Note:</strong> If you are looking for a different or\
+    \ older version of our benchmarking library, you might be looking for\n<a href=\"\
+    https://github.com/automl/HPOlib1.5\">HPOlib1.5</a></p>\n"
+  stargazers_count: 39
   subscribers_count: 7
   topics:
   - hyperparameter-optimization
@@ -23157,7 +24112,7 @@ automl/HPOBench:
   - benchmark
   - containerized-benchmarks
   - hpolib
-  updated_at: 1630337226.0
+  updated_at: 1631002119.0
 bananaeat/Cinnamon_assembly:
   data_format: 2
   description: null
@@ -24775,13 +25730,13 @@ bbglab/boostdm-analyses:
     \ boostdm-analyses.sif Singularity\n</code></pre>\n<ul>\n<li>Now you can run the\
     \ notebooks from singularity:</li>\n</ul>\n<pre><code>$ singularity exec boostdm-analyses.sif\
     \ jupyter-lab\n</code></pre>\n"
-  stargazers_count: 1
+  stargazers_count: 2
   subscribers_count: 7
   topics:
   - mutations
   - cancer-genes
   - drivers
-  updated_at: 1628058577.0
+  updated_at: 1630980259.0
 bbodi/rustarok:
   data_format: 2
   description: Multiplayer, fast-paced Moba style game
@@ -26764,6 +27719,155 @@ cokelaer/pacbio4all:
   subscribers_count: 1
   topics: []
   updated_at: 1508516491.0
+cory-weller/YKO-barseq:
+  data_format: 2
+  description: null
+  filenames:
+  - bartender/Singularity
+  full_name: cory-weller/YKO-barseq
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-yko-barseq\" class=\"anchor\" href=\"#yko-barseq\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>YKO-barseq</h1>\n<h2>\n<a id=\"user-content-building-singularity-image\"\
+    \ class=\"anchor\" href=\"#building-singularity-image\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building singularity\
+    \ image</h2>\n<p>On a computer with sudo access, run:</p>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre><span class=\"pl-c\"><span class=\"pl-c\">#</span>\
+    \ while in directory containing Singularity file</span>\nsudo singularity build\
+    \ bartender.sif Singularity</pre></div>\n<h2>\n<a id=\"user-content-running-bartender-extractor\"\
+    \ class=\"anchor\" href=\"#running-bartender-extractor\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Running\
+    \ bartender extractor</h2>\n<div class=\"highlight highlight-source-shell\"><pre>singularity\
+    \ <span class=\"pl-c1\">exec</span> \\\n    -B /data/SBGE/cory/YKO-barseq:/home/wellerca/\
+    \ \\\n    bartender/bartender.sif bartender_extractor_com \\\n    -f seq/MS3059950-600V3_19109498_S7_L001_R1_001.fastq\
+    \ \\\n    -o pre  \\\n    -p CGAGC[34]C -m 1</pre></div>\n<p>Output:</p>\n<pre><code>Running\
+    \ bartender extractor\nbartender_extractor seq/MS3059950-600V3_19109498_S7_L001_R1_001.fastq\
+    \ pre 1 \"(CGAG.|CGA.C|CG.GC|C.AGC|.GAGC)([ATCGN]{34})(C)\" CGAGC C 3 1\nTotally\
+    \ there are 1187764 reads in seq/MS3059950-600V3_19109498_S7_L001_R1_001.fastq\
+    \ file!\nTotally there are 1118562 valid barcodes from seq/MS3059950-600V3_19109498_S7_L001_R1_001.fastq\
+    \ file\nTotally there are 1118562 valid barcodes whose quality pass the quality\
+    \ condition\nThe estimated sequence error from the prefix and suffix parts is\
+    \ 0.0311966\n</code></pre>\n<h2>\n<a id=\"user-content-formatting-barcodes\" class=\"\
+    anchor\" href=\"#formatting-barcodes\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Formatting barcodes</h2>\n<p>The\
+    \ <code>extracted_barcode.txt</code> file contains a 34-mer nucleotide sequence,\
+    \ but we only\nwant the 20 nucleotide barcode sequence contained within.</p>\n\
+    <div class=\"highlight highlight-source-python\"><pre><span class=\"pl-s1\">python3</span>\
+    \ <span class=\"pl-s1\">format_barcodes</span>.<span class=\"pl-s1\">py</span>\
+    \ <span class=\"pl-s1\">pre_barcode</span>.<span class=\"pl-s1\">txt</span> <span\
+    \ class=\"pl-c1\">&gt;</span> <span class=\"pl-s1\">barcodes</span>.<span class=\"\
+    pl-s1\">txt</span></pre></div>\n<h2>\n<a id=\"user-content-running-bartender-cluster\"\
+    \ class=\"anchor\" href=\"#running-bartender-cluster\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Running bartender\
+    \ cluster</h2>\n<div class=\"highlight highlight-source-shell\"><pre>singularity\
+    \ <span class=\"pl-c1\">exec</span> \\\n    -B /data/SBGE/cory/YKO-barseq:/home/wellerca/\
+    \ \\\n    bartender/bartender.sif bartender_single_com  \\\n    -f barcodes.txt\
+    \ \\\n    -o barcode_clusters  \\\n    -d 2 \\\n    -s 5</pre></div>\n<p>output:</p>\n\
+    <pre><code>Running bartender\nLoading barcodes from the file\nIt takes 00:00:01\
+    \ to load the barcodes from barcodes.txt\nShortest barcode length: 20\nLongest\
+    \ barcode length: 20\nStart to group barcode with length 20\nUsing two sample\
+    \ unpooled test\nTransforming the barcodes into seed clusters\nInitial number\
+    \ of unique reads:  64431\nThe distance threshold is 2\nClustering iteration 1\n\
+    Clustering iteration 2\nClustering iteration 3\nClustering iteration 4\nIdentified\
+    \ 18272 barcodes with length 20\nThe clustering process takes 00:00:01\nStart\
+    \ to dump clusters to file with prefix barcode_clusters\nStart to remove pcr effects\n\
+    ***(Overall error rate estimated from the clustering result)***\nTotal number\
+    \ of clusters after removing PCR effects: 18272\nThe estimated error rate is 0.00340786\n\
+    The overall running time 00:00:05 seconds.\n</code></pre>\n<h2>\n<a id=\"user-content-take-most-abundant-seq-consensus-per-cluster-and-plot\"\
+    \ class=\"anchor\" href=\"#take-most-abundant-seq-consensus-per-cluster-and-plot\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Take most abundant seq (consensus) per cluster and plot</h2>\n<div\
+    \ class=\"highlight highlight-source-r\"><pre>library(<span class=\"pl-smi\">data.table</span>)\n\
+    library(<span class=\"pl-smi\">ggplot2</span>)\nlibrary(<span class=\"pl-smi\"\
+    >ggrepel</span>)\n\n<span class=\"pl-smi\">dat</span> <span class=\"pl-k\">&lt;-</span>\
+    \ fread(<span class=\"pl-s\"><span class=\"pl-pds\">'</span>barcode_clusters_barcode.csv<span\
+    \ class=\"pl-pds\">'</span></span>)\n\n<span class=\"pl-smi\">consensus</span>\
+    \ <span class=\"pl-k\">&lt;-</span> <span class=\"pl-smi\">dat</span>[, <span\
+    \ class=\"pl-smi\">.SD</span>[which.max(<span class=\"pl-smi\">Frequency</span>)],\
+    \ <span class=\"pl-v\">by</span><span class=\"pl-k\">=</span><span class=\"pl-smi\"\
+    >Cluster.ID</span>]\n\nsetnames(<span class=\"pl-smi\">consensus</span>, <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>Unique.reads<span class=\"pl-pds\"\
+    >\"</span></span>, <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>consensus<span\
+    \ class=\"pl-pds\">\"</span></span>)\n<span class=\"pl-smi\">consensus</span>[,\
+    \ <span class=\"pl-smi\">Frequency</span> <span class=\"pl-k\">:</span><span class=\"\
+    pl-k\">=</span> <span class=\"pl-c1\">NULL</span>]\nsetkey(<span class=\"pl-smi\"\
+    >consensus</span>, <span class=\"pl-smi\">Cluster.ID</span>)\nsetkey(<span class=\"\
+    pl-smi\">dat</span>, <span class=\"pl-smi\">Cluster.ID</span>)\n\n<span class=\"\
+    pl-smi\">dat.merge</span> <span class=\"pl-k\">&lt;-</span> merge(<span class=\"\
+    pl-smi\">dat</span>, <span class=\"pl-smi\">consensus</span>)\n<span class=\"\
+    pl-smi\">consensus_counts</span> <span class=\"pl-k\">&lt;-</span> <span class=\"\
+    pl-smi\">dat.merge</span>[, <span class=\"pl-k\">list</span>(<span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>N<span class=\"pl-pds\">\"</span></span> <span\
+    \ class=\"pl-k\">=</span> sum(<span class=\"pl-smi\">Frequency</span>)), <span\
+    \ class=\"pl-v\">by</span><span class=\"pl-k\">=</span><span class=\"pl-smi\"\
+    >consensus</span>][order(<span class=\"pl-k\">-</span><span class=\"pl-smi\">N</span>)]\n\
+    <span class=\"pl-smi\">consensus_counts</span>[, <span class=\"pl-smi\">abundance_rank</span>\
+    \ <span class=\"pl-k\">:</span><span class=\"pl-k\">=</span> <span class=\"pl-c1\"\
+    >1</span><span class=\"pl-k\">:</span><span class=\"pl-smi\">.N</span>]\n\nfwrite(<span\
+    \ class=\"pl-smi\">consensus_counts</span>, <span class=\"pl-v\">file</span><span\
+    \ class=\"pl-k\">=</span><span class=\"pl-s\"><span class=\"pl-pds\">\"</span>consensus_counts.csv<span\
+    \ class=\"pl-pds\">\"</span></span>, <span class=\"pl-v\">quote</span><span class=\"\
+    pl-k\">=</span><span class=\"pl-c1\">F</span>, <span class=\"pl-v\">row.names</span><span\
+    \ class=\"pl-k\">=</span><span class=\"pl-c1\">F</span>, <span class=\"pl-v\"\
+    >col.names</span><span class=\"pl-k\">=</span><span class=\"pl-c1\">T</span>,\
+    \ <span class=\"pl-v\">sep</span><span class=\"pl-k\">=</span><span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>,<span class=\"pl-pds\">\"</span></span>)\n\n\
+    \n<span class=\"pl-smi\">consensus_counts</span>[<span class=\"pl-smi\">N</span>\
+    \ <span class=\"pl-k\">&gt;</span> <span class=\"pl-c1\">3000</span>, <span class=\"\
+    pl-smi\">text_label</span> <span class=\"pl-k\">:</span><span class=\"pl-k\">=</span>\
+    \ <span class=\"pl-smi\">consensus</span>]\n\n\nggplot(<span class=\"pl-smi\"\
+    >consensus_counts</span>[<span class=\"pl-smi\">N</span><span class=\"pl-k\">&gt;</span><span\
+    \ class=\"pl-k\">=</span><span class=\"pl-c1\">2</span>], aes(<span class=\"pl-v\"\
+    >x</span><span class=\"pl-k\">=</span><span class=\"pl-smi\">abundance_rank</span>,\
+    \ <span class=\"pl-v\">y</span><span class=\"pl-k\">=</span><span class=\"pl-smi\"\
+    >N</span>)) <span class=\"pl-k\">+</span> geom_point() <span class=\"pl-k\">+</span>\n\
+    scale_y_continuous(<span class=\"pl-v\">trans</span><span class=\"pl-k\">=</span><span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">'</span>log10<span class=\"pl-pds\">'</span></span>,\
+    \ \n                    <span class=\"pl-v\">breaks</span><span class=\"pl-k\"\
+    >=</span>c(<span class=\"pl-c1\">1e0</span>, <span class=\"pl-c1\">1e1</span>,\
+    \ <span class=\"pl-c1\">1e2</span>, <span class=\"pl-c1\">1e3</span>, <span class=\"\
+    pl-c1\">1e4</span>, <span class=\"pl-c1\">1e5</span>, <span class=\"pl-c1\">1e6</span>),\n\
+    \                    <span class=\"pl-v\">labels</span><span class=\"pl-k\">=</span>c(<span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>1<span class=\"pl-pds\">\"</span></span>,\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>10<span class=\"pl-pds\"\
+    >\"</span></span>, <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>100<span\
+    \ class=\"pl-pds\">\"</span></span>, <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>1000<span class=\"pl-pds\">\"</span></span>, <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>10000<span class=\"pl-pds\">\"</span></span>, <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>100000<span class=\"pl-pds\"\
+    >\"</span></span>, <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>1000000<span\
+    \ class=\"pl-pds\">\"</span></span>)) <span class=\"pl-k\">+</span>\nlabs(<span\
+    \ class=\"pl-v\">x</span><span class=\"pl-k\">=</span><span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>Barcodes ranked by abundance<span class=\"pl-pds\"\
+    >\"</span></span>,\n        <span class=\"pl-v\">y</span><span class=\"pl-k\"\
+    >=</span><span class=\"pl-s\"><span class=\"pl-pds\">\"</span>Abundance<span class=\"\
+    pl-pds\">\"</span></span>,\n        <span class=\"pl-v\">title</span><span class=\"\
+    pl-k\">=</span><span class=\"pl-s\"><span class=\"pl-pds\">\"</span>Barcodes with\
+    \ cluster counts &gt;= 2<span class=\"pl-pds\">\"</span></span>) <span class=\"\
+    pl-k\">+</span>\ntheme_few(<span class=\"pl-c1\">12</span>) <span class=\"pl-k\"\
+    >+</span>\ngeom_text_repel(aes(<span class=\"pl-v\">label</span><span class=\"\
+    pl-k\">=</span><span class=\"pl-smi\">text_label</span>))\n\nggplot(<span class=\"\
+    pl-smi\">consensus_counts</span>[<span class=\"pl-smi\">N</span><span class=\"\
+    pl-k\">&gt;</span><span class=\"pl-k\">=</span><span class=\"pl-c1\">2</span>\
+    \ <span class=\"pl-k\">&amp;</span> <span class=\"pl-smi\">N</span> <span class=\"\
+    pl-k\">&lt;</span> <span class=\"pl-c1\">10000</span>], aes(<span class=\"pl-v\"\
+    >x</span><span class=\"pl-k\">=</span><span class=\"pl-smi\">abundance_rank</span>,\
+    \ <span class=\"pl-v\">y</span><span class=\"pl-k\">=</span><span class=\"pl-smi\"\
+    >N</span>)) <span class=\"pl-k\">+</span> geom_point() <span class=\"pl-k\">+</span>\n\
+    labs(<span class=\"pl-v\">x</span><span class=\"pl-k\">=</span><span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>Barcodes ranked by abundance<span class=\"\
+    pl-pds\">\"</span></span>,\n        <span class=\"pl-v\">y</span><span class=\"\
+    pl-k\">=</span><span class=\"pl-s\"><span class=\"pl-pds\">\"</span>Abundance<span\
+    \ class=\"pl-pds\">\"</span></span>,\n        <span class=\"pl-v\">title</span><span\
+    \ class=\"pl-k\">=</span><span class=\"pl-s\"><span class=\"pl-pds\">\"</span>Barcodes\
+    \ with cluster counts &gt;= 2 and &lt;= 100000<span class=\"pl-pds\">\"</span></span>)\
+    \ <span class=\"pl-k\">+</span>\ntheme_few(<span class=\"pl-c1\">12</span>) <span\
+    \ class=\"pl-k\">+</span>\ngeom_text_repel(aes(<span class=\"pl-v\">label</span><span\
+    \ class=\"pl-k\">=</span><span class=\"pl-smi\">text_label</span>))\n</pre></div>\n"
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1631115532.0
 cpezzato/discrete_active_inference:
   data_format: 2
   description: null
@@ -28237,7 +29341,7 @@ datalad/datalad:
     \ href=\"https://github.com/datalad/datalad/commits?author=AKSoo\" title=\"Code\"\
     ><g-emoji class=\"g-emoji\" alias=\"computer\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f4bb.png\"\
     >\U0001F4BB</g-emoji></a>\n</td>\n  </tr>\n</table>\n\n\n\n"
-  stargazers_count: 252
+  stargazers_count: 253
   subscribers_count: 23
   topics:
   - python
@@ -28245,7 +29349,7 @@ datalad/datalad:
   - data-storage
   - dataset
   - usable
-  updated_at: 1630809991.0
+  updated_at: 1631166572.0
 davecwright3/bart-singularity:
   data_format: 2
   description: Bayesian Atmospheric Radiative Transfer (BART) packaged in a Singularity
@@ -34615,7 +35719,7 @@ gpuhackathons-org/gpubootcamp:
     rel="nofollow">OpenACC Slack Channel</a>.</p>
 
     '
-  stargazers_count: 97
+  stargazers_count: 99
   subscribers_count: 9
   topics:
   - machine-learning
@@ -34630,7 +35734,7 @@ gpuhackathons-org/gpubootcamp:
   - rapidsai
   - openmp
   - ai4hpc
-  updated_at: 1630857225.0
+  updated_at: 1631164118.0
 granek/jupyter-MIC-2021:
   data_format: 2
   description: null
@@ -37024,7 +38128,7 @@ icaoberg/singularity-boxes:
   topics:
   - singularity
   - utilities
-  updated_at: 1628957812.0
+  updated_at: 1631084542.0
 icaoberg/singularity-chalk-cli:
   data_format: 2
   description: Singularity recipe for chalk-cli.
@@ -37189,6 +38293,56 @@ icaoberg/singularity-gifgen:
   - singularity
   - utilities
   updated_at: 1627585713.0
+icaoberg/singularity-gotop:
+  data_format: 2
+  description: A terminal based graphical activity monitor inspired by gtop and vtop
+  filenames:
+  - 3.0.0/Singularity
+  full_name: icaoberg/singularity-gotop
+  latest_release: v3.0.0
+  readme: "<p><a href=\"https://github.com/icaoberg/singularity-gotop/actions/workflows/main.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/icaoberg/singularity-gotop/actions/workflows/main.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://github.com/icaoberg/singularity-gotop/actions/workflows/pretty.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/icaoberg/singularity-gotop/actions/workflows/pretty.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/7970acf310b549a3bd62867fbe3d0e11bd65f094de2204a25a0a00c78e522e9f/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f6963616f626572672f73696e67756c61726974792d676f746f70\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/7970acf310b549a3bd62867fbe3d0e11bd65f094de2204a25a0a00c78e522e9f/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f6963616f626572672f73696e67756c61726974792d676f746f70\"\
+    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/icaoberg/singularity-gotop\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/7b8613e397ce94440087fb830ecbbec5d0d806459beb0f617ff837aca32d8c79/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f6963616f626572672f73696e67756c61726974792d676f746f70\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/7b8613e397ce94440087fb830ecbbec5d0d806459beb0f617ff837aca32d8c79/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f6963616f626572672f73696e67756c61726974792d676f746f70\"\
+    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/icaoberg/singularity-gotop\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/7da0b740d700c489f36c7c42ee8996da37b62f2c4cfb138702453938d6f3acf7/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f6963616f626572672f73696e67756c61726974792d676f746f70\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/7da0b740d700c489f36c7c42ee8996da37b62f2c4cfb138702453938d6f3acf7/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f6963616f626572672f73696e67756c61726974792d676f746f70\"\
+    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/icaoberg/singularity-gotop\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/7da344bc86ffcbbb642fdbe48343d10897dbf168f470553cca36b9df13821c23/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f6963616f626572672f73696e67756c61726974792d676f746f70\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/7da344bc86ffcbbb642fdbe48343d10897dbf168f470553cca36b9df13821c23/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f6963616f626572672f73696e67756c61726974792d676f746f70\"\
+    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/icaoberg/singularity-gotop\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
+    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing\nCenter</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
+    \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
+    \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
+  stargazers_count: 1
+  subscribers_count: 1
+  topics:
+  - singularity
+  - utilities
+  updated_at: 1631126992.0
 icaoberg/singularity-graphviz:
   data_format: 2
   description: Singularity recipe for graphviz
@@ -39864,7 +41018,7 @@ josephwkania/radio_transients:
     \ built on a E5 v3 family machine and uploaded to Sylabs Cloud at\n<a href=\"\
     https://cloud.sylabs.io/library/josephwkania/radio_transients/radio_transients\"\
     \ rel=\"nofollow\">https://cloud.sylabs.io/library/josephwkania/radio_transients/radio_transients</a>\n\
-    They where last built on 26-Aug-2021</p>\n<p>If your processor your processor\
+    They where last built on 06-Sep-2021</p>\n<p>If your processor your processor\
     \ is significantly older than this, you may run into problems with\nthe older\
     \ processor not having the whole instruction set needed. In this case, you should\
     \ build\nuse singularity to build the image locally.</p>\n<p>An archival version\
@@ -39887,7 +41041,7 @@ josephwkania/radio_transients:
   - fast-radio-bursts
   - psrdada
   - radio-astronomy
-  updated_at: 1630022942.0
+  updated_at: 1630981931.0
 jstutters/nicpython36:
   data_format: 2
   description: modified version of nicMSlesions
@@ -44481,7 +45635,7 @@ mwanakijiji/rrlyrae_metallicity:
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1630696593.0
+  updated_at: 1631113934.0
 nbcrrolls/electrostatics-singularity:
   data_format: 2
   description: Molecular electrostatics singularity image
@@ -45277,6 +46431,108 @@ nservant/HiC-Pro:
   subscribers_count: 20
   topics: []
   updated_at: 1630568850.0
+nterhoeven/reper:
+  data_format: 2
+  description: reper - Genome-wide identification, classification and quantification
+    of repetitive elements without an assembled genome
+  filenames:
+  - Singularity
+  full_name: nterhoeven/reper
+  latest_release: v1.1.0
+  readme: '<h1>
+
+    <a id="user-content-reper---genome-wide-identification-classification-and-quantification-of-repetitive-elements-without-an-assembled-genome"
+    class="anchor" href="#reper---genome-wide-identification-classification-and-quantification-of-repetitive-elements-without-an-assembled-genome"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>reper
+    - Genome-wide identification, classification and quantification of repetitive
+    elements without an assembled genome</h1>
+
+    <p><a href="https://hub.docker.com/r/nterhoeven/reper/" rel="nofollow"><img src="https://camo.githubusercontent.com/1b581309777cbea555e8910f11c173f25e5894df5e68a18de4081446df4ca30c/68747470733a2f2f696d672e736869656c64732e696f2f646f636b65722f6175746f6d617465642f6e746572686f6576656e2f72657065722e737667"
+    alt="Docker Automated build" data-canonical-src="https://img.shields.io/docker/automated/nterhoeven/reper.svg"
+    style="max-width:100%;"></a>
+
+    <a href="https://hub.docker.com/r/nterhoeven/reper/" rel="nofollow"><img src="https://camo.githubusercontent.com/101e7c1322f2d88fd96dce52b73222a097be18d929155ce911ab9ad66b5fd890/68747470733a2f2f696d672e736869656c64732e696f2f646f636b65722f6275696c642f6e746572686f6576656e2f72657065722e737667"
+    alt="Docker Build Status" data-canonical-src="https://img.shields.io/docker/build/nterhoeven/reper.svg"
+    style="max-width:100%;"></a>
+
+    <a href="https://zenodo.org/badge/latestdoi/80427752" rel="nofollow"><img src="https://camo.githubusercontent.com/90a2c59fbd3c8d8b90183b23c76dfe43a8ead25e60b8735e78a3ecb0c341f64c/68747470733a2f2f7a656e6f646f2e6f72672f62616467652f38303432373735322e737667"
+    alt="DOI" data-canonical-src="https://zenodo.org/badge/80427752.svg" style="max-width:100%;"></a>
+
+    <a href="http://joss.theoj.org/papers/f0d16a43d8b031695f151ea25e0d47b0" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/8102d9e219e18b5dc3adca0f1672f19e48a9da54dfe7e54f36439af0ebaea78e/687474703a2f2f6a6f73732e7468656f6a2e6f72672f7061706572732f66306431366134336438623033313639356631353165613235653064343762302f7374617475732e737667"
+    alt="status" data-canonical-src="http://joss.theoj.org/papers/f0d16a43d8b031695f151ea25e0d47b0/status.svg"
+    style="max-width:100%;"></a></p>
+
+    <h2>
+
+    <a id="user-content-what-is-reper" class="anchor" href="#what-is-reper" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>What is reper?</h2>
+
+    <p>reper is a pipeline to detect repetitive sequences in genome sequencing data.
+
+    The detection is based on kmer frequencies and does not rely on a genome assembly.
+
+    This allows an analysis of repeat sequences of organisms with large and repeat
+    rich
+
+    genomes (especially plants). For a detailed explanation of the pipeline, see the
+    <a href="https://github.com/nterhoeven/reper/wiki/How-does-reper-work%3F">reper
+    wiki</a>.</p>
+
+    <h2>
+
+    <a id="user-content-how-do-i-get-reper" class="anchor" href="#how-do-i-get-reper"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How
+    do I get reper?</h2>
+
+    <p>reper is available as Docker container, Singularity image or can be installed
+    manually.
+
+    Please visit the <a href="https://github.com/nterhoeven/reper/wiki/Installation">reper
+    wiki installation page</a> for detailed explanations.</p>
+
+    <h2>
+
+    <a id="user-content-how-do-i-run-reper" class="anchor" href="#how-do-i-run-reper"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How
+    do I run reper?</h2>
+
+    <p>Running reper is very easy. You just need to adjust the config file and start
+    reper with <code>reper kmerCount</code>.
+
+    A detailed explanation of the available commands is given in the <a href="https://github.com/nterhoeven/reper/wiki/Using-reper">usage
+    page of the reper wiki</a>.
+
+    Or you can take a look at the <a href="https://github.com/nterhoeven/reper/wiki/Tutorial">Tutorial</a>
+    and learn how to analyze the
+
+    repeat content of the sugar beet using reper.</p>
+
+    <h2>
+
+    <a id="user-content-how-can-i-contribute" class="anchor" href="#how-can-i-contribute"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How
+    can I contribute?</h2>
+
+    <p>Contribution to reper is always appreciated. Please submit any bugs, feature
+    requests and similar via the github issue tracker.
+
+    If you want to contribute code, feel free to fork this repository and/or open
+    a pull request.</p>
+
+    <h2>
+
+    <a id="user-content-license-and-citation" class="anchor" href="#license-and-citation"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License
+    and Citation</h2>
+
+    <p>reper is placed under the MIT License.</p>
+
+    '
+  stargazers_count: 2
+  subscribers_count: 3
+  topics: []
+  updated_at: 1601383172.0
 nuKs/preprocessing:
   data_format: 2
   description: null
@@ -45442,7 +46698,7 @@ oist/GenomicBreaks:
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1630908802.0
+  updated_at: 1631137164.0
 onuryukselen/singularity:
   data_format: 2
   description: null
@@ -50070,7 +51326,7 @@ pscedu/singularity-aws-cli:
   topics:
   - singularity
   - utilities
-  updated_at: 1629229305.0
+  updated_at: 1631147788.0
 pscedu/singularity-bamtools:
   data_format: 2
   description: C++ API & command-line toolkit for working with BAM data
@@ -50194,7 +51450,7 @@ pscedu/singularity-bat:
   topics:
   - singularity
   - utilities
-  updated_at: 1629429567.0
+  updated_at: 1631148435.0
 pscedu/singularity-bcftools:
   data_format: 2
   description: "bcftools \u2014 utilities for variant calling and manipulating VCFs\
@@ -50811,7 +52067,7 @@ pscedu/singularity-dust:
   topics:
   - singularity
   - utilities
-  updated_at: 1630615488.0
+  updated_at: 1631167402.0
 pscedu/singularity-fastani:
   data_format: 2
   description: FastANI is developed for fast alignment-free computation of whole-genome
@@ -51067,7 +52323,7 @@ pscedu/singularity-fdupes:
   topics:
   - singularity
   - utilities
-  updated_at: 1629232273.0
+  updated_at: 1631148685.0
 pscedu/singularity-ffmpeg:
   data_format: 2
   description: A complete, cross-platform solution to record, convert and stream audio
@@ -51364,7 +52620,7 @@ pscedu/singularity-gnuplot:
   topics:
   - singularity
   - utilities
-  updated_at: 1628990757.0
+  updated_at: 1631148738.0
 pscedu/singularity-graphviz:
   data_format: 2
   description: Graphviz is a package of open-source tools initiated by AT&T Labs Research
@@ -51394,7 +52650,7 @@ pscedu/singularity-graphviz:
     true\" class=\"octicon octicon-link\"></span></a>singularity-graphviz</h1>\n<p><a\
     \ href=\"https://camo.githubusercontent.com/960789693fa68a8f442f9c6cc7d6a117639f1a792ec84c96648ad4764c385fcf/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f656e2f342f34382f477261706876697a4c6f676f2e706e67\"\
     \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/960789693fa68a8f442f9c6cc7d6a117639f1a792ec84c96648ad4764c385fcf/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f656e2f342f34382f477261706876697a4c6f676f2e706e67\"\
-    \ alt=\"Logo\" data-canonical-src=\"https://upload.wikimedia.org/wikipedia/en/4/48/GraphvizLogo.png\"\
+    \ width=\"25%\" data-canonical-src=\"https://upload.wikimedia.org/wikipedia/en/4/48/GraphvizLogo.png\"\
     \ style=\"max-width:100%;\"></a></p>\n<p>Singularity recipe for <a href=\"https://graphviz.org/\"\
     \ rel=\"nofollow\">graphviz</a>.</p>\n<h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\"\
     \ class=\"anchor\" href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"\
@@ -51428,7 +52684,7 @@ pscedu/singularity-graphviz:
   topics:
   - singularity
   - utilities
-  updated_at: 1628970549.0
+  updated_at: 1631151504.0
 pscedu/singularity-hisat2:
   data_format: 2
   description: 'HISAT2 is a fast and sensitive alignment program for mapping next-generation
@@ -51867,7 +53123,7 @@ pscedu/singularity-lazygit:
   topics:
   - singularity
   - utilities
-  updated_at: 1629429605.0
+  updated_at: 1631165383.0
 pscedu/singularity-mc:
   data_format: 2
   description: GNU Midnight Commander is a visual file manager, licensed under GNU
@@ -52185,7 +53441,7 @@ pscedu/singularity-octave:
   topics:
   - singularity
   - numerical-computation
-  updated_at: 1629828935.0
+  updated_at: 1631163068.0
 pscedu/singularity-pandoc:
   data_format: 2
   description: Pandoc is a free and open-source document converter, widely used as
@@ -53513,6 +54769,146 @@ qbicsoftware-archive/microarray-qc-workflow:
   subscribers_count: 5
   topics: []
   updated_at: 1600940492.0
+qbicsoftware/rnaseq-power-container:
+  data_format: 2
+  description: Singularity container for RNA-Seq power analysis
+  filenames:
+  - Singularity.rnaseqpower
+  full_name: qbicsoftware/rnaseq-power-container
+  latest_release: 0.3.11
+  readme: '<p>Creates power or sample size matrix given different experimental parameters.
+    Uploads created heatmaps as attachment to openBIS using attachi-cli and Dync.</p>
+
+    <p>Uses <a href="https://doi.org/doi:10.18129/B9.bioc.RnaSeqSampleSize" rel="nofollow">RnaSeqSampleSize</a>.</p>
+
+    <p>Containers are built using the <a href="https://github.com/singularityhub/singularity-deploy">Singularity
+    Deploy template</a>.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1631093651.0
+qwert2333/CEPCSW_training:
+  data_format: 2
+  description: null
+  filenames:
+  - .ci/github/Singularity
+  full_name: qwert2333/CEPCSW_training
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-cepcsw" class="anchor" href="#cepcsw" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a><a href="https://cepc.github.io/CEPCSW/"
+    rel="nofollow">CEPCSW</a>
+
+    </h1>
+
+    <p><a href="https://www.travis-ci.com/cepc/CEPCSW" rel="nofollow"><img src="https://camo.githubusercontent.com/51cb592ac6435ae6b6bdc6cca7a941779434c9db16df9857df2a94e6f239971b/68747470733a2f2f7777772e7472617669732d63692e636f6d2f636570632f4345504353572e7376673f6272616e63683d6d6173746572"
+    alt="Build Status" data-canonical-src="https://www.travis-ci.com/cepc/CEPCSW.svg?branch=master"
+    style="max-width:100%;"></a>
+
+    <a href="https://github.com/cepc/CEPCSW/actions"><img src="https://github.com/cepc/CEPCSW/workflows/CI/badge.svg?branch=master"
+    alt="CI" style="max-width:100%;"></a></p>
+
+    <p>CEPC offline software prototype based on <a href="https://github.com/key4hep">Key4hep</a>.</p>
+
+    <h2>
+
+    <a id="user-content-quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Quick start</h2>
+
+    <p>SSH to lxslc7 (CentOS 7).</p>
+
+    <p>Before run following commands, please make sure you setup the CVMFS:</p>
+
+    <pre><code>$ git clone git@github.com:cepc/CEPCSW.git
+
+    $ cd CEPCSW
+
+    $ git checkout master # branch name
+
+    $ source setup.sh
+
+    $ ./build.sh
+
+    $ ./run.sh Examples/options/helloalg.py
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-packages" class="anchor" href="#packages" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Packages</h2>
+
+    <ul>
+
+    <li>
+
+    <p>Examples: For new comers and users</p>
+
+    </li>
+
+    <li>
+
+    <p>Detector: Geometry</p>
+
+    </li>
+
+    <li>
+
+    <p>Generator: Physics Generator</p>
+
+    </li>
+
+    <li>
+
+    <p>Simulation: Detector Simulation</p>
+
+    </li>
+
+    <li>
+
+    <p>Digitization: Digitization</p>
+
+    </li>
+
+    <li>
+
+    <p>Reconstruction: Reconstruction</p>
+
+    </li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-conventions-for-collections" class="anchor" href="#conventions-for-collections"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Conventions
+    for collections</h2>
+
+    <p>Keep the collection names compatible between the prototype and the existing
+    CEPC software.</p>
+
+    <ul>
+
+    <li>MCParticle</li>
+
+    <li>VXDCollection</li>
+
+    <li>SITCollection</li>
+
+    <li>TPCCollection</li>
+
+    <li>SETCollection</li>
+
+    </ul>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1631168746.0
 radio1988/OneStopRNAseq:
   data_format: 2
   description: null
@@ -54563,6 +55959,25 @@ rickstaa/real-panda-control-examples:
   - control
   - moveit
   updated_at: 1630669467.0
+robertodr/singularities:
+  data_format: 2
+  description: Singularity containers
+  filenames:
+  - Singularity
+  full_name: robertodr/singularities
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-singularities" class="anchor" href="#singularities" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>singularities</h1>
+
+    <p>Singularity containers</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1631084178.0
 rohitfarmer/singularity-defs:
   data_format: 2
   description: Definition (recipe) files for singularity containers.
@@ -54780,6 +56195,269 @@ rohitfarmer/singularity-defs:
   subscribers_count: 0
   topics: []
   updated_at: 1630513929.0
+ropensci/babette:
+  data_format: 2
+  description: babette is an R package to work with BEAST2
+  filenames:
+  - Singularity
+  full_name: ropensci/babette
+  latest_release: v2.3
+  readme: "<h1>\n<a id=\"user-content-babette\" class=\"anchor\" href=\"#babette\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>babette</h1>\n<p><a href=\"https://github.com/ropensci/onboarding/issues/209\"\
+    ><img src=\"https://camo.githubusercontent.com/34962aada576bd5457cefa8c40985c4e48e5eb46e231763014a50e66a9c5bfc6/68747470733a2f2f6261646765732e726f70656e7363692e6f72672f3230395f7374617475732e737667\"\
+    \ alt=\"Peer Review Status\" data-canonical-src=\"https://badges.ropensci.org/209_status.svg\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://cran.r-project.org/package=babette\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/536bdce48c86becf8b912a87aaf5f5b33ba9d0a0937adb31fc49ffea594be2aa/687474703a2f2f7777772e722d706b672e6f72672f6261646765732f76657273696f6e2f62616265747465\"\
+    \ alt=\"CRAN_Status_Badge\" data-canonical-src=\"http://www.r-pkg.org/badges/version/babette\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://CRAN.R-project.org/package=babette\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/72e21fb5f7528cd427adcf3775996bb87f94d63edd19dee35d7c61d700ff214b/687474703a2f2f6372616e6c6f67732e722d706b672e6f72672f6261646765732f6772616e642d746f74616c2f62616265747465\"\
+    \ alt=\"\" data-canonical-src=\"http://cranlogs.r-pkg.org/badges/grand-total/babette\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://CRAN.R-project.org/package=babette\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/e5e6b7a0d6797fa2229354e5ea4a153db65e0357f965acd3521d01bfa06e02c0/687474703a2f2f6372616e6c6f67732e722d706b672e6f72672f6261646765732f62616265747465\"\
+    \ alt=\"\" data-canonical-src=\"http://cranlogs.r-pkg.org/badges/babette\" style=\"\
+    max-width:100%;\"></a></p>\n<table>\n<thead>\n<tr>\n<th>Branch</th>\n<th><a href=\"\
+    https://github.com/ropensci/babette/actions\"><img src=\"man/figures/GitHubActions.png\"\
+    \ alt=\"GitHub Actions logo\" style=\"max-width:100%;\"></a></th>\n<th><a href=\"\
+    https://www.codecov.io\" rel=\"nofollow\"><img src=\"man/figures/Codecov.png\"\
+    \ alt=\"Codecov logo\" style=\"max-width:100%;\"></a></th>\n</tr>\n</thead>\n\
+    <tbody>\n<tr>\n<td><code>master</code></td>\n<td><a href=\"https://github.com/ropensci/babette/workflows/R-CMD-check/badge.svg?branch=master\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/ropensci/babette/workflows/R-CMD-check/badge.svg?branch=master\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/babette/branch/master\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/efca5f3d8233fc656117425ee5f9b275a30210f1d30a8e6e7dedca03983a9c42/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f626162657474652f636f7665726167652e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/babette/coverage.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n<tr>\n<td><code>develop</code></td>\n\
+    <td><a href=\"https://github.com/ropensci/babette/workflows/R-CMD-check/badge.svg?branch=develop\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/ropensci/babette/workflows/R-CMD-check/badge.svg?branch=develop\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/babette/branch/develop\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/51ae49af84b4c6935b371742d1f488f1310fff13d9e968ac22794d61b55cc234/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f626162657474652f636f7665726167652e7376673f6272616e63683d646576656c6f70\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/babette/coverage.svg?branch=develop\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n</tbody>\n</table>\n<p><a href=\"\
+    https://zenodo.org/badge/latestdoi/118616108\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/54a938b6c9ed10b2be03db51c0d372d93c99ca720e5d13ae2bbff8356924a257/68747470733a2f2f7a656e6f646f2e6f72672f62616467652f3131383631363130382e737667\"\
+    \ alt=\"DOI\" data-canonical-src=\"https://zenodo.org/badge/118616108.svg\" style=\"\
+    max-width:100%;\"></a></p>\n<p><code>babette</code> is an R package that combines:</p>\n\
+    <ul>\n<li>\n<a href=\"https://github.com/ropensci/beautier\">beautier</a> creates\
+    \ a BEAST2 input (<code>.xml</code>) file from an inference model</li>\n<li>\n\
+    <a href=\"https://github.com/richelbilderbeek/tiebeaur\">tiebeaur</a> creates\
+    \ an inference model from a BEAST2 input (<code>.xml</code>) file <g-emoji class=\"\
+    g-emoji\" alias=\"warning\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/26a0.png\"\
+    >\u26A0\uFE0F</g-emoji> experimental <g-emoji class=\"g-emoji\" alias=\"warning\"\
+    \ fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/26a0.png\"\
+    >\u26A0\uFE0F</g-emoji>\n</li>\n<li>\n<a href=\"https://github.com/ropensci/beastier\"\
+    >beastier</a> runs BEAST2</li>\n<li>\n<a href=\"https://github.com/ropensci/mauricer\"\
+    >mauricer</a> install BEAST2 packages</li>\n<li>\n<a href=\"https://github.com/ropensci/tracerer\"\
+    >tracerer</a> parses BEAST2 output (<code>.log</code>, <code>.trees</code>, etc)\
+    \ files.</li>\n</ul>\n<p><a href=\"man/figures/babette_logo.png\" target=\"_blank\"\
+    \ rel=\"noopener noreferrer\"><img src=\"man/figures/babette_logo.png\" alt=\"\
+    babette logo\" style=\"max-width:100%;\"></a></p>\n<p>Non-CRAN extensions:</p>\n\
+    <ul>\n<li>\n<a href=\"https://github.com/richelbilderbeek/beastierinstall\">beastierinstall</a>\
+    \ Install and uninstall BEAST2</li>\n<li>\n<a href=\"https://github.com/richelbilderbeek/mauricerinstall\"\
+    >mauricerinstall</a> Install and uninstall BEAST2 packages</li>\n</ul>\n<p>Related\
+    \ R packages:</p>\n<ul>\n<li>\n<a href=\"https://github.com/ropensci/lumier\"\
+    >lumier</a>: Shiny app to help create the function call needed</li>\n</ul>\n<p>Related\
+    \ R functions:</p>\n<table>\n<thead>\n<tr>\n<th>Related function</th>\n<th>\n\
+    <code>babette</code> function</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>[ips::rbeauti](https://github.com/heibl/ips/blob/master/R/rbeauti.R)</code></td>\n\
+    <td><code>[beautier::create_beast2_input_from_model](https://github.com/ropensci/beautier/blob/master/R/create_beast2_input_from_model.R)</code></td>\n\
+    </tr>\n</tbody>\n</table>\n<p>Related software:</p>\n<ul>\n<li>\n<a href=\"https://github.com/josephwb/BEASTifier\"\
+    >BEASTifier</a>: command-line tool to generate BEAST2 XML input files</li>\n</ul>\n\
+    <h2>\n<a id=\"user-content-examples\" class=\"anchor\" href=\"#examples\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Examples</h2>\n\
+    <p>See:</p>\n<ul>\n<li>\n<a href=\"https://github.com/ropensci/lumier\">lumier</a>:\
+    \ R Shiny app to help create the R function call needed</li>\n<li>\n<a href=\"\
+    https://github.com/richelbilderbeek/babette_examples\">examples</a>: examples\
+    \ tested by Travis CI and AppVeyor</li>\n<li>\n<a href=\"https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/2041-210X.13032\"\
+    \ rel=\"nofollow\">article</a>, in 'Methods in Ecology and Evolution'</li>\n<li><a\
+    \ href=\"https://methodsblog.wordpress.com/2018/06/25/babette-beast2/\" rel=\"\
+    nofollow\">Methods.blog post: The babette R Package: How to Sooth the Phylogenetic\
+    \ BEAST2</a></li>\n<li><a href=\"https://ropensci.org/blog/2020/01/28/babette/\"\
+    \ rel=\"nofollow\">rOpenSci blog post: Call BEAST2 for Bayesian evolutionary analysis\
+    \ from R</a></li>\n<li>\n<a href=\"https://doi.org/10.1101/271866\" rel=\"nofollow\"\
+    >pre-print article</a>, in bioRxiv</li>\n<li><a href=\"https://www.youtube.com/watch?v=nA-0-Fc95xY&amp;list=PLu8_ZyzXyRDFIRx-kdDI5Q6xVr-HnY7TB\"\
+    \ rel=\"nofollow\">'babette' YouTube channel</a></li>\n</ul>\n<h2>\n<a id=\"user-content-installation\"\
+    \ class=\"anchor\" href=\"#installation\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Installation</h2>\n<p>See <a\
+    \ href=\"doc/install.md\">doc/install.md</a> (or just click <a href=\"doc/install.md\"\
+    >here</a>)</p>\n<h2>\n<a id=\"user-content-faq\" class=\"anchor\" href=\"#faq\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>FAQ</h2>\n<p>See <a href=\"doc/faq.md\">FAQ</a>.</p>\n<h2>\n<a id=\"\
+    user-content-missing-featuresunsupported\" class=\"anchor\" href=\"#missing-featuresunsupported\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Missing features/unsupported</h2>\n<p><code>babette</code> cannot\
+    \ do everything <code>BEAUti</code> and <code>BEAST2</code> and <code>Tracer</code>\
+    \ can.</p>\n<p>See <a href=\"https://github.com/ropensci/beautier\">beautier</a>\n\
+    for missing features in creating a BEAST2 input (<code>.xml</code>) file.</p>\n\
+    <p>See <a href=\"https://github.com/ropensci/beastier\">beastier</a> for missing\n\
+    features in running BEAST2</p>\n<p>See <a href=\"https://github.com/ropensci/mauricer\"\
+    >mauricer</a> for missing\nfeatures in installing BEAST2 packages.</p>\n<p>See\
+    \ <a href=\"https://github.com/ropensci/tracerer\">tracerer</a>\nfor missing features\
+    \ in parsing BEAST2 output (<code>.log</code>, <code>.trees</code>, etc) files.</p>\n\
+    <h2>\n<a id=\"user-content-there-is-a-feature-i-miss\" class=\"anchor\" href=\"\
+    #there-is-a-feature-i-miss\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>There is a feature I miss</h2>\n<p>See <a href=\"\
+    CONTRIBUTING.md\">CONTRIBUTING</a>, at <code>Submitting use cases</code></p>\n\
+    <h2>\n<a id=\"user-content-i-want-to-collaborate\" class=\"anchor\" href=\"#i-want-to-collaborate\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>I want to collaborate</h2>\n<p>See <a href=\"CONTRIBUTING.md\">CONTRIBUTING</a>,\
+    \ at <code>Submitting code</code></p>\n<h2>\n<a id=\"user-content-i-think-i-have-found-a-bug\"\
+    \ class=\"anchor\" href=\"#i-think-i-have-found-a-bug\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>I think I have\
+    \ found a bug</h2>\n<p>See <a href=\"CONTRIBUTING.md\">CONTRIBUTING</a>, at <code>Submitting\
+    \ bugs</code></p>\n<h2>\n<a id=\"user-content-theres-something-else-i-want-to-say\"\
+    \ class=\"anchor\" href=\"#theres-something-else-i-want-to-say\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>There's\
+    \ something else I want to say</h2>\n<p>Sure, just add an Issue. Or send an email.</p>\n\
+    <h2>\n<a id=\"user-content-dependencies\" class=\"anchor\" href=\"#dependencies\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Dependencies</h2>\n<table>\n<thead>\n<tr>\n<th>Branch</th>\n<th>\n\
+    <a href=\"https://github.com/ropensci/babette/actions\"><img src=\"man/figures/GitHubActions.png\"\
+    \ alt=\"GitHub Actions logo\" style=\"max-width:100%;\"></a> <code>master</code>\n\
+    </th>\n<th>\n<a href=\"https://github.com/ropensci/babette/actions\"><img src=\"\
+    man/figures/GitHubActions.png\" alt=\"GitHub Actions logo\" style=\"max-width:100%;\"\
+    ></a> <code>develop</code>\n</th>\n<th>\n<a href=\"https://travis-ci.com\" rel=\"\
+    nofollow\"><img src=\"man/figures/TravisCI.png\" alt=\"Travis CI logo\" style=\"\
+    max-width:100%;\"></a> <code>master</code>\n</th>\n<th>\n<a href=\"https://travis-ci.com\"\
+    \ rel=\"nofollow\"><img src=\"man/figures/TravisCI.png\" alt=\"Travis CI logo\"\
+    \ style=\"max-width:100%;\"></a> <code>develop</code>\n</th>\n<th>\n<a href=\"\
+    https://www.codecov.io\" rel=\"nofollow\"><img src=\"man/figures/Codecov.png\"\
+    \ alt=\"Codecov logo\" style=\"max-width:100%;\"></a> <code>master</code>\n</th>\n\
+    <th>\n<a href=\"https://www.codecov.io\" rel=\"nofollow\"><img src=\"man/figures/Codecov.png\"\
+    \ alt=\"Codecov logo\" style=\"max-width:100%;\"></a> <code>develop</code>\n</th>\n\
+    </tr>\n</thead>\n<tbody>\n<tr>\n<td><a href=\"https://github.com/ropensci/beautier\"\
+    >beautier</a></td>\n<td><a href=\"https://github.com/ropensci/beautier/workflows/R-CMD-check/badge.svg?branch=master\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/ropensci/beautier/workflows/R-CMD-check/badge.svg?branch=master\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://github.com/ropensci/beautier/workflows/R-CMD-check/badge.svg?branch=develop\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/ropensci/beautier/workflows/R-CMD-check/badge.svg?branch=develop\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://travis-ci.com/ropensci/beautier\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/715e4e61b1ebd73b3a52ef0166effdb1d90652b97d7835605849b98aba822e90/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f62656175746965722e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.com/ropensci/beautier.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://travis-ci.com/ropensci/beautier\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/5a1df310872217c8173d71443fe40c787e7977f2abf4e645e492be481b41ddf7/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f62656175746965722e7376673f6272616e63683d646576656c6f70\"\
+    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.com/ropensci/beautier.svg?branch=develop\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/beautier/branch/master\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/011707c588b637427fb7fd26e3ac40d7d2603f03d5c99ae6fd868f0ef6e0cd0e/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f62656175746965722f636f7665726167652e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/beautier/coverage.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/beautier/branch/develop\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/a1c159794b764809cd571a36953e2b354e8213fd7eef81313e83bcdba7f425a0/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f62656175746965722f636f7665726167652e7376673f6272616e63683d646576656c6f70\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/beautier/coverage.svg?branch=develop\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n<tr>\n<td><a href=\"https://github.com/ropensci/beastier\"\
+    >beastier</a></td>\n<td><a href=\"https://github.com/ropensci/beastier/workflows/R-CMD-check/badge.svg?branch=master\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/ropensci/beastier/workflows/R-CMD-check/badge.svg?branch=master\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://github.com/ropensci/beastier/workflows/R-CMD-check/badge.svg?branch=develop\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/ropensci/beastier/workflows/R-CMD-check/badge.svg?branch=develop\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://travis-ci.com/ropensci/beastier\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/99e6881096ca8519b64030f50c7e8a6cc599474c2b01ff4c86157513f85b82dc/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f62656173746965722e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.com/ropensci/beastier.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://travis-ci.com/ropensci/beastier\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/182a1155aa241284ccfd72742b437f0897065081e232b8eccdf746181a512f10/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f62656173746965722e7376673f6272616e63683d646576656c6f70\"\
+    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.com/ropensci/beastier.svg?branch=develop\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/beastier/branch/master\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/c63ca071d5e17ab427b0940b3a8e8ff140fc7464bd93d8e5c7cd6737596d513e/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f62656173746965722f636f7665726167652e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/beastier/coverage.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/beastier/branch/develop\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/f3afb3c0742afb89be7dc0f4894dca48d603994c44b850d0cabab2fad41d9b43/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f62656173746965722f636f7665726167652e7376673f6272616e63683d646576656c6f70\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/beastier/coverage.svg?branch=develop\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n<tr>\n<td><a href=\"https://github.com/ropensci/mauricer\"\
+    >mauricer</a></td>\n<td><a href=\"https://github.com/ropensci/mauricer/workflows/R-CMD-check/badge.svg?branch=master\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/ropensci/mauricer/workflows/R-CMD-check/badge.svg?branch=master\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://github.com/ropensci/mauricer/workflows/R-CMD-check/badge.svg?branch=develop\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/ropensci/mauricer/workflows/R-CMD-check/badge.svg?branch=develop\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://travis-ci.com/ropensci/mauricer\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/8d0c7df06887811a1a476ede44d38600189d0f5a4222281b0f5625e396bebe0f/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f6d617572696365722e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.com/ropensci/mauricer.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://travis-ci.com/ropensci/mauricer\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/0d63126f80d7b2bf63604224199d01682cda4b12b323a40cfd980aac2d12dffb/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f6d617572696365722e7376673f6272616e63683d646576656c6f70\"\
+    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.com/ropensci/mauricer.svg?branch=develop\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/mauricer/branch/master\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/7c49b609a4f88e3bcfec9cca58ec05df862a50e0db5aa91255286c09d35fa205/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f6d617572696365722f636f7665726167652e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/mauricer/coverage.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/mauricer/branch/develop\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/e1a5e1a83ab27ae237c8816a584bf2c3680b4328d40c23ade4c1392d45edfe1d/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f6d617572696365722f636f7665726167652e7376673f6272616e63683d646576656c6f70\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/mauricer/coverage.svg?branch=develop\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n<tr>\n<td><a href=\"https://github.com/ropensci/tracerer\"\
+    >tracerer</a></td>\n<td><a href=\"https://github.com/ropensci/tracerer/workflows/R-CMD-check/badge.svg?branch=master\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/ropensci/tracerer/workflows/R-CMD-check/badge.svg?branch=master\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://github.com/ropensci/tracerer/workflows/R-CMD-check/badge.svg?branch=develop\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/ropensci/tracerer/workflows/R-CMD-check/badge.svg?branch=develop\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://travis-ci.com/ropensci/tracerer\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/0120e8a72e60ac7530a30ac3761940113d52348070fe26e07886c492e893e9c7/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f74726163657265722e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.com/ropensci/tracerer.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://travis-ci.com/ropensci/tracerer\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/269d5349035a6989ebdc4a49c31b59a42d289ce014dae1b243823d6ff715829d/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f74726163657265722e7376673f6272616e63683d646576656c6f70\"\
+    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.com/ropensci/tracerer.svg?branch=develop\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/tracerer/branch/master\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/8bf59765a8998e08ff65c2542f37d4a91270ddd8fd0e8d54206a25cebba34095/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f74726163657265722f636f7665726167652e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/tracerer/coverage.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/tracerer/branch/develop\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/395d9f8ed80d2817fdf19a0b112212029ffe31cbac54391eaf700f6262a992b7/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f74726163657265722f636f7665726167652e7376673f6272616e63683d646576656c6f70\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/tracerer/coverage.svg?branch=develop\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n</tbody>\n</table>\n<h2>\n<a id=\"\
+    user-content-windows\" class=\"anchor\" href=\"#windows\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Windows</h2>\n\
+    <table>\n<thead>\n<tr>\n<th>Package</th>\n<th>Status</th>\n</tr>\n</thead>\n<tbody>\n\
+    <tr>\n<td><a href=\"https://github.com/richelbilderbeek/babette_on_windows\">babette_on_windows</a></td>\n\
+    <td><a href=\"https://ci.appveyor.com/project/richelbilderbeek/babette-on-windows/branch/master\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/766b68c1e911e6a4d4023dc8b9f6911cab3d3230e03c14bcd248c03b720a62e9/68747470733a2f2f63692e6170707665796f722e636f6d2f6170692f70726f6a656374732f7374617475732f6a7637366572726a6f636d35643579712f6272616e63682f6d61737465723f7376673d74727565\"\
+    \ alt=\"Build status\" data-canonical-src=\"https://ci.appveyor.com/api/projects/status/jv76errjocm5d5yq/branch/master?svg=true\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n<tr>\n<td><a href=\"https://github.com/richelbilderbeek/beastier_on_windows\"\
+    >beastier_on_windows</a></td>\n<td><a href=\"https://ci.appveyor.com/project/richelbilderbeek/beastier-on-windows/branch/master\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/44128274aa78d7d1007c75cf4db9d8122affc62fafb628914ef99f8488499a8c/68747470733a2f2f63692e6170707665796f722e636f6d2f6170692f70726f6a656374732f7374617475732f72616c65783973646e6e786c776267782f6272616e63682f6d61737465723f7376673d74727565\"\
+    \ alt=\"Build status\" data-canonical-src=\"https://ci.appveyor.com/api/projects/status/ralex9sdnnxlwbgx/branch/master?svg=true\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n<tr>\n<td><a href=\"https://github.com/richelbilderbeek/beautier_on_windows\"\
+    >beautier_on_windows</a></td>\n<td><a href=\"https://ci.appveyor.com/project/richelbilderbeek/beautier-on-windows/branch/master\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/55a1eee4b9a67ddc066037029928ffba2ed2d79716017361d1ac7ca6ad7f7b48/68747470733a2f2f63692e6170707665796f722e636f6d2f6170692f70726f6a656374732f7374617475732f626c766a6f3570756c626b71787268622f6272616e63682f6d61737465723f7376673d74727565\"\
+    \ alt=\"Build status\" data-canonical-src=\"https://ci.appveyor.com/api/projects/status/blvjo5pulbkqxrhb/branch/master?svg=true\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n<tr>\n<td><a href=\"https://github.com/richelbilderbeek/mauricer_on_windows\"\
+    >mauricer_on_windows</a></td>\n<td><a href=\"https://ci.appveyor.com/project/richelbilderbeek/mauricer-on-windows/branch/master\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/1cf94645736f89346af01252332b07e9863765253054e1e109eb211dffa0b593/68747470733a2f2f63692e6170707665796f722e636f6d2f6170692f70726f6a656374732f7374617475732f626334336977703638786f32646475682f6272616e63682f6d61737465723f7376673d74727565\"\
+    \ alt=\"Build status\" data-canonical-src=\"https://ci.appveyor.com/api/projects/status/bc43iwp68xo2dduh/branch/master?svg=true\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n<tr>\n<td><a href=\"https://github.com/richelbilderbeek/tracerer_on_windows\"\
+    >tracerer_on_windows</a></td>\n<td><a href=\"https://ci.appveyor.com/project/richelbilderbeek/tracerer-on-windows/branch/master\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/ca1a3e8f44916d396187fe41573657bd6d0c062366482c4a55b5495eb32b0bde/68747470733a2f2f63692e6170707665796f722e636f6d2f6170692f70726f6a656374732f7374617475732f6a7968636b36366436797262723132682f6272616e63682f6d61737465723f7376673d74727565\"\
+    \ alt=\"Build status\" data-canonical-src=\"https://ci.appveyor.com/api/projects/status/jyhck66d6yrbr12h/branch/master?svg=true\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n</tbody>\n</table>\n<h2>\n<a id=\"\
+    user-content-related-packages\" class=\"anchor\" href=\"#related-packages\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Related\
+    \ packages</h2>\n<table>\n<thead>\n<tr>\n<th>Package</th>\n<th><a href=\"https://travis-ci.com\"\
+    \ rel=\"nofollow\"><img src=\"man/figures/TravisCI.png\" alt=\"Travis CI logo\"\
+    \ style=\"max-width:100%;\"></a></th>\n<th><a href=\"https://www.codecov.io\"\
+    \ rel=\"nofollow\"><img src=\"man/figures/Codecov.png\" alt=\"Codecov logo\" style=\"\
+    max-width:100%;\"></a></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><a href=\"https://github.com/ropensci/lumier\"\
+    >lumier</a></td>\n<td><a href=\"https://travis-ci.com/ropensci/lumier\" rel=\"\
+    nofollow\"><img src=\"https://camo.githubusercontent.com/8d6a176fcd54fd2ef588a4b86a41041906e6d7c9cc8c61131dd85786742ff4df/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f6c756d6965722e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.com/ropensci/lumier.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/lumier/branch/master\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/e24ac5f3f1a9e3c2c13a7e115d98d4d5b58a7d0278d1cae777207ec7f8c4e04e/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f6c756d6965722f636f7665726167652e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/lumier/coverage.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n</tbody>\n</table>\n<h2>\n<a id=\"\
+    user-content-external-links\" class=\"anchor\" href=\"#external-links\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>External\
+    \ links</h2>\n<ul>\n<li><a href=\"https://github.com/CompEvol/beast2\">BEAST2\
+    \ GitHub</a></li>\n</ul>\n<h2>\n<a id=\"user-content-references\" class=\"anchor\"\
+    \ href=\"#references\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>References</h2>\n<p>Article about <code>babette</code>:</p>\n\
+    <ul>\n<li>Bilderbeek, Rich\xE8l JC, and Rampal S. Etienne. \"babette: BEAUti 2,\
+    \ BEAST 2 and Tracer for R.\" Methods in Ecology and Evolution (2018). <a href=\"\
+    https://doi.org/10.1111/2041-210X.13032\" rel=\"nofollow\">https://doi.org/10.1111/2041-210X.13032</a>\n\
+    </li>\n</ul>\n<pre><code>@article{bilderbeek2018babette,\n  title={babette: BEAUti\
+    \ 2, BEAST 2 and Tracer for R},\n  author={Bilderbeek, Rich\xE8l JC and Etienne,\
+    \ Rampal S},\n  journal={Methods in Ecology and Evolution},\n  year={2018},\n\
+    \  publisher={Wiley Online Library}\n}\n</code></pre>\n<p>FASTA files <code>anthus_aco.fas</code>\
+    \ and <code>anthus_nd2.fas</code> from:</p>\n<ul>\n<li>Van Els, Paul, and Heraldo\
+    \ V. Norambuena. \"A revision of species limits in Neotropical pipits Anthus based\
+    \ on multilocus genetic and vocal data.\" Ibis.</li>\n</ul>\n<p><a href=\"https://ropensci.org\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/2210c5afe29fad80dd5573f3a462877889e5d078b38f2a5f36511472156fe3e7/68747470733a2f2f726f70656e7363692e6f72672f7075626c69635f696d616765732f726f70656e7363695f666f6f7465722e706e67\"\
+    \ alt=\"ropensci_footer\" data-canonical-src=\"https://ropensci.org/public_images/ropensci_footer.png\"\
+    \ style=\"max-width:100%;\"></a></p>\n"
+  stargazers_count: 26
+  subscribers_count: 4
+  topics:
+  - r
+  - r-package
+  - rstats
+  - phylogenetics
+  - beast2
+  - bayesian-inference
+  updated_at: 1631100774.0
 ropensci/beastier:
   data_format: 2
   description: R package to run BEAST2
@@ -54811,25 +56489,17 @@ ropensci/beastier:
     max-width:100%;\"></a></p>\n<table>\n<thead>\n<tr>\n<th>Branch</th>\n<th><a href=\"\
     https://github.com/ropensci/beautier/actions\"><img src=\"man/figures/GitHubActions.png\"\
     \ alt=\"GitHub Actions logo\" style=\"max-width:100%;\"></a></th>\n<th><a href=\"\
-    https://travis-ci.com\" rel=\"nofollow\"><img src=\"man/figures/TravisCI.png\"\
-    \ alt=\"Travis CI logo\" style=\"max-width:100%;\"></a></th>\n<th><a href=\"https://www.codecov.io\"\
-    \ rel=\"nofollow\"><img src=\"man/figures/Codecov.png\" alt=\"Codecov logo\" style=\"\
-    max-width:100%;\"></a></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>master</code></td>\n\
-    <td><a href=\"https://github.com/ropensci/beastier/workflows/R-CMD-check/badge.svg?branch=master\"\
+    https://www.codecov.io\" rel=\"nofollow\"><img src=\"man/figures/Codecov.png\"\
+    \ alt=\"Codecov logo\" style=\"max-width:100%;\"></a></th>\n</tr>\n</thead>\n\
+    <tbody>\n<tr>\n<td><code>master</code></td>\n<td><a href=\"https://github.com/ropensci/beastier/workflows/R-CMD-check/badge.svg?branch=master\"\
     \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/ropensci/beastier/workflows/R-CMD-check/badge.svg?branch=master\"\
-    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://travis-ci.com/ropensci/beastier\"\
-    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/99e6881096ca8519b64030f50c7e8a6cc599474c2b01ff4c86157513f85b82dc/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f62656173746965722e7376673f6272616e63683d6d6173746572\"\
-    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.com/ropensci/beastier.svg?branch=master\"\
-    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/beastier/branch/master\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/beastier/branch/master\"\
     \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/c63ca071d5e17ab427b0940b3a8e8ff140fc7464bd93d8e5c7cd6737596d513e/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f62656173746965722f636f7665726167652e7376673f6272616e63683d6d6173746572\"\
     \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/beastier/coverage.svg?branch=master\"\
     \ style=\"max-width:100%;\"></a></td>\n</tr>\n<tr>\n<td><code>develop</code></td>\n\
     <td><a href=\"https://github.com/ropensci/beastier/workflows/R-CMD-check/badge.svg?branch=develop\"\
     \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/ropensci/beastier/workflows/R-CMD-check/badge.svg?branch=develop\"\
-    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://travis-ci.com/ropensci/beastier\"\
-    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/182a1155aa241284ccfd72742b437f0897065081e232b8eccdf746181a512f10/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f62656173746965722e7376673f6272616e63683d646576656c6f70\"\
-    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.com/ropensci/beastier.svg?branch=develop\"\
-    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/beastier/branch/develop\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/beastier/branch/develop\"\
     \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/f3afb3c0742afb89be7dc0f4894dca48d603994c44b850d0cabab2fad41d9b43/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f62656173746965722f636f7665726167652e7376673f6272616e63683d646576656c6f70\"\
     \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/beastier/coverage.svg?branch=develop\"\
     \ style=\"max-width:100%;\"></a></td>\n</tr>\n</tbody>\n</table>\n<p><code>beastier</code>\
@@ -54971,7 +56641,7 @@ ropensci/beastier:
   - r
   - r-package
   - rstats
-  updated_at: 1630614148.0
+  updated_at: 1631093301.0
 ropensci/mauricer:
   data_format: 2
   description: Install BEAST2 packages from R
@@ -55010,9 +56680,6 @@ ropensci/mauricer:
     <th><a href="https://github.com/ropensci/mauricer/actions"><img src="man/figures/GitHubActions.png"
     alt="GitHub Actions logo" style="max-width:100%;"></a></th>
 
-    <th><a href="https://travis-ci.com" rel="nofollow"><img src="man/figures/TravisCI.png"
-    alt="Travis CI logo" style="max-width:100%;"></a></th>
-
     <th><a href="https://www.codecov.io" rel="nofollow"><img src="man/figures/Codecov.png"
     alt="Codecov logo" style="max-width:100%;"></a></th>
 
@@ -55030,10 +56697,6 @@ ropensci/mauricer:
     target="_blank" rel="noopener noreferrer"><img src="https://github.com/ropensci/mauricer/workflows/R-CMD-check/badge.svg?branch=master"
     alt="R-CMD-check" style="max-width:100%;"></a></td>
 
-    <td><a href="https://travis-ci.com/ropensci/mauricer" rel="nofollow"><img src="https://camo.githubusercontent.com/8d0c7df06887811a1a476ede44d38600189d0f5a4222281b0f5625e396bebe0f/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f6d617572696365722e7376673f6272616e63683d6d6173746572"
-    alt="Build Status" data-canonical-src="https://travis-ci.com/ropensci/mauricer.svg?branch=master"
-    style="max-width:100%;"></a></td>
-
     <td><a href="https://codecov.io/github/ropensci/mauricer/branch/master" rel="nofollow"><img
     src="https://camo.githubusercontent.com/7c49b609a4f88e3bcfec9cca58ec05df862a50e0db5aa91255286c09d35fa205/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f6d617572696365722f636f7665726167652e7376673f6272616e63683d6d6173746572"
     alt="codecov.io" data-canonical-src="https://codecov.io/github/ropensci/mauricer/coverage.svg?branch=master"
@@ -55048,10 +56711,6 @@ ropensci/mauricer:
     <td><a href="https://github.com/ropensci/mauricer/workflows/R-CMD-check/badge.svg?branch=develop"
     target="_blank" rel="noopener noreferrer"><img src="https://github.com/ropensci/mauricer/workflows/R-CMD-check/badge.svg?branch=develop"
     alt="R-CMD-check" style="max-width:100%;"></a></td>
-
-    <td><a href="https://travis-ci.com/ropensci/mauricer" rel="nofollow"><img src="https://camo.githubusercontent.com/0d63126f80d7b2bf63604224199d01682cda4b12b323a40cfd980aac2d12dffb/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f6d617572696365722e7376673f6272616e63683d646576656c6f70"
-    alt="Build Status" data-canonical-src="https://travis-ci.com/ropensci/mauricer.svg?branch=develop"
-    style="max-width:100%;"></a></td>
 
     <td><a href="https://codecov.io/github/ropensci/mauricer/branch/develop" rel="nofollow"><img
     src="https://camo.githubusercontent.com/e1a5e1a83ab27ae237c8816a584bf2c3680b4328d40c23ade4c1392d45edfe1d/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f6d617572696365722f636f7665726167652e7376673f6272616e63683d646576656c6f70"
@@ -55310,7 +56969,7 @@ ropensci/mauricer:
   - r
   - r-package
   - rstats
-  updated_at: 1629292811.0
+  updated_at: 1631094514.0
 sailfish009/openstructure:
   data_format: 2
   description: Open-Source Computational Structural Biology Framework
@@ -55847,7 +57506,7 @@ sc-eQTLgen-consortium/WG1-pipeline-QC:
   stargazers_count: 2
   subscribers_count: 2
   topics: []
-  updated_at: 1630625677.0
+  updated_at: 1631071066.0
 sdsc/sdsc-summer-institute-2021:
   data_format: 2
   description: San Diego Supercomputer Center Summer Institute
@@ -58263,38 +59922,29 @@ sylabs/singularity:
   description: SingularityCE is the Community Edition of Singularity, an open source
     container platform designed to be simple, fast, and secure.
   filenames:
-  - e2e/testdata/sshfs.def
-  - e2e/testdata/Docker_registry.def
-  - e2e/testdata/inspecter_container.def
-  - e2e/testdata/regressions/issue_4967.def
-  - e2e/testdata/regressions/issue_4969.def
-  - e2e/testdata/regressions/issue_5399.def
-  - e2e/testdata/regressions/issue_4820.def
-  - e2e/testdata/regressions/issue_5315.def
-  - e2e/testdata/regressions/issue_5250.def
-  - e2e/testdata/regressions/issue_4583.def
-  - e2e/testdata/regressions/issue_4203.def
-  - examples/build-singularity/build-singularity.def
-  - examples/legacy/2.3/contrib/raspbian.def
-  - examples/legacy/2.2/arch.def
-  - examples/legacy/2.2/ubuntu.def
-  - examples/legacy/2.2/busybox.def
-  - examples/legacy/2.2/scientific.def
-  - examples/legacy/2.2/docker.def
-  - examples/legacy/2.2/debian.def
-  - examples/legacy/2.2/centos.def
-  - examples/legacy/2.2/contrib/fedora.def
-  - examples/legacy/2.2/contrib/ubuntu-bio.def
-  - examples/legacy/2.2/contrib/ubuntu16-tensorflow-0.12.1.def
-  - examples/legacy/2.2/contrib/centos7-ompi_cuda.def
-  - examples/legacy/2.2/contrib/linuxbrew_and_non-root_software_example.def
-  - examples/legacy/2.2/contrib/debian85-tensorflow-0.10.def
-  - examples/legacy/2.2/contrib/ubuntu-root.def
-  - examples/legacy/2.2/contrib/centos-minimal.def
-  - examples/legacy/2.2/contrib/centos7-ompi_master.def
-  - examples/legacy/2.2/contrib/ubuntu16-tensorflow-0.12.1-gpu.def
-  - examples/legacy/2.2/contrib/r_python_julia.def
-  - examples/legacy/2.2/contrib/ubuntu-openfoam.def
+  - e2e/testdata/Singularity
+  - examples/apps/Singularity
+  - examples/apps/Singularity.cowsay
+  - examples/shub/Singularity
+  - examples/arch/Singularity
+  - examples/opensuse/Singularity
+  - examples/instances/Singularity
+  - examples/self/Singularity
+  - examples/asciinema/Singularity
+  - examples/docker/Singularity
+  - examples/centos/Singularity
+  - examples/opensuse-arm64/Singularity
+  - examples/library/Singularity
+  - examples/raspbian/Singularity
+  - examples/scientific/Singularity
+  - examples/multistage/Singularity
+  - examples/sle/Singularity
+  - examples/ubuntu/Singularity
+  - examples/debian/Singularity
+  - examples/busybox/Singularity
+  - examples/centos-arm64/Singularity
+  - examples/scratch/Singularity.busybox
+  - examples/scratch/Singularity.alpine
   full_name: sylabs/singularity
   latest_release: v3.8.3
   readme: '<h1>
@@ -58459,13 +60109,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 79
+  stargazers_count: 78
   subscribers_count: 10
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1631033802.0
+  updated_at: 1631166458.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
@@ -59501,7 +61151,7 @@ tin6150/r4eta:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1630460420.0
+  updated_at: 1631062642.0
 tjhendrickson/BIDS_scripts:
   data_format: 2
   description: null
@@ -60836,7 +62486,7 @@ vigo332/singularity-rstudio-r4:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1629302451.0
+  updated_at: 1631115061.0
 vincent-noel/pc4ecm:
   data_format: 2
   description: PhysiCell Invasion Model

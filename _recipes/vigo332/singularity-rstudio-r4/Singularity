@@ -37,10 +37,12 @@ From: ubuntu:20.04
   export DEBIAN_FRONTEND=noninteractive
 
   # Get dependencies
-  apt-get update
+  apt-get update -qq 
+  apt-get install -y --no-install-recommends software-properties-common dirmngr
   apt-get install -y --no-install-recommends \
     locales \
     gnupg2 \
+    wget \
     ca-certificates
 
   # Configure default locale
@@ -50,25 +52,31 @@ From: ubuntu:20.04
   export LC_ALL=en_US.UTF-8
   export LANG=en_US.UTF-8
 
+
+  wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+  add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
+
   # Install R
-  echo "deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/" > /etc/apt/sources.list.d/r.list
-  cat /etc/apt/sources.list.d/r.list
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+  #  echo "deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/" > /etc/apt/sources.list.d/r.list
+  #  cat /etc/apt/sources.list.d/r.list
+  #  add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/'
+  # apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
   # apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
-  apt-get update
-  apt-get install -y --no-install-recommends --allow-unauthenticated --fix-missing \
-    r-base=${R_VERSION}* \
-    r-base-core=${R_VERSION}* \
-    r-base-dev=${R_VERSION}* \
-    r-recommended=${R_VERSION}* \
-    r-base-html=${R_VERSION}* \
-    r-doc-html=${R_VERSION}* \
+
+  apt-get install -y --no-install-recommends --allow-unauthenticated --fix-missing --fix-broken \
+    r-base \
+    r-base-core \
+    r-base-dev \
+    r-recommended \
+    r-base-html \
+    r-doc-html \
     libcurl4-openssl-dev \
     libssl-dev \
     libxml2-dev \
     libcairo2-dev \
     libxt-dev \
     wget \
+    libgsl-dev \
     gdebi-core
 
   # Add a default CRAN mirror
