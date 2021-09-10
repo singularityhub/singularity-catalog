@@ -405,14 +405,18 @@ from: debian:buster-20201012
     ##############
     
     # note: we need to disable memory-mapping since it causes problems with the cluster
-    GSNAP_VERSION="2021-07-23"
+    # note: we need to compile avx versions separately
+    GSNAP_VERSION="2021-08-25"
     GSNAP_DIR=gmap-${GSNAP_VERSION}
     
     cd /opt && wget -O ${GSNAP_DIR}.tar.gz -nv http://research-pub.gene.com/gmap/src/gmap-gsnap-${GSNAP_VERSION}.tar.gz && \
     tar -xvf ${GSNAP_DIR}.tar.gz && \
     cd ${GSNAP_DIR} && \
-    ./configure --prefix=/opt --disable-mmap && \
-    make -j $COMPILE_CPUS -k && make install && \
+    ./configure --prefix=/opt --with-simd-level=sse42 --with-gmapdb=/group/dcgc/sequencing_processed/support/pipeline/gmap --disable-mmap && \
+    make -j $COMPILE_CPUS -k && make install && make clean && \
+    ./configure --prefix=/opt/${GSNAP_DIR}/avx2 --with-simd-level=avx2 --with-gmapdb=/group/dcgc/sequencing_processed/support/pipeline/gmap --disable-mmap CFLAGS="-O3 -fomit-frame-pointer -mavx2" && \
+    make -j $COMPILE_CPUS -k && make install && make clean && \
+    cp /opt/${GSNAP_DIR}/avx2/bin/*avx2 /opt/bin/ && \
     cd /opt && rm -rf ${GSNAP_DIR}.tar.gz ${GSNAP_DIR}
 
     #############
@@ -469,7 +473,7 @@ from: debian:buster-20201012
     cd /opt/${KALLISTO_DIR}/ext/htslib && autoheader && autoconf && \
     cd /opt/${KALLISTO_DIR} && mkdir build && cd build && \
     cmake -DCMAKE_INSTALL_PREFIX:PATH=/opt .. && make && make install && \
-    cd /opt && rm -rf ${KALLISTO_DIR}.tar.gz ${KALLISTO_DIR}
+    cd /opt # && rm -rf ${KALLISTO_DIR}.tar.gz ${KALLISTO_DIR}
 
     ############
     # velocyto #

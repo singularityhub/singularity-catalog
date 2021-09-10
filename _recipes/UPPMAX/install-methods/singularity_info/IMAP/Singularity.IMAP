@@ -1,0 +1,50 @@
+Bootstrap: docker
+From: ubuntu@sha256:e4a134999bea4abb4a27bc437e6118fdddfb172e1b9d683129b74d254af51675
+
+%environment
+  export LC_ALL=C
+  export PATH=$PATH:/opt/IMAP
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export LC_ALL=C
+
+  apt-get update && apt-get install -y git \
+    g++ \
+    build-essential \
+    pkg-config \
+    libgd-dev \
+    libncurses5-dev \
+    libghc-bzlib-dev \
+    libboost-all-dev \
+    python \
+    wget \
+    perl \
+    cpanminus \
+    openjdk-8-jdk \
+    openjdk-8-jre
+
+  cpanm \
+    YAML \
+    Switch \
+    Parallel::ForkManager \
+    ExtUtils::PkgConfig \
+    GD \
+    XML::Parser \
+    XML::Parser::PerlSAX \
+    XML::DOM \
+    XML::DOM::XPath \
+    XML::Twig \
+    Bio::TreeIO
+
+  cd /opt && git clone https://github.com/jkimlab/IMAP.git && \
+  cd IMAP && perl build.pl --install
+
+  # some fixes to make the build.pl work with the singularity setup
+  sed -i -e 's/gunzip $Bin\/IMAP_EX\/S288C.fa.gz/gunzip .\/IMAP_EX\/S288C.fa.gz/; s/gunzip $Bin\/IMAP_EX\/Saccharomyces_dairensis.fa.gz/gunzip .\/IMAP_EX\/Saccharomyces_dairensis.fa.gz/; s/$Bin\/scripts\/fastq-dump --split-files --gzip SRR1569791 -O $Bin\/IMAP_EX\//$Bin\/scripts\/fastq-dump --split-files --gzip SRR1569791 -O .\/IMAP_EX\//' /opt/IMAP/build.pl
+
+  # clean apt cache
+  rm -rf /var/lib/apt/lists/*
+
+%runscript
+  /opt/IMAP/IMAP.pl "$@"
