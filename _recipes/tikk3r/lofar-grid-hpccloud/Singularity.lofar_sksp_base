@@ -25,21 +25,24 @@ From: fedora:31
     export DEBIAN_FRONTEND=noninteractive
     export HAS_CUDA=true
     export HAS_MKL=true
+    export OMPI_ALLOW_RUN_AS_ROOT=1
+    export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
 
     #
     # System installs
 	#
 	dnf -y update
     dnf -y install dnf-plugins-core
-	dnf -y install patch sudo yum-utils
+	dnf -y install patch sudo yum-utils hostname
 	dnf -y install git svn wget vim nano
 	dnf -y install automake autoconf cmake make
 	dnf -y install gcc gcc-c++ gcc-gfortran
 	dnf -y install arpack-devel python-devel python3-devel lapack-devel libpng-devel libxml2-devel readline-devel ncurses-devel f2py bzip2-devel libicu-devel python3-scipy python-setuptools gsl gsl-devel gdal gdal-devel libpqxx libpqxx-devel
 	dnf -y install bison flex ncurses tar bzip2 which gettext
 	dnf -y install cmake3
-    dnf -y install hdf5
-	dnf -y install hdf5-devel
+    
+    #dnf -y install hdf5
+	#dnf -y install hdf5-devel
     dnf -y install python
 	dnf -y install python-pip python2-tkinter python3-tkinter
     dnf -y install libsigc++20-devel gtkmm30-devel
@@ -50,6 +53,11 @@ From: fedora:31
     dnf -y install python3-numpy-f2py
     dnf -y install qt5
     dnf -y install perf
+    dnf -y install rsync
+    dnf -y install openmpi openmpi-devel
+    dnf -y install htop
+    dnf -y install python3-pybind11 pybind11-devel mysql mysql-devel python-devel python3-devel
+    dnf -y install gdb
 
     #
     # Install Boost
@@ -84,9 +92,27 @@ From: fedora:31
     export make=`which make`
 
 	mkdir -p $INSTALLDIR
-    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:$LD_LIBRARY_PATH
-    export CMAKE_PREFIX_PATH=/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:$CMAKE_PREFIX_PATH
-    export CPATH=/usr/local/cuda/include:/opt/intel/mkl/include:$CPATH
+    #export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/opt/hdf5/lib:/opt/intel/mkl/lib/intel64:/usr/lib64/openmpi/lib/:$LD_LIBRARY_PATH
+    #export CMAKE_PREFIX_PATH=/usr/local/cuda/lib64:/opt/hdf5/lib:/opt/intel/mkl/lib/intel64:$CMAKE_PREFIX_PATH
+    #export CPATH=/usr/local/cuda/include:/opt/hdf5/include:/opt/intel/mkl/include:$CPATH
+    #export PATH=/usr/lib64/openmpi/bin:$PATH
+
+    export MARCH='x86-64'
+    export MTUNE='generic'
+    export NOAVX512=false
+
+    if [ $NOAVX512 ]; then
+        export CFLAGS="-march=${MARCH} -mtune=${MTUNE} -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+        export CXXFLAGS="-march=${MARCH} -mtune=${MTUNE} -std=c++11 -mno-avx512f -mno-avx512pf -mno-avx512er -mno-avx512cd -mno-avx512vl -mno-avx512bw -mno-avx512dq -mno-avx512ifma -mno-avx512vbmi"
+    else
+        export CFLAGS="-march=${MARCH} -mtune=${MTUNE}"
+        export CXXFLAGS="-march=${MARCH} -mtune=${MTUNE} -std=c++11"
+    fi
+    export CPLUS_INCLUDE_PATH="/usr/include/openmpi-x86_64:/usr/include/c++/9:$CPLUS_INCLUDE_PATH:/usr/include/python2.7:$INSTALLDIR/casacore/include:/usr/include/boost:/usr/include/cfitsio:$INSTALLDIR/EveryBeam/include"
+    export CPATH="/usr/include/openmpi-x86_64/:/usr/local/cuda/include:/opt/intel/mkl/include:${INSTALLDIR}/casacore/include:$INSTALLDIR/LOFARBeam/include:$INSTALLDIR/idg/include:$INSTALLDIR/aoflagger/include:$INSTALLDIR/EveryBeam/include:$CPATH"
+    export CMAKE_PREFIX_PATH="$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:$INSTALLDIR/lofar:$INSTALLDIR/LOFARBeam:/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:/usr/lib64/openmpi:$INSTALLDIR/EveryBeam"
+    export LD_LIBRARY_PATH="$INSTALLDIR/aoflagger/lib:$INSTALLDIR/casacore/lib:$INSTALLDIR/idg/lib:$INSTALLDIR/LOFARBeam/lib:/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:/usr/lib64/openmpi/lib/:$INSTALLDIR/EveryBeam/lib:LD_LIBRARY_PATH"
+    export PATH="/usr/lib64/openmpi/bin:$PATH"
 
     ###################
     # Source installs #
@@ -100,6 +126,27 @@ From: fedora:31
 	# Install wcslib
 	#
     dnf -y install wcslib wcslib-devel 
+
+    #
+    # Install HDF5 with parallel support
+    #
+    export CC=`which mpicc`
+	export CXX=`which mpic++`
+    mkdir /opt/hdf5
+    cd /opt/hdf5
+    wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-${HDF5_VERSION}/src/hdf5-${HDF5_VERSION}.tar.gz
+    # For reference. Only needed if building with CMake.
+    #wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-${HDF5_VERSION}/src/CMake-hdf5-${HDF5_VERSION}.tar.gz
+    tar xf hdf5-${HDF5_VERSION}.tar.gz
+    cd hdf5-${HDF5_VERSION}
+    # Thread safety required for WSClean's parallel gridding with facets.
+    ./configure -prefix=/opt/hdf5 --enable-build-mode=production --enable-threadsafe --enable-shared --disable-sharedlib-rpath --disable-hl
+    make -j $J
+    #make check
+    make install
+    export CC=`which gcc`
+	export CXX=`which g++`
+
 
     if [ $HAS_MKL ]; then
         #
@@ -132,8 +179,8 @@ From: fedora:31
 	# init-lofar
 	#
 	echo export INSTALLDIR=$INSTALLDIR > $INSTALLDIR/init.sh
-    echo export PATH=/usr/local/cuda/bin:\$PATH >> $INSTALLDIR/init.sh
-    echo export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
+    echo export PATH=/usr/local/cuda/bin:/opt/hdf5/bin:\$PATH >> $INSTALLDIR/init.sh
+    echo export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/opt/hdf5/lib:/opt/intel/mkl/lib/intel64/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
     echo export HAS_CUDA=true >> $INSTALLDIR/init.sh
     echo export HAS_MKL=true >> $INSTALLDIR/init.sh
 

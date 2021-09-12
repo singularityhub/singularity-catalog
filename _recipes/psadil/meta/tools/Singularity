@@ -1,0 +1,47 @@
+Bootstrap: docker
+From: rocker/verse:4.1.1
+
+%files
+  /home/psadil/Documents/git/brainbehavior/renv.lock renv.lock
+
+%post
+  apt-get update
+  apt-get -y install \
+    unzip \
+    libxt6 \
+    bc \
+    dc \
+    libgl1-mesa-dev \
+    libglu1-mesa-dev \
+    libxcursor1 \
+    libxft2 \
+    libxinerama1 \
+    libxrandr2 \
+    libxrender1 
+
+  
+  echo "Installing FSL conda environment ..." 
+  chmod 777 /opt 
+  chmod a+s /opt 
+  mkdir -p /opt/fsl-6.0.5 
+  curl -fsSL --retry 5 https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-6.0.5-centos7_64.tar.gz | tar -xz -C /opt/fsl-6.0.5 --strip-components 1 
+  bash /opt/fsl-6.0.5/etc/fslconf/fslpython_install.sh -f /opt/fsl-6.0.5
+
+  R -e "install.packages('remotes')"
+  R -e "remotes::install_github('rstudio/renv@0.14.0')"
+
+  R -e 'renv::restore()'
+
+%environment
+  export FSLDIR="/opt/fsl-6.0.5"
+  export PATH="/opt/fsl-6.0.5/bin:$PATH" 
+  export FSLOUTPUTTYPE="NIFTI_GZ" 
+  export FSLMULTIFILEQUIT="TRUE" 
+  export FSLTCLSH="/opt/fsl-6.0.5/bin/fsltclsh" 
+  export FSLWISH="/opt/fsl-6.0.5/bin/fslwish" 
+  export FSLLOCKDIR="" 
+  export FSLMACHINELIST="" 
+  export FSLREMOTECALL="" 
+  export FSLGECUDAQ="cuda.q"
+
+

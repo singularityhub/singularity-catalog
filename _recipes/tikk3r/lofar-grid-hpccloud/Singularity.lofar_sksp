@@ -2,7 +2,7 @@
 #From: tikk3r/lofar-grid-hpccloud:lofar_sksp_base
 # If building from a base image locally enable this instead.
 Bootstrap: localimage
-From: test_3.3_base.sif
+From: lofar_sksp_base.sif
 
 %environment
     export PYTHONPATH=
@@ -35,7 +35,7 @@ From: test_3.3_base.sif
     export DPPP_VERSION=master
 	export DYSCO_VERSION=v1.2
     #export EVERYBEAM_VERSION=v0.1.3
-    export EVERYBEAM_VERSION=master
+    export EVERYBEAM_VERSION=0c26c65d
     export FFTW_VERSION=3.5.8
 	export HDF5_VERSION=1.10.5
     export IDG_VERSION=master
@@ -50,16 +50,14 @@ From: test_3.3_base.sif
 	export PYTHON_CASACORE_VERSION=v2.2.1
     export RMEXTRACT_VERSION=4c61232
 	export SUPERLU_VERSION=5.2.1
-	export WSCLEAN_VERSION=latest
+	export WSCLEAN_VERSION=41c651d1
 	export WCSLIB_VERSION=6.4
 	export HDF5_USE_FILE_LOCKING=FALSE
 
     export CC=`which gcc`
 	export CXX=`which g++`
-    #export MARCH='x86-64'
-    #export MTUNE='generic'
-    export MARCH='skylake-avx512'
-    export MTUNE='skylake-avx512'
+    export MARCH='x86-64'
+    export MTUNE='generic'
     export NOAVX512=false
 
     if [ $NOAVX512 ]; then
@@ -69,11 +67,11 @@ From: test_3.3_base.sif
         export CFLAGS="-march=${MARCH} -mtune=${MTUNE}"
         export CXXFLAGS="-march=${MARCH} -mtune=${MTUNE} -std=c++11"
     fi
-    export CPLUS_INCLUDE_PATH="/usr/include/openmpi-x86_64:/usr/include/c++/9:$CPLUS_INCLUDE_PATH:/usr/include/python2.7:$INSTALLDIR/casacore/include:/usr/include/boost:/usr/include/cfitsio:$INSTALLDIR/EveryBeam/include"
-    export CPATH="/usr/include/openmpi-x86_64/:/usr/local/cuda/include:/opt/intel/mkl/include:${INSTALLDIR}/casacore/include:$INSTALLDIR/LOFARBeam/include:$INSTALLDIR/idg/include:$INSTALLDIR/aoflagger/include:$INSTALLDIR/EveryBeam/include:$CPATH"
-    export CMAKE_PREFIX_PATH="$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:$INSTALLDIR/lofar:$INSTALLDIR/LOFARBeam:/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:/usr/lib64/openmpi:$INSTALLDIR/EveryBeam"
-    export LD_LIBRARY_PATH="$INSTALLDIR/aoflagger/lib:$INSTALLDIR/casacore/lib:$INSTALLDIR/idg/lib:$INSTALLDIR/LOFARBeam/lib:/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:/usr/lib64/openmpi/lib/:$INSTALLDIR/EveryBeam/lib:LD_LIBRARY_PATH"
-    export PATH="/usr/lib64/openmpi/bin:$PATH"
+    export CPLUS_INCLUDE_PATH="/opt/hdf5/include:/usr/include/openmpi-x86_64:/usr/include/c++/9:$CPLUS_INCLUDE_PATH:/usr/include/python2.7:$INSTALLDIR/casacore/include:/usr/include/boost:/usr/include/cfitsio:$INSTALLDIR/EveryBeam/include"
+    export CPATH="/usr/include/openmpi-x86_64/:/usr/local/cuda/include:/opt/hdf5/include:/opt/intel/mkl/include:${INSTALLDIR}/casacore/include:$INSTALLDIR/LOFARBeam/include:$INSTALLDIR/idg/include:$INSTALLDIR/aoflagger/include:$INSTALLDIR/EveryBeam/include:$CPATH"
+    export CMAKE_PREFIX_PATH="$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:/opt/hdf5:$INSTALLDIR/lofar:$INSTALLDIR/LOFARBeam:/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:/usr/lib64/openmpi:$INSTALLDIR/EveryBeam"
+    export LD_LIBRARY_PATH="$INSTALLDIR/aoflagger/lib:$INSTALLDIR/casacore/lib:/opt/hdf5/lib:$INSTALLDIR/idg/lib:$INSTALLDIR/LOFARBeam/lib:/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:/usr/lib64/openmpi/lib/:$INSTALLDIR/EveryBeam/lib:LD_LIBRARY_PATH"
+    export PATH="/opt/hdf5/bin:/usr/lib64/openmpi/bin:$PATH"
     export make=`which make`
     export OLD_PYTHONPATH=$PYTHONPATH
 
@@ -86,10 +84,6 @@ From: test_3.3_base.sif
 	ln -s /usr/lib64/libboost_numpy27.so /usr/lib64/libboost_numpy.so
     ln -s /usr/lib64/libnsl.so.2.0.0 /usr/lib64/libnsl.so
 
-    dnf -y install rsync
-    dnf -y install openmpi openmpi-devel
-    dnf -y install htop
-    dnf -y install python3-pybind11 pybind11-devel mysql mysql-devel python-devel python3-devel
     #module load mpi
 
     #
@@ -331,11 +325,11 @@ From: test_3.3_base.sif
     git clone https://git.astron.nl/RD/idg.git src
     cd src && git checkout $IDG_VERSION && mkdir build && cd build
     if [ $HAS_CUDA ] && [ $HAS_MKL ]; then
-        cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg -DBUILD_WITH_MKL=ON -DBUILD_LIB_CUDA=ON -DCUDA_INCLUDE_DIR=/usr/local/cuda/include ..
+        cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg -DBUILD_WITH_MKL=ON -DBUILD_LIB_CUDA=ON -DCUDA_INCLUDE_DIR=/usr/local/cuda/include -DCMAKE_BUILD_TYPE=Debug ..
     elif [ ! $HAS_CUDA ] && [ $HAS_MKL ]; then
-        cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg -DBUILD_WITH_MKL=ON ..
+        cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg -DBUILD_WITH_MKL=ON -DCMAKE_BUILD_TYPE=Debug ..
     elif [ $HAS_CUDA ] && [ ! $HAS_MKL ]; then
-        cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg -DBUILD_WITH_MKL=OFF -DBUILD_LIB_CUDA=ON -DCUDA_INCLUDE_DIR=/usr/local/cuda/include ..
+        cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg -DBUILD_WITH_MKL=OFF -DBUILD_LIB_CUDA=ON -DCUDA_INCLUDE_DIR=/usr/local/cuda/include -DCMAKE_BUILD_TYPE=Debug ..
     else
         cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg ..
     fi
@@ -487,10 +481,11 @@ From: test_3.3_base.sif
 	echo export PATH=\$INSTALLDIR/DPPP/bin:\$PATH  >> $INSTALLDIR/init.sh
     echo export PATH=\$INSTALLDIR/difmap/uvf_difmap:\$PATH >> $INSTALLDIR/init.sh
 	echo export PATH=\$INSTALLDIR/dysco/bin:\$PATH  >> $INSTALLDIR/init.sh
+	echo export PATH=/opt/hdf5/bin:\$PATH  >> $INSTALLDIR/init.sh
 	echo export PATH=\$INSTALLDIR/lofar/bin:\$PATH  >> $INSTALLDIR/init.sh
 	echo export PATH=\$INSTALLDIR/wsclean/bin:\$PATH  >> $INSTALLDIR/init.sh
     echo export PATH=/usr/lib64/openmpi/bin:\$PATH >> $INSTALLDIR/init.sh
-	echo export LD_LIBRARY_PATH=\$INSTALLDIR/aoflagger/lib:\$INSTALLDIR/casacore/lib:\$INSTALLDIR/DPPP/lib:\$INSTALLDIR/dysco/lib:\$INSTALLDIR/EveryBeam/lib:\$INSTALLDIR/idg/lib:\$INSTALLDIR/lofar/lib:\$INSTALLDIR/lofar/lib64:\$INSTALLDIR/LOFARBeam/lib:\$LD_LIBRARY_PATH  >> $INSTALLDIR/init.sh
+	echo export LD_LIBRARY_PATH=\$INSTALLDIR/aoflagger/lib:\$INSTALLDIR/casacore/lib:\$INSTALLDIR/DPPP/lib:\$INSTALLDIR/dysco/lib:\$INSTALLDIR/EveryBeam/lib:/opt/hdf5/lib:\$INSTALLDIR/idg/lib:\$INSTALLDIR/lofar/lib:\$INSTALLDIR/lofar/lib64:\$INSTALLDIR/LOFARBeam/lib:\$LD_LIBRARY_PATH  >> $INSTALLDIR/init.sh
     echo export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
     echo export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
     # OPENBLAS_NUM_THREADS=1 is required for WSClean

@@ -1,8 +1,7 @@
 #Bootstrap: shub
 #From: tikk3r/lofar-grid-hpccloud:lofar_sksp
 Bootstrap: localimage
-#From: lofar-grid-hpccloud_lofar_sksp.sif
-From: lofar_sksp_x86-64_generic_cuda_fedora31.sif
+From: lofar_sksp.sif
 
 
 
@@ -12,6 +11,7 @@ From: lofar_sksp_x86-64_generic_cuda_fedora31.sif
     source $INSTALLDIR/pyenv-py2/bin/activate
 
 %post
+    . $INSTALLDIR/init.sh
 	# General environment settings.
 	export J=4
 	export INSTALLDIR=/opt/lofar

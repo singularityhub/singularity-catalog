@@ -10497,7 +10497,7 @@ J35P312/fluffy:
   stargazers_count: 2
   subscribers_count: 5
   topics: []
-  updated_at: 1631110609.0
+  updated_at: 1631272019.0
 JCSDA-internal/containers:
   data_format: 2
   description: Contains tools for building and distributing the JEDI/JCSDA Containers
@@ -21867,7 +21867,7 @@ adamlabadorf/bf500:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1631234114.0
+  updated_at: 1631274450.0
 adamlabadorf/bf550:
   data_format: 2
   description: null
@@ -25321,6 +25321,189 @@ baxpr/fmriqa:
   subscribers_count: 2
   topics: []
   updated_at: 1558037991.0
+baxpr/freesurfer-singularity:
+  data_format: 2
+  description: Singularity container for Freesurfer recon-all, thalamus, brainstem,
+    hippocampus/amygdala
+  filenames:
+  - Singularity
+  full_name: baxpr/freesurfer-singularity
+  latest_release: v1.0.0
+  readme: '<h1>
+
+    <a id="user-content-freesurfer-development-version" class="anchor" href="#freesurfer-development-version"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Freesurfer,
+    development version</h1>
+
+    <p>This repository contains the files needed to build a singularity container
+    that
+
+    runs Freesurfer 7.2.0 recon-all. The build recipe is <a href="Singularity">Singularity</a>.</p>
+
+    <p>A valid Freesurfer license file is required at runtime. See <a href="USAGE.md">USAGE.md</a>
+
+    for details.</p>
+
+    <p>Here is the <a href="FreeSurferColorLUT.txt">look-up table for the various
+    Freesurfer segmentations</a>,
+
+    and the <a href="src/create_MM_labelmaps.sh">description of MM hippocampus re-combinations</a>.</p>
+
+    <h2>
+
+    <a id="user-content-references" class="anchor" href="#references" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>REFERENCES</h2>
+
+    <p>Also see <a href="https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferMethodsCitation"
+    rel="nofollow">https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferMethodsCitation</a></p>
+
+    <h3>
+
+    <a id="user-content-recon-all" class="anchor" href="#recon-all" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>recon-all</h3>
+
+    <p>Collins, DL, Neelin, P., Peters, TM, and Evans, AC. (1994) Automatic 3D
+
+    Inter-Subject Registration of MR Volumetric Data in Standardized Talairach
+
+    Space, Journal of Computer Assisted Tomography, 18(2) p192-205, 1994 PMID:
+
+    8126267; UI: 94172121</p>
+
+    <p>Cortical Surface-Based Analysis I: Segmentation and Surface Reconstruction
+
+    Dale, A.M., Fischl, Bruce, Sereno, M.I., (1999). Cortical Surface-Based
+
+    Analysis I: Segmentation and Surface Reconstruction. NeuroImage 9(2):179-194</p>
+
+    <p>Fischl, B.R., Sereno, M.I.,Dale, A. M. (1999) Cortical Surface-Based
+
+    Analysis II: Inflation, Flattening, and Surface-Based Coordinate System.
+
+    NeuroImage, 9, 195-207.</p>
+
+    <p>Fischl, Bruce, Sereno, M.I., Tootell, R.B.H., and Dale, A.M., (1999).
+
+    High-resolution inter-subject averaging and a coordinate system for the
+
+    cortical surface. Human Brain Mapping, 8(4): 272-284</p>
+
+    <p>Fischl, Bruce, and Dale, A.M., (2000). Measuring the Thickness of the Human
+
+    Cerebral Cortex from Magnetic Resonance Images. Proceedings of the National
+
+    Academy of Sciences, 97:11044-11049.</p>
+
+    <p>Fischl, Bruce, Liu, Arthur, and Dale, A.M., (2001). Automated Manifold
+
+    Surgery: Constructing Geometrically Accurate and Topologically Correct
+
+    Models of the Human Cerebral Cortex. IEEE Transactions on Medical Imaging,
+
+    20(1):70-80</p>
+
+    <p>Non-Uniform Intensity Correction.
+
+    <a href="http://www.bic.mni.mcgill.ca/software/N3/node6.html" rel="nofollow">http://www.bic.mni.mcgill.ca/software/N3/node6.html</a></p>
+
+    <p>Fischl B, Salat DH, Busa E, Albert M, Dieterich M, Haselgrove C, van der
+
+    Kouwe A, Killiany R, Kennedy D, Klaveness S, Montillo A, Makris N, Rosen B,
+
+    Dale AM. Whole brain segmentation: automated labeling of neuroanatomical
+
+    structures in the human brain. Neuron. 2002 Jan 31;33(3):341-55.</p>
+
+    <p>Bruce Fischl, Andre van der Kouwe, Christophe Destrieux, Eric Halgren,
+
+    Florent Segonne, David H. Salat, Evelina Busa, Larry J. Seidman, Jill
+
+    Goldstein, David Kennedy, Verne Caviness, Nikos Makris, Bruce Rosen, and
+
+    Anders M. Dale. Automatically Parcellating the Human Cerebral Cortex.
+
+    Cerebral Cortex January 2004; 14:11-22.</p>
+
+    <h3>
+
+    <a id="user-content-brainstem" class="anchor" href="#brainstem" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Brainstem</h3>
+
+    <p>Bayesian segmentation of brainstem structures in MRI. Iglesias, J.E., Van
+
+    Leemput, K., Bhatt, P., Casillas, C., Dutt, S., Schuff, N., Truran-Sacrey,
+
+    D., Boxer, A., and Fischl, B. NeuroImage, 113, June 2015, 184-195.</p>
+
+    <h3>
+
+    <a id="user-content-hippocampus-and-amygdala" class="anchor" href="#hippocampus-and-amygdala"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Hippocampus
+    and amygdala</h3>
+
+    <p>Hippocampus: A computational atlas of the hippocampal formation using ex
+
+    vivo, ultra-high resolution MRI: Application to adaptive segmentation of in
+
+    vivo MRI. Iglesias, J.E., Augustinack, J.C., Nguyen, K., Player, C.M.,
+
+    Player, A., Wright, M., Roy, N., Frosch, M.P., Mc Kee, A.C., Wald, L.L.,
+
+    Fischl, B., and Van Leemput, K. Neuroimage, 115, July 2015, 117-137.</p>
+
+    <p>Amygdala: High-resolution magnetic resonance imaging reveals nuclei of the
+
+    human amygdala: manual segmentation to automatic atlas. Saygin ZM &amp; Kliemann
+
+    D (joint 1st authors), Iglesias JE, van der Kouwe AJW, Boyd E, Reuter M,
+
+    Stevens A, Van Leemput K, Mc Kee A, Frosch MP, Fischl B, Augustinack JC.
+
+    Neuroimage, 155, July 2017, 370-382.</p>
+
+    <p>Longitudinal method: Bayesian longitudinal segmentation of hippocampal
+
+    substructures in brain MRI using subject-specific atlases. Iglesias JE, Van
+
+    Leemput K, Augustinack J, Insausti R, Fischl B, Reuter M. Neuroimage, 141,
+
+    November 2016, 542-555.</p>
+
+    <h3>
+
+    <a id="user-content-mm-hippocampal-subregions" class="anchor" href="#mm-hippocampal-subregions"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>"MM"
+    hippocampal subregions</h3>
+
+    <p>A reorganization of Freesurfer''s segmentation into anterior and posterior
+    segments
+
+    as described in:</p>
+
+    <p>McHugo M, Talati P, Woodward ND, Armstrong K, Blackford JU, Heckers S. Regionally
+
+    specific volume deficits along the hippocampal long axis in early and chronic
+
+    psychosis. Neuroimage Clin. 2018;20:1106-1114. doi:10.1016/j.nicl.2018.10.021</p>
+
+    <h3>
+
+    <a id="user-content-thalamus" class="anchor" href="#thalamus" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Thalamus</h3>
+
+    <p>A probabilistic atlas of the human thalamic nuclei combining ex vivo MRI and
+
+    histology. Iglesias, J.E., Insausti, R., Lerma-Usabiaga, G., Bocchetta, M.,
+
+    Van Leemput, K., Greve, D., van der Kouwe, A., Caballero-Gaudes, C.,
+
+    Paz-Alonso, P. Neuroimage (accepted).</p>
+
+    '
+  stargazers_count: 1
+  subscribers_count: 2
+  topics: []
+  updated_at: 1631304289.0
 baxpr/makerois-PMAT:
   data_format: 2
   description: null
@@ -27147,7 +27330,7 @@ chaotic-aur/toolbox:
     yarn run lint</pre></div>
 
     '
-  stargazers_count: 31
+  stargazers_count: 34
   subscribers_count: 11
   topics:
   - archlinux
@@ -27156,7 +27339,7 @@ chaotic-aur/toolbox:
   - continuous-deployment
   - pkgbuild
   - aur
-  updated_at: 1628725309.0
+  updated_at: 1631291028.0
 chenhongluo/horovord:
   data_format: 2
   description: null
@@ -29393,7 +29576,7 @@ datalad/datalad:
   - data-storage
   - dataset
   - usable
-  updated_at: 1631166572.0
+  updated_at: 1631296209.0
 davecwright3/bart-singularity:
   data_format: 2
   description: Bayesian Atmospheric Radiative Transfer (BART) packaged in a Singularity
@@ -29765,7 +29948,7 @@ dcgc-bfx/singularity-base:
   stargazers_count: 0
   subscribers_count: 4
   topics: []
-  updated_at: 1631199430.0
+  updated_at: 1631272941.0
 dcgc-bfx/singularity-base-conda:
   data_format: 2
   description: null
@@ -35441,7 +35624,7 @@ gnetsanet/crispedit:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1631205062.0
+  updated_at: 1631344428.0
 gnperdue/singularity_imgs:
   data_format: 2
   description: Singularity images for deep learning software
@@ -46318,6 +46501,460 @@ nicspalla/openmpi_centos_x86_64:
   subscribers_count: 1
   topics: []
   updated_at: 1605260984.0
+nova0002/troubleshooting:
+  data_format: 2
+  description: null
+  filenames:
+  - container/Singularity.intel_am4
+  - container/Singularity.intel_netcdf
+  - container/Singularity.gnu
+  full_name: nova0002/troubleshooting
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-gfdl-am4-model" class="anchor" href="#gfdl-am4-model" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>GFDL AM4 Model</h1>
+
+    <p><a href="https://zenodo.org/badge/latestdoi/102487636" rel="nofollow"><img
+    src="https://camo.githubusercontent.com/878db836b9000fd7d9ff531257cade7343f3a3fdf8f764b5a7f1e8ef6ccc6abe/68747470733a2f2f7a656e6f646f2e6f72672f62616467652f3130323438373633362e737667"
+    alt="DOI" data-canonical-src="https://zenodo.org/badge/102487636.svg" style="max-width:100%;"></a></p>
+
+    <p>This repository includes the public release of the GFDL AM4 model
+
+    code.  The AM4 model is described in the
+
+    <a href="https://doi.org/10.1002/2017MS001208" rel="nofollow">two</a>
+
+    <a href="https://doi.org/10.1002/2017MS001209" rel="nofollow">articles</a> published
+    in the
+
+    <a href="https://agupubs.onlinelibrary.wiley.com/journal/19422466" rel="nofollow">Journal
+    of Advances in Modeling Earth Systems
+
+    (JAMES)</a>.
+
+    More information on the model and access to the output is available on
+
+    the <a href="http://data1.gfdl.noaa.gov/nomads/forms/am4.0/" rel="nofollow">AM4
+    data and code
+
+    site</a> at the
+
+    <a href="https://www.gfdl.noaa.gov" rel="nofollow">Geophysical Fluid Dynamics
+    Laboratory
+
+    (GFDL)</a>.</p>
+
+    <p>The layout of this package includes the following directories:</p>
+
+    <ul>
+
+    <li>src - The source code for the AM4 model</li>
+
+    <li>exec - The build directory with Makefiles for building the model executable</li>
+
+    <li>run - Sample run script and updated files needed for running</li>
+
+    <li>analysis - Sample analysis scripts</li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-cloning-instructions" class="anchor" href="#cloning-instructions"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Cloning
+    Instructions</h2>
+
+    <p>This repository uses <a href="https://git-scm.com/book/en/v2/Git-Tools-Submodules"
+    rel="nofollow">git
+
+    submodules</a> to
+
+    point to other repositories.  Thus, care should be taken when cloning,
+
+    and updating the source to ensure all source.  To obtain all source,
+
+    use the following git command</p>
+
+    <pre><code>git clone --recursive https://github.com/NOAA-GFDL/AM4.git
+
+    </code></pre>
+
+    <p>The <code>--recursive</code> option to <code>git clone</code> instructs git
+    to recursively
+
+    clone all submodules.  In the event the repository was not cloned
+
+    using the <code>--recursive</code> option, the following step must be taken to
+
+    obtain all sources:</p>
+
+    <pre><code># From within the AM4 parent directory
+
+    git submodule update --init --recursive
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-source-code" class="anchor" href="#source-code" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Source Code</h2>
+
+    <p>All model source is contained in the <a href="src">src</a> directory.  GFDL
+
+    tracks code using the git version control system.  This package
+
+    includes a single version of the following GFDL model components.  The
+
+    git hash listed corresponds to the commit hash in the internal GFDL
+
+    git repository.</p>
+
+    <table>
+
+    <thead>
+
+    <tr>
+
+    <th>Component</th>
+
+    <th>Commit Hash</th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr>
+
+    <td>atmos_drivers</td>
+
+    <td>5ee95d6abf0879594551dd7e6635dff4004c4010</td>
+
+    </tr>
+
+    <tr>
+
+    <td>atmos_param</td>
+
+    <td>2e94acfd8621e85216bf822c395a8c3f15a511a5</td>
+
+    </tr>
+
+    <tr>
+
+    <td>atmos_shared</td>
+
+    <td>a557d4d7bab033ef1ad1d400a62fe07a97ccb477</td>
+
+    </tr>
+
+    <tr>
+
+    <td>ice_param</td>
+
+    <td>1553c8bc4f9a66791c89367b6f327147523155ed</td>
+
+    </tr>
+
+    <tr>
+
+    <td>ice_sis</td>
+
+    <td>ccc7328dcd79706dd5c17c8bab660222886fc80b</td>
+
+    </tr>
+
+    <tr>
+
+    <td>land_lad2</td>
+
+    <td>a220288ecb289bf9d793d051fc5076072874ce07</td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    <p>The following components are available in the
+
+    <a href="https://github.com/NOAA-GFDL">NOAA-GFDL</a> github organization:</p>
+
+    <ul>
+
+    <li><a href="https://github.com/NOAA-GFDL/MOM6">MOM6</a></li>
+
+    <li><a href="https://github.com/NOAA-GFDL/coupler">coupler</a></li>
+
+    <li>
+
+    <a href="https://github.com/NOAA-GFDL/FMS">FMS</a> (as <a href="src/shared">shared</a>)</li>
+
+    <li>
+
+    <a href="https://github.com/NOAA-GFDL/GFDL_atmos_cubed_sphere">GFDL_atmos_cubed_sphere
+    (tag AM4.0)</a> (as <a href="src/atmos_cubed_sphere">atmos_cubed_sphere</a>)</li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-building-am4" class="anchor" href="#building-am4" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Building AM4</h2>
+
+    <p>###Containers
+
+    The <a href="container">container folder</a> provides example Dockerfiles and
+    Signularity
+
+    definition files to use to build AM4 containers using either GCC/GFORTAN or
+
+    Intel oneAPI. There is a script that can be used to build the intel
+
+    singularity containers, and the first step of this script can be used with the
+
+    other GFDL climate models.</p>
+
+    <h3>
+
+    <a id="user-content-from-source" class="anchor" href="#from-source" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>From source</h3>
+
+    <p>The <a href="exec">exec</a> directory contains Makefiles that can be used to
+
+    build the AM4 executable.  These Makefiles were generated using the
+
+    <a href="https://github.com/NOAA-GFDL/mkmf">Make Makefile (mkmf)</a> program.
+
+    Included in the exec direcgtory is a sample make template file for the
+
+    Intel compilers (<a href="exec/templates/intel.mk">intel.mk</a>).  This make
+
+    template can be used on any system with a relatively recent version of
+
+    the Intel compilers, the netCDF 4 library and the MPICH2 MPI library.
+
+    Included in the <a href="exec/templates/intel.mk">intel.mk</a> file are
+
+    additional settings that can be modified during the build.</p>
+
+    <p>To run the default build (-O3 -msse2), go to the exec directory and
+
+    enter the command</p>
+
+    <pre><code>make
+
+    </code></pre>
+
+    <p>If you would like to change some of the compiler options, there are several
+    different
+
+    options to add to the make command.  For example</p>
+
+    <pre><code>make ISA=-xhost BLD_TYPE=REPRO
+
+    </code></pre>
+
+    <p>will replace -msse with -xhost and -O3 with -O2.  The three options for
+
+    <code>BLD_TYPE</code> are<br>
+
+    <code>PROD</code> (-O3)<br>
+
+    <code>REPRO</code> (-O2)<br>
+
+    <code>DEBUG</code> (-O0 and other traps)<br>
+
+    All of the make line options can be
+
+    found in the <a href="exec/templates/intel.mk">intel.mk</a> file.</p>
+
+    <h2>
+
+    <a id="user-content-obtaining-the-input-data" class="anchor" href="#obtaining-the-input-data"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Obtaining
+    the input data</h2>
+
+    <p>The input data required for running the AM4 model can be found on
+
+    <a href="http://data1.gfdl.noaa.gov/nomads/forms/am4.0/" rel="nofollow">GFDL''s
+    data
+
+    portal</a> .</p>
+
+    <p>The file <code>AM4.tar.gz</code> contains a configured run directory to run
+    a
+
+    sample experiment of the AM4 model.  Included in the tar file is a
+
+    README.AM4_run with more instructions on how to configure the AM4 run
+
+    directory.</p>
+
+    <p>On Linux systems, the <code>wget</code> command is usually sufficient to download
+    the data
+
+    file:</p>
+
+    <pre><code>wget ftp://nomads.gfdl.noaa.gov/users/Ming.Zhao/AM4Documentation/GFDL-AM4.0/inputData/AM4_run.tar.gz
+
+    </code></pre>
+
+    <p>To ensure the file downloaded is complete and not corrupted, download one of
+    the two files:</p>
+
+    <pre><code>wget ftp://nomads.gfdl.noaa.gov/users/Ming.Zhao/AM4Documentation/GFDL-AM4.0/inputData/AM4_run.tar.gz.sha256
+
+    wget ftp://nomads.gfdl.noaa.gov/users/Ming.Zhao/AM4Documentation/GFDL-AM4.0/inputData/AM4_run.tar.gz.sig
+
+    </code></pre>
+
+    <p>and run the following command that corresponds to the signature file downloaded:</p>
+
+    <pre><code>sha256sum -c AM4_run.tar.gz.sha256
+
+    </code></pre>
+
+    <pre><code>gpg --verify AM4_run.tar.gz.sig
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-running-am4" class="anchor" href="#running-am4" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Running AM4</h2>
+
+    <p>Included in the run directory is a sample run script for reference.
+
+    To run the AM4 sample experiment, first download the data file
+
+    mentioned in <a href="#obtaining-the-input-data">Obtaining the Input data</a>
+
+    section.  Replace diag_table and input.nml in the top level of the
+
+    untar''d directory with the corresponding files in the run directory
+
+    of this repository. Modify the variables in the configuration section
+
+    in the sample run script, and then run the script.</p>
+
+    <p>The sample data and run script are configured to run on 216
+
+    processors.  To run on a different number of processors, or modify the
+
+    experiment, refer to the <code>README.AM4_run</code> file included in the AM4
+
+    data tarball.</p>
+
+    <p>Note: The <code>input.nml</code> file (found in the AM4 data tarball) contains
+
+    Fortran namelists and namelist variables that modify, at run time, the
+
+    model.  To learn more about the settings in the <code>input.nml</code> file,
+
+    please refer to source code where the namelist/variable are defined.</p>
+
+    <h2>
+
+    <a id="user-content-analysis-scripts" class="anchor" href="#analysis-scripts"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Analysis
+    Scripts</h2>
+
+    <p>Some of the climate analysis scripts run at NOAA GFDL and used in the
+
+    AM4 documentation papers are located in the analysis directory.
+
+    Within each analysis suite, is a <a href="https://jupyter-notebook.readthedocs.io/en/stable/"
+    rel="nofollow">jupyter
+
+    notebook</a>, both
+
+    readable and runnable from your local jupyter environment, provided
+
+    all dependencies are installed.</p>
+
+    <p>E.g.</p>
+
+    <ul>
+
+    <li><a href="analysis/cjs1/radiation_atmos_av_mon/radiation_atmos_av_mon.ipynb">Radiation
+    processor</a></li>
+
+    <li><a href="analysis/bw/bw_atmos_cru_ts_a1r/bw_atmos_monthly_cru_ts.1980-2014.ipynb">Long-term
+    DJF seasonal mean</a></li>
+
+    <li><a href="analysis/bw/bw_atmos_zm_atl_pac_a1r/bw_atmos_atl_pac.1980-2014.ipynb">Zonal_mean_zonal_wind_stress</a></li>
+
+    <li><a href="analysis/pcmdimetrics/portraitPlot-AM4.AMIP.ipynb">PCMDI Metrics
+    Portrait Plot</a></li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-model-output-and-other-references" class="anchor" href="#model-output-and-other-references"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Model
+    output and Other References</h2>
+
+    <p>Please refer to the <a href="http://data1.gfdl.noaa.gov/nomads/forms/am4.0/"
+    rel="nofollow">AM4 data and code
+
+    site</a> for details
+
+    about where to find model and OBS data used in the papers.</p>
+
+    <p>For all analysis figures and pertaining data, please use the AM4
+
+    documentation papers as the original reference.</p>
+
+    <p>Please direct your questions and feedback to
+
+    <a href="mailto:gfdl.climate.model.info@noaa.gov">gfdl.climate.model.info@noaa.gov</a></p>
+
+    <h2>
+
+    <a id="user-content-disclaimer" class="anchor" href="#disclaimer" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Disclaimer</h2>
+
+    <p>The United States Department of Commerce (DOC) GitHub project code is
+
+    provided on an ''as is'' basis and the user assumes responsibility for
+
+    its use.  DOC has relinquished control of the information and no
+
+    longer has responsibility to protect the integrity, confidentiality,
+
+    or availability of the information.  Any claims against the Department
+
+    of Commerce stemming from the use of its GitHub project will be
+
+    governed by all applicable Federal law.  Any reference to specific
+
+    commercial products, processes, or services by service mark,
+
+    trademark, manufacturer, or otherwise, does not constitute or imply
+
+    their endorsement, recommendation or favoring by the Department of
+
+    Commerce.  The Department of Commerce seal and logo, or the seal and
+
+    logo of a DOC bureau, shall not be used in any manner to imply
+
+    endorsement of any commercial product or activity by DOC or the United
+
+    States Government.</p>
+
+    <p>This project code is made available through GitHub but is managed by
+
+    NOAA-GFDL at <a href="https://gitlab.gfdl.noaa.gov" rel="nofollow">https://gitlab.gfdl.noaa.gov</a>.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1631295050.0
 nservant/HiC-Pro:
   data_format: 2
   description: 'HiC-Pro: An optimized and flexible pipeline for Hi-C data processing'
@@ -51131,6 +51768,17 @@ psadil/cat12:
   subscribers_count: 1
   topics: []
   updated_at: 1630100555.0
+psadil/meta:
+  data_format: 2
+  description: null
+  filenames:
+  - tools/Singularity
+  full_name: psadil/meta
+  latest_release: null
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1631301951.0
 pscedu/singularity-abyss:
   data_format: 2
   description: ABySS is a de novo sequence assembler that is designed for very short
@@ -51377,6 +52025,65 @@ pscedu/singularity-aspera-connect:
   - singularity
   - utilities
   updated_at: 1629217755.0
+pscedu/singularity-augustus:
+  data_format: 2
+  description: AUGUSTUS is a program that predicts genes in eukaryotic genomic sequences.
+  filenames:
+  - 3.4.0/Singularity
+  full_name: pscedu/singularity-augustus
+  latest_release: null
+  readme: "<p><a href=\"https://github.com/pscedu/singularity-augustus/actions/workflows/main.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-augustus/actions/workflows/main.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://github.com/pscedu/singularity-augustus/actions/workflows/pretty.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-augustus/actions/workflows/pretty.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/b009594bd55f20cf925162d0fe98bf76f1a1f741fbee0db595e0980a750bb1ae/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d6175677573747573\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/b009594bd55f20cf925162d0fe98bf76f1a1f741fbee0db595e0980a750bb1ae/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d6175677573747573\"\
+    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-augustus\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/e5e9d7c3436fbd053be5a28483f6822d138a79c3a29716fd6d3f2fe128fae067/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d6175677573747573\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/e5e9d7c3436fbd053be5a28483f6822d138a79c3a29716fd6d3f2fe128fae067/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d6175677573747573\"\
+    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-augustus\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/f00d9c84f9567045a6f64ca45bb524ba8b825def2d65b2d01198055f6cba9c46/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d6175677573747573\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/f00d9c84f9567045a6f64ca45bb524ba8b825def2d65b2d01198055f6cba9c46/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d6175677573747573\"\
+    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-augustus\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/955c466d3c55ba981c6418256a37775f3ba366d3272280c174ef9e6ed43f5d27/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d6175677573747573\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/955c466d3c55ba981c6418256a37775f3ba366d3272280c174ef9e6ed43f5d27/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d6175677573747573\"\
+    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-augustus\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-singularity-augustus\"\
+    \ class=\"anchor\" href=\"#singularity-augustus\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>singularity-augustus</h1>\n<p>Singularity\
+    \ recipe for AUGUSTUS.</p>\n<h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\"\
+    \ class=\"anchor\" href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installing\
+    \ the container on Bridges 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code>\
+    \ file</li>\n<li>and the <code>augustus</code> script</li>\n</ul>\n<p>to <code>/opt/packages/AUGUSTUS/3.4.0</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/AUGUSTUS</code>\
+    \ as <code>3.4.0.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
+    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing Center</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
+    \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
+    \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 3
+  topics:
+  - singularity
+  - bioinformatics
+  updated_at: 1631406538.0
 pscedu/singularity-aws-cli:
   data_format: 2
   description: The AWS Command Line Interface (CLI) is a unified tool to manage your
@@ -52057,6 +52764,70 @@ pscedu/singularity-bwa:
   - bioinformatics
   - singularity
   updated_at: 1629083200.0
+pscedu/singularity-checkm:
+  data_format: 2
+  description: CheckM provides a set of tools for assessing the quality of genomes
+    recovered from isolates, single cells, or metagenomes.
+  filenames:
+  - 1.1.3/Singularity
+  full_name: pscedu/singularity-checkm
+  latest_release: v1.1.3
+  readme: "<p><a href=\"https://github.com/pscedu/singularity-checkm/actions/workflows/main.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-checkm/actions/workflows/main.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://github.com/pscedu/singularity-checkm/actions/workflows/pretty.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-checkm/actions/workflows/pretty.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/5c36d6207c7a83b2505f3c3da9648b2bde15022fb54c87c7d694d8aef86ba345/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d636865636b6d\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/5c36d6207c7a83b2505f3c3da9648b2bde15022fb54c87c7d694d8aef86ba345/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d636865636b6d\"\
+    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-checkm\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/39b062bc9d3f1163144f8faf52a104ed79d50fb16f21cf3ab1bf888d2f31ffff/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d636865636b6d\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/39b062bc9d3f1163144f8faf52a104ed79d50fb16f21cf3ab1bf888d2f31ffff/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d636865636b6d\"\
+    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-checkm\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/b2c55512b9909564abb8abf9ff50100608717f5342c5fcce30438dcc63f8eeeb/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d636865636b6d\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/b2c55512b9909564abb8abf9ff50100608717f5342c5fcce30438dcc63f8eeeb/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d636865636b6d\"\
+    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-checkm\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/4e65c1f34358c555baa1e01b53582475c3621a1e12ad015e81ad9fc5dbc0a221/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d636865636b6d\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/4e65c1f34358c555baa1e01b53582475c3621a1e12ad015e81ad9fc5dbc0a221/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d636865636b6d\"\
+    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-checkm\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-singularity-checkm\"\
+    \ class=\"anchor\" href=\"#singularity-checkm\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>singularity-checkm</h1>\n<p><a\
+    \ href=\"https://camo.githubusercontent.com/93019bef04184f04502c095cd35e9340a581b7ead3193c4e7b387aa845b96f59/687474703a2f2f65636f67656e6f6d6963732e6769746875622e696f2f436865636b4d2f696d672f636865636b6d2e706e67\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/93019bef04184f04502c095cd35e9340a581b7ead3193c4e7b387aa845b96f59/687474703a2f2f65636f67656e6f6d6963732e6769746875622e696f2f436865636b4d2f696d672f636865636b6d2e706e67\"\
+    \ width=\"50%\" data-canonical-src=\"http://ecogenomics.github.io/CheckM/img/checkm.png\"\
+    \ style=\"max-width:100%;\"></a></p>\n<p>Singularity recipe for <a href=\"http://ecogenomics.github.io/CheckM/\"\
+    \ rel=\"nofollow\">CheckM</a>.</p>\n<h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\"\
+    \ class=\"anchor\" href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installing\
+    \ the container on Bridges 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code>\
+    \ file</li>\n<li>and the <code>checkm</code> script</li>\n</ul>\n<p>to <code>/opt/packages/CheckM/1.1.3</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/checkm</code>\
+    \ as <code>1.1.3.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
+    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing Center</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
+    \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
+    \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 3
+  topics:
+  - singularity
+  - bioinformatics
+  updated_at: 1631305978.0
 pscedu/singularity-cutadapt:
   data_format: 2
   description: cutadapt removes adapter sequences from sequencing reads.
@@ -52614,6 +53385,78 @@ pscedu/singularity-gatk:
   - singularity
   - bioinformatics
   updated_at: 1628991719.0
+pscedu/singularity-genemark-es:
+  data_format: 2
+  description: 'Novel genomes can be analyzed by GeneMark-ES, an algorithm utilizing
+    models parameterized by unsupervised training. Notably, GeneMark-ES has a special
+    option for fungal genomes to account for fungal-specific intron organization. '
+  filenames:
+  - 4.65/Singularity
+  full_name: pscedu/singularity-genemark-es
+  latest_release: null
+  readme: "<p><a href=\"https://github.com/pscedu/singularity-genemark-es/actions/workflows/main.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-genemark-es/actions/workflows/main.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://github.com/pscedu/singularity-genemark-es/actions/workflows/pretty.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-genemark-es/actions/workflows/pretty.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/268bf28da5aff3f043cd0714535301fca5138222750e4a5728a5c25e2e832847/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d67656e656d61726b2d6573\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/268bf28da5aff3f043cd0714535301fca5138222750e4a5728a5c25e2e832847/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d67656e656d61726b2d6573\"\
+    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-genemark-es\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/23ee7cd28d76bd5cef900d9662da76f2c280c918c273ee7fc6998621242d6e5b/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d67656e656d61726b2d6573\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/23ee7cd28d76bd5cef900d9662da76f2c280c918c273ee7fc6998621242d6e5b/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d67656e656d61726b2d6573\"\
+    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-genemark-es\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/a38b44e2f6b70d1fd02cecabb5e1e98970228f7141ff2c262872ebd57619e047/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d67656e656d61726b2d6573\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/a38b44e2f6b70d1fd02cecabb5e1e98970228f7141ff2c262872ebd57619e047/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d67656e656d61726b2d6573\"\
+    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-genemark-es\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/74af0a874b012a1b673b1febc99b28067b350741dc8da571c81f4e6231b52442/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d67656e656d61726b2d6573\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/74af0a874b012a1b673b1febc99b28067b350741dc8da571c81f4e6231b52442/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d67656e656d61726b2d6573\"\
+    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-genemark-es\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-singularity-genemark-es\"\
+    \ class=\"anchor\" href=\"#singularity-genemark-es\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>singularity-genemark-es</h1>\n\
+    <p>Singularity recipe for GeneMark-ES.</p>\n<h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\"\
+    \ class=\"anchor\" href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installing\
+    \ the container on Bridges 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code>\
+    \ file</li>\n<li>and the <code>countFullySupportedTranscripts.py</code>, <code>flag_anchored_elements.py</code>,\
+    \ <code>generateReport.py</code>, <code>predictionAnalysis.py</code>, <code>selectSupportedSubsets.py</code>,\
+    \ <code>bed_to_gff.pl</code>, <code>bp_seq_select.pl</code>, <code>build_mod.pl</code>,\
+    \ <code>calc_introns_from_gtf.pl</code>, <code>change_path_in_perl_scripts.pl</code>,\
+    \ <code>compare_intervals_exact.pl</code>, <code>gc_distr.pl</code>, <code>get_below_gc.pl</code>,\
+    \ <code>get_sequence_from_GTF.pl</code>, <code>gmes_petap.pl</code>, <code>hc_exons2hints.pl</code>,\
+    \ <code>histogram.pl</code>, <code>make_nt_freq_mat.pl</code>, <code>parse_ET.pl</code>,\
+    \ <code>parse_by_introns.pl</code>, <code>parse_gibbs.pl</code>, <code>parse_set.pl</code>,\
+    \ <code>predict_genes.pl</code>, <code>reformat_gff.pl</code>, <code>rescale_gff.pl</code>,\
+    \ <code>rnaseq_introns_to_gff.pl</code>, <code>run_es.pl</code>, <code>run_hmm_pbs.pl</code>,\
+    \ <code>scan_for_bp.pl</code>, <code>star_to_gff.pl</code> and <code>verify_evidence_gmhmm.pl</code>\
+    \ scripts</li>\n</ul>\n<p>to <code>/opt/packages/GeneMark-ES/4.8.25</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/Genemark-ES</code>\
+    \ as <code>4.8.25.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
+    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing Center</a> in the <a href=\"https://www.cmu.edu/genemark-ess/\"\
+    \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
+    \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 3
+  topics:
+  - singularity
+  - bioinformatics
+  updated_at: 1631406552.0
 pscedu/singularity-gent:
   data_format: 2
   description: 'This program computes the cross entropy for groups of sequences  that
@@ -54409,6 +55252,8 @@ pscedu/singularity-star:
   latest_release: v2.7.9a
   readme: "<p><a href=\"https://github.com/pscedu/singularity-star/actions/workflows/main.yml/badge.svg\"\
     \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-star/actions/workflows/main.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://github.com/pscedu/singularity-star/actions/workflows/pretty.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-star/actions/workflows/pretty.yml/badge.svg\"\
     \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/20882b7d30c437aaa54b3f20556d8c7f04d76904ca2b8ed42ce00a9aee8d3b08/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d73746172\"\
     \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/20882b7d30c437aaa54b3f20556d8c7f04d76904ca2b8ed42ce00a9aee8d3b08/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d73746172\"\
     \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-star\"\
@@ -54429,7 +55274,7 @@ pscedu/singularity-star:
     \ href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"true\"><span aria-hidden=\"\
     true\" class=\"octicon octicon-link\"></span></a>Installing the container on Bridges\
     \ 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code> file</li>\n<li>and the\
-    \ <code>star</code> script</li>\n</ul>\n<p>to <code>/opt/packages/star/2.7.6a</code>.</p>\n\
+    \ <code>STAR</code> script</li>\n</ul>\n<p>to <code>/opt/packages/star/2.7.6a</code>.</p>\n\
     <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/star</code>\
     \ as <code>2.7.6a.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
     \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
@@ -54457,7 +55302,7 @@ pscedu/singularity-star:
   topics:
   - singularity
   - bioinformatics
-  updated_at: 1629828765.0
+  updated_at: 1631408318.0
 pscedu/singularity-tiger:
   data_format: 2
   description: Target/Integrative Genetic Element Retriever
@@ -54703,7 +55548,7 @@ pscedu/singularity-viennarna:
   topics:
   - singularity
   - bioinformatics
-  updated_at: 1628992096.0
+  updated_at: 1631407623.0
 pscedu/singularity-visidata:
   data_format: 2
   description: 'VisiData is an interactive multitool for tabular data. '
@@ -60226,7 +61071,7 @@ sylabs/singularity:
   - containers
   - hpc
   - linux
-  updated_at: 1631254374.0
+  updated_at: 1631288994.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
@@ -61004,7 +61849,7 @@ tikk3r/lofar-grid-hpccloud:
   - Singularity.lofar_sksp_ddf_public
   - Singularity.lofar_sksp
   full_name: tikk3r/lofar-grid-hpccloud
-  latest_release: v3.2
+  latest_release: v3.3
   readme: '<p><a href="https://camo.githubusercontent.com/5f618187158129a12605b61c2558a97b7014bf61a63dcbb58ecc23d53ade59a4/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f762f72656c656173652f74696b6b33722f6c6f6661722d677269642d687063636c6f75643f736f72743d73656d766572"
     target="_blank" rel="nofollow"><img src="https://camo.githubusercontent.com/5f618187158129a12605b61c2558a97b7014bf61a63dcbb58ecc23d53ade59a4/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f762f72656c656173652f74696b6b33722f6c6f6661722d677269642d687063636c6f75643f736f72743d73656d766572"
     data-canonical-src="https://img.shields.io/github/v/release/tikk3r/lofar-grid-hpccloud?sort=semver"
@@ -61086,7 +61931,7 @@ tikk3r/lofar-grid-hpccloud:
   stargazers_count: 2
   subscribers_count: 3
   topics: []
-  updated_at: 1629363312.0
+  updated_at: 1631304541.0
 timkphd/Containers:
   data_format: 2
   description: null
