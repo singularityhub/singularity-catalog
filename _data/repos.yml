@@ -10402,7 +10402,7 @@ ISU-HPC/mysql:
   stargazers_count: 1
   subscribers_count: 3
   topics: []
-  updated_at: 1630430182.0
+  updated_at: 1631556979.0
 Irfanwustl/Research_code:
   data_format: 2
   description: null
@@ -10497,7 +10497,7 @@ J35P312/fluffy:
   stargazers_count: 2
   subscribers_count: 5
   topics: []
-  updated_at: 1631272019.0
+  updated_at: 1631543739.0
 JCSDA-internal/containers:
   data_format: 2
   description: Contains tools for building and distributing the JEDI/JCSDA Containers
@@ -18348,6 +18348,7 @@ ReproNim/containers:
   - images/bids/Singularity.bids-baracus--1.1.4
   - images/bids/Singularity.bids-nipypelines--0.3.0
   - images/bids/Singularity.bids-fmriprep--1.5.0
+  - images/bids/Singularity.bids-rshrf--1.5.8
   - images/bids/Singularity.bids-spm--0.0.15
   - images/bids/Singularity.bids-fmriprep--20.0.6
   - images/bids/Singularity.bids-hippunfold--0.5.11
@@ -18669,7 +18670,7 @@ ReproNim/containers:
   stargazers_count: 14
   subscribers_count: 7
   topics: []
-  updated_at: 1630523988.0
+  updated_at: 1631520450.0
 ResearchIT/MolecularGraphicsToolbox:
   data_format: 2
   description: null
@@ -19289,6 +19290,277 @@ SODALITE-EU/application-optimisation:
   subscribers_count: 6
   topics: []
   updated_at: 1631168499.0
+SSCHAcode/python-sscha:
+  data_format: 2
+  description: The python implementation of the Stochastic Self-Consistent Harmonic
+    Approximation (SSCHA).
+  filenames:
+  - docker/Singularity.def
+  full_name: SSCHAcode/python-sscha
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-introduction" class="anchor" href="#introduction" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h1>
+
+    <p>Website for more information <a href="http://sscha.eu/" rel="nofollow">sscha.eu</a>.</p>
+
+    <h2>
+
+    <a id="user-content-what-is-python-sscha" class="anchor" href="#what-is-python-sscha"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What
+    is python-sscha?</h2>
+
+    <p>python-sscha is both a python library and a stand-alone program to simulate
+    quantum and thermal fluctuations in solid systems.</p>
+
+    <h2>
+
+    <a id="user-content-why-do-i-need-python-sscha" class="anchor" href="#why-do-i-need-python-sscha"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why
+    do I need python-sscha?</h2>
+
+    <p>If you are simulating transport or thermal properties of materials, phase diagrams,
+    or phonon-related properties of materials, you need python-sscha.
+
+    It is a package that enables you to include the effect of both thermal and quantum
+    phonon fluctuations into your <em>ab initio</em> simulations.</p>
+
+    <p>The method used by this package is the  Stochastic self-consistent Harmonic
+    Approximation (SSCHA). The SSCHA is a full-quantum method that optimizes the nuclear
+    wave-function (or density matrix at finite temperature) to minimize the free energy.
+
+    In this way, you can simulate highly anharmonic systems, like those close to a
+    second-order phase transition (as charge density waves and thermoelectric materials).
+
+    Despite the full quantum and thermal nature of the algorithm, the overall computational
+    cost is comparable to standard classical molecular dynamics. Since the algorithm
+    correctly exploits the symmetries of the crystal, it is also much cheaper.</p>
+
+    <p>python-sscha comes both as a python library that can be run inside your workflows
+    and as stand-alone software, initialized by input scripts with the same syntax
+    as Quantum ESPRESSO.</p>
+
+    <p>You can couple it with any <em>ab initio</em> engine for force and energy calculations.
+    It can interact through the Atomic Simulation Environment (ASE) and has an implemented
+    interface for automatic submission of jobs in a remote cluster.</p>
+
+    <p>Moreover, it is easy to use, with short input files highly human-readable.
+
+    What are you waiting for? Download and install python-sscha, and start enjoying
+    the Tutorials!</p>
+
+    <h1>
+
+    <a id="user-content-how-to-install" class="anchor" href="#how-to-install" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>How to install</h1>
+
+    <p>The SSCHA code is a collection of 2 python packages: CellConstructor and python-sscha.
+
+    In this guide, we refer to the installation of python-sscha.</p>
+
+    <h2>
+
+    <a id="user-content-requirements" class="anchor" href="#requirements" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Requirements</h2>
+
+    <p>To install python-sscha you need:</p>
+
+    <ol>
+
+    <li>python (either 2.7 or 3.*)</li>
+
+    <li>numpy</li>
+
+    <li>scipy</li>
+
+    <li>matplotlib</li>
+
+    <li>Lapack</li>
+
+    <li>Blas</li>
+
+    <li>gfortran (or any fortran compiler)</li>
+
+    <li>CellConstructor</li>
+
+    </ol>
+
+    <p>For python, we strongly recommend using the anaconda distribution, that already
+    comes with numerical packages correctly compiled to exploit multithreading.</p>
+
+    <p>The numpy, scipy and matplotlib are python packages. These are usually provided
+    with a new installation
+
+    of python distributions like anaconda. Lapack and Blas are needed for compiling
+    the FORTRAN code (together with a FORTRAN compiler like gfortran).
+
+    In many Linux distributions like ubuntu they can be installed as</p>
+
+    <p>.. code-block:: console</p>
+
+    <p>sudo apt-get install libblas-dev liblapack-dev liblapacke-dev gfortran</p>
+
+    <p>Note that this specific command may change in time.</p>
+
+    <p>Together with these mandatory requirements (otherwise, the code will not compile
+    correctly or raise an exception at the startup), we
+
+    strongly recommend installing also the following libraries:</p>
+
+    <ol>
+
+    <li>Atomic Simulation Environment (ASE)</li>
+
+    <li>SPGLIB</li>
+
+    </ol>
+
+    <p>If these packages are available, they will enable the automatic cluster/local
+    calculation of forces (ASE) and the symmetry recognition in the supercell (SPGLIB).</p>
+
+    <p>To install all the python dependencies (and recommended) automatically, you
+    may just run:</p>
+
+    <p>.. code-block:: console</p>
+
+    <p>pip install -r requirements.txt</p>
+
+    <h2>
+
+    <a id="user-content-installation-from-pip" class="anchor" href="#installation-from-pip"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation
+    from pip</h2>
+
+    <p>The easiest way to install python-sscha (and CellConstructor) is through the
+    python package manager:</p>
+
+    <p>.. code-block:: console</p>
+
+    <p>pip install python-sscha</p>
+
+    <p>Eventually, you can append the --user option to install the package only for
+    the user (without requiring administrator powers).
+
+    Pip will check for requirements automatically and install them. This method only
+    works if pip is already installed with python.</p>
+
+    <h2>
+
+    <a id="user-content-installation-from-source" class="anchor" href="#installation-from-source"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation
+    from source</h2>
+
+    <p>Once all the dependences of the codes are satisfied, you can unzip the source
+    code downloaded from the website.
+
+    Then run, inside the directory that contains the setup.py script, the following
+    command:</p>
+
+    <p>.. code-block:: console</p>
+
+    <p>python setup.py install</p>
+
+    <p>As for the pip installation, you may append the --user option to install the
+    package only for the user (without requiring administrator powers).</p>
+
+    <h2>
+
+    <a id="user-content-install-with-intel-fortran-compiler" class="anchor" href="#install-with-intel-fortran-compiler"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install
+    with Intel FORTRAN compiler</h2>
+
+    <p>The setup.py script works automatically with the GNU FORTRAN compiler. However,
+    due to some differences in linking lapack,
+
+    to use the intel compiler you need to edit a bit the setup.py script:</p>
+
+    <p>In this case, you need to delete the lapack linking from the
+
+    setup.py and include the -mkl as linker option.
+
+    Note that you must force to use the same liker compiler as the one used for the
+    compilation.</p>
+
+    <h2>
+
+    <a id="user-content-install-with-a-specific-compiler-path" class="anchor" href="#install-with-a-specific-compiler-path"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install
+    with a specific compiler path</h2>
+
+    <p>This can be achieved by specifying the environment variables on which setup.py
+    relies:</p>
+
+    <ol>
+
+    <li>CC (C compiler)</li>
+
+    <li>FC (Fortran compiler)</li>
+
+    <li>LDSHARED (linking)</li>
+
+    </ol>
+
+    <p>If we want to use a custom compiler in /path/to/fcompiler we may run the setup
+    as:</p>
+
+    <p>.. code-block:: console</p>
+
+    <p>FC=/path/to/fcompiler LDSHARED=/path/to/fcompiler python setup.py install</p>
+
+    <p>A specific setup.py script is provided to install it easily in FOSS clusters.</p>
+
+    <h1>
+
+    <a id="user-content-quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Quick start</h1>
+
+    <p>To quickly start using the code, we recommend using the jupyter notebooks with
+    examples we provide in the Tutorials directory of the source code.</p>
+
+    <p>Tutorials are organized as follows:</p>
+
+    <ol>
+
+    <li>Setup the first calculation: PbTe tutorial. Here you learn how to set up a
+    SSCHA calculation starting just with the structure (we provide a .cif file of
+    the PbTe at high temperature). The tutorial will guide you step by step. You will
+    learn how to: prepare the starting data needed for the SSCHA calculation, generate
+    a random ensemble, save the ensemble and prepare input files for your favorite
+    ab-initio code, read back the energies and the forces inside SSCHA, run a SSCHA
+    minimization. You will also learn how to use ASE and the Cluster module to automatize
+    the calculation of the ensemble and submit it to a HPC system.</li>
+
+    <li>Automatic relaxation with a force field: SnTe_ToyModel. Here, we show how
+    to use a force-field for a SSCHA calculation, running everything on your computer.
+    We also will explain how to calculate the free energy hessian for second-order
+    phase transitions, and study a phase transition as a function of temperature.</li>
+
+    <li>Variable cell relaxation: LaH10 tutorial. Here you learn how to perform an
+    automatic calculation with a variable cell. You will exploit the quantum effect
+    to search the high-temperature superconductive phase (Fm-3m) of LaH10 below 200
+    GPa, starting from a distorted structure.</li>
+
+    <li>Hessian matrix calculation for second-order phase transitions: H3S tutorial.
+    Here you reproduce the calculation of the Hessian of the free energy to assert
+    the stability of the H3S phase.</li>
+
+    <li>Spectral properties: Spectral_Properties. In this tutorial, we explain how
+    to use the post-processing utilities of the SSCHA to calculate the phonon spectral
+    function, and computing phonon lifetimes, and plotting interacting phonon dispersion.
+    We provide an ensemble for PbTe already computed ab-initio.</li>
+
+    </ol>
+
+    <p>The jupyter notebooks are interactive, to quickly start with your simulation,
+    pick the tutorial that resembles the kind of calculation you want to run, and
+    simply edit it directly in the notebook.</p>
+
+    '
+  stargazers_count: 13
+  subscribers_count: 4
+  topics: []
+  updated_at: 1631617738.0
 Sarah145/batch_correct:
   data_format: 2
   description: Comparison of batch correction methods for scRNA-seq data - basically
@@ -20191,8 +20463,8 @@ UPPMAX/install-methods:
 
     <h3>
 
-    <a id="user-content-appsbioinfo" class="anchor" href="#appsbioinfo" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>apps/bioinfo/</h3>
+    <a id="user-content-bioinfo" class="anchor" href="#bioinfo" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>bioinfo/</h3>
 
     <p>Bioinformatics applications.</p>
 
@@ -20221,10 +20493,10 @@ UPPMAX/install-methods:
 
     <h3>
 
-    <a id="user-content-data_uppnex" class="anchor" href="#data_uppnex" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>data_uppnex/</h3>
+    <a id="user-content-data" class="anchor" href="#data" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>data/</h3>
 
-    <p>Installation instructions for databases under <code>/sw/data/uppnex/</code>.  Database
+    <p>Installation instructions for databases under <code>/sw/data/</code>.  Database
 
     directories containing <code>*-install-README.md</code> files are updated manually.
 
@@ -20253,7 +20525,7 @@ UPPMAX/install-methods:
   stargazers_count: 3
   subscribers_count: 5
   topics: []
-  updated_at: 1631210528.0
+  updated_at: 1631648367.0
 UniversalDataTool/universal-data-tool:
   data_format: 2
   description: Collaborate & label any type of data, images, text, or documents, in
@@ -25503,7 +25775,7 @@ baxpr/freesurfer-singularity:
   stargazers_count: 1
   subscribers_count: 2
   topics: []
-  updated_at: 1631304289.0
+  updated_at: 1631568867.0
 baxpr/makerois-PMAT:
   data_format: 2
   description: null
@@ -26795,6 +27067,63 @@ buregab/openspiel_singularity:
   subscribers_count: 1
   topics: []
   updated_at: 1604380357.0
+c3se/containers:
+  data_format: 2
+  description: 'The main platform for sharing all the information about AI/HPC-related
+    containers at C3SE. See also the included tutorial to get started. '
+  filenames:
+  - Julia/Singularity.Julia-1.6.2
+  - FINE-Marine/Singularity.FINE-Marine-7.2
+  - Ubuntu/Singularity.Ubuntu-bionic-20210827
+  - ambertools/Singularity.ambertools-20
+  - TensorFlow/Singularity.TensorFlow-v2.1.0-tf2-py3-NGC-R20.03
+  - TensorFlow/Singularity.TensorFlow-v2.3.1-tf2-py3-GPU-Jupyter
+  - TensorFlow/Singularity.TensorFlow-v2.2.0-tf2-py3-NGC-R20.08
+  - FDTD/Singularity.FDTD-8.19.1541
+  - DIANA/Singularity.DIANA-10.3
+  - FEniCS/Singularity.FEniCS
+  - CentOS/Singularity.CentOS-8.3.2011
+  - SonnetSuite/Singularity.SonnetSuite-17.52.1
+  - PyTorch/Singularity.PyTorch-1.7.0
+  - PyTorch/Singularity.PyTorch-1.5.0
+  - PyTorch/Singularity.PyTorch-1.6.0
+  - ANSA/Singularity.ANSA-20.1.0
+  - Conda/Singularity.miniconda-4.10.3
+  - Conda/Singularity.anaconda-2021.05
+  full_name: c3se/containers
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-container-recipes-provided-at-c3se-clusters" class="anchor"
+    href="#container-recipes-provided-at-c3se-clusters" aria-hidden="true"><span aria-hidden="true"
+    class="octicon octicon-link"></span></a>Container recipes provided at C3SE clusters</h1>
+
+    <p>This repository holds the recipes of the centrally provided Singularity containers
+    at C3SE''s clusters.
+
+    They are also useable as a reference for users who wish to build their own Singularity
+    containers.</p>
+
+    <h2>
+
+    <a id="user-content-missing-containers-updates-and-troubleshootin" class="anchor"
+    href="#missing-containers-updates-and-troubleshootin" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Missing containers,
+    updates, and troubleshootin</h2>
+
+    <p>We continuously add more packages to this repository. If you can''t find a
+    relevant container for your needs, or in the case of encountering any errors or
+    deprecated features in the material, feel free to contact us: <a href="mailto:support@c3se.chalmers.se">support@c3se.chalmers.se</a>
+    or open a pull-request.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 4
+  topics:
+  - singularity-containers
+  - docker
+  - hpc
+  updated_at: 1631646083.0
 caoky8989/LVAD:
   data_format: 2
   description: null
@@ -29948,7 +30277,7 @@ dcgc-bfx/singularity-base:
   stargazers_count: 0
   subscribers_count: 4
   topics: []
-  updated_at: 1631272941.0
+  updated_at: 1631532608.0
 dcgc-bfx/singularity-base-conda:
   data_format: 2
   description: null
@@ -35624,7 +35953,7 @@ gnetsanet/crispedit:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1631344428.0
+  updated_at: 1631673344.0
 gnperdue/singularity_imgs:
   data_format: 2
   description: Singularity images for deep learning software
@@ -36013,7 +36342,7 @@ gpuhackathons-org/gpubootcamp:
     rel="nofollow">OpenACC Slack Channel</a>.</p>
 
     '
-  stargazers_count: 101
+  stargazers_count: 110
   subscribers_count: 9
   topics:
   - machine-learning
@@ -36028,7 +36357,7 @@ gpuhackathons-org/gpubootcamp:
   - rapidsai
   - openmp
   - ai4hpc
-  updated_at: 1631178479.0
+  updated_at: 1631675235.0
 granek/jupyter-MIC-2021:
   data_format: 2
   description: null
@@ -41055,7 +41384,7 @@ jordancaraballo/slump-detection:
   data_format: 2
   description: null
   filenames:
-  - Singularity.def
+  - requirements/Singularity.def
   full_name: jordancaraballo/slump-detection
   latest_release: null
   readme: "<h1>\n<a id=\"user-content-slump-detection\" class=\"anchor\" href=\"#slump-detection\"\
@@ -41172,13 +41501,9 @@ jordancaraballo/slump-detection:
     \ class=\"anchor\" href=\"#project-specific-information\" aria-hidden=\"true\"\
     ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Project\
     \ Specific Information</h2>\n<p>Data resides under:</p>\n<div class=\"highlight\
-    \ highlight-source-shell\"><pre>/att/nobackup/mwooten3/EVHR_requests/_deliver/EWebbRequest</pre></div>\n\
-    <div class=\"highlight highlight-source-shell\"><pre>[1:27 PM] Caraballo-Vega,\
-    \ Jordan Alexis (GSFC-5870)\nssh adaptlogin\n\n[1:27 PM] Caraballo-Vega, Jordan\
-    \ Alexis (GSFC-5870)\nssh gpulogin1\n\n[1:28 PM] Caraballo-Vega, Jordan Alexis\
-    \ (GSFC-5870)\nmodule load anaconda\n\n[1:28 PM] Caraballo-Vega, Jordan Alexis\
-    \ (GSFC-5870)\nconda create --name slump-detection-11.1 --clone /att/nobackup/jacaraba/.conda/envs/slump-detection-11.1\n\
-    \n\nconda create --name slump-detection-11.1 --clone /att/nobackup/jacaraba/.conda/envs/slump-detection-11.1</pre></div>\n\
+    \ highlight-source-shell\"><pre>/att/nobackup/username/EVHR_requests/_deliver/EWebbRequest</pre></div>\n\
+    <div class=\"highlight highlight-source-shell\"><pre>ssh adaptlogin\nssh gpulogin1\n\
+    module load anaconda\nconda create --name slump-detection-11.1 --clone /att/nobackup/username/.conda/envs/slump-detection-11.1</pre></div>\n\
     <h2>\n<a id=\"user-content-anaconda-environment\" class=\"anchor\" href=\"#anaconda-environment\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
     ></span></a>Anaconda environment</h2>\n<div class=\"highlight highlight-source-shell\"\
@@ -41194,23 +41519,22 @@ jordancaraballo/slump-detection:
     pl-pds\">\"</span>git+https://github.com/philferriere/cocoapi.git#egg=pycocotools&amp;subdirectory=PythonAPI<span\
     \ class=\"pl-pds\">\"</span></span>\ngit clone https://github.com/facebookresearch/detectron2\
     \ detectron2_repo <span class=\"pl-k\">&amp;&amp;</span> pip install -e detectron2_repo</pre></div>\n\
-    <p>I think that we need to add nvcc</p>\n<p>conda install pytorch torchvision\
-    \ torchaudio cudatoolkit=11.1 -c pytorch -c nvidia\nconda create -n rapids-21.06\
-    \ -c rapidsai -c nvidia -c conda-forge     rapids-blazing=21.06 python=3.7 cudatoolkit=11.2\
-    \ nvcc_linux-64 nccl ipykernel ipywidgets matplotlib geopandas iteration_utilities</p>\n\
-    <p>conda create -n rapids-21.06 -c rapidsai -c nvidia -c conda-forge -c pytorch\
-    \ rapids-blazing=21.06 python=3.7 cudatoolkit=11.1 ipykernel ipywidgets matplotlib\
-    \ geopandas pytorch torchvision torchaudio cudatoolkit=11.1</p>\n<h2>\n<a id=\"\
-    \" class=\"anchor\" href=\"#\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
-    \ class=\"octicon octicon-link\"></span></a>=======================</h2>\n<p>Trying\
-    \ this one</p>\n<div class=\"highlight highlight-source-shell\"><pre>conda config\
-    \ --add channels conda-forge\nconda config --set channel_priority strict\nconda\
-    \ create -y -n slump-detection-11.1 rioxarray cupy cudatoolkit=11.1 dask-cuda\
-    \ cudnn cutensor nccl ipykernel ipywidgets matplotlib geopandas iteration_utilities\
-    \ gcc_linux-64</pre></div>\n<div class=\"highlight highlight-source-shell\"><pre>pip\
-    \ install cython\npip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0\
-    \ -f https://download.pytorch.org/whl/torch_stable.html\npip install <span class=\"\
-    pl-s\"><span class=\"pl-pds\">'</span>git+https://github.com/facebookresearch/fvcore<span\
+    <p>Adding NCCL</p>\n<div class=\"highlight highlight-source-shell\"><pre>conda\
+    \ install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia\n\
+    conda create -n rapids-21.06 -c rapidsai -c nvidia -c conda-forge     rapids-blazing=21.06\
+    \ python=3.7 cudatoolkit=11.2 nvcc_linux-64 nccl ipykernel ipywidgets matplotlib\
+    \ geopandas iteration_utilities</pre></div>\n<p>or</p>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre>conda create -n rapids-21.06 -c rapidsai -c nvidia\
+    \ -c conda-forge -c pytorch rapids-blazing=21.06 python=3.7 cudatoolkit=11.1 ipykernel\
+    \ ipywidgets matplotlib geopandas pytorch torchvision torchaudio cudatoolkit=11.1\
+    \ </pre></div>\n<p>You could also enhance your kernel with:</p>\n<div class=\"\
+    highlight highlight-source-shell\"><pre>conda config --add channels conda-forge\n\
+    conda config --set channel_priority strict\nconda create -y -n slump-detection-11.1\
+    \ rioxarray cupy cudatoolkit=11.1 dask-cuda cudnn cutensor nccl ipykernel ipywidgets\
+    \ matplotlib geopandas iteration_utilities gcc_linux-64</pre></div>\n<div class=\"\
+    highlight highlight-source-shell\"><pre>pip install cython\npip install torch==1.9.0+cu111\
+    \ torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html\n\
+    pip install <span class=\"pl-s\"><span class=\"pl-pds\">'</span>git+https://github.com/facebookresearch/fvcore<span\
     \ class=\"pl-pds\">'</span></span>\npip install <span class=\"pl-s\"><span class=\"\
     pl-pds\">\"</span>git+https://github.com/philferriere/cocoapi.git#egg=pycocotools&amp;subdirectory=PythonAPI<span\
     \ class=\"pl-pds\">\"</span></span>\npip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu111/torch1.9/index.html\n\
@@ -41231,7 +41555,7 @@ jordancaraballo/slump-detection:
   stargazers_count: 1
   subscribers_count: 1
   topics: []
-  updated_at: 1630690224.0
+  updated_at: 1631617813.0
 josephwkania/radio_transients:
   data_format: 2
   description: 'Singularity containers with common radio transient search software.  '
@@ -42272,6 +42596,7 @@ khanlab/tar2bids:
   description: null
   filenames:
   - Singularity.v0.0.5
+  - Singularity.v0.06b
   - Singularity.0.0.2c
   - Singularity.v0.0.5f
   - Singularity.v0.0.5g
@@ -42304,7 +42629,7 @@ khanlab/tar2bids:
   - Singularity.0.0.2b
   - Singularity.0.0.2g
   full_name: khanlab/tar2bids
-  latest_release: v0.0.6a
+  latest_release: v0.06b
   readme: "<h1>\n<a id=\"user-content-tar2bids\" class=\"anchor\" href=\"#tar2bids\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
     ></span></a>tar2bids</h1>\n<pre><code>Runs dicom tarball(s) to BIDS conversion\
@@ -42322,7 +42647,7 @@ khanlab/tar2bids:
   stargazers_count: 4
   subscribers_count: 2
   topics: []
-  updated_at: 1629601700.0
+  updated_at: 1631675333.0
 klm122/w2l:
   data_format: 2
   description: w2l
@@ -45663,6 +45988,17 @@ mmirko/singularitytest:
   subscribers_count: 1
   topics: []
   updated_at: 1605257877.0
+mmore500/conduit-quality-of-service-writeup:
+  data_format: 2
+  description: null
+  filenames:
+  - pin/conduit-binder/third-party/force-cover/Singularity
+  full_name: mmore500/conduit-quality-of-service-writeup
+  latest_release: null
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1631675356.0
 mmore500/presentation-template:
   data_format: 2
   description: A LaTeX Beamer template for presentations using the Metropolis theme.
@@ -47175,10 +47511,10 @@ nservant/HiC-Pro:
     Logs: logs/dixon_2M/ice_1000000.log\nLogs: logs/dixon_2M_2/ice_500000.log\nLogs:\
     \ logs/dixon_2M_2/ice_1000000.log\n\nreal\t2m15,736s\nuser\t4m3,277s\nsys\t0m24,423s\n\
     \n</code></pre>\n"
-  stargazers_count: 249
+  stargazers_count: 250
   subscribers_count: 20
   topics: []
-  updated_at: 1630568850.0
+  updated_at: 1631544480.0
 nterhoeven/reper:
   data_format: 2
   description: reper - Genome-wide identification, classification and quantification
@@ -47419,16 +47755,32 @@ oist/GenomicBreaks:
     https://github.com/oist/plessy_pairwiseGenomeComparison\">pariwise genome alignment\
     \ pipeline</a>.</p>\n<h2>\n<a id=\"user-content-installation\" class=\"anchor\"\
     \ href=\"#installation\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a>Installation</h2>\n<p>The following should work:</p>\n\
-    <pre><code>Rscript -e 'remotes::install_github(\"oist/GenomicBreaks\", repos=BiocManager::repositories())'\n\
-    </code></pre>\n<h2>\n<a id=\"user-content-in-brief\" class=\"anchor\" href=\"\
-    #in-brief\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>In brief:</h2>\n<p>A pairwise alignment of two genomes is loaded in\
-    \ <code>GBreaks</code> objects wrapping\nthe <code>GRanges</code> class.  Here\
-    \ is an example:</p>\n<pre><code>GRanges object with 11 ranges and 2 metadata\
-    \ columns:\n       seqnames            ranges strand |                  query\
-    \     score\n          &lt;Rle&gt;         &lt;IRanges&gt;  &lt;Rle&gt; |    \
-    \          &lt;GRanges&gt; &lt;integer&gt;\n   [1]     chr1 11234702-11242676\
+    octicon octicon-link\"></span></a>Installation</h2>\n<h3>\n<a id=\"user-content-install-the-package\"\
+    \ class=\"anchor\" href=\"#install-the-package\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Install the package.</h3>\n<p>The\
+    \ following should work:</p>\n<pre><code>Rscript -e 'remotes::install_github(\"\
+    oist/GenomicBreaks\", repos=BiocManager::repositories())'\n</code></pre>\n<h3>\n\
+    <a id=\"user-content-how-to-install-r-41-rstudio-and-bioconductor\" class=\"anchor\"\
+    \ href=\"#how-to-install-r-41-rstudio-and-bioconductor\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>How to install\
+    \ R 4.1, Rstudio and Bioconductor.</h3>\n<p>On a Debian/Ubuntu system, try this:</p>\n\
+    <pre><code>sudo apt install r-base\nsudo apt install pandoc qpdf texlive # For\
+    \ vignette builds and package checks\nsudo apt install libxml2-dev libcurl4-openssl-dev\
+    \ libssl-dev libfftw3-dev libtiff-dev libgsl-dev\nsudp atp install libfontconfig1-dev\
+    \ libharfbuzz-dev libfribidi-dev # For pkgdown\nsudo apt install git bash-completion\n\
+    sudo apt install libgl1 libnss3 libasound2 libxdamage1\nwget https://s3.amazonaws.com/rstudio-ide-build/desktop/bionic/amd64/rstudio-1.4.1717-amd64.deb\n\
+    sudo apt --fix-broken install ./rstudio-1.4.1717-amd64.deb\nRscript -e 'install.packages(\"\
+    BiocManager\")'\nRscript -e 'BiocManager::install(\"GenomicRanges\")'\nRscript\
+    \ -e 'install.packages(\"tidyverse\")'\nRscript -e 'install.packages(\"devtools\"\
+    )' \nRscript -e 'install.packages(\"remotes\")'\n</code></pre>\n<h2>\n<a id=\"\
+    user-content-genomicbreaks-in-brief\" class=\"anchor\" href=\"#genomicbreaks-in-brief\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>GenomicBreaks in brief:</h2>\n<p>A pairwise alignment of two genomes\
+    \ is loaded in <code>GBreaks</code> objects wrapping\nthe <code>GRanges</code>\
+    \ class.  Here is an example:</p>\n<pre><code>GRanges object with 11 ranges and\
+    \ 2 metadata columns:\n       seqnames            ranges strand |            \
+    \      query     score\n          &lt;Rle&gt;         &lt;IRanges&gt;  &lt;Rle&gt;\
+    \ |              &lt;GRanges&gt; &lt;integer&gt;\n   [1]     chr1 11234702-11242676\
     \      + |   Chr1:7691083-7699807      7975\n   [2]     chr1 11242764-11256464\
     \      - |   Chr1:7714830-7733148     13701\n   [3]     chr1 11256821-11271214\
     \      - |   Chr1:7699877-7713142     14394\n   [4]     chr1 11271261-11272159\
@@ -47445,7 +47797,7 @@ oist/GenomicBreaks:
   stargazers_count: 0
   subscribers_count: 2
   topics: []
-  updated_at: 1631243184.0
+  updated_at: 1631686321.0
 onuryukselen/singularity:
   data_format: 2
   description: null
@@ -51778,7 +52130,7 @@ psadil/meta:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1631301951.0
+  updated_at: 1631532831.0
 pscedu/singularity-abyss:
   data_format: 2
   description: ABySS is a de novo sequence assembler that is designed for very short
@@ -56919,7 +57271,9 @@ robertodr/singularities:
   data_format: 2
   description: Singularity containers
   filenames:
+  - Singularity.lsdalton-mpi+omp
   - Singularity.hello
+  - Singularity.lsdalton-omp
   full_name: robertodr/singularities
   latest_release: null
   readme: '<h1>
@@ -56927,13 +57281,120 @@ robertodr/singularities:
     <a id="user-content-singularities" class="anchor" href="#singularities" aria-hidden="true"><span
     aria-hidden="true" class="octicon octicon-link"></span></a>singularities</h1>
 
-    <p>Singularity containers</p>
+    <p>Singularity container recipes for LSDalton, based on Ubuntu 18.04 LTS.</p>
+
+    <h2>
+
+    <a id="user-content-available-recipes" class="anchor" href="#available-recipes"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Available
+    recipes</h2>
+
+    <ul>
+
+    <li>
+
+    <a href="Singularity.lsdalton-omp">Singularity.lsdalton-omp</a>: OpenMP-parallel
+    binary on Ubuntu 18.04</li>
+
+    <li>
+
+    <a href="Singularity.lsdalton-mpi+omp">Singularity.lsdalton-mpi+omp</a>: MPI+OpenMP-parallel
+    binary on Ubuntu 18.04</li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-generate-new-recipes-using-hpc-container-maker-hpccm" class="anchor"
+    href="#generate-new-recipes-using-hpc-container-maker-hpccm" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Generate new recipes
+    using HPC Container Maker (HPCCM)</h2>
+
+    <p>The recipe files are auto-generated using <a href="https://github.com/NVIDIA/hpc-container-maker">HPC
+    Container Maker</a>.</p>
+
+    <p>For Singularity:</p>
+
+    <pre><code>$ hpccm --recipe &lt;recipe_name&gt;.py --format singularity --singularity-version=3.2
+    &gt; recipes/Singularity.&lt;version-tag&gt;
+
+    </code></pre>
+
+    <p>For Docker:</p>
+
+    <pre><code>$ hpccm --recipe &lt;recipe_name&gt;.py --format docker &gt; recipes/Docker.&lt;version-tag&gt;
+
+    </code></pre>
+
+    <p>The images are automatically built in GitLab CI and uploaded to the registry
+    on every commit.</p>
+
+    <h2>
+
+    <a id="user-content-how-to-locally-build-the-image-from-a-recipe-file" class="anchor"
+    href="#how-to-locally-build-the-image-from-a-recipe-file" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>How to locally build
+    the image from a recipe file</h2>
+
+    <p>You need <code>sudo</code> for building images but you don''t need <code>sudo</code>
+    for anything else.</p>
+
+    <pre><code>$ sudo singularity build lsdalton-v2020.0-omp.sif Singularity.lsdalton-v2020.0-omp
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-how-to-pull-these-images-from-the-gitlab-registry" class="anchor"
+    href="#how-to-pull-these-images-from-the-gitlab-registry" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>How to pull these images
+    from the GitLab registry</h2>
+
+    <p>For Singularity:</p>
+
+    <pre><code>singularity pull https://gitlab.com/api/v4/projects/dalton%2Fcontainers/packages/generic/lsdalton/v2020.0/lsdalton-v2020.0-omp_latest.sif
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-how-to-use-the-image" class="anchor" href="#how-to-use-the-image"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How
+    to use the image</h2>
+
+    <h3>
+
+    <a id="user-content-singularity" class="anchor" href="#singularity" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Singularity</h3>
+
+    <p>First try this:</p>
+
+    <pre><code>$ cat /etc/os-release
+
+    $ singularity exec lsdalton-v2020.0-omp.sif cat /etc/os-release
+
+    </code></pre>
+
+    <p>Now try to run LSDalton:</p>
+
+    <pre><code>$ singularity run lsdalton-v2020.0-omp.sif myinput.dal somemolecule.mol
+
+    </code></pre>
+
+    <p>Since <code>lsdalton-v2020.0-omp.sif</code> is executable, you can also rename
+    it to <em>e.g.</em> <code>lsdalton</code> and do this instead:</p>
+
+    <pre><code>$ mv lsdalton-v2020.0-omp.sif lsdalton
+
+    $ ./lsdalton myinput.dal somemolecule.mol
+
+    </code></pre>
 
     '
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1631211925.0
+  updated_at: 1631538867.0
 rohitfarmer/singularity-defs:
   data_format: 2
   description: Definition (recipe) files for singularity containers.
@@ -58479,13 +58940,14 @@ sdsc/sdsc-summer-institute-2021:
     \ 2021</h1>\n<p>This repository hosts all material and slides of the presentations\
     \ at the Summer Institute</p>\n<ol>\n<li><a href=\"https://na.eventscloud.com/website/21339/agenda/\"\
     \ rel=\"nofollow\">Agenda</a></li>\n<li>See also <a href=\"https://github.com/sdsc/sdsc-summer-institute-2020\"\
-    >last year's material</a>\n</li>\n</ol>\n<h2>\n<a id=\"user-content-interactive-videos\"\
+    >SCC20 material</a>\n</li>\n</ol>\n<h2>\n<a id=\"user-content-interactive-videos\"\
     \ class=\"anchor\" href=\"#interactive-videos\" aria-hidden=\"true\"><span aria-hidden=\"\
     true\" class=\"octicon octicon-link\"></span></a>Interactive Videos</h2>\n<ul>\n\
-    <li>A link to the recorded sessions will be posted <a href=\"https://www.sdsc.edu/event_items/202108_sdscsi.html\"\
-    \ rel=\"nofollow\">here</a> as soon as they have been completed.</li>\n<li>A full\
-    \ catalog of all our trainings at SDSC can be found <a href=\"https://www.sdsc.edu/education_and_training/training_hpc.html#catalog\"\
-    \ rel=\"nofollow\">here</a>.</li>\n</ul>\n<h2>\n<a id=\"user-content-aliases-symlinks-and-reservations\"\
+    <li>Interactive Videos can be found here: <a href=\"https://education.sdsc.edu/training/interactive/sdsc_si21/index.html\"\
+    \ rel=\"nofollow\">https://education.sdsc.edu/training/interactive/sdsc_si21/index.html</a>\n\
+    </li>\n<li>A full catalog of all our trainings at SDSC can be found <a href=\"\
+    https://www.sdsc.edu/education_and_training/training_hpc.html\" rel=\"nofollow\"\
+    >here</a>.</li>\n</ul>\n<h2>\n<a id=\"user-content-aliases-symlinks-and-reservations\"\
     \ class=\"anchor\" href=\"#aliases-symlinks-and-reservations\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Aliases,\
     \ symlinks and reservations</h2>\n<p>For your convenience, we\u2019ve create aliases\
@@ -58505,7 +58967,7 @@ sdsc/sdsc-summer-institute-2021:
   stargazers_count: 5
   subscribers_count: 13
   topics: []
-  updated_at: 1629147257.0
+  updated_at: 1631666132.0
 seasite-project/CGO21_YaskSite_AD:
   data_format: 2
   description: "This is the Artifact Description repository for the CGO21 paper: YaskSite\
@@ -60878,38 +61340,29 @@ sylabs/singularity:
   description: SingularityCE is the Community Edition of Singularity, an open source
     container platform designed to be simple, fast, and secure.
   filenames:
-  - e2e/testdata/sshfs.def
-  - e2e/testdata/Docker_registry.def
-  - e2e/testdata/inspecter_container.def
-  - e2e/testdata/regressions/issue_4967.def
-  - e2e/testdata/regressions/issue_4969.def
-  - e2e/testdata/regressions/issue_5399.def
-  - e2e/testdata/regressions/issue_4820.def
-  - e2e/testdata/regressions/issue_5315.def
-  - e2e/testdata/regressions/issue_5250.def
-  - e2e/testdata/regressions/issue_4583.def
-  - e2e/testdata/regressions/issue_4203.def
-  - examples/build-singularity/build-singularity.def
-  - examples/legacy/2.3/contrib/raspbian.def
-  - examples/legacy/2.2/arch.def
-  - examples/legacy/2.2/ubuntu.def
-  - examples/legacy/2.2/busybox.def
-  - examples/legacy/2.2/scientific.def
-  - examples/legacy/2.2/docker.def
-  - examples/legacy/2.2/debian.def
-  - examples/legacy/2.2/centos.def
-  - examples/legacy/2.2/contrib/fedora.def
-  - examples/legacy/2.2/contrib/ubuntu-bio.def
-  - examples/legacy/2.2/contrib/ubuntu16-tensorflow-0.12.1.def
-  - examples/legacy/2.2/contrib/centos7-ompi_cuda.def
-  - examples/legacy/2.2/contrib/linuxbrew_and_non-root_software_example.def
-  - examples/legacy/2.2/contrib/debian85-tensorflow-0.10.def
-  - examples/legacy/2.2/contrib/ubuntu-root.def
-  - examples/legacy/2.2/contrib/centos-minimal.def
-  - examples/legacy/2.2/contrib/centos7-ompi_master.def
-  - examples/legacy/2.2/contrib/ubuntu16-tensorflow-0.12.1-gpu.def
-  - examples/legacy/2.2/contrib/r_python_julia.def
-  - examples/legacy/2.2/contrib/ubuntu-openfoam.def
+  - e2e/testdata/Singularity
+  - examples/apps/Singularity
+  - examples/apps/Singularity.cowsay
+  - examples/shub/Singularity
+  - examples/arch/Singularity
+  - examples/opensuse/Singularity
+  - examples/instances/Singularity
+  - examples/self/Singularity
+  - examples/asciinema/Singularity
+  - examples/docker/Singularity
+  - examples/centos/Singularity
+  - examples/opensuse-arm64/Singularity
+  - examples/library/Singularity
+  - examples/raspbian/Singularity
+  - examples/scientific/Singularity
+  - examples/multistage/Singularity
+  - examples/sle/Singularity
+  - examples/ubuntu/Singularity
+  - examples/debian/Singularity
+  - examples/busybox/Singularity
+  - examples/centos-arm64/Singularity
+  - examples/scratch/Singularity.busybox
+  - examples/scratch/Singularity.alpine
   full_name: sylabs/singularity
   latest_release: v3.8.3
   readme: '<h1>
@@ -61074,13 +61527,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 79
+  stargazers_count: 82
   subscribers_count: 11
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1631498703.0
+  updated_at: 1631635513.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
@@ -63451,7 +63904,7 @@ vigo332/singularity-rstudio-r4:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1631115061.0
+  updated_at: 1631568351.0
 vincent-noel/pc4ecm:
   data_format: 2
   description: PhysiCell Invasion Model

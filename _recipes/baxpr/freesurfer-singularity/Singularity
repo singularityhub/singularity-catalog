@@ -55,20 +55,22 @@ Useful information within the container:
   
   # fslstats via local copy
   tar -zx -f /opt/fsl-${fsl_version}-centos7_64.tar.gz fsl/bin/fslstats -C /usr/local
+  rm /opt/fsl-${fsl_version}-centos7_64.tar.gz
   
   # fslstats via download
   #wget -nv -P /opt https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-${fsl_version}-centos7_64.tar.gz
   #tar -zx -f /opt/fsl-${fsl_version}-centos7_64.tar.gz fsl/bin/fslstats -C /usr/local
-  #rm -r fsl /opt/fsl-${fsl_version}-centos7_64.tar.gz
+  #rm /opt/fsl-${fsl_version}-centos7_64.tar.gz
 
   # Freesurfer via local file
   tar -zxf /opt/freesurfer-linux-centos7_x86_64-${freesurfer_version}.tar.gz -C /usr/local
+  rm /opt/freesurfer-linux-centos7_x86_64-${freesurfer_version}.tar.gz
   
   # Freesurfer via network download
   #cd /usr/local
   #wget -nv https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/${freesurfer_version}/freesurfer-linux-centos7_x86_64-${freesurfer_version}.tar.gz
   #tar -zxf freesurfer-linux-centos7_x86_64-${freesurfer_version}.tar.gz
-  #rm freesurfer-linux-centos7_x86_64-dev.tar.gz
+  #rm freesurfer-linux-centos7_x86_64-${freesurfer_version}.tar.gz
 
   # Freeview needs a machine id here
   dbus-uuidgen > /etc/machine-id

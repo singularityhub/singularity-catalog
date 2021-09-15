@@ -1,10 +1,10 @@
 BootStrap: docker
-From: ubuntu:20.04
+From: r-base:4.0.4
 
 %labels
   Maintainer Wei Guo
-  R_Version 4.0.3
-  RStudio_Version 1.3.1903
+  R_Version 4.0.4
+  RStudio_Version 1.3.1093
   Adopted_from https://github.com/nickjer/singularity-rstudio
 
 %help
@@ -19,6 +19,9 @@ From: ubuntu:20.04
 %environment
   export PATH=/usr/lib/rstudio-server/bin:${PATH}
 
+%files
+  jranke.asc /tmp/jranke.asc
+
 %setup
   install -Dv \
     rstudio_auth.sh \
@@ -30,19 +33,23 @@ From: ubuntu:20.04
     pam-helper.sh \
     ${SINGULARITY_ROOTFS}/usr/lib/rstudio-server/bin/pam-helper
 
+  install -Dv \
+    jranke.asc \
+    ${SINGULARITY_ROOTFS}/tmp/jranke.asc
+  
 %post
   # Software versions
-  export R_VERSION=4.0.3
+  export R_VERSION=4.0.4
   export RSTUDIO_VERSION=1.3.1093
   export DEBIAN_FRONTEND=noninteractive
 
-  # Get dependencies
-  apt-get update -qq 
-  apt-get install -y --no-install-recommends software-properties-common dirmngr
-  apt-get install -y --no-install-recommends \
+  apt-get update -y
+  apt-get install -y software-properties-common dirmngr
+  apt-get install -y \
     locales \
     gnupg2 \
     wget \
+    libatlas3-base \
     ca-certificates
 
   # Configure default locale
@@ -53,27 +60,24 @@ From: ubuntu:20.04
   export LANG=en_US.UTF-8
 
 
-  wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
-  add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
-
   # Install R
-  #  echo "deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/" > /etc/apt/sources.list.d/r.list
-  #  cat /etc/apt/sources.list.d/r.list
-  #  add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/'
-  # apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
-  # apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+  apt-key add /tmp/jranke.asc
+  add-apt-repository "deb http://cloud.r-project.org/bin/linux/debian $(lsb_release -cs)-cran40/"
 
+  apt-get update -y
+  apt-get upgrade -y
   apt-get install -y --no-install-recommends --allow-unauthenticated --fix-missing --fix-broken \
-    r-base \
-    r-base-core \
-    r-base-dev \
-    r-recommended \
-    r-base-html \
-    r-doc-html \
+    r-base=${R_VERSION}* \
+    r-base-core=${R_VERSION}* \
+    r-base-dev=${R_VERSION}* \
+    r-base-html=${R_VERSION}* \
+    r-doc-html=${R_VERSION}* \
+    r-recommended=${R_VERSION}* \
     libcurl4-openssl-dev \
     libssl-dev \
     libxml2-dev \
     libcairo2-dev \
+    unixodbc-dev \
     libxt-dev \
     wget \
     libgsl-dev \
@@ -86,12 +90,12 @@ From: ubuntu:20.04
   wget \
     --no-verbose \
     -O rstudio-server.deb \
-    "https://download2.rstudio.org/server/bionic/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb"
+   "https://download2.rstudio.org/server/bionic/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb"
   gdebi -n rstudio-server.deb
   rm -f rstudio-server.deb
 
   # install some commonly used packages
-  R --vanilla -e 'install.packages(c("DBI", "odbc", "shiny", "devtools", "ggplot2", "tidyverse", "tidymodels", "car", "dplyr", "tidyr"), repos="http://cran.us.r-project.org")'
+  R --vanilla -e 'options(Ncpus=4); install.packages(c("DBI", "odbc", "shiny", "devtools", "ggplot2", "tidyverse", "tidymodels", "car", "dplyr", "tidyr", "BiocManager"), repos="http://cran.us.r-project.org")'
 
   # Add a directory for host R libraries
   mkdir -p /library

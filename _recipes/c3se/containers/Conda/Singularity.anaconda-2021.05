@@ -1,0 +1,6 @@
+Bootstrap: docker
+From: continuumio/anaconda3-2021.05
+
+%post
+    # Make image writable with overlays
+    chmod a+rw -R /

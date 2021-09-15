@@ -1,0 +1,7 @@
+Bootstrap: docker
+From: continuumio/miniconda3
+
+%post
+    /opt/conda/bin/conda install -c conda-forge -y ambertools=20
+    # Make image writable with overlays
+    chmod o+rw -R /

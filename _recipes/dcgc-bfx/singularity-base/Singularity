@@ -155,6 +155,22 @@ from: debian:buster-20201012
     dpkg -i /opt/rstudio-${RSTUDIO_VERSION}-amd64.deb && \
     cd /opt/ && rm rstudio-${RSTUDIO_VERSION}-amd64.deb
     apt-get clean 
+    
+    ############
+    # kallisto #
+    ############
+    
+    # kallisto needs to be installed before otherwise it will pick an incorrect libhdf5
+    
+    KALLISTO_VERSION="0.46.1"
+    KALLISTO_DIR=kallisto-${KALLISTO_VERSION}
+    
+    cd /opt && wget -O ${KALLISTO_DIR}.tar.gz -nv https://github.com/pachterlab/kallisto/archive/v${KALLISTO_VERSION}.tar.gz && \
+    tar -zxf ${KALLISTO_DIR}.tar.gz && \
+    cd /opt/${KALLISTO_DIR}/ext/htslib && autoheader && autoconf && \
+    cd /opt/${KALLISTO_DIR} && mkdir build && cd build && \
+    cmake -DCMAKE_INSTALL_PREFIX:PATH=/opt .. && make && make install && \
+    cd /opt # && rm -rf ${KALLISTO_DIR}.tar.gz ${KALLISTO_DIR}
 
     #######################################
     # miniconda and mamba package manager #
@@ -460,20 +476,6 @@ from: debian:buster-20201012
     unzip ${GATK_DIR}.zip && \
     ln -s /opt/${GATK_DIR}/gatk /opt/bin/gatk && \
     rm ${GATK_DIR}.zip
-    
-    ############
-    # kallisto #
-    ############
-    
-    KALLISTO_VERSION="0.46.1"
-    KALLISTO_DIR=kallisto-${KALLISTO_VERSION}
-    
-    cd /opt && wget -O ${KALLISTO_DIR}.tar.gz -nv https://github.com/pachterlab/kallisto/archive/v${KALLISTO_VERSION}.tar.gz && \
-    tar -zxf ${KALLISTO_DIR}.tar.gz && \
-    cd /opt/${KALLISTO_DIR}/ext/htslib && autoheader && autoconf && \
-    cd /opt/${KALLISTO_DIR} && mkdir build && cd build && \
-    cmake -DCMAKE_INSTALL_PREFIX:PATH=/opt .. && make && make install && \
-    cd /opt # && rm -rf ${KALLISTO_DIR}.tar.gz ${KALLISTO_DIR}
 
     ############
     # velocyto #
