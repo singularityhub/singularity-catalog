@@ -2,8 +2,11 @@ Bootstrap: docker
 From: centos:8.3.2011
 
 %help
-    Minimal Centos 8.3.2011 image from dockerhub
+    Minimal Centos image from dockerhub
 
 %post
     # Make image writable with overlays
-    chmod a+rw -R /
+    yum install -y sudo
+    yum clean all
+    echo "%users  ALL=(ALL)       ALL" > /etc/sudoers
+    chmod a+rwX -fR /boot /bin /sbin /lib /lib32 /lib64 /usr /etc /var /opt || :

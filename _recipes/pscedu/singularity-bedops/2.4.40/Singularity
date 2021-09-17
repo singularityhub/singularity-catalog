@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: debian:latest
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-bedops
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    VERSION 2.4.40
+
+%post
+    apt update
+    apt install -y wget bzip2
+    mkdir -p /opt/bedops
+    cd /opt/bedops
+    wget -nc https://github.com/bedops/bedops/releases/download/v2.4.40/bedops_linux_x86_64-v2.4.40.tar.bz2
+    tar -xvf bedops_linux_x86_64-v2.4.40.tar.bz2 && rm -f bedops_linux_x86_64-v2.4.40.tar.bz2
+    cd bin/
+    mv -v * /usr/local/bin
+

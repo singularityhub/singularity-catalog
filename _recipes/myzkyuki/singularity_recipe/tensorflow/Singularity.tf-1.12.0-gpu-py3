@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:1.12.0-gpu-py3
+
+%runscript
+    exec echo "Tensorflow GPU container"
+
+%files
+
+%environment
+    export SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%labels
+
+%post
+    pip3 install keras
+    pip3 install mlflow
+    pip3 install boto3
+    pip3 install awscli
+    pip3 install opencv-python
+    pip3 install tensorlayer
+    pip3 install click
+    pip3 install tqdm
+    pip3 install easydict
+    pip3 install autopep8
+    pip3 install jupyter_contrib_nbextensions && jupyter contrib nbextension install
+    apt-get update
+    apt-get -y install python3-tk
+    apt-get install -y libsm6 libxext6
+    # test

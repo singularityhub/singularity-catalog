@@ -1,0 +1,60 @@
+BootStrap: docker
+From: ghcr.io/junghawoo/simpleg_tool:latest
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+# Python
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python \
+        python3
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        curl \
+        openssh-client \
+        python3-pip \
+        python3-setuptools \
+        python3-wheel \
+        wget
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    python3 -m pip install -U pip setuptools
+
+# pip
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3-pip \
+        python3-setuptools \
+        python3-wheel
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    pip3 --no-cache-dir install geoedfframework==0.6.0
+
+%environment
+    export PATH=/usr/local/bin:$PATH
+    export PYTHONPATH=/usr/local/lib/python3.6/dist-packages:$PYTHONPATH
+%post
+    export PATH=/usr/local/bin:$PATH
+    export PYTHONPATH=/usr/local/lib/python3.6/dist-packages:$PYTHONPATH
+
+%files
+    . /simpleg_tool
+
+%post
+    cd /
+    cd /simpleg_tool
+    pip3 install .
+
+%post
+    cd /
+    chmod a+x /usr/local/bin/*.sh
+    chmod a+x /usr/local/bin/*.py
+    chmod -R go+rX /usr/local/lib/python3.6/dist-packages

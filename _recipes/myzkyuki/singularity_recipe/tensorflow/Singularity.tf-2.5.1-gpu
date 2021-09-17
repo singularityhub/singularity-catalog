@@ -1,0 +1,54 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:2.5.1-gpu
+
+%runscript
+    exec echo "Tensorflow GPU container"
+
+%files
+
+%environment
+    export SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%labels
+
+%post
+    apt-get update
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get install -y tzdata
+    apt-get install -y \
+        python3-tk \
+        libopencv-dev \
+        python3-opencv \
+        libsm6 \
+        libxext6 \
+        git
+
+    /usr/local/bin/pip3 --no-cache-dir install \
+        awscli \
+        boto3 \
+        Cython \
+        efficientnet \
+        matplotlib \
+        mlflow \
+        git+https://github.com/simone1999/mtcnn.git@patch-1 \
+        optuna \
+        pandas \
+        Pillow \
+        scipy \
+        seaborn \
+        sklearn \
+        tensorboard \
+        tensorboard-plugin-profile \
+        tensorflow==2.5.1 \
+        tensorflow-addons \
+        tensorflow-datasets \
+        tensorflow-estimator \
+        tensorflow-hub \
+        tensorflow-probability \
+        tf-models-official==2.5.1 \
+        tqdm \
+        lxml
+
+

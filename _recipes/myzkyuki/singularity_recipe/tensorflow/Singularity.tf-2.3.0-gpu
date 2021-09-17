@@ -1,0 +1,45 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:2.3.0-gpu
+
+%runscript
+    exec echo "Tensorflow GPU container"
+
+%files
+
+%environment
+    export SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+%labels
+
+%post
+    apt-get update
+    apt-get install -y \
+        python3-tk \
+        libopencv-dev \
+        python3-opencv \
+        libsm6 \
+        libxext6 \
+        language-pack-ja \
+        git
+
+    /usr/local/bin/pip3 --no-cache-dir install --upgrade pip
+    /usr/local/bin/pip3 --no-cache-dir install awscli
+    /usr/local/bin/pip3 --no-cache-dir install boto3
+    /usr/local/bin/pip3 --no-cache-dir install Cython
+    /usr/local/bin/pip3 --no-cache-dir install matplotlib
+    /usr/local/bin/pip3 --no-cache-dir install mlflow
+    /usr/local/bin/pip3 --no-cache-dir install mtcnn
+    /usr/local/bin/pip3 --no-cache-dir install pandas
+    /usr/local/bin/pip3 --no-cache-dir install Pillow
+    /usr/local/bin/pip3 --no-cache-dir install scipy
+    /usr/local/bin/pip3 --no-cache-dir install seaborn
+    /usr/local/bin/pip3 --no-cache-dir install sklearn
+    /usr/local/bin/pip3 --no-cache-dir install tensorboard
+    /usr/local/bin/pip3 --no-cache-dir install tensorboard-plugin-profile
+    /usr/local/bin/pip3 --no-cache-dir install tensorflow-addons
+    /usr/local/bin/pip3 --no-cache-dir install tensorflow-datasets
+    /usr/local/bin/pip3 --no-cache-dir install tensorflow-probability
+    /usr/local/bin/pip3 --no-cache-dir install tqdm
+

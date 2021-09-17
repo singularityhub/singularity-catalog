@@ -1,0 +1,53 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:2.1.0-gpu-py3
+
+%runscript
+    exec echo "Tensorflow GPU container"
+
+%files
+
+%environment
+    export SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%labels
+
+%post
+    /usr/local/bin/pip3 --no-cache-dir install \
+        autopep8 \
+        awscli \
+        boto3 \
+        click \
+        contextlib2 \
+        Cython \
+        easydict \
+        efficientnet \
+        kaggle \
+        keras==2.3.1 \
+        lxml \
+        matplotlib \
+        mlflow \
+        mtcnn \
+        opencv-python \
+        pandas \
+        Pillow \
+        psutil \
+        pyarrow \
+        scipy \
+        seaborn \
+        sklearn \
+        tensorflow-addons==0.9.1 \
+        tensorflow-datasets \
+        tensorflow-probability \
+        tensorlayer \
+        tqdm \
+        wheel
+
+    apt-get update
+    apt-get install -y \
+        python3-tk \
+        libsm6 \
+        libxext6 \
+        git
+

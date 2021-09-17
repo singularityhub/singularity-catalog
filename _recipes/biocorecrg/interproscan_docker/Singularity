@@ -5,37 +5,36 @@ From: biocorecrg/debian-perlbrew-pyenv3-java:buster
     echo "Welcome to BiocoreCRG Interproscan Image"
 
 %post
-	
+
 	IPSCAN_VERSION=5.48-83.0
-	IPSCAN_DATA=/nfs/db/iprscan/5.48-83.0
-	
+
 	# Install InterPro
-	
+
 	cd /usr/local; curl --retry 3 --fail --silent --show-error --location --remote-name https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/${IPSCAN_VERSION}/interproscan-${IPSCAN_VERSION}-64-bit.tar.gz && \
 		curl --fail --silent --show-error --location --remote-name https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/${IPSCAN_VERSION}/interproscan-${IPSCAN_VERSION}-64-bit.tar.gz.md5 && \
 		md5sum -c interproscan-${IPSCAN_VERSION}-64-bit.tar.gz.md5
-	
+
 	cd /usr/local; tar zxf interproscan-${IPSCAN_VERSION}-64-bit.tar.gz --exclude "interproscan-${IPSCAN_VERSION}/data" && rm interproscan-${IPSCAN_VERSION}-64-bit.tar.gz interproscan-${IPSCAN_VERSION}-64-bit.tar.gz.md5
-	
-	PATH="/usr/local/interproscan-${IPSCAN_VERSION}:${PATH}"
-	
+
+	PATH="/usr/local/interproscan:${PATH}"
+
 	# Copy extra binaries. They might be downloaded from an URL in the future
-	
+
 	tar zxf /usr/local/signalp-4.1b.Linux.tar.Z -C /usr/local/interproscan-${IPSCAN_VERSION}/bin/signalp/4.1 --strip-components 1
-	
+
 	tar zxf /usr/local/tmhmm-2.0c.Linux.tar.gz -C /usr/local && \
 		 cp /usr/local/tmhmm-2.0c/bin/decodeanhmm.Linux_x86_64 /usr/local/interproscan-${IPSCAN_VERSION}/bin/tmhmm/2.0c/decodeanhmm
-	
+
 	tar xzf /usr/local/phobius101_linux.tar.gz -C /usr/local/interproscan-${IPSCAN_VERSION}/bin/phobius/1.01 --strip-components 3
-	
+
 	# Replace interproscan.properties
-	
-	ln -s /usr/local/interproscan-${IPSCAN_VERSION} /usr/local/interproscan
+
+	mv /usr/local/interproscan-${IPSCAN_VERSION} /usr/local/interproscan
 	cp /usr/local/interproscan.properties /usr/local/interproscan
-	chmod a+r /usr/local/interproscan-${IPSCAN_VERSION}/interproscan.properties
+	chmod a+r /usr/local/interproscan/interproscan.properties
 
 	# Hardcoded Data
-	cd /usr/local/interproscan; rm -rf data; ln -s ${IPSCAN_DATA} data
+	cd /usr/local/interproscan; rm -rf data
 	chmod -R a+rx /usr/local/interproscan/bin
 	cd /usr/local/bin; ln -s /usr/local/interproscan/interproscan.sh
 

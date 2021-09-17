@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:2.0.0-gpu-py3
+
+%runscript
+    exec echo "Tensorflow GPU container"
+
+%files
+
+%environment
+    export SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%labels
+
+%post
+    /usr/local/bin/pip3 --no-cache-dir install \
+        tensorflow-addons \
+        tensorflow-probability \
+        keras \
+        mlflow \
+        boto3 \
+        awscli \
+        opencv-python \
+        tensorlayer \
+        click \
+        tqdm \
+        easydict \
+        autopep8 \
+        jupyter_contrib_nbextensions && jupyter contrib nbextension install
+
+    apt-get update
+    apt-get install -y \
+        python3-tk \
+        libsm6 \
+        libxext6 \
+        git
+
