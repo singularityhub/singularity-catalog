@@ -1,0 +1,8 @@
+Bootstrap: docker
+From: alexisespinosa/openfoam:v1712-waves2Foam2124
+
+%post
+/bin/mv /bin/sh /bin/sh.original
+/bin/ln -s /bin/bash /bin/sh
+echo ". /opt/OpenFOAM/OpenFOAM-v1712/etc/bashrc" >> $SINGULARITY_ENVIRONMENT
+echo ". /opt/waves2Foam/bin/bashrc" >> $SINGULARITY_ENVIRONMENT

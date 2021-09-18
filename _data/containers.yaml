@@ -1,5 +1,5 @@
 bases:
-- count: 861
+- count: 862
   name: ubuntu
 - count: 241
   name: nvidia/cuda
@@ -45,6 +45,8 @@ bases:
   name: vitchyr/railrl_v12_cuda10-1_mj2-0-2-2_torch1-1-0_gym0-12-5_py3-6-5
 - count: 18
   name: cokelaer/damona/conda
+- count: 18
+  name: ghcr.io/mkandes/naked-singularity
 - count: 17
   name: nvcr.io/nvidia/pytorch
 - count: 17
@@ -57,8 +59,6 @@ bases:
   name: khanlab/heudiconv
 - count: 12
   name: pawsey/openfoam
-- count: 12
-  name: ghcr.io/mkandes/naked-singularity
 - count: 12
   name: nvcr.io/nvidia/tensorflow
 - count: 12
@@ -198,6 +198,8 @@ bases:
 - count: 3
   name: willgpaik/centos7_aci
 - count: 3
+  name: fcpindi/c-pac
+- count: 3
   name: perl
 - count: 3
   name: mattocci/rstan
@@ -262,6 +264,8 @@ bases:
 - count: 2
   name: amazon/aws-cli
 - count: 2
+  name: alexisespinosa/openfoam
+- count: 2
   name: arcsUVA/anaconda
 - count: 2
   name: bethgelab/deeplearning
@@ -318,7 +322,7 @@ bases:
 - count: 2
   name: spellrun/tensorflow
 - count: 2
-  name: nvcr.io/nvidia/namd
+  name: nvcr.io/hpc/namd
 - count: 2
   name: vanessa/pokemon
 - count: 2
@@ -642,6 +646,8 @@ bases:
 - count: 1
   name: quay.io/biocontainers/picard
 - count: 1
+  name: quay.io/biocontainers/flash
+- count: 1
   name: quay.io/biocontainers/kraken2
 - count: 1
   name: quay.io/biocontainers/blast
@@ -649,6 +655,8 @@ bases:
   name: quay.io/biocontainers/fastqc
 - count: 1
   name: quay.io/biocontainers/bedops
+- count: 1
+  name: quay.io/biocontainers/blat
 - count: 1
   name: staphb/prokka
 - count: 1
@@ -728,9 +736,9 @@ bases:
 - count: 1
   name: spellrun/dynet
 - count: 1
-  name: nvcr.io/nvidia/relion
+  name: nvcr.io/hpc/relion
 - count: 1
-  name: nvcr.io/nvidia/gromacs
+  name: nvcr.io/hpc/gromacs
 - count: 1
   name: '{{ cookiecutter.dockerhub_username }}/{{ cookiecutter.image_name }}'
 - count: 1
@@ -901,6 +909,8 @@ bases:
   name: r-3.6.1.sif
 - count: 1
   name: ax3l/picongpu
+- count: 1
+  name: lbnl-science-it/atlas
 - count: 1
   name: clottaz/fastqpuri
 - count: 1
@@ -1084,7 +1094,7 @@ bases:
 - count: 1
   name: quay.io/biocontainers/metawrap
 bootstraps:
-- count: 2783
+- count: 2792
   name: docker
 - count: 276
   name: debootstrap
@@ -1096,7 +1106,7 @@ bootstraps:
   name: yum
 - count: 70
   name: localimage
-- count: 12
+- count: 18
   name: oras
 - count: 12
   name: scratch
@@ -1113,7 +1123,7 @@ bootstraps:
 - count: 1
   name: tensorflow
 orgs:
-- count: 33
+- count: 35
   name: quay.io/biocontainers
 - count: 25
   name: bids
@@ -1121,10 +1131,10 @@ orgs:
   name: registry.gitlab.com/rode0day
 - count: 11
   name: vitchyr
-- count: 11
-  name: nvcr.io/nvidia
 - count: 9
   name: rocker
+- count: 8
+  name: nvcr.io/nvidia
 - count: 6
   name: slaclab
 - count: 6
@@ -1133,6 +1143,8 @@ orgs:
   name: continuumio
 - count: 4
   name: willgpaik
+- count: 4
+  name: nvcr.io/hpc
 - count: 4
   name: willprice
 - count: 4
@@ -1149,6 +1161,8 @@ orgs:
   name: bioconductor
 - count: 4
   name: conda
+- count: 3
+  name: alexisespinosa
 - count: 3
   name: jcsda
 - count: 3
@@ -1185,8 +1199,6 @@ orgs:
   name: pcpaquette
 - count: 2
   name: opendronemap
-- count: 2
-  name: alexisespinosa
 - count: 2
   name: jupyter
 - count: 2
@@ -1362,6 +1374,8 @@ orgs:
 - count: 1
   name: qtimlab
 - count: 1
+  name: fcpindi
+- count: 1
   name: nipy
 - count: 1
   name: ncbi
@@ -1395,8 +1409,6 @@ orgs:
   name: amd64
 - count: 1
   name: bilbydev
-- count: 1
-  name: nvcr.io/hpc
 - count: 1
   name: rapidsai
 - count: 1
@@ -1499,6 +1511,8 @@ orgs:
   name: mkandes
 - count: 1
   name: ax3l
+- count: 1
+  name: lbnl-science-it
 - count: 1
   name: clottaz
 - count: 1
@@ -1662,8 +1676,8 @@ orgs:
 - count: 1
   name: drneavin
 tags:
-  latest: 271
-  other: 2541
+  latest: 272
+  other: 2553
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -1699,6 +1713,9 @@ versions:
     base_ci: 1
   alantrrs/py-faster-rcnn:
     'latest   ': 1
+  alexisespinosa/openfoam:
+    2.4.x_waves2Foam2079: 1
+    v1712-waves2Foam2124: 1
   alexisespinosa/pangolin:
     '0_124 ': 1
   alexisespinosa/polar:
@@ -2050,6 +2067,9 @@ versions:
     v5.2.2_cv1: 2
   faustus123/hddeps:
     c7: 1
+  fcpindi/c-pac:
+    latest-ABCD-HCP: 1
+    latest-lite: 1
   fedora:
     '27': 11
     '28': 4
@@ -2072,8 +2092,13 @@ versions:
   ghcr.io/junghawoo/simpleg_tool:
     latest: 1
   ghcr.io/mkandes/naked-singularity:
-    ubuntu-18.04: 4
+    ubuntu-18.04: 5
+    ubuntu-18.04-cuda-10.2: 1
+    ubuntu-18.04-cuda-10.2-mlnx-ofed-4.6-1.0.1.1: 1
+    ubuntu-18.04-cuda-10.2-mlnx-ofed-4.6-1.0.1.1-openmpi-3.1.4: 1
     ubuntu-18.04-cuda-11.2: 1
+    ubuntu-18.04-mlnx-ofed-4.6-1.0.1.1: 1
+    ubuntu-18.04-mlnx-ofed-4.6-1.0.1.1-openmpi-3.1.4: 1
     ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0: 3
     ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0-mvapich-2.3.6: 1
     ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0-openmpi-3.1.6: 1
@@ -2347,8 +2372,15 @@ versions:
     14.16-buster-slim: 1
   nunofonseca/irap_fedora:
     v1.0.6b: 1
+  nvcr.io/hpc/gromacs:
+    '2021': 1
+  nvcr.io/hpc/namd:
+    3.0-alpha3-multinode: 1
+    3.0-alpha3-singlenode: 1
   nvcr.io/hpc/pgi-compilers:
     ce: 1
+  nvcr.io/hpc/relion:
+    3.1.2: 1
   nvcr.io/nvidia/cuda:
     10.2-devel-ubuntu18.04: 3
     11.0-devel-ubuntu20.04: 6
@@ -2357,15 +2389,10 @@ versions:
     11.2.2-devel-ubuntu20.04: 1
   nvcr.io/nvidia/deepstream:
     5.0-20.07-triton: 3
-  nvcr.io/nvidia/gromacs:
-    '2021': 1
   nvcr.io/nvidia/hpc-benchmarks:
     21.4-hpl: 1
   nvcr.io/nvidia/mxnet:
     21.02-py3: 1
-  nvcr.io/nvidia/namd:
-    3.0-alpha3-multinode: 1
-    3.0-alpha3-singlenode: 1
   nvcr.io/nvidia/nvhpc:
     20.11-devel-cuda_multi-ubuntu20.04: 4
     20.9-devel-ubuntu20.04: 2
@@ -2380,8 +2407,6 @@ versions:
     20.07-py3: 6
     20.09-py3: 2
     21.08-py3: 1
-  nvcr.io/nvidia/relion:
-    3.1.2: 1
   nvcr.io/nvidia/tensorflow:
     20.03-tf2-py3: 2
     20.07-tf1-py3: 2
@@ -2647,6 +2672,8 @@ versions:
     0.22.3--0: 1
   quay.io/biocontainers/blast:
     2.9.0--h20b68b9_1: 1
+  quay.io/biocontainers/blat:
+    36--0: 1
   quay.io/biocontainers/bowtie2:
     2.2.5--py39h7cff6ad_8: 1
     2.4.1--py38he513fc3_0: 1
@@ -2664,6 +2691,8 @@ versions:
     0.11.9--0: 1
   quay.io/biocontainers/fastx_toolkit:
     0.0.14--he1b5a44_8: 1
+  quay.io/biocontainers/flash:
+    1.2.11--hed695b0_5: 1
   quay.io/biocontainers/gatk4:
     4.1.9.0--py39_0: 2
     4.2.0.0--hdfd78af_1: 1
@@ -2973,7 +3002,7 @@ versions:
     focal-20200729: 1
     focal-20200925: 3
     focal-20210827: 1
-    latest: 61
+    latest: 62
     rolling: 1
     sha256.21678b2846063434e2009dee535d3e28ded35774ca72722e1d62b37077de30da: 5
     sha256.80c52afadf3e7c3f9573de4fe79b7dca57fb3290df6c8dc46a75b02768a81146: 3
