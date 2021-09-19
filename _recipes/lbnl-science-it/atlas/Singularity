@@ -1,6 +1,8 @@
 Bootstrap: docker
 From: lbnl-science-it/atlas
 
+#### actually singularity container not build for this project yet... 2021.0918
+
 # vim: nosmartindent tabstop=4 noexpandtab shiftwidth=4
 
 # Singularity def, wrap around docker tin6150/r4eta
@@ -26,7 +28,7 @@ From: lbnl-science-it/atlas
 	touch "_ROOT_DIR_OF_CONTAINER_" ## also is "_CURRENT_DIR_CONTAINER_BUILD" 
 	date     >> _ROOT_DIR_OF_CONTAINER_
 	hostname >> _ROOT_DIR_OF_CONTAINER_
-	echo "Singularity def 2021.0917.1720 HelloWorld" >> _ROOT_DIR_OF_CONTAINER_
+	echo "Singularity def 2021.0918.hhmm HelloWorld" >> _ROOT_DIR_OF_CONTAINER_
 
 	# docker run as root, but singularity may run as user, so adding these hacks here
 	#mkdir -p /global/scratch/tin

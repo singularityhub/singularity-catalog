@@ -25928,7 +25928,7 @@ baxpr/freesurfer-singularity:
   stargazers_count: 1
   subscribers_count: 2
   topics: []
-  updated_at: 1631568867.0
+  updated_at: 1631975812.0
 baxpr/makerois-PMAT:
   data_format: 2
   description: null
@@ -43178,11 +43178,23 @@ lbnl-science-it/atlas:
 
     <p>// R script in home dir, bind mounted to container
 
+    docker run -v /global/data/transportation/ATLAS/static/urbansim:/global/data/transportation/ATLAS/static/urbansim
+    -it --entrypoint=Rscript  ghcr.io/lbnl-science-it/atlas:main  /global/data/transportation/ATLAS/static/urbansim/model_application/Model_application_hima.R
+
+    docker run -v /global/data/transportation/ATLAS/static/urbansim:/mnt -it --entrypoint=Rscript  ghcr.io/lbnl-science-it/atlas:main  /mnt/model_application/Model_application_hima.R
+
     docker run -v "$PWD":/mnt -it --entrypoint=Rscript  ghcr.io/lbnl-science-it/atlas:main  /mnt/model_application/Model_application_hima.R</p>
 
     <p>// running a bash shell, can call R from there
 
-    docker run                -it --entrypoint=bash     ghcr.io/lbnl-science-it/atlas:main</p>
+    docker run                -it --entrypoint=bash     ghcr.io/lbnl-science-it/atlas:main
+
+    docker run -v /global/data/transportation/ATLAS/static/urbansim:/mnt -it --entrypoint=bash  ghcr.io/lbnl-science-it/atlas:main<br>
+
+    root@c2bc9c1d6e9f:/mnt# mkdir -p /global/data/transportation/ATLAS/static/urbansim
+
+    root@c2bc9c1d6e9f:/mnt# Rscript model_application/Model_application_hima.R   #
+    error cuz R code call for setwd that doesn''t exist</p>
 
     <h2>
 
@@ -43208,7 +43220,7 @@ lbnl-science-it/atlas:
   subscribers_count: 0
   topics:
   - modeling
-  updated_at: 1631937320.0
+  updated_at: 1632001254.0
 lehtiolab/nf-deqms:
   data_format: 2
   description: null
@@ -46183,10 +46195,10 @@ mkandes/naked-singularity:
     <p>Saturday, September 4th, 2021</p>
 
     '
-  stargazers_count: 36
+  stargazers_count: 37
   subscribers_count: 2
   topics: []
-  updated_at: 1631904609.0
+  updated_at: 1631977462.0
 ml4ai/UA-hpc-containers:
   data_format: 2
   description: Container recipes for use with the U of A HPC resources
@@ -48215,6 +48227,41 @@ onuryukselen/singularity:
   subscribers_count: 0
   topics: []
   updated_at: 1623903591.0
+oogasawa/singularity-img-gridengine-client:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: oogasawa/singularity-img-gridengine-client
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-singularity-img-ubuntu16-gridengine-client" class="anchor"
+    href="#singularity-img-ubuntu16-gridengine-client" aria-hidden="true"><span aria-hidden="true"
+    class="octicon octicon-link"></span></a>singularity-img-ubuntu16-gridengine-client</h1>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1631971328.0
+oogasawa/singularity-img-gridengine-master:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: oogasawa/singularity-img-gridengine-master
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-singularity-img-gridengine-master" class="anchor" href="#singularity-img-gridengine-master"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>singularity-img-gridengine-master</h1>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1631970804.0
 openPMD/openPMD-api:
   data_format: 2
   description: ':floppy_disk: C++ & Python API for Scientific I/O'
