@@ -1,0 +1,162 @@
+Bootstrap: docker
+From: python:3.6
+
+
+%environment
+    export Author="FENELLA MCANDREW"
+    export LC_ALL=C
+    export PATH=/usr/games:$PATH
+
+    # Declare experiment environment variables
+    EXPERIMENT_NAME=aqc-maxcut
+    # Declare mlflow environment variables
+    MLFLOW_S3_ENDPOINT_URL=https://objects.storage.unimelb.edu.au
+    MLFLOW_PYTHON_BIN=/usr/local/bin/python
+    MLFLOW_BIN=/usr/local/bin/mlflow
+    S3_BUCKET=s3://6200_aqc_maxcut
+
+    # Export env vars for LC_ALL
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+    # Export env vars
+    export EXPERIMENT_NAME \
+      MLFLOW_S3_ENDPOINT_URL \
+      MLFLOW_PYTHON_BIN \
+      MLFLOW_BIN \
+      S3_BUCKET
+
+%post
+  # Print image info
+  cat /etc/os-release
+
+  # Software versions
+  export R_VERSION=3.6.1
+
+  # Get dependencies
+  apt-get update && apt-get install -y gnupg2
+  apt-key update
+  apt-get install -y --no-install-recommends \
+    locales \
+    ca-certificates \
+    gcc
+
+  # Configure default locale
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  locale-gen en_US.utf8
+  /usr/sbin/update-locale LANG=en_US.UTF-8
+  export LC_ALL=en_US.UTF-8
+  export LANG=en_US.UTF-8
+
+  ####################################################
+  # MLFlow Installation
+  ####################################################
+
+  export MLFLOW_VERSION=1.4.0
+
+  # Install mlflow and  dependencies
+  pip install mlflow==$MLFLOW_VERSION \
+    scikit-learn \
+    boto3 \
+    sqlalchemy \
+    psycopg2 \
+    numpy \
+    matplotlib \
+    networkx 
+
+  ####################################################
+  # AWS Installation
+  ####################################################
+
+  apt-get update
+  apt-get install -y --no-install-recommends --allow-unauthenticated \
+    awscli
+
+  ####################################################
+  # R Installation
+  ####################################################
+
+  # Install R
+  apt install dirmngr --install-recommends
+  apt install -y software-properties-common
+  apt install -y apt-transport-https
+  apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
+  add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran35/'
+  apt update
+  apt install -y r-base
+
+  R --version
+
+  # Add a default CRAN mirror
+  echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl')" >> /usr/lib/R/etc/Rprofile.site
+
+  # Add a directory for host R libraries
+  mkdir -p /library
+  echo "R_LIBS_SITE=/library:\${R_LIBS_SITE}" >> /usr/lib/R/etc/Renviron.site
+
+  # Install required R packages
+  R --slave -e 'install.packages("tidyverse", repos="https://cloud.r-project.org/")'
+  R --slave -e 'install.packages("yaml", repos="https://cloud.r-project.org/")'
+  R --slave -e 'install.packages("logging", repos="https://cloud.r-project.org/")'
+
+  # Clean up
+  rm -rf /var/lib/apt/lists/*
+
+####################################################
+# APP TO BUILD EXPERIMENTS
+####################################################
+
+%apphelp build_experiments
+  This application is to build all experimental configurations
+
+%applabels build_experiments
+  APP_NAME BUILD_EXPERIMENTS
+
+%apprun build_experiments
+  echo "Container was created $NOW"
+
+  # execute script
+  Rscript src/make-templates.R
+
+  # make template files
+  echo "Completed making template files"
+
+  # Migrate template files onto remote storage
+  echo "Moving template files from CONTAINER to AWS S3 STORAGE"
+  aws s3 mv params/ready/ $S3_BUCKET/$EXPERIMENT_NAME/ready/ --recursive --exclude "*" --include "*.yml" --endpoint-url=$MLFLOW_S3_ENDPOINT_URL
+
+####################################################
+# APP TO RUN EXPERIMENT
+####################################################
+
+%apphelp run_experiment
+  This is the help for running experiments. To run an experiment feed the following Arguments: 
+    - ARG_1=<EXPERIMENTAL_CONFIG_YAML_FILE_NAME>
+
+%applabels run_experiment
+  APP_NAME RUNNING_EXPERIMENTS
+
+%apprun run_experiment
+  echo "Container was created $NOW"
+
+  echo "Arguments received: $*"
+
+  # Run experiment with parameter file
+  python _main_.py --run_path=$@
+
+  export LOCAL_FILENAME=$@
+  export LOCAL_PREFIX="params/ready/"
+  export RAW_FILENAME=${LOCAL_FILENAME#"$LOCAL_PREFIX"}
+
+
+  # Move experiment to complete folder
+  echo "\n Completed experiment $@ moving to complete folder"
+  mv $@ params/complete/$RAW_FILENAME
+
+
+%runscript
+  echo "Container was created $NOW"
+
+  echo "Run one of the built apps. You're not running anything!"
+
+%labels
+    Author Fenella McAndrew

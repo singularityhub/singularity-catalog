@@ -1,0 +1,45 @@
+BootStrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%post
+    # ~~~~~ BASIC SETUP ~~~~~ #
+    # for Sambamaba
+    apt-get update && \
+    apt-get install -y wget \
+    bzip2
+
+    # for Samtools
+    apt-get update && \
+    apt-get install -y gcc \
+    make \
+    libncurses5-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    liblzma-dev
+
+    # ~~~~~ SAMBAMBA ~~~~~ #
+    cd /opt && \
+    wget https://github.com/biod/sambamba/releases/download/v0.6.6/sambamba_v0.6.6_linux.tar.bz2 && \
+    tar xvjf sambamba_v0.6.6_linux.tar.bz2 && \
+    rm -f sambamba_v0.6.6_linux.tar.bz2 && \
+    ln -s sambamba_v0.6.6 sambamba
+
+    # ~~~~~ SAMTOOLS ~~~~~ #
+    cd /opt && \
+    wget https://github.com/samtools/samtools/releases/download/1.7/samtools-1.7.tar.bz2 && \
+    tar xvjf samtools-1.7.tar.bz2 && \
+    rm -f samtools-1.7.tar.bz2 && \
+    cd /opt/samtools-1.7/ && \
+    ./configure && \
+    make && \
+    make install
+
+%test
+    samtools --version
+    sambamba --version
+
+%environment
+    export PATH="/opt:${PATH}"
+    export LC_ALL="C.UTF-8"
+    export LANG="C.UTF-8"

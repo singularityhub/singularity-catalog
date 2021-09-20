@@ -1,0 +1,23 @@
+BootStrap: docker
+From: ubuntu:16.04
+
+%post
+    apt-get update && \
+    apt-get install -y openjdk-8-jre \
+    perl \
+    unzip \
+    wget && \
+    cd /usr/local/bin && \
+    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.7.zip && \
+    unzip fastqc_v0.11.7.zip && \
+    rm -f fastqc_v0.11.7.zip && \
+    cd FastQC && \
+    chmod 755 fastqc
+
+%test
+    fastqc --version
+
+%environment
+    export PATH=/usr/local/bin/FastQC:${PATH}
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8

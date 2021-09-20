@@ -1,5 +1,5 @@
 bases:
-- count: 862
+- count: 866
   name: ubuntu
 - count: 241
   name: nvidia/cuda
@@ -9,15 +9,15 @@ bases:
   name: centos
 - count: 85
   name: alpine
-- count: 79
+- count: 80
   name: continuumio/miniconda3
 - count: 65
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 59
+- count: 60
   name: tensorflow/tensorflow
 - count: 58
   name: mkandes/naked-singularity
-- count: 51
+- count: 52
   name: python
 - count: 44
   name: nfcore/base
@@ -53,6 +53,8 @@ bases:
   name: poldracklab/fmriprep
 - count: 16
   name: ezlabgva/busco
+- count: 13
+  name: r-base
 - count: 12
   name: qiime2/core
 - count: 12
@@ -67,8 +69,6 @@ bases:
   name: nitishnarula/secure/ubuntu-focal
 - count: 12
   name: rocker/r-ver
-- count: 12
-  name: r-base
 - count: 11
   name: deeplearnphysics/larcv2
 - count: 11
@@ -132,6 +132,8 @@ bases:
 - count: 5
   name: sequana.img
 - count: 5
+  name: broadinstitute/gatk3
+- count: 5
   name: neuronets/kwyk
 - count: 5
   name: 'GodloveD/busybox   '
@@ -149,8 +151,6 @@ bases:
   name: willgpaik/qt5_aci
 - count: 4
   name: quay.io/biocontainers/bowtie2
-- count: 4
-  name: broadinstitute/gatk3
 - count: 4
   name: anair17/railrl_hand_v2
 - count: 4
@@ -289,6 +289,8 @@ bases:
   name: registry.gitlab.com/rode0day/fuzzer-testing/angora_runner
 - count: 2
   name: registry.gitlab.com/rode0day/fuzzer-testing/afl_runner
+- count: 2
+  name: stevekm/ngs580-nf
 - count: 2
   name: icbi/quantiseq2
 - count: 2
@@ -585,8 +587,6 @@ bases:
   name: cokelaer/damona/sequana
 - count: 1
   name: stevekm/containers
-- count: 1
-  name: stevekm/ngs580-nf
 - count: 1
   name: rockylinux/rockylinux
 - count: 1
@@ -1094,9 +1094,9 @@ bases:
 - count: 1
   name: quay.io/biocontainers/metawrap
 bootstraps:
-- count: 2792
+- count: 2802
   name: docker
-- count: 278
+- count: 308
   name: debootstrap
 - count: 233
   name: shub
@@ -1677,7 +1677,7 @@ orgs:
   name: drneavin
 tags:
   latest: 272
-  other: 2553
+  other: 2561
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -1878,7 +1878,7 @@ versions:
     4.2.0.0: 1
     gatkbase-2.0.2: 1
   broadinstitute/gatk3:
-    3.8-0: 4
+    3.8-0: 5
   bruggerk/ricopili:
     latest: 1
   bud42/fs6:
@@ -2622,7 +2622,7 @@ versions:
     '3': 2
     3-slim: 1
     3.5.1: 1
-    '3.6': 1
+    '3.6': 2
     '3.7': 1
     3.7-slim: 16
     3.7.4-slim: 2
@@ -2902,7 +2902,7 @@ versions:
   stevekm/containers:
     base: 1
   stevekm/ngs580-nf:
-    variant-calling-0.0.1: 1
+    variant-calling-0.0.1: 2
   stevekm/phoenix-demo:
     base: 1
     demo1: 1
@@ -2934,6 +2934,7 @@ versions:
     2.3.3-gpu: 1
     2.4.0-custom-op-gpu-ubuntu16: 1
     2.4.1-gpu: 3
+    2.4.3-gpu: 1
     2.5.0-gpu: 1
     2.5.1-gpu: 1
     latest-gpu: 5
@@ -2979,7 +2980,7 @@ versions:
     pytorch-1.3.0: 1
   ubuntu:
     '14.04': 10
-    '16.04': 124
+    '16.04': 128
     '17.04': 6
     '18.04': 197
     '19.04': 10

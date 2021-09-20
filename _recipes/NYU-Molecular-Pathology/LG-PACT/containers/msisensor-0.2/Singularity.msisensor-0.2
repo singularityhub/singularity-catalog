@@ -1,0 +1,41 @@
+BootStrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%post
+    # ~~~~~ BASIC SETUP ~~~~~ #
+    apt-get update && \
+    apt-get install -y wget \
+    bzip2 \
+    g++
+
+    # for Samtools
+    apt-get install -y gcc \
+    make \
+    libncurses5-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    liblzma-dev \
+    git
+
+    # ~~~~~ SAMTOOLS ~~~~~ #
+    cd /opt && \
+    wget https://newcontinuum.dl.sourceforge.net/project/samtools/samtools/0.1.19/samtools-0.1.19.tar.bz2 && \
+    tar xvjf samtools-0.1.19.tar.bz2 && \
+    rm -f samtools-0.1.19.tar.bz2 && \
+    cd samtools-0.1.19 && \
+    make
+    export SAMTOOLS_ROOT="/opt/samtools-0.1.19"
+    export PATH="/opt/samtools-0.1.19:${PATH}"
+
+    # ~~~~~ MSISENSOR ~~~~~ #
+    cd /opt && \
+    git clone https://github.com/ding-lab/msisensor.git && \
+    cd msisensor && \
+    make
+
+%environment
+    export PATH="/opt:${PATH}"
+    export SAMTOOLS_ROOT="/opt/samtools-0.1.19"
+    export PATH="/opt/samtools-0.1.19:${PATH}"
+    export PATH="/opt/msisensor:${PATH}"

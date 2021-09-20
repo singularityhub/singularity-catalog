@@ -14967,6 +14967,636 @@ NOC-MSM/CoNES:
   subscribers_count: 2
   topics: []
   updated_at: 1628023485.0
+NYU-Molecular-Pathology/LG-PACT:
+  data_format: 2
+  description: NYU Langone Health Genome Pathology Clinical Trial (PACT) target Exome
+    sequencing analysis pipeline
+  filenames:
+  - containers/bwa-0.7.17/Singularity.bwa-0.7.17
+  - containers/R-3.5.1/Singularity.R-3.5.1
+  - containers/deconstructSigs-1.8.0/Singularity.deconstructSigs-1.8.0
+  - containers/msisensor-0.2/Singularity.msisensor-0.2
+  - containers/cnvkit-0.9.5/Singularity.cnvkit-0.9.5
+  - containers/python-2.7/Singularity.python-2.7
+  - containers/varscan-2.4.3/Singularity.varscan-2.4.3
+  - containers/fastqc-0.11.7/Singularity.fastqc-0.11.7
+  - containers/pindel-0.2.5b9/Singularity.pindel-0.2.5b9
+  - containers/sambamba-0.6.6/Singularity.sambamba-0.6.6
+  - containers/sambamba-0.6.6/Singularity.sambamba-0.6.6.old
+  - containers/cnv_facets-0.14.0/Singularity.cnv_facets-0.14.0
+  - containers/variant-calling-0.0.1/Singularity.variant-calling-0.0.1
+  - containers/sambamba-0.6.8/Singularity.sambamba-0.6.8
+  - containers/samtools-1.7/Singularity.samtools-1.7
+  - containers/variant-calling-0.0.2/Singularity.variant-calling-0.0.2
+  - containers/multiqc-1.4/Singularity.multiqc-1.4
+  - containers/python-3.6/Singularity.python-3.6
+  - containers/manta-1.5.0/Singularity.manta-1.5.0
+  - containers/bcftools-1.3/Singularity.bcftools-1.3
+  - containers/strelka-2.9.10/Singularity.strelka-2.9.10
+  - containers/cnvkit-0.9.0/Singularity.cnvkit-0.9.0
+  - containers/IGV-2.4.10/Singularity.IGV-2.4.10
+  - containers/reporting-3.4.3/Singularity.reporting-3.4.3
+  - containers/trimmomatic-0.36/Singularity.trimmomatic-0.36
+  - containers/R-3.2.3/Singularity.R-3.2.3
+  - containers/base/Singularity.base
+  - containers/bwa-0.7.17-sambamba-0.6.8/Singularity.bwa-0.7.17-sambamba-0.6.8
+  - containers/multiqc-1.5/Singularity.multiqc-1.5
+  - containers/bedtools-2.27.1/Singularity.bedtools-2.27.1
+  - containers/htslib-1.7/Singularity.htslib-1.7
+  - containers/delly2-0.7.7/Singularity.delly2-0.7.7
+  - containers/lofreq-2.1.3/Singularity.lofreq-2.1.3
+  - containers/R-3.4.3/Singularity.R-3.4.3
+  - containers/annovar-150617/Singularity.annovar-150617
+  - containers/bedtools-2.26.0/Singularity.bedtools-2.26.0
+  full_name: NYU-Molecular-Pathology/LG-PACT
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-ngs580-nf" class="anchor" href="#ngs580-nf" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>NGS580-nf</h1>
+
+    <p>Target exome analysis for 580 gene panel (NGS580)</p>
+
+    <p><strong>NOTE:</strong> Details listed here may change during development</p>
+
+    <h2>
+
+    <a id="user-content-overview" class="anchor" href="#overview" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Overview</h2>
+
+    <p>This pipeline is designed to run targeted exome analysis on Illumina Next-Gen
+    sequencing genomic data, in support of the NGS580 cancer diagnostic panel for
+    NYU''s Molecular Pathology Department.</p>
+
+    <p>This pipeline starts from paired-end fastq data (<code>.fastq.gz</code>), and
+    is meant to accompany the output from the Illumina demultiplexing pipeline listed
+    here: <a href="https://github.com/NYU-Molecular-Pathology/demux-nf">https://github.com/NYU-Molecular-Pathology/demux-nf</a>.</p>
+
+    <p>The NGS580-nf analysis workflow includes read trimming, QC, alignment, variant
+    calling, annotation, and reporting, along with many other steps.</p>
+
+    <h2>
+
+    <a id="user-content-contents" class="anchor" href="#contents" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Contents</h2>
+
+    <p>Some key pipeline components included in this repository:</p>
+
+    <ul>
+
+    <li>
+
+    <p><code>bin</code>: directory of custom scripts used throughout the pipeline</p>
+
+    </li>
+
+    <li>
+
+    <p><code>containers</code>: directory of container recipes (Docker, Singularity)
+    for use with the pipeline</p>
+
+    </li>
+
+    <li>
+
+    <p><code>example</code>: directory of example samplesheets, etc., to show the
+    format used with this pipeline</p>
+
+    </li>
+
+    <li>
+
+    <p><code>targets</code>: directory of target region .bed files included with the
+    pipeline for typical analyses</p>
+
+    </li>
+
+    <li>
+
+    <p><code>Makefile</code>: A Makefile with recipes for configuring, starting, and
+    managing the pipeline. This is meant to be the main interface between the end-user
+    and the pipeline. The Makefile should be reviewed as-needed to familiarize yourself
+    with the methods and configurations that are meant to be used for running and
+    managing the pipeline.</p>
+
+    </li>
+
+    <li>
+
+    <p><code>main.nf</code>: the main Nextflow pipeline script</p>
+
+    </li>
+
+    <li>
+
+    <p><code>nextflow.config</code>: configuration file for the main Nextflow pipeline
+    script</p>
+
+    </li>
+
+    <li>
+
+    <p><code>.config.json</code>: a template for the required <code>config.json</code>
+    file used in the pipeline, shows the default pipeline settings that are meant
+    to be easily modified by the end-user and used within the pipeline for data processing.</p>
+
+    </li>
+
+    <li>
+
+    <p><code>annovar_db.nf</code>, <code>cnv-pool.nf</code>, <code>hapmap-pool.nf</code>,
+    <code>ref.nf</code>: workflows for generating and downloading extra reference
+    files used in the main pipeline.</p>
+
+    </li>
+
+    <li>
+
+    <p><code>ref</code>: default location for the storage of reference files (not
+    used on NYU Big Purple HPC)</p>
+
+    </li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-pipeline-items" class="anchor" href="#pipeline-items" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Pipeline Items</h2>
+
+    <p>Some key components that are created during setup, configuration, and execution
+    of the pipeline:</p>
+
+    <ul>
+
+    <li>
+
+    <p><code>samples.analysis.tsv</code>: the main samplesheet definig input items
+    for the pipeline (described below)</p>
+
+    </li>
+
+    <li>
+
+    <p><code>config.json</code>: configuration file used for pipeline settings (see
+    <code>.config.json</code> template for example)</p>
+
+    </li>
+
+    <li>
+
+    <p><code>output</code>: analysis output files published by the Nextflow pipeline</p>
+
+    </li>
+
+    <li>
+
+    <p><code>work</code>: Nextflow temporary directories for execution of pipeline
+    tasks</p>
+
+    </li>
+
+    <li>
+
+    <p><code>trace.txt</code>, <code>nextflow.html</code>, <code>timeline.html</code>,
+    <code>.nextflow.log</code>: Nextflow execution logs and reports</p>
+
+    </li>
+
+    <li>
+
+    <p><code>logs</code>: directory for pipeline execution logs</p>
+
+    </li>
+
+    </ul>
+
+    <h1>
+
+    <a id="user-content-setup" class="anchor" href="#setup" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Setup</h1>
+
+    <p>This repository should first be cloned from GitHub:</p>
+
+    <pre><code>git clone --recursive https://github.com/NYU-Molecular-Pathology/NGS580-nf.git
+
+    cd NGS580-nf
+
+    </code></pre>
+
+    <ul>
+
+    <li>Once a copy of the repo is made, it can be used to "deploy" new copies of
+    the workflow in a pre-configured state</li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-reference-data" class="anchor" href="#reference-data" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Reference Data</h2>
+
+    <p>Nextflow pipelines have been included for downloading required reference data,
+    including ANNOVAR reference databases. You can run them with the following command:</p>
+
+    <pre><code>make setup
+
+    </code></pre>
+
+    <h3>
+
+    <a id="user-content-hapmap-pool-bam" class="anchor" href="#hapmap-pool-bam" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>HapMap Pool .bam</h3>
+
+    <p>A negative control HapMap pool .bam file can be prepared using the following
+    command:</p>
+
+    <pre><code>make hapmap-pool
+
+    </code></pre>
+
+    <ul>
+
+    <li>Requires <code>samples.hapmap.tsv</code> file specifying the .bam files to
+    be combined (example included at <code>example/samples.hapmap.tsv</code>).</li>
+
+    </ul>
+
+    <p>This file is typically built from multiple HapMap samples previously aligned
+    by this pipeline. For demonstration purposes, you can provide any .bam and .bai
+    files.</p>
+
+    <p>The HapMap Pool files to be used in the pipeline should be set under the <code>HapMapBam</code>
+    and <code>HapMapBai</code> keys of <code>config.json</code>.</p>
+
+    <h3>
+
+    <a id="user-content-cnv-pool" class="anchor" href="#cnv-pool" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>CNV Pool</h3>
+
+    <p>A control normal sample .cnn file for CNV calling can be prepared using the
+    following command:</p>
+
+    <pre><code>make cnv-pool
+
+    </code></pre>
+
+    <ul>
+
+    <li>Requires <code>samples.cnv.tsv</code> file specifying the .bam files to be
+    used (example included at <code>example/samples.cnv.tsv</code>)</li>
+
+    </ul>
+
+    <p>This file is typically built from .bam files of specially chosen normal tissue
+    sequencing samples previously aligned by this pipeline. For demonstration purposes,
+    you can create the .cnn file from any desired .bam file. Note that the targets
+    .bed file used to create the .cnn file must match the targets used in the rest
+    of the pipeline.</p>
+
+    <p>The .cnn file to be used in the pipeline should be set under the <code>CNVPool</code>
+    key in <code>config.json</code>.</p>
+
+    <h2>
+
+    <a id="user-content-containers" class="anchor" href="#containers" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Containers</h2>
+
+    <p>The <code>containers</code> directory contains instructions and recipes for
+    building the Docker and Singularity containers used in the pipeline.</p>
+
+    <p>Docker is typically used for local container development, while Singularity
+    containers are used on the NYU Big Purple HPC cluster. The current pipeline configuration
+    for Big Purple uses <code>.simg</code> files stored in a common location on the
+    file system.</p>
+
+    <h1>
+
+    <a id="user-content-usage" class="anchor" href="#usage" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h1>
+
+    <p>The pipeline is designed to start from demultiplexed paired end <code>.fastq.gz</code>
+    files, with sample ID, tumor ID, and matched normal ID associations defined for
+    each set of R1 and R2 .fastq file using a file <code>samples.analysis.tsv</code>
+    (example included at <code>example/samples.analysis.tsv</code>).</p>
+
+    <h2>
+
+    <a id="user-content-deployment" class="anchor" href="#deployment" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Deployment</h2>
+
+    <p>The easiset way to use the pipeline is to "deploy" a new instance of it based
+    on output from the demultiplexing pipeline <a href="https://github.com/NYU-Molecular-Pathology/demux-nf"><code>demux-nf</code></a>.
+    This will automatically propagate configurations and information from the demultiplexing
+    output.</p>
+
+    <p>The pipeline can also deploy a new, pre-configured copy of itself using the
+    included <code>deploy</code> recipe:</p>
+
+    <pre><code>make deploy PRODDIR=/path/to/NGS580_analyses RUNID=Name_for_analysis
+    FASTQDIR=/path/to/fastq_files
+
+    </code></pre>
+
+    <ul>
+
+    <li>An optional argument <code>DEMUX_SAMPLESHEET</code> can be used to provide
+    a specially formatted demultiplexing samplesheet to be used for extracting extra
+    sample information (example included at <code>example/demux-SampleSheet.csv</code>;
+    note the extra columns labeling tumor-normal pair IDs, used later).</li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-create-config" class="anchor" href="#create-config" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Create Config</h2>
+
+    <p>A file <code>config.json</code> is required to hold settings for the pipeline.
+    It should be created using the built-in methods:</p>
+
+    <pre><code>make config RUNID=my_run_ID FASTQDIR=/path/to/fastqs
+
+    </code></pre>
+
+    <p>or</p>
+
+    <pre><code>make config RUNID=my_run_ID FASTQDIRS=''/path/to/fastqs1 /path/to/fastqs2''
+
+    </code></pre>
+
+    <p>or</p>
+
+    <pre><code>cp .config.json config.json
+
+    </code></pre>
+
+    <p>and then simply edit the new <code>config.json</code> and update the items
+    to match your pipeline settings.</p>
+
+    <p>Once created, the <code>config.json</code> file can be updated manually as
+    needed. The template and default values can be viewed in the included <code>.config.json</code>
+    file.</p>
+
+    <ul>
+
+    <li>
+
+    <code>config.json</code> should be generated automatically if you used <code>make
+    deploy</code>
+
+    </li>
+
+    </ul>
+
+    <h2>
+
+    <a id="user-content-create-samplesheet" class="anchor" href="#create-samplesheet"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create
+    Samplesheet</h2>
+
+    <p>A samplesheet file <code>samples.analysis.tsv</code> is required in order to
+    define the input samples and their associated .fastq files (example included at
+    <code>example/samples.analysis.tsv</code>). Create a samplesheet, based on the
+    config file, using the built-in methods:</p>
+
+    <pre><code>make samplesheet
+
+    </code></pre>
+
+    <ul>
+
+    <li>Note that this uses the values previously saved in <code>config.json</code>
+    to create the samplesheet</li>
+
+    </ul>
+
+    <h3>
+
+    <a id="user-content-sample-pairs-optional" class="anchor" href="#sample-pairs-optional"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sample
+    Pairs (Optional)</h3>
+
+    <p>The NGS580-nf pipeline has special processing for tumor-normal pairs. These
+    pairs should be defined in the <code>samples.analysis.tsv</code> file, by listing
+    the matched Normal sample for each applicable sample.</p>
+
+    <p>In order to update <code>samples.analysis.tsv</code> automatically with these
+    sample pairs, an extra samplesheet can be provided with the tumor-normal pairs.</p>
+
+    <p>Create a <code>samples.tumor.normal.csv</code> samplesheet (example included
+    at <code>example/samples.tumor.normal.csv</code>) with the tumor-normal groupings
+    for your samples, and update the original samplesheet with it by running the following
+    script:</p>
+
+    <pre><code>python update-samplesheets.py --tumor-normal-sheet samples.tumor.normal.csv
+
+    </code></pre>
+
+    <p>If a demultiplexing samplesheet with extra tumor-normal pairs information was
+    supplied (see example: <code>example/demux-SampleSheet.csv</code>), then it can
+    be used to update the samplesheet with pairs information with the following recipe:</p>
+
+    <pre><code>make pairs PAIRS_SHEET=demux-SampleSheet.csv PAIRS_MODE=demux
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-run" class="anchor" href="#run" aria-hidden="true"><span aria-hidden="true"
+    class="octicon octicon-link"></span></a>Run</h2>
+
+    <p>The pipeline includes an auto-run functionality that attempts to determine
+    the best configuration to use for NYU phoenix and Big Purple HPC clusters:</p>
+
+    <pre><code>make run
+
+    </code></pre>
+
+    <p>This will run the pipeline in the current session.</p>
+
+    <p>In order to run the pipeline in the background as a job on NYU''s Big Purple
+    HPC, you should instead use the <code>submit</code> recipe:</p>
+
+    <pre><code>make submit SUBQ=fn_medium
+
+    </code></pre>
+
+    <p>Where <code>SUBQ</code> is the name of the SLURM queue you wish to use.</p>
+
+    <p>Refer to the <code>Makefile</code> for more run options.</p>
+
+    <p>Due to the scale of the pipeline, a "local" run option is not currently configured,
+    but can be set up easily based on the details shown in the Makefile and <code>nextflow.config</code>.</p>
+
+    <h3>
+
+    <a id="user-content-extra-parameters" class="anchor" href="#extra-parameters"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Extra
+    Parameters</h3>
+
+    <p>You can supply extra parameters for Nextflow by using the <code>EP</code> variable
+    included in the Makefile, like this:</p>
+
+    <pre><code>make run EP=''--runID 180320_NB501073_0037_AH55F3BGX5
+
+    </code></pre>
+
+    <h3>
+
+    <a id="user-content-demo" class="anchor" href="#demo" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Demo</h3>
+
+    <p>A demo dataset can be loaded using the following command:</p>
+
+    <pre><code>make demo
+
+    </code></pre>
+
+    <p>This will:</p>
+
+    <ul>
+
+    <li>
+
+    <p>checkout a demo dataset</p>
+
+    </li>
+
+    <li>
+
+    <p>create a <code>samples.analysis.tsv</code> samplesheet for the analysis</p>
+
+    </li>
+
+    </ul>
+
+    <p>You can then proceed to run the analysis with the commands described above.</p>
+
+    <h2>
+
+    <a id="user-content-more-functionality" class="anchor" href="#more-functionality"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>More
+    Functionality</h2>
+
+    <p>Extra functions included in the Makefile for pipeline management include:</p>
+
+    <h3>
+
+    <a id="user-content-make-clean" class="anchor" href="#make-clean" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a><code>make clean</code>
+
+    </h3>
+
+    <p>Removes all Nextflow output except for the most recent run. Use <code>make
+    clean-all</code> to remove all pipeline outputs.</p>
+
+    <h3>
+
+    <a id="user-content-make-record-presome_prefix_" class="anchor" href="#make-record-presome_prefix_"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>make
+    record PRE=some_prefix_</code>
+
+    </h3>
+
+    <p>"Records" copies of the most recent pipeline run''s output logs, configuration,
+    Nextflow reports, etc.. Useful for recording analyses that failed or had errors
+    in order to debug. Include the optional argument <code>TASK</code> to specify
+    a Nextflow <code>work</code> directory to include in the records (example: <code>make
+    record PRE=error_something_broke_ TASK=e9/d9ff34</code>).</p>
+
+    <h3>
+
+    <a id="user-content-make-kill" class="anchor" href="#make-kill" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a><code>make kill</code>
+
+    </h3>
+
+    <p>Attempts to cleanly shut down a pipeline running on a remote host e.g. inside
+    a SLURM HPC compute job. Note that you can also use <code>scancel</code> to halt
+    the parent Nextflow pipeline job as well.</p>
+
+    <h3>
+
+    <a id="user-content-make-fix-permissions-make-fix-group" class="anchor" href="#make-fix-permissions-make-fix-group"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>make
+    fix-permissions</code>, <code>make fix-group</code>
+
+    </h3>
+
+    <p>Attempts to fix usergroup and permissions issues that may arise on shared systems
+    with multiple users. Be sure to use the extra argument <code>USERGROUP=somegroup</code>
+    to specify the usergroup to update to.</p>
+
+    <h3>
+
+    <a id="user-content-make-finalize-work-rm" class="anchor" href="#make-finalize-work-rm"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>make
+    finalize-work-rm</code>
+
+    </h3>
+
+    <p>Examines the <code>trace.txt</code> output from the most recent completed pipeline
+    run in order to determine while subdirectories in the Nextflow <code>work</code>
+    dir are no longer needed, and then deletes them. Can delete multiple subdirs in
+    parallel when run with <code>make finalize-work-rm -j 20</code> e.g. specifying
+    to delete 20 at a time, etc.</p>
+
+    <h1>
+
+    <a id="user-content-software" class="anchor" href="#software" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Software</h1>
+
+    <p>Developed under Centos 6, RHEL 7, macOS 10.12</p>
+
+    <ul>
+
+    <li>
+
+    <p>bash</p>
+
+    </li>
+
+    <li>
+
+    <p>GNU <code>make</code>, standard GNU tools</p>
+
+    </li>
+
+    <li>
+
+    <p>Python 2/3</p>
+
+    </li>
+
+    <li>
+
+    <p>Java 8+ for Nextflow</p>
+
+    </li>
+
+    <li>
+
+    <p>Docker/Singularity as needed for containers</p>
+
+    </li>
+
+    </ul>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 2
+  topics:
+  - nextflow
+  - singularity-container
+  - docker-container
+  - python
+  - groovy
+  - slurm
+  - html
+  - makefile
+  - markdown
+  updated_at: 1632098034.0
 NYU-Molecular-Pathology/NGS580-nf:
   data_format: 2
   description: Target exome sequencing analysis for NYU NGS580 gene panel
@@ -19698,10 +20328,10 @@ SSCHAcode/python-sscha:
     simply edit it directly in the notebook.</p>
 
     '
-  stargazers_count: 13
+  stargazers_count: 14
   subscribers_count: 4
   topics: []
-  updated_at: 1631617738.0
+  updated_at: 1632038752.0
 Sarah145/batch_correct:
   data_format: 2
   description: Comparison of batch correction methods for scRNA-seq data - basically
@@ -24529,7 +25159,7 @@ automl/HPOBench:
     </li>\n</ul>\n<p><strong>Note:</strong> If you are looking for a different or\
     \ older version of our benchmarking library, you might be looking for\n<a href=\"\
     https://github.com/automl/HPOlib1.5\">HPOlib1.5</a></p>\n"
-  stargazers_count: 40
+  stargazers_count: 42
   subscribers_count: 7
   topics:
   - hyperparameter-optimization
@@ -24538,7 +25168,7 @@ automl/HPOBench:
   - benchmark
   - containerized-benchmarks
   - hpolib
-  updated_at: 1631742874.0
+  updated_at: 1632085683.0
 bananaeat/Cinnamon_assembly:
   data_format: 2
   description: null
@@ -29032,82 +29662,29 @@ cyang31/containers:
   data_format: 2
   description: null
   filenames:
-  - Singularity.mac_local
-  - Singularity.ExplainAI2
-  - Singularity.centos_tf
-  - Singularity.centos_torch2
-  - Singularity.ubuntu_torch
-  - Singularity.Spektral
-  - Singularity.torch_mmf
-  - Singularity.pytorch
-  - Singularity.physio
-  - Singularity.torch
-  - Singularity.centos_torch3
   - Singularity.jax
   - Singularity.ExplainAI
+  - Singularity.pytorch
+  - Singularity.ExplainAI2
+  - Singularity.torch_mmf
+  - Singularity.torch
+  - Singularity.mac_local
+  - Singularity.ubuntu_tf
+  - Singularity.ubuntu_torch
   - Singularity.centos_torch
   - Singularity.centos_tf2
+  - Singularity.centos_torch3
   - Singularity.ubuntu_pre
-  - Singularity.ubuntu_tf
+  - Singularity.centos_tf
+  - Singularity.centos_torch2
+  - Singularity.physio
+  - Singularity.Spektral
   full_name: cyang31/containers
   latest_release: null
-  readme: '<p><a href="https://singularity-hub.org/collections/4054" rel="nofollow"><img
-    src="https://camo.githubusercontent.com/a07b23d4880320ac89cdc93bbbb603fa84c215d135e05dd227ba8633a9ff34be/68747470733a2f2f7777772e73696e67756c61726974792d6875622e6f72672f7374617469632f696d672f686f737465642d73696e67756c61726974792d2d6875622d2532336533323932392e737667"
-    alt="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    data-canonical-src="https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg"
-    style="max-width:100%;"></a></p>
-
-    <h1>
-
-    <a id="user-content-singularity-container" class="anchor" href="#singularity-container"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>singularity-container</h1>
-
-    <h2>
-
-    <a id="user-content-singularity-images-supporting-basedmux-workflow" class="anchor"
-    href="#singularity-images-supporting-basedmux-workflow" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>Singularity images
-    supporting <a href="https://github.com/vibaotram/baseDmux.git">baseDmux workflow</a>
-
-    </h2>
-
-    <p><strong>Singularity.guppy-cpu-conda</strong></p>
-
-    <p>containing GUPPY version 3.4 CPU, Miniconda3</p>
-
-    <pre><code>shub://vibaotram/singularity-container:guppy-cpu-conda
-
-    </code></pre>
-
-    <p><strong>Singularity.cpu-guppy3.4-conda-api</strong></p>
-
-    <p>containing GUPPY version 3.4 CPU, Miniconda3, ONT_FAST5_API</p>
-
-    <pre><code>shub://vibaotram/singularity-container:cpu-guppy3.4-conda-api
-
-    </code></pre>
-
-    <p><strong>Singularity.guppy3.4gpu-conda-api</strong></p>
-
-    <p>containing GUPPY version 3.4 GPU, Miniconda3, ONT_FAST5_API</p>
-
-    <pre><code>shub://vibaotram/singularity-container:guppy3.4gpu-conda-api
-
-    </code></pre>
-
-    <p><strong>Singularity.deepbinner-api</strong></p>
-
-    <p>containing deepbinner 2.0.0, ONT_FAST5_API, python3</p>
-
-    <pre><code>shub://vibaotram/singularity-container:deepbinner-api
-
-    </code></pre>
-
-    '
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1625949452.0
+  updated_at: 1632080282.0
 czbiohub/demux:
   data_format: 2
   description: Demultiplex sequencing experiments with Nextflow
@@ -33901,6 +34478,29 @@ federatedcloud/singularity-PRESTO:
   subscribers_count: 6
   topics: []
   updated_at: 1622819998.0
+fenellamcandrew/aqc-maxcut:
+  data_format: 2
+  description: MAXCUT Simulation Code
+  filenames:
+  - SingularityFile.def
+  full_name: fenellamcandrew/aqc-maxcut
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-adiabatic-quantum-computing-for-maxcut" class="anchor" href="#adiabatic-quantum-computing-for-maxcut"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Adiabatic
+    Quantum Computing for MAXCUT</h1>
+
+    <p>MAXCUT Simulation Code</p>
+
+    <div class="highlight highlight-source-shell"><pre>ssh -i <span class="pl-k">~</span>/.ssh/experimentr.pem
+    ubuntu@<span class="pl-k">&lt;</span>MY_IP_ADDRESS<span class="pl-k">&gt;</span></pre></div>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 2
+  topics: []
+  updated_at: 1632103728.0
 frankwillmore/alcf-singularity:
   data_format: 2
   description: local settings
@@ -46653,6 +47253,7 @@ myzkyuki/singularity_recipe:
   filenames:
   - tensorflow/Singularity.tf-2.2.0-gpu
   - tensorflow/Singularity.tf-2.5.1-gpu
+  - tensorflow/Singularity.tf-2.4.3-gpu
   - tensorflow/Singularity.tf-2.0.0-gpu-py3
   - tensorflow/Singularity.tf-1.12.0-gpu-py3
   - tensorflow/Singularity.tf-1.12.0-gpu-mlflow-py3
@@ -46673,7 +47274,7 @@ myzkyuki/singularity_recipe:
   stargazers_count: 0
   subscribers_count: 0
   topics: []
-  updated_at: 1631695061.0
+  updated_at: 1632105144.0
 nbcrrolls/electrostatics-singularity:
   data_format: 2
   description: Molecular electrostatics singularity image
@@ -52575,7 +53176,7 @@ psadil/meta:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1631532831.0
+  updated_at: 1632096667.0
 pscedu/singularity-abyss:
   data_format: 2
   description: ABySS is a de novo sequence assembler that is designed for very short
@@ -53425,7 +54026,7 @@ pscedu/singularity-blat:
     \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
     \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
   stargazers_count: 0
-  subscribers_count: 3
+  subscribers_count: 2
   topics:
   - singularity
   - bioinformatics
@@ -54290,7 +54891,7 @@ pscedu/singularity-flash:
     \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
     \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
   stargazers_count: 0
-  subscribers_count: 3
+  subscribers_count: 2
   topics:
   - singularity
   - bioinformatics
@@ -58506,14 +59107,14 @@ ropensci/babette:
   - phylogenetics
   - beast2
   - bayesian-inference
-  updated_at: 1631464179.0
+  updated_at: 1632075310.0
 ropensci/beastier:
   data_format: 2
   description: R package to run BEAST2
   filenames:
   - Singularity
   full_name: ropensci/beastier
-  latest_release: v2.4.5
+  latest_release: v2.4.8
   readme: "<h1>\n<a id=\"user-content-beastier\" class=\"anchor\" href=\"#beastier\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
     ></span></a>beastier</h1>\n<p><a href=\"https://github.com/ropensci/onboarding/issues/209\"\
@@ -58690,7 +59291,184 @@ ropensci/beastier:
   - r
   - r-package
   - rstats
-  updated_at: 1631093301.0
+  updated_at: 1632043528.0
+ropensci/beautier:
+  data_format: 2
+  description: R package to generate the same BEAST2 XML parameter files as generated
+    by BEAUti 2
+  filenames:
+  - Singularity
+  full_name: ropensci/beautier
+  latest_release: v2.6.2
+  readme: "<h1>\n<a id=\"user-content-beautier\" class=\"anchor\" href=\"#beautier\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>beautier</h1>\n<p><a href=\"https://github.com/ropensci/onboarding/issues/209\"\
+    ><img src=\"https://camo.githubusercontent.com/34962aada576bd5457cefa8c40985c4e48e5eb46e231763014a50e66a9c5bfc6/68747470733a2f2f6261646765732e726f70656e7363692e6f72672f3230395f7374617475732e737667\"\
+    \ alt=\"Peer Review Status\" data-canonical-src=\"https://badges.ropensci.org/209_status.svg\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://cran.r-project.org/package=beautier\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/b9548d4d91cbcc60cb67432f002e7b30b11c6bc67b3ea54dae3cf7f98b5a08e2/687474703a2f2f7777772e722d706b672e6f72672f6261646765732f76657273696f6e2f6265617574696572\"\
+    \ alt=\"CRAN_Status_Badge\" data-canonical-src=\"http://www.r-pkg.org/badges/version/beautier\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://CRAN.R-project.org/package=beautier\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/48220660db55ddb42d1c82b169b751dc8eaf0921a180cd7b6074cf69635d6aa5/687474703a2f2f6372616e6c6f67732e722d706b672e6f72672f6261646765732f6772616e642d746f74616c2f6265617574696572\"\
+    \ alt=\"\" data-canonical-src=\"http://cranlogs.r-pkg.org/badges/grand-total/beautier\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://CRAN.R-project.org/package=beautier\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/1ea6ff18e030d3d1676cbfa9a8e7360b45c7f772e458d7208f5f10f41b91a099/687474703a2f2f6372616e6c6f67732e722d706b672e6f72672f6261646765732f6265617574696572\"\
+    \ alt=\"\" data-canonical-src=\"http://cranlogs.r-pkg.org/badges/beautier\" style=\"\
+    max-width:100%;\"></a>\n<a href=\"https://zenodo.org/badge/latestdoi/53443354\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/231e56f620880094559614cb924a94a0797c0e5d202219d97b14f72e8b6f0902/68747470733a2f2f7a656e6f646f2e6f72672f62616467652f35333434333335342e737667\"\
+    \ alt=\"DOI\" data-canonical-src=\"https://zenodo.org/badge/53443354.svg\" style=\"\
+    max-width:100%;\"></a></p>\n<table>\n<thead>\n<tr>\n<th>Branch</th>\n<th><a href=\"\
+    https://github.com/ropensci/beautier/actions\"><img src=\"man/figures/GitHubActions.png\"\
+    \ alt=\"GitHub Actions logo\" style=\"max-width:100%;\"></a></th>\n<th><a href=\"\
+    https://travis-ci.com\" rel=\"nofollow\"><img src=\"man/figures/TravisCI.png\"\
+    \ alt=\"Travis CI logo\" style=\"max-width:100%;\"></a></th>\n<th><a href=\"https://www.codecov.io\"\
+    \ rel=\"nofollow\"><img src=\"man/figures/Codecov.png\" alt=\"Codecov logo\" style=\"\
+    max-width:100%;\"></a></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><code>master</code></td>\n\
+    <td><a href=\"https://github.com/ropensci/beautier/workflows/R-CMD-check/badge.svg?branch=master\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/ropensci/beautier/workflows/R-CMD-check/badge.svg?branch=master\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://travis-ci.com/ropensci/beautier\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/715e4e61b1ebd73b3a52ef0166effdb1d90652b97d7835605849b98aba822e90/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f62656175746965722e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.com/ropensci/beautier.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/beautier/branch/master\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/011707c588b637427fb7fd26e3ac40d7d2603f03d5c99ae6fd868f0ef6e0cd0e/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f62656175746965722f636f7665726167652e7376673f6272616e63683d6d6173746572\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/beautier/coverage.svg?branch=master\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n<tr>\n<td><code>develop</code></td>\n\
+    <td><a href=\"https://github.com/ropensci/beautier/workflows/R-CMD-check/badge.svg?branch=develop\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/ropensci/beautier/workflows/R-CMD-check/badge.svg?branch=develop\"\
+    \ alt=\"R-CMD-check\" style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://travis-ci.com/ropensci/beautier\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/5a1df310872217c8173d71443fe40c787e7977f2abf4e645e492be481b41ddf7/68747470733a2f2f7472617669732d63692e636f6d2f726f70656e7363692f62656175746965722e7376673f6272616e63683d646576656c6f70\"\
+    \ alt=\"Build Status\" data-canonical-src=\"https://travis-ci.com/ropensci/beautier.svg?branch=develop\"\
+    \ style=\"max-width:100%;\"></a></td>\n<td><a href=\"https://codecov.io/github/ropensci/beautier/branch/develop\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/a1c159794b764809cd571a36953e2b354e8213fd7eef81313e83bcdba7f425a0/68747470733a2f2f636f6465636f762e696f2f6769746875622f726f70656e7363692f62656175746965722f636f7665726167652e7376673f6272616e63683d646576656c6f70\"\
+    \ alt=\"codecov.io\" data-canonical-src=\"https://codecov.io/github/ropensci/beautier/coverage.svg?branch=develop\"\
+    \ style=\"max-width:100%;\"></a></td>\n</tr>\n</tbody>\n</table>\n<p><code>beautier</code>\
+    \ is <code>BEAUti</code> for R.</p>\n<p><a href=\"man/figures/beautier_logo.png\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"man/figures/beautier_logo.png\"\
+    \ alt=\"beautier logo\" style=\"max-width:100%;\"></a></p>\n<p>The purpose of\
+    \ <code>beautier</code> is to create\n<a href=\"inst/extdata/2_4.xml\">a valid\
+    \ BEAST2 XML input file</a>\nfrom a n inference model. In this way, a scientific\
+    \ pipeline using\n<code>BEAST2</code> can be fully scripted, instead of using\
+    \ <code>BEAUti</code>'s GUI.</p>\n<p><code>beautier</code> is part of the <a href=\"\
+    https://github.com/ropensci/babette\"><code>babette</code></a> package suite:</p>\n\
+    <ul>\n<li>\n<a href=\"https://github.com/ropensci/beautier\"><code>beautier</code></a>\
+    \ create a BEAST2 input (<code>.xml</code>) file from an inference model.</li>\n\
+    <li>\n<a href=\"https://github.com/richelbilderbeek/tiebeaur\"><code>tiebeaur</code></a>\
+    \ creates an inference model from a BEAST2 input (<code>.xml</code>) file <g-emoji\
+    \ class=\"g-emoji\" alias=\"warning\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/26a0.png\"\
+    >\u26A0\uFE0F</g-emoji> experimental <g-emoji class=\"g-emoji\" alias=\"warning\"\
+    \ fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/26a0.png\"\
+    >\u26A0\uFE0F</g-emoji>\n</li>\n<li>\n<a href=\"https://github.com/ropensci/beastier\"\
+    ><code>beastier</code></a> runs BEAST2</li>\n<li>\n<a href=\"https://github.com/ropensci/tracerer\"\
+    ><code>tracerer</code></a> pastes BEAST2 output (<code>.log</code>, <code>.trees</code>,\
+    \ etc) files.</li>\n<li>\n<a href=\"https://github.com/ropensci/mauricer\"><code>mauricer</code></a>\
+    \ install BEAST2 packages</li>\n</ul>\n<p>Related R packages:</p>\n<ul>\n<li>\n\
+    <a href=\"https://github.com/richelbilderbeek/beautier_on_windows\"><code>beautier_on_windows</code></a>:\
+    \ verifies\n<code>beautier</code> builds on Windows</li>\n<li>\n<a href=\"https://github.com/ropensci/lumier\"\
+    ><code>lumier</code></a>: Shiny app to help create the function call needed</li>\n\
+    </ul>\n<h2>\n<a id=\"user-content-examples\" class=\"anchor\" href=\"#examples\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Examples</h2>\n<p>See <a href=\"doc/examples.md\">examples</a>.</p>\n\
+    <h2>\n<a id=\"user-content-installation\" class=\"anchor\" href=\"#installation\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Installation</h2>\n<p><code>beautier</code> can be installed:</p>\n\
+    <ul>\n<li>Latest CRAN version: CRAN</li>\n<li>Latest stable version: GitHub, <code>master</code>\
+    \ branch</li>\n<li>Bleeding-edge version: GitHub, <code>develop</code> branch</li>\n\
+    </ul>\n<h3>\n<a id=\"user-content-cran\" class=\"anchor\" href=\"#cran\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>CRAN</h3>\n\
+    <p>For the latest CRAN version:</p>\n<div class=\"highlight highlight-source-r\"\
+    ><pre>install.packages(<span class=\"pl-s\"><span class=\"pl-pds\">\"</span>beautier<span\
+    \ class=\"pl-pds\">\"</span></span>)</pre></div>\n<h3>\n<a id=\"user-content-github-master-branch\"\
+    \ class=\"anchor\" href=\"#github-master-branch\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>GitHub, <code>master</code> branch</h3>\n\
+    <p>For the latest stable version:</p>\n<div class=\"highlight highlight-source-r\"\
+    ><pre><span class=\"pl-e\">remotes</span><span class=\"pl-k\">::</span>install_github(<span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>ropensci/beautier<span class=\"\
+    pl-pds\">\"</span></span>)</pre></div>\n<h3>\n<a id=\"user-content-github-develop-branch\"\
+    \ class=\"anchor\" href=\"#github-develop-branch\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>GitHub, <code>develop</code>\
+    \ branch</h3>\n<p>For the bleeding-edge version:</p>\n<div class=\"highlight highlight-source-r\"\
+    ><pre><span class=\"pl-e\">remotes</span><span class=\"pl-k\">::</span>install_github(<span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>ropensci/beautier<span class=\"\
+    pl-pds\">\"</span></span>, <span class=\"pl-v\">ref</span> <span class=\"pl-k\"\
+    >=</span> <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>develop<span class=\"\
+    pl-pds\">\"</span></span>)</pre></div>\n<h2>\n<a id=\"user-content-faq\" class=\"\
+    anchor\" href=\"#faq\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a><a href=\"doc/faq.md\">FAQ</a>\n</h2>\n<p>See\
+    \ <a href=\"doc/faq.md\">FAQ</a>.</p>\n<h2>\n<a id=\"user-content-supported\"\
+    \ class=\"anchor\" href=\"#supported\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Supported</h2>\n<p>This works,\
+    \ and the interface is unlikely to change.</p>\n<ul>\n<li>1 DNA alignment</li>\n\
+    <li>Site models:\n<ul>\n<li>JC69</li>\n<li>HKY</li>\n<li>TN93</li>\n<li>GTR</li>\n\
+    </ul>\n</li>\n<li>Clock models:\n<ul>\n<li>Strickt</li>\n<li>Relaxed log-normal</li>\n\
+    </ul>\n</li>\n<li>Tree models:\n<ul>\n<li>Yule</li>\n<li>Birth-Death</li>\n<li>Coalescent\
+    \ Bayesian Skyline</li>\n<li>Coalescent Constant Population</li>\n<li>Coalescent\
+    \ Exponential Population</li>\n</ul>\n</li>\n<li>Handle missing data: simply use\
+    \ a dash (\xB4-\xB4) as a sequence\nin a FASTA file</li>\n</ul>\n<h2>\n<a id=\"\
+    user-content-experimental\" class=\"anchor\" href=\"#experimental\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Experimental</h2>\n\
+    <p>This works partially, and the interface may change as well.</p>\n<h3>\n<a id=\"\
+    user-content-tip-dating\" class=\"anchor\" href=\"#tip-dating\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Tip\
+    \ dating</h3>\n<p>The tip dates file is a file\nthat needs to not have column,\
+    \ nor row names.\nThe columns need to be tab separated.</p>\n<p>See <a href=\"\
+    https://github.com/ropensci/beautier/blob/master/inst/extdata/G_VII_pre2003_dates_4.txt\"\
+    >here</a>\nfor an example, of which the first rows are shown here:</p>\n<pre><code>KF767106_Indonesia_1976_VII\t\
+    1976\nKF767104_Indonesia_1988_VII\t1988\nKF767105_Indonesia_1988_VII\t1988\nAY288998_Indonesia_1990_VII\t\
+    1990\n</code></pre>\n<p>In the future, there probably will be a \xB4to_tipdates_file\xB4\
+    \ function,\nto create a temporary tipdates file from a table.</p>\n<h2>\n<a id=\"\
+    user-content-missing-featuresunsupported\" class=\"anchor\" href=\"#missing-featuresunsupported\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Missing features/unsupported</h2>\n<p><code>beautier</code> cannot\
+    \ do everything <code>BEAUti</code> can.</p>\n<p>Here are some missing or (yet)\
+    \ unsupported features:</p>\n<ul>\n<li>Two or more DNA alignments</li>\n<li>Two\
+    \ or more site, clock or tree models</li>\n<li>Two or more MRCA priors</li>\n\
+    <li>Shared site, clock and/or tree models</li>\n<li>Using an amino acid alignment</li>\n\
+    <li>Support for hyper parameters</li>\n<li>Clock models\n<ul>\n<li>Relaxed exponential</li>\n\
+    <li>Random local</li>\n</ul>\n</li>\n<li>Tree priors\n<ul>\n<li>Calibrated Yule\
+    \ model</li>\n<li>Coalescent Extended Bayesian Skyline</li>\n</ul>\n</li>\n<li>Initialization\
+    \ (this is a tab that is hidden by default in <code>BEAUti</code>)</li>\n</ul>\n\
+    <h2>\n<a id=\"user-content-there-is-a-feature-i-miss\" class=\"anchor\" href=\"\
+    #there-is-a-feature-i-miss\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>There is a feature I miss</h2>\n<p>See <a href=\"\
+    CONTRIBUTING.md\">CONTRIBUTING</a>, at <code>Submitting use cases</code></p>\n\
+    <h2>\n<a id=\"user-content-i-want-to-collaborate\" class=\"anchor\" href=\"#i-want-to-collaborate\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>I want to collaborate</h2>\n<p>See <a href=\"CONTRIBUTING.md\">CONTRIBUTING</a>,\
+    \ at 'Submitting code'</p>\n<h2>\n<a id=\"user-content-i-think-i-have-found-a-bug\"\
+    \ class=\"anchor\" href=\"#i-think-i-have-found-a-bug\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>I think I have\
+    \ found a bug</h2>\n<p>See <a href=\"CONTRIBUTING.md\">CONTRIBUTING</a>, at 'Submitting\
+    \ bugs'</p>\n<h2>\n<a id=\"user-content-theres-something-else-i-want-to-say\"\
+    \ class=\"anchor\" href=\"#theres-something-else-i-want-to-say\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>There's\
+    \ something else I want to say</h2>\n<p>Sure, just add an Issue. Or send an email.</p>\n\
+    <h2>\n<a id=\"user-content-external-links\" class=\"anchor\" href=\"#external-links\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>External links</h2>\n<ul>\n<li><a href=\"https://github.com/CompEvol/beast2\"\
+    >BEAST2 GitHub</a></li>\n</ul>\n<h2>\n<a id=\"user-content-references\" class=\"\
+    anchor\" href=\"#references\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>References</h2>\n<p>Article about\
+    \ <code>babette</code>:</p>\n<ul>\n<li>Bilderbeek, Rich\xE8l JC, and Rampal S.\
+    \ Etienne. \"<code>babette</code>: BEAUti 2, BEAST 2 and Tracer for R.\" Methods\
+    \ in Ecology and Evolution (2018). <a href=\"https://doi.org/10.1111/2041-210X.13032\"\
+    \ rel=\"nofollow\">https://doi.org/10.1111/2041-210X.13032</a>\n</li>\n</ul>\n\
+    <p>FASTA files <code>anthus_aco.fas</code> and <code>anthus_nd2.fas</code> from:</p>\n\
+    <ul>\n<li>Van Els, Paul, and Heraldo V. Norambuena. \"A revision of species limits\
+    \ in Neotropical pipits Anthus based on multilocus genetic and vocal data.\" Ibis.</li>\n\
+    </ul>\n<p>FASTA file <code>G_VII_pre2003_msa.fas</code> from:</p>\n<ul>\n<li>Durr,\
+    \ PA; Wibowo, MH; Tabbu, CR; Asmara, W; Selleck, P; Wang, J; Broz, I; Graham,\
+    \ K.; Dimitrov, K and Afonso, C. (in preparation). Phylodynamics of Genotype VII\
+    \ Newcastle disease virus in Indonesia.</li>\n</ul>\n<p><a href=\"https://ropensci.org\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/2210c5afe29fad80dd5573f3a462877889e5d078b38f2a5f36511472156fe3e7/68747470733a2f2f726f70656e7363692e6f72672f7075626c69635f696d616765732f726f70656e7363695f666f6f7465722e706e67\"\
+    \ alt=\"ropensci_footer\" data-canonical-src=\"https://ropensci.org/public_images/ropensci_footer.png\"\
+    \ style=\"max-width:100%;\"></a></p>\n"
+  stargazers_count: 8
+  subscribers_count: 2
+  topics:
+  - r
+  - r-package
+  - rstats
+  updated_at: 1632042231.0
 ropensci/mauricer:
   data_format: 2
   description: Install BEAST2 packages from R
@@ -60914,6 +61692,318 @@ slhogle/singularity_def_files:
   subscribers_count: 1
   topics: []
   updated_at: 1614942669.0
+sokovninn/yolact-artwin:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: sokovninn/yolact-artwin
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-you-only-look-at-coefficients\" class=\"anchor\"\
+    \ href=\"#you-only-look-at-coefficients\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a><strong>Y</strong>ou <strong>O</strong>nly\
+    \ <strong>L</strong>ook <strong>A</strong>t <strong>C</strong>oefficien<strong>T</strong>s</h1>\n\
+    <pre><code>    \u2588\u2588\u2557   \u2588\u2588\u2557 \u2588\u2588\u2588\u2588\
+    \u2588\u2588\u2557 \u2588\u2588\u2557      \u2588\u2588\u2588\u2588\u2588\u2557\
+    \  \u2588\u2588\u2588\u2588\u2588\u2588\u2557\u2588\u2588\u2588\u2588\u2588\u2588\
+    \u2588\u2588\u2557\n    \u255A\u2588\u2588\u2557 \u2588\u2588\u2554\u255D\u2588\
+    \u2588\u2554\u2550\u2550\u2550\u2588\u2588\u2557\u2588\u2588\u2551     \u2588\u2588\
+    \u2554\u2550\u2550\u2588\u2588\u2557\u2588\u2588\u2554\u2550\u2550\u2550\u2550\
+    \u255D\u255A\u2550\u2550\u2588\u2588\u2554\u2550\u2550\u255D\n     \u255A\u2588\
+    \u2588\u2588\u2588\u2554\u255D \u2588\u2588\u2551   \u2588\u2588\u2551\u2588\u2588\
+    \u2551     \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551\u2588\u2588\u2551\
+    \        \u2588\u2588\u2551   \n      \u255A\u2588\u2588\u2554\u255D  \u2588\u2588\
+    \u2551   \u2588\u2588\u2551\u2588\u2588\u2551     \u2588\u2588\u2554\u2550\u2550\
+    \u2588\u2588\u2551\u2588\u2588\u2551        \u2588\u2588\u2551   \n       \u2588\
+    \u2588\u2551   \u255A\u2588\u2588\u2588\u2588\u2588\u2588\u2554\u255D\u2588\u2588\
+    \u2588\u2588\u2588\u2588\u2588\u2557\u2588\u2588\u2551  \u2588\u2588\u2551\u255A\
+    \u2588\u2588\u2588\u2588\u2588\u2588\u2557   \u2588\u2588\u2551   \n       \u255A\
+    \u2550\u255D    \u255A\u2550\u2550\u2550\u2550\u2550\u255D \u255A\u2550\u2550\u2550\
+    \u2550\u2550\u2550\u255D\u255A\u2550\u255D  \u255A\u2550\u255D \u255A\u2550\u2550\
+    \u2550\u2550\u2550\u255D   \u255A\u2550\u255D \n</code></pre>\n<p>A simple, fully\
+    \ convolutional model for real-time instance segmentation. This is the code for\
+    \ our papers:</p>\n<ul>\n<li><a href=\"https://arxiv.org/abs/1904.02689\" rel=\"\
+    nofollow\">YOLACT: Real-time Instance Segmentation</a></li>\n<li><a href=\"https://arxiv.org/abs/1912.06218\"\
+    \ rel=\"nofollow\">YOLACT++: Better Real-time Instance Segmentation</a></li>\n\
+    </ul>\n<h4>\n<a id=\"user-content-yolact-v12-released-changelog\" class=\"anchor\"\
+    \ href=\"#yolact-v12-released-changelog\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>YOLACT++ (v1.2) released! (<a\
+    \ href=\"CHANGELOG.md\">Changelog</a>)</h4>\n<p>YOLACT++'s resnet50 model runs\
+    \ at 33.5 fps on a Titan Xp and achieves 34.1 mAP on COCO's <code>test-dev</code>\
+    \ (check out our journal paper <a href=\"https://arxiv.org/abs/1912.06218\" rel=\"\
+    nofollow\">here</a>).</p>\n<p>In order to use YOLACT++, make sure you compile\
+    \ the DCNv2 code. (See <a href=\"https://github.com/dbolya/yolact#installation\"\
+    >Installation</a>)</p>\n<h4>\n<a id=\"user-content-for-a-real-time-demo-check-out-our-iccv-video\"\
+    \ class=\"anchor\" href=\"#for-a-real-time-demo-check-out-our-iccv-video\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>For\
+    \ a real-time demo, check out our ICCV video:</h4>\n<p><a href=\"https://www.youtube.com/watch?v=0pMfmo8qfpQ\"\
+    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/c9e061dab1a6754a417d6eb14803f1104cce54aa9231aa0d779e2523694ed23e/68747470733a2f2f696d672e796f75747562652e636f6d2f76692f30704d666d6f38716670512f302e6a7067\"\
+    \ alt=\"IMAGE ALT TEXT HERE\" data-canonical-src=\"https://img.youtube.com/vi/0pMfmo8qfpQ/0.jpg\"\
+    \ style=\"max-width:100%;\"></a></p>\n<p>Some examples from our YOLACT base model\
+    \ (33.5 fps on a Titan Xp and 29.8 mAP on COCO's <code>test-dev</code>):</p>\n\
+    <p><a href=\"data/yolact_example_0.png\" target=\"_blank\" rel=\"noopener noreferrer\"\
+    ><img src=\"data/yolact_example_0.png\" alt=\"Example 0\" style=\"max-width:100%;\"\
+    ></a></p>\n<p><a href=\"data/yolact_example_1.png\" target=\"_blank\" rel=\"noopener\
+    \ noreferrer\"><img src=\"data/yolact_example_1.png\" alt=\"Example 1\" style=\"\
+    max-width:100%;\"></a></p>\n<p><a href=\"data/yolact_example_2.png\" target=\"\
+    _blank\" rel=\"noopener noreferrer\"><img src=\"data/yolact_example_2.png\" alt=\"\
+    Example 2\" style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-installation\"\
+    \ class=\"anchor\" href=\"#installation\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Installation</h1>\n<ul>\n<li>Clone\
+    \ this repository and enter it:\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>git clone https://github.com/dbolya/yolact.git\n<span class=\"pl-c1\">cd</span>\
+    \ yolact</pre></div>\n</li>\n<li>Set up the environment using one of the following\
+    \ methods:\n<ul>\n<li>Using <a href=\"https://www.anaconda.com/distribution/\"\
+    \ rel=\"nofollow\">Anaconda</a>\n<ul>\n<li>Run <code>conda env create -f environment.yml</code>\n\
+    </li>\n</ul>\n</li>\n<li>Manually with pip\n<ul>\n<li>Set up a Python3 environment\
+    \ (e.g., using virtenv).</li>\n<li>Install <a href=\"http://pytorch.org/\" rel=\"\
+    nofollow\">Pytorch</a> 1.0.1 (or higher) and TorchVision.</li>\n<li>Install some\
+    \ other packages:\n<div class=\"highlight highlight-source-shell\"><pre><span\
+    \ class=\"pl-c\"><span class=\"pl-c\">#</span> Cython needs to be installed before\
+    \ pycocotools</span>\npip install cython\npip install opencv-python pillow pycocotools\
+    \ matplotlib </pre></div>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n<li>If you'd like\
+    \ to train YOLACT, download the COCO dataset and the 2014/2017 annotations. Note\
+    \ that this script will take a while and dump 21gb of files into <code>./data/coco</code>.\n\
+    <div class=\"highlight highlight-source-shell\"><pre>sh data/scripts/COCO.sh</pre></div>\n\
+    </li>\n<li>If you'd like to evaluate YOLACT on <code>test-dev</code>, download\
+    \ <code>test-dev</code> with this script.\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>sh data/scripts/COCO_test.sh</pre></div>\n</li>\n<li>If you want to use\
+    \ YOLACT++, compile deformable convolutional layers (from <a href=\"https://github.com/CharlesShang/DCNv2/tree/pytorch_1.0\"\
+    >DCNv2</a>).\nMake sure you have the latest CUDA toolkit installed from <a href=\"\
+    https://developer.nvidia.com/cuda-toolkit\" rel=\"nofollow\">NVidia's Website</a>.\n\
+    <div class=\"highlight highlight-source-shell\"><pre><span class=\"pl-c1\">cd</span>\
+    \ external/DCNv2\npython setup.py build develop</pre></div>\n</li>\n</ul>\n<h1>\n\
+    <a id=\"user-content-evaluation\" class=\"anchor\" href=\"#evaluation\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Evaluation</h1>\n\
+    <p>Here are our YOLACT models (released on April 5th, 2019) along with their FPS\
+    \ on a Titan Xp and mAP on <code>test-dev</code>:</p>\n<table>\n<thead>\n<tr>\n\
+    <th align=\"center\">Image Size</th>\n<th align=\"center\">Backbone</th>\n<th\
+    \ align=\"center\">FPS</th>\n<th align=\"center\">mAP</th>\n<th>Weights</th>\n\
+    <th></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td align=\"center\">550</td>\n<td\
+    \ align=\"center\">Resnet50-FPN</td>\n<td align=\"center\">42.5</td>\n<td align=\"\
+    center\">28.2</td>\n<td><a href=\"https://drive.google.com/file/d/1yp7ZbbDwvMiFJEq4ptVKTYTI2VeRDXl0/view?usp=sharing\"\
+    \ rel=\"nofollow\">yolact_resnet50_54_800000.pth</a></td>\n<td><a href=\"https://ucdavis365-my.sharepoint.com/:u:/g/personal/yongjaelee_ucdavis_edu/EUVpxoSXaqNIlssoLKOEoCcB1m0RpzGq_Khp5n1VX3zcUw\"\
+    \ rel=\"nofollow\">Mirror</a></td>\n</tr>\n<tr>\n<td align=\"center\">550</td>\n\
+    <td align=\"center\">Darknet53-FPN</td>\n<td align=\"center\">40.0</td>\n<td align=\"\
+    center\">28.7</td>\n<td><a href=\"https://drive.google.com/file/d/1dukLrTzZQEuhzitGkHaGjphlmRJOjVnP/view?usp=sharing\"\
+    \ rel=\"nofollow\">yolact_darknet53_54_800000.pth</a></td>\n<td><a href=\"https://ucdavis365-my.sharepoint.com/:u:/g/personal/yongjaelee_ucdavis_edu/ERrao26c8llJn25dIyZPhwMBxUp2GdZTKIMUQA3t0djHLw\"\
+    \ rel=\"nofollow\">Mirror</a></td>\n</tr>\n<tr>\n<td align=\"center\">550</td>\n\
+    <td align=\"center\">Resnet101-FPN</td>\n<td align=\"center\">33.5</td>\n<td align=\"\
+    center\">29.8</td>\n<td><a href=\"https://drive.google.com/file/d/1UYy3dMapbH1BnmtZU4WH1zbYgOzzHHf_/view?usp=sharing\"\
+    \ rel=\"nofollow\">yolact_base_54_800000.pth</a></td>\n<td><a href=\"https://ucdavis365-my.sharepoint.com/:u:/g/personal/yongjaelee_ucdavis_edu/EYRWxBEoKU9DiblrWx2M89MBGFkVVB_drlRd_v5sdT3Hgg\"\
+    \ rel=\"nofollow\">Mirror</a></td>\n</tr>\n<tr>\n<td align=\"center\">700</td>\n\
+    <td align=\"center\">Resnet101-FPN</td>\n<td align=\"center\">23.6</td>\n<td align=\"\
+    center\">31.2</td>\n<td><a href=\"https://drive.google.com/file/d/1lE4Lz5p25teiXV-6HdTiOJSnS7u7GBzg/view?usp=sharing\"\
+    \ rel=\"nofollow\">yolact_im700_54_800000.pth</a></td>\n<td><a href=\"https://ucdavis365-my.sharepoint.com/:u:/g/personal/yongjaelee_ucdavis_edu/Eagg5RSc5hFEhp7sPtvLNyoBjhlf2feog7t8OQzHKKphjw\"\
+    \ rel=\"nofollow\">Mirror</a></td>\n</tr>\n</tbody>\n</table>\n<p>YOLACT++ models\
+    \ (released on December 16th, 2019):</p>\n<table>\n<thead>\n<tr>\n<th align=\"\
+    center\">Image Size</th>\n<th align=\"center\">Backbone</th>\n<th align=\"center\"\
+    >FPS</th>\n<th align=\"center\">mAP</th>\n<th>Weights</th>\n<th></th>\n</tr>\n\
+    </thead>\n<tbody>\n<tr>\n<td align=\"center\">550</td>\n<td align=\"center\">Resnet50-FPN</td>\n\
+    <td align=\"center\">33.5</td>\n<td align=\"center\">34.1</td>\n<td><a href=\"\
+    https://drive.google.com/file/d/1ZPu1YR2UzGHQD0o1rEqy-j5bmEm3lbyP/view?usp=sharing\"\
+    \ rel=\"nofollow\">yolact_plus_resnet50_54_800000.pth</a></td>\n<td><a href=\"\
+    https://ucdavis365-my.sharepoint.com/:u:/g/personal/yongjaelee_ucdavis_edu/EcJAtMiEFlhAnVsDf00yWRIBUC4m8iE9NEEiV05XwtEoGw\"\
+    \ rel=\"nofollow\">Mirror</a></td>\n</tr>\n<tr>\n<td align=\"center\">550</td>\n\
+    <td align=\"center\">Resnet101-FPN</td>\n<td align=\"center\">27.3</td>\n<td align=\"\
+    center\">34.6</td>\n<td><a href=\"https://drive.google.com/file/d/15id0Qq5eqRbkD-N3ZjDZXdCvRyIaHpFB/view?usp=sharing\"\
+    \ rel=\"nofollow\">yolact_plus_base_54_800000.pth</a></td>\n<td><a href=\"https://ucdavis365-my.sharepoint.com/:u:/g/personal/yongjaelee_ucdavis_edu/EVQ62sF0SrJPrl_68onyHF8BpG7c05A8PavV4a849sZgEA\"\
+    \ rel=\"nofollow\">Mirror</a></td>\n</tr>\n</tbody>\n</table>\n<p>To evalute the\
+    \ model, put the corresponding weights file in the <code>./weights</code> directory\
+    \ and run one of the following commands. The name of each config is everything\
+    \ before the numbers in the file name (e.g., <code>yolact_base</code> for <code>yolact_base_54_800000.pth</code>).</p>\n\
+    <h2>\n<a id=\"user-content-quantitative-results-on-coco\" class=\"anchor\" href=\"\
+    #quantitative-results-on-coco\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Quantitative Results on COCO</h2>\n\
+    <div class=\"highlight highlight-source-shell\"><pre><span class=\"pl-c\"><span\
+    \ class=\"pl-c\">#</span> Quantitatively evaluate a trained model on the entire\
+    \ validation set. Make sure you have COCO downloaded as above.</span>\n<span class=\"\
+    pl-c\"><span class=\"pl-c\">#</span> This should get 29.92 validation mask mAP\
+    \ last time I checked.</span>\npython eval.py --trained_model=weights/yolact_base_54_800000.pth\n\
+    \n<span class=\"pl-c\"><span class=\"pl-c\">#</span> Output a COCOEval json to\
+    \ submit to the website or to use the run_coco_eval.py script.</span>\n<span class=\"\
+    pl-c\"><span class=\"pl-c\">#</span> This command will create './results/bbox_detections.json'\
+    \ and './results/mask_detections.json' for detection and instance segmentation\
+    \ respectively.</span>\npython eval.py --trained_model=weights/yolact_base_54_800000.pth\
+    \ --output_coco_json\n\n<span class=\"pl-c\"><span class=\"pl-c\">#</span> You\
+    \ can run COCOEval on the files created in the previous command. The performance\
+    \ should match my implementation in eval.py.</span>\npython run_coco_eval.py\n\
+    \n<span class=\"pl-c\"><span class=\"pl-c\">#</span> To output a coco json file\
+    \ for test-dev, make sure you have test-dev downloaded from above and go</span>\n\
+    python eval.py --trained_model=weights/yolact_base_54_800000.pth --output_coco_json\
+    \ --dataset=coco2017_testdev_dataset</pre></div>\n<h2>\n<a id=\"user-content-qualitative-results-on-coco\"\
+    \ class=\"anchor\" href=\"#qualitative-results-on-coco\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Qualitative\
+    \ Results on COCO</h2>\n<div class=\"highlight highlight-source-shell\"><pre><span\
+    \ class=\"pl-c\"><span class=\"pl-c\">#</span> Display qualitative results on\
+    \ COCO. From here on I'll use a confidence threshold of 0.15.</span>\npython eval.py\
+    \ --trained_model=weights/yolact_base_54_800000.pth --score_threshold=0.15 --top_k=15\
+    \ --display</pre></div>\n<h2>\n<a id=\"user-content-benchmarking-on-coco\" class=\"\
+    anchor\" href=\"#benchmarking-on-coco\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Benchmarking on COCO</h2>\n<div\
+    \ class=\"highlight highlight-source-shell\"><pre><span class=\"pl-c\"><span class=\"\
+    pl-c\">#</span> Run just the raw model on the first 1k images of the validation\
+    \ set</span>\npython eval.py --trained_model=weights/yolact_base_54_800000.pth\
+    \ --benchmark --max_images=1000</pre></div>\n<h2>\n<a id=\"user-content-images\"\
+    \ class=\"anchor\" href=\"#images\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Images</h2>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre><span class=\"pl-c\"><span class=\"pl-c\">#</span>\
+    \ Display qualitative results on the specified image.</span>\npython eval.py --trained_model=weights/yolact_base_54_800000.pth\
+    \ --score_threshold=0.15 --top_k=15 --image=my_image.png\n\n<span class=\"pl-c\"\
+    ><span class=\"pl-c\">#</span> Process an image and save it to another file.</span>\n\
+    python eval.py --trained_model=weights/yolact_base_54_800000.pth --score_threshold=0.15\
+    \ --top_k=15 --image=input_image.png:output_image.png\n\n<span class=\"pl-c\"\
+    ><span class=\"pl-c\">#</span> Process a whole folder of images.</span>\npython\
+    \ eval.py --trained_model=weights/yolact_base_54_800000.pth --score_threshold=0.15\
+    \ --top_k=15 --images=path/to/input/folder:path/to/output/folder</pre></div>\n\
+    <h2>\n<a id=\"user-content-video\" class=\"anchor\" href=\"#video\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Video</h2>\n\
+    <div class=\"highlight highlight-source-shell\"><pre><span class=\"pl-c\"><span\
+    \ class=\"pl-c\">#</span> Display a video in real-time. \"--video_multiframe\"\
+    \ will process that many frames at once for improved performance.</span>\n<span\
+    \ class=\"pl-c\"><span class=\"pl-c\">#</span> If you want, use \"--display_fps\"\
+    \ to draw the FPS directly on the frame.</span>\npython eval.py --trained_model=weights/yolact_base_54_800000.pth\
+    \ --score_threshold=0.15 --top_k=15 --video_multiframe=4 --video=my_video.mp4\n\
+    \n<span class=\"pl-c\"><span class=\"pl-c\">#</span> Display a webcam feed in\
+    \ real-time. If you have multiple webcams pass the index of the webcam you want\
+    \ instead of 0.</span>\npython eval.py --trained_model=weights/yolact_base_54_800000.pth\
+    \ --score_threshold=0.15 --top_k=15 --video_multiframe=4 --video=0\n\n<span class=\"\
+    pl-c\"><span class=\"pl-c\">#</span> Process a video and save it to another file.\
+    \ This uses the same pipeline as the ones above now, so it's fast!</span>\npython\
+    \ eval.py --trained_model=weights/yolact_base_54_800000.pth --score_threshold=0.15\
+    \ --top_k=15 --video_multiframe=4 --video=input_video.mp4:output_video.mp4</pre></div>\n\
+    <p>As you can tell, <code>eval.py</code> can do a ton of stuff. Run the <code>--help</code>\
+    \ command to see everything it can do.</p>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>python eval.py --help</pre></div>\n<h1>\n<a id=\"user-content-training\"\
+    \ class=\"anchor\" href=\"#training\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Training</h1>\n<p>By default,\
+    \ we train on COCO. Make sure to download the entire dataset using the commands\
+    \ above.</p>\n<ul>\n<li>To train, grab an imagenet-pretrained model and put it\
+    \ in <code>./weights</code>.\n<ul>\n<li>For Resnet101, download <code>resnet101_reducedfc.pth</code>\
+    \ from <a href=\"https://drive.google.com/file/d/1tvqFPd4bJtakOlmn-uIA492g2qurRChj/view?usp=sharing\"\
+    \ rel=\"nofollow\">here</a>.</li>\n<li>For Resnet50, download <code>resnet50-19c8e357.pth</code>\
+    \ from <a href=\"https://drive.google.com/file/d/1Jy3yCdbatgXa5YYIdTCRrSV0S9V5g1rn/view?usp=sharing\"\
+    \ rel=\"nofollow\">here</a>.</li>\n<li>For Darknet53, download <code>darknet53.pth</code>\
+    \ from <a href=\"https://drive.google.com/file/d/17Y431j4sagFpSReuPNoFcj9h7azDTZFf/view?usp=sharing\"\
+    \ rel=\"nofollow\">here</a>.</li>\n</ul>\n</li>\n<li>Run one of the training commands\
+    \ below.\n<ul>\n<li>Note that you can press ctrl+c while training and it will\
+    \ save an <code>*_interrupt.pth</code> file at the current iteration.</li>\n<li>All\
+    \ weights are saved in the <code>./weights</code> directory by default with the\
+    \ file name <code>&lt;config&gt;_&lt;epoch&gt;_&lt;iter&gt;.pth</code>.</li>\n\
+    </ul>\n</li>\n</ul>\n<div class=\"highlight highlight-source-shell\"><pre><span\
+    \ class=\"pl-c\"><span class=\"pl-c\">#</span> Trains using the base config with\
+    \ a batch size of 8 (the default).</span>\npython train.py --config=yolact_base_config\n\
+    \n<span class=\"pl-c\"><span class=\"pl-c\">#</span> Trains yolact_base_config\
+    \ with a batch_size of 5. For the 550px models, 1 batch takes up around 1.5 gigs\
+    \ of VRAM, so specify accordingly.</span>\npython train.py --config=yolact_base_config\
+    \ --batch_size=5\n\n<span class=\"pl-c\"><span class=\"pl-c\">#</span> Resume\
+    \ training yolact_base with a specific weight file and start from the iteration\
+    \ specified in the weight file's name.</span>\npython train.py --config=yolact_base_config\
+    \ --resume=weights/yolact_base_10_32100.pth --start_iter=-1\n\n<span class=\"\
+    pl-c\"><span class=\"pl-c\">#</span> Use the help option to see a description\
+    \ of all available command line arguments</span>\npython train.py --help</pre></div>\n\
+    <h2>\n<a id=\"user-content-multi-gpu-support\" class=\"anchor\" href=\"#multi-gpu-support\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Multi-GPU Support</h2>\n<p>YOLACT now supports multiple GPUs seamlessly\
+    \ during training:</p>\n<ul>\n<li>Before running any of the scripts, run: <code>export\
+    \ CUDA_VISIBLE_DEVICES=[gpus]</code>\n<ul>\n<li>Where you should replace [gpus]\
+    \ with a comma separated list of the index of each GPU you want to use (e.g.,\
+    \ 0,1,2,3).</li>\n<li>You should still do this if only using 1 GPU.</li>\n<li>You\
+    \ can check the indices of your GPUs with <code>nvidia-smi</code>.</li>\n</ul>\n\
+    </li>\n<li>Then, simply set the batch size to <code>8*num_gpus</code> with the\
+    \ training commands above. The training script will automatically scale the hyperparameters\
+    \ to the right values.\n<ul>\n<li>If you have memory to spare you can increase\
+    \ the batch size further, but keep it a multiple of the number of GPUs you're\
+    \ using.</li>\n<li>If you want to allocate the images per GPU specific for different\
+    \ GPUs, you can use <code>--batch_alloc=[alloc]</code> where [alloc] is a comma\
+    \ seprated list containing the number of images on each GPU. This must sum to\
+    \ <code>batch_size</code>.</li>\n</ul>\n</li>\n</ul>\n<h2>\n<a id=\"user-content-logging\"\
+    \ class=\"anchor\" href=\"#logging\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Logging</h2>\n<p>YOLACT now logs\
+    \ training and validation information by default. You can disable this with <code>--no_log</code>.\
+    \ A guide on how to visualize these logs is coming soon, but now you can look\
+    \ at <code>LogVizualizer</code> in <code>utils/logger.py</code> for help.</p>\n\
+    <h2>\n<a id=\"user-content-pascal-sbd\" class=\"anchor\" href=\"#pascal-sbd\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Pascal SBD</h2>\n<p>We also include a config for training on Pascal\
+    \ SBD annotations (for rapid experimentation or comparing with other methods).\
+    \ To train on Pascal SBD, proceed with the following steps:</p>\n<ol>\n<li>Download\
+    \ the dataset from <a href=\"http://home.bharathh.info/pubs/codes/SBD/download.html\"\
+    \ rel=\"nofollow\">here</a>. It's the first link in the top \"Overview\" section\
+    \ (and the file is called <code>benchmark.tgz</code>).</li>\n<li>Extract the dataset\
+    \ somewhere. In the dataset there should be a folder called <code>dataset/img</code>.\
+    \ Create the directory <code>./data/sbd</code> (where <code>.</code> is YOLACT's\
+    \ root) and copy <code>dataset/img</code> to <code>./data/sbd/img</code>.</li>\n\
+    <li>Download the COCO-style annotations from <a href=\"https://drive.google.com/open?id=1ExrRSPVctHW8Nxrn0SofU1lVhK5Wn0_S\"\
+    \ rel=\"nofollow\">here</a>.</li>\n<li>Extract the annotations into <code>./data/sbd/</code>.</li>\n\
+    <li>Now you can train using <code>--config=yolact_resnet50_pascal_config</code>.\
+    \ Check that config to see how to extend it to other models.</li>\n</ol>\n<p>I\
+    \ will automate this all with a script soon, don't worry. Also, if you want the\
+    \ script I used to convert the annotations, I put it in <code>./scripts/convert_sbd.py</code>,\
+    \ but you'll have to check how it works to be able to use it because I don't actually\
+    \ remember at this point.</p>\n<p>If you want to verify our results, you can download\
+    \ our <code>yolact_resnet50_pascal_config</code> weights from <a href=\"https://drive.google.com/open?id=1yLVwtkRtNxyl0kxeMCtPXJsXFFyc_FHe\"\
+    \ rel=\"nofollow\">here</a>. This model should get 72.3 mask AP_50 and 56.2 mask\
+    \ AP_70. Note that the \"all\" AP isn't the same as the \"vol\" AP reported in\
+    \ others papers for pascal (they use an averages of the thresholds from <code>0.1\
+    \ - 0.9</code> in increments of <code>0.1</code> instead of what COCO uses).</p>\n\
+    <h2>\n<a id=\"user-content-custom-datasets\" class=\"anchor\" href=\"#custom-datasets\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Custom Datasets</h2>\n<p>You can also train on your own dataset by\
+    \ following these steps:</p>\n<ul>\n<li>Create a COCO-style Object Detection JSON\
+    \ annotation file for your dataset. The specification for this can be found <a\
+    \ href=\"http://cocodataset.org/#format-data\" rel=\"nofollow\">here</a>. Note\
+    \ that we don't use some fields, so the following may be omitted:\n<ul>\n<li><code>info</code></li>\n\
+    <li><code>liscense</code></li>\n<li>Under <code>image</code>: <code>license, flickr_url,\
+    \ coco_url, date_captured</code>\n</li>\n<li>\n<code>categories</code> (we use\
+    \ our own format for categories, see below)</li>\n</ul>\n</li>\n<li>Create a definition\
+    \ for your dataset under <code>dataset_base</code> in <code>data/config.py</code>\
+    \ (see the comments in <code>dataset_base</code> for an explanation of each field):</li>\n\
+    </ul>\n<div class=\"highlight highlight-source-python\"><pre><span class=\"pl-s1\"\
+    >my_custom_dataset</span> <span class=\"pl-c1\">=</span> <span class=\"pl-s1\"\
+    >dataset_base</span>.<span class=\"pl-en\">copy</span>({\n    <span class=\"pl-s\"\
+    >'name'</span>: <span class=\"pl-s\">'My Dataset'</span>,\n\n    <span class=\"\
+    pl-s\">'train_images'</span>: <span class=\"pl-s\">'path_to_training_images'</span>,\n\
+    \    <span class=\"pl-s\">'train_info'</span>:   <span class=\"pl-s\">'path_to_training_annotation'</span>,\n\
+    \n    <span class=\"pl-s\">'valid_images'</span>: <span class=\"pl-s\">'path_to_validation_images'</span>,\n\
+    \    <span class=\"pl-s\">'valid_info'</span>:   <span class=\"pl-s\">'path_to_validation_annotation'</span>,\n\
+    \n    <span class=\"pl-s\">'has_gt'</span>: <span class=\"pl-c1\">True</span>,\n\
+    \    <span class=\"pl-s\">'class_names'</span>: (<span class=\"pl-s\">'my_class_id_1'</span>,\
+    \ <span class=\"pl-s\">'my_class_id_2'</span>, <span class=\"pl-s\">'my_class_id_3'</span>,\
+    \ ...)\n})</pre></div>\n<ul>\n<li>A couple things to note:\n<ul>\n<li>Class IDs\
+    \ in the annotation file should start at 1 and increase sequentially on the order\
+    \ of <code>class_names</code>. If this isn't the case for your annotation file\
+    \ (like in COCO), see the field <code>label_map</code> in <code>dataset_base</code>.</li>\n\
+    <li>If you do not want to create a validation split, use the same image path and\
+    \ annotations file for validation. By default (see <code>python train.py --help</code>),\
+    \ <code>train.py</code> will output validation mAP for the first 5000 images in\
+    \ the dataset every 2 epochs.</li>\n</ul>\n</li>\n<li>Finally, in <code>yolact_base_config</code>\
+    \ in the same file, change the value for <code>'dataset'</code> to <code>'my_custom_dataset'</code>\
+    \ or whatever you named the config object above. Then you can use any of the training\
+    \ commands in the previous section.</li>\n</ul>\n<h4>\n<a id=\"user-content-creating-a-custom-dataset-from-scratch\"\
+    \ class=\"anchor\" href=\"#creating-a-custom-dataset-from-scratch\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Creating\
+    \ a Custom Dataset from Scratch</h4>\n<p>See <a href=\"https://github.com/dbolya/yolact/issues/70#issuecomment-504283008\"\
+    >this nice post by @Amit12690</a> for tips on how to annotate a custom dataset\
+    \ and prepare it for use with YOLACT.</p>\n<h1>\n<a id=\"user-content-citation\"\
+    \ class=\"anchor\" href=\"#citation\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Citation</h1>\n<p>If you use\
+    \ YOLACT or this code base in your work, please cite</p>\n<pre><code>@inproceedings{yolact-iccv2019,\n\
+    \  author    = {Daniel Bolya and Chong Zhou and Fanyi Xiao and Yong Jae Lee},\n\
+    \  title     = {YOLACT: {Real-time} Instance Segmentation},\n  booktitle = {ICCV},\n\
+    \  year      = {2019},\n}\n</code></pre>\n<p>For YOLACT++, please cite</p>\n<pre><code>@misc{yolact-plus-arxiv2019,\n\
+    \  title         = {YOLACT++: Better Real-time Instance Segmentation},\n  author\
+    \        = {Daniel Bolya and Chong Zhou and Fanyi Xiao and Yong Jae Lee},\n  year\
+    \          = {2019},\n  eprint        = {1912.06218},\n  archivePrefix = {arXiv},\n\
+    \  primaryClass  = {cs.CV}\n}\n</code></pre>\n<h1>\n<a id=\"user-content-contact\"\
+    \ class=\"anchor\" href=\"#contact\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Contact</h1>\n<p>For questions\
+    \ about our paper or code, please contact <a href=\"mailto:dbolya@ucdavis.edu\"\
+    >Daniel Bolya</a>.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1632072929.0
 solvcon/solvcon:
   data_format: 2
   description: A software framework of conservation-law solvers that use the space-time
@@ -62159,13 +63249,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 84
+  stargazers_count: 85
   subscribers_count: 11
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1631730574.0
+  updated_at: 1632084706.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
