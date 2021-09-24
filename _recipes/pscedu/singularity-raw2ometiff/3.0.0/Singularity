@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    WEBSITE http://github.com/icaoberg/singularity-raw2ometiff
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved. 
+    VERSION 3.0.0
+
+%post
+    apt update
+    apt install -y libblosc1 wget unzip default-jdk
+    cd /opt/
+    wget -nc https://github.com/glencoesoftware/raw2ometiff/releases/download/v0.3.0/raw2ometiff-0.3.0.zip
+    unzip raw2ometiff-0.3.0.zip && rm -f raw2ometiff-0.3.0.zip
+    ln -s /opt/raw2ometiff-0.3.0/bin/raw2ometiff /usr/local/bin/raw2ometiff
+    apt remove -y wget unzip
+    apt clean

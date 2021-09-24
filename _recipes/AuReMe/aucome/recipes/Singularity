@@ -1,0 +1,61 @@
+# Need a Pathway-tools installer in the same folder.
+Bootstrap: docker
+From: ubuntu:18.04
+
+%files
+    pathway-tools-23.5-linux-64-tier1-install /opt
+    metacyc_23.5.padmet /opt
+
+%environment
+    export PATH="$PATH:/programs/pathway-tools:"
+    export PATH="/opt/conda/bin:${PATH}"
+    export LANG="C.UTF-8"
+
+%post
+    apt-get -y update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    curl \
+    make \
+    wget \
+    csh \
+    git \
+    ncbi-blast+ \
+    libxm4 \
+    vim \
+    r-base \
+    python3-dev \
+    python3-distutils \
+    iputils-ping \
+    screen \
+    exonerate \
+    gnome-terminal ;\
+    apt-get clean; \
+    apt-get purge ;\
+    wget -c https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh ;\
+    /bin/bash Miniconda3-latest-Linux-x86_64.sh -bfp /usr/local ;\
+    conda update conda ;\
+    conda install -c bioconda orthofinder=2.5.4  ;\
+    mkdir -p /programs/ /shared/ /home/database/BIOCYC/METACYC/23/ ;\
+    cd /opt ;\
+    mv metacyc_23.5.padmet /home/database/BIOCYC/METACYC/23/ ;\
+    mkdir -p /external/folder ;\
+    chmod u+x pathway-tools-23.5-linux-64-tier1-install ;\
+    ./pathway-tools-23.5-linux-64-tier1-install --InstallDir /programs/pathway-tools --PTOOLS_LOCAL_PATH /external/folder/ --InstallDesktopShortcuts 0 --mode unattended ;\
+    cp -r /external/folder/ptools-local /opt ;\
+    rm pathway-tools-23.5-linux-64-tier1-install ;\
+    R -e "install.packages('https://cran.r-project.org/src/contrib/Archive/pvclust/pvclust_2.0-0.tar.gz', repos=NULL, type='source', dependencies=TRUE)";\
+    R -e "install.packages('ape', dependencies=TRUE)";\
+    curl https://bootstrap.pypa.io/get-pip.py | python3 ;\
+    pip3 install seaborn scipy lxml rpy2 supervenn tzlocal ;\
+    cd /programs ;\
+    git clone https://github.com/AuReMe/mpwt.git ;\
+    cd mpwt ;\
+    python3 setup.py develop ;\
+    cd .. ;\
+    git clone https://github.com/AuReMe/padmet.git ;\
+    cd padmet ;\
+    python3 setup.py develop ;\
+    cd .. ;\
+    git clone https://github.com/AuReMe/aucome.git ;\
+    cd aucome ;\
+    python3 setup.py develop

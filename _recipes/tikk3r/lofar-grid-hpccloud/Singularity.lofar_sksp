@@ -2,7 +2,7 @@
 #From: tikk3r/lofar-grid-hpccloud:lofar_sksp_base
 # If building from a base image locally enable this instead.
 Bootstrap: localimage
-From: lofar_sksp_base.sif
+From: lofar_sksp_v3.3_base.sif
 
 %environment
     export PYTHONPATH=
@@ -489,10 +489,11 @@ From: lofar_sksp_base.sif
     echo export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
     echo export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
     # OPENBLAS_NUM_THREADS=1 is required for WSClean
+    echo export NCPU=\$(nproc) >> $INSTALLDIR/init.sh
 	echo export OPENBLAS_NUM_THREADS=1 >> $INSTALLDIR/init.sh
-	echo export OPENBLAS_MAX_THREADS=64 >> $INSTALLDIR/init.sh
-	echo export OMP_NUM_THREADS=64 >> $INSTALLDIR/init.sh
-	echo export OMP_MAX_THREADS=64 >> $INSTALLDIR/init.sh
+	echo export OPENBLAS_MAX_THREADS=\$NCPU >> $INSTALLDIR/init.sh
+	echo export OMP_NUM_THREADS=\$NCPU >> $INSTALLDIR/init.sh
+	echo export OMP_MAX_THREADS=\$NCPU >> $INSTALLDIR/init.sh
 
 	echo export PYTHONPATH=\$INSTALLDIR/dppp:\$INSTALLDIR/lofar/lib64/python2.7/site-packages:\$PYTHONPATH >> $INSTALLDIR/init_py2.sh
     echo source \$INSTALLDIR/pyenv-py2/bin/activate >> $INSTALLDIR/init_py2.sh

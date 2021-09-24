@@ -982,6 +982,17 @@ Asap7772/railrl_evalsawyer:
   subscribers_count: 1
   topics: []
   updated_at: 1623985699.0
+AuReMe/aucome:
+  data_format: 2
+  description: Automatic Comparison of Metabolism
+  filenames:
+  - recipes/Singularity
+  full_name: AuReMe/aucome
+  latest_release: v0.5
+  stargazers_count: 2
+  subscribers_count: 2
+  topics: []
+  updated_at: 1632390696.0
 AvciRecep/chaste_nesi:
   data_format: 2
   description: null
@@ -5476,9 +5487,12 @@ DrosophilaGenomeEvolution/TrEMOLO:
     \ these variable insertions and deletions.</p>\n<h1>\n<a id=\"user-content-release-notes\"\
     \ class=\"anchor\" href=\"#release-notes\" aria-hidden=\"true\"><span aria-hidden=\"\
     true\" class=\"octicon octicon-link\"></span></a>Release notes<a name=\"user-content-release\"\
-    ></a>\n</h1>\n<h1>\n<a id=\"user-content-requirements\" class=\"anchor\" href=\"\
-    #requirements\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
-    \ octicon-link\"></span></a>Requirements<a name=\"user-content-requirements\"\
+    ></a>\n</h1>\n<h1>\n<a id=\"user-content-current-limitations\" class=\"anchor\"\
+    \ href=\"#current-limitations\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Current limitations</h1>\n<ul>\n<li>\n\
+    </li>\n<li>\n</li>\n</ul>\n<h1>\n<a id=\"user-content-requirements\" class=\"\
+    anchor\" href=\"#requirements\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Requirements<a name=\"user-content-requirements\"\
     ></a>\n</h1>\n<p>Numerous tools are used by TrEMOLO. We recommand to use the <a\
     \ href=\"#singularity\">Singularity installation</a> to be sure to have all of\
     \ them in the good configurations and versions.</p>\n<ul>\n<li>For both approaches\n\
@@ -5516,7 +5530,9 @@ DrosophilaGenomeEvolution/TrEMOLO:
     <li><a href=\"https://www.rdocumentation.org/packages/viridis/versions/0.3.4\"\
     \ rel=\"nofollow\">viridis</a></li>\n<li><a href=\"https://bookdown.org/yihui/bookdown/get-started.html\"\
     \ rel=\"nofollow\">bookdown</a></li>\n<li><a href=\"https://www.r-project.org/nosvn/pandoc/knitr.html\"\
-    \ rel=\"nofollow\">knitr</a></li>\n</ul>\n</li>\n</ul>\n</li>\n<li><a href=\"\
+    \ rel=\"nofollow\">knitr</a></li>\n<li><a href=\"https://cran.r-project.org/web/packages/stringr/index.html\"\
+    \ rel=\"nofollow\">stringr</a></li>\n<li><a href=\"https://cran.r-project.org/web/packages/stringi/index.html\"\
+    \ rel=\"nofollow\">stringi</a></li>\n</ul>\n</li>\n</ul>\n</li>\n<li><a href=\"\
     https://github.com/jgm/citeproc\">pandoc-citeproc 0.17</a></li>\n</ul>\n<h1>\n\
     <a id=\"user-content-installation\" class=\"anchor\" href=\"#installation\" aria-hidden=\"\
     true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installation<a\
@@ -5539,7 +5555,9 @@ DrosophilaGenomeEvolution/TrEMOLO:
     \ build TrEMOLO.simg TrEMOLO/Singularity</pre></div>\n<p><strong>YOU MUST BE ROOT\
     \ for compiling</strong></p>\n<p>Test TrEMOLO with singularity</p>\n<div class=\"\
     highlight highlight-source-shell\"><pre>singularity <span class=\"pl-c1\">exec</span>\
-    \ TrEMOLO.simg snakemake --snakefile TrEMOLO/run.snk --configfile TrEMOLO/test/tmp_config.yml</pre></div>\n\
+    \ TrEMOLO.simg snakemake --snakefile TrEMOLO/run.snk --configfile TrEMOLO/test/tmp_config.yml\n\
+    <span class=\"pl-c\"><span class=\"pl-c\">#</span>OR</span>\nsingularity run TrEMOLO.simg\
+    \ snakemake --snakefile TrEMOLO/run.snk --configfile TrEMOLO/test/tmp_config.yml</pre></div>\n\
     <h3>\n<a id=\"user-content-pulling-from-singularityhub\" class=\"anchor\" href=\"\
     #pulling-from-singularityhub\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
     \ class=\"octicon octicon-link\"></span></a>Pulling from SingularityHub</h3>\n\
@@ -5596,8 +5614,9 @@ DrosophilaGenomeEvolution/TrEMOLO:
     \ (True, False) FREQUENCE CALCULATED WITH CLIPPING READS</span>\n    <span class=\"\
     pl-ent\">INSIDER_VARIANT</span>:\n        <span class=\"pl-ent\">DETECT_ALL_TE</span>:\
     \ <span class=\"pl-s\">False    </span><span class=\"pl-c\"><span class=\"pl-c\"\
-    >#</span> Warning! it may be take several hours on big genomes</span>\n    <span\
-    \ class=\"pl-ent\">INTERMEDIATE_FILE</span>: <span class=\"pl-s\">True     </span><span\
+    >#</span> detect ALL TE on genome (parameter GENOME) assembly not only new insertion.\
+    \ Warning! it may be take several hours on big genomes</span>\n    <span class=\"\
+    pl-ent\">INTERMEDIATE_FILE</span>: <span class=\"pl-s\">True     </span><span\
     \ class=\"pl-c\"><span class=\"pl-c\">#</span> Conserve the intermediate analyses\
     \ files to process them latter.</span>\n\n\n<span class=\"pl-ent\">PARAMS</span>:\n\
     \    <span class=\"pl-ent\">OUTSIDER_VARIANT</span>:\n        <span class=\"pl-ent\"\
@@ -5666,50 +5685,54 @@ DrosophilaGenomeEvolution/TrEMOLO:
     https://github.githubassets.com/images/icons/emoji/unicode/1f4c2.png\">\U0001F4C2\
     </g-emoji><a name=\"user-content-output\"></a>\n</h1>\n<p>Here is the structure\
     \ of the output files obtained after running the pipeline.</p>\n<pre><code>WORK_DIRECTORY\n\
-    \u251C\u2500\u2500 params.yaml\n\u251C\u2500\u2500 POSITION_ALL_TE.bed -&gt; INSIDER/TE_DETECTION/POSITION_ALL_TE.bed\
-    \ #ALL TE ON GENOME NOT ONLY INSERTION (ONLY IF PARAMETER \"DETECT_ALL_TE\" is\
-    \ True),\n\u251C\u2500\u2500 POS_ALT_TE_OUTSIDER_ON_REF.bed -&gt; INSIDER/TE_INSIDER_VR/POS_ALT_TE_OUTSIDER_ON_REF.bed\n\
-    \u251C\u2500\u2500 POSITION_TE_INOUTSIDER.bed\n\u251C\u2500\u2500 POSITION_TE_INSIDER.bed\n\
-    \u251C\u2500\u2500 POSITION_TE_OUTSIDER.bed\n\u251C\u2500\u2500 POS_TE_INSIDER_ON_REF.bed\
-    \ -&gt; INSIDER/TE_DETECTION/INSERTION_TE_ON_REF.bed #POSITION TE INSIDER ON REFRENCE\
-    \ GENOME\n\u251C\u2500\u2500 POS_TE_OUTSIDER_ON_REF.bed #POSITION TE OUTSIDER\
-    \ ON REFRENCE GENOME\n\u251C\u2500\u2500 POSITION_TE_OUTSIDER_IN_NEO_GENOME.bed\
-    \  #POSITION TE SEQUENCE ON BEST READS SUPPORT INTEGRATED IN GENOME\n\u251C\u2500\
-    \u2500 POSITION_TE_ON_REF.bed  #POSITION TE INSIDER AND OUTSIDER ON REFRENCE GENOME\n\
-    \u251C\u2500\u2500 POSITION_TE_OUTSIDER_IN_PSEUDO_GENOME.bed\n\u251C\u2500\u2500\
-    \ VALUES_TSD_ALL_GROUP.csv\n\u251C\u2500\u2500 VALUES_TSD_GROUP_OUTSIDER.csv\n\
-    \u251C\u2500\u2500 VALUES_TSD_INSIDER_GROUP.csv\n\u251C\u2500\u2500 TE_INFO.csv\
-    \ #FILE CONTENING ALL INFO OF TE INSERTION\n\u251C\u2500\u2500 DELETION_TE.bed\
-    \ -&gt; INSIDER/TE_DETECTION/DELETION_TE.bed #TE DELETION POSTION ON GENOME\n\u251C\
-    \u2500\u2500 DELETION_TE_ON_REF.bed -&gt; INSIDER/TE_DETECTION/DELETION_TE_ON_REF.bed\
-    \ #TE DELETION POSITION ON REFERENCE\n\u251C\u2500\u2500 SOFT_TE.bed -&gt; OUTSIDER/TE_DETECTION/SOFT/SOFT_TE.bed\
-    \ #TE INSERTION FOUND IN SOFT READS\n\u251C\u2500\u2500 FREQ_OPTIMIZED\n\u251C\
-    \u2500\u2500 INSIDER #FOLDER CONTAINS FILES TRAITEMENT INSIDER\n\u2502\_\_ \u251C\
+    \u251C\u2500\u2500 params.yaml  ##**Your config file\n\u251C\u2500\u2500 LIST_HEADER_DB_TE.csv\
+    \ ##** list of names assigned to TE in the TE database (Only if you have charactere\
+    \ \"&amp; ; / \\ | ' : ! ? \" in your TE database)\n\u251C\u2500\u2500 POSITION_ALL_TE.bed\
+    \ -&gt; INSIDER/TE_DETECTION/POSITION_ALL_TE.bed ##**ALL TE ON GENOME NOT ONLY\
+    \ INSERTION (ONLY IF PARAMETER \"DETECT_ALL_TE\" is True),\n\u251C\u2500\u2500\
+    \ POSITION_TE_INOUTSIDER.bed\n\u251C\u2500\u2500 POSITION_TE_INSIDER.bed\n\u251C\
+    \u2500\u2500 POSITION_TE_OUTSIDER.bed\n\u251C\u2500\u2500 POS_ALT_TE_OUTSIDER_ON_REF.bed\
+    \ -&gt; INSIDER/TE_INSIDER_VR/POS_ALT_TE_OUTSIDER_ON_REF.bed\n\u251C\u2500\u2500\
+    \ POS_TE_INSIDER_ON_REF.bed -&gt; INSIDER/TE_DETECTION/INSERTION_TE_ON_REF.bed\
+    \ ##**POSITION TE INSIDER ON REFRENCE GENOME\n\u251C\u2500\u2500 POS_TE_OUTSIDER_ON_REF.bed\
+    \ ##**POSITION TE OUTSIDER ON REFRENCE GENOME\n\u251C\u2500\u2500 POSITION_TE_OUTSIDER_IN_NEO_GENOME.bed\
+    \  ##**POSITION TE SEQUENCE ON BEST READS SUPPORT INTEGRATED IN GENOME\n\u251C\
+    \u2500\u2500 POSITION_TE_OUTSIDER_IN_PSEUDO_GENOME.bed  ##**POSITION TE SEQUENCE\
+    \ ON TE DATABASE (with ID) INTEGRATED IN GENOME\n\u251C\u2500\u2500 VALUES_TSD_ALL_GROUP.csv\n\
+    \u251C\u2500\u2500 VALUES_TSD_GROUP_OUTSIDER.csv\n\u251C\u2500\u2500 VALUES_TSD_INSIDER_GROUP.csv\n\
+    \u251C\u2500\u2500 TE_INFO.csv ##**FILE CONTENING ALL INFO OF TE INSERTION\n\u251C\
+    \u2500\u2500 DELETION_TE.bed -&gt; INSIDER/TE_DETECTION/DELETION_TE.bed ##**TE\
+    \ DELETION POSTION ON GENOME\n\u251C\u2500\u2500 DELETION_TE_ON_REF.bed -&gt;\
+    \ INSIDER/TE_DETECTION/DELETION_TE_ON_REF.bed ##**TE DELETION POSITION ON REFERENCE\n\
+    \u251C\u2500\u2500 SOFT_TE.bed -&gt; OUTSIDER/TE_DETECTION/SOFT/SOFT_TE.bed ##**TE\
+    \ INSERTION FOUND IN SOFT READS\n\u251C\u2500\u2500 FREQ_OPTIMIZED\n\u251C\u2500\
+    \u2500 INSIDER ##**FOLDER CONTAINS FILES TRAITEMENT INSIDER\n\u2502\_\_ \u251C\
     \u2500\u2500 FREQ_GLOBAL\n\u2502\_\_ \u251C\u2500\u2500 TE_DETECTION\n\u2502\_\
     \_ \u2502\_\_ \u2514\u2500\u2500 TSD\n\u2502\_\_ \u251C\u2500\u2500 TE_INSIDER_VR\n\
-    \u2502\_\_ \u2514\u2500\u2500 VARIANT_CALLING\n\u251C\u2500\u2500 log  #log file\
-    \ to check if you have any error\n\u251C\u2500\u2500 OUTSIDER\n\u2502\_\_ \u251C\
-    \u2500\u2500 ET_FIND_FA\n\u2502\_\_ \u2502   \u251C\u2500\u2500 TE_REPORT_FOUND_TE_NAME.fasta\n\
+    \u2502\_\_ \u2514\u2500\u2500 VARIANT_CALLING\n\u251C\u2500\u2500 log  ##**log\
+    \ file to check if you have any error\n\u251C\u2500\u2500 OUTSIDER\n\u2502\_\_\
+    \ \u251C\u2500\u2500 ET_FIND_FA\n\u2502\_\_ \u2502   \u251C\u2500\u2500 TE_REPORT_FOUND_TE_NAME.fasta\n\
     \u2502\_\_ \u2502\_\_ \u251C\u2500\u2500 TE_REPORT_FOUND_blood.fasta\n\u2502\_\
     \_ \u2502\_\_ \u2514\u2500\u2500 TE_REPORT_FOUND_ZAM.fasta\n...\n\u2502\_\_ \u251C\
     \u2500\u2500 FIND_TE_ON_REF\n\u2502\_\_ \u251C\u2500\u2500 FREQ_AFTER\n\u2502\_\
     \_ \u2502\_\_ \u2514\u2500\u2500 DEPTH_TE.csv\n\u2502\_\_ \u251C\u2500\u2500 INSIDER_VR\n\
-    \u2502\_\_ \u251C\u2500\u2500 MAPPING #FOLDER CONTAINS FILES MAPPING ON GENOME\n\
-    \u2502\_\_ \u251C\u2500\u2500 MAPPING_TO_REF #FOLDER CONTAINS FILES MAPPING ON\
-    \ REFERENCE GENOME\n\u2502\_\_ \u251C\u2500\u2500 READ_FASTQ_TE #FOLDER CONTAINS\
-    \ ALL THE READs ASSOCIATED WITH THE TE\n\u2502\_\_ \u251C\u2500\u2500 TE_DETECTION\n\
-    \u2502\_\_ \u2502\_\_ \u2514\u2500\u2500 TSD\n\u2502\_\_ \u251C\u2500\u2500 TE_TOWARD_GENOME\
-    \ #FOLDER CONTAINS ALL THE READs ASSOCIATED WITH THE TE\n\u2502\_\_ \u2502\_\_\
-    \ \u251C\u2500\u2500 NEO_GENOME.fasta   #GENOME CONTAINS TE OUTSIDER (the best\
-    \ sequence of svim/sniffles)\n\u2502\_\_ \u2502\_\_ \u251C\u2500\u2500 PSEUDO_GENOME_TE_DB_ID.fasta\
-    \   #GENOME CONTAINS TE OUTSIDER (the sequence of database TE and the ID of svim/sniffles)\n\
-    \u2502\_\_ \u2502\_\_ \u251C\u2500\u2500 TRUE_POSITION_TE.bed   #POSITION IN PSEUDO\
-    \ GENOME\n\u2502\_\_ \u2502\_\_ \u251C\u2500\u2500 TRUE_POSITION_TE.fasta  #SEQUENCE\
+    \u2502\_\_ \u251C\u2500\u2500 MAPPING ##**FOLDER CONTAINS FILES MAPPING ON GENOME\n\
+    \u2502\_\_ \u251C\u2500\u2500 MAPPING_TO_REF ##**FOLDER CONTAINS FILES MAPPING\
+    \ ON REFERENCE GENOME\n\u2502\_\_ \u251C\u2500\u2500 READ_FASTQ_TE ##**FOLDER\
+    \ CONTAINS ALL THE READs ASSOCIATED WITH THE TE\n\u2502\_\_ \u251C\u2500\u2500\
+    \ TE_DETECTION\n\u2502\_\_ \u2502\_\_ \u2514\u2500\u2500 TSD\n\u2502\_\_ \u251C\
+    \u2500\u2500 TE_TOWARD_GENOME ##**FOLDER CONTAINS ALL THE READs ASSOCIATED WITH\
+    \ THE TE\n\u2502\_\_ \u2502\_\_ \u251C\u2500\u2500 NEO_GENOME.fasta   ##**GENOME\
+    \ CONTAINS TE OUTSIDER (the best sequence of svim/sniffles)\n\u2502\_\_ \u2502\
+    \_\_ \u251C\u2500\u2500 PSEUDO_GENOME_TE_DB_ID.fasta   ##**GENOME CONTAINS TE\
+    \ OUTSIDER (the sequence of database TE and the ID of svim/sniffles)\n\u2502\_\
+    \_ \u2502\_\_ \u251C\u2500\u2500 TRUE_POSITION_TE.bed   ##**POSITION IN PSEUDO\
+    \ GENOME\n\u2502\_\_ \u2502\_\_ \u251C\u2500\u2500 TRUE_POSITION_TE.fasta  ##**SEQUENCE\
     \ INTEGRATE IN PSEUDO GENOME\n\u2502\_\_ \u2502\_\_ \u251C\u2500\u2500 TRUE_POSITION_TE_READS.bed\
-    \  #POSITION IN NEO GENOME\n\u2502\_\_ \u2502\_\_ \u2514\u2500\u2500 TRUE_POSITION_TE_READS.fasta\
-    \  #SEQUENCE INTEGRATE IN NEO GENOME\n\u2502\_\_ \u2514\u2500\u2500 VARIANT_CALLING\
-    \  #FOLDER CONTAINS FILES OF sniflles/svim\n\u251C\u2500\u2500 REPORT\n\u2502\_\
-    \_ \u251C\u2500\u2500 mini_report\n\u2502\_\_ \u2514\u2500\u2500 report.html\n\
+    \  ##**POSITION IN NEO GENOME\n\u2502\_\_ \u2502\_\_ \u2514\u2500\u2500 TRUE_POSITION_TE_READS.fasta\
+    \  ##**SEQUENCE INTEGRATE IN NEO GENOME\n\u2502\_\_ \u2514\u2500\u2500 VARIANT_CALLING\
+    \  ##**FOLDER CONTAINS FILES OF sniflles/svim\n\u251C\u2500\u2500 REPORT\n\u2502\
+    \_\_ \u251C\u2500\u2500 mini_report\n\u2502\_\_ \u2514\u2500\u2500 report.html\n\
     \u251C\u2500\u2500 SNAKE_USED\n\u2502\_\_ \u251C\u2500\u2500 Snakefile_insider.snk\n\
     \u2514\u2500\u2500 \u2514\u2500\u2500 Snakefile_outsider.snk\n</code></pre>\n\
     <h3>\n<a id=\"user-content-most-useful-output\" class=\"anchor\" href=\"#most-useful-output\"\
@@ -5751,7 +5774,7 @@ DrosophilaGenomeEvolution/TrEMOLO:
   stargazers_count: 4
   subscribers_count: 2
   topics: []
-  updated_at: 1631190756.0
+  updated_at: 1632234184.0
 Emresav/popcorn:
   data_format: 2
   description: The source code of POPCORN planner (also a MILP Compilation collaborated
@@ -6139,7 +6162,7 @@ FCP-INDI/C-PAC:
   stargazers_count: 19
   subscribers_count: 6
   topics: []
-  updated_at: 1631921473.0
+  updated_at: 1632417402.0
 FangfeiLi05/PyFitSeq:
   data_format: 2
   description: null
@@ -6275,6 +6298,58 @@ FangfeiLi05/PyFitSeq:
   subscribers_count: 2
   topics: []
   updated_at: 1631051818.0
+GenomePathogenAnalysisService/read-it-and-keep:
+  data_format: 2
+  description: Read contamination removal
+  filenames:
+  - Singularity.def
+  full_name: GenomePathogenAnalysisService/read-it-and-keep
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-read-it-and-keep\" class=\"anchor\" href=\"\
+    #read-it-and-keep\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>read-it-and-keep</h1>\n<p>Read contamination removal.</p>\n\
+    <h2>\n<a id=\"user-content-install\" class=\"anchor\" href=\"#install\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Install</h2>\n\
+    <p>Install either from source or build a singularity container.</p>\n<h3>\n<a\
+    \ id=\"user-content-compile-from-source\" class=\"anchor\" href=\"#compile-from-source\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Compile from source</h3>\n<p>Make the executable <code>src/readItAndKeep</code>\
+    \ by running:</p>\n<pre><code>cd src &amp;&amp; make\n</code></pre>\n<h3>\n<a\
+    \ id=\"user-content-singularity-container\" class=\"anchor\" href=\"#singularity-container\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Singularity container</h3>\n<p>Build a singularity container by cloning\
+    \ this repository\nand running:</p>\n<pre><code>sudo singularity build readItAndKeep.sif\
+    \ Singularity.def\n</code></pre>\n<h2>\n<a id=\"user-content-usage\" class=\"\
+    anchor\" href=\"#usage\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a>Usage</h2>\n<p>Required options:</p>\n<ol>\n\
+    <li>\n<code>--ref_fasta</code>: reference genome in FASTA format.</li>\n<li>\n\
+    <code>--reads1</code>: at least one reads file in FASTA[.GZ] or FASTQ[.GZ] format.</li>\n\
+    <li>\n<code>-o,--outprefix</code>: prefix of output files.</li>\n</ol>\n<p>Run\
+    \ on one file of reads:</p>\n<pre><code>readItAndKeep --ref_fasta ref_genome.fasta\
+    \ --reads1 reads1.fq.gz -o out\n</code></pre>\n<p>It will output <code>out.reads.fastq.gz</code>.</p>\n\
+    <p>Run on two files of reads by adding the option <code>--reads2 reads2.fq.gz</code>\
+    \ to the\nprevious command. It will output <code>out.reads_1.fastq.gz</code> and\n\
+    <code>out.reads_2.fastq.gz</code>.</p>\n<p>If the input reads files are in FASTA\
+    \ format, then it will output reads in\nFASTA format, calling the files <code>*.fasta.*</code>\
+    \ instead of <code>*.fastq.*</code>.</p>\n<p>It always writes the counts of input\
+    \ and output reads to <code>STDOUT</code> in\ntab-delimited format, for example:</p>\n\
+    <pre><code>Input reads file 1\t1000\nInput reads file 2\t1000\nKept reads 1\t\
+    950\nKept reads 2\t950\n</code></pre>\n<p>All logging messages sent to <code>STDERR</code>.</p>\n\
+    <h2>\n<a id=\"user-content-tests\" class=\"anchor\" href=\"#tests\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Tests</h2>\n\
+    <p>These are under development. To run them you will need:</p>\n<ol>\n<li>Python\
+    \ 3</li>\n<li>Python package <a href=\"https://docs.pytest.org/en/stable/\" rel=\"\
+    nofollow\">pytest</a> (<code>pip install pytest</code>)</li>\n<li>Python package\
+    \ <a href=\"https://github.com/sanger-pathogens/Fastaq\">pyfastaq</a>  (<code>pip\
+    \ install pyfastaq</code>)</li>\n<li>\n<a href=\"https://www.niehs.nih.gov/research/resources/software/biostatistics/art/index.cfm\"\
+    \ rel=\"nofollow\">ART read simulator</a>\ninstalled, so that <code>art_illumina</code>\
+    \ is in your <code>$PATH</code>\n</li>\n<li>\n<a href=\"https://github.com/rrwick/Badread\"\
+    >badread</a> for nanopore read simulation.</li>\n</ol>\n<p>Run the tests after\
+    \ compiling the source code, ie:</p>\n<pre><code>cd src\nmake\nmake test\n</code></pre>\n"
+  stargazers_count: 3
+  subscribers_count: 4
+  topics: []
+  updated_at: 1632405752.0
 HALFpipe/HALFpipe:
   data_format: 2
   description: ENIGMA Halfpipe is a user-friendly software that facilitates reproducible
@@ -11141,7 +11216,7 @@ JD2112/AlveolarCellTypeDeconvolution:
   - hla-dr
   - cd3
   - cell-deconvolution
-  updated_at: 1630996544.0
+  updated_at: 1632205530.0
 JiaLonghao1997/Microbiome:
   data_format: 2
   description: "\u5B8F\u57FA\u56E0\u7EC4\u76F8\u5173\u4EE3\u7801"
@@ -19441,7 +19516,7 @@ ReproNim/containers:
   stargazers_count: 14
   subscribers_count: 7
   topics: []
-  updated_at: 1631845521.0
+  updated_at: 1632165377.0
 ResearchIT/MolecularGraphicsToolbox:
   data_format: 2
   description: null
@@ -20636,6 +20711,90 @@ TheJacksonLaboratory/acm-bcb-singularity2021:
   subscribers_count: 1
   topics: []
   updated_at: 1627830100.0
+TheJacksonLaboratory/mousegwas:
+  data_format: 2
+  description: An R package for easy execution of mouse GWAS
+  filenames:
+  - singularity/Singularity
+  full_name: TheJacksonLaboratory/mousegwas
+  latest_release: GRCm38
+  readme: "<h1>\n<a id=\"user-content-mousegwas\" class=\"anchor\" href=\"#mousegwas\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>MouseGWAS</h1>\n<h2>\n<a id=\"user-content-introduction\" class=\"\
+    anchor\" href=\"#introduction\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Introduction</h2>\n<p>This package\
+    \ was built to manage the GWAS analysis of mouse phenotypes. The mice in the study\
+    \ were genotypes using either MDA or UCLA chips and deposited in the mouse phenome\
+    \ database (<a href=\"https://phenome.jax.org/genotypes\" rel=\"nofollow\">https://phenome.jax.org/genotypes</a>).</p>\n\
+    <h2>\n<a id=\"user-content-installation\" class=\"anchor\" href=\"#installation\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Installation</h2>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>Rscript -e <span class=\"pl-s\"><span class=\"pl-pds\">'</span>library(devtools);\
+    \ install_github(\"TheJacksonLaboratory/mousegwas\")<span class=\"pl-pds\">'</span></span></pre></div>\n\
+    <h2>\n<a id=\"user-content-input\" class=\"anchor\" href=\"#input\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Input</h2>\n\
+    <p>The input for the script is the genotype csv files downloaded from the MPD\
+    \ website, the measured phenotypes as a csv file and a yaml file describing the\
+    \ input file.\nThe input csv file should contain a column for strain, a column\
+    \ for sex and columns for phenotype measurements. The names of the columns should\
+    \ be defined in the yaml file using the keywords <code>strain</code> and <code>sex</code>\
+    \ and the phenotypes should be a list under the <code>phenotypes</code> keyword.\n\
+    Another data that should reside in the yaml file is translation of strains to\
+    \ the strain names in the genotypes files, it is a dictionary under the <code>translate</code>\
+    \ keyword, and <code>F1</code> keyword which is a dictionary translating the F1\
+    \ names to their parent names, make sure the female parent is always first, it\
+    \ will be used to determine the X chromosome of make F1s. Confounding SNPs could\
+    \ be given using the <code>confSNPs</code>, this might be useful to control for\
+    \ obvious markers like coat color alleles. For sanity check you can supply coat\
+    \ color under <code>coat</code> as a dictionary from strain name to coat color\
+    \ and execute a GWAS of coat color with <code>--coat_phenotype</code>, it can\
+    \ also be used as a covariate with <code>--coat_covar</code>.</p>\n<h2>\n<a id=\"\
+    user-content-execution\" class=\"anchor\" href=\"#execution\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Execution</h2>\n\
+    <p>The script <code>run_GWAS.py</code> will read the input files and will prepapre\
+    \ the input for either GEMMA or pyLMM. In the case of GEMMA it will download version\
+    \ 0.98 to the working directory if it can't find the GEMMA executable, if you\
+    \ wish to use pyLMM it should be installed and available in the path. A common\
+    \ process would be creating a virtual environment in python, activating it and\
+    \ installing pyLMM using <code>pip</code>, see <a href=\"https://github.com/nickFurlotte/pylmm\"\
+    >https://github.com/nickFurlotte/pylmm</a> for details.\nThe mousegwas will also\
+    \ download METASOFT and run it on the output if there is more than one phenotype.</p>\n\
+    <p>As part of the data processing, mousegwas can select a subset of the individuals,\
+    \ restricting the number of mice in each strain x sex group or use the average\
+    \ phenotype of all the individuals in such a group. This is controlled by the\
+    \ <code>-d</code> option with 0 for average or any other integer for number restriction.</p>\n\
+    <p>By default LOCO will be used, use the <code>--noloco</code> argument to disable\
+    \ it.</p>\n<p>A quantile-quantile normalizatin of each phenotype meausrement could\
+    \ be done using the <code>--qqnorm</code> argument.\nOther parameters will control\
+    \ the final Manhattan plot, it is a bit unnecessary since the <code>postprocess_GWAS.R</code>\
+    \ script will generate more and publication ready figures.</p>\n<h2>\n<a id=\"\
+    user-content-nextflow-pipeline\" class=\"anchor\" href=\"#nextflow-pipeline\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Nextflow pipeline</h2>\n<p>To execute the scripts in an easy way we\
+    \ included a nextflow pipeline that runs the initial GWAS, the shuffled executions,\n\
+    determine a p-value and run the postprocess.\nTo run coat color phenotype GWAS\
+    \ you can simply install <code>nextflow</code>, make sure that <code>singularity</code>\
+    \ is installed and run:</p>\n<div class=\"highlight highlight-source-shell\"><pre>nextflow\
+    \ run TheJacksonLaboratory/mousegwas \\\n  --yaml https://raw.githubusercontent.com/TheJacksonLaboratory/mousegwas/master/example/coat_color_MDA.yaml\
+    \ \\\n  --shufyaml https://raw.githubusercontent.com/TheJacksonLaboratory/mousegwas/master/example/coat_color_MDA.yaml\
+    \ \\\n  --addgwas=<span class=\"pl-s\"><span class=\"pl-pds\">\"</span>--coat_phenotype<span\
+    \ class=\"pl-pds\">\"</span></span> --addpostp=<span class=\"pl-s\"><span class=\"\
+    pl-pds\">\"</span>--coat_phenotype --colorgroup<span class=\"pl-pds\">\"</span></span>\
+    \ --pvalue 0.1 --clusters 1 --outdir coatout -profile singularity,slurm</pre></div>\n\
+    <p><code>slurm</code> can be changed to <code>pbs</code> or ignored for local\
+    \ execution.</p>\n<p>To regenerate the results in the paper: <a href=\"https://www.biorxiv.org/content/10.1101/2020.10.08.331017v1\"\
+    \ rel=\"nofollow\">https://www.biorxiv.org/content/10.1101/2020.10.08.331017v1</a>\
+    \ :</p>\n<div class=\"highlight highlight-source-shell\"><pre>nextflow run TheJacksonLaboratory/mousegwas\
+    \ \\\n  --yaml https://raw.githubusercontent.com/TheJacksonLaboratory/mousegwas/master/example/grooming_nowild.yaml\
+    \ \\\n  --shufyaml https://raw.githubusercontent.com/TheJacksonLaboratory/mousegwas/master/example/grooming_shuffle.yaml\
+    \ \\\n  --input https://raw.githubusercontent.com/TheJacksonLaboratory/mousegwas/master/example/grooming_paper_strain_survey_2019_11_21.csv\
+    \ <span class=\"pl-cce\">\\ </span>\\\n  --outdir grooming_output --addpostp=<span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>--loddrop 0<span class=\"pl-pds\"\
+    >\"</span></span> -profile slurm,singularity</pre></div>\n"
+  stargazers_count: 1
+  subscribers_count: 2
+  topics: []
+  updated_at: 1632398739.0
 TormodLandet/Ocellaris:
   data_format: 2
   description: This is a github MIRROR of the main ocellaris repo on bitbucket (https://bitbucket.org/ocellarisproject/ocellaris).
@@ -21296,7 +21455,7 @@ UPPMAX/install-methods:
   stargazers_count: 3
   subscribers_count: 5
   topics: []
-  updated_at: 1631648367.0
+  updated_at: 1632212576.0
 UniversalDataTool/universal-data-tool:
   data_format: 2
   description: Collaborate & label any type of data, images, text, or documents, in
@@ -22347,7 +22506,7 @@ XSEDE/nix-container-python-mandle:
 
     '
   stargazers_count: 0
-  subscribers_count: 12
+  subscribers_count: 13
   topics: []
   updated_at: 1628539859.0
 XSEDE/nix-container-sc-benchmark:
@@ -22400,7 +22559,7 @@ XSEDE/singularity-nix-base:
 
     '
   stargazers_count: 0
-  subscribers_count: 12
+  subscribers_count: 13
   topics:
   - nix
   - singularity
@@ -25159,8 +25318,8 @@ automl/HPOBench:
     </li>\n</ul>\n<p><strong>Note:</strong> If you are looking for a different or\
     \ older version of our benchmarking library, you might be looking for\n<a href=\"\
     https://github.com/automl/HPOlib1.5\">HPOlib1.5</a></p>\n"
-  stargazers_count: 42
-  subscribers_count: 7
+  stargazers_count: 46
+  subscribers_count: 8
   topics:
   - hyperparameter-optimization
   - benchmarking
@@ -25168,7 +25327,7 @@ automl/HPOBench:
   - benchmark
   - containerized-benchmarks
   - hpolib
-  updated_at: 1632085683.0
+  updated_at: 1632398761.0
 bananaeat/Cinnamon_assembly:
   data_format: 2
   description: null
@@ -26558,7 +26717,7 @@ baxpr/freesurfer-singularity:
   stargazers_count: 1
   subscribers_count: 2
   topics: []
-  updated_at: 1631975812.0
+  updated_at: 1632448071.0
 baxpr/makerois-PMAT:
   data_format: 2
   description: null
@@ -27868,6 +28027,7 @@ c3se/containers:
   - ambertools/Singularity.ambertools-20
   - ANSA/Singularity.ANSA-20.1.0
   - TensorFlow/Singularity.TensorFlow-2.5.0-NGC-21.08
+  - TensorFlow/Singularity.TensorFlow-1.15.5-NGC-21.08
   - GROMACS/Singularity.GROMACS-2021-NGC
   - RELION/Singularity.RELION-3.1.2-NGC
   - Conda/Singularity.miniconda-4.10.3
@@ -27912,7 +28072,7 @@ c3se/containers:
   - singularity-containers
   - docker
   - hpc
-  updated_at: 1631880714.0
+  updated_at: 1632385907.0
 caoky8989/LVAD:
   data_format: 2
   description: null
@@ -27946,6 +28106,67 @@ cclerget/test-wh:
   subscribers_count: 1
   topics: []
   updated_at: 1547670364.0
+cedarwarman/object_detection_singularity:
+  data_format: 2
+  description: A Singularity container Definition File for running the Tensorflow
+    Object Detection API and a demo Python script.
+  filenames:
+  - singularity/Singularity
+  full_name: cedarwarman/object_detection_singularity
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-tensorflow-object-detection-in-singularity" class="anchor"
+    href="#tensorflow-object-detection-in-singularity" aria-hidden="true"><span aria-hidden="true"
+    class="octicon octicon-link"></span></a>Tensorflow Object Detection in Singularity</h1>
+
+    <p>This repo contains a Singularity Definition File for making a container that
+    runs the <a href="https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2.md">Tensorflow
+    Object Detection API</a>. It also contains a Python script that runs a modified
+    version of the API''s <a href="https://github.com/tensorflow/models/blob/master/research/object_detection/colab_tutorials/eager_few_shot_od_training_tf2_colab.ipynb">Eager
+    Few Shot Detector demo</a>.</p>
+
+    <h2>
+
+    <a id="user-content-building-the-singularity-container" class="anchor" href="#building-the-singularity-container"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building
+    the Singularity container</h2>
+
+    <p>To build the Singularity container with <a href="https://cloud.sylabs.io/builder"
+    rel="nofollow">Remote Builder</a>, first add your credentials:</p>
+
+    <pre><code>singularity remote login
+
+    </code></pre>
+
+    <p>Then run:</p>
+
+    <pre><code>singularity -v build --remote ./singularity/tf_od.sif ./singularity/Singularity
+
+    </code></pre>
+
+    <h2>
+
+    <a id="user-content-running-the-demo" class="anchor" href="#running-the-demo"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running
+    the demo</h2>
+
+    <p>To run the demo with X11 forwarding and error message suppression:</p>
+
+    <pre><code>singularity exec --nv -B ~/.Xauthority ./singularity/tf_od.sif python3
+    ./python/eager_few_shot_od_training_tf2_singularity.py &amp;&gt;/dev/null &amp;
+
+    </code></pre>
+
+    <p>I use this in an HPC environment, so putting it in the background and suppressing
+    messages allows me to monitor the progress with <code>nvtop</code> or <code>nvidia-smi</code>
+    in the same window. Adjust to suit your needs.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1632281930.0
 cfe-lab/MiCall:
   data_format: 2
   description: Pipeline for processing FASTQ data from an Illumina MiSeq to genotype
@@ -28457,7 +28678,7 @@ chaotic-aur/toolbox:
   - continuous-deployment
   - pkgbuild
   - aur
-  updated_at: 1631794886.0
+  updated_at: 1632172183.0
 chenhongluo/horovord:
   data_format: 2
   description: null
@@ -28485,7 +28706,7 @@ cidgoh/nf-ncov-voc:
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1631182048.0
+  updated_at: 1632171390.0
 cjknight/singularity_test:
   data_format: 2
   description: null
@@ -32197,8 +32418,8 @@ devitocodes/devito:
     jupyterhub.</p>
 
     '
-  stargazers_count: 314
-  subscribers_count: 35
+  stargazers_count: 325
+  subscribers_count: 33
   topics:
   - compilers
   - stencil-codes
@@ -32208,7 +32429,7 @@ devitocodes/devito:
   - performance
   - fwi
   - rtm
-  updated_at: 1628685478.0
+  updated_at: 1632404222.0
 dfornika/nf-core-cpo:
   data_format: 2
   description: null
@@ -32946,6 +33167,24 @@ dptools/dpdash:
   subscribers_count: 2
   topics: []
   updated_at: 1622821974.0
+drneavin/Demultiplexing_Doublet_Detecting_Docs:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity.Demuxafy
+  - scripts/Singularity.Demuxafy
+  full_name: drneavin/Demultiplexing_Doublet_Detecting_Docs
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-demultiplexing_doublet_detecting_docs" class="anchor" href="#demultiplexing_doublet_detecting_docs"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Demultiplexing_Doublet_Detecting_Docs</h1>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1632324189.0
 dshyshlov/funannotate_singularity:
   data_format: 2
   description: Recipe for funannotate pipeline Singularity recipy for UA HPC
@@ -36660,7 +36899,7 @@ gher-ulg/DIVAnd-singularity:
   stargazers_count: 1
   subscribers_count: 2
   topics: []
-  updated_at: 1627222877.0
+  updated_at: 1632146718.0
 ghoshmainak/singularity-recipe:
   data_format: 2
   description: null
@@ -37264,7 +37503,7 @@ gpuhackathons-org/gpubootcamp:
   - rapidsai
   - openmp
   - ai4hpc
-  updated_at: 1631799701.0
+  updated_at: 1632225502.0
 granek/jupyter-MIC-2021:
   data_format: 2
   description: null
@@ -42379,6 +42618,131 @@ jstutters/nicpython36:
   subscribers_count: 0
   topics: []
   updated_at: 1624933808.0
+jtfrey/open-xdmod-container:
+  data_format: 2
+  description: Run Open XDMod in a container with automated data ingest.
+  filenames:
+  - container/Singularity/Singularity
+  full_name: jtfrey/open-xdmod-container
+  latest_release: v8.1.2
+  readme: '<h1>
+
+    <a id="user-content-open-xdmod-container" class="anchor" href="#open-xdmod-container"
+    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>open-xdmod-container</h1>
+
+    <p>Run Open XDMod in a container with automated data ingest.</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1632401090.0
+jtfrey/xdmod-container:
+  data_format: 2
+  description: Linux containers running XDMoD service (MariaDB + Apache)
+  filenames:
+  - Singularity/Singularity
+  full_name: jtfrey/xdmod-container
+  latest_release: v1.8.2
+  readme: "<h1>\n<a id=\"user-content-xdmod-container\" class=\"anchor\" href=\"#xdmod-container\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>xdmod-container</h1>\n<p>This repository includes container provisioning\
+    \ files to create a container that executes the XDMoD web application.  Both the\
+    \ MariaDB server and Apache httpd execute within the container, making the service\
+    \ completely self-contained.</p>\n<p>The MariaDB instance will retain the default\
+    \ CentOS 7 configuration; no <code>root</code> password is set, the test database\
+    \ is not removed, and the anonymous user is not removed.  Since all access is\
+    \ internal to the container, there's no need to secure it.</p>\n<p>The container\
+    \ features a runloop that waits for files to appear in <code>/var/lib/XDMoD-ingest-queue/in</code>.\
+    \  The file(s) are ingested into the database and will be moved to <code>/var/lib/XDMoD-ingest-queue/out</code>\
+    \ if successful or to <code>/var/lib/XDMoD-ingest-queue/error</code> if not. \
+    \ Results of the operations are logged to <code>/var/log/xdmod/ingest-queue.log</code>.</p>\n\
+    <h2>\n<a id=\"user-content-docker\" class=\"anchor\" href=\"#docker\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Docker</h2>\n\
+    <p>The Docker container should be spawned with TCP port 8080 mapped to a host\
+    \ port to expose the web application.  The database starts out uninitialized;\
+    \ when a container instance is spawned an external directory may be bind-mounted\
+    \ at <code>/var/lib/mysql</code> in the container to make the database persistent\
+    \ across restarts of the instance, and when the container entrypoint script is\
+    \ first executed the database setup will be completed automatically.</p>\n<p>An\
+    \ external directory can also be bind-mounted at <code>/var/lib/XDMoD-ingest-queue</code>.\
+    \  The directory must have the following subdirectories:</p>\n<ul>\n<li><code>in</code></li>\n\
+    <li><code>out</code></li>\n<li><code>error</code></li>\n</ul>\n<p>These three\
+    \ directories will be created automatically by the entrypoint script if not present\
+    \ in <code>/var/lib/XDMoD-ingest-queue</code>.  Using an external directory allows\
+    \ processes outside the container to copy Slurm accounting log files to the <code>in</code>\
+    \ subdirectory and the entrypoint runloop will awake within 5 minutes and ingest\
+    \ the data.</p>\n<h3>\n<a id=\"user-content-example\" class=\"anchor\" href=\"\
+    #example\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Example</h3>\n<p>The container image is built in this repository directory\
+    \ using:</p>\n<pre><code>$ cd Docker\n$ ROOT_PASSWORD=\"&lt;password&gt;\" docker\
+    \ build --rm --tag local/xdmod:9.5.0 .\n</code></pre>\n<p>The following example\
+    \ illustrates the creation of an instance with persistent database and ingest\
+    \ queue directories:</p>\n<pre><code>$ mkdir -p /tmp/XDMoD-Caviness/ingest-queue\n\
+    $ mkdir -p /tmp/XDMoD-Caviness/database\n$ docker run --detach --restart unless-stopped\
+    \ \\\n    --name XDMoD-Caviness \\\n    --env CLUSTER_NAME=\"cc3\" \\\n    --env\
+    \ RESOURCE_LOG_FORMAT=\"slurm\" \\\n    --volume \"/tmp/XDMoD-Caviness/database:/var/lib/mysql:rw\"\
+    \ \\\n    --volume \"/tmp/XDMoD-Caviness/ingest-queue:/var/lib/XDMoD-ingest-queue:rw\"\
+    \ \\\n    --publish 8080:8080\n    local/xdmod:9.5.0\n</code></pre>\n<p>The <code>CLUSTER_NAME</code>\
+    \ and <code>RESOURCE_LOG_FORMAT</code> are used in the entrypoint XDMoD-start\
+    \ script as arguments to <code>xdmod-shredder</code> for resource manager log\
+    \ file ingestion.  <code>RESOURCE_LOG_FORMAT</code> defaults to \"slurm\".</p>\n\
+    <p>Once the instance is online, XDMoD must be initialized and the ingest queue\
+    \ activated:</p>\n<pre><code>$ docker exec -it XDMoD-Caviness /bin/bash -l\n[container]&gt;\
+    \ xdmod-setup\n    :\n[container]&gt; touch /var/lib/XDMoD-ingest-queue/enable\n\
+    [container]&gt; exit\n</code></pre>\n<p>At this point, copying files to <code>/tmp/XDMoD-Caviness/ingest-queue/in</code>\
+    \ will see them processed in the runloop.  Point a web browser to <a href=\"http://localhost:8080/\"\
+    \ rel=\"nofollow\">http://localhost:8080/</a> to use the web application.</p>\n\
+    <h2>\n<a id=\"user-content-singularity\" class=\"anchor\" href=\"#singularity\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Singularity</h2>\n<p>Singularity 3.0 or newer is required (3.2.1 was\
+    \ used in our production environment) for the network port mapping and support\
+    \ for instances (service-like containers).</p>\n<p>Rather than bind-mounting directories\
+    \ at specific paths as outline above for Docker, with Singularity a writable overlay\
+    \ file system is a good option.  Any changes to the file system relative to the\
+    \ read-only container image are written to an external directory.  As with Docker,\
+    \ port 8080 is mapped to a host port to expose the web application.</p>\n<h3>\n\
+    <a id=\"user-content-example-1\" class=\"anchor\" href=\"#example-1\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Example</h3>\n\
+    <p>The container image is built in this repository directory using:</p>\n<pre><code>$\
+    \ cd Singularity\n$ ROOT_PASSWORD=\"&lt;password&gt;\" singularity build XDMoD-9.5.0.sif\
+    \ Singularity\n</code></pre>\n<p>The following example illustrates the execution\
+    \ of an instance with an overlay file system:</p>\n<pre><code>$ mkdir -p /tmp/XDMoD-Caviness\n\
+    $ singularity instance start --overlay /tmp/XDMoD-Caviness --net --dns 10.65.0.13\
+    \ \\\n    --network bridge --network-args \"portmap=8080:8080/tcp\" \\\n    --env\
+    \ CLUSTER_NAME=\"cc3\" --env RESOURCE_LOG_FORMAT=\"slurm\" \\\n    XDMoD-9.5.0.sif\
+    \ XDMoD-Caviness\n</code></pre>\n<p>The <code>CLUSTER_NAME</code> and <code>RESOURCE_LOG_FORMAT</code>\
+    \ are used in the entrypoint XDMoD-start script as arguments to <code>xdmod-shredder</code>\
+    \ for resource manager log file ingestion.  <code>RESOURCE_LOG_FORMAT</code> defaults\
+    \ to \"slurm\".</p>\n<p>Once the instance is online, XDMoD must be initialized\
+    \ and the ingest queue activated:</p>\n<pre><code>$ singularity shell instance://XDMoD-Caviness\n\
+    [container]&gt; xdmod-setup\n    :\n[container]&gt; touch /var/lib/XDMoD-ingest-queue/in\n\
+    [container]&gt; touch /var/lib/XDMoD-ingest-queue/enable\n[container]&gt; exit\n\
+    </code></pre>\n<p>At this point, copying files to <code>/tmp/XDMoD-Caviness/upper/var/lib/XDMoD-ingest-queue/in</code>\
+    \ will see them processed in the runloop.  Point a web browser to <a href=\"http://localhost:8080/\"\
+    \ rel=\"nofollow\">http://localhost:8080/</a> to use the web application.</p>\n\
+    <h3>\n<a id=\"user-content-helper-scripts\" class=\"anchor\" href=\"#helper-scripts\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Helper Scripts</h3>\n<p>The <code>sbin</code> directory includes a\
+    \ SysV-style script that can be used to start, stop, restart, and query status\
+    \ of instances of the Singularity container.</p>\n<p>To start a new or existing\
+    \ instance with the default container image and overlay directory:</p>\n<pre><code>$\
+    \ sbin/instance Caviness start\n</code></pre>\n<p>To use a different container\
+    \ image and overlay directory:</p>\n<pre><code>$ sbin/instance --overlay=/tmp/XDMoD\
+    \ --image=./XDMoD-uge.sif Farber start\n</code></pre>\n<p>The <code>status</code>\
+    \ action returns 0 if the instance is running, non-zero otherwise:</p>\n<pre><code>$\
+    \ sbin/instance Farber status\n</code></pre>\n<p>The <code>--verbose</code> option\
+    \ increases the amount of output displayed by the command, and the <code>--help</code>\
+    \ option summarizes the command and all options.</p>\n<p>In addition, the <code>systemd</code>\
+    \ directory contains a templated service unit that integrates Singularity instances\
+    \ with systemd for automated startup/shutdown.  Adding our Farber instance above\
+    \ looks like:</p>\n<pre><code>$ cp systemd/xdmod-template.service /etc/systemd/system/xdmod@Farber.service\n\
+    $ systemctl daemon-reload\n$ systemctl enable xdmod@Farber.service\n$ systemctl\
+    \ start xdmod@Farber.service\n</code></pre>\n"
+  stargazers_count: 1
+  subscribers_count: 1
+  topics: []
+  updated_at: 1632400855.0
 kaczmarj/container-examples:
   data_format: 2
   description: Examples of Dockerfiles and Singularity recipes
@@ -43268,13 +43632,14 @@ khanlab/tar2bids:
   - Singularity.v0.0.3
   - Singularity.v0.0.6a
   - Singularity.0.0.2b
+  - Singularity.v0.0.6b
   - Singularity.v0.0.3c
   - Singularity
   - Singularity.0.0.2e
   - Singularity.v0.0.5b
   - Singularity.v0.0.3b
   full_name: khanlab/tar2bids
-  latest_release: v0.06b
+  latest_release: v0.0.6b
   readme: "<h1>\n<a id=\"user-content-tar2bids\" class=\"anchor\" href=\"#tar2bids\"\
     \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
     ></span></a>tar2bids</h1>\n<pre><code>Runs dicom tarball(s) to BIDS conversion\
@@ -43292,7 +43657,7 @@ khanlab/tar2bids:
   stargazers_count: 4
   subscribers_count: 2
   topics: []
-  updated_at: 1631675333.0
+  updated_at: 1632366484.0
 klm122/w2l:
   data_format: 2
   description: w2l
@@ -43498,66 +43863,44 @@ lbnl-science-it/atlas:
   - Singularity
   full_name: lbnl-science-it/atlas
   latest_release: null
-  readme: '<h1>
-
-    <a id="user-content-atlas" class="anchor" href="#atlas" aria-hidden="true"><span
-    aria-hidden="true" class="octicon octicon-link"></span></a>atlas</h1>
-
-    <p>Container with R and necessary packages to run BEAM/Atlas vehicle simulation.</p>
-
-    <h2>
-
-    <a id="user-content-example-running-r-script-via-docker" class="anchor" href="#example-running-r-script-via-docker"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example
-    running R script via Docker</h2>
-
-    <p>cd /global/data/transportation/ATLAS/static/urbansim/</p>
-
-    <p>// R script in home dir, bind mounted to container
-
-    docker run -v /global/data/transportation/ATLAS/static/urbansim:/global/data/transportation/ATLAS/static/urbansim
-    -it --entrypoint=Rscript  ghcr.io/lbnl-science-it/atlas:main  /global/data/transportation/ATLAS/static/urbansim/model_application/Model_application_hima.R
-
-    docker run -v /global/data/transportation/ATLAS/static/urbansim:/mnt -it --entrypoint=Rscript  ghcr.io/lbnl-science-it/atlas:main  /mnt/model_application/Model_application_hima.R
-
-    docker run -v "$PWD":/mnt -it --entrypoint=Rscript  ghcr.io/lbnl-science-it/atlas:main  /mnt/model_application/Model_application_hima.R</p>
-
-    <p>// running a bash shell, can call R from there
-
-    docker run                -it --entrypoint=bash     ghcr.io/lbnl-science-it/atlas:main
-
-    docker run -v /global/data/transportation/ATLAS/static/urbansim:/mnt -it --entrypoint=bash  ghcr.io/lbnl-science-it/atlas:main<br>
-
-    root@c2bc9c1d6e9f:/mnt# mkdir -p /global/data/transportation/ATLAS/static/urbansim
-
-    root@c2bc9c1d6e9f:/mnt# Rscript model_application/Model_application_hima.R   #
-    error cuz R code call for setwd that doesn''t exist</p>
-
-    <h2>
-
-    <a id="user-content-example-running-r-script-via-singularity" class="anchor" href="#example-running-r-script-via-singularity"
-    aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example
-    running R script via Singularity</h2>
-
-    <p>cd /global/data/transportation/ATLAS/static/urbansim/</p>
-
-    <p>singularity pull  docker://ghcr.io/lbnl-science-it/atlas:main
-
-    singularity exec  docker://ghcr.io/lbnl-science-it/atlas:main  Rscript ./model_application/Model_application_hima.R</p>
-
-    <p>// other things to try for debug use
-
-    singularity shell docker://ghcr.io/lbnl-science-it/atlas:main  # get bash prompt,
-    can call R afterward
-
-    singularity run   docker://ghcr.io/lbnl-science-it/atlas:main  # get R    prompt</p>
-
-    '
+  readme: "<h1>\n<a id=\"user-content-atlas\" class=\"anchor\" href=\"#atlas\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>atlas</h1>\n\
+    <p>Container with R and necessary packages to run BEAM/Atlas vehicle simulation.</p>\n\
+    <h2>\n<a id=\"user-content-example-running-r-script-via-docker\" class=\"anchor\"\
+    \ href=\"#example-running-r-script-via-docker\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Example running R script via\
+    \ Docker</h2>\n<div class=\"highlight highlight-source-shell\"><pre>\n<span class=\"\
+    pl-c1\">cd</span> /global/data/transportation/ATLAS/static/urbansim/\n\n<span\
+    \ class=\"pl-c\"><span class=\"pl-c\">#</span># R script in home dir, bind mounted\
+    \ to container</span>\n<span class=\"pl-c\"><span class=\"pl-c\">#</span>XX docker\
+    \ run -v /global/data/transportation/ATLAS/static/urbansim:/global/data/transportation/ATLAS/static/urbansim\
+    \ -it --entrypoint=Rscript  ghcr.io/lbnl-science-it/atlas:main  /global/data/transportation/ATLAS/static/urbansim/model_application/Model_application_hima.R\
+    \ </span>\ndocker run -v /global/data/transportation/ATLAS/static/urbansim:/mnt\
+    \ -it --entrypoint=Rscript  ghcr.io/lbnl-science-it/atlas:main  /mnt/model_application/Model_application_hima.R\
+    \ \ndocker run -v <span class=\"pl-s\"><span class=\"pl-pds\">\"</span><span class=\"\
+    pl-smi\">$PWD</span><span class=\"pl-pds\">\"</span></span>:/mnt -it --entrypoint=Rscript\
+    \  ghcr.io/lbnl-science-it/atlas:main  /mnt/model_application/Model_application_hima.R\n\
+    \n<span class=\"pl-c\"><span class=\"pl-c\">#</span># running a bash shell, can\
+    \ call R from there</span>\ndocker run                -it --entrypoint=bash  \
+    \   ghcr.io/lbnl-science-it/atlas:main\ndocker run -v /global/data/transportation/ATLAS/static/urbansim:/mnt\
+    \ -it --entrypoint=bash  ghcr.io/lbnl-science-it/atlas:main  \n    root@0b5815f5b441:/<span\
+    \ class=\"pl-c\"><span class=\"pl-c\">#</span> export R_LIBS=/usr/local/lib/R/site-library/</span>\n\
+    \    root@0b5815f5b441:/<span class=\"pl-c\"><span class=\"pl-c\">#</span> Rscript\
+    \ /mnt/model_application/Model_application_hima.R</span>\n</pre></div>\n<h2>\n\
+    <a id=\"user-content-example-running-r-script-via-singularity\" class=\"anchor\"\
+    \ href=\"#example-running-r-script-via-singularity\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Example running\
+    \ R script via Singularity</h2>\n<pre><code>\ncd /global/data/transportation/ATLAS/static/urbansim/\n\
+    \nsingularity pull  docker://ghcr.io/lbnl-science-it/atlas:main \nsingularity\
+    \ exec  docker://ghcr.io/lbnl-science-it/atlas:main  Rscript ./model_application/Model_application_hima.R\
+    \  \n\n// other things to try for debug use\nsingularity shell docker://ghcr.io/lbnl-science-it/atlas:main\
+    \  # get bash prompt, can call R afterward\nsingularity run   docker://ghcr.io/lbnl-science-it/atlas:main\
+    \  # get R    prompt\n\n</code></pre>\n"
   stargazers_count: 0
   subscribers_count: 0
   topics:
   - modeling
-  updated_at: 1632001254.0
+  updated_at: 1632184967.0
 lehtiolab/nf-deqms:
   data_format: 2
   description: null
@@ -44290,6 +44633,63 @@ lscsoft/bilby:
   subscribers_count: 6
   topics: []
   updated_at: 1628778318.0
+luukkonenr/deepspeed-torch-singularity:
+  data_format: 2
+  description: Recipe for deepspeed singularity container
+  filenames:
+  - Singularity
+  full_name: luukkonenr/deepspeed-torch-singularity
+  latest_release: null
+  readme: "<h1>\n<a id=\"user-content-singularity-recipe-template-for-building-deepspeed-enabled-pytorch-container\"\
+    \ class=\"anchor\" href=\"#singularity-recipe-template-for-building-deepspeed-enabled-pytorch-container\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Singularity-recipe-template for building Deepspeed-enabled pytorch-container</h1>\n\
+    <h2>\n<a id=\"user-content-install-singularity\" class=\"anchor\" href=\"#install-singularity\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Install singularity</h2>\n<p>Follow these instructions to install\
+    \ singularity on a system\n<a href=\"https://github.com/hpcng/singularity/blob/master/INSTALL.md\"\
+    >https://github.com/hpcng/singularity/blob/master/INSTALL.md</a></p>\n<p>NOTE:\
+    \ I've used <strong>Singularity version 3.5.3</strong>, newest 3.8.3 gave me some\
+    \ errors and I think it uses later gcc or something like that which results in\
+    \ build problems with some of the libraries.</p>\n<h2>\n<a id=\"user-content-building-a-container\"\
+    \ class=\"anchor\" href=\"#building-a-container\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Building a container</h2>\n<p>You\
+    \ need root-privileges (or --fakeroot) to build containers. (In my undest\nYou\
+    \ may need to set cachedir for singularity to avoid 'disk is full'-errors</p>\n\
+    <pre><code>mkdir $HOME/.cache/singularity/\nexport SINGULARITY_TMPDIR=/path/ e.g\
+    \ $HOME/.cache/singularity/\nexport SINGULARITY_CACHEDIR=/path/ e.g $HOME/.cache/singularity/\n\
+    </code></pre>\n<p><strong>BUILD:</strong> <code>sudo -E singularity build container-name\
+    \ Singularity</code></p>\n<h2>\n<a id=\"user-content-running-on-csc-environment\"\
+    \ class=\"anchor\" href=\"#running-on-csc-environment\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Running on CSC-environment</h2>\n\
+    <p>If running on Mahti make sure your $HOME/.ssh/config is looking like this</p>\n\
+    <pre><code>    host c???? g???? mahti* *.mahti.csc.fi\n      IdentityFile ~/.ssh/id_rsa_mahti\n\
+    \      StrictHostKeyChecking no\n</code></pre>\n<p>Put the following inside your\
+    \ slurm-script:</p>\n<pre><code>#Load pdsh\nmodule load pdsh/2.31\n\n#Bind directory\
+    \ with pdsh to /usr/local/sbin in singularity\nexport SING_FLAGS=\"$SING_FLAGS\
+    \ -B /appl/spack/v014/install-tree/gcc-4.8.5/pdsh-2.31-cdzt5w/bin:/usr/local/sbin\"\
+    `\n\nexport SING_IMAGE=/PATH/TO/CONTAINER/deepspeed.sif # This needs to match\
+    \ the path inside your init_node.sh\nexport SING_FLAGS=$SING_FLAGS \"--nv\" #\
+    \ Enable GPU\nexport TORCH_EXT_DIR=/path/to/some/dir/ # I f you have existing\
+    \ dir with some ops, may cause a hang with a msg about using this torch_ext_dir.\
+    \ Try removing that dir and run your job again.\n</code></pre>\n<p><strong>RUNNING:</strong>\n\
+    <code>singularity_wrapper exec deepspeed DEEPSPEED_ARGUMENTS path/to/python_script.py\
+    \ PYTHON_ARGUMENTS</code></p>\n<p><strong>EXAMPLE:</strong>\n<code>singularity_wrapper\
+    \ exec deepspeed --hostfile=hostfile.txt --master_addr=$MASTER_NODE /projappl/project_2004600/risto/model3multi/training/trainer.py\
+    \ --train_data $TRAIN_DATA \\ ... </code></p>\n<h2>\n<a id=\"user-content-notes\"\
+    \ class=\"anchor\" href=\"#notes\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Notes</h2>\n<p>This version has been\
+    \ configured to use pdsh for inter-node communications. No other runners have\
+    \ been tested and may need spesific configurations.\nPDSH-runner has been modified\
+    \ to contain relevant information about running python inside container:</p>\n\
+    <ol>\n<li>added line \"source node_init.sh\" <em>see node_init.sh</em>\n</li>\n\
+    <li>exec argument <code>python</code> changed to <code>singularity_wrapper exec\
+    \ python</code>\nFile is located at<code>/opt/conda/lib/python3.8/site-packages/deepspeed/launcher/multinode_runner.py</code>\n\
+    </li>\n</ol>\n"
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1632389580.0
 lxwgcool/singularity:
   data_format: 2
   description: singularity-recipe-share
@@ -44902,6 +45302,47 @@ mattocci27/r-containers:
   subscribers_count: 1
   topics: []
   updated_at: 1631864050.0
+mattwfranchi/Webots.HPC:
+  data_format: 2
+  description: null
+  filenames:
+  - Singularity
+  full_name: mattwfranchi/Webots.HPC
+  latest_release: null
+  readme: '<h1>
+
+    <a id="user-content-webotshpc" class="anchor" href="#webotshpc" aria-hidden="true"><span
+    aria-hidden="true" class="octicon octicon-link"></span></a>Webots.HPC</h1>
+
+    <p>Connected Autonomous Vehicles Situational Awareness Research Group</p>
+
+    <p>Through parallelization, our project can test multiple scenarios of a Connected
+    Autonomous Vehicle in a simulation with human-driven vehicles and compare the
+    risk level of assessment to successfully merge onto the highway.</p>
+
+    <p><strong>Materials</strong>
+
+    SUMO
+
+    Webots
+
+    Palmetto Cluster</p>
+
+    <p><strong>Parameters</strong>
+
+    -Speed
+
+    -X and Z Coordinate Position
+
+    -Bearing
+
+    -Merge Status (calculated field)</p>
+
+    '
+  stargazers_count: 0
+  subscribers_count: 1
+  topics: []
+  updated_at: 1632430325.0
 maxpkatz/singularity_image_files:
   data_format: 2
   description: null
@@ -48533,7 +48974,7 @@ oist/GenomicBreaks:
   topics:
   - comparative-genomics
   - r
-  updated_at: 1631779221.0
+  updated_at: 1632462303.0
 onuryukselen/singularity:
   data_format: 2
   description: null
@@ -53578,6 +54019,71 @@ pscedu/singularity-bedtools:
   - singularity
   - bioinformatics
   updated_at: 1631927097.0
+pscedu/singularity-bioformats2raw:
+  data_format: 2
+  description: Bio-Formats image file format to raw format converter.
+  filenames:
+  - 3.0.0/Singularity
+  full_name: pscedu/singularity-bioformats2raw
+  latest_release: v3.0.0
+  readme: "<p><a href=\"https://github.com/pscedu/singularity-bioformats2raw/actions/workflows/main.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-bioformats2raw/actions/workflows/main.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://github.com/pscedu/singularity-bioformats2raw/actions/workflows/pretty.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-bioformats2raw/actions/workflows/pretty.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/393a92fbeeb7f1545c3869f957dc859760052e0eff8eeb8f95b409800de2d2b2/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d62696f666f726d61747332726177\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/393a92fbeeb7f1545c3869f957dc859760052e0eff8eeb8f95b409800de2d2b2/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d62696f666f726d61747332726177\"\
+    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-bioformats2raw\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/444f4d60540e76ad5618bb8884c8f9d5a6a1f61fcf2a94363f379f6c6b074c5c/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d62696f666f726d61747332726177\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/444f4d60540e76ad5618bb8884c8f9d5a6a1f61fcf2a94363f379f6c6b074c5c/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d62696f666f726d61747332726177\"\
+    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-bioformats2raw\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/91fa772cacd77c7d5f540224712927de4888ac6dc960cd56dc1d23edeac9a1b9/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d62696f666f726d61747332726177\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/91fa772cacd77c7d5f540224712927de4888ac6dc960cd56dc1d23edeac9a1b9/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d62696f666f726d61747332726177\"\
+    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-bioformats2raw\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/f6dea7ba6ee602447c05fc1a8d8498d7d44f22ad6f72fb6ad78b424301cd6d14/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d62696f666f726d61747332726177\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/f6dea7ba6ee602447c05fc1a8d8498d7d44f22ad6f72fb6ad78b424301cd6d14/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d62696f666f726d61747332726177\"\
+    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-bioformats2raw\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-singularity-bioformats2raw\"\
+    \ class=\"anchor\" href=\"#singularity-bioformats2raw\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>singularity-bioformats2raw</h1>\n\
+    <p><a href=\"https://camo.githubusercontent.com/d6ac5fb6156e1b197fd547d7632a7b90cb6aac15112aff196834a376c3065baf/68747470733a2f2f7777772e676c656e636f65736f6674776172652e636f6d2f696d672f6c6f676f2e737667\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/d6ac5fb6156e1b197fd547d7632a7b90cb6aac15112aff196834a376c3065baf/68747470733a2f2f7777772e676c656e636f65736f6674776172652e636f6d2f696d672f6c6f676f2e737667\"\
+    \ width=\"25%\" data-canonical-src=\"https://www.glencoesoftware.com/img/logo.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n<p>Singularity recipe for <a href=\"https://github.com/glencoesoftware/bioformats2raw\"\
+    >bioformats2raw</a>.</p>\n<h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\"\
+    \ class=\"anchor\" href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installing\
+    \ the container on Bridges 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code>\
+    \ file</li>\n<li>and the <code>bioformats2raw</code> script</li>\n</ul>\n<p>to\
+    \ <code>/opt/packages/bioformats2raw/3.0.0</code>.</p>\n<p>Copy the file <code>modulefile.lua</code>\
+    \ to <code>/opt/modulefiles/bioformats2raw</code> as <code>3.0.0.lua</code>.</p>\n\
+    <h2>\n<a id=\"user-content-building-the-image-using-the-recipe\" class=\"anchor\"\
+    \ href=\"#building-the-image-using-the-recipe\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Building the image using the\
+    \ recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\" class=\"\
+    anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To build the image locally</h3>\n\
+    <p>Run the script <code>build.sh</code> to build image locally.</p>\n<pre><code>bash\
+    \ ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
+    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing Center</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
+    \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
+    \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 2
+  topics:
+  - singularity
+  - utilities
+  - image-processing
+  updated_at: 1632375348.0
 pscedu/singularity-bismark:
   data_format: 2
   description: 'Bismark is a program to map bisulfite treated sequencing reads to
@@ -56170,6 +56676,70 @@ pscedu/singularity-prokka:
   - singularity
   - bioinformatics
   updated_at: 1624982164.0
+pscedu/singularity-raw2ometiff:
+  data_format: 2
+  description: Raw format to OME-TIFF converter.
+  filenames:
+  - 3.0.0/Singularity
+  full_name: pscedu/singularity-raw2ometiff
+  latest_release: v3.0.0
+  readme: "<p><a href=\"https://github.com/pscedu/singularity-raw2ometiff/actions/workflows/main.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-raw2ometiff/actions/workflows/main.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://github.com/pscedu/singularity-raw2ometiff/actions/workflows/pretty.yml/badge.svg\"\
+    \ target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"https://github.com/pscedu/singularity-raw2ometiff/actions/workflows/pretty.yml/badge.svg\"\
+    \ alt=\"Status\" style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/8d0d22e8f29e65a71263e2fb6bce4826c7ce3f09aed55e6dbde2928785d212f2/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d726177326f6d6574696666\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/8d0d22e8f29e65a71263e2fb6bce4826c7ce3f09aed55e6dbde2928785d212f2/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6973737565732f7073636564752f73696e67756c61726974792d726177326f6d6574696666\"\
+    \ alt=\"Issue\" data-canonical-src=\"https://img.shields.io/github/issues/pscedu/singularity-raw2ometiff\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/7822cb72c205ba7e407c8e3c73f1753c3051e55c850a256628b591b7640cb064/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d726177326f6d6574696666\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/7822cb72c205ba7e407c8e3c73f1753c3051e55c850a256628b591b7640cb064/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f666f726b732f7073636564752f73696e67756c61726974792d726177326f6d6574696666\"\
+    \ alt=\"forks\" data-canonical-src=\"https://img.shields.io/github/forks/pscedu/singularity-raw2ometiff\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/ee493a8b01574ccdadc2be17adf48265c4d4d5b8d4dd7528eebab32317323e41/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d726177326f6d6574696666\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/ee493a8b01574ccdadc2be17adf48265c4d4d5b8d4dd7528eebab32317323e41/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f73746172732f7073636564752f73696e67756c61726974792d726177326f6d6574696666\"\
+    \ alt=\"Stars\" data-canonical-src=\"https://img.shields.io/github/stars/pscedu/singularity-raw2ometiff\"\
+    \ style=\"max-width:100%;\"></a>\n<a href=\"https://camo.githubusercontent.com/48898dd432d34088bdf217be2af09312648ecdf47ab776fb4de050c5338365bd/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d726177326f6d6574696666\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/48898dd432d34088bdf217be2af09312648ecdf47ab776fb4de050c5338365bd/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f7073636564752f73696e67756c61726974792d726177326f6d6574696666\"\
+    \ alt=\"License\" data-canonical-src=\"https://img.shields.io/github/license/pscedu/singularity-raw2ometiff\"\
+    \ style=\"max-width:100%;\"></a></p>\n<h1>\n<a id=\"user-content-singularity-raw2ometiff\"\
+    \ class=\"anchor\" href=\"#singularity-raw2ometiff\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>singularity-raw2ometiff</h1>\n\
+    <p><a href=\"https://camo.githubusercontent.com/d6ac5fb6156e1b197fd547d7632a7b90cb6aac15112aff196834a376c3065baf/68747470733a2f2f7777772e676c656e636f65736f6674776172652e636f6d2f696d672f6c6f676f2e737667\"\
+    \ target=\"_blank\" rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/d6ac5fb6156e1b197fd547d7632a7b90cb6aac15112aff196834a376c3065baf/68747470733a2f2f7777772e676c656e636f65736f6674776172652e636f6d2f696d672f6c6f676f2e737667\"\
+    \ width=\"25%\" data-canonical-src=\"https://www.glencoesoftware.com/img/logo.svg\"\
+    \ style=\"max-width:100%;\"></a></p>\n<p>Singularity recipe for <a href=\"https://github.com/glencoesoftware/raw2ometiff\"\
+    >raw2ometiff</a>.</p>\n<h2>\n<a id=\"user-content-installing-the-container-on-bridges-2\"\
+    \ class=\"anchor\" href=\"#installing-the-container-on-bridges-2\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Installing\
+    \ the container on Bridges 2</h2>\n<p>Copy the</p>\n<ul>\n<li>\n<code>SIF</code>\
+    \ file</li>\n<li>and the <code>raw2ometiff</code> script</li>\n</ul>\n<p>to <code>/opt/packages/raw2ometiff/3.0.0</code>.</p>\n\
+    <p>Copy the file <code>modulefile.lua</code> to <code>/opt/modulefiles/raw2ometiff</code>\
+    \ as <code>3.0.0.lua</code>.</p>\n<h2>\n<a id=\"user-content-building-the-image-using-the-recipe\"\
+    \ class=\"anchor\" href=\"#building-the-image-using-the-recipe\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Building\
+    \ the image using the recipe</h2>\n<h3>\n<a id=\"user-content-to-build-the-image-locally\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-locally\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build the\
+    \ image locally</h3>\n<p>Run the script <code>build.sh</code> to build image locally.</p>\n\
+    <pre><code>bash ./build.sh\n</code></pre>\n<h3>\n<a id=\"user-content-to-build-the-image-remotely\"\
+    \ class=\"anchor\" href=\"#to-build-the-image-remotely\" aria-hidden=\"true\"\
+    ><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>To build\
+    \ the image remotely</h3>\n<p>Run the script <code>rbuild.sh</code> to build image\
+    \ remotely.</p>\n<pre><code>bash ./rbuild.sh\n</code></pre>\n<h2>\n<a id=\"user-content-to-run-tests\"\
+    \ class=\"anchor\" href=\"#to-run-tests\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>To run tests</h2>\n<p>To run\
+    \ the available tests, run the command</p>\n<pre><code>bash ./test.sh\n</code></pre>\n\
+    <hr>\n<p>Copyright \xA9 2020-2021 Pittsburgh Supercomputing Center. All Rights\
+    \ Reserved.</p>\n<p>The <a href=\"https://www.psc.edu/biomedical-applications/\"\
+    \ rel=\"nofollow\">Biomedical Applications Group</a> at the <a href=\"http://www.psc.edu\"\
+    \ rel=\"nofollow\">Pittsburgh Supercomputing Center</a> in the <a href=\"https://www.cmu.edu/mcs/\"\
+    \ rel=\"nofollow\">Mellon College of Science</a> at <a href=\"http://www.cmu.edu\"\
+    \ rel=\"nofollow\">Carnegie Mellon University</a>.</p>\n"
+  stargazers_count: 0
+  subscribers_count: 2
+  topics:
+  - singularity
+  - utilities
+  - image-processing
+  updated_at: 1632372020.0
 pscedu/singularity-raxml:
   data_format: 2
   description: RAxML - Randomized Axelerated Maximum Likelihood.
@@ -59523,7 +60093,7 @@ ropensci/mauricer:
   - r
   - r-package
   - rstats
-  updated_at: 1631094514.0
+  updated_at: 1632374481.0
 sailfish009/openstructure:
   data_format: 2
   description: Open-Source Computational Structural Biology Framework
@@ -60221,12 +60791,13 @@ shreyaskamathkm/Cluster_Images:
   - Singularity_Ubuntu_16_04
   - Singularity_Ubuntu_18_04_Cuda_11_1
   - Singularity_Ubuntu_20_04_Cuda_11_1
+  - Singularity_Ubuntu_18_04_Cuda_11_0
   full_name: shreyaskamathkm/Cluster_Images
   latest_release: null
   stargazers_count: 0
   subscribers_count: 1
   topics: []
-  updated_at: 1616693700.0
+  updated_at: 1632449600.0
 shreyaskamathkm/singularity_meshroom:
   data_format: 2
   description: null
@@ -62789,38 +63360,29 @@ sylabs/singularity:
   description: SingularityCE is the Community Edition of Singularity, an open source
     container platform designed to be simple, fast, and secure.
   filenames:
-  - examples/build-singularity/build-singularity.def
-  - examples/legacy/2.2/busybox.def
-  - examples/legacy/2.2/centos.def
-  - examples/legacy/2.2/docker.def
-  - examples/legacy/2.2/ubuntu.def
-  - examples/legacy/2.2/arch.def
-  - examples/legacy/2.2/debian.def
-  - examples/legacy/2.2/scientific.def
-  - examples/legacy/2.2/contrib/ubuntu16-tensorflow-0.12.1.def
-  - examples/legacy/2.2/contrib/ubuntu-openfoam.def
-  - examples/legacy/2.2/contrib/ubuntu16-tensorflow-0.12.1-gpu.def
-  - examples/legacy/2.2/contrib/ubuntu-root.def
-  - examples/legacy/2.2/contrib/centos-minimal.def
-  - examples/legacy/2.2/contrib/fedora.def
-  - examples/legacy/2.2/contrib/r_python_julia.def
-  - examples/legacy/2.2/contrib/centos7-ompi_master.def
-  - examples/legacy/2.2/contrib/debian85-tensorflow-0.10.def
-  - examples/legacy/2.2/contrib/linuxbrew_and_non-root_software_example.def
-  - examples/legacy/2.2/contrib/ubuntu-bio.def
-  - examples/legacy/2.2/contrib/centos7-ompi_cuda.def
-  - examples/legacy/2.3/contrib/raspbian.def
-  - e2e/testdata/inspecter_container.def
-  - e2e/testdata/Docker_registry.def
-  - e2e/testdata/sshfs.def
-  - e2e/testdata/regressions/issue_4583.def
-  - e2e/testdata/regressions/issue_4967.def
-  - e2e/testdata/regressions/issue_4203.def
-  - e2e/testdata/regressions/issue_5250.def
-  - e2e/testdata/regressions/issue_5315.def
-  - e2e/testdata/regressions/issue_4969.def
-  - e2e/testdata/regressions/issue_4820.def
-  - e2e/testdata/regressions/issue_5399.def
+  - examples/opensuse/Singularity
+  - examples/opensuse-arm64/Singularity
+  - examples/shub/Singularity
+  - examples/multistage/Singularity
+  - examples/arch/Singularity
+  - examples/sle/Singularity
+  - examples/scratch/Singularity.busybox
+  - examples/scratch/Singularity.alpine
+  - examples/apps/Singularity.cowsay
+  - examples/apps/Singularity
+  - examples/docker/Singularity
+  - examples/ubuntu/Singularity
+  - examples/debian/Singularity
+  - examples/centos/Singularity
+  - examples/instances/Singularity
+  - examples/raspbian/Singularity
+  - examples/asciinema/Singularity
+  - examples/scientific/Singularity
+  - examples/busybox/Singularity
+  - examples/centos-arm64/Singularity
+  - examples/self/Singularity
+  - examples/library/Singularity
+  - e2e/testdata/Singularity
   full_name: sylabs/singularity
   latest_release: v3.8.3
   readme: '<h1>
@@ -62985,13 +63547,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 86
-  subscribers_count: 11
+  stargazers_count: 87
+  subscribers_count: 12
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1632194664.0
+  updated_at: 1632417612.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
@@ -63851,7 +64413,7 @@ tikk3r/lofar-grid-hpccloud:
   stargazers_count: 2
   subscribers_count: 3
   topics: []
-  updated_at: 1631304541.0
+  updated_at: 1632126296.0
 timkphd/Containers:
   data_format: 2
   description: null
@@ -65197,6 +65759,7 @@ vibaotram/singularity-container:
   - Singularity.myR_4-0-2_rstudio_1.3
   - Singularity.guppy3.4gpu-conda-api
   - Singularity.guppy5.0.7gpu-conda-api
+  - Singularity.guppy5.0.14gpu-conda-api
   - Singularity.deepbinner-api
   - Singularity.guppy-cpu-conda
   - Singularity.guppy4.5.4gpu-conda-api
@@ -65261,7 +65824,7 @@ vibaotram/singularity-container:
   subscribers_count: 3
   topics:
   - singularity
-  updated_at: 1626013391.0
+  updated_at: 1632300990.0
 vigo332/singularity-rstudio-r4:
   data_format: 2
   description: null

@@ -48,8 +48,11 @@ From: shreyaskamathkm/cluster_images:ubuntu_18.04_cuda_10.2
 
 # user requests
   /opt/conda/bin/conda update -y --all
-  /opt/conda/bin/conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
+  /opt/conda/bin/conda install pytorch==1.6.0 torchvision==0.7.0 cudatoolkit=10.2 -c pytorch
   /opt/conda/bin/conda install -c anaconda gxx_linux-64
+  /opt/conda/bin/conda install -c fvcore -c iopath -c conda-forge fvcore iopath
+  /opt/conda/bin/conda install -c bottler nvidiacub
+  /opt/conda/bin/conda install pytorch3d -c pytorch3d
   /opt/conda/bin/conda clean -ya
 
 # rest of the updates
@@ -69,7 +72,7 @@ From: shreyaskamathkm/cluster_images:ubuntu_18.04_cuda_10.2
   /opt/conda/bin/pip install --no-cache-dir pandas
   /opt/conda/bin/pip install --no-cache-dir kornia
   /opt/conda/bin/pip install --no-cache-dir fairscale
-  /opt/conda/bin/pip install --no-cache-dir pytorch-lightning==1.2.4
+  /opt/conda/bin/pip install --no-cache-dir pytorch-lightning
   /opt/conda/bin/pip install --no-cache-dir test-tube
   /opt/conda/bin/pip install --no-cache-dir wandb
   /opt/conda/bin/pip install --no-cache-dir lpips
@@ -78,7 +81,7 @@ From: shreyaskamathkm/cluster_images:ubuntu_18.04_cuda_10.2
   /opt/conda/bin/pip install --no-cache-dir timm
   /opt/conda/bin/pip install --no-cache-dir nibabel
   /opt/conda/bin/pip install --no-cache-dir yacs
-  
+    
 # pip install git+https://github.com/PytorchLightning/pytorch-lightning.git@release/1.2-dev --upgrade
 
 # Apex installation

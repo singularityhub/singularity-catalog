@@ -1,0 +1,90 @@
+Bootstrap: docker
+From: shreyaskamathkm/cluster_images:ubuntu_18.04_cuda_11.0
+
+# https://github.com/horovod/horovod/issues/882
+# https://lambdalabs.com/blog/horovod-keras-for-multi-gpu-training/
+%setup
+# -----------------------------------------------------------------------------------
+# This is a port of the Dockerfile maintained at https://github.com/uber/horovod
+%environment
+# -----------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+# From my environments
+    export SHELL=/bin/bash
+    export CPATH="/usr/local/cuda/include:$CPATH"
+    export PATH="/usr/local/cuda/bin:$PATH"
+    export CUDA_HOME="/usr/local/cuda"
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
+%post
+# -----------------------------------------------------------------------------------
+# From my environments
+    mkdir /project /scratch
+
+    # post-setup script
+
+    apt-get -y update && apt-get install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
+        build-essential \
+        cmake \
+        g++-4.8 \
+        git \
+        curl \
+        vim \
+        wget \
+        ca-certificates \
+        libjpeg-dev \
+        libpng-dev \
+        libsm6 \
+        libxext6 \
+        libxrender-dev \
+        aria2 \
+ 	librdmacm1 \
+        libibverbs1 \
+        ibverbs-providers
+
+      apt-get -y autoremove
+
+
+# user requests
+  /opt/conda/bin/conda update -y --all
+  /opt/conda/bin/conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c conda-forge
+  /opt/conda/bin/conda install -c anaconda gxx_linux-64
+  /opt/conda/bin/conda clean -ya
+
+# rest of the updates
+  /opt/conda/bin/pip install --no-cache-dir --upgrade pip
+  /opt/conda/bin/pip install --no-cache-dir natsort
+  /opt/conda/bin/pip install --no-cache-dir albumentations
+  /opt/conda/bin/pip uninstall -y opencv-python-headless
+  /opt/conda/bin/pip install --no-cache-dir opencv-python
+  /opt/conda/bin/pip install --no-cache-dir opencv-contrib-python
+  /opt/conda/bin/pip install --no-cache-dir PyContracts
+  /opt/conda/bin/pip install --no-cache-dir tensorflow-gpu
+  /opt/conda/bin/pip install --no-cache-dir Shapely
+  /opt/conda/bin/pip install --no-cache-dir tfa-nightly
+#  /opt/conda/bin/pip install --no-cache-dir mmcv-full===1.2.2 -f https://download.openmmlab.com/mmcv/dist/cu102/torch1.6.0/index.html
+  /opt/conda/bin/pip install --no-cache-dir portalocker
+  /opt/conda/bin/pip install --no-cache-dir tabulate
+  /opt/conda/bin/pip install --no-cache-dir pandas
+  /opt/conda/bin/pip install --no-cache-dir kornia
+  /opt/conda/bin/pip install --no-cache-dir fairscale
+  /opt/conda/bin/pip install --no-cache-dir pytorch-lightning==1.2.4
+  /opt/conda/bin/pip install --no-cache-dir test-tube
+  /opt/conda/bin/pip install --no-cache-dir wandb
+  /opt/conda/bin/pip install --no-cache-dir lpips
+  /opt/conda/bin/pip install --no-cache-dir pretrainedmodels
+  /opt/conda/bin/pip install --no-cache-dir efficientnet-pytorch
+  /opt/conda/bin/pip install --no-cache-dir timm
+  /opt/conda/bin/pip install --no-cache-dir nibabel
+  /opt/conda/bin/pip install --no-cache-dir yacs
+
+# Apex installation
+	mkdir -p /tmp/apex &&
+	cd /tmp/apex && \
+	git clone https://github.com/NVIDIA/apex && \
+	cd apex && \
+	/opt/conda/bin/pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
+	rm -rf /tmp/apex
+	cd /root
+
+  cd /workspace

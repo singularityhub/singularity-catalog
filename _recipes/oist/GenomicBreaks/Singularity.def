@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: bioconductor/bioconductor_docker:devel
+From: debian:sid
 
 %files
     . /GenomicBreaksSource
@@ -7,10 +7,28 @@ From: bioconductor/bioconductor_docker:devel
 %post
     apt update
     apt upgrade -y
-    apt install last-align -y
+    apt install -y wget locales last-align
+    apt install -y pandoc qpdf texlive # For vignette builds and package checks
+    apt install -y libxml2-dev libcurl4-openssl-dev libssl-dev libfftw3-dev libtiff-dev libgsl-dev
+    apt install -y libfontconfig1-dev libharfbuzz-dev libfribidi-dev # For pkgdown
+    apt install -y git bash-completion
+    apt install -y libgl1 libnss3 libasound2 libxdamage1
+    wget https://s3.amazonaws.com/rstudio-ide-build/desktop/bionic/amd64/rstudio-1.4.1717-amd64.deb
+    apt --fix-broken -y install ./rstudio-1.4.1717-amd64.deb
+    rm rstudio-1.4.1717-amd64.deb
+
+    R -e 'install.packages("BiocManager")'
+    R -e 'BiocManager::install("GenomicRanges")'
+    R -e 'install.packages("tidyverse")'
+    R -e 'install.packages("devtools")' 
+    R -e 'install.packages("remotes")'
+
     R -e 'BiocManager::install(c("rtracklayer", "S4Vectors", "heatmaps", "GenomicRanges", "IRanges", "GenomeInfoDb", "Biostrings", "BSgenome"))'
     R -e 'BiocManager::install(c("CNEr"))'
     R -e 'BiocManager::install(c("rmarkdown"))'
     R -e 'BiocManager::install(c("ggplot2"))'
     R -e 'BiocManager::install(c("weights"))'
-    R CMD INSTALL /GenomicBreaksSource
+
+    R -e 'remotes::install_github("oist/GenomicBreaks", repos=BiocManager::repositories())'
+
+    printf 'R_LIBS=~/R/library/GBreaks_singularity\n' | tee -a /etc/R/Renviron.site >/dev/null

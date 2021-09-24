@@ -1,19 +1,19 @@
 bases:
-- count: 866
+- count: 867
   name: ubuntu
 - count: 241
   name: nvidia/cuda
-- count: 186
+- count: 189
   name: debian
-- count: 127
+- count: 129
   name: centos
 - count: 85
   name: alpine
-- count: 80
+- count: 82
   name: continuumio/miniconda3
 - count: 65
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 60
+- count: 62
   name: tensorflow/tensorflow
 - count: 58
   name: mkandes/naked-singularity
@@ -31,7 +31,7 @@ bases:
   name: aibasel/downward
 - count: 27
   name: neurodebian
-- count: 21
+- count: 22
   name: khanlab/tar2bids
 - count: 19
   name: busybox
@@ -47,12 +47,14 @@ bases:
   name: cokelaer/damona/conda
 - count: 18
   name: ghcr.io/mkandes/naked-singularity
-- count: 17
+- count: 18
   name: nvcr.io/nvidia/pytorch
 - count: 17
   name: poldracklab/fmriprep
 - count: 16
   name: ezlabgva/busco
+- count: 13
+  name: nvcr.io/nvidia/tensorflow
 - count: 13
   name: r-base
 - count: 12
@@ -61,8 +63,6 @@ bases:
   name: khanlab/heudiconv
 - count: 12
   name: pawsey/openfoam
-- count: 12
-  name: nvcr.io/nvidia/tensorflow
 - count: 12
   name: pennbbl/qsiprep
 - count: 12
@@ -138,6 +138,8 @@ bases:
 - count: 5
   name: 'GodloveD/busybox   '
 - count: 5
+  name: shreyaskamathkm/cluster_images
+- count: 5
   name: anibali/pytorch
 - count: 5
   name: metabat/metabat
@@ -160,8 +162,6 @@ bases:
 - count: 4
   name: node
 - count: 4
-  name: letaylor/sc_qc_cluster
-- count: 4
   name: intel2021.2_netcdfc4.7.4_ubuntu.sif
 - count: 4
   name: bids/hcppipelines
@@ -178,11 +178,7 @@ bases:
 - count: 4
   name: golang
 - count: 4
-  name: shreyaskamathkm/cluster_images
-- count: 4
   name: danabl/glimslib
-- count: 4
-  name: bioconductor/bioconductor_docker
 - count: 4
   name: matmu/vep
 - count: 3
@@ -251,6 +247,8 @@ bases:
   name: google/deepvariant
 - count: 3
   name: library/ubuntu
+- count: 3
+  name: bioconductor/bioconductor_docker
 - count: 3
   name: mesnardo/petibm-decoupledibpm
 - count: 3
@@ -682,6 +680,8 @@ bases:
 - count: 1
   name: bdgenomics/rhapsody
 - count: 1
+  name: letaylor/sc_qc_cluster
+- count: 1
   name: nvcr.io/nvidia/cuda-arm64
 - count: 1
   name: adriansevcenco/alienpy.dock
@@ -751,6 +751,8 @@ bases:
   name: willprice/gpu-flow
 - count: 1
   name: andresquintero/bratwurst_tensorflow2
+- count: 1
+  name: cyberbotics/webots
 - count: 1
   name: anair17/railrl-hand-v1a
 - count: 1
@@ -1094,11 +1096,11 @@ bases:
 - count: 1
   name: quay.io/biocontainers/metawrap
 bootstraps:
-- count: 2805
+- count: 2815
   name: docker
-- count: 308
+- count: 309
   name: debootstrap
-- count: 233
+- count: 234
   name: shub
 - count: 168
   name: library
@@ -1398,6 +1400,8 @@ orgs:
 - count: 1
   name: dcgc-bfx
 - count: 1
+  name: letaylor
+- count: 1
   name: adriansevcenco
 - count: 1
   name: mattocci
@@ -1421,6 +1425,8 @@ orgs:
   name: '{{ cookiecutter.dockerhub_username }}'
 - count: 1
   name: andresquintero
+- count: 1
+  name: cyberbotics
 - count: 1
   name: uazhlt
 - count: 1
@@ -1477,8 +1483,6 @@ orgs:
   name: uppmax
 - count: 1
   name: marcchpc
-- count: 1
-  name: letaylor
 - count: 1
   name: i686
 - count: 1
@@ -1676,8 +1680,8 @@ orgs:
 - count: 1
   name: drneavin
 tags:
-  latest: 275
-  other: 2561
+  latest: 273
+  other: 2572
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -1855,7 +1859,6 @@ versions:
   bioconductor/bioconductor_docker:
     RELEASE_3_10: 2
     RELEASE_3_12: 1
-    devel: 1
   bioconductor/bioconductor_full:
     RELEASE_3_10: 1
     RELEASE_3_8: 1
@@ -1905,7 +1908,7 @@ versions:
     '6.10': 1
     '6.8': 1
     '6.9': 1
-    '7': 60
+    '7': 62
     7.4.1708: 4
     7.6.1810: 2
     7.7.1908: 2
@@ -1974,6 +1977,8 @@ versions:
     latest: 1
   ctpelok77/kstar:
     latest: 1
+  cyberbotics/webots:
+    latest: 1
   danabl/glimslib:
     libadjoint-2017-2: 1
     libadjoint-2017-2_ants: 2
@@ -2005,7 +2010,8 @@ versions:
     jessie: 7
     jessie-slim: 5
     latest: 19
-    stretch: 42
+    sid: 1
+    stretch: 44
     stretch-slim: 6
     testing: 1
     testing-slim: 2
@@ -2191,8 +2197,7 @@ versions:
     '1.4': 1
     1.4.0: 1
     1.4.1: 1
-    1.6.1: 1
-    1.6.2: 1
+    1.6.2: 2
     latest: 1
   jupyter/datascience-notebook:
     latest: 1
@@ -2223,6 +2228,7 @@ versions:
     v0.0.5h: 1
     v0.0.6: 1
     v0.0.6a: 1
+    v0.0.6b: 1
     v0.05a: 1
     v0.06b: 1
   kkelchte/ros_gazebo_tensorflow:
@@ -2243,7 +2249,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 4
+    latest: 1
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2406,7 +2412,7 @@ versions:
     20.03-py3: 4
     20.07-py3: 6
     20.09-py3: 2
-    21.08-py3: 1
+    21.08-py3: 2
   nvcr.io/nvidia/tensorflow:
     20.03-tf2-py3: 2
     20.07-tf1-py3: 2
@@ -2417,6 +2423,7 @@ versions:
     21.05-tf2-py3: 2
     21.07-tf2-py3: 1
     21.08-tf1-py3: 1
+    21.08-tf2-py3: 1
   nvidia/container-toolkit:
     1.0.0-alpha1: 1
   nvidia/cuda:
@@ -2868,6 +2875,7 @@ versions:
   shreyaskamathkm/cluster_images:
     ubuntu_16.04_cuda_10.2: 1
     ubuntu_18.04_cuda_10.2: 1
+    ubuntu_18.04_cuda_11.0: 1
     ubuntu_18.04_cuda_11.1: 1
     ubuntu_20.04_cuda_11.1: 1
   silasysh/annogesic:
@@ -2933,10 +2941,11 @@ versions:
     2.3.1-gpu: 1
     2.3.3-gpu: 1
     2.4.0-custom-op-gpu-ubuntu16: 1
-    2.4.1-gpu: 3
+    2.4.1-gpu: 4
     2.4.3-gpu: 1
     2.5.0-gpu: 1
     2.5.1-gpu: 1
+    2.6.0-gpu: 1
     latest-gpu: 5
     latest-gpu-jupyter: 1
     latest-gpu-py3: 4
@@ -2982,7 +2991,7 @@ versions:
     '14.04': 10
     '16.04': 128
     '17.04': 6
-    '18.04': 197
+    '18.04': 198
     '19.04': 10
     '19.10': 4
     '20.04': 149

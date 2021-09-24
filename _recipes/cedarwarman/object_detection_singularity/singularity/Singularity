@@ -1,0 +1,63 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:2.6.0-gpu
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+
+    # Install apt dependencies
+    apt-get update && apt-get install -y \
+    git \
+    gpg-agent \
+    python3-cairocffi \
+    protobuf-compiler \
+    python3-pil \
+    python3-lxml \
+    python3-tk \
+    wget \
+    x11-apps \
+    xauth
+
+    # Install gcloud and gsutil commands
+    # https://cloud.google.com/sdk/docs/quickstart-debian-ubuntu
+    export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
+    echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+    apt-get update -y && apt-get install google-cloud-sdk -y
+
+    # Download the git version of the model garden
+    cd /opt
+    git clone https://github.com/tensorflow/models.git
+
+    # Compile protobuf configs
+    (cd /opt/models/research/ && protoc object_detection/protos/*.proto --python_out=.)
+    cd /opt/models/research/
+		
+    cp object_detection/packages/tf2/setup.py ./	
+    python -m pip install -U pip	
+    python -m pip install .
+
+    # Installing extra packages for the demo python script
+    python -m pip install imageio ipython google-colab
+
+    # Downloading the model checkpoint for the demo (optional if not running demo)
+    wget http://download.tensorflow.org/models/object_detection/tf2/20200711/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8.tar.gz
+    tar -xf ssd_resnet50_v1_fpn_640x640_coco17_tpu-8.tar.gz
+    mv ssd_resnet50_v1_fpn_640x640_coco17_tpu-8/checkpoint /opt/models/research/object_detection/test_data/
+	
+    # Fix permissions problem
+    chmod -R 777 /opt/models/research/object_detection/test_data/checkpoint
+
+%environment
+    # Makes Tensorflow warnings quiet (optional)
+    # export TF_CPP_MIN_LOG_LEVEL=3
+
+%runscript
+    cd /opt/models/research/ && \
+    exec /bin/bash "$@"
+
+%startscript
+    cd /opt/models/research/ && \
+    exec /bin/bash "$@"
+
+%help
+    This container runs the Tensorflow 2 Object Detection API. It was modified for Singularity from the Dockerfile contained in the Object Detection API repository: https://github.com/tensorflow/models/blob/master/research/object_detection/dockerfiles/tf2/Dockerfile

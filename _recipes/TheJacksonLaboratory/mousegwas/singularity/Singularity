@@ -12,6 +12,7 @@ from: bioconductor/bioconductor_docker:RELEASE_3_10
     # Install mousegwas
     Rscript -e 'install.packages("XML", repos = "http://www.omegahat.net/R")'
     Rscript -e 'install.packages("devtools", repos="http://cran.us.r-project.org")'
+    Rscript -e 'install.packages(c("viridis", "gplots"), repos="http://cran.us.r-project.org")'
     Rscript -e 'library(devtools); local({r <- getOption("repos"); r["CRAN"] <- "http://cran.us.r-project.org"; options(repos=r)}); install_github("TheJacksonLaboratory/mousegwas")'
     # Install GEMMA
     curl -L https://github.com/genetics-statistics/GEMMA/releases/download/0.98.1/gemma-0.98.1-linux-static.gz |zcat - > /usr/local/bin/gemma
