@@ -1,15 +1,15 @@
 bases:
-- count: 867
+- count: 869
   name: ubuntu
-- count: 241
+- count: 242
   name: nvidia/cuda
-- count: 189
+- count: 190
   name: debian
 - count: 129
   name: centos
 - count: 85
   name: alpine
-- count: 82
+- count: 83
   name: continuumio/miniconda3
 - count: 65
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
@@ -33,6 +33,8 @@ bases:
   name: neurodebian
 - count: 22
   name: khanlab/tar2bids
+- count: 20
+  name: ghcr.io/mkandes/naked-singularity
 - count: 19
   name: busybox
 - count: 19
@@ -45,8 +47,6 @@ bases:
   name: vitchyr/railrl_v12_cuda10-1_mj2-0-2-2_torch1-1-0_gym0-12-5_py3-6-5
 - count: 18
   name: cokelaer/damona/conda
-- count: 18
-  name: ghcr.io/mkandes/naked-singularity
 - count: 18
   name: nvcr.io/nvidia/pytorch
 - count: 17
@@ -161,8 +161,6 @@ bases:
   name: slaclab/slac-jupyterlab
 - count: 4
   name: node
-- count: 4
-  name: letaylor/sc_qc_cluster
 - count: 4
   name: intel2021.2_netcdfc4.7.4_ubuntu.sif
 - count: 4
@@ -436,6 +434,10 @@ bases:
 - count: 2
   name: combinelab/salmon
 - count: 2
+  name: OSKAR-base-dep.sif
+- count: 2
+  name: OSKAR-2.7.6-base.sif
+- count: 2
   name: build/spades_base.sif
 - count: 2
   name: halfpipe/halfpipe
@@ -681,6 +683,8 @@ bases:
   name: quay.io/biocontainers/prodigal
 - count: 1
   name: bdgenomics/rhapsody
+- count: 1
+  name: letaylor/sc_qc_cluster
 - count: 1
   name: nvcr.io/nvidia/cuda-arm64
 - count: 1
@@ -1052,10 +1056,6 @@ bases:
 - count: 1
   name: eagenomics/starseqr
 - count: 1
-  name: OSKAR-base-dep.sif
-- count: 1
-  name: OSKAR-2.7.6-base.sif
-- count: 1
   name: sarah145/batch_correct
 - count: 1
   name: faustus123/hddeps
@@ -1096,7 +1096,7 @@ bases:
 - count: 1
   name: quay.io/biocontainers/metawrap
 bootstraps:
-- count: 2818
+- count: 2820
   name: docker
 - count: 309
   name: debootstrap
@@ -1106,9 +1106,9 @@ bootstraps:
   name: library
 - count: 79
   name: yum
-- count: 70
+- count: 72
   name: localimage
-- count: 18
+- count: 20
   name: oras
 - count: 12
   name: scratch
@@ -1400,6 +1400,8 @@ orgs:
 - count: 1
   name: dcgc-bfx
 - count: 1
+  name: letaylor
+- count: 1
   name: adriansevcenco
 - count: 1
   name: mattocci
@@ -1481,8 +1483,6 @@ orgs:
   name: uppmax
 - count: 1
   name: marcchpc
-- count: 1
-  name: letaylor
 - count: 1
   name: i686
 - count: 1
@@ -1680,8 +1680,8 @@ orgs:
 - count: 1
   name: drneavin
 tags:
-  latest: 276
-  other: 2572
+  latest: 273
+  other: 2578
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -2006,7 +2006,7 @@ versions:
     buster: 62
     buster-20200908-slim: 2
     buster-20201012: 1
-    buster-slim: 17
+    buster-slim: 18
     jessie: 7
     jessie-slim: 5
     latest: 19
@@ -2103,6 +2103,8 @@ versions:
     ubuntu-18.04-cuda-10.2-mlnx-ofed-4.6-1.0.1.1: 1
     ubuntu-18.04-cuda-10.2-mlnx-ofed-4.6-1.0.1.1-openmpi-3.1.4: 1
     ubuntu-18.04-cuda-11.2: 1
+    ubuntu-18.04-cuda-11.2-mlnx-ofed-4.7-3.2.9.0: 1
+    ubuntu-18.04-cuda-11.2-mlnx-ofed-4.7-3.2.9.0-openmpi-4.0.5: 1
     ubuntu-18.04-mlnx-ofed-4.6-1.0.1.1: 1
     ubuntu-18.04-mlnx-ofed-4.6-1.0.1.1-openmpi-3.1.4: 1
     ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0: 3
@@ -2249,7 +2251,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 4
+    latest: 1
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2436,7 +2438,7 @@ versions:
     10.0-devel-ubuntu18.04: 5
     10.0-runtime-centos7: 1
     10.1-base-centos7: 1
-    10.1-base-ubuntu18.04: 1
+    10.1-base-ubuntu18.04: 2
     10.1-cudnn7-devel-centos7: 2
     10.1-cudnn7-devel-ubuntu16.04: 4
     10.1-cudnn7-devel-ubuntu18.04: 31
@@ -2988,13 +2990,13 @@ versions:
   uazhlt/pytorch-example:
     pytorch-1.3.0: 1
   ubuntu:
-    '14.04': 10
+    '14.04': 11
     '16.04': 128
     '17.04': 6
     '18.04': 198
     '19.04': 10
     '19.10': 4
-    '20.04': 149
+    '20.04': 150
     '20.10': 1
     '21.04': 1
     '21.10': 1
