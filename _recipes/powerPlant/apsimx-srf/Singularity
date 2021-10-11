@@ -1,30 +1,34 @@
 Bootstrap: docker
-From: ubuntu:bionic
+From: ubuntu:focal
 
 %labels
 Maintainer eric.burgueno@plantandfood.co.nz
-Version 2021.04.15.6139
+Version 2021.10.8.6835
 
 %setup
-  curl --silent -o ${SINGULARITY_ROOTFS}/ApsimSetup.deb http://apsimdev.apsim.info/ApsimXFiles/ApsimSetup6139.deb
-
+  curl --silent -o ${SINGULARITY_ROOTFS}/ApsimSetup.deb http://apsimdev.apsim.info/ApsimXFiles/apsim-6835.deb
+  curl --silent -o ${SINGULARITY_ROOTFS}/packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
 %post
-  ## Configure timezone
+  export DEBIAN_FRONTEND=noninteractive
+  ## Install .NET Runtime, libsqlite3 and tzdata
   apt-get update
-  apt-get -y install tzdata
+  apt -y install /packages-microsoft-prod.deb
+  apt-get update
+  apt-get -y install aspnetcore-runtime-3.1 libsqlite3-dev tzdata
+
+  ## Configure timezone
   ln -fs /usr/share/zoneinfo/Pacific/Auckland /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
-  
+
   ## Install from deb file
   apt -y install /ApsimSetup.deb
   
-  ## Create entrypoint
-  cp -a /usr/local/bin/apsim /usr/local/bin/apsimmodels
-  sed -i 's/ApsimNG/Models/' /usr/local/bin/apsimmodels
+  ## Fix entrypoint
+  chmod +x /usr/local/bin/*
 
   ## Cleanup
-  rm -rf /ApsimSetup.deb
+  rm -rf /ApsimSetup.deb /packages-microsoft-prod.deb
   apt-get -y clean all
   apt-get -y autoremove --purge
 
 %runscript
-  exec /usr/local/bin/apsimmodels "$@"
+  exec /usr/local/bin/Models "$@"
