@@ -4217,7 +4217,7 @@ ComputationalRadiationPhysics/picongpu:
     our strong scaling" title="Strong Scaling" style="max-width:100%;"></a></p>
 
     '
-  stargazers_count: 504
+  stargazers_count: 505
   subscribers_count: 46
   topics:
   - laser
@@ -4230,7 +4230,7 @@ ComputationalRadiationPhysics/picongpu:
   - particle-in-cell
   - pic
   - research
-  updated_at: 1633506658.0
+  updated_at: 1634580108.0
 D-Lo/bambi:
   data_format: 2
   description: R wrapper for bamdb
@@ -5318,10 +5318,10 @@ DiamondLightSource/Savu:
   - install/savu_singularity/conda-recipes/Singularity
   full_name: DiamondLightSource/Savu
   latest_release: v4.0
-  stargazers_count: 28
+  stargazers_count: 29
   subscribers_count: 16
   topics: []
-  updated_at: 1634044324.0
+  updated_at: 1634760084.0
 DoaneAS/atacflow:
   data_format: 2
   description: Analysis pipeline for ATACseq data using Nextflow
@@ -19989,7 +19989,198 @@ SCXsunchenxi/Auto-Pytorch:
   - scripts/Singularity
   full_name: SCXsunchenxi/Auto-Pytorch
   latest_release: null
-  readme: '{"message":"API rate limit exceeded for installation ID 633759.","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}'
+  readme: "<h1>\n<a id=\"user-content-auto-pytorch\" class=\"anchor\" href=\"#auto-pytorch\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Auto-PyTorch</h1>\n<p>Copyright (C) 2019  <a href=\"http://www.automl.org/\"\
+    \ rel=\"nofollow\">AutoML Group Freiburg</a></p>\n<p>This a very early pre-alpha\
+    \ version of our upcoming Auto-PyTorch.\nSo far, Auto-PyTorch supports featurized\
+    \ data (classification, regression) and image data (classification).</p>\n<p>The\
+    \ newest features in Auto-PyTorch for tabular data are described in the paper\
+    \ <a href=\"https://arxiv.org/abs/2006.13799\" rel=\"nofollow\">\"Auto-PyTorch\
+    \ Tabular: Multi-Fidelity MetaLearning for Efficient and Robust AutoDL\"</a>.</p>\n\
+    <h2>\n<a id=\"user-content-installation\" class=\"anchor\" href=\"#installation\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Installation</h2>\n<p>Clone repository</p>\n<div class=\"highlight\
+    \ highlight-source-shell\"><pre>$ <span class=\"pl-c1\">cd</span> install/path\n\
+    $ git clone https://github.com/automl/Auto-PyTorch.git\n$ <span class=\"pl-c1\"\
+    >cd</span> Auto-PyTorch</pre></div>\n<p>If you want to contribute to this repository\
+    \ switch to our current develop branch</p>\n<div class=\"highlight highlight-source-shell\"\
+    ><pre>$ git checkout develop</pre></div>\n<p>Install pytorch:\n<a href=\"https://pytorch.org/\"\
+    \ rel=\"nofollow\">https://pytorch.org/</a></p>\n<p>Install Auto-PyTorch:</p>\n\
+    <div class=\"highlight highlight-source-shell\"><pre>$ cat requirements.txt <span\
+    \ class=\"pl-k\">|</span> xargs -n 1 -L 1 pip install\n$ python setup.py install</pre></div>\n\
+    <h2>\n<a id=\"user-content-examples\" class=\"anchor\" href=\"#examples\" aria-hidden=\"\
+    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Examples</h2>\n\
+    <p>Code for the <a href=\"https://arxiv.org/abs/2006.13799\" rel=\"nofollow\"\
+    >paper</a> is available under <code>examples/ensemble</code>.</p>\n<p>For a detailed\
+    \ tutorial, please refer to the jupyter notebook in <a href=\"https://github.com/automl/Auto-PyTorch/tree/master/examples/basics\"\
+    >https://github.com/automl/Auto-PyTorch/tree/master/examples/basics</a>.</p>\n\
+    <p>In a nutshell:</p>\n<div class=\"highlight highlight-source-python\"><pre><span\
+    \ class=\"pl-k\">from</span> <span class=\"pl-s1\">autoPyTorch</span> <span class=\"\
+    pl-k\">import</span> <span class=\"pl-v\">AutoNetClassification</span>\n\n<span\
+    \ class=\"pl-c\"># data and metric imports</span>\n<span class=\"pl-k\">import</span>\
+    \ <span class=\"pl-s1\">sklearn</span>.<span class=\"pl-s1\">model_selection</span>\n\
+    <span class=\"pl-k\">import</span> <span class=\"pl-s1\">sklearn</span>.<span\
+    \ class=\"pl-s1\">datasets</span>\n<span class=\"pl-k\">import</span> <span class=\"\
+    pl-s1\">sklearn</span>.<span class=\"pl-s1\">metrics</span>\n<span class=\"pl-v\"\
+    >X</span>, <span class=\"pl-s1\">y</span> <span class=\"pl-c1\">=</span> <span\
+    \ class=\"pl-s1\">sklearn</span>.<span class=\"pl-s1\">datasets</span>.<span class=\"\
+    pl-en\">load_digits</span>(<span class=\"pl-s1\">return_X_y</span><span class=\"\
+    pl-c1\">=</span><span class=\"pl-c1\">True</span>)\n<span class=\"pl-v\">X_train</span>,\
+    \ <span class=\"pl-v\">X_test</span>, <span class=\"pl-s1\">y_train</span>, <span\
+    \ class=\"pl-s1\">y_test</span> <span class=\"pl-c1\">=</span> \\\n        <span\
+    \ class=\"pl-s1\">sklearn</span>.<span class=\"pl-s1\">model_selection</span>.<span\
+    \ class=\"pl-en\">train_test_split</span>(<span class=\"pl-v\">X</span>, <span\
+    \ class=\"pl-s1\">y</span>, <span class=\"pl-s1\">random_state</span><span class=\"\
+    pl-c1\">=</span><span class=\"pl-c1\">1</span>)\n\n<span class=\"pl-c\"># running\
+    \ Auto-PyTorch</span>\n<span class=\"pl-s1\">autoPyTorch</span> <span class=\"\
+    pl-c1\">=</span> <span class=\"pl-v\">AutoNetClassification</span>(<span class=\"\
+    pl-s\">\"tiny_cs\"</span>,  <span class=\"pl-c\"># config preset</span>\n    \
+    \                                <span class=\"pl-s1\">log_level</span><span class=\"\
+    pl-c1\">=</span><span class=\"pl-s\">'info'</span>,\n                        \
+    \            <span class=\"pl-s1\">max_runtime</span><span class=\"pl-c1\">=</span><span\
+    \ class=\"pl-c1\">300</span>,\n                                    <span class=\"\
+    pl-s1\">min_budget</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\">30</span>,\n\
+    \                                    <span class=\"pl-s1\">max_budget</span><span\
+    \ class=\"pl-c1\">=</span><span class=\"pl-c1\">90</span>)\n\n<span class=\"pl-s1\"\
+    >autoPyTorch</span>.<span class=\"pl-en\">fit</span>(<span class=\"pl-v\">X_train</span>,\
+    \ <span class=\"pl-s1\">y_train</span>, <span class=\"pl-s1\">validation_split</span><span\
+    \ class=\"pl-c1\">=</span><span class=\"pl-c1\">0.3</span>)\n<span class=\"pl-s1\"\
+    >y_pred</span> <span class=\"pl-c1\">=</span> <span class=\"pl-s1\">autoPyTorch</span>.<span\
+    \ class=\"pl-en\">predict</span>(<span class=\"pl-v\">X_test</span>)\n\n<span\
+    \ class=\"pl-en\">print</span>(<span class=\"pl-s\">\"Accuracy score\"</span>,\
+    \ <span class=\"pl-s1\">sklearn</span>.<span class=\"pl-s1\">metrics</span>.<span\
+    \ class=\"pl-en\">accuracy_score</span>(<span class=\"pl-s1\">y_test</span>, <span\
+    \ class=\"pl-s1\">y_pred</span>))</pre></div>\n<p>More examples with datasets:</p>\n\
+    <div class=\"highlight highlight-source-shell\"><pre>$ <span class=\"pl-c1\">cd</span>\
+    \ examples/\n</pre></div>\n<h2>\n<a id=\"user-content-configuration\" class=\"\
+    anchor\" href=\"#configuration\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Configuration</h2>\n<p>How to configure\
+    \ Auto-PyTorch for your needs:</p>\n<div class=\"highlight highlight-source-python\"\
+    ><pre>\n<span class=\"pl-c\"># Print all possible configuration options.</span>\n\
+    <span class=\"pl-v\">AutoNetClassification</span>().<span class=\"pl-en\">print_help</span>()\n\
+    \n<span class=\"pl-c\"># You can use the constructor to configure Auto-PyTorch.</span>\n\
+    <span class=\"pl-s1\">autoPyTorch</span> <span class=\"pl-c1\">=</span> <span\
+    \ class=\"pl-v\">AutoNetClassification</span>(<span class=\"pl-s1\">log_level</span><span\
+    \ class=\"pl-c1\">=</span><span class=\"pl-s\">'info'</span>, <span class=\"pl-s1\"\
+    >max_runtime</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\">300</span>,\
+    \ <span class=\"pl-s1\">min_budget</span><span class=\"pl-c1\">=</span><span class=\"\
+    pl-c1\">30</span>, <span class=\"pl-s1\">max_budget</span><span class=\"pl-c1\"\
+    >=</span><span class=\"pl-c1\">90</span>)\n\n<span class=\"pl-c\"># You can overwrite\
+    \ this configuration in each fit call.</span>\n<span class=\"pl-s1\">autoPyTorch</span>.<span\
+    \ class=\"pl-en\">fit</span>(<span class=\"pl-v\">X_train</span>, <span class=\"\
+    pl-s1\">y_train</span>, <span class=\"pl-s1\">log_level</span><span class=\"pl-c1\"\
+    >=</span><span class=\"pl-s\">'debug'</span>, <span class=\"pl-s1\">max_runtime</span><span\
+    \ class=\"pl-c1\">=</span><span class=\"pl-c1\">900</span>, <span class=\"pl-s1\"\
+    >min_budget</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\">50</span>,\
+    \ <span class=\"pl-s1\">max_budget</span><span class=\"pl-c1\">=</span><span class=\"\
+    pl-c1\">150</span>)\n\n<span class=\"pl-c\"># You can use presets to configure\
+    \ the config space.</span>\n<span class=\"pl-c\"># Available presets: full_cs,\
+    \ medium_cs (default), tiny_cs.</span>\n<span class=\"pl-c\"># These are defined\
+    \ in autoPyTorch/core/presets.</span>\n<span class=\"pl-c\"># tiny_cs is recommended\
+    \ if you want fast results with few resources.</span>\n<span class=\"pl-c\">#\
+    \ full_cs is recommended if you have many resources and a very high search budget.</span>\n\
+    <span class=\"pl-s1\">autoPyTorch</span> <span class=\"pl-c1\">=</span> <span\
+    \ class=\"pl-v\">AutoNetClassification</span>(<span class=\"pl-s\">\"full_cs\"\
+    </span>)\n\n<span class=\"pl-c\"># Enable or disable components using the Auto-PyTorch\
+    \ config:</span>\n<span class=\"pl-s1\">autoPyTorch</span> <span class=\"pl-c1\"\
+    >=</span> <span class=\"pl-v\">AutoNetClassification</span>(<span class=\"pl-s1\"\
+    >networks</span><span class=\"pl-c1\">=</span>[<span class=\"pl-s\">\"resnet\"\
+    </span>, <span class=\"pl-s\">\"shapedresnet\"</span>, <span class=\"pl-s\">\"\
+    mlpnet\"</span>, <span class=\"pl-s\">\"shapedmlpnet\"</span>])\n\n<span class=\"\
+    pl-c\"># You can take a look at the search space.</span>\n<span class=\"pl-c\"\
+    ># Each hyperparameter belongs to a node in Auto-PyTorch's ML Pipeline.</span>\n\
+    <span class=\"pl-c\"># The names of the hyperparameters are prefixed with the\
+    \ name of the node: NodeName:hyperparameter_name.</span>\n<span class=\"pl-c\"\
+    ># If a hyperparameter belongs to a component: NodeName:component_name:hyperparameter_name.</span>\n\
+    <span class=\"pl-c\"># Call with the same arguments as fit.</span>\n<span class=\"\
+    pl-s1\">autoPyTorch</span>.<span class=\"pl-en\">get_hyperparameter_search_space</span>(<span\
+    \ class=\"pl-v\">X_train</span>, <span class=\"pl-s1\">y_train</span>, <span class=\"\
+    pl-s1\">validation_split</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\"\
+    >0.3</span>)\n\n<span class=\"pl-c\"># You can configure the search space of every\
+    \ hyperparameter of every component:</span>\n<span class=\"pl-k\">from</span>\
+    \ <span class=\"pl-s1\">autoPyTorch</span> <span class=\"pl-k\">import</span>\
+    \ <span class=\"pl-v\">HyperparameterSearchSpaceUpdates</span>\n<span class=\"\
+    pl-s1\">search_space_updates</span> <span class=\"pl-c1\">=</span> <span class=\"\
+    pl-v\">HyperparameterSearchSpaceUpdates</span>()\n\n<span class=\"pl-s1\">search_space_updates</span>.<span\
+    \ class=\"pl-en\">append</span>(<span class=\"pl-s1\">node_name</span><span class=\"\
+    pl-c1\">=</span><span class=\"pl-s\">\"NetworkSelector\"</span>,\n           \
+    \                 <span class=\"pl-s1\">hyperparameter</span><span class=\"pl-c1\"\
+    >=</span><span class=\"pl-s\">\"shapedresnet:activation\"</span>,\n          \
+    \                  <span class=\"pl-s1\">value_range</span><span class=\"pl-c1\"\
+    >=</span>[<span class=\"pl-s\">\"relu\"</span>, <span class=\"pl-s\">\"sigmoid\"\
+    </span>])\n<span class=\"pl-s1\">search_space_updates</span>.<span class=\"pl-en\"\
+    >append</span>(<span class=\"pl-s1\">node_name</span><span class=\"pl-c1\">=</span><span\
+    \ class=\"pl-s\">\"NetworkSelector\"</span>,\n                            <span\
+    \ class=\"pl-s1\">hyperparameter</span><span class=\"pl-c1\">=</span><span class=\"\
+    pl-s\">\"shapedresnet:blocks_per_group\"</span>,\n                           \
+    \ <span class=\"pl-s1\">value_range</span><span class=\"pl-c1\">=</span>[<span\
+    \ class=\"pl-c1\">2</span>,<span class=\"pl-c1\">5</span>],\n                \
+    \            <span class=\"pl-s1\">log</span><span class=\"pl-c1\">=</span><span\
+    \ class=\"pl-c1\">False</span>)\n<span class=\"pl-s1\">autoPyTorch</span> <span\
+    \ class=\"pl-c1\">=</span> <span class=\"pl-v\">AutoNetClassification</span>(<span\
+    \ class=\"pl-s1\">hyperparameter_search_space_updates</span><span class=\"pl-c1\"\
+    >=</span><span class=\"pl-s1\">search_space_updates</span>)</pre></div>\n<p>Enable\
+    \ ensemble building (for featurized data):</p>\n<div class=\"highlight highlight-source-python\"\
+    ><pre><span class=\"pl-k\">from</span> <span class=\"pl-s1\">autoPyTorch</span>\
+    \ <span class=\"pl-k\">import</span> <span class=\"pl-v\">AutoNetEnsemble</span>\n\
+    <span class=\"pl-s1\">autoPyTorchEnsemble</span> <span class=\"pl-c1\">=</span>\
+    \ <span class=\"pl-v\">AutoNetEnsemble</span>(<span class=\"pl-v\">AutoNetClassification</span>,\
+    \ <span class=\"pl-s\">\"tiny_cs\"</span>, <span class=\"pl-s1\">max_runtime</span><span\
+    \ class=\"pl-c1\">=</span><span class=\"pl-c1\">300</span>, <span class=\"pl-s1\"\
+    >min_budget</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\">30</span>,\
+    \ <span class=\"pl-s1\">max_budget</span><span class=\"pl-c1\">=</span><span class=\"\
+    pl-c1\">90</span>)</pre></div>\n<p>Disable pynisher if you experience issues when\
+    \ using cuda:</p>\n<div class=\"highlight highlight-source-python\"><pre><span\
+    \ class=\"pl-s1\">autoPyTorch</span> <span class=\"pl-c1\">=</span> <span class=\"\
+    pl-v\">AutoNetClassification</span>(<span class=\"pl-s\">\"tiny_cs\"</span>, <span\
+    \ class=\"pl-s1\">log_level</span><span class=\"pl-c1\">=</span><span class=\"\
+    pl-s\">'info'</span>, <span class=\"pl-s1\">max_runtime</span><span class=\"pl-c1\"\
+    >=</span><span class=\"pl-c1\">300</span>, <span class=\"pl-s1\">min_budget</span><span\
+    \ class=\"pl-c1\">=</span><span class=\"pl-c1\">30</span>, <span class=\"pl-s1\"\
+    >max_budget</span><span class=\"pl-c1\">=</span><span class=\"pl-c1\">90</span>,\
+    \ <span class=\"pl-s1\">cuda</span><span class=\"pl-c1\">=</span><span class=\"\
+    pl-c1\">True</span>, <span class=\"pl-s1\">use_pynisher</span><span class=\"pl-c1\"\
+    >=</span><span class=\"pl-c1\">False</span>)</pre></div>\n<h2>\n<a id=\"user-content-license\"\
+    \ class=\"anchor\" href=\"#license\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>License</h2>\n<p>This program\
+    \ is free software: you can redistribute it and/or modify\nit under the terms\
+    \ of the Apache license 2.0 (please see the LICENSE file).</p>\n<p>This program\
+    \ is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY;\
+    \ without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR\
+    \ PURPOSE.</p>\n<p>You should have received a copy of the Apache license 2.0\n\
+    along with this program (see LICENSE file).</p>\n<h2>\n<a id=\"user-content-reference\"\
+    \ class=\"anchor\" href=\"#reference\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Reference</h2>\n<div class=\"\
+    highlight highlight-text-bibtex\"><pre><span class=\"pl-k\">@incollection</span>{<span\
+    \ class=\"pl-en\">mendoza-automlbook18a</span>,\n  <span class=\"pl-s\">author</span>\
+    \    = <span class=\"pl-s\"><span class=\"pl-pds\">{</span>Hector Mendoza and\
+    \ Aaron Klein and Matthias Feurer and Jost Tobias Springenberg and Matthias Urban\
+    \ and Michael Burkart and Max Dippel and Marius Lindauer and Frank Hutter<span\
+    \ class=\"pl-pds\">}</span></span>,\n  <span class=\"pl-s\">title</span>     =\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">{</span>Towards Automatically-Tuned\
+    \ Deep Neural Networks<span class=\"pl-pds\">}</span></span>,\n  <span class=\"\
+    pl-s\">year</span>      = <span class=\"pl-s\"><span class=\"pl-pds\">{</span>2018<span\
+    \ class=\"pl-pds\">}</span></span>,\n  <span class=\"pl-s\">month</span>     =\
+    \ dec,\n  <span class=\"pl-s\">editor</span>    = <span class=\"pl-s\"><span class=\"\
+    pl-pds\">{</span>Hutter, Frank and Kotthoff, Lars and Vanschoren, Joaquin<span\
+    \ class=\"pl-pds\">}</span></span>,\n  <span class=\"pl-s\">booktitle</span> =\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">{</span>AutoML: Methods, Sytems,\
+    \ Challenges<span class=\"pl-pds\">}</span></span>,\n  <span class=\"pl-s\">publisher</span>\
+    \ = <span class=\"pl-s\"><span class=\"pl-pds\">{</span>Springer<span class=\"\
+    pl-pds\">}</span></span>,\n  <span class=\"pl-s\">chapter</span>   = <span class=\"\
+    pl-s\"><span class=\"pl-pds\">{</span>7<span class=\"pl-pds\">}</span></span>,\n\
+    \  <span class=\"pl-s\">pages</span>     = <span class=\"pl-s\"><span class=\"\
+    pl-pds\">{</span>141--156<span class=\"pl-pds\">}</span></span>,\n  <span class=\"\
+    pl-s\">note</span>      = <span class=\"pl-s\"><span class=\"pl-pds\">{</span>To\
+    \ appear.<span class=\"pl-pds\">}</span></span>,\n}</pre></div>\n<p><strong>Note</strong>:\
+    \ Previously, the name of the project was AutoNet. Since this was too generic,\
+    \ we changed the name to AutoPyTorch. AutoNet 2.0 in the reference mention above\
+    \ is indeed AutoPyTorch.</p>\n<h2>\n<a id=\"user-content-contact\" class=\"anchor\"\
+    \ href=\"#contact\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>Contact</h2>\n<p>Auto-PyTorch is developed by the\
+    \ <a href=\"http://www.automl.org/\" rel=\"nofollow\">AutoML Group of the University\
+    \ of Freiburg</a>.</p>\n"
   stargazers_count: 0
   subscribers_count: 1
   topics: []
@@ -21658,7 +21849,7 @@ UniversalDataTool/universal-data-tool:
     </g-emoji></a>\n</td>\n  </tr>\n</table>\n\n\n\n<p>This project follows the <a\
     \ href=\"https://github.com/all-contributors/all-contributors\">all-contributors</a>\
     \ specification. Contributions of any kind welcome!</p>\n"
-  stargazers_count: 1517
+  stargazers_count: 1519
   subscribers_count: 35
   topics:
   - computer-vision
@@ -21681,7 +21872,7 @@ UniversalDataTool/universal-data-tool:
   - labeling
   - labeling-tool
   - hacktoberfest
-  updated_at: 1634457841.0
+  updated_at: 1634951027.0
 VIB-CBD/scanpy-images:
   data_format: 2
   description: Docker and Singularity images for Scanpy
@@ -22880,10 +23071,10 @@ abs-tudelft/ArrowSAM:
     \ clone https://github.com/tahashmi/bwa.git\n</code></pre>\n</li>\n<li>\n<p>Go\
     \ into bwa dir and compile BWA-MEM:</p>\n<pre><code> cd bwa\n make\n</code></pre>\n\
     </li>\n<li>\n<p>Now you can run BWA-MEM.</p>\n</li>\n</ol>\n"
-  stargazers_count: 15
+  stargazers_count: 14
   subscribers_count: 4
   topics: []
-  updated_at: 1624522487.0
+  updated_at: 1635069341.0
 aces/cbrain-containers-recipes:
   data_format: 2
   description: Recipes for singularity and docker containers used in CBRAIN
@@ -23223,7 +23414,7 @@ aertslab/SCope:
     \ docker-compose -f docker-compose.host.yml up -d</code></li>\n</ol>\n<p>You should\
     \ be able to visit <code>http://localhost:8080</code> and see the app!</p>\n"
   stargazers_count: 51
-  subscribers_count: 9
+  subscribers_count: 8
   topics:
   - single-cell
   - large-scale-data-visualization
@@ -23245,14 +23436,14 @@ aertslab/pySCENIC:
   - Singularity.0.9.18
   full_name: aertslab/pySCENIC
   latest_release: 0.11.2
-  stargazers_count: 177
-  subscribers_count: 15
+  stargazers_count: 181
+  subscribers_count: 14
   topics:
   - single-cell
   - transcriptomics
   - gene-regulatory-network
   - transcription-factors
-  updated_at: 1633827356.0
+  updated_at: 1634893645.0
 agaveplatform/SC17-container-tutorial:
   data_format: 2
   description: 'SC17 tutorial - "HPC via HTTP: Portable, Scalable Computing using
@@ -24278,8 +24469,8 @@ arcsUVA/omero-client:
   data_format: 2
   description: Omero client Singularity recipes.
   filenames:
-  - Singularity.5.4.0
   - Singularity.5.4.10
+  - Singularity.5.4.0
   full_name: arcsUVA/omero-client
   latest_release: null
   readme: '<h1>
@@ -24352,13 +24543,13 @@ arcsUVA/tensorflow:
   data_format: 2
   description: TensorFlow Singularity recipes.
   filenames:
-  - Singularity.1.12.0-py27
-  - Singularity.1.6.0-py36
+  - Singularity.1.13.1-py36
   - Singularity.1.6.0-py27
   - Singularity.1.12.0-py36
-  - Singularity.1.13.1-py36
   - Singularity.1.13.0-py36
+  - Singularity.1.12.0-py27
   - Singularity.1.14.0-py36
+  - Singularity.1.6.0-py36
   full_name: arcsUVA/tensorflow
   latest_release: null
   readme: '<h1>
@@ -24661,7 +24852,7 @@ arzwa/wgd:
     \ https://doi.org/10.1093/bioinformatics/bty915\n</code></pre>\n<p>For citation\
     \ of the tools used in wgd, please consult the documentation at\n<a href=\"https://wgd.readthedocs.io/en/latest/index.html#citation\"\
     \ rel=\"nofollow\">https://wgd.readthedocs.io/en/latest/index.html#citation</a>.</p>\n"
-  stargazers_count: 59
+  stargazers_count: 58
   subscribers_count: 5
   topics:
   - wgd
@@ -24670,7 +24861,7 @@ arzwa/wgd:
   - bioinformatics
   - genomics
   - evolution
-  updated_at: 1630211014.0
+  updated_at: 1634845895.0
 asafpr/singularity:
   data_format: 2
   description: Singularity description files
@@ -27868,7 +28059,7 @@ bobeobibo/phigaro:
     <li>bioRxiv, 2019; doi: <a href=\"https://doi.org/10.1101/598243\" rel=\"nofollow\"\
     >https://doi.org/10.1101/598243</a>\n</li>\n</ul>\n<p>(c) E.Starikova, P. Tikhonova,\
     \ N.Pryanichnikov, 2019</p>\n"
-  stargazers_count: 27
+  stargazers_count: 29
   subscribers_count: 3
   topics:
   - bioinformatics
@@ -27882,7 +28073,7 @@ bobeobibo/phigaro:
   - genomics
   - genomic-data-analysis
   - genomic-regions
-  updated_at: 1630153579.0
+  updated_at: 1634739266.0
 bow/crimson:
   data_format: 2
   description: Bioinformatics tool outputs converter to JSON or YAML
@@ -29873,10 +30064,10 @@ ctpelok77/kstar:
     <p>For questions and comments please get in touch with Michael Katz (<a href="mailto:michael.katz1@ibm.com">michael.katz1@ibm.com</a>).</p>
 
     '
-  stargazers_count: 5
+  stargazers_count: 6
   subscribers_count: 1
   topics: []
-  updated_at: 1633488626.0
+  updated_at: 1634742353.0
 cyang31/containers:
   data_format: 2
   description: null
@@ -33043,7 +33234,7 @@ dgruber/wfl:
     \ class=\"pl-s\">\"parallel task %d\"</span>, <span class=\"pl-s1\">i</span>))\n\
     \    }\n    <span class=\"pl-c1\">...</span></pre></div>\n<p>For missing functionality\
     \ or bugs please open an issue on github. Contributions welcome!</p>\n"
-  stargazers_count: 34
+  stargazers_count: 35
   subscribers_count: 4
   topics:
   - docker
@@ -33056,7 +33247,7 @@ dgruber/wfl:
   - linux
   - high-throughput
   - singularity
-  updated_at: 1633858200.0
+  updated_at: 1634764509.0
 djarecka/tmp_nipype_tut:
   data_format: 2
   description: null
@@ -35410,24 +35601,22 @@ funkelab/lsd:
     \ in <code>predict.py</code>) or replace with custom function (e.g check chunk\
     \ completion directly in output container).</p>\n<details>\n <summary>Example\
     \ roi config</summary>\n<div class=\"highlight highlight-source-json\"><pre>{\n\
-    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>container<span class=\"\
-    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>hemi_roi_1.zarr<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>offset<span class=\"pl-pds\">\"</span></span>: [<span class=\"pl-c1\"\
-    >140800</span>, <span class=\"pl-c1\">205120</span>, <span class=\"pl-c1\">198400</span>],\n\
-    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>size<span class=\"pl-pds\"\
-    >\"</span></span>: [<span class=\"pl-c1\">3000</span>, <span class=\"pl-c1\">3000</span>,\
-    \ <span class=\"pl-c1\">3000</span>]\n}</pre></div>\n</details>\n<details>\n <summary>Example\
-    \ predict config</summary>\n<pre><code> {\n  \"base_dir\": \"/path/to/base/directory\"\
-    ,\n  \"experiment\": \"hemi\",\n  \"setup\": \"setup01\",\n  \"iteration\": 400000,\n\
-    \  \"raw_file\": \"predict_roi.json\",\n  \"raw_dataset\" : \"volumes/raw\",\n\
-    \  \"out_base\" : \"output\",\n  \"file_name\": \"foo.zarr\",\n  \"num_workers\"\
-    : 5,\n  \"db_host\": \"mongodb client\",\n  \"db_name\": \"foo\",\n  \"queue\"\
-    : \"gpu_rtx\",\n  \"singularity_image\": \"/path/to/singularity/image\"\n}\n</code></pre>\n\
-    </details>\n<h3>\n<a id=\"user-content-watershed\" class=\"anchor\" href=\"#watershed\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Watershed</h3>\n<p>The worker logic is located in a single <a href=\"\
-    https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/workers/extract_fragments_worker.py\"\
+    \  <span class=\"pl-ent\">\"container\"</span>: <span class=\"pl-s\"><span class=\"\
+    pl-pds\">\"</span>hemi_roi_1.zarr<span class=\"pl-pds\">\"</span></span>,\n  <span\
+    \ class=\"pl-ent\">\"offset\"</span>: [<span class=\"pl-c1\">140800</span>, <span\
+    \ class=\"pl-c1\">205120</span>, <span class=\"pl-c1\">198400</span>],\n  <span\
+    \ class=\"pl-ent\">\"size\"</span>: [<span class=\"pl-c1\">3000</span>, <span\
+    \ class=\"pl-c1\">3000</span>, <span class=\"pl-c1\">3000</span>]\n}</pre></div>\n\
+    </details>\n<details>\n <summary>Example predict config</summary>\n<pre><code>\
+    \ {\n  \"base_dir\": \"/path/to/base/directory\",\n  \"experiment\": \"hemi\"\
+    ,\n  \"setup\": \"setup01\",\n  \"iteration\": 400000,\n  \"raw_file\": \"predict_roi.json\"\
+    ,\n  \"raw_dataset\" : \"volumes/raw\",\n  \"out_base\" : \"output\",\n  \"file_name\"\
+    : \"foo.zarr\",\n  \"num_workers\": 5,\n  \"db_host\": \"mongodb client\",\n \
+    \ \"db_name\": \"foo\",\n  \"queue\": \"gpu_rtx\",\n  \"singularity_image\": \"\
+    /path/to/singularity/image\"\n}\n</code></pre>\n</details>\n<h3>\n<a id=\"user-content-watershed\"\
+    \ class=\"anchor\" href=\"#watershed\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Watershed</h3>\n<p>The worker\
+    \ logic is located in a single <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/workers/extract_fragments_worker.py\"\
     >script</a> which is then distributed by the <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/02_extract_fragments_blockwise.py\"\
     >master script</a>. By default the nodes are stored in mongo using a <a href=\"\
     https://github.com/funkelab/daisy/blob/master/daisy/persistence/mongodb_graph_provider.py\"\
@@ -35435,86 +35624,67 @@ funkelab/lsd:
     \ can use the <a href=\"https://github.com/funkelab/daisy/blob/master/daisy/persistence/file_graph_provider.py\"\
     >FileGraphProvider</a> instead (inside the worker script).</p>\n<details>\n <summary>Example\
     \ watershed config</summary>\n<div class=\"highlight highlight-source-json\"><pre>{\n\
-    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>experiment<span class=\"\
-    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>hemi<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>setup<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span\
-    \ class=\"pl-pds\">\"</span>setup01<span class=\"pl-pds\">\"</span></span>,\n\
-    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>iteration<span class=\"\
-    pl-pds\">\"</span></span>: <span class=\"pl-c1\">400000</span>,\n  <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>affs_file<span class=\"pl-pds\">\"</span></span>:\
+    \  <span class=\"pl-ent\">\"experiment\"</span>: <span class=\"pl-s\"><span class=\"\
+    pl-pds\">\"</span>hemi<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"\
+    pl-ent\">\"setup\"</span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>setup01<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"iteration\"</span>:\
+    \ <span class=\"pl-c1\">400000</span>,\n  <span class=\"pl-ent\">\"affs_file\"\
+    </span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo.zarr<span class=\"\
+    pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"affs_dataset\"</span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>/volumes/affs<span class=\"\
+    pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"fragments_file\"</span>:\
     \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo.zarr<span class=\"\
-    pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>affs_dataset<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>/volumes/affs<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>fragments_file<span class=\"pl-pds\">\"\
-    </span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo.zarr<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>fragments_dataset<span class=\"pl-pds\">\"</span></span>: <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>/volumes/fragments<span class=\"pl-pds\"\
-    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>block_size<span\
-    \ class=\"pl-pds\">\"</span></span>: [<span class=\"pl-c1\">1000</span>, <span\
-    \ class=\"pl-c1\">1000</span>, <span class=\"pl-c1\">1000</span>],\n  <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>context<span class=\"pl-pds\">\"</span></span>:\
+    pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"fragments_dataset\"</span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>/volumes/fragments<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"block_size\"\
+    </span>: [<span class=\"pl-c1\">1000</span>, <span class=\"pl-c1\">1000</span>,\
+    \ <span class=\"pl-c1\">1000</span>],\n  <span class=\"pl-ent\">\"context\"</span>:\
     \ [<span class=\"pl-c1\">248</span>, <span class=\"pl-c1\">248</span>, <span class=\"\
-    pl-c1\">248</span>],\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>db_host<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>mongodb client<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>db_name<span class=\"pl-pds\">\"</span></span>:\
-    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo<span class=\"pl-pds\"\
-    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>num_workers<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-c1\">6</span>,\n  <span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>fragments_in_xy<span class=\"\
-    pl-pds\">\"</span></span>: <span class=\"pl-c1\">false</span>,\n  <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>epsilon_agglomerate<span class=\"pl-pds\"\
-    >\"</span></span>: <span class=\"pl-c1\">0</span>,\n  <span class=\"pl-s\"><span\
-    \ class=\"pl-pds\">\"</span>queue<span class=\"pl-pds\">\"</span></span>: <span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>local<span class=\"pl-pds\">\"\
-    </span></span>\n}</pre></div>\n</details>\n<h3>\n<a id=\"user-content-agglomerate\"\
-    \ class=\"anchor\" href=\"#agglomerate\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Agglomerate</h3>\n<p>Same as\
-    \ watershed. <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/workers/agglomerate_worker.py\"\
+    pl-c1\">248</span>],\n  <span class=\"pl-ent\">\"db_host\"</span>: <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>mongodb client<span class=\"pl-pds\">\"\
+    </span></span>,\n  <span class=\"pl-ent\">\"db_name\"</span>: <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>foo<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-ent\">\"num_workers\"</span>: <span class=\"pl-c1\">6</span>,\n\
+    \  <span class=\"pl-ent\">\"fragments_in_xy\"</span>: <span class=\"pl-c1\">false</span>,\n\
+    \  <span class=\"pl-ent\">\"epsilon_agglomerate\"</span>: <span class=\"pl-c1\"\
+    >0</span>,\n  <span class=\"pl-ent\">\"queue\"</span>: <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>local<span class=\"pl-pds\">\"</span></span>\n}</pre></div>\n\
+    </details>\n<h3>\n<a id=\"user-content-agglomerate\" class=\"anchor\" href=\"\
+    #agglomerate\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>Agglomerate</h3>\n<p>Same as watershed. <a href=\"\
+    https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/workers/agglomerate_worker.py\"\
     >Worker script</a>, <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/03_agglomerate_blockwise.py\"\
     >master script</a>. Change to FileGraphProvider if needed.</p>\n<details>\n <summary>Example\
     \ agglomerate config</summary>\n<div class=\"highlight highlight-source-json\"\
-    ><pre>{\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>experiment<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>hemi<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span>setup<span class=\"pl-pds\">\"</span></span>:\
-    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>setup01<span class=\"pl-pds\"\
-    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>iteration<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-c1\">400000</span>,\n  <span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>affs_file<span class=\"pl-pds\"\
-    >\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo.zarr<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>affs_dataset<span class=\"pl-pds\">\"</span></span>: <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>/volumes/affs<span class=\"pl-pds\">\"\
-    </span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>fragments_file<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>foo.zarr<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span>fragments_dataset<span class=\"pl-pds\">\"</span></span>:\
+    ><pre>{\n  <span class=\"pl-ent\">\"experiment\"</span>: <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>hemi<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-ent\">\"setup\"</span>: <span class=\"pl-s\"><span class=\"\
+    pl-pds\">\"</span>setup01<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"\
+    pl-ent\">\"iteration\"</span>: <span class=\"pl-c1\">400000</span>,\n  <span class=\"\
+    pl-ent\">\"affs_file\"</span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"\
+    </span>foo.zarr<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\"\
+    >\"affs_dataset\"</span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>/volumes/affs<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"fragments_file\"\
+    </span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo.zarr<span class=\"\
+    pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"fragments_dataset\"</span>:\
     \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>/volumes/fragments<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>block_size<span class=\"pl-pds\">\"</span></span>: [<span class=\"pl-c1\"\
-    >1000</span>, <span class=\"pl-c1\">1000</span>, <span class=\"pl-c1\">1000</span>],\n\
-    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>context<span class=\"\
-    pl-pds\">\"</span></span>: [<span class=\"pl-c1\">248</span>, <span class=\"pl-c1\"\
-    >248</span>, <span class=\"pl-c1\">248</span>],\n  <span class=\"pl-s\"><span\
-    \ class=\"pl-pds\">\"</span>db_host<span class=\"pl-pds\">\"</span></span>: <span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>mongodb client<span class=\"\
-    pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>db_name<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>foo<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span>num_workers<span class=\"pl-pds\">\"</span></span>:\
-    \ <span class=\"pl-c1\">4</span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>queue<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span\
-    \ class=\"pl-pds\">\"</span>local<span class=\"pl-pds\">\"</span></span>,\n  <span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>merge_function<span class=\"\
-    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>hist_quant_75<span\
-    \ class=\"pl-pds\">\"</span></span>\n}</pre></div>\n</details>\n<h3>\n<a id=\"\
-    user-content-find-segments\" class=\"anchor\" href=\"#find-segments\" aria-hidden=\"\
-    true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a>Find\
-    \ segments</h3>\n<p>In contrast to the above three methods, when <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/04_find_segments.py\"\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"block_size\"\
+    </span>: [<span class=\"pl-c1\">1000</span>, <span class=\"pl-c1\">1000</span>,\
+    \ <span class=\"pl-c1\">1000</span>],\n  <span class=\"pl-ent\">\"context\"</span>:\
+    \ [<span class=\"pl-c1\">248</span>, <span class=\"pl-c1\">248</span>, <span class=\"\
+    pl-c1\">248</span>],\n  <span class=\"pl-ent\">\"db_host\"</span>: <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>mongodb client<span class=\"pl-pds\">\"\
+    </span></span>,\n  <span class=\"pl-ent\">\"db_name\"</span>: <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>foo<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-ent\">\"num_workers\"</span>: <span class=\"pl-c1\">4</span>,\n\
+    \  <span class=\"pl-ent\">\"queue\"</span>: <span class=\"pl-s\"><span class=\"\
+    pl-pds\">\"</span>local<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"\
+    pl-ent\">\"merge_function\"</span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>hist_quant_75<span class=\"pl-pds\">\"</span></span>\n}</pre></div>\n\
+    </details>\n<h3>\n<a id=\"user-content-find-segments\" class=\"anchor\" href=\"\
+    #find-segments\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a>Find segments</h3>\n<p>In contrast to the above three\
+    \ methods, when <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/04_find_segments.py\"\
     >creating LUTs</a> there just needs to be enough RAM to hold the RAG in memory.\
     \ The only thing done in parallel is reading the graph (<code>graph_provider.read_blockwise()</code>).\
     \ It could be adapted to use multiprocessing/dask for distributing the connected\
@@ -35522,168 +35692,132 @@ funkelab/lsd:
     \ errors when passing the nodes/edges. Daisy doesn't need to be used for scheduling\
     \ here since nothing is written to containers.</p>\n<details>\n <summary>Example\
     \ find segments config</summary>\n<div class=\"highlight highlight-source-json\"\
-    ><pre>{\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>db_host<span class=\"\
-    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>mongodb\
-    \ client<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span\
-    \ class=\"pl-pds\">\"</span>db_name<span class=\"pl-pds\">\"</span></span>: <span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo<span class=\"pl-pds\">\"\
-    </span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>fragments_file<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>foo.zarr<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span>edges_collection<span class=\"pl-pds\">\"</span></span>:\
-    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>edges_hist_quant_75<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>thresholds_minmax<span class=\"pl-pds\">\"</span></span>: [<span class=\"\
-    pl-c1\">0</span>, <span class=\"pl-c1\">1</span>],\n  <span class=\"pl-s\"><span\
-    \ class=\"pl-pds\">\"</span>thresholds_step<span class=\"pl-pds\">\"</span></span>:\
-    \ <span class=\"pl-c1\">0.02</span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>block_size<span class=\"pl-pds\">\"</span></span>: [<span class=\"pl-c1\"\
-    >1000</span>, <span class=\"pl-c1\">1000</span>, <span class=\"pl-c1\">1000</span>],\n\
-    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>num_workers<span class=\"\
-    pl-pds\">\"</span></span>: <span class=\"pl-c1\">5</span>,\n  <span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span>fragments_dataset<span class=\"pl-pds\">\"</span></span>:\
-    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>/volumes/fragments<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>run_type<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span>test<span class=\"pl-pds\">\"</span></span>\n\
-    }</pre></div>\n</details>\n<h3>\n<a id=\"user-content-extract-segmentation\" class=\"\
-    anchor\" href=\"#extract-segmentation\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Extract segmentation</h3>\n<p>This\
+    ><pre>{\n  <span class=\"pl-ent\">\"db_host\"</span>: <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>mongodb client<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-ent\">\"db_name\"</span>: <span class=\"pl-s\"><span class=\"\
+    pl-pds\">\"</span>foo<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"\
+    pl-ent\">\"fragments_file\"</span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>foo.zarr<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\"\
+    >\"edges_collection\"</span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>edges_hist_quant_75<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"thresholds_minmax\"\
+    </span>: [<span class=\"pl-c1\">0</span>, <span class=\"pl-c1\">1</span>],\n \
+    \ <span class=\"pl-ent\">\"thresholds_step\"</span>: <span class=\"pl-c1\">0.02</span>,\n\
+    \  <span class=\"pl-ent\">\"block_size\"</span>: [<span class=\"pl-c1\">1000</span>,\
+    \ <span class=\"pl-c1\">1000</span>, <span class=\"pl-c1\">1000</span>],\n  <span\
+    \ class=\"pl-ent\">\"num_workers\"</span>: <span class=\"pl-c1\">5</span>,\n \
+    \ <span class=\"pl-ent\">\"fragments_dataset\"</span>: <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>/volumes/fragments<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-ent\">\"run_type\"</span>: <span class=\"pl-s\"><span class=\"\
+    pl-pds\">\"</span>test<span class=\"pl-pds\">\"</span></span>\n}</pre></div>\n\
+    </details>\n<h3>\n<a id=\"user-content-extract-segmentation\" class=\"anchor\"\
+    \ href=\"#extract-segmentation\" aria-hidden=\"true\"><span aria-hidden=\"true\"\
+    \ class=\"octicon octicon-link\"></span></a>Extract segmentation</h3>\n<p>This\
     \ <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/05_extract_segmentation_from_lut.py\"\
     >script</a> does use daisy to write the segmentation to file, but doesn't necessarily\
     \ require bsub/sbatch to distribute (you can run locally).</p>\n<details>\n <summary>Example\
     \ extract segmentation config</summary> \n<div class=\"highlight highlight-source-json\"\
-    ><pre>{\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>fragments_file<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>foo.zarr<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span>fragments_dataset<span class=\"pl-pds\">\"</span></span>:\
-    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>/volumes/fragments<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>edges_collection<span class=\"pl-pds\">\"</span></span>: <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>edges_hist_quant_75<span class=\"pl-pds\"\
-    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>threshold<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-c1\">0.4</span>,\n  <span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>block_size<span class=\"pl-pds\"\
-    >\"</span></span>: [<span class=\"pl-c1\">1000</span>, <span class=\"pl-c1\">1000</span>,\
-    \ <span class=\"pl-c1\">1000</span>],\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>out_file<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"\
+    ><pre>{\n  <span class=\"pl-ent\">\"fragments_file\"</span>: <span class=\"pl-s\"\
     ><span class=\"pl-pds\">\"</span>foo.zarr<span class=\"pl-pds\">\"</span></span>,\n\
-    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>out_dataset<span class=\"\
-    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>volumes/segmentation_40<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>num_workers<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-c1\"\
-    >3</span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>run_type<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>test<span class=\"pl-pds\">\"</span></span>\n}</pre></div>\n</details>\n\
-    <h3>\n<a id=\"user-content-evaluate-volumes\" class=\"anchor\" href=\"#evaluate-volumes\"\
-    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
-    ></span></a>Evaluate volumes</h3>\n<p><a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/05_evaluate_volumes.py\"\
+    \  <span class=\"pl-ent\">\"fragments_dataset\"</span>: <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>/volumes/fragments<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-ent\">\"edges_collection\"</span>: <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>edges_hist_quant_75<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-ent\">\"threshold\"</span>: <span class=\"pl-c1\">0.4</span>,\n\
+    \  <span class=\"pl-ent\">\"block_size\"</span>: [<span class=\"pl-c1\">1000</span>,\
+    \ <span class=\"pl-c1\">1000</span>, <span class=\"pl-c1\">1000</span>],\n  <span\
+    \ class=\"pl-ent\">\"out_file\"</span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
+    >\"</span>foo.zarr<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\"\
+    >\"out_dataset\"</span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>volumes/segmentation_40<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"num_workers\"\
+    </span>: <span class=\"pl-c1\">3</span>,\n  <span class=\"pl-ent\">\"run_type\"\
+    </span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>test<span class=\"\
+    pl-pds\">\"</span></span>\n}</pre></div>\n</details>\n<h3>\n<a id=\"user-content-evaluate-volumes\"\
+    \ class=\"anchor\" href=\"#evaluate-volumes\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a>Evaluate volumes</h3>\n<p><a\
+    \ href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/05_evaluate_volumes.py\"\
     >Evaluate</a> Voi scores. Assumes dense voxel ground truth (not skeletons). This\
     \ also assumes the ground truth (and segmentation) can fit into memory, which\
     \ was fine for hemi and fib25 volumes assuming ~750 GB of RAM. The script should\
     \ probably be refactored to run blockwise.</p>\n<details>\n <summary>Example evaluate\
     \ volumes config</summary>\n<div class=\"highlight highlight-source-json\"><pre>{\n\
-    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>experiment<span class=\"\
-    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>hemi<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>setup<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span\
-    \ class=\"pl-pds\">\"</span>setup01<span class=\"pl-pds\">\"</span></span>,\n\
-    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>iteration<span class=\"\
-    pl-pds\">\"</span></span>: <span class=\"pl-c1\">400000</span>,\n  <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>gt_file<span class=\"pl-pds\">\"</span></span>:\
+    \  <span class=\"pl-ent\">\"experiment\"</span>: <span class=\"pl-s\"><span class=\"\
+    pl-pds\">\"</span>hemi<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"\
+    pl-ent\">\"setup\"</span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>setup01<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"iteration\"</span>:\
+    \ <span class=\"pl-c1\">400000</span>,\n  <span class=\"pl-ent\">\"gt_file\"</span>:\
     \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>hemi_roi_1.zarr<span class=\"\
-    pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>gt_dataset<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>volumes/labels/neuron_ids<span class=\"pl-pds\">\"</span></span>,\n\
-    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>fragments_file<span class=\"\
-    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo.zarr<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>fragments_dataset<span class=\"pl-pds\">\"</span></span>: <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>/volumes/fragments<span class=\"pl-pds\"\
-    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>db_host<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>mongodb client<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>rag_db_name<span class=\"pl-pds\">\"</span></span>:\
-    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo<span class=\"pl-pds\"\
-    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>edges_collection<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>edges_hist_quant_75<span class=\"pl-pds\">\"</span></span>,\n  <span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>scores_db_name<span class=\"\
-    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>scores<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>thresholds_minmax<span class=\"pl-pds\">\"</span></span>: [<span class=\"\
-    pl-c1\">0</span>, <span class=\"pl-c1\">1</span>],\n  <span class=\"pl-s\"><span\
-    \ class=\"pl-pds\">\"</span>thresholds_step<span class=\"pl-pds\">\"</span></span>:\
-    \ <span class=\"pl-c1\">0.02</span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>num_workers<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-c1\"\
-    >4</span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>method<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>vanilla<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span>run_type<span class=\"pl-pds\">\"</span></span>:\
-    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>test<span class=\"pl-pds\"\
-    >\"</span></span>\n}</pre></div>\n</details>\n<h3>\n<a id=\"user-content-evaluate-annotations\"\
-    \ class=\"anchor\" href=\"#evaluate-annotations\" aria-hidden=\"true\"><span aria-hidden=\"\
-    true\" class=\"octicon octicon-link\"></span></a>Evaluate annotations</h3>\n<p>For\
-    \ the zebrafinch, ground truth skeletons were used due to the size of the dataset.\
-    \ These skeletons were cropped, masked, and relabelled for the sub Rois that were\
-    \ tested in the paper. We <a href=\"https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/05_evaluate_annotations.py\"\
+    pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"gt_dataset\"</span>: <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>volumes/labels/neuron_ids<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"fragments_file\"\
+    </span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo.zarr<span class=\"\
+    pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"fragments_dataset\"</span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>/volumes/fragments<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"db_host\"</span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>mongodb client<span class=\"\
+    pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"rag_db_name\"</span>: <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo<span class=\"pl-pds\">\"\
+    </span></span>,\n  <span class=\"pl-ent\">\"edges_collection\"</span>: <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>edges_hist_quant_75<span class=\"pl-pds\"\
+    >\"</span></span>,\n  <span class=\"pl-ent\">\"scores_db_name\"</span>: <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>scores<span class=\"pl-pds\"\
+    >\"</span></span>,\n  <span class=\"pl-ent\">\"thresholds_minmax\"</span>: [<span\
+    \ class=\"pl-c1\">0</span>, <span class=\"pl-c1\">1</span>],\n  <span class=\"\
+    pl-ent\">\"thresholds_step\"</span>: <span class=\"pl-c1\">0.02</span>,\n  <span\
+    \ class=\"pl-ent\">\"num_workers\"</span>: <span class=\"pl-c1\">4</span>,\n \
+    \ <span class=\"pl-ent\">\"method\"</span>: <span class=\"pl-s\"><span class=\"\
+    pl-pds\">\"</span>vanilla<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"\
+    pl-ent\">\"run_type\"</span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>test<span\
+    \ class=\"pl-pds\">\"</span></span>\n}</pre></div>\n</details>\n<h3>\n<a id=\"\
+    user-content-evaluate-annotations\" class=\"anchor\" href=\"#evaluate-annotations\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a>Evaluate annotations</h3>\n<p>For the zebrafinch, ground truth skeletons\
+    \ were used due to the size of the dataset. These skeletons were cropped, masked,\
+    \ and relabelled for the sub Rois that were tested in the paper. We <a href=\"\
+    https://github.com/funkelab/lsd/blob/tutorial/lsd/tutorial/scripts/05_evaluate_annotations.py\"\
     >evaluated</a> voi, erl, and the mincut metric on the consolidated skeletons.\
     \ The current implementation could be refactored / made more modular. It also\
     \ uses <code>node_collections</code> which are now deprecated in daisy. To use\
     \ with the current implementation, you should checkout daisy commit <code>39723ca</code>.</p>\n\
     <details>\n <summary>Example evaluate annotations config</summary>\n<div class=\"\
-    highlight highlight-source-json\"><pre>{\n  <span class=\"pl-s\"><span class=\"\
-    pl-pds\">\"</span>experiment<span class=\"pl-pds\">\"</span></span>: <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>zebrafinch<span class=\"pl-pds\">\"</span></span>,\n\
-    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>setup<span class=\"pl-pds\"\
-    >\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>setup01<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>iteration<span class=\"pl-pds\">\"</span></span>: <span class=\"pl-c1\"\
-    >400000</span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>config_slab<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>mtlsd<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span>fragments_file<span class=\"pl-pds\">\"</span></span>:\
-    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo.zarr<span class=\"\
-    pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>fragments_dataset<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>/volumes/fragments<span class=\"pl-pds\">\"</span></span>,\n  <span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>edges_db_host<span class=\"pl-pds\"\
-    >\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>mongodb\
-    \ client<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span\
-    \ class=\"pl-pds\">\"</span>edges_db_name<span class=\"pl-pds\">\"</span></span>:\
-    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>foo<span class=\"pl-pds\"\
-    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>edges_collection<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>edges_hist_quant_75<span class=\"pl-pds\">\"</span></span>,\n  <span\
-    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>scores_db_name<span class=\"\
-    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>scores<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>annotations_db_host<span class=\"pl-pds\">\"</span></span>: <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>mongo client<span class=\"pl-pds\">\"</span></span>,\n\
-    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>annotations_db_name<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>foo<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"\
-    ><span class=\"pl-pds\">\"</span>annotations_skeletons_collection_name<span class=\"\
-    pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>zebrafinch<span\
-    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>node_components<span class=\"pl-pds\">\"</span></span>: <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>zebrafinch_components<span class=\"pl-pds\"\
-    >\"</span></span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>node_mask<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>zebrafinch_mask<span class=\"pl-pds\">\"</span></span>,\n  <span class=\"\
-    pl-s\"><span class=\"pl-pds\">\"</span>roi_offset<span class=\"pl-pds\">\"</span></span>:\
-    \ [<span class=\"pl-c1\">50800</span>, <span class=\"pl-c1\">43200</span>, <span\
-    \ class=\"pl-c1\">44100</span>],\n  <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>roi_shape<span class=\"pl-pds\">\"</span></span>: [<span class=\"pl-c1\"\
-    >10800</span>, <span class=\"pl-c1\">10800</span>, <span class=\"pl-c1\">10800</span>],\n\
-    \  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>thresholds_minmax<span\
-    \ class=\"pl-pds\">\"</span></span>: [<span class=\"pl-c1\">0.5</span>, <span\
-    \ class=\"pl-c1\">1</span>],\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"\
-    </span>thresholds_step<span class=\"pl-pds\">\"</span></span>: <span class=\"\
-    pl-c1\">1</span>,\n  <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>run_type<span\
-    \ class=\"pl-pds\">\"</span></span>: <span class=\"pl-s\"><span class=\"pl-pds\"\
-    >\"</span>11_micron_roi_masked<span class=\"pl-pds\">\"</span></span>\n}</pre></div>\n\
-    \ </details>\n"
+    highlight highlight-source-json\"><pre>{\n  <span class=\"pl-ent\">\"experiment\"\
+    </span>: <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>zebrafinch<span\
+    \ class=\"pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"setup\"</span>:\
+    \ <span class=\"pl-s\"><span class=\"pl-pds\">\"</span>setup01<span class=\"pl-pds\"\
+    >\"</span></span>,\n  <span class=\"pl-ent\">\"iteration\"</span>: <span class=\"\
+    pl-c1\">400000</span>,\n  <span class=\"pl-ent\">\"config_slab\"</span>: <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>mtlsd<span class=\"pl-pds\">\"\
+    </span></span>,\n  <span class=\"pl-ent\">\"fragments_file\"</span>: <span class=\"\
+    pl-s\"><span class=\"pl-pds\">\"</span>foo.zarr<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-ent\">\"fragments_dataset\"</span>: <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>/volumes/fragments<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-ent\">\"edges_db_host\"</span>: <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>mongodb client<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-ent\">\"edges_db_name\"</span>: <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>foo<span class=\"pl-pds\">\"</span></span>,\n  <span\
+    \ class=\"pl-ent\">\"edges_collection\"</span>: <span class=\"pl-s\"><span class=\"\
+    pl-pds\">\"</span>edges_hist_quant_75<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-ent\">\"scores_db_name\"</span>: <span class=\"pl-s\"><span\
+    \ class=\"pl-pds\">\"</span>scores<span class=\"pl-pds\">\"</span></span>,\n \
+    \ <span class=\"pl-ent\">\"annotations_db_host\"</span>: <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>mongo client<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-ent\">\"annotations_db_name\"</span>: <span class=\"pl-s\"\
+    ><span class=\"pl-pds\">\"</span>foo<span class=\"pl-pds\">\"</span></span>,\n\
+    \  <span class=\"pl-ent\">\"annotations_skeletons_collection_name\"</span>: <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>zebrafinch<span class=\"pl-pds\"\
+    >\"</span></span>,\n  <span class=\"pl-ent\">\"node_components\"</span>: <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>zebrafinch_components<span class=\"\
+    pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"node_mask\"</span>: <span\
+    \ class=\"pl-s\"><span class=\"pl-pds\">\"</span>zebrafinch_mask<span class=\"\
+    pl-pds\">\"</span></span>,\n  <span class=\"pl-ent\">\"roi_offset\"</span>: [<span\
+    \ class=\"pl-c1\">50800</span>, <span class=\"pl-c1\">43200</span>, <span class=\"\
+    pl-c1\">44100</span>],\n  <span class=\"pl-ent\">\"roi_shape\"</span>: [<span\
+    \ class=\"pl-c1\">10800</span>, <span class=\"pl-c1\">10800</span>, <span class=\"\
+    pl-c1\">10800</span>],\n  <span class=\"pl-ent\">\"thresholds_minmax\"</span>:\
+    \ [<span class=\"pl-c1\">0.5</span>, <span class=\"pl-c1\">1</span>],\n  <span\
+    \ class=\"pl-ent\">\"thresholds_step\"</span>: <span class=\"pl-c1\">1</span>,\n\
+    \  <span class=\"pl-ent\">\"run_type\"</span>: <span class=\"pl-s\"><span class=\"\
+    pl-pds\">\"</span>11_micron_roi_masked<span class=\"pl-pds\">\"</span></span>\n\
+    }</pre></div>\n </details>\n"
   stargazers_count: 13
   subscribers_count: 5
   topics: []
@@ -38679,10 +38813,10 @@ heathsc/gemBS:
     </li>\n</ul>\n<p>bisulfite caller and filtering:</p>\n<ul>\n<li>Simon Heath -\
     \ <a href=\"mailto:simon.heath@gmail.com\">simon.heath@gmail.com</a>\n</li>\n\
     </ul>\n"
-  stargazers_count: 24
+  stargazers_count: 25
   subscribers_count: 4
   topics: []
-  updated_at: 1624379756.0
+  updated_at: 1634748676.0
 heathsc/gemBS-rs:
   data_format: 2
   description: A re-write of the gemBS pipeline framework in Rust
@@ -38868,7 +39002,7 @@ hejm37/sysu-planner:
 
     '
   stargazers_count: 0
-  subscribers_count: 1
+  subscribers_count: 2
   topics: []
   updated_at: 1563536767.0
 hexmek/container:
@@ -43137,10 +43271,10 @@ kalibera/rchk:
     style="max-width:100%;"></a></p>
 
     '
-  stargazers_count: 98
+  stargazers_count: 99
   subscribers_count: 9
   topics: []
-  updated_at: 1632502511.0
+  updated_at: 1634582071.0
 kapsakcj/singularities:
   data_format: 2
   description: Singularity recipes for bioinformatics software
@@ -48087,7 +48221,7 @@ nextgenusfs/funannotate:
   - gene-models
   - comparative-genomics
   - ncbi-submission
-  updated_at: 1633929352.0
+  updated_at: 1635130878.0
 nhoffman/dada2-nf:
   data_format: 2
   description: A Nextflow pipeline for processing 16S rRNA sequences using dada2
@@ -49513,11 +49647,11 @@ openPMD/openPMD-api:
     \ style=\"max-width:100%;\"></a></p>\n<div class=\"highlight highlight-source-shell\"\
     ><pre><span class=\"pl-c\"><span class=\"pl-c\">#</span> optional:           \
     \    +python +adios1 -adios2 -hdf5 -mpi</span>\nspack install openpmd-api\nspack\
-    \ load -r openpmd-api</pre></div>\n<h3>\n<a id=\"user-content-conda\" class=\"\
-    anchor\" href=\"#conda\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
-    octicon octicon-link\"></span></a><a href=\"https://conda.io\" rel=\"nofollow\"\
-    >Conda</a>\n</h3>\n<p><a href=\"https://anaconda.org/conda-forge/openpmd-api\"\
-    \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/3ad2b345bb3589aa2d733ca20df72938ed54a48342b69f7cbe9eacab43d84549/68747470733a2f2f696d672e736869656c64732e696f2f636f6e64612f766e2f636f6e64612d666f7267652f6f70656e706d642d617069\"\
+    \ load openpmd-api</pre></div>\n<h3>\n<a id=\"user-content-conda\" class=\"anchor\"\
+    \ href=\"#conda\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon\
+    \ octicon-link\"></span></a><a href=\"https://conda.io\" rel=\"nofollow\">Conda</a>\n\
+    </h3>\n<p><a href=\"https://anaconda.org/conda-forge/openpmd-api\" rel=\"nofollow\"\
+    ><img src=\"https://camo.githubusercontent.com/3ad2b345bb3589aa2d733ca20df72938ed54a48342b69f7cbe9eacab43d84549/68747470733a2f2f696d672e736869656c64732e696f2f636f6e64612f766e2f636f6e64612d666f7267652f6f70656e706d642d617069\"\
     \ alt=\"Conda Version\" data-canonical-src=\"https://img.shields.io/conda/vn/conda-forge/openpmd-api\"\
     \ style=\"max-width:100%;\"></a>\n<a href=\"https://anaconda.org/conda-forge/openpmd-api\"\
     \ rel=\"nofollow\"><img src=\"https://camo.githubusercontent.com/114e64f6c29b3e409c6de5b19ee4074ec3053396d43319fe4876231f1480e0d1/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f706c6174666f726d732d6c696e75782532302537432532306f737825323025374325323077696e2d626c7565\"\
@@ -49822,7 +49956,7 @@ openPMD/openPMD-api:
   - meta-data
   - opendata
   - cpp14
-  updated_at: 1634358411.0
+  updated_at: 1635129811.0
 openhpc/ohpc:
   data_format: 2
   description: OpenHPC Integration, Packaging, and Test Repo
@@ -49941,8 +50075,8 @@ openhpc/ohpc:
     Form</a>.</p>
 
     '
-  stargazers_count: 598
-  subscribers_count: 90
+  stargazers_count: 599
+  subscribers_count: 89
   topics:
   - hpc
   - scientific-computing
@@ -49951,7 +50085,7 @@ openhpc/ohpc:
   - devtools
   - mpi
   - linuxfoundation
-  updated_at: 1633803866.0
+  updated_at: 1634854219.0
 pbranson/pangeo-hpc-singularity:
   data_format: 2
   description: Scripts to run dask and jupyter lab on Singularity using the pangeo-notebook
@@ -51364,7 +51498,7 @@ pmitev/Teoroo-singularity:
 
     '
   stargazers_count: 0
-  subscribers_count: 1
+  subscribers_count: 2
   topics:
   - singularity
   - singularity-containers
@@ -52732,14 +52866,14 @@ powerPlant/eddypro-engine-srf:
   data_format: 2
   description: Singularity recipe files for EddyPro Engine (https://github.com/LI-COR/eddypro-engine)
   filenames:
-  - Singularity.6.0.0
-  - Singularity.6.1.0
-  - Singularity.6.2.0
+  - Singularity.5.1.1
   - Singularity.5.2.0
   - Singularity.6.2.1
-  - Singularity.5.1.1
-  - Singularity.5.2.1
+  - Singularity.6.0.0
+  - Singularity.6.2.0
   - Singularity
+  - Singularity.6.1.0
+  - Singularity.5.2.1
   full_name: powerPlant/eddypro-engine-srf
   latest_release: null
   readme: '<p><a href="https://singularity-hub.org/collections/2272" rel="nofollow"><img
@@ -52760,8 +52894,8 @@ powerPlant/edta-srf:
   description: Singularity recipe files for edta (https://github.com/oushujun/EDTA)
   filenames:
   - Singularity.1.9.0
-  - Singularity.1.8.3
   - Singularity
+  - Singularity.1.8.3
   full_name: powerPlant/edta-srf
   latest_release: null
   readme: '<p>Singularity recipe files for the Extensive de novo TE Annotator tool</p>
@@ -53124,8 +53258,8 @@ powerPlant/portcullis-srf:
   filenames:
   - Singularity.1.1.2
   - Singularity.1.1.1
-  - Singularity.1.1.0
   - Singularity
+  - Singularity.1.1.0
   full_name: powerPlant/portcullis-srf
   latest_release: null
   readme: '<p><a href="https://singularity-hub.org/collections/2267" rel="nofollow"><img
@@ -53146,18 +53280,18 @@ powerPlant/qiime2-srf:
   data_format: 2
   description: Singularity recipe files for QIIME 2 (https://docs.qiime2.org/)
   filenames:
-  - Singularity.2019.1-picrust2
-  - Singularity.2020.6
   - Singularity.2020.8
+  - Singularity.2020.6
+  - Singularity.2019.7
+  - Singularity.2019.4
+  - Singularity
+  - Singularity.2019.1-picrust2
+  - Singularity.2019.7-picrust2
+  - Singularity.2018.11
   - Singularity.2020.2
   - Singularity.2019.10
-  - Singularity.2019.4
-  - Singularity.2018.2
-  - Singularity.2019.7
-  - Singularity.2018.11
   - Singularity.2019.1
-  - Singularity.2019.7-picrust2
-  - Singularity
+  - Singularity.2018.2
   full_name: powerPlant/qiime2-srf
   latest_release: null
   readme: '<p><a href="https://singularity-hub.org/collections/2268" rel="nofollow"><img
@@ -53326,10 +53460,10 @@ powerPlant/sortmerna-srf:
   data_format: 2
   description: Singularity recipe files for sortmerna (https://github.com/biocore/sortmerna)
   filenames:
-  - Singularity.4.3.2
-  - Singularity.3.0.3
   - Singularity.4.2.0
   - Singularity
+  - Singularity.3.0.3
+  - Singularity.4.3.2
   full_name: powerPlant/sortmerna-srf
   latest_release: null
   readme: '<p>Singularity recipe files for the SortMeRNA local sequence alignment
@@ -59308,19 +59442,24 @@ rohitfarmer/singularity-defs:
   description: Definition (recipe) files for singularity containers.
   filenames:
   - cytof-deep-cnn/Singularity.def
+  - comet/chemlab-comet.def
   - comet/Singularity.def
   - generic/Singularity.def
   - cytof-workflow-v3/Singularity_SCS.def
   - cytof-workflow-v3/Singularity.def
-  - tf-gpu-chemistry/Singularity
   - cite-seq/Singularity_rocker.def
   - cite-seq/Singularity_publish.def
   - cite-seq/Singularity_AJM_COVID.def
   - cite-seq/Singularity_3.def
   - cite-seq/Singularity_xenial.def
+  - diffnets/diffnets.def
   - bittersweet/Singularity.def
+  - H5N1/h5n1day100.def
   - H5N1/Singularity.def
   - H5N1/Singularity_R_3.6.def
+  - r-dev/r_3.5.3.def
+  - r-dev/r_4.0.3.def
+  - r-dev/r_3.6.1.def
   full_name: rohitfarmer/singularity-defs
   latest_release: null
   readme: '<h1>
@@ -62694,7 +62833,7 @@ solvcon/solvcon:
   subscribers_count: 8
   topics:
   - computational-science
-  updated_at: 1633016397.0
+  updated_at: 1634906449.0
 soudabeh19/centos7-reprozip.fslbuild-centos5:
   data_format: 2
   description: PreFreeSurfer-Converting Docker to Singularity (centos7-reprozip.fslbuild-centos5)
@@ -62719,11 +62858,65 @@ soycoder/nemo:
   description: HPC-AI 2020 | Training Project NEMO - Nucleus for European Modelling
     of the Ocean
   filenames:
-  - Slurm Script/Singularity.nemo.apps
   - Slurm Script/Singularity.CENTOS-7.7-NEMO-MOFED
+  - Slurm Script/Singularity.nemo.apps
   full_name: soycoder/nemo
   latest_release: null
-  readme: '{"message":"API rate limit exceeded for installation ID 633759.","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}'
+  readme: "<h1>\n<a id=\"user-content--nemo---ocean\" class=\"anchor\" href=\"#-nemo---ocean\"\
+    \ aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"octicon octicon-link\"\
+    ></span></a><g-emoji class=\"g-emoji\" alias=\"ocean\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f30a.png\"\
+    >\U0001F30A</g-emoji> NEMO - ocean</h1>\n<p>HPC-AI 2020 | Training Project - NEMO:\
+    \ Nucleus for European Modelling of the Ocean</p>\n<h2>\n<a id=\"user-content--docker-images---centos\"\
+    \ class=\"anchor\" href=\"#-docker-images---centos\" aria-hidden=\"true\"><span\
+    \ aria-hidden=\"true\" class=\"octicon octicon-link\"></span></a><g-emoji class=\"\
+    g-emoji\" alias=\"floppy_disk\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f4be.png\"\
+    >\U0001F4BE</g-emoji> Docker Images - CentOS</h2>\n<p>Thank you for an image \
+    \ (<a href=\"https://hub.docker.com/r/wangyoucao577/centos7-gcc7.4\" rel=\"nofollow\"\
+    >wangyoucao577/centos7-gcc7.4</a>)</p>\n<h2>\n<a id=\"user-content--tag\" class=\"\
+    anchor\" href=\"#-tag\" aria-hidden=\"true\"><span aria-hidden=\"true\" class=\"\
+    octicon octicon-link\"></span></a><g-emoji class=\"g-emoji\" alias=\"bookmark\"\
+    \ fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f516.png\"\
+    >\U0001F516</g-emoji> Tag</h2>\n<ul>\n<li><a href=\"https://hub.docker.com/layers/soycoder/centos7/nemo-ocean/images/sha256-c7bdaa3614e1fc1bbef31bdb05ac997e64b11abff716d00315807b1b79ad13c3\"\
+    \ rel=\"nofollow\">:nemo-ocean</a></li>\n</ul>\n<h2>\n<a id=\"user-content--environment\"\
+    \ class=\"anchor\" href=\"#-environment\" aria-hidden=\"true\"><span aria-hidden=\"\
+    true\" class=\"octicon octicon-link\"></span></a><g-emoji class=\"g-emoji\" alias=\"\
+    sunrise_over_mountains\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f304.png\"\
+    >\U0001F304</g-emoji> Environment</h2>\n<ol>\n<li>HPC-X to build an out-of-box\
+    \ MPI environment</li>\n<li>Boost library</li>\n<li>HDF5 Parallellibrary</li>\n\
+    <li>NETCDF Parallel library with HDF5</li>\n<li>NETCDF-FortranParallel library\
+    \ with NETCDF Parallel</li>\n<li>XIOS</li>\n<li>GYREwith GNUgfortran + HPC-X OpenMPI</li>\n\
+    </ol>\n<div class=\"highlight highlight-text-html-basic\"><pre>/usr/mpi/gcc/openmpi-3.1.1rc1/bin/mpirun\
+    \ \\\n-mca pml ucx -x UCX_NET_DEVICES=mlx5_0:1 \\\n-mca mpi_show_mca_params 1\
+    \ -mca pml_ucx_verbose 9 \\\n/usr/mpi/gcc/openmpi-3.1.1rc1/tests/osu-micro-benchmarks-5.3.2/osu_get_bw\n\
+    \n\n/usr/mpi/gcc/openmpi-3.1.1rc1/bin/mpirun -n 2 \\\n-mca pml ucx -x UCX_NET_DEVICES=mlx5_0:1\
+    \ \\\n/usr/mpi/gcc/openmpi-3.1.1rc1/tests/osu-micro-benchmarks-5.3.2/osu_get_bw\n\
+    \n/usr/bin/time -p mpirun -n 2 \\\n-mca pml ucx -x UCX_TLS=rc UCX_NET_DEVICES=mlx5_0:1\
+    \ ./nemo\n\n/usr/bin/time -p mpirun -n 2 \\\n-mca -x UCX_TLS=rc -x UCX_NET_DEVICES=mlx5_0:1\
+    \ ./nemo\n\n/usr/bin/time -p mpirun -n 2 \\\n-mca -x UCX_TLS=rc -x UCX_NET_DEVICES=ib0\
+    \ \\\n/home/hpc/nemo/apps/hpcx-v2.6.0-gcc-MLNX_OFED_LINUX-4.7-1.0.0.1-redhat7.7-x86_64/ompi/tests/osu-micro-benchmarks-5.3.2/osu_get_bw\n\
+    \nibstat\n\n\nNow step into the container and install MOFED:\n\n$ sudo singularity\
+    \ exec -w u16.04-sandbox/ bash\n(singularity)# cd MOFED/MLNX_OFED_LINUX-4.3-1.0.1.0-ubuntu16.04-x86_64\n\
+    (singularity)# ./mlnxofedinstall\n\n\n! -- (nemo) singularity exec -w nemo.sif\
+    \ bash\n\n\n## Run container\nTo use Singularity in Mellanox/HPCX need to load\
+    \ env module: `module load tools/singularity`\n.\n\nRun `osu_latency` test:\n\
+    ```sh\n$ mpirun -np 2 --map-by node -mca btl self singularity exec hpcx-u16.04.simg\
+    \ /hpcx/ompi-a7df\nd94/tests/osu-micro-benchmarks-5.3.2/osu_latency\n# OSU MPI\
+    \ Latency Test v5.3.2\n# Size          Latency (us)\n0                       1.55\n\
+    1                       1.55\n2                       1.55\n4                \
+    \       1.55\n8                       1.54\n16                      1.55\n32 \
+    \                     1.55\n64                      1.65\n128                \
+    \     2.19\n256                     2.23\n512                     2.35\n1024 \
+    \                   2.64\n2048                    2.89\n4096                 \
+    \   3.51\n8192                    5.00\n16384                   6.44\n32768  \
+    \                 8.91\n65536                  14.12\n131072                 25.05\n\
+    262144                 27.31\n524288                 49.03\n1048576          \
+    \      92.53\n2097152               178.95\n4194304               351.24\n\n\n\
+    \n$hpcx_mpi_dir/tests/osu-micro-benchmarks-5.3.2/osu_get_bw\n\ncd /home/hpc/nemo/apps/hpcx-v2.6.0-gcc-MLNX_OFED_LINUX-4.7-1.0.0.1-redhat7.7-x86_64\n\
+    \nmpirun \\\n-mca pml ucx -x UCX_NET_DEVICES=mlx5_0:1 \\\n-mca mpi_show_mca_params\
+    \ 1 -mca pml_ucx_verbose 9 \\\n./ompi/tests/osu-micro-benchmarks-5.3.2/osu_get_bw\n\
+    \n\nmpirun \\\n-mca mpi_show_mca_params 1 -mca pml_ucx_verbose 9 \\\n./ompi/tests/osu-micro-benchmarks-5.3.2/osu_get_bw\n\
+    \n\n\n/usr/bin/time -p mpirun -np 4 \\\n--map-by core -report-bindings \\\n-mca\
+    \ io ompio -x UCX_NET_DEVICES=mlx5_0:1 ./nemo</pre></div>\n"
   stargazers_count: 0
   subscribers_count: 0
   topics: []
@@ -63934,13 +64127,13 @@ sylabs/singularity:
     found in the <a href="LICENSE.md">license file</a>.</em></p>
 
     '
-  stargazers_count: 104
+  stargazers_count: 108
   subscribers_count: 10
   topics:
   - containers
   - hpc
   - linux
-  updated_at: 1634443914.0
+  updated_at: 1634936708.0
 sylvainschmitt/singularity-octopus:
   data_format: 2
   description: 'octopus Singularity container '
