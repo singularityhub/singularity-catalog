@@ -1,28 +1,33 @@
 Bootstrap: docker
-From: ubuntu:bionic
+From: ubuntu:focal
 
 %labels
-Maintainer eric.burgueno@plantandfood.co.nz
-Version 0.20.0
+Maintainer marty.hickman@plantandfood.co.nz
+Version 0.23.1
 
 %environment
-  PATH=/Bismark-0.20.0:$PATH
+  PATH=/Bismark-0.23.1:$PATH
   export PATH
+  export LANG=en_NZ.UTF-8
+  export LC_ALL=en_NZ.UTF-8
+  export LANGUAGE=en_NZ.UTF-8
 
 %post
   ## Download prerequisites
+  export DEBIAN_FRONTEND="noninteractive"
   apt-get update
-  apt-get -y install bowtie2 curl libfile-copy-recursive-perl samtools
+  apt-get -y install bowtie2 curl locales libfile-copy-recursive-perl libgd-graph-perl samtools
+  locale-gen en_NZ.UTF-8 
 
-  curl -OL https://github.com/FelixKrueger/Bismark/archive/0.20.0.tar.gz
+  curl -OL https://github.com/FelixKrueger/Bismark/archive/0.23.1.tar.gz
 
-  tar -xvf 0.20.0.tar.gz
+  tar -xvf 0.23.1.tar.gz
   
   ## Cleanup
   apt-get -y remove --purge curl
   apt-get -y clean all
   apt-get -y autoremove --purge
-  rm -rf /0.20.0.tar.gz
+  rm -rf /0.23.1.tar.gz
 
 %runscript
   exec bismark "$@"

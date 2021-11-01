@@ -1,7 +1,7 @@
 bases:
-- count: 873
+- count: 874
   name: ubuntu
-- count: 242
+- count: 243
   name: nvidia/cuda
 - count: 190
   name: debian
@@ -173,8 +173,6 @@ bases:
   name: intel2021.2_netcdfc4.7.4_ubuntu.sif
 - count: 4
   name: golang
-- count: 4
-  name: letaylor/sc_qc_cluster
 - count: 4
   name: matmu/vep
 - count: 4
@@ -836,6 +834,8 @@ bases:
 - count: 1
   name: nightseas/cuda-torch
 - count: 1
+  name: letaylor/sc_qc_cluster
+- count: 1
   name: hansencb/synb0
 - count: 1
   name: dota
@@ -1096,7 +1096,7 @@ bases:
 - count: 1
   name: iarcbioinfo/imputation-nf
 bootstraps:
-- count: 2827
+- count: 2826
   name: docker
 - count: 309
   name: debootstrap
@@ -1492,6 +1492,8 @@ orgs:
 - count: 1
   name: nightseas
 - count: 1
+  name: letaylor
+- count: 1
   name: hansencb
 - count: 1
   name: libatomsquip
@@ -1610,8 +1612,6 @@ orgs:
 - count: 1
   name: GodloveD
 - count: 1
-  name: letaylor
-- count: 1
   name: cyberbotics
 - count: 1
   name: anibali
@@ -1680,8 +1680,8 @@ orgs:
 - count: 1
   name: icbi
 tags:
-  latest: 276
-  other: 2584
+  latest: 273
+  other: 2586
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -2251,7 +2251,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 4
+    latest: 1
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2439,7 +2439,7 @@ versions:
     10.0-runtime-centos7: 1
     10.1-base-centos7: 1
     10.1-base-ubuntu18.04: 2
-    10.1-cudnn7-devel-centos7: 2
+    10.1-cudnn7-devel-centos7: 3
     10.1-cudnn7-devel-ubuntu16.04: 4
     10.1-cudnn7-devel-ubuntu18.04: 31
     10.1-cudnn7-runtime: 1
@@ -3001,7 +3001,7 @@ versions:
     '21.04': 2
     '21.10': 1
     artful: 7
-    bionic: 156
+    bionic: 155
     'bionic   ': 1
     bionic-20180526: 1
     bionic-20190307: 4
@@ -3010,7 +3010,7 @@ versions:
     cosmic: 4
     disco: 2
     eoan-20200410: 2
-    focal: 16
+    focal: 18
     focal-20200729: 1
     focal-20200925: 3
     focal-20210827: 1

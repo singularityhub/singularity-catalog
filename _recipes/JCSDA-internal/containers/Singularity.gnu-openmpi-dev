@@ -12,25 +12,35 @@ SPECIES JEDI
     export GIT_MERGE_AUTOEDIT
     export LANG=en_US.UTF-8
     export LANGUAGE=en_US:en
-    export PATH=/usr/local/bin:/usr/local/miniconda3/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin
-    alias pip=/usr/local/miniconda3/bin/pip
+    export PATH=/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin
 
 %post
     echo "Hello from inside the container"
-    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    bash Miniconda3-latest-Linux-x86_64.sh -b -p /usr/local/miniconda3
-    export PATH=/usr/local/miniconda3/bin:$PATH
-    conda install numpy
-    conda install matplotlib
-    conda install click
-    conda install pandas
-    conda install -c conda-forge ruamel.yaml
-    conda install -c conda-forge netcdf4
-    conda install -c conda-forge xarray
-    conda install -c conda-forge cartopy
     apt-get update
+    apt-get install -y --no-install-recommends sqlite3
+    apt-get install -y --no-install-recommends libsqlite3-dev libtiff-dev
+    apt-get install -y --no-install-recommends libgeos-dev libgeos++-dev
     apt-get install -y --no-install-recommends feh
     apt-get install -y --no-install-recommends default-jre
+    python3 -m pip install -U click
+    python3 -m pip install -U pandas
+    python3 -m pip install -U numpy
+    python3 -m pip install -U matplotlib
+    python3 -m pip install -U shapely
+    python3 -m pip install -U pyshp
+    python3 -m pip install -U ruamel.yaml
+    cd /root
+    wget https://download.osgeo.org/proj/proj-8.1.1.tar.gz
+    tar xvf proj-8.1.1.tar.gz
+    cd proj-8.1.1
+    mkdir build
+    cd build
+    cmake ..
+    cmake --build .
+    cmake --build . --target install
+    python3 -m pip install -U pyproj
+    python3 -m pip install -U cartopy
+    rm -rf /root/proj-*
     rm -rf /var/lib/apt/lists/*
 
 %runscript
