@@ -25,11 +25,13 @@ From: nvidia/cuda:10.1-cudnn7-devel-centos7
 
   # install Python modules
   pip3.8 install --upgrade pip setuptools wheel
-  pip3.8 install --upgrade memory-profiler mock numpy scipy scikit-learn pandas pytest spacy datasets wget boto3 mlflow
+  pip3.8 install --upgrade memory-profiler mock numpy scipy scikit-learn pandas pytest spacy datasets wget 
+  pip3.8 install --upgrade pyngrok boto3 mlflow
 #  pip3.8 install --upgrade torch==1.8.0+cu111 torchvision==0.9.0+cu111 torchaudio==0.8.0 -f https://download.pytorch.org/whl/torch_stable.html
   pip3.8 install --upgrade torch==1.7.1+cu101 torchvision==0.8.2+cu101 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
   pip3.8 install --upgrade tensorflow~=2.3.0 tensorflow_addons tensorboard tensorboardX
   pip3.8 install --upgrade transformers~=4.11.0
+
 
   # in-container bind points for shared filesystems
   mkdir -p /extra /xdisk /uaopt /cm/shared
