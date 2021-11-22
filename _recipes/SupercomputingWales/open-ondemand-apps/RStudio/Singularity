@@ -1,0 +1,19 @@
+Bootstrap:docker  
+From:rocker/tidyverse
+
+%labels
+MAINTAINER Thomas Green
+
+%environment
+
+%runscript
+exec /bin/bash /bin/echo "Not supported"
+
+%post
+apt-get update -qq
+apt-get -y --no-install-recommends install \
+    openssh-client
+
+# For R package monocle3
+apt-get install -y libudunits2-dev libgdal-dev libgeos-dev libproj-dev
+apt-get install -y libglpk-dev

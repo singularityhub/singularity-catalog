@@ -1,0 +1,38 @@
+Bootstrap: docker
+FROM: bioconductor/release_core2
+
+%labels
+  Version v1.5
+
+%help
+  Singularity image for diffTF (R + all packages)
+
+
+%post
+
+  # Needed for csaw
+  apt-get install -y libbz2-dev
+  apt-get install -y liblzma-dev
+
+  R --slave -e "install.packages('BiocManager')"
+
+  R --slave -e "BiocManager::install(c('GenomicRanges', 'limma', 'DESeq2', 'vsn', 'csaw', 'DiffBind', 'geneplotter', 'preprocessCore', 'apeglm', 'ashr'))"
+
+  R --slave -e "install.packages('checkmate')"
+  R --slave -e "install.packages('futile.logger')"
+  R --slave -e "install.packages('tidyverse')"
+  R --slave -e "install.packages('reshape2')"
+  R --slave -e "install.packages('RColorBrewer')"
+  R --slave -e "install.packages('ggrepel')"
+  R --slave -e "install.packages('lsr')"
+  R --slave -e "install.packages('modeest')"
+  R --slave -e "install.packages('boot')"
+  R --slave -e "install.packages('grDevices')"
+  R --slave -e "install.packages('pheatmap')"
+  R --slave -e "install.packages('matrixStats')"
+  R --slave -e "install.packages('locfdr')"
+
+%environment
+
+%test
+  R --version

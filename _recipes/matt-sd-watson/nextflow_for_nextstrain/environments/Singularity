@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: continuumio/miniconda3:latest
+Stage: condabuild
+%files
+    environment.yml
+%labels
+authors="Matt Watson" 
+description="Docker image containing all requirements for running Nextstrain and augur through a Nextflow pipeline"
+%post
+    /opt/conda/bin/conda install mamba -c conda-forge && \
+    apt-get update && apt-get install -y python3-pip && \
+    /opt/conda/bin/mamba env create -f environment.yml
+%runscript
+    exec /opt/conda/envs/$(head -n 1 environment.yml | cut -f 2 -d ' ')/bin/"$@"
+
+Bootstrap: docker
+From: ubuntu:21.04
+Stage: apps
+
+%post
+export DEBIAN_FRONTEND=noninteractive
+apt-get update && \
+apt-get install -y git procps && apt install -y r-base && \
+apt install -f -y r-cran-dplyr && apt install -f -y r-cran-data.table && \
+apt update && apt install -f -y r-cran-optparse
+%files from condabuild
+  /opt/conda/envs/nf_nextstrain
+%environment
+export PATH=/opt/conda/envs/nf_nextstrain/bin:$PATH
+
+

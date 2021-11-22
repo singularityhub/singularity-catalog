@@ -1,9 +1,11 @@
 Bootstrap: shub
-From: shub://drneavin/SingularityBaseImages:r363_python368
+From: drneavin/SingularityBaseImages:r363_python368
+
 
 %environment
     export PATH=/opt/plink2:/opt/plink:/opt:/usr/games:/opt/conda/envs/py36/bin:/opt/conda/bin:/opt/ancestry_viz:/opt/Eagle_v2.4.1:/opt/Minimac4:/opt/GenotypeHarmonizer-1.4.23:/opt/picard/build/libs:$PATH
     export PYTHONPATH=/opt/conda/envs/py36/lib/python3.6/site-packages/
+	export BCFTOOLS_PLUGINS=/opt/bcftools-1.10.2/plugins
     export LC_ALL=C 
     alias python=python3
 
@@ -138,8 +140,8 @@ From: shub://drneavin/SingularityBaseImages:r363_python368
     cd /opt
         mkdir plink2
         cd plink2
-			wget https://s3.amazonaws.com/plink2-assets/plink2_linux_x86_64_20210826.zip
-            unzip plink2_linux_x86_64_20210826.zip
+			wget https://s3.amazonaws.com/plink2-assets/plink2_linux_x86_64_20211011.zip
+            unzip plink2_linux_x86_64_20211011.zip
 
     cd /opt
         git clone https://github.com/broadinstitute/picard.git
@@ -147,11 +149,12 @@ From: shub://drneavin/SingularityBaseImages:r363_python368
         ./gradlew shadowJar
 
     cd /opt
-        git clone https://github.com/sc-eQTLgen-consortium/WG1-pipeline-QC.git
+        git clone --single-branch --branch v0.0.2 https://github.com/sc-eQTLgen-consortium/WG1-pipeline-QC.git
 
 	cd /opt
 		wget https://www.dropbox.com/s/fvd4pl8no3ngg0l/hg38exonsUCSC.bed
 
+	conda clean --all
 
 ##############################
 # setup scripts for users
@@ -175,5 +178,6 @@ From: shub://drneavin/SingularityBaseImages:r363_python368
 
 
 
-%labels 
-    Author Drew Neavin
+%labels
+	Author = Drew Neavin
+	Image_version = 0.0.2

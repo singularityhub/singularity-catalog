@@ -1,0 +1,204 @@
+BootStrap: docker
+From: centos:7
+
+%help
+    Container for Savu, a Python package to assist with the processing and
+    reconstruction of parallel-beam tomography data.
+
+    The project originated in the Data Analysis Group at the Diamond Light Source
+    (UK synchrotron) to address the growing, and increasingly complex, needs of
+    the tomography community.
+
+    Sources:
+      * https://savu.readthedocs.io/en/latest/howto/installation.html
+      * https://github.com/DiamondLightSource/Savu
+
+%labels
+    maintainer M. Duta
+    version 1.1
+
+%files
+    # each line is a pair of <source> (host system path) and <destination> (container path)
+
+
+#============================================================#
+# *** Install the software
+#============================================================#
+
+%post
+
+    #
+    # --- locale
+    export LANG=en_US.utf8
+    export LC_ALL=en_US.utf8
+
+
+    #
+    # --- install compilers
+    yum install -y centos-release-scl-rh
+    yum install -y devtoolset-9
+
+    source /opt/rh/devtoolset-9/enable 
+
+
+    #
+    # --- install infiniband
+    yum groupinstall -y "Infiniband"
+    yum install -y libibverbs-devel
+
+
+    #
+    # --- config tools
+    yum install -y autoconf automake libtool bzip2
+
+
+    #
+    # --- install OpenMPI
+    #
+    # ... UCX
+    UCX_VERSION=1.11.1
+    cd /opt/
+    curl -L https://github.com/openucx/ucx/archive/refs/tags/v${UCX_VERSION}.tar.gz --output ucx-${UCX_VERSION}.tar.gz
+    tar -xf ucx-${UCX_VERSION}.tar.gz
+    cd ucx-${UCX_VERSION}
+    sh ./autogen.sh
+    ./configure \
+        --prefix=/usr/local \
+        --enable-optimizations \
+        --disable-logging \
+        --disable-debug \
+        --disable-assertions \
+        --disable-params-check \
+        --enable-cma \
+        --enable-mt \
+        --without-java \
+        --disable-doxygen-doc \
+        --with-verbs
+    make
+    make install
+    cd ../
+    rm -fr ucx-${UCX_VERSION}.tar.gz ucx-${UCX_VERSION}/
+
+    # ... OFI
+    OFI_VERSION=1.13.1
+    cd /opt/
+    curl -L https://github.com/ofiwg/libfabric/archive/refs/tags/v${OFI_VERSION}.tar.gz --output libfabric-${OFI_VERSION}.tar.gz
+    tar -xf libfabric-${OFI_VERSION}.tar.gz
+    cd libfabric-${OFI_VERSION}/
+    sh ./autogen.sh
+    ./configure --prefix=/usr/local --enable-verbs=yes --enable-shm=yes
+    make
+    make install
+    cd ../
+    rm -fr libfabric-${OFI_VERSION}.tar.gz libfabric-${OFI_VERSION}/
+
+    # ... make UCX and libfabric visible
+    ldconfig
+    ldconfig /usr/local/lib
+
+    # ... MPI
+    OPENMPI_VERSION=4.0.5
+    cd /opt/
+    curl https://download.open-mpi.org/release/open-mpi/v${OPENMPI_VERSION%??}/openmpi-${OPENMPI_VERSION}.tar.gz \
+         --output openmpi-${OPENMPI_VERSION}.tar.gz
+    tar -xf openmpi-${OPENMPI_VERSION}.tar.gz
+    cd openmpi-${OPENMPI_VERSION}/
+    ./configure \
+        --prefix=/usr/local \
+        --enable-orterun-prefix-by-default --enable-mpirun-prefix-by-default \
+        --enable-mpi-cxx --without-verbs \
+        --with-ucx --with-ofi
+    make
+    make install
+    cd ../
+    rm -fr openmpi-${OPENMPI_VERSION}.tar.gz openmpi-${OPENMPI_VERSION}/
+
+
+    #
+    # --- make OpenMPI libraries /usr/local/lib available
+    ldconfig
+    ldconfig /usr/local/lib
+
+    #
+    # --- HDF5
+    HDF5_VERSION=1.12.1
+    HDF5_PREFIX=/opt/hdf5/${HDF5_VERSION}
+
+    cd /opt/
+    curl https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${HDF5_VERSION%??}/hdf5-${HDF5_VERSION}/src/hdf5-${HDF5_VERSION}.tar.bz2 --output hdf5-${HDF5_VERSION}.tar.bz2
+    tar -xf hdf5-${HDF5_VERSION}.tar.bz2 && cd hdf5-${HDF5_VERSION}
+    CFLAGS="-O3 -mavx2" CXXFLAGS=${CFLAGS} FCFLAGS=${CFLAGS} \
+    CC=$(type -p mpicc) FC=$(type -p mpif90) \
+    ./configure \
+       --prefix=${HDF5_PREFIX} \
+       --enable-fortran \
+       --enable-fortran2003 \
+       --enable-parallel \
+       --disable-tests && \
+    make && make install
+
+    cd /opt && rm -fr hdf5-${HDF5_VERSION}*
+
+
+    #
+    # --- python
+    cd /opt/
+    curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh --output Miniconda3-latest-Linux-x86_64.sh
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3
+    rm -f Miniconda3-latest-Linux-x86_64.sh
+
+
+    #
+    # ... H5PY (which installs MPI4PY as a dependency)
+    CC=$(type -p mpicc) HDF5_MPI="ON" HDF5_DIR=${HDF5_PREFIX} /opt/miniconda3/bin/pip install --no-binary=h5py h5py
+
+
+    #
+    # --- mount points to facilitate application disk I/O
+    mkdir -p /apps/input
+    mkdir -p /apps/output
+
+    #
+    # --- uninstall some packages
+    yum install -y autoconf automake libtool bzip2
+
+
+#============================================================#
+# *** Set environment: PATH, LD_LIBRARY_PATH, etc.
+#============================================================#
+
+%environment
+    # ... dependencies
+
+
+#============================================================#
+# *** Set environment: PATH, LD_LIBRARY_PATH, etc.
+#============================================================#
+
+%environment
+    # ... dependencies
+    export PATH=/opt/rh/devtoolset-9/root/usr/bin:${PATH}}
+    export LD_LIBRARY_PATH=/opt/rh/devtoolset-9/root/usr/lib64:/opt/rh/devtoolset-9/root/usr/lib:${LD_LIBRARY_PATH}
+    export LD_LIBRARY_PATH=/opt/rh/devtoolset-9/root/usr/lib64/dyninst:/opt/rh/devtoolset-9/root/usr/lib/dyninst:${LD_LIBRARY_PATH}
+
+    # ... application
+    export PATH=/opt/miniconda3/bin:/opt/hdf5/1.12.1/bin:${PATH}
+    export LD_LIBRARY_PATH=/opt/hdf5/1.12.1/lib:${LD_LIBRARY_PATH}
+
+    # ... locale
+    export LANG=en_US.utf8
+    export LC_ALL=en_US.utf8
+
+
+#============================================================#
+# script to run with command "singularity run"
+#============================================================#
+
+%runscript
+
+
+#============================================================#
+# script to run with command "singularity test"
+#============================================================#
+
+%test

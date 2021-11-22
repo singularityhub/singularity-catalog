@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-rnaview
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    VERSION latest
+
+%post
+    apt update
+    apt install -y wget build-essential
+    cd /opt && wget -nc http://ndbserver.rutgers.edu/ndbmodule/services/download/RNAVIEW.tar.gz
+    tar -xvf RNAVIEW.tar.gz && rm -fv RNAVIEW.tar.gz
+    cd RNAVIEW
+    make
+    chmod +x /opt/RNAVIEW/bin/rnaview
+    ln -s /opt/RNAVIEW/bin/rnaview /usr/local/bin/rnaview

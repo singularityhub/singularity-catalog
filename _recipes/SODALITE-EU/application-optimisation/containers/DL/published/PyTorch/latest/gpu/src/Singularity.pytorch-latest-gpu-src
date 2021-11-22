@@ -1,0 +1,61 @@
+BootStrap: docker
+From: nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
+
+%environment
+PATH=$PATH:/opt/anaconda3/bin
+export PATH
+
+%post
+
+	# add CUDA paths
+	CPATH="/usr/local/cuda-10.1/include:/usr/include/x86_64-linux-gnu:$CPATH"
+	PATH="/usr/local/cuda-10.1/bin:$PATH"
+	LD_LIBRARY_PATH="/usr/local/cuda-10.1/lib64:/usr/local/cuda/extras/CUPTI/lib64:/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH"
+	CUDA_HOME="/usr/local/cuda-10.1"
+	export CPATH PATH LD_LIBRARY_PATH CUDA_HOME
+
+	apt-get update
+	apt-get install -y git wget 
+
+	# sanity check environment correctly exported
+	echo $CPATH
+
+	# install anaconda3 as required by torch source
+	cd home
+	wget https://repo.anaconda.com/archive/Anaconda3-2019.10-Linux-x86_64.sh
+	bash Anaconda3-2019.10-Linux-x86_64.sh -b -p /opt/anaconda3
+
+	# enable anaconda in bash environment
+	touch /home/.bashrc
+	echo "PATH=/opt/anaconda3/bin:\$PATH" >> /home/.bashrc
+	echo "export PATH" >> /home/.bashrc
+	rm Anaconda3-2019.10-Linux-x86_64.sh 
+	. /home/.bashrc
+
+	# install additional required packages via anaconda
+	cd /home
+	conda install numpy ninja pyyaml mkl mkl-include setuptools cmake cffi typing
+
+	#set to cuda installation
+	export USE_CUDA=1
+
+	# Get pytorch source
+	git clone --recursive https://github.com/pytorch/pytorch
+	cd pytorch
+	export CMAKE_PREFIX_PATH=${CONDA_PREFIX:-"$(dirname $(which conda))/../"}
+	pip3 install numpy ninja pyyaml mkl mkl-include setuptools cmake cffi typing
+	python3 setup.py install
+
+	# Get torchvision source
+	cd ../
+	git clone --recursive https://github.com/pytorch/vision
+	cd vision
+	python3 setup.py install
+
+	# Get pytorch examples
+	cd ../
+	git clone --recursive https://github.com/pytorch/examples
+
+%labels
+    Author nina
+    karthee - updated version to 1.4

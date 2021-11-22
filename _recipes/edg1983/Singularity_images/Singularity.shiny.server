@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: rocker/shiny:3.6.2
+
+%labels
+maintainer vsochat@stanford.edu
+
+%setup
+    #mkdir -p ${SINGULARITY_ROOTFS}/shiny_apps
+    #mkdir -p ${SINGULARITY_ROOTFS}/shiny_apps/Variant_explorer
+
+%files
+    #shiny-server.conf /shiny_apps
+    #/home/edoardo/github.com/Variant_explorer/* /shiny_apps/Variant_explorer
+
+%post
+    apt-get update
+    apt-get install -y libsodium-dev libssl-dev libssh2-1-dev libgit2-dev libxml2-dev
+    mkdir -p /var/log/shiny-server
+    chown shiny.shiny /var/log/shiny-server
+    #chmod -R a+r /srv/shiny_server
+    #chmod -R a+w /shiny_apps 
+    #R --slave -e 'install.packages(c("xml2","roxygen2", "rversions", "openssl","httr","cyphr","shiny","shinyBS","stringr", "DT", "dplyr", "plotly", "kinship2", "tidyr", "shinydashboard", "gridExtra", "ggplot2", "jsonlite", "ontologyIndex", "BiocManager", "devtools"))'
+    #R --slave -e 'BiocManager::install("GenomicRanges")'
+    #R --slave -e 'devtools::install_github("exaexa/scattermore", upgrade = FALSE)'
+    #R --slave -e 'devtools::install_github("daattali/shinycssloaders",upgrade = FALSE)'
+    #mv /shiny_apps/shiny-server.conf /etc/shiny-server
+    
+%runscript
+    exec shiny-server 2>&1

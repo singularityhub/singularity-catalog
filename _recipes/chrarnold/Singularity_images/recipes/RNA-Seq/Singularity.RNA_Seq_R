@@ -1,0 +1,36 @@
+Bootstrap: docker
+FROM: bioconductor/release_core2
+
+%labels
+  Version v1.0
+
+%help
+  Singularity image for the RNA-Seq pipeline (R 3.5.1 + all packages)
+
+
+
+%post
+
+  R --slave -e "source('https://bioconductor.org/biocLite.R'); \
+          biocLite('GenomicRanges')"
+
+  R --slave -e "source('https://bioconductor.org/biocLite.R'); \
+          biocLite('rtracklayer')"
+
+  R --slave -e "install.packages('checkmate')"
+  R --slave -e "install.packages('futile.logger')"
+  R --slave -e "install.packages('tidyverse')"
+  R --slave -e "install.packages('reshape2')"
+  R --slave -e "install.packages('RColorBrewer')"
+  R --slave -e "install.packages('grDevices')"
+  R --slave -e "install.packages('matrixStats')"
+  R --slave -e "install.packages('rlist')"
+  R --slave -e "install.packages('gridExtra')"
+  R --slave -e "install.packages('stringr')"
+  R --slave -e "install.packages('scales')"
+  R --slave -e "install.packages('stats')"
+
+%environment
+
+%test
+  R --version

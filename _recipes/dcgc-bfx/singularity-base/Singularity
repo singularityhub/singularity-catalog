@@ -3,23 +3,32 @@ from: debian:buster-20201012
 
 %help
     Contains:
-        - subread 2.0.1
-        - bcl2fastq 2.20.0
-        - htslib 1.11
-        - samtools 1.11
-        - bcftools 1.11
-        - bedtools 2.29.2
-        - bwa 0.7.17
-        - bowtie 1.3.0
-        - bowtie2 2.4.2
-        - STAR 2.7.7a
-        - fastqc 0.11.9
-        - fastq_screen 0.14.1
-        - picardtools 2.23.8
-        - gmap/gsnap 2020-12-17
-        - snakemake 5.32.1
-        - multiqc 1.9
-    Run directly invokes samtools
+        - subread
+        - bcl2fastq
+        - htslib
+        - samtools
+        - bcftools
+        - bedtools
+        - bwa
+        - bowtie
+        - bowtie2
+        - STAR
+        - kallisto
+        - fastqc
+        - fastq_screen
+        - picardtools
+        - gmap/gsnap
+        - snakemake
+        - multiqc
+        - R
+        - python
+        - RNA-SeQC v1
+        - RNA-SeQC v2
+        - xengsort
+        - gatk
+        - velocyto
+        - cutadapt
+        - umi_tools
 
 %labels
     Version 1.0.0
@@ -91,7 +100,7 @@ from: debian:buster-20201012
     
     # install basic system tools and libs 
     apt-get clean && apt-get update -y && apt-get upgrade -y
-    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc pandoc-citeproc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpango1.0-dev  libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-dev
+    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc pandoc-citeproc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpango1.0-dev  libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-dev gawk
     
     # no texlive-fonts-extra due to mmap
     
@@ -134,7 +143,7 @@ from: debian:buster-20201012
     # Bioconductor packages
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'if (!requireNamespace("BiocManager",quietly=TRUE)) install.packages("BiocManager", repos="http://cran.r-project.org")'
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'BiocManager::install(ask=FALSE)'
-    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'BiocManager::install(c("biomaRt","DESeq2","MAST","edgeR","BiocParallel","IHW","clusterProfiler","ReportingTools","genefilter","org.Mm.eg.db","org.Hs.eg.db","org.Dr.eg.db", "LoomExperiment", "SingleCellExperiment"), ask=FALSE, Ncpus='"$COMPILE_CPUS"')'
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'BiocManager::install(c("biomaRt","DESeq2","MAST","edgeR","BiocParallel","IHW","clusterProfiler","ReportingTools","genefilter","org.Mm.eg.db","org.Hs.eg.db","org.Dr.eg.db", "LoomExperiment", "SingleCellExperiment", "rtracklayer"), ask=FALSE, Ncpus='"$COMPILE_CPUS"')'
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'BiocManager::install("romanhaa/cerebroApp",ask=FALSE, Ncpus='"$COMPILE_CPUS"')'
     
     # github/dev packages
@@ -170,7 +179,7 @@ from: debian:buster-20201012
     cd /opt/${KALLISTO_DIR}/ext/htslib && autoheader && autoconf && \
     cd /opt/${KALLISTO_DIR} && mkdir build && cd build && \
     cmake -DCMAKE_INSTALL_PREFIX:PATH=/opt .. && make && make install && \
-    cd /opt # && rm -rf ${KALLISTO_DIR}.tar.gz ${KALLISTO_DIR}
+    cd /opt # && rm -rf ${KALLISTO_DIR}.tar.gz
 
     #######################################
     # miniconda and mamba package manager #
@@ -266,6 +275,20 @@ from: debian:buster-20201012
         make -j $COMPILE_CPUS -k && \
         make install && \
         cd /opt && rm -r ${HTSLIB_DIR}.tar.bz2 ${HTSLIB_DIR}
+    
+    ##########
+    # preseq #
+    ##########
+        
+    PRESEQ_VERSION="3.1.2"
+    PRESEQ_DIR=preseq-${PRESEQ_VERSION}
+    
+    cd /opt && wget -O ${PRESEQ_DIR}.tar.gz -nv https://github.com/smithlabcode/preseq/releases/download/v${PRESEQ_VERSION}/preseq-${PRESEQ_VERSION}.tar.gz && \
+    tar -zxf ${PRESEQ_DIR}.tar.gz && \
+    cd /opt/${PRESEQ_DIR}/ && \
+    CPPFLAGS='-I/opt/include' LDFLAGS="-L/opt/lib/" ./configure --prefix=/opt --enable-htslib && \
+    make && make install && \
+    cd /opt && rm -rf ${PRESEQ_DIR}.tar.gz ${PRESEQ_DIR}
     
     ############
     # samtools #
@@ -476,6 +499,19 @@ from: debian:buster-20201012
     unzip ${GATK_DIR}.zip && \
     ln -s /opt/${GATK_DIR}/gatk /opt/bin/gatk && \
     rm ${GATK_DIR}.zip
+    
+    #########
+    # seqtk #
+    #########
+    
+    SEQTK_VERSION="1.3"
+    SEQTK_DIR=seqtk-${SEQTK_VERSION}
+    
+    cd /opt && wget -O ${SEQTK_DIR}.zip https://github.com/lh3/seqtk/archive/refs/tags/v${SEQTK_VERSION}.zip && \
+    unzip ${SEQTK_DIR}.zip && \
+    cd ${SEQTK_DIR} && make && cp seqtk /opt/bin && \
+    cd /opt && rm -r ${SEQTK_DIR}.zip ${SEQTK_DIR}
+    
 
     ############
     # velocyto #

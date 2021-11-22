@@ -1,0 +1,26 @@
+Bootstrap: docker
+FROM: bioconductor/release_core2
+
+%labels
+  Version v1.0
+
+%help
+  Singularity image for the variant calling pipeline (R 3.5.1 + all packages + java)
+
+
+
+%post
+
+  R --slave -e "install.packages('tools')"
+  R --slave -e "install.packages('tidyverse')"
+  R --slave -e "install.packages('grid')"
+  R --slave -e "install.packages('gplots')"
+  R --slave -e "install.packages('reshape')"
+  R --slave -e "install.packages('gsalib')"
+  apt update
+  apt install --yes default-jre
+
+%environment
+
+%test
+  R --version

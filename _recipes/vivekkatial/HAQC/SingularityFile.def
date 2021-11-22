@@ -9,7 +9,7 @@ From: python:3.9.2
     export PATH=/usr/games:$PATH
 
     # Declare experiment environment variables
-    EXPERIMENT_NAME=vrp-qaoa
+    EXPERIMENT_NAME=qaoa-tsp
     # Declare mlflow environment variables
     MLFLOW_S3_ENDPOINT_URL=https://objects.storage.unimelb.edu.au
     MLFLOW_PYTHON_BIN=/usr/local/bin/python
@@ -78,7 +78,27 @@ From: python:3.9.2
   # Print valid arguments
   echo $instance
   # Run experiment
-  python qaoa_vrp/main.py -f $instance --track_mlflow=True
+  python -W ignore qaoa_vrp/run_optimizers_parallel.py -f $instance -b 1000 -p 10 -T True
+
+####################################################
+# APP TO RUN EXPERIMENT FOR ONE OPTIMIZER
+####################################################
+%apphelp run_optimizer
+  This is the help for running experiments. To run an experiment feed the following Arguments: 
+    - ARG_1=<INSTANCE_FILENAME>
+
+%applabels run_optimizer
+  APP_NAME run_optimizer
+
+%apprun run_optimizer
+  # Argument Array
+  instance="$@"
+  # Print valid arguments
+  echo $instance
+  # Run experiment
+  python qaoa_vrp/run_nelder_mead.py -f $instance -m 5 -p 10 -T True
+
+
 
 ####################################################
 # APP TO BUILD EXPERIMENTS

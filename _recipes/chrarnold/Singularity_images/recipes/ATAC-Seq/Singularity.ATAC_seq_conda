@@ -1,0 +1,32 @@
+Bootstrap: docker
+FROM: continuumio/miniconda3
+
+%labels
+  Version v1.1
+
+%help
+  Singularity image for the ATAC-Seq pipeline (Python 3)
+
+
+
+%post
+
+  # Add channels for Bioconda
+  /opt/conda/bin/conda config --add channels defaults
+  /opt/conda/bin/conda config --add channels bioconda
+  /opt/conda/bin/conda config --add channels conda-forge
+
+  # Install the tools
+  /opt/conda/bin/conda install --yes bedtools samtools fastqc trimmomatic multiqc bowtie2 picard gatk deeptools
+
+%environment
+
+%test
+   # bedtools --version
+   # samtools --version
+   # fastqc --version
+   # trimmomatic -version
+   # bowtie2 --version
+   # picard SortSam --version
+   # gatk --version
+   # deeptools --version

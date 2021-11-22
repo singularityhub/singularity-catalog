@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: python:slim-buster
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://github.com/pscedu/singularity-busco
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved. 
+    VERSION 3.2.3.1
+
+%post
+    apt-get update
+    pip3 install glances==3.2.3.1

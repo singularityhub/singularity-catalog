@@ -1,0 +1,99 @@
+BootStrap: library
+From: ubuntu:16.04
+
+%post
+    apt-get -y update
+    apt-get -yf install wget python3-pip lsb-release apt-transport-https libboost-all-dev libhdf5-cpp-11 git build-essential
+    #
+    echo "deb http://us.archive.ubuntu.com/ubuntu/ xenial main restricted" >> /etc/apt/sources.list
+    echo "deb http://us.archive.ubuntu.com/ubuntu/ xenial universe" >> /etc/apt/sources.list
+    echo "deb http://us.archive.ubuntu.com/ubuntu/ xenial-updates main restricted" >> /etc/apt/sources.list
+    echo "deb http://us.archive.ubuntu.com/ubuntu/ xenial-updates universe" >> /etc/apt/sources.list
+    # 
+    apt-get update
+    VERSION="2.3.4"
+    mkdir /usr/ont-albacore
+    cd /usr/ont-albacore
+    pip3 install numpy==1.16.0
+#    pip3 install python-dateutil==2.8.1
+    pip3 install progressbar==2.5
+    pip3 install h5py==2.8.0
+#    pip3 install --upgrade setuptools
+#    pip3 install --upgrade pip
+    pip3 install ont-fast5-api==1.4.8
+    wget https://mirror.oxfordnanoportal.com/software/analysis/ont_albacore-${VERSION}-cp35-cp35m-manylinux1_x86_64.whl
+    pip3 install ont_albacore-${VERSION}-cp35-cp35m-manylinux1_x86_64.whl
+
+    #
+    apt autoremove --purge --yes
+    apt clean
+
+%environment
+    export SHELL=/bin/bash
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    export PATH=/usr/ont-albacore/:$PATH
+    alias read_fast5_basecaller='read_fast5_basecaller.py'
+    alias paired_read_basecaller='paired_read_basecaller.py'
+    alias full_1dsq_basecaller='full_1dsq_basecaller.py'
+
+%runscript
+    exec $*
+    echo "You can also run with '--app' option (run 'singularity run-help' for available apps)"
+
+%test
+    echo "\n\tTesting ont-fast5-api::"
+    echo "\n\tsingle_to_multi_fast5 --help"
+    single_to_multi_fast5 --help
+    echo "\n\tmulti_to_single_fast5 --help"
+    multi_to_single_fast5 --help
+    echo "\n\tcompress_fast5 --help"
+    compress_fast5 --help
+    echo "\n\tfast5_subset --help"
+    fast5_subset --help
+
+    echo "\n\n\tTesting Albacore::"
+    echo "\n\tBasecalling:"
+    read_fast5_basecaller.py --help
+    paired_read_basecaller.py --help
+    full_1dsq_basecaller.py --help
+
+    echo "\n\n\tCalibration Strand Detection:"
+    echo "\tBarcoding/Demultiplexing:"
+    echo "\tAlignment:"
+
+%apprun single_to_multi_fast5
+    single_to_multi_fast5 $*
+
+%apprun multi_to_single_fast5
+    multi_to_single_fast5 $*
+
+%apprun compress_fast5
+    compress_fast5 $*
+
+%apprun fast5_subset
+    fast5_subset $*
+
+%apprun read_fast5_basecaller.py
+    read_fast5_basecaller.py $*
+
+%apprun paired_read_basecaller.py
+    paired_read_basecaller.py $*
+
+%apprun full_1dsq_basecaller.py
+    full_1dsq_basecaller.py $*
+
+%labels
+    Author kibet-gilbert
+    github:: https://github.com/kibet-gilbert
+%help
+    Singularity container for albacore
+    ==================================
+    Apps available::
+    read_fast5_basecaller.py -h
+    paired_read_basecaller.py -h
+    full_1dsq_basecaller.py -h
+    single_to_multi_fast5
+    multi_to_single_fast5
+    compress_fast5
+    fast5_subset

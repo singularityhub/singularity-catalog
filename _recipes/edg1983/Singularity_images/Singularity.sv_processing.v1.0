@@ -1,0 +1,101 @@
+Bootstrap: library
+From: centos:8
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/resources
+
+%environment
+    SHELL=/bin/bash
+    PATH=$PATH:/usr/local/bin:/opt/root/bin
+    LC_ALL=C.UTF-8
+
+%help
+    SV processing and annotation tools.
+    This image includes 
+    - small tools to fix svtools VCF files (FilterSVByValue.py, Fix_svtools_VCF.py)
+    - SV_annotation.py to annotate SV VCF.
+
+%post
+    yum -y install \
+        cmake \
+        gcc \
+        gcc-c++ \
+        bzip2 \
+        bzip2-devel \
+        openssl-devel \
+        libcurl-devel \
+        xz-devel \
+        ncurses-devel \
+        make \
+        wget \
+        git \
+        zlib-devel \
+        autoconf \
+        tar \
+        unzip \
+        python3 \
+        python3-devel \
+	    procps
+    #update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+    
+    ## Install bcftools
+    cd /opt
+    wget https://github.com/samtools/bcftools/releases/download/1.10.2/bcftools-1.10.2.tar.bz2
+    tar -jxvf bcftools-1.10.2.tar.bz2
+    rm bcftools-1.10.2.tar.bz2
+    cd bcftools-1.10.2
+    ./configure
+    make
+    make install 
+
+    ## Install bgzip and tabix
+    cd htslib-1.10.2
+    ./configure
+    make
+    make install
+    
+    ## Install bedtools
+    cd /opt
+    mkdir bedtools && cd bedtools
+    wget https://github.com/arq5x/bedtools2/releases/download/v2.29.2/bedtools.static.binary
+    chmod a+x bedtools.static.binary
+    ln --symbolic --force /opt/bedtools/bedtools.static.binary /usr/local/bin/bedtools
+    
+    ## Install python modules and create link
+    cd /opt
+    pip3 install --upgrade setuptools
+    #pip3 install Cython cytoolz toolz wheel
+    pip3 install pandas 
+    git clone --recursive https://github.com/brentp/cyvcf2
+    cd cyvcf2/htslib
+    autoheader
+    autoconf
+    ./configure --enable-libcurl
+    make
+
+    cd ..
+    pip3 install -r requirements.txt
+    CYTHONIZE=1 pip3 install -e .
+    
+    ## Get tools from github
+    cd /opt
+    git clone https://github.com/edg1983/SV_annotation.git
+    git clone https://github.com/edg1983/SV_utils.git
+
+    ## Create links to bin
+    cd /opt/SV_annotation
+    chmod a+x SV_annotation.py
+    cd /opt/SV_utils
+    chmod a+x *.py
+    ln --symbolic --force /opt/SV_annotation/SV_annotation.py /usr/local/bin
+    ln --symbolic --force /opt/SV_utils/FilterSVByValue.py /usr/local/bin
+    ln --symbolic --force /opt/SV_utils/Fix_svtools_VCF.py /usr/local/bin
+
+%test
+    bedtools --help
+    bcftools --help
+    bgzip --help
+    tabix --help
+    SV_annotation.py --help
+    FilterSVByValue.py --help
+    Fix_svtools_VCF.py --help

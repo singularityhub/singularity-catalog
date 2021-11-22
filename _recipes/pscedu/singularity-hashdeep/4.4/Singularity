@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: debian:latest
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-hashdeep
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.  
+    VERSION 4.4
+
+%post
+    apt update
+    apt install -y build-essential unzip autoconf wget gcc
+    cd /tmp
+    wget https://github.com/jessek/hashdeep/archive/refs/tags/v4.4.zip
+    unzip v4.4.zip && rm -f v4.4.zip
+    cd hashdeep-4.4
+    sh ./bootstrap.sh
+    ./configure
+    make
+    make install

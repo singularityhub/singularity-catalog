@@ -1,10 +1,10 @@
 Bootstrap: localimage
-From: GOMAP-base.sif
+From: GOMAP-Base.sif
 
 %labels
 GOMAP_OWNER Wimalanathan Kokulapalan
 GOMAP_MAINTAINER Wimalanathan Kokulapalan 
-GOMAP_VERSION v1.3.5
+GOMAP_VERSION v1.3.8
 
 %files
 	GOMAP /opt/
@@ -22,7 +22,7 @@ GOMAP_VERSION v1.3.5
 	chmod -R 777 /opt/GOMAP/
 	
     #Downloading backed in GOMAP code 
-	cd /opt/GOMAP/data && \
+	cd /data && \
 	chmod -R 755 software && chmod -R 755 data
 	
     #Making necessary directories
@@ -36,6 +36,8 @@ GOMAP_VERSION v1.3.5
 
 %startscript
 	chmod 777 /tmp
+
+
 
 %runscript
 	cd /opt/GOMAP/ 

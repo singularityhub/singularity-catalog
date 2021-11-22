@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%post
+apt update
+apt install -y wget
+wget https://download.java.net/java/GA/jdk14.0.1/664493ef4a6946b186ff29eb326336a2/7/GPL/openjdk-14.0.1_linux-x64_bin.tar.gz
+tar -xf openjdk-14.0.1_linux-x64_bin.tar.gz
+PATH=$PATH:/jdk-14.0.1/bin
+rm openjdk-14.0.1_linux-x64_bin.tar.gz
+export PATH
+apt install -y git
+git clone https://gitlab.com/enricos83/ENHSP-Public.git
+cd /ENHSP-Public
+git checkout enhsp20-0.9.1
+./compile
+mv enhsp-dist ../
+cd ..
+rm -r ENHSP-Public
+jlink --no-header-files --no-man-pages --compress=2 --strip-java-debug-attributes --add-modules jdk.jsobject --output java-runtime
+rm -r /jdk-14.0.1
+PATH=$PATH:/java-runtime/bin
+apt remove -y git
+apt remove -y wget
+apt autoremove -y --purge
+export PATH
+
+%runscript
+/java-runtime/bin/java -jar /enhsp-dist/enhsp.jar "$@"
+
+%help
+This is ENHSP-20 planner container.
+
+%labels
+Author Enrico Scala enricos83@gmail.com

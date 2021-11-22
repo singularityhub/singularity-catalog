@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%setup
+
+%files
+
+%environment
+  export LC_ALL=C
+
+%post
+  export LC_ALL=C
+  export DEBIAN_FRONTEND=noninteractive
+
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y git wget gawk cmake build-essential libopenmpi-dev openssh-client gromacs-openmpi slurm-client openssh-client ca-certificates
+                
+%runscript
+   /usr/bin/mdrun_mpi "$@"

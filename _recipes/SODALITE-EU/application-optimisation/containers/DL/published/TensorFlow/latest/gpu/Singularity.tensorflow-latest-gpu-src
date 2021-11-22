@@ -1,0 +1,68 @@
+BootStrap: docker
+From: nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
+
+%post
+  
+  	# add CUDA paths
+	CPATH="/usr/local/cuda-10.1/include:/usr/include/x86_64-linux-gnu:$CPATH"
+	PATH="/usr/local/cuda-10.1/bin:$PATH"
+	LD_LIBRARY_PATH="/usr/local/cuda-10.1/lib64:/usr/local/cuda/extras/CUPTI/lib64:/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH"
+	CUDA_HOME="/usr/local/cuda-10.1"
+	export CPATH PATH LD_LIBRARY_PATH CUDA_HOME
+	#echo 'export CPATH PATH LD_LIBRARY_PATH CUDA_HOME' >>$SINGULARITY_ENVIRONMENT
+
+	# sanity check environment correctly exported
+	echo $CPATH
+
+	# install ubuntu updates
+	apt-get update
+
+	# TF 2.1 requires gcc-8, will fail with gcc 7.3
+	#apt-get install -y gcc-8 g++-8
+	#update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 80 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+	#update-alternatives --config gcc
+
+	apt-get -y install cmake graphviz libpng-dev \
+    	libprotobuf-dev ninja-build protobuf-compiler wget \
+	opencl-headers libgoogle-glog-dev python3 python3-pip python-pip \
+	libtbb-dev git vim	
+
+	# source install prerequisites
+	apt-get -y install pkg-config zip unzip
+	pip3 install --upgrade pip
+	pip3 install -U pip six wheel setuptools mock 'future>=0.17.1'
+ 	pip3 install numpy==1.18.0
+	pip3 install -U keras_applications --no-deps
+	pip3 install -U keras_preprocessing --no-deps
+
+	# get bazel 0.27.1 for TF 2.1
+	cd home
+	wget https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel-3.1.0-installer-linux-x86_64.sh
+	chmod +x bazel-3.1.0-installer-linux-x86_64.sh
+	./bazel-3.1.0-installer-linux-x86_64.sh
+	export PATH=$PATH:$(pwd)
+
+	# get tensorflow
+	git clone https://github.com/tensorflow/tensorflow.git
+	cd tensorflow
+
+	export TF_NEED_CUDA=1
+	export TF_CUDA_VERSION=10.1
+	export TF_CUDNN_VERSION=7.6
+
+	# pass python3 to interactive package
+	# built with XLA support
+	echo "/usr/bin/python3" | ./configure 
+	# set to optimized build
+	# bazel build --config=cuda --copt=-mavx --copt=-mavx2 --copt=-msse4.1 --copt=-msse4.2 --copt=-mfma //tensorflow/tools/pip_package:build_pip_package
+	bazel build --config=cuda --config=opt  //tensorflow/tools/pip_package:build_pip_package
+	./bazel-bin/tensorflow/tools/pip_package/build_pip_package tensorflow_pkg
+
+	# EXECUTE THIS STEP MANUALLY BY FINDING THE APPROPRIATE PACKAGE NAME!
+	pip3 install tensorflow_pkg/tensorflow-2.4.0-cp36-cp36m-linux_x86_64.whl
+
+%labels
+# Tensorflow can be installed using either the gpu_ubuntu_base image or the docker nvidia image as base. Generally, the docker image download is faster than the cuda build.
+# The container MUST be run using singularity --nv. Without the --nv nvidia flag, the GPU will NOT be addressable.
+
+

@@ -1,0 +1,37 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%environment
+    SHELL=/bin/bash
+    PATH=$PATH:/usr/local/bin:/opt/root/bin
+    LC_ALL=C.UTF-8
+
+%help
+    hail big data tool
+    see https://hail.is/index.html
+
+%runscript
+    echo "Loading python 3 with hail support"
+    echo "Use [import hail as hl] to load hail in python"
+    
+    echo "Starting notebook..."
+    echo "Open browser to localhost:8888"
+    exec jupyter notebook --notebook-dir=/opt/notebooks --ip='*' --port=8888 --no-browser
+
+%post
+    #Install system libraries
+    apt-get update
+    apt-get -y install apt-transport-https zlib1g-dev libssl-dev libcurl4-openssl-dev liblzma-dev libbz2-dev build-essential wget cmake gcc language-pack-en-base python3 python3-pip make openjdk-8-jre-headless g++ libopenblas-dev liblapack3
+    update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+
+    ## Install phantomjs
+    cd /opt
+    wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
+    tar -jxvf phantomjs-2.1.1-linux-x86_64.tar.bz2
+    rm phantomjs-2.1.1-linux-x86_64.tar.bz2
+    ln -s /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs
+
+    ## Install hail and supporting python pkgs
+    pip3 install --upgrade setuptools
+    pip3 install selenium phantomjs jupyter
+    python3 -m pip install hail

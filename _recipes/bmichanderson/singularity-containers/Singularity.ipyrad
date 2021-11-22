@@ -1,8 +1,5 @@
 # Author: B. Anderson
 # Singularity recipe for creating a container for using the program ipyrad
-# Note: may need to include building MPICH or OpenMPI for use on Pawsey
-# see: https://github.com/PawseySC/pawsey-containers/blob/master/hpc-python/intel/Dockerfile
-# see: https://github.com/PawseySC/pawsey-containers/blob/master/openmpi-base/Dockerfile
 
 
 Bootstrap: docker
@@ -16,59 +13,15 @@ From: continuumio/miniconda3
 
 
 %post
-	# build MPICH or OpenMPI for mpi4py
-	export DEBIAN_FRONTEND=noninteractive
-
-	apt update && apt upgrade -y && apt install -y build-essential ca-certificates gdb gfortran wget
-
-	apt autoremove -y && apt clean all
-
-#	MPICH_VER="3.1.4"
-#	MPICH_CONFIG_OPT="--enable-fast=all,03 --prefix=/usr"
-#	MPICH_MAKE_OPT="-j4"
-
-#	mkidr -p /tmp/mpich-build && cd /tmp/mpich-build
-#	wget http://www.mpich.org/static/downloads/${MPICH_VER}/mpich-${MPICH_VER}.tar.gz
-#	tar xvzf mpich-${MPICH_VER}.tar.gz
-#	cd mpich-${MPICH_VER}
-#	./configure ${MPICH_CONFIG_OPT}
-#	make ${MPICH_MAKE_OPT}
-#	make install
-#	ldconfig
-#	cp -p examples/cpi /usr/bin/
-#	cd /
-#	rm -rf /tmp/mpich-build
-
-
-	OPENMPI_VER="4.0.2"
-	OPENMPI_CONFIG_OPT="--enable-fast=all,03 --prefix=/usr"
-	OPENMPI_MAKE_OPT="-j4"
-	OPENMPI_VER_MM="${OPENMPI_VER%.*}"
-
-	mkidr -p /tmp/openmpi-build && cd /tmp/openmpi-build
-	wget http://www.openmpi.org/software/ompi/v${OPENMPI_VER_MM}/downloads/openmpi-${OPENMPI_VER}.tar.bz2
-	tar xjf openmpi-${OPENMPI_VER}.tar.bz2
-	cd openmpi-${OPENMPI_VER}
-	./configure ${OPENMPI_CONFIG_OPT}
-	make ${OPENMPI_MAKE_OPT}
-	make install
-	ldconfig
-	cd /
-	rm -rf /tmp/openmpi-build
-
-
 	# install ipyrad with conda along with packages for analysis
-	conda install -c conda-forge -c bioconda ipyrad
-
-	conda install -c bioconda scikit-learn
-
-	conda install -c eaton-lab toyplot
-
-	#conda install -c eaton-lab -c conda-forge tetrad
-	# NOTE: trying to install tetrad as well leads to conflicts, so may have to create a different container
-
-	conda install -c bioconda -c ipyrad structure clumpp
-
+	# note: trying to install tetrad leads to conflicts, so it needs its own container
+	conda install \
+	-c conda-forge \
+	-c bioconda \
+	-c eaton-lab \
+	-c ipyrad \
+	ipyrad scikit-learn toyplot structure clumpp
+	
 	conda clean -ay
 
 
@@ -79,8 +32,6 @@ From: continuumio/miniconda3
 
 %environment
 	# Set up environmental variables within the container
-	LD_LIBRARY_PATH=/usr/lib
-	LIBRARY_PATH=/usr/lib
 
 
 %runscript
@@ -91,15 +42,9 @@ From: continuumio/miniconda3
 
 %help
 	# This message is displayed when called as: singularity run-help [container]
-
 	******************************************************************************
-
 	This container is for running ipyrad
-
 	To run, use: singularity run ipyrad.sif [args]
-	
 	To execute a python script: singularity exec ipyrad.sif python [script] [args]
-
 	Check contents by entering it as: singularity shell ipyrad.sif
-
 	******************************************************************************

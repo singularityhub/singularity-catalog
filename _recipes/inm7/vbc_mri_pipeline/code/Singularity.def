@@ -1,0 +1,72 @@
+Bootstrap: docker
+From: debian:stretch-slim
+
+%setup
+    # install your pipeline script into /usr/local/bin
+    install -m 755 /data/project/personalized_pipeline/01_MRI_pipelines/Container/vbc_dwmri/code/*.sh ${SINGULARITY_ROOTFS}/usr/local/bin
+
+%environment
+    export LC_ALL=C
+
+%post
+    apt-get update && apt-get -y apt-utils && apt-get -y -V upgrade
+    apt-get -y install curl gnupg apt-transport-https wget sudo
+
+    # NeuroDebian
+    curl http://neuro.debian.net/lists/stretch.de-fzj.full -o /etc/apt/sources.list.d/neurodebian.sources.list
+    apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
+    # curl http://neuro.debian.net/lists/stretch.us-ca.full -o /etc/apt/sources.list.d/neurodebian.sources.list
+    # apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
+    # wget -O- http://neuro.debian.net/lists/buster.de-fzj.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list
+    # apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
+    apt-get update
+
+    # ANTs
+    apt-get -y install ants
+
+    # FSL
+    apt-get -y install fsl-core fsl-atlases
+
+    # AFNI
+    apt-get -y install afni
+
+    # Workbench
+    apt-get -y install connectome-workbench
+
+    # Freesurfer
+    cd /tmp
+    apt-get -y install bc binutils libgomp1 perl psmisc sudo tcsh unzip uuid-dev vim-common libjpeg62-turbo-dev
+    wget https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz
+    tar -C /opt -xzvf /tmp/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz
+    chmod 777 /opt/freesurfer
+    apt-get update
+    rm -f /tmp/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz
+
+    # MRtrix3
+    apt-get -y install git g++ python python-numpy libeigen3-dev zlib1g-dev libqt4-opengl-dev libgl1-mesa-dev libfftw3-dev libtiff5-dev
+    cd /opt/
+    git clone https://github.com/MRtrix3/mrtrix3.git
+    cd mrtrix3
+    ./configure
+    ./build
+    ./set_path
+    # remove compiler artifacts
+    # not using `./build clean`, seems to delete stuff in bin/ too
+    rm -rf ./tmp
+
+    # cleanup
+    apt-get autoremove
+    apt-get autoclean
+
+%runscript
+
+%labels
+    author Kyesam Jung (k.jung@fz-juelich.de)
+    version 1.1.0
+
+%help
+    This container contains AFNI, FSL, ANTs, Freesurfer, Workbench, and MRtrix3.
+    Usage 1 (the entire pipeline): singularity exec --bind /local/path/to/bind:/mnt_sc Container_dwMRI.simg /usr/local/bin/container_SC_pipeline.sh /mnt_sc/working/path/input.txt
+    Usage 2 (perform a SC module): singularity exec --bind /local/path/to/bind:/mnt_sc Container_dwMRI.simg /usr/local/bin/container_SC_${module_name}.sh /mnt_sc/working/path/input.txt
+    Built by Kyesam Jung (k.jung@fz-juelich.de)
+

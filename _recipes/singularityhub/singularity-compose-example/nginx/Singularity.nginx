@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: alpine:3.4 
+
+%files
+    install.sh /usr/src/install.sh
+    nginx.key /usr/src/nginx.key
+    nginx.conf /etc/nginx/nginx.conf
+    nginx.vh.default.conf /etc/nginx/conf.d/default.conf
+
+%environment
+    NGINX_VERSION=1.13.6
+    export NGINX_VERSION
+
+%post
+    NGINX_VERSION=1.13.6
+    export NGINX_VERSION
+    sh -x /usr/src/install.sh
+
+    # Create hashed temporary upload locations
+    mkdir -p /tmp/0 /tmp/1 /tmp/2 /tmp/3 /tmp/4 /tmp/5 /tmp/6 /tmp/7 /tmp/8 /tmp/9
+
+%startscript
+    exec nginx -g "daemon off;"

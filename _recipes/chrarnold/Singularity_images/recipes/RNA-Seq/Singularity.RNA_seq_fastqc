@@ -1,0 +1,25 @@
+Bootstrap: docker
+FROM: continuumio/miniconda3
+
+%labels
+  Version v1.0
+
+%help
+  Singularity image for the RNA-Seq pipeline (Python 3)
+
+
+
+%post
+
+  # Add channels for Bioconda
+  /opt/conda/bin/conda config --add channels defaults
+  /opt/conda/bin/conda config --add channels bioconda
+  /opt/conda/bin/conda config --add channels conda-forge
+
+  # Install the tools
+  /opt/conda/bin/conda install --yes fastqc
+
+%environment
+
+%test
+   # fastqc --version

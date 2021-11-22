@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/resources
+
+%environment
+    SHELL=/bin/bash
+    PATH=$PATH:/usr/local/bin
+    LC_ALL=C.UTF-8
+
+%help
+    STR analysis with Expansion Hunter v3.2.2
+    variant catalog is moved to /resources
+
+%post
+    apt-get update
+    apt-get -y install \
+        apt-transport-https \
+        language-pack-en-base \
+        libssl-dev \
+        wget \
+        zlib1g-dev
+    update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+
+    ## Install Expansion Hunter
+    cd /opt
+    wget https://github.com/Illumina/ExpansionHunter/releases/download/v3.2.2/ExpansionHunter-v3.2.2-linux_x86_64.tar.gz
+    tar -zxvf ExpansionHunter-v3.2.2-linux_x86_64.tar.gz
+    cd ExpansionHunter-v3.2.2-linux_x86_64
+    mv variant_catalog /resources
+    ln --symbolic --force /opt/ExpansionHunter-v3.2.2-linux_x86_64/bin/ExpansionHunter /usr/local/bin/ExpansionHunter
+
+%test 
+    ExpansionHunter --version

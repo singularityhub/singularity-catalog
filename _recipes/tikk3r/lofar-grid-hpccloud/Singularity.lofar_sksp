@@ -2,13 +2,13 @@
 #From: tikk3r/lofar-grid-hpccloud:lofar_sksp_base
 # If building from a base image locally enable this instead.
 Bootstrap: localimage
-From: lofar_sksp_v3.3_base.sif
+From: lofar_sksp_base_v3.3.1_cascadelake_avx512.sif
 
-%environment
-    export PYTHONPATH=
-    export INSTALLDIR=/opt/lofar
-    . $INSTALLDIR/init.sh
-    source $INSTALLDIR/pyenv-py2/bin/activate
+#%environment
+    #export PYTHONPATH=
+    #export INSTALLDIR=/opt/lofar
+    #. $INSTALLDIR/init.sh
+    #source $INSTALLDIR/pyenv-py2/bin/activate
 
 %post
     . $INSTALLDIR/init.sh
@@ -16,6 +16,7 @@ From: lofar_sksp_v3.3_base.sif
 	export J=6
 	export INSTALLDIR=/opt/lofar
 	export PYTHON_VERSION=2.7
+    export OPENBLAS_NUM_THREADS=1
 
 	# Path to where the patch for python-casacore's setup is stored.
 	export PYTHON_CASACORE_PATCH=$INSTALLDIR/python-casacore/python_casacore_setup_patch.patch
@@ -32,13 +33,15 @@ From: lofar_sksp_v3.3_base.sif
 	export CASAREST_VERSION=latest
 	export CFITSIO_VERSION=7.3.47
     #export DPPP_VERSION=v5.1
-    export DPPP_VERSION=master
+    export DPPP_VERSION=e5eff2e
 	export DYSCO_VERSION=v1.2
     #export EVERYBEAM_VERSION=v0.1.3
-    export EVERYBEAM_VERSION=0c26c65d
+    #export EVERYBEAM_VERSION=0c26c65d
+    export EVERYBEAM_VERSION=14f35c85
     export FFTW_VERSION=3.5.8
 	export HDF5_VERSION=1.10.5
-    export IDG_VERSION=master
+    #export IDG_VERSION=master
+    export IDG_VERSION=03b30672
 	export LAPACK_VERSION=3.8.0
 	export LOFAR_VERSION=3_2_18
     # Don't change LOSOTO2_VERSION. This is the last commit that plays nice with Python 2.
@@ -50,14 +53,16 @@ From: lofar_sksp_v3.3_base.sif
 	export PYTHON_CASACORE_VERSION=v2.2.1
     export RMEXTRACT_VERSION=4c61232
 	export SUPERLU_VERSION=5.2.1
-	export WSCLEAN_VERSION=41c651d1
+	export WSCLEAN_VERSION=c0a654ca
 	export WCSLIB_VERSION=6.4
 	export HDF5_USE_FILE_LOCKING=FALSE
 
     export CC=`which gcc`
 	export CXX=`which g++`
-    export MARCH='x86-64'
-    export MTUNE='generic'
+    #export MARCH='x86-64'
+    #export MTUNE='generic'
+    export MARCH='cascadelake'
+    export MTUNE='cascadelake'
     export NOAVX512=false
 
     if [ $NOAVX512 ]; then
@@ -70,7 +75,7 @@ From: lofar_sksp_v3.3_base.sif
     export CPLUS_INCLUDE_PATH="/opt/hdf5/include:/usr/include/openmpi-x86_64:/usr/include/c++/9:$CPLUS_INCLUDE_PATH:/usr/include/python2.7:$INSTALLDIR/casacore/include:/usr/include/boost:/usr/include/cfitsio:$INSTALLDIR/EveryBeam/include"
     export CPATH="/usr/include/openmpi-x86_64/:/usr/local/cuda/include:/opt/hdf5/include:/opt/intel/mkl/include:${INSTALLDIR}/casacore/include:$INSTALLDIR/LOFARBeam/include:$INSTALLDIR/idg/include:$INSTALLDIR/aoflagger/include:$INSTALLDIR/EveryBeam/include:$CPATH"
     export CMAKE_PREFIX_PATH="$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:/opt/hdf5:$INSTALLDIR/lofar:$INSTALLDIR/LOFARBeam:/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:/usr/lib64/openmpi:$INSTALLDIR/EveryBeam"
-    export LD_LIBRARY_PATH="$INSTALLDIR/aoflagger/lib:$INSTALLDIR/casacore/lib:/opt/hdf5/lib:$INSTALLDIR/idg/lib:$INSTALLDIR/LOFARBeam/lib:/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:/usr/lib64/openmpi/lib/:$INSTALLDIR/EveryBeam/lib:LD_LIBRARY_PATH"
+    export LD_LIBRARY_PATH="$INSTALLDIR/aoflagger/lib:$INSTALLDIR/casacore/lib:/opt/hdf5/lib:$INSTALLDIR/idg/lib:$INSTALLDIR/LOFARBeam/lib:/usr/local/cuda/lib64:/opt/intel/mkl/lib/intel64:/usr/lib64/openmpi/lib/:$INSTALLDIR/EveryBeam/lib:$LD_LIBRARY_PATH"
     export PATH="/opt/hdf5/bin:/usr/lib64/openmpi/bin:$PATH"
     export make=`which make`
     export OLD_PYTHONPATH=$PYTHONPATH
@@ -158,8 +163,7 @@ From: lofar_sksp_v3.3_base.sif
 	# Install PyBDSF
 	#
 	mkdir -p ${INSTALLDIR}/pybdsf
-	if [ "${PYBDSF_VERSION}" = "latest" ]; then cd ${INSTALLDIR}/pybdsf && git clone https://github.com/lofar-astron/pybdsf pybdsf && cd pybdsf; fi
-	if [ "${PYBDSF_VERSION}" != "latest" ]; then cd ${INSTALLDIR}/pybdsf && git clone https://github.com/lofar-astron/pybdsf && cd ${INSTALLDIR}/pybdsf/pybdsf && git checkout ${PYBDSF_VERSION}; fi
+	cd ${INSTALLDIR}/pybdsf && git clone https://github.com/lofar-astron/pybdsf && cd ${INSTALLDIR}/pybdsf/pybdsf && git checkout ${PYBDSF_VERSION} && echo export PYBDSF_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
     cd ${INSTALLDIR}/pybdsf/pybdsf
     python setup.py install
     cd $INSTALLDIR
@@ -177,7 +181,7 @@ From: lofar_sksp_v3.3_base.sif
 	mkdir -p ${INSTALLDIR}/casacore/data
 	cd $INSTALLDIR/casacore
     git clone https://github.com/casacore/casacore.git src
-	if [ "${CASACORE_VERSION}" != "latest" ]; then cd ${INSTALLDIR}/casacore/src && git checkout tags/${CASACORE_VERSION}; fi
+	cd ${INSTALLDIR}/casacore/src && git checkout tags/${CASACORE_VERSION} && echo export CASACORE_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
     # Backport patch UVFITS for LOFAR. This is fixed in recent versions > May 26 2020
     #wget https://patch-diff.githubusercontent.com/raw/casacore/casacore/pull/1033.patch -O $INSTALLDIR/casacore/1033.patch
     #cd $INSTALLDIR/casacore/src && patch --fuzz 3 -p1 < $INSTALLDIR/casacore/1033.patch
@@ -195,7 +199,7 @@ From: lofar_sksp_v3.3_base.sif
 	#
 	mkdir ${INSTALLDIR}/python-casacore
     cd ${INSTALLDIR}/python-casacore && git clone https://github.com/casacore/python-casacore
-	if [ "$PYTHON_CASACORE_VERSION" != "latest" ]; then cd ${INSTALLDIR}/python-casacore/python-casacore && git checkout tags/${PYTHON_CASACORE_VERSION}; fi
+	cd ${INSTALLDIR}/python-casacore/python-casacore && git checkout tags/${PYTHON_CASACORE_VERSION} && echo export PYTHON_CASACORE_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
 	cd ${INSTALLDIR}/python-casacore/python-casacore
     python setup.py build_ext -I${INSTALLDIR}/casacore/include/:/usr/include/python2.7 -L${INSTALLDIR}/casacore/lib/:/usr/lib64/
     cd $INSTALLDIR/python-casacore/python-casacore
@@ -213,7 +217,7 @@ From: lofar_sksp_v3.3_base.sif
 	#
 	mkdir -p $INSTALLDIR/dysco/build
 	cd $INSTALLDIR/dysco && git clone https://github.com/aroffringa/dysco.git src
-    if [ "$DYSCO_VERSION" != "latest" ]; then cd src && git checkout $DYSCO_VERSION; fi
+    cd src && git checkout $DYSCO_VERSION && echo export DYSCO_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
 	cd $INSTALLDIR/dysco/build && cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/dysco -DCASACORE_ROOT_DIR=$INSTALLDIR/casacore -DPORTABLE=True ../src && $make -s -j $J && $make install
     cd $INSTALLDIR
     rm -rf $INSTALLDIR/dysco/build
@@ -224,8 +228,7 @@ From: lofar_sksp_v3.3_base.sif
 	#
     source $INSTALLDIR/pyenv-py3/bin/activate
 	mkdir -p ${INSTALLDIR}/aoflagger/build
-	if [ "${AOFLAGGER_VERSION}" = "latest" ]; then cd ${INSTALLDIR}/aoflagger && git clone https://gitlab.com/aroffringa/aoflagger.git src && cd ${INSTALLDIR}/aoflagger/src; fi
-	if [ "${AOFLAGGER_VERSION}" != "latest" ]; then cd ${INSTALLDIR}/aoflagger && git clone https://gitlab.com/aroffringa/aoflagger.git src && cd ${INSTALLDIR}/aoflagger/src && git checkout ${AOFLAGGER_VERSION}; fi
+	cd ${INSTALLDIR}/aoflagger && git clone https://gitlab.com/aroffringa/aoflagger.git src && cd ${INSTALLDIR}/aoflagger/src && git checkout ${AOFLAGGER_VERSION} && echo export DYSCO_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
 	cd ${INSTALLDIR}/aoflagger/build && cmake -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/aoflagger/ -DCASACORE_ROOT_DIR=${INSTALLDIR}/casacore -DBUILD_SHARED_LIBS=ON -DPORTABLE=True ../src
 	cd ${INSTALLDIR}/aoflagger/build && $make -s -j ${J}
 	cd ${INSTALLDIR}/aoflagger/build && $make install
@@ -294,7 +297,9 @@ From: lofar_sksp_v3.3_base.sif
     mkdir -p $INSTALLDIR/LOFARBeam/build
     cd $INSTALLDIR/LOFARBeam
     git clone https://github.com/lofar-astron/LOFARBeam.git src
-    cd build
+    cd src
+    echo export LOFARBEAM_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
+    cd ../build
     # Install in the existing lofar python folder
     cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/lofar ../src
     $make -j $J
@@ -312,6 +317,7 @@ From: lofar_sksp_v3.3_base.sif
     cd $INSTALLDIR/EveryBeam
     git clone https://git.astron.nl/RD/EveryBeam.git src
     cd src && git checkout $EVERYBEAM_VERSION
+    echo export EVERYBEAM_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
     cd $INSTALLDIR/EveryBeam/build
     cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/EveryBeam ../src
     $make -j $J
@@ -323,7 +329,7 @@ From: lofar_sksp_v3.3_base.sif
     mkdir -p $INSTALLDIR/idg && cd $INSTALLDIR/idg
     #git clone https://gitlab.com/astron-idg/idg.git src 
     git clone https://git.astron.nl/RD/idg.git src
-    cd src && git checkout $IDG_VERSION && mkdir build && cd build
+        cd src && git checkout $IDG_VERSION && echo export IDG_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh && mkdir build && cd build
     if [ $HAS_CUDA ] && [ $HAS_MKL ]; then
         cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/idg -DBUILD_WITH_MKL=ON -DBUILD_LIB_CUDA=ON -DCUDA_INCLUDE_DIR=/usr/local/cuda/include -DCMAKE_BUILD_TYPE=Debug ..
     elif [ ! $HAS_CUDA ] && [ $HAS_MKL ]; then
@@ -341,16 +347,26 @@ From: lofar_sksp_v3.3_base.sif
     #
     # Install DPPP
     #
+    # Temporarily get rid of MKL. Throws an error about needing a not-OpenMP version of OpenBLAS and MKL's multithreaded stuff uses OpenMP from what I can tell.
+    export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | tr ":" "\n" | grep -v "/opt/intel" | tr "\n" ":")
+    export CPATH=$(echo $CPATH | tr ":" "\n" | grep -v "/opt/intel" | tr "\n" ":")
+    export CMAKE_PREFIX_PATH=$(echo $CMAKE_PREFIX_PATH | tr ":" "\n" | grep -v "/opt/intel" | tr "\n" ":")
+
     mkdir -p $INSTALLDIR/DPPP/build
     git clone https://git.astron.nl/RD/DP3.git $INSTALLDIR/DPPP/src
     cd $INSTALLDIR/DPPP/src
     git checkout ${DPPP_VERSION}
+    echo export DPPP_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
     cd $INSTALLDIR/DPPP/build
-    cmake3 -DCMAKE_CXX_FLAGS="-D_GLIB_USE_CXX_ABI=1 -DBOOST_NO_CXX11_SCOPED_ENUMS" -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLDIR/DPPP -DLOFAR_STATION_RESPONSE_DIR:PATH=$INSTALLDIR/lofar/include -DLOFAR_STATION_RESPONSE_LIB:FILEPATH=$INSTALLDIR/lofar/lib/libstationresponse.so -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include -DAOFLAGGER_INCLUDE_DIR=$INSTALLDIR/aoflagger/include -DAOFLAGGER_LIB=$INSTALLDIR/aoflagger/lib/libaoflagger.so ../src
+    # Link to libopenblasp.so (note the p) and not libopenblas.so so we get the multi-threaded version.
+    cmake3 -DCMAKE_CXX_FLAGS="-D_GLIB_USE_CXX_ABI=1 -DBOOST_NO_CXX11_SCOPED_ENUMS" -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLDIR/DPPP -DLOFAR_STATION_RESPONSE_DIR:PATH=$INSTALLDIR/lofar/include -DLOFAR_STATION_RESPONSE_LIB:FILEPATH=$INSTALLDIR/lofar/lib/libstationresponse.so -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include -DAOFLAGGER_INCLUDE_DIR=$INSTALLDIR/aoflagger/include -DAOFLAGGER_LIB=$INSTALLDIR/aoflagger/lib/libaoflagger.so -DBLAS_openblas_LIBRARY=/usr/lib64/libopenblasp.so ../src
     $make -s -j $J && $make install
     cd $INSTALLDIR
     rm -rf $INSTALLDIR/DPPP/build
     rm -rf $INSTALLDIR/DPPP/src
+    export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64:$LD_LIBRARY_PATH
+    export CPATH=/opt/intel/mkl/include:$CPATH
+    export CMAKE_PREFIX_PATH=/opt/intel/mkl/lib/intel64:$CMAKE_PREFIX_PATH
 
     ############################################
     # Install Python packages for Python 2 now #
@@ -419,8 +435,7 @@ From: lofar_sksp_v3.3_base.sif
     # Install-WSClean
     #
     mkdir $INSTALLDIR/wsclean
-    if [ "$WSCLEAN_VERSION" != "latest" ]; then cd ${INSTALLDIR}/wsclean && git clone https://gitlab.com/aroffringa/wsclean.git && cd wsclean && git checkout $WSCLEAN_VERSION; fi
-    if [ "$WSCLEAN_VERSION" = "latest" ]; then cd ${INSTALLDIR}/wsclean && git clone https://gitlab.com/aroffringa/wsclean.git && cd wsclean; fi
+    cd ${INSTALLDIR}/wsclean && git clone https://gitlab.com/aroffringa/wsclean.git && cd wsclean && git checkout $WSCLEAN_VERSION && echo export WSCLEAN_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
     mkdir build && cd build
     # Switch to mpicc for a minute
     export CC=`which mpicc`
@@ -464,6 +479,25 @@ From: lofar_sksp_v3.3_base.sif
 	ln -s /opt/lofar/DPPP/bin/makesourcedb /opt/lofar/lofar/bin/makesourcedb
     ln -s $INSTALLDIR/pyenv-py3/bin/h5plot /usr/bin/h5plot
 
+    # Store version information.
+	echo export ARMADILLO_VERSION=$ARMADILLO_VERSION >> $INSTALLDIR/init.sh
+	echo export BLAS_VERSION=$BLAS_VERSION >> $INSTALLDIR/init.sh
+	echo export BOOST_VERSION=$BOOST_VERSION >> $INSTALLDIR/init.sh
+	echo export CASAREST_VERSION=$CASAREST_VERSION >> $INSTALLDIR/init.sh
+	echo export CFITSIO_VERSION=$CFITSIO_VERSION >> $INSTALLDIR/init.sh
+    echo export FFTW_VERSION=$FFTW_VERSION >> $INSTALLDIR/init.sh
+	echo export HDF5_VERSION=$HDF5_VERSION >> $INSTALLDIR/init.sh
+	echo export LAPACK_VERSION=$LAPACK_VERSION >> $INSTALLDIR/init.sh
+	echo export LOFAR_VERSION=$LOFAR_VERSION >> $INSTALLDIR/init.sh
+	echo export LOSOTO2_VERSION=$LOSOTO2_VERSION >> $INSTALLDIR/init.sh
+	echo export LOSOTO3_VERSION=$LOSOTO3_VERSION >> $INSTALLDIR/init.sh
+    echo export LSMTOOL_VERSION=$LSMTOOL_VERSION >> $INSTALLDIR/init.sh
+	echo export OPENBLAS_VERSION=$OPENBLAS_VERSION >> $INSTALLDIR/init.sh
+    echo export RMEXTRACT_VERSION=$RMEXTRACT_VERSION >> $INSTALLDIR/init.sh
+	echo export SUPERLU_VERSION=$SUPERLU_VERSION >> $INSTALLDIR/init.sh
+	echo export WCSLIB_VERSION=$WCSLIB_VERSION >> $INSTALLDIR/init.sh
+	echo export HDF5_USE_FILE_LOCKING=$HDF5_USE_FILE_LOCKING >> $INSTALLDIR/init.sh
+
     echo export MARCH=$MARCH >> $INSTALLDIR/init.sh
     echo export MTUNE=$MTUNE >> $INSTALLDIR/init.sh
     echo $'export MARCH_MACHINE=$(gcc -march=native -Q --help=target | grep "\-march=" | head -n 1 | awk \'{print $2}\')' >> $INSTALLDIR/init.sh
@@ -489,7 +523,7 @@ From: lofar_sksp_v3.3_base.sif
     echo export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
     echo export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
     # OPENBLAS_NUM_THREADS=1 is required for WSClean
-    echo export NCPU=\$(nproc) >> $INSTALLDIR/init.sh
+    echo export NCPU=\$\(nproc --all\) >> $INSTALLDIR/init.sh
 	echo export OPENBLAS_NUM_THREADS=1 >> $INSTALLDIR/init.sh
 	echo export OPENBLAS_MAX_THREADS=\$NCPU >> $INSTALLDIR/init.sh
 	echo export OMP_NUM_THREADS=\$NCPU >> $INSTALLDIR/init.sh
@@ -501,39 +535,11 @@ From: lofar_sksp_v3.3_base.sif
     echo "measures.directory: $INSTALLDIR/casacore/data" > $INSTALLDIR/.casarc 
     echo export CASARCFILES=\$INSTALLDIR/.casarc >> $INSTALLDIR/init.sh
     
-    # Store version information.
-	echo export AOFLAGGER_VERSION=$AOFLAGGER_VERSION >> $INSTALLDIR/init.sh
-	echo export ARMADILLO_VERSION=$ARMADILLO_VERSION >> $INSTALLDIR/init.sh
-	echo export BLAS_VERSION=$BLAS_VERSION >> $INSTALLDIR/init.sh
-	echo export BOOST_VERSION=$BOOST_VERSION >> $INSTALLDIR/init.sh
-	echo export CASACORE_VERSION=$CASACORE_VERSION >> $INSTALLDIR/init.sh
-	echo export CASAREST_VERSION=$CASAREST_VERSION >> $INSTALLDIR/init.sh
-	echo export CFITSIO_VERSION=$CFITSIO_VERSION >> $INSTALLDIR/init.sh
-    echo export DPPP_VERSION=$DPPP_VERSION >> $INSTALLDIR/init.sh
-	echo export DYSCO_VERSION=$DYSCO_VERSION >> $INSTALLDIR/init.sh
-    echo export EVERYBEAM_VERSION=$EVERYBEAM_VERSION >> $INSTALLDIR/init.sh
-    echo export FFTW_VERSION=$FFTW_VERSION >> $INSTALLDIR/init.sh
-	echo export HDF5_VERSION=$HDF5_VERSION >> $INSTALLDIR/init.sh
-    echo export IDG_VERSION=$IDG_VERSION >> $INSTALLDIR/init.sh
-	echo export LAPACK_VERSION=$LAPACK_VERSION >> $INSTALLDIR/init.sh
-	echo export LOFAR_VERSION=$LOFAR_VERSION >> $INSTALLDIR/init.sh
-	echo export LOSOTO2_VERSION=$LOSOTO2_VERSION >> $INSTALLDIR/init.sh
-	echo export LOSOTO3_VERSION=$LOSOTO3_VERSION >> $INSTALLDIR/init.sh
-    echo export LSMTOOL_VERSION=$LSMTOOL_VERSION >> $INSTALLDIR/init.sh
-	echo export OPENBLAS_VERSION=$OPENBLAS_VERSION >> $INSTALLDIR/init.sh
-	echo export PYBDSF_VERSION=$PYBDSF_VERSION >> $INSTALLDIR/init.sh
-	echo export PYTHON_CASACORE_VERSION=$PYTHON_CASACORE_VERSION >> $INSTALLDIR/init.sh
-    echo export RMEXTRACT_VERSION=$RMEXTRACT_VERSION >> $INSTALLDIR/init.sh
-	echo export SUPERLU_VERSION=$SUPERLU_VERSION >> $INSTALLDIR/init.sh
-	echo export WSCLEAN_VERSION=$WSCLEAN_VERSION >> $INSTALLDIR/init.sh
-	echo export WCSLIB_VERSION=$WCSLIB_VERSION >> $INSTALLDIR/init.sh
-	echo export HDF5_USE_FILE_LOCKING=$HDF5_USE_FILE_LOCKING >> $INSTALLDIR/init.sh
-
     #
     # entrypoint
     #
 %runscript
-    echo LOFAR-SKSP Singularity Container v3.3 
+    echo LOFAR-SKSP Singularity Container v3.3.1
 
 %help
     This Singularity image contains an install of LOFAR 3.2.18. In order to run your pipelines, you may need to know where the software is installed. The root directory is /opt/lofar, with most software installed as follows:

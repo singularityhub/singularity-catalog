@@ -1,0 +1,45 @@
+Bootstrap:docker
+From:alpine:latest
+
+%post
+/bin/sh build.sh
+/bin/sh snpsift.sh
+
+%files
+build.sh
+snpsift.sh
+
+%environment
+SNPEFF_VERSION=v4.3p
+
+%labels
+Maintainer	kokulapalan@gmail.com
+
+%test
+snpEff -version
+
+# =======================
+# SnpSift
+# =======================
+%appenv SnpSift
+    BEST_APP=SnpSift
+    export BEST_APP
+
+%apphelp SnpSift
+    Please see http://snpeff.sourceforge.net/SnpSift.html for help
+
+%apprun SnpSift
+    SnpSift "$@"
+
+# =======================
+# snpEff
+# =======================
+%appenv snpEff
+    BEST_APP=snpEff
+    export BEST_APP
+
+%apphelp snpEff
+    Please see http://snpeff.sourceforge.net/index.html for help
+
+%apprun snpEff
+    snpEff "$@"

@@ -1,0 +1,94 @@
+Bootstrap: library
+From: centos:latest
+
+%environment
+    SHELL=/bin/bash
+    PATH=$PATH:/usr/local/bin
+    LC_ALL=C.UTF-8
+
+%help
+    Dysgu SV variant caller
+    see https://github.com/kcleal/dysgu
+
+%runscript
+    dysgu "$@"
+
+%post
+    yum -y install cmake \
+        sed \
+        curl \
+        git \
+        bzip2 \
+        bzip2-devel \
+        openssl-devel \
+        libffi-devel \
+        xz-devel \
+        openssl-devel \
+        ncurses-devel \
+        make \
+        wget \
+        zlib-devel \
+        autoconf \
+        tar \
+        unzip \
+        python3 \
+        python3-devel \
+        procps \
+        curl-devel \
+        libjpeg-devel \
+        libtiff-devel \
+        gcc \
+        gcc-c++
+        #llvm-toolset \
+
+    #Install python 3.9
+    cd /opt
+    curl https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz -O
+    tar -xvf Python-3.9.1.tgz
+    rm Python-3.9.1.tgz
+    cd Python-3.9.1
+    ./configure --enable-optimizations
+    make install
+    python3 -V
+
+    #Now upgrade pip
+    /usr/local/bin/python3.9 -m pip install --upgrade pip
+
+    #Install dysgu requirements
+    pip3 install cython numpy pandas
+
+    pip3 install \
+        click \
+        pysam==0.16.0.1 \
+        networkx \
+        scikit-learn \
+        ncls \
+        scikit-bio \
+        edlib \
+        sortedcontainers \
+        lightgbm
+
+    #=== DYSGU ===
+    #downoad dysgu 
+    cd /opt
+    git clone --recursive https://github.com/kcleal/dysgu.git
+    
+    #compile htslib
+    cd dysgu/dysgu/htslib
+    make
+    make install
+    
+    #Fix dysgu to remove libc++ request
+    cd ../
+    for f in *.cpp
+    do
+        sed -i '/"--stdlib=libc++",/d' $f
+    done
+    cd ../
+    sed -i "s/flags = ['--stdlib=libc++']/flags = ['--pippo']/" setup.py
+
+    #install dysgu package
+    pip3 install .
+
+%test
+    dysgu --help

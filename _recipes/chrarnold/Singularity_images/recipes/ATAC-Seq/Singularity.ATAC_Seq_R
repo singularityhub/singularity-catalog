@@ -1,0 +1,35 @@
+Bootstrap: docker
+FROM: bioconductor/bioconductor_docker
+
+%labels
+  Version v1.1
+
+%help
+  Singularity image for the ATAC-Seq pipeline (R 4 + all packages)
+
+
+%post
+
+  R --slave -e "BiocManager::install('DESeq2')"
+  R --slave -e "BiocManager::install('GenomicRanges')"
+  R --slave -e "BiocManager::install('Rsamtools')"
+  R --slave -e "BiocManager::install('DiffBind')"
+  R --slave -e "BiocManager::install('ChIPseeker')"
+
+  R --slave -e "install.packages('checkmate')"
+  R --slave -e "install.packages('futile.logger')"
+  R --slave -e "install.packages('tidyverse')"
+  R --slave -e "install.packages('reshape2')"
+  R --slave -e "install.packages('RColorBrewer')"
+  R --slave -e "install.packages('grDevices')"
+  R --slave -e "install.packages('matrixStats')"
+  R --slave -e "install.packages('rlist')"
+  R --slave -e "install.packages('gridExtra')"
+  R --slave -e "install.packages('stringr')"
+  R --slave -e "install.packages('scales')"
+  R --slave -e "install.packages('stats')"
+
+%environment
+
+%test
+  R --version

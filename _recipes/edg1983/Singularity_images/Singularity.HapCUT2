@@ -1,0 +1,54 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%environment
+    SHELL=/bin/bash
+    PATH=$PATH:/usr/local/bin
+    export C_INCLUDE_PATH=$C_INCLUDE_PATH:/opt/htslib-1.11
+    export LIBRARY_PATH=$LIBRARY_PATH:/opt/htslib-1.11
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/htslib-1.11
+    LC_ALL=C.UTF-8
+
+
+%help
+    HapCUT2 container latest version from
+    https://github.com/vibansal/HapCUT2
+
+    Available commands: HAPCUT2, extractHAIRS
+
+%post
+    apt-get update
+    apt-get -y install apt-transport-https \
+        build-essential \
+        cmake \
+        gcc \
+        language-pack-en-base \
+        libbz2-dev \
+        libcurl4-openssl-dev \
+        liblzma-dev \
+        libncurses5-dev \
+        libreadline-dev \
+        libssl-dev \
+        git \
+        make \
+        wget \
+        zlib1g-dev \
+        autoconf
+    update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+    
+    ## Install HTSlib
+    cd /opt
+    wget https://github.com/samtools/htslib/releases/download/1.11/htslib-1.11.tar.bz2
+    tar -jxvf htslib-1.11.tar.bz2
+    rm htslib-1.11.tar.bz2
+    cd htslib-1.11
+    make
+    make install
+
+    ## Install HapCUT2
+    cd /opt
+    git clone https://github.com/vibansal/HapCUT2.git
+    cd HapCUT2
+    make HTSLIB=/opt/htslib-1.11
+    ln -s /opt/HapCUT2/build/HAPCUT2 /usr/local/bin/HAPCUT2
+    ln -s /opt/HapCUT2/build/extractHAIRS /usr/local/bin/extractHAIRS

@@ -87,7 +87,6 @@ From:  dcgc-bfx/dcgc-jupyter-rstudio:0.2.1
     r-parallelly \
     r-pheatmap \
     r-readr \
-    r-refmanager \
     r-remotes \
     r-rgl \
     r-sctransform \
@@ -131,9 +130,13 @@ From:  dcgc-bfx/dcgc-jupyter-rstudio:0.2.1
   pip install -q --no-cache-dir git+https://github.com/theislab/diffxpy
   pip install -q --no-cache-dir git+https://github.com/theislab/scachepy
   pip install -q --no-cache-dir git+https://github.com/calico/solo.git
+  
+  # install R dependencies that are difficult to install from conda or make problems
+  R --quiet -e 'install.packages("deldir", repos="http://cran.r-project.org")'
 
   # install R dependencies not available from conda
-  R --quiet -e "devtools::install_github(repo = 'yanlinlin82/ggvenn', dependencies = FALSE, quiet = TRUE)"
+  R --quiet -e 'devtools::install_github("ropensci/RefManageR")'
+  R --quiet -e 'devtools::install_github(repo = "yanlinlin82/ggvenn", dependencies = FALSE, quiet = TRUE)'
   R --quiet -e 'devtools::install_github("cellgeni/sceasy", dependencies = FALSE, quiet = TRUE)'
   R --quiet -e 'remotes::install_github("chris-mcginnis-ucsf/DoubletFinder")'
 

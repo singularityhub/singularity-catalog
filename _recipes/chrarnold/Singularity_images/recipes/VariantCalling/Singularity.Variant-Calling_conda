@@ -1,0 +1,33 @@
+Bootstrap: docker
+FROM: continuumio/miniconda3
+
+%labels
+  Version v1.0
+
+%help
+  Singularity image for the variant calling pipeline (Python 3)
+
+
+
+%post
+
+  # Add channels for Bioconda
+  /opt/conda/bin/conda config --add channels defaults
+  /opt/conda/bin/conda config --add channels bioconda
+  /opt/conda/bin/conda config --add channels conda-forge
+
+  # Install the tools
+  /opt/conda/bin/conda install --yes bedtools samtools openssl=1.0 bwa fastqc trimmomatic cutadapt multiqc picard vcftools bcftools
+
+  # wget --no-check-certificate -O gatk.tar.bz2 https://github.com/chrarnold/Singularity_images/raw/master/files/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef.tar.bz2?raw=true
+
+  # gatk-register gatk.tar.bz2
+
+%environment
+
+%test
+   # bedtools --version
+   # samtools --version
+   # fastqc --version
+   # bowtie2 --version
+   # picard SortSam --version

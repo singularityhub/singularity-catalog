@@ -1,0 +1,82 @@
+Bootstrap: library
+From: centos:8
+
+%labels
+    Author Edoardo Giacopuzzi
+    Contact edoardo.giacopuzzi@well.ox.ac.uk
+
+%help
+    variantstore tool
+    see https://github.com/Kingsford-Group/variantstore
+
+%environment
+    SHELL=/bin/bash
+    PATH=$PATH:/usr/local/bin
+    LC_ALL=C.UTF-8
+
+%runscript
+    variantstore $@
+
+%post
+    yum -y install \
+        cmake \
+        gcc \
+        gcc-c++ \
+        bzip2 \
+        bzip2-devel \
+        openssl-devel \
+        xz-devel \
+        openssl-devel \
+        ncurses-devel \
+        make \
+        wget \
+        zlib-devel \
+        autoconf \
+        automake \
+        libtool \
+        curl \
+        tar \
+        git \
+	    procps 
+    
+    #localectl set-locale LANG=en_US.UTF-8
+
+    #install gperftools-devel
+    dnf -y install https://extras.getpagespeed.com/release-el8-latest.rpm
+    dnf -y install gperftools-devel
+
+    #install sdsl-lite
+    cd /opt
+    git clone https://github.com/simongog/sdsl-lite.git
+    cd sdsl-lite
+    ./install.sh /usr
+
+    ld -lsdsl --verbose
+
+    #install protobuf
+    cd /opt
+    wget https://github.com/protocolbuffers/protobuf/releases/download/v3.18.0/protobuf-cpp-3.18.0.tar.gz
+    tar -zxvf protobuf-cpp-3.18.0.tar.gz
+    rm protobuf-cpp-3.18.0.tar.gz
+    cd protobuf-3.18.0
+    ./configure --prefix=/usr
+    make
+    make install
+    ldconfig
+    
+    #install variantstore
+    echo $LD_LIBRARY_PATH
+    cd /opt
+    git clone https://github.com/Kingsford-Group/variantstore
+    cd variantstore
+    ln -s /opt/sdsl-lite/include/sdsl sdsl
+    make proto
+    make variantstore
+    chmod a+x variantstore
+
+    #make links
+    cd /usr/bin
+    ln -s /opt/variantstore/variantstore ./
+
+%test
+    variantstore help -v

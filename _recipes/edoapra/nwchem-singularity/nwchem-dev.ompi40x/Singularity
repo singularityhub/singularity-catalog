@@ -1,0 +1,142 @@
+Bootstrap: docker
+From: ubuntu:20.04
+%labels
+MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
+
+%setup
+    bash -c "if [[ ! -z "${GITHUB_WORKSPACE}" ]]; then mkdir -p ${SINGULARITY_ROOTFS}/nwchem; rsync -a ${GITHUB_WORKSPACE}/nwchem/src ${SINGULARITY_ROOTFS}/nwchem/. ;fi"
+    bash -c "if [[  -f ${GITHUB_WORKSPACE}/opt/ompi/lib/libmpi.so ]]; then mkdir -p ${SINGULARITY_ROOTFS}/opt ;rsync -a ${GITHUB_WORKSPACE}/opt/ompi ${SINGULARITY_ROOTFS}/opt/. ; echo ompi/ucx cache fetched ;fi"
+    bash -c "if [[  -f ${GITHUB_WORKSPACE}/libext/lib/libnwc_openblas.a ]]; then rsync -a ${GITHUB_WORKSPACE}/libext/* ${SINGULARITY_ROOTFS}/nwchem/src/libext/. ; echo libext cache fetched ;fi"
+    bash -c "if [[  -f ${GITHUB_WORKSPACE}/simint_install/lib/lib_nwcsimint.a ]]; then rsync -a ${GITHUB_WORKSPACE}/simint_install ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/. ; echo libext cache fetched ;fi"
+    echo '@@@ ls -l SINGULARITY_ROOTFS'
+    ls -l ${SINGULARITY_ROOTFS}
+
+##%files
+##    ${GITHUB_WORKSPACE}/nwchem nwchem
+
+%post
+#
+#https://sylabs.io/guides/3.6/user-guide/mpi.html
+export DEBIAN_FRONTEND=noninteractive
+export ompi=4.0.5
+export ompi_prefix=ompi-$ompi
+export ucx=1.8.1
+export OMPI_DIR=/opt/ompi
+export SINGULARITY_ompi=4.0.5
+export SINGULARITY_ompi_prefix=ompi-$ompi
+pwd \
+&& apt-get -y update \
+&& apt-get -y install -y tzdata git \
+&& pwd \
+&& echo '@@ ls -lart ' \
+&& ls -lart  \
+&& echo '@@ ls on /opt' \
+&& ls -lart /opt \
+&& bash -c "if [[ ! -f nwchem/src/GNUmakefile ]]; then git clone --depth 1  https://github.com/nwchemgit/nwchem.git; fi " \
+&& apt-get -y install -y curl wget tar libnl-3-200 libnl-route-3-200 libgomp1 libnuma1 \
+ g++ gfortran   make ssh patch curl  wget unzip perl-base file \
+ python3 python3-dev cmake  unzip zip perl automake libtool autoconf flex  \
+ libnuma-dev libslurm-dev libpmi2-0-dev libpmi0-dev  libnl-3-dev libnl-route-3-dev udev \
+&& apt-get clean \
+&& bash -c "if [[ ! -f /opt/ompi/lib/libmpi.so ]]; then  \
+wget https://github.com/openucx/ucx/releases/download/v$ucx/ucx-$ucx.tar.gz \
+&& tar xzf  ucx-$ucx.tar.gz \
+&& cd ucx-$ucx \
+&& mkdir build && cd build \
+&& ../configure --prefix=$OMPI_DIR --disable-logging --disable-debug --disable-assertions --disable-params-check \
+&& make -j4 && make install \
+&& cd ../.. \
+&& wget https://github.com/open-mpi/ompi/archive/v$ompi.tar.gz -O $ompi_prefix.tar.gz && \
+tar xzf $ompi_prefix.tar.gz                                           && \
+cd $ompi_prefix                                                        && \
+./autogen.pl                                                           && \
+./configure  --prefix=$OMPI_DIR --with-ucx=$OMPI_DIR --enable-mca-no-build=btl-uct   \
+ --with-pmi --with-pmi-libdir=/usr/lib/x86_64-linux-gnu --enable-mpi1-compatibility --with-slurm --without-tm --without-lsf  \
+ --without-sge --without-alps --without-lustre --disable-memchecker \
+ --without-hcoll --disable-static  \
+--disable-mpi-java --enable-dlopen --without-cuda --without-verbs \
+--disable-mpi-cxx --disable-cxx-exceptions && \
+make -j 6                                                               && \
+make install                                                            && \
+make clean                                                              && \
+#cd /tmp && \
+#rm -rf /usr/share/doc/ && \
+#rm -rf /usr/share/man/
+cd .. ; fi "
+export PATH=$OMPI_DIR/bin:$PATH
+export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+export ARMCI_NETWORK=MPI-PR
+#export NWCHEM_TOP=/opt/nwchem
+export NWCHEM_TARGET=LINUX64
+export NWCHEM_MODULES="all python"
+export BUILD_OPENBLAS=1
+export BUILD_SCALAPACK=1
+export BLAS_SIZE=8
+export SCALAPACK_SIZE=8
+#export USE_64TO32=y
+export USE_MPI=y
+export USE_MPIF=y
+export USE_MPIF4=y
+export USE_HWOPT=n
+export USE_LIBXC=y
+export USE_NOIO=y
+export USE_SIMINT=y
+export SIMINT_MAXAM=5
+#ENV         MRCC_METHODS=y
+#ENV         CCSDTQ=y
+#ENV         CCSDTLR=y
+ls -l nwchem* || true \
+&& bash -c "if [[ ! -f nwchem/src/GNUmakefile ]]; then git clone --depth 1  https://github.com/nwchemgit/nwchem.git; fi" \
+&& cd nwchem \
+&& export NWCHEM_TOP=`pwd` \
+&& ls -lrt \
+&& cd src \
+&& ls -lrt libext/lib || true \
+&& make nwchem_config && make -j6  \
+&& make install INSTALL_PREFIX=/opt/nwchem \
+&& DEBIAN_FRONTEND=noninteractive apt-get -y install localepurge \
+&& echo MANDELETE >  /etc/locale.nopurge \
+&& echo DONTBOTHERNEWLOCALE >> /etc/locale.nopurge \
+&& echo en_US.UTF-8 >> /etc/locale.nopurge \
+&& localepurge \
+&& rm -rf /usr/share/doc  /usr/share/man \
+&& du -sh /opt/nwchem \
+&& du -sk /opt/nwchem/*|sort -n \
+&& rm -rf tce tools nwdft NWints/simint/libsimint_source/simint.l?_p?_d? geom symmetry util nwxc ddscf lapack blas rism argos peigs rmdft gradients symmetry property smd lucia dplot propery hessian ccsd mp2_grad moints cafe analyz dimqm   develop libext/scalapack libext/openblas libext/libxc/libxc*   ../lib || true\
+&& du -sk *|sort -n  || true\
+&& cd .. \
+&& du -sk *|sort -n || true \
+&& dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n | tail -n 100
+
+
+#clean unnecessary packages
+#apt-get -y purge curl wget tar  cmake  unzip zip perl automake libtool autoconf flex  \
+#&&  apt-get -y autoremove && apt-get clean
+
+#cd /data
+%environment
+export ompi=4.0.5
+export SINGULARITY_ompi=4.0.5
+export SINGULARITY_ompi_prefix=ompi-$ompi
+export OMPI_DIR=/opt/ompi
+export SINGULARITY_OMPI_DIR=$OMPI_DIR
+export SINGULARITYENV_APPEND_PATH=$OMPI_DIR/bin
+export SINGULARITYENV_APPEND_LD_LIBRARY_PATH=$OMPI_DIR/lib
+
+#export nwchem_hash=77ba3a6e1dd6f9ba26879d0416bb93b302f1f4f7
+#export NWCHEM_TOP=/opt/nwchem
+export FFIELD=amber
+export AMBER_1=$NWCHEM_TOP/src/data/amber_s/
+export AMBER_2=$NWCHEM_TOP/src/data/amber_q/
+export AMBER_3=$NWCHEM_TOP/src/data/amber_x/
+export AMBER_4=$NWCHEM_TOP/src/data/amber_u/
+export SPCE=${NWCHEM_TOP}/src/data/solvents/spce.rst
+export CHARMM_S=$NWCHEM_TOP/src/data/charmm_s/
+export CHARMM_X=$NWCHEM_TOP/src/data/charmm_x/
+export PATH=$PATH:/opt/nwchem/bin/
+export PATH=$OMPI_DIR/bin:$PATH
+export NWCHEM_BASIS_LIBRARY=/opt/share/libraries/
+export NWCHEM_NWPW_LIBRARY=/opt/share/libraryps/
+export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+#%runscript
+#exec /bin/bash "$@"

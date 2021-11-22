@@ -1,0 +1,9 @@
+Bootstrap: docker-daemon
+
+From: impica:latest
+
+%runscript
+exec "$@"
+
+%post
+chmod -R 777 /work/ /out/

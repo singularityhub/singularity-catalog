@@ -1,0 +1,41 @@
+Bootstrap: docker
+From: alpine:3.5
+
+%labels
+    MAINTAINER Victor Sande <victorsv at gmail>
+    APP rclone
+    VERSION v1.41
+
+%help
+    Interact with several Cloud storage endpoints
+    Syntax: [options] subcommand <parameters> <parameters...>
+    Official docs: https://rclone.org/docs/
+
+
+%post
+    export RCLONE_VERSION=current
+    export ARCH=amd64
+    apk --no-cache add ca-certificates fuse wget 
+    cd /tmp 
+    wget -q http://downloads.rclone.org/rclone-${RCLONE_VERSION}-linux-${ARCH}.zip 
+    unzip /tmp/rclone-${RCLONE_VERSION}-linux-${ARCH}.zip 
+    mv /tmp/rclone-*-linux-${ARCH}/rclone /usr/bin 
+    rm -r /tmp/rclone* 
+
+%runscript
+    /usr/bin/rclone "$@"
+
+
+##############################
+# RClone
+##############################
+
+%apphelp rclone
+    Interact with several Cloud storage endpoints
+    Syntax: [options] subcommand <parameters> <parameters...>
+    Official docs: https://rclone.org/docs/
+
+%apprun rclone
+    /usr/bin/rclone "$@"
+
+CMD ["--version"]

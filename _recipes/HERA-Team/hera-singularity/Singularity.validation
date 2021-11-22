@@ -1,0 +1,130 @@
+# =============================================================================
+# Definition file for singularity containers for the HERA software stack.
+# All containers come standard with the following Python packages:
+#
+# |-------------------------------------------------|
+# |  Data Analysis |  Astronomical    |  HERA       |
+# |----------------|------------------|-------------|
+# |  dask	         |  aipy	          |  linsolve   |
+# |  jupyterlab	   |  astropy	        |  uvtools    |
+# |  matplotlib	   |  astropy-healpix	|  hera_qm    |
+# |  numpy	       |  astroquery	    |  hera_cal   |
+# |  pandas	       |  cartopy	        |  hera_sim   |
+# |  scipy	       |  healpy	        |  hera_psepc |
+# |  scikit-learn	 |  pyuvdata1       |	            |
+# |  xarray	       |  pyuvsim         |             |
+# |                |  SSINS3          |             |
+# |-------------------------------------------------|
+#
+# This container contains specific branch of hera_sim under a PR for validation
+# simulation.
+# =============================================================================
+Bootstrap: library
+From: ubuntu:20.04
+
+
+# -----------------------------------------------------------------------------
+# - Runtime environment variables -
+# Define environment variables that will be set at runtime.
+# -----------------------------------------------------------------------------
+%environment
+  # conda install path
+  export CONDA_PATH="/usr/local/miniconda3"
+  # conda initialization script
+  export CONDA_SH="$CONDA_PATH/etc/profile.d/conda.sh"
+  # Prepend PATH with conda/python bin
+  export PATH=${CONDA_PATH}/bin:${PATH}
+  export PATH=${CONDA_PATH}/envs/validation/bin:${PATH}
+
+
+# -----------------------------------------------------------------------------
+# - Built commands -
+# Commands to be executed at build time after the base OS has been installed.
+# These commands are executed as root in /root inside the container.
+# -----------------------------------------------------------------------------
+%post
+  echo "Installing required OS packages ..."
+  # Update Ubuntu packages and install necessary packages
+  apt-get update && apt-get install -y git wget vim bash gcc gfortran g++ make file
+
+  # Fix locale bugs see https://github.com/hpcng/singularity/issues/11
+  apt-get install -y locales && \
+  echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && \
+  locale-gen && update-locale LANG=en_US.UTF-8
+
+  echo "Installing Open MPI"
+  export OMPI_DIR=/opt/ompi
+  export OMPI_VERSION=4.1.0
+  export OMPI_URL="https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-$OMPI_VERSION.tar.bz2"
+  mkdir -p /tmp/ompi
+  mkdir -p /opt
+  # Download
+  cd /tmp/ompi && wget -O openmpi-$OMPI_VERSION.tar.bz2 $OMPI_URL && tar -xjf openmpi-$OMPI_VERSION.tar.bz2
+  # Compile and install
+  cd /tmp/ompi/openmpi-$OMPI_VERSION && ./configure --prefix=$OMPI_DIR && make install
+  # Set env variables so we can compile our application
+  export PATH=$OMPI_DIR/bin:$PATH
+  export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+  export MANPATH=$OMPI_DIR/share/man:$MANPATH
+
+  apt-get clean
+
+  echo "DONE with OS install and update"
+
+  # DONE with OS install and update
+
+  # Define environment variables for install paths
+  INSTALL_PATH="/usr/local"
+  CONDA_PATH="$INSTALL_PATH/miniconda3"
+  CONDA_SH="$CONDA_PATH/etc/profile.d/conda.sh"
+
+  # Download and install miniconda
+  cd $INSTALL_PATH && \
+  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+  bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_PATH && \
+  rm Miniconda3-latest-Linux-x86_64.sh
+
+  # Make conda executable available during build and update.
+  # This does not make the executable available during runtime.
+  . $CONDA_SH && conda update -n base conda
+
+  # Create `hera1` enviroment and install dependencies for HEREA packages.
+  conda create -n validation -y -c conda-forge python=3.8 ipython ipykernel numpy scipy \
+    scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
+    aipy healpy pyuvdata h5py pyyaml click python-casacore cartopy \
+    xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl \
+    psutil pytest future numba
+
+  # Activate the Python environment
+  conda activate validation
+
+  # Install pyuvsim and pyradiosky
+  pip install git+https://github.com/RadioAstronomySoftwareGroup/pyuvsim.git
+
+  # Install healvis with gsm
+  pip install git+https://github.com/rasg-affiliates/healvis.git gsm
+
+  # Install pygdsm
+  pip install git+https://github.com/telegraphic/pygdsm
+
+  # Install SSINS
+  pip install git+https://github.com/mwilensky768/SSINS.git
+
+  # Install HERA packages.
+  # linsolve is used in most hera software and should be installed first
+  # hera_qm should be installed before hera_cal
+  for pkg in linsolve uvtools hera_qm hera_cal vis_cpu hera_sim hera_pspec
+  do
+    pip install git+https://github.com/HERA-Team/$pkg
+  done
+
+  echo "== Done building container =="
+
+
+%labels
+  Author HERA Team
+
+
+%help
+  This container contains specific branch of hera_sim under a PR for validation
+  simulation.

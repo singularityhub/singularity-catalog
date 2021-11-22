@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: ubuntu:21.04
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY https://github.com/icaoberg/singularity-btop
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.
+    VERSION 1.0.20
+
+%post
+    apt update
+    apt-get install -y coreutils sed git build-essential gcc-11 g++-11 wget
+    mkdir -p /opt/btop && cd /opt/btop
+    wget -nc https://github.com/aristocratos/btop/releases/download/v1.0.20/btop-1.0.20-x86_64-linux-musl.tbz
+    tar -xvf btop-1.0.20-x86_64-linux-musl.tbz && rm -f btop-1.0.20-x86_64-linux-musl.tbz
+    ln -s /opt/btop/bin/btop /usr/local/bin/btop
+    apt clean

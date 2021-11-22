@@ -1,0 +1,51 @@
+# Ubuntu 18.04 - Ros melodic franka ros container
+Bootstrap: docker
+From: osrf/ros:melodic-desktop-full
+
+%help
+    A container with ROS melodic installed. Usefull when you want to a robot that uses
+    ROS melodic while your own system has a different ROS version installed.
+%labels
+    Maintainer: Rick Staa
+    Github: https://github.com/rickstaa/real-panda-control-examples
+    Version: v0.0.0
+    Type: Private
+%environment
+    # Set language options
+    export LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+    # Set ROS vars
+    export ROS_DISTRO=melodic
+%post
+    # Install extra system package dependencies
+    apt update --fix-missing
+    apt install -q -y \
+        vim \
+        git \
+        bash-completion \
+        wget \
+        lsb-release \
+        iputils-ping
+    apt upgrade -y
+
+    # Install ros build tools
+    apt install -q -y python-catkin-tools \
+        python-rosdep \
+        python-rosinstall \
+        python-rosinstall-generator \
+        python-wstool \
+        build-essential
+
+    # Add container resources to the container
+    bash -c "cd / \
+        && git clone https://github.com/rickstaa/real-panda-control-examples.git \
+        && cp ./real-panda-control-examples/real_panda_control_examples/containers/singularity/resources/.singularity_bashrc /.singularity_bashrc \
+        && cp ./real-panda-control-examples/real_panda_control_examples/containers/singularity/resources/welcome_msgs/.ros-melodic.txt /.welcome_msg \
+        && cp ./real-panda-control-examples/real_panda_control_examples/containers/singularity/resources/bash_aliases/.singularity_bash_aliases /.singularity_bash_aliases \
+        && rm -rf /real-panda-control-examples"
+%runscript
+	# Execute the .singularity_bashrc file
+	OCI_CMD='/bin/bash'
+	OCI_ARGS='-rcfile /.singularity_bashrc'
+	SINGULARITY_OCI_RUN="${OCI_CMD} ${OCI_ARGS}"
+	exec $SINGULARITY_OCI_RUN

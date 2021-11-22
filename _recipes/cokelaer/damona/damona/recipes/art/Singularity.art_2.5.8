@@ -1,0 +1,17 @@
+Bootstrap: library
+From: cokelaer/damona/conda:4.7.12
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    export PATH=$PATH:/usr/local/anaconda/bin
+
+    conda install art==2016.06.05
+
+    # Let us save some space
+    conda clean --packages -y
+    conda clean --all -y # next requires lots of space
+
+

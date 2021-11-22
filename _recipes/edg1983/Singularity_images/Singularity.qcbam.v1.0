@@ -1,0 +1,83 @@
+Bootstrap: library
+From: centos:8
+
+%labels
+    Author Edoardo Giacopuzzi
+    Contact edoardo.giacopuzzi@well.ox.ac.uk
+
+%help
+    Image with alignment tools:
+    - fastqc v0.11.9
+    - samtools v1.11
+    - mosdepth v0.3.1
+    - somalier v0.2.12
+    - multiqc v1.9
+
+%environment
+    SHELL=/bin/bash
+    PATH=$PATH:/usr/local/bin
+    LC_ALL=C.UTF-8
+
+%post
+    #yum update
+    yum -y install \
+        cmake \
+        gcc \
+        gcc-c++ \
+        bzip2 \
+        bzip2-devel \
+        openssl-devel \
+        xz-devel \
+        openssl-devel \
+        ncurses-devel \
+        make \
+        wget \
+        zlib-devel \
+        autoconf \
+        tar \
+        unzip \
+        python3 \
+        python3-devel \
+        java-11-openjdk \
+	procps
+
+    yum -y groupinstall 'development tools'
+
+    #install fastQC
+    cd /opt
+    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
+    unzip fastqc_v0.11.9.zip
+    rm fastqc_v0.11.9.zip
+    cd FastQC/
+    chmod 755 fastqc
+    cd /usr/local/bin 
+    ln -s /opt/FastQC/fastqc ./
+    
+    #install samtools
+    cd /opt
+    wget https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2
+    tar -jxvf samtools-1.11.tar.bz2
+    rm samtools-1.11.tar.bz2
+    cd samtools-1.11
+    ./configure
+    make
+    make install
+
+    #install mosdepth
+    cd /usr/local/bin
+    wget https://github.com/brentp/mosdepth/releases/download/v0.3.1/mosdepth
+    chmod 755 mosdepth
+
+    #install somalier 
+    wget https://github.com/brentp/somalier/releases/download/v0.2.12/somalier
+    chmod 755 somalier
+
+    #install multiqc
+    pip3 install multiqc
+
+%test
+    samtools --version
+    somalier
+    mosdepth -h
+    multiqc --help
+    fastqc --help

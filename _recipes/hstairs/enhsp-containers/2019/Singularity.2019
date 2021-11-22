@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%post
+apt update
+apt install -y openjdk-11-jdk
+apt install -y git
+git clone https://gitlab.com/enricos83/ENHSP-Public.git
+cd /ENHSP-Public
+git checkout enhsp19-0.9.0
+./compile
+mv enhsp-dist ../
+cd ..
+rm -r ENHSP-Public
+apt remove -y openjdk-11-jdk
+apt remove -y git
+apt autoremove -y --purge
+apt install -y openjdk-11-jre-headless
+
+%runscript
+java -jar /enhsp-dist/enhsp.jar "$@"
+
+%help
+This is ENHSP-19 planner container.
+
+%labels
+Author Enrico Scala enricos83@gmail.com

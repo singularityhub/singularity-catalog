@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: perl:5.32.1
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-circos
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    VERSION 0.69-9
+
+%environment
+    export LANGUAGE=en_US.UTF-8
+    export LC_ALL=C
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    apt update && apt-get install -y locales libipc-run3-perl libgd-dev
+    locale-gen en_US.UTF-8
+    cpan install Math::Round
+    cpan install Font::TTF::Font
+    cpan install Config::General
+    cpan install Clone
+    cpan install GD::Polyline
+    cpan install Math::Bezier
+    cpan install GD
+    cpan install List::MoreUtils
+    cpan install Params::Validate
+    cpan install Readonly
+    cpan install Math::VecStat
+    cpan install Statistics::Basic
+    cpan install Set::IntSpan
+    cpan install Regexp::Common
+    cpan install SVG
+    cpan install Text::Format
+    cd /opt
+    wget http://circos.ca/distribution/circos-0.69-9.tgz
+    tar -xvf circos-0.69-9.tgz && rm -f circos-0.69-9.tgz
+    ln -s $(pwd)/circos-0.69-9/bin/circos /usr/local/bin/circos

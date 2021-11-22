@@ -1,0 +1,31 @@
+Bootstrap: docker
+FROM: continuumio/miniconda3
+
+%labels
+  Version v1.1
+
+%help
+  Singularity image for the RNA-Seq pipeline (Python 3), updated July 2020
+
+
+
+%post
+
+  # Add channels for Bioconda
+  /opt/conda/bin/conda config --add channels defaults
+  /opt/conda/bin/conda config --add channels bioconda
+  /opt/conda/bin/conda config --add channels conda-forge
+
+  # Install the tools
+  /opt/conda/bin/conda install --yes bedtools samtools subread fastqc cutadapt multiqc star picard deeptools htseq trim-galore kallisto openssl=1.0
+
+%environment
+
+%test
+   # bedtools --version
+   # samtools --version
+   # fastqc --version
+   # cutadapt -version
+   # bowtie2 --version
+   # picard SortSam --version
+   # deeptools --version

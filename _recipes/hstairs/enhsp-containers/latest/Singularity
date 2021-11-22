@@ -1,0 +1,48 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%post
+apt update
+apt install -y wget
+JDK=openjdk-17.0.1_linux-x64_bin.tar.gz
+wget https://download.java.net/java/GA/jdk17.0.1/2a2082e5a09d4267845be086888add4f/12/GPL/$JDK
+tar -xf $JDK
+PATH=$PATH:/jdk-17.0.1/bin
+rm $JDK
+export PATH
+apt install -y git
+git clone https://gitlab.com/enricos83/ENHSP-Public.git
+cd /ENHSP-Public
+git checkout enhsp-20
+./compile
+mv enhsp-dist ../
+cd ..
+rm -r ENHSP-Public
+jlink --no-header-files --no-man-pages --compress=2 --strip-java-debug-attributes --add-modules jdk.jsobject --output java-runtime
+rm -r /jdk-17.0.1
+PATH=$PATH:/java-runtime/bin
+
+git clone https://github.com/enricos83/downward.git
+cd downward 
+git checkout only-grounder
+cd ..
+cp -r downward/translate .
+rm -fr downward
+mkdir downward
+mv translate downward/
+apt install -y python3.8-minimal
+ln -s /usr/bin/python3.8 /usr/bin/python3
+
+apt remove -y git
+apt remove -y wget
+apt autoremove -y --purge
+export PATH
+
+%runscript
+/java-runtime/bin/java -jar /enhsp-dist/enhsp.jar "$@"
+
+%help
+This is the ENHSP-20 planner container.
+
+%labels
+Author Enrico Scala enricos83@gmail.com

@@ -74,13 +74,16 @@ From: ubuntu:20.04
     scikit-learn matplotlib pandas astropy astropy-healpix astroquery \
     aipy healpy pyuvdata=2.1.5 h5py pyyaml click python-casacore cartopy \
     xarray netcdf4 h5netcdf mpi4py dask jupyterlab ipympl \
-    psutil pytest future
+    psutil pytest future numba
 
   # Activate the Python environment
   conda activate hera1
 
   # Install pyuvsim and pyradiosky
-  pip install pyuvsim[sim]
+  pip install git+https://github.com/RadioAstronomySoftwareGroup/pyuvsim.git
+
+  # Install healvis with gsm
+  pip install git+https://github.com/rasg-affiliates/healvis.git gsm
 
   # Install pygdsm
   pip install git+https://github.com/telegraphic/pygdsm

@@ -1,0 +1,67 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/resources
+    mkdir -p ${SINGULARITY_ROOTFS}/opt/V2
+    mkdir -p ${SINGULARITY_ROOTFS}/opt/V2_core/core
+    mkdir -p ${SINGULARITY_ROOTFS}/opt/V2_core/config
+
+%environment
+    SHELL=/bin/bash
+    PATH=$PATH:/usr/local/bin
+    LC_ALL=C.UTF-8
+
+%files
+    tools/V2_anno.var2reg/V2/* /opt/V2
+    tools/V2_anno.var2reg/core/* /opt/V2_core/core
+    tools/V2_anno.var2reg/config/* /opt/V2_core/config
+    tools/V2_anno.var2reg/snpEff_latest_core.zip /opt 
+    resources/V2_anno.var2reg/* /resources
+ 
+%help
+    V2 pipeline for VCF annotation and then var2reg integration
+    Main available tools are:
+    - V2_annotation_pipeline_sample.py - performs VCF annotation and QC
+    - V2_var2reg_para.py - post-processing of annotated VCF. Integreates small-vars, SV and regDB
+    - snpEff / snpSift v4.3 - GRCh37.87 and GRCh38.92 human genome databases are provided
+    NOTE: you should set snpEff / snpSift executable in your setting file as 
+          java -jar /opt/snpEff/snpEff.jar
+          java -jar /opt/snpEff/snpSift.jar
+
+%post
+    ln -fs /usr/share/zoneinfo/Europe/London /etc/localtime
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update
+    apt-get -y install apt-transport-https zlib1g-dev libssl-dev libcurl4-openssl-dev liblzma-dev libbz2-dev build-essential wget cmake gcc language-pack-en-base python3 python3-pip make r-base-core default-jre
+    update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+    
+    ## Install htslib
+    cd /opt
+    wget https://github.com/samtools/htslib/releases/download/1.9/htslib-1.9.tar.bz2
+    tar -jxvf htslib-1.9.tar.bz2
+    cd htslib-1.9
+    ./configure
+    make
+    make install
+    
+    ## Install snpEff
+    cd /opt
+    unzip snpEff_latest_core.zip
+    mv /resources/snpEff* snpEff/
+    cd snpEff
+    unzip snpEff_v4_3_GRCh37.87.zip
+    unzip snpEff_v4_3_GRCh38.92.zip
+  
+    ## Install R packages
+    R --slave -e 'install.packages(c("rjson","data.table", "ggplot2", "reshape2", "dplyr", "stringr", "grid", "gridExtra"))' 
+ 
+    ## Install python modules and create link
+    pip3 install --upgrade setuptools
+    pip3 install Cython cytoolz toolz
+    pip3 install pandas pyranges vcfpy gffutils numpy tqdm pysam
+ 
+    ## Create links to bin
+    cd /opt/V2
+    chmod a+x *.py
+    ln --symbolic --force /opt/V2/*.py /usr/local/bin

@@ -1,0 +1,41 @@
+Bootstrap: docker
+From: python:3.5
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/code
+
+%environment
+    PYTHONUNBUFFERED=1
+    export PYTHONUNBUFFERED
+
+%files
+    requirements.txt /tmp/requirements.txt
+    manage.py /code/manage.py
+    run_uwsgi.sh /code/run_uwsgi
+    upload /code/upload
+    uwsgi.ini /code/uwsgi.ini
+
+%post
+    apt-get update
+    apt-get install -y sqlite3 libsqlite3-dev
+    apt-get install -y \
+        pkg-config \
+        cmake \
+        openssl \
+        wget \
+        git \
+        vim
+
+    pip install --upgrade pip
+    pip install -r /tmp/requirements.txt
+
+    mkdir -p /code/images && \
+    mkdir -p /var/www/images && \
+    chmod -R 0755 /code/images/ && \
+    # Create hashed temporary upload locations
+    mkdir -p /var/www/images/_upload/{0..9} && chmod 777 -R /var/www/images/_upload
+
+# Not intended for production
+%startscript
+    cd /code
+    /bin/bash /code/run_uwsgi.sh

@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: node:16.13.0-alpine
+Stage: spython-base
+
+%files
+package.json ./
+package-lock.json ./
+. ./
+%post
+# pull official base image
+
+# set working directory
+cd /app
+
+# add `/app/node_modules/.bin` to $PATH
+PATH=/app/node_modules/.bin:$PATH
+
+# install app dependencies
+npm install
+npm install react-scripts@3.4.1 -g --silent
+
+# add app
+
+# start app
+%environment
+export PATH=/app/node_modules/.bin:$PATH
+%runscript
+cd /app
+exec /bin/bash npm start "$@"
+%startscript
+cd /app
+exec /bin/bash npm start "$@"

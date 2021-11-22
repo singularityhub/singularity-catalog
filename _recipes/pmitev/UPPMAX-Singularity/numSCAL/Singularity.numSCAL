@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+  Author pmitev@gmail.com
+
+%environment
+  export LC_ALL=C
+  export MESA_GL_VERSION_OVERRIDE=3.3
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export LC_ALL=C
+  export NCPU=$(grep -c ^processor /proc/cpuinfo)
+
+  mkdir -p /tmp/apt
+  echo "Dir::Cache "/tmp/apt";" > /etc/apt/apt.conf.d/singularity-cache.conf
+
+  apt-get update && \
+  apt-get  -y --no-install-recommends install build-essential git apt-transport-https ca-certificates unzip qt5-default libglew-dev mesa-common-dev libglu1-mesa-dev libfontconfig1 libqt5opengl5-dev
+
+#  apt-get  -y --no-install-recommends install build-essential git apt-transport-https ca-certificates unzip qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libglew-dev mesa-common-dev libglu1-mesa-dev libfontconfig1 libqt5opengl5-dev
+  cd /opt
+  git clone --depth 1 https://github.com/ahboujelben/numSCAL-basic.git
+  cd numSCAL-basic
+  unzip libs.zip
+  unzip prerequisites.zip
+  qmake numSCAL.pro
+  make -j 4
+
+  
+  rm /etc/apt/apt.conf.d/singularity-cache.conf
+
+%runscript
+  /opt/numSCAL-basic/numSCAL "$@"

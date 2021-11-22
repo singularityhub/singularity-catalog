@@ -1,0 +1,250 @@
+Bootstrap: docker
+From: debian:9.13
+
+%environment
+    export PATH=/opt/DoubletDetection/:/opt/popscle/bin/:/opt:/usr/games:/opt/bedtools2/bin:/opt/conda/envs/py36/bin:/opt/souporcell:/opt/souporcell/troublet/target/release:/opt/conda/bin:/opt/minimap2-2.7:/root/.cargo/bin:/opt/vartrix-v1.1.3-x86_64-linux/:/opt/freebayes/scripts:/opt/freebayes:/opt/vcflib/bin:/opt/vcflib/scripts:$PATH
+    export PYTHONPATH=/opt/conda/envs/py36/lib/python3.6/site-packages/
+    export LC_ALL=C 
+    alias python=python3
+
+%post 
+#!/bin/bash
+    eval "$(command conda 'shell.bash' 'hook' 2> /dev/null)"
+    export PATH=/opt/conda/bin/:$PATH
+	ADD file:843b8a2a9df1a07305ff3d02484d4be7f769057c6d2e311d52d59e00deb917c6 in / 
+	/bin/sh -c apt-get update --fix-missing && apt-get install -y wget bzip2 ca-certificates curl git && apt-get clean && rm -rf /var/lib/apt/lists/*
+	/bin/sh -c wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.6.14-Linux-x86_64.sh -O ~/miniconda.sh && /bin/bash ~/miniconda.sh -b -p /opt/conda && rm ~/miniconda.sh && /opt/conda/bin/conda clean -tipsy && ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && echo "conda activate base" >> ~/.bashrc
+	ENV TINI_VERSION=v0.16.1
+	ADD fcc011174ff1c034ee60c6e5ee61d7e2ead72f93e352279c623be55431ff9b4a in /usr/bin/tini
+	/bin/sh -c chmod +x /usr/bin/tini
+	ENTRYPOINT ["/usr/bin/tini" "--"]
+
+	apt update
+    yes | apt upgrade
+    yes | apt-get install build-essential
+    apt-get install -y --no-install-recommends apt-utils
+    apt-get install -y gcc-7 g++-7 gfortran-7 libgfortran-7-dev
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7
+    update-alternatives --config gcc
+    gcc --version
+    yes | apt-get install wget
+    yes | apt-get install curl
+    apt install -y dirmngr --install-recommends
+    apt install -y software-properties-common
+    apt install -y apt-transport-https
+    add-apt-repository 'deb http://deb.debian.org/debian buster-backports main'
+    yes | apt-get update
+    yes | apt-get upgrade
+    apt install -y ca-certificates gnupg2
+    apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
+    add-apt-repository 'deb https://cloud.r-project.org/bin/linux/debian buster-cran35/'
+    apt-get update
+    apt install -y r-base
+    apt install -y r-base-dev
+    apt-get update
+    apt-get install -y libv8-dev
+    apt-get update
+	apt --allow-releaseinfo-change update
+    apt-get update
+    mkdir -p /usr/share/man/man1
+    apt-get install -y openjdk-11-jdk
+    java -version
+
+
+    cd /opt
+    yes | apt-get install git
+    /opt/conda/bin/conda init bash
+    eval "$(conda shell.bash hook)"
+    conda activate py36
+        yes | apt-get install libncurses5-dev
+        yes | apt-get install zlib1g-dev
+        yes | apt-get install libbz2-dev
+        yes | apt-get install liblzma-dev
+        yes | apt-get install zlib1g
+        yes | apt-get install zlib1g-dev
+        apt-get install -y pkg-config
+        apt-get install -y libcurl4-openssl-dev
+        apt-get install -y graphviz
+        apt-get install -y graphviz-dev
+        apt-get install -y libxml2
+        apt-get install -y libxml2-dev
+        apt-get install -y bzip2
+        apt-get install -y libssl-dev
+        apt-get install -y devscripts
+        apt-get install -y eigensoft
+
+    cd /root
+    wget https://github.com/Kitware/CMake/releases/download/v3.21.2/cmake-3.21.2.tar.gz
+    tar -xzf cmake-3.21.2.tar.gz
+    cd  cmake-3.21.2
+    ./configure
+    make
+    make install
+    cmake --version
+
+
+    /opt/conda/envs/py36/bin/pip install pandas
+    /opt/conda/envs/py36/bin/pip install docopt
+    /opt/conda/envs/py36/bin/pip install pyfaidx
+    /opt/conda/envs/py36/bin/pip install snpflip
+    /opt/conda/envs/py36/bin/pip install ugtm
+    /opt/conda/envs/py36/bin/pip install scikit-learn
+    /opt/conda/envs/py36/bin/pip install altair
+    /opt/conda/envs/py36/bin/pip install matplotlib
+    /opt/conda/envs/py36/bin/pip install numpy
+	/opt/conda/envs/py36/bin/pip install CrossMap
+	/opt/conda/envs/py36/bin/pip install cget
+	/opt/conda/envs/py36/bin/pip install argparse
+	/opt/conda/envs/py36/bin/pip install scrublet
+	/opt/conda/envs/py36/bin/pip install scipy
+	/opt/conda/envs/py36/bin/pip install umap-learn
+	/opt/conda/envs/py36/bin/pip install numba
+
+
+    cp /opt/conda/lib/libstdc++.so.6.0.26 /usr/lib/x86_64-linux-gnu/
+    mv /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so.6.bkp
+    ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.26 /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+
+
+	R --slave -e 'install.packages("V8", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("tidyverse", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("ggpubr", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("RColorBrewer", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("cluster", repos = "http://cran.us.r-project.org")'
+	R --slave -e 'install.packages("Seurat", repos = "http://cran.us.r-project.org")'
+	R --slave -e 'devtools::install_github(repo="knausb/vcfR")'
+	R --slave -e 'install.packages("lsa", repos = "http://cran.us.r-project.org")'
+	R --slave -e 'BiocManager::install("ComplexHeatmap")'
+	R --slave -e 'devtools::install_github("kostkalab/scds", ref="master")'
+	R --slave -e 'BiocManager::install("SingleCellExperiment")'
+	R --slave -e 'install.packages("ggforce", repos = "http://cran.us.r-project.org")'
+	R --slave -e 'install.packages("ggnewscale", repos = "http://cran.us.r-project.org")'
+
+
+    cd /opt
+        git clone https://github.com/broadinstitute/picard.git
+        cd picard/
+        ./gradlew shadowJar
+
+    cd /opt
+        wget https://www.dropbox.com/s/m8u61jn4i1mcktp/TestData4PipelineSmall.tar.gz
+
+    cd /opt
+    git clone https://github.com/JonathanShor/DoubletDetection.git
+    cd DoubletDetection
+    /opt/conda/envs/py36/bin/pip install .
+
+    cd /opt
+    wget https://github.com/lh3/minimap2/archive/v2.7.tar.gz
+        tar -xzvf v2.7.tar.gz
+        cd minimap2-2.7
+        make
+
+    cd /opt
+    wget https://github.com/arq5x/bedtools2/releases/download/v2.28.0/bedtools-2.28.0.tar.gz
+        tar -zxvf bedtools-2.28.0.tar.gz
+        cd bedtools2
+        make
+
+    cd /opt
+    CARGO_HOME=/opt/.cargo RUSTUP_HOME=/opt/.cargo bash -c 'curl https://sh.rustup.rs -sSf | sh -s -- -y'
+        . /opt/.cargo/env
+        which cargo
+        rustup default stable
+        yes | apt-get install git
+
+    cd /opt
+        git clone https://github.com/wheaton5/souporcell.git
+            cd souporcell/troublet
+            cargo build --release
+            cd /opt/souporcell/souporcell
+            cargo build --release
+    cd /opt
+        wget https://github.com/10XGenomics/vartrix/releases/download/v1.1.3/vartrix-v1.1.3-x86_64-linux.tar.gz
+            tar xzvf vartrix-v1.1.3-x86_64-linux.tar.gz
+            rm vartrix-v1.1.3-x86_64-linux.tar.gz
+            export PATH=/opt/vartrix-v1.1.3-x86_64-linux:$PATH
+
+    cd /opt
+    wget https://github.com/samtools/htslib/releases/download/1.10.2/htslib-1.10.2.tar.bz2
+        tar xvfj htslib-1.10.2.tar.bz2
+        cd htslib-1.10.2
+        ./configure
+        make
+        make install
+
+    cd /opt
+    git clone https://github.com/sc-eQTLgen-consortium/WG1-pipeline-QC.git
+
+    cd /opt
+        wget https://github.com/samtools/samtools/releases/download/1.10/samtools-1.10.tar.bz2
+        tar xvfj samtools-1.10.tar.bz2
+        rm samtools-1.10.tar.bz2
+        cd samtools-1.10
+        ./configure
+        make
+        make install
+
+    cd /opt
+        wget https://github.com/samtools/bcftools/releases/download/1.10.2/bcftools-1.10.2.tar.bz2
+        tar xvfj bcftools-1.10.2.tar.bz2
+        rm bcftools-1.10.2.tar.bz2
+        cd bcftools-1.10.2
+        ./configure
+        make
+        make install
+
+
+    cd /opt
+    git clone https://github.com/ekg/freebayes.git
+    wget https://github.com/ekg/freebayes/releases/download/v1.3.1/freebayes-v1.3.1
+        mv freebayes-v1.3.1 freebayes/freebayes
+        chmod 777 freebayes/freebayes
+
+    cd /opt
+    wget http://ftp.gnu.org/gnu/parallel/parallel-latest.tar.bz2
+        tar xjf parallel-latest.tar.bz2
+        cd parallel-*
+        ./configure && make
+        yes | make install
+
+
+    cd /opt
+    git clone https://github.com/statgen/popscle.git
+        cd popscle
+        # sed -i 's/set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -pthread")/set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -pthread --std=c++11")/g' CMakeLists.txt
+        cat CMakeLists.txt
+        mkdir build
+        cd build
+        cmake ..
+        make
+    echo 'alias popscle=/opt/popscle/bin/popscle' >> $SINGULARITY_ENVIRONMENT
+
+
+    sed -i 's/louvain.set_rng_seed(random_state)/partition_kwargs["seed"] = random_state/g'  /opt/conda/envs/py36/lib/python3.6/site-packages/scanpy/tools/_louvain.py
+
+##############################
+# setup scripts for users
+##############################
+%apphelp setup
+    This function copies pipeline scripts to the user systems from the Singularity image.
+%appenv setup
+    SCRIPT_DIR=/opt/WG1-pipeline-QC/Demultiplexing
+    export SCRIPT_DIR
+%apprun setup
+    exec cp -a ${SCRIPT_DIR}/. "$PWD"
+
+%apphelp test_dataset
+    This function copies the yaml scripts to the user systems from the Singularity image.
+%appenv test_dataset
+    TAR=/opt/TestData4PipelineSmall.tar.gz
+    export TAR
+%apprun test_dataset
+    exec cp -a ${TAR} "$@"
+
+
+
+%labels 
+    Authors Drew Neavin and Anne Senabouth
+	Image_version = 0.0.2
+

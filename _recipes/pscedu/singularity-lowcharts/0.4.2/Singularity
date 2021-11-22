@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: debian:latest
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-lowcharts
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.  
+    VERSION 0.4.2
+
+%post
+    apt update
+    apt install -y wget
+    wget -nc https://github.com/juan-leon/lowcharts/releases/download/v0.4.2/lowcharts-v0.4.2-x86_64-unknown-linux-gnu.tar.gz
+    tar -xvf lowcharts-v0.4.2-x86_64-unknown-linux-gnu.tar.gz && rm -f lowcharts-v0.4.2-x86_64-unknown-linux-gnu.tar.gz
+    mv lowcharts /usr/local/bin
+    apt clean

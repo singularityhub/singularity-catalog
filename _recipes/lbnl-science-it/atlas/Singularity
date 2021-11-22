@@ -28,7 +28,7 @@ From: lbnl-science-it/atlas
 	touch "_ROOT_DIR_OF_CONTAINER_" ## also is "_CURRENT_DIR_CONTAINER_BUILD" 
 	date     >> _ROOT_DIR_OF_CONTAINER_
 	hostname >> _ROOT_DIR_OF_CONTAINER_
-	echo "Singularity def 2021.0918.hhmm HelloWorld" >> _ROOT_DIR_OF_CONTAINER_
+	echo "Singularity def 2021.1101.1826 HelloWorld optparse" >> _ROOT_DIR_OF_CONTAINER_
 
 	# docker run as root, but singularity may run as user, so adding these hacks here
 	#mkdir -p /global/scratch/tin
