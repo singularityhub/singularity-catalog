@@ -26,9 +26,42 @@ From: continuumio/miniconda3
 	apt update && apt install git
 	git clone https://github.com/eaton-lab/tetrad.git
 	cd tetrad
+
+	# NOTE: there is a patch that needs to be applied to avoid a bug
+	# It may not be necessary once fixed on the repository
+		echo "diff --git a/tetrad/tetrad.py b/tetrad/tetrad.py" >> mydiff
+		echo "index a0c70c3..9ed2e9a 100644" >> mydiff
+		echo "--- a/tetrad/tetrad.py" >> mydiff
+		echo "+++ b/tetrad/tetrad.py" >> mydiff
+		echo "@@ -316,7 +316,10 @@ class Tetrad(object):" >> mydiff
+		echo "         # reloading info from hdf5" >> mydiff
+		echo "         assert \".snps.hdf5\" in self.files.data, \"data file is not .snps.hdf5\"" >> mydiff
+		echo "         io5 = h5py.File(self.files.data, 'r')" >> mydiff
+		echo "-        names = [i.decode() for i in io5[\"snps\"].attrs[\"names\"]]" >> mydiff
+		echo "+        try:" >> mydiff
+		echo "+            names = [i.decode() for i in io5[\"snps\"].attrs[\"names\"]]" >> mydiff
+		echo "+        except AttributeError:" >> mydiff
+		echo "+            names = [i for i in io5[\"snps\"].attrs[\"names\"]]" >> mydiff
+		echo "         self.samples = names" >> mydiff
+		echo "" >> mydiff
+		echo "" >> mydiff
+		echo "@@ -333,7 +336,10 @@ class Tetrad(object):" >> mydiff
+		echo "         # get data shape from io5 input file       " >> mydiff
+		echo "         assert \".snps.hdf5\" in self.files.data, \"data file is not .snps.hdf5\"" >> mydiff
+		echo "         io5 = h5py.File(self.files.data, 'r')" >> mydiff
+		echo "-        names = [i.decode() for i in io5[\"snps\"].attrs[\"names\"]]" >> mydiff
+		echo "+        try:" >> mydiff
+		echo "+            names = [i.decode() for i in io5[\"snps\"].attrs[\"names\"]]" >> mydiff
+		echo "+        except AttributeError:" >> mydiff
+		echo "+            names = [i for i in io5[\"snps\"].attrs[\"names\"]]" >> mydiff
+		echo "         self.samples = names" >> mydiff
+		echo "         ntaxa = len(names)" >> mydiff
+		echo "         nsnps = io5[\"snps\"].shape[1]" >> mydiff
+
+	git apply mydiff
 	python setup.py install
 	cd ..
-	rm -r tetrad
+	rm -rf tetrad
 
 
 %environment

@@ -1,5 +1,5 @@
 # Author: B. Anderson
-# Singularity recipe for creating a container for using Qiime
+# Singularity recipe for creating a container for using QIIME2
 
 Bootstrap: docker
 From: continuumio/miniconda3
@@ -7,58 +7,35 @@ From: continuumio/miniconda3
 
 %labels
 	MAINTAINER bmichanderson
-	PROGRAM Qiime
-	VERSION 2021.4
+	PROGRAM QIIME2
+	VERSION 2021.8
 
 
 %post
 	# set frontend for package installation
 	export DEBIAN_FRONTEND=noninteractive
 
-
 	# update conda
 	conda update conda
-
 
 	# install dependencies with conda
 	conda install wget
 
-
 	# qiime2
-	wget https://data.qiime2.org/distro/core/qiime2-2021.4-py38-linux-conda.yml
+	wget https://data.qiime2.org/distro/core/qiime2-2021.8-py38-linux-conda.yml
 	export MY_ENV="qiime2"
-	conda env create -n $MY_ENV --file qiime2-2021.4-py38-linux-conda.yml
-	rm qiime2-2021.4-py38-linux-conda.yml
+	conda env create -n $MY_ENV --file qiime2-2021.8-py38-linux-conda.yml
+	rm qiime2-2021.8-py38-linux-conda.yml
 	conda clean -ay
-
 
 	# set path for new environment
 	echo "export PATH=/opt/conda/envs/$MY_ENV/bin:$PATH" >> $SINGULARITY_ENVIRONMENT
-	#export PATH=/opt/conda/envs/$MY_ENV/bin:/opt/conda/bin:$PATH
-
-
-%test
-	# test that the program works
-	#qiime --help		# this breaks with read only file system
-
-
-%environment
-	# Set up environmental variables within the container
-
-
-%runscript
-	# This will be executed when the container is run (singularity run [container])
 
 
 %help
 	# This message is displayed when called as: singularity run-help [container]
-
 	******************************************************************************
-
-	This container is for running Qiime
-
+	This container is for running QIIME2
 	To use: singularity exec qiime.sif qiime ...
-	
 	Check contents by entering it as: singularity shell qiime.sif
-
 	******************************************************************************

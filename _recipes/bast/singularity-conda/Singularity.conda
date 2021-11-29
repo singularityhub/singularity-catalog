@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: continuumio/miniconda3:4.10.3-alpine
+
+# Reads:
+#   environment.yml
+#
+# Creates:
+#   environment (folder)
+#
+# Usage:
+#    $ ./conda.sif python myscript.py
+#    runs myscript.py inside the conda environment defined by environment.yml
+#
+#    $ ./conda.sif python
+#    opens Python shell inside the conda environment defined by environment.yml
+
+%post
+  # https://github.com/ContinuumIO/docker-images/issues/151
+  mkdir /opt/conda/pkgs
+  touch /opt/conda/pkgs/urls.txt
+
+%environment
+  export LC_ALL=C
+
+%runscript
+  eval "$(conda shell.bash hook)"
+  if [ ! -d "environment" ]; then
+    conda env create --prefix environment --file environment.yml
+  else
+    if [ "environment.yml" -nt "environment" ]; then
+      echo "environment.yml is newer than environment: updating environment"
+      conda env update --prefix environment --file environment.yml --prune
+    fi
+  fi
+
+  conda activate ./environment
+
+  $@

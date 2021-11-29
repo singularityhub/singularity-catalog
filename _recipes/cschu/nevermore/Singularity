@@ -28,4 +28,4 @@ export PATH=$PATH:/opt/software/miniconda3/bin:/opt/software/mOTUs
   bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/software/miniconda3
   rm -f Miniconda3-latest-Linux-x86_64.sh
 
-  /opt/software/miniconda3/bin/conda install -y -c conda-forge -c bioconda 'samtools>=1.13' bwa kraken2 fastqc multiqc bbmap
+  /opt/software/miniconda3/bin/conda install -y -c conda-forge -c bioconda 'samtools>=1.13' bwa kraken2 fastqc multiqc bbmap seqtk

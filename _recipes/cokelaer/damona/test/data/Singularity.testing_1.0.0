@@ -1,0 +1,24 @@
+BootStrap: docker
+From: alpine
+
+%labels
+
+    AUTHOR Thomas Cokelaer
+    VERSION 1.0
+
+%post
+
+    echo "echo 'Hello World'" > /usr/local/bin/hello
+    chmod 755 /usr/local/bin/hello
+
+
+
+%environment
+    export LANG=C   # prevents perl for raising warnings
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+
+%runscript
+    exec hello
+
+

@@ -140,8 +140,8 @@ From: drneavin/SingularityBaseImages:r363_python368
     cd /opt
         mkdir plink2
         cd plink2
-			wget https://s3.amazonaws.com/plink2-assets/plink2_linux_x86_64_20211011.zip
-            unzip plink2_linux_x86_64_20211011.zip
+            wget https://s3.amazonaws.com/plink2-assets/plink2_linux_x86_64_20211125.zip
+            unzip plink2_linux_x86_64_20211125.zip
 
     cd /opt
         git clone https://github.com/broadinstitute/picard.git
@@ -149,7 +149,7 @@ From: drneavin/SingularityBaseImages:r363_python368
         ./gradlew shadowJar
 
     cd /opt
-        git clone --single-branch --branch v0.0.2 https://github.com/sc-eQTLgen-consortium/WG1-pipeline-QC.git
+        git clone --single-branch --branch v0.0.3 https://github.com/sc-eQTLgen-consortium/WG1-pipeline-QC.git
 
 	cd /opt
 		wget https://www.dropbox.com/s/fvd4pl8no3ngg0l/hg38exonsUCSC.bed
@@ -180,4 +180,4 @@ From: drneavin/SingularityBaseImages:r363_python368
 
 %labels
 	Author = Drew Neavin
-	Image_version = 0.0.2
+	Image_version = 0.0.3

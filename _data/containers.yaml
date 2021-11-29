@@ -1,19 +1,19 @@
 bases:
-- count: 925
+- count: 933
   name: ubuntu
 - count: 261
   name: nvidia/cuda
 - count: 206
   name: debian
-- count: 144
+- count: 146
   name: centos
-- count: 97
+- count: 98
   name: continuumio/miniconda3
-- count: 89
+- count: 91
   name: alpine
 - count: 68
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 65
+- count: 66
   name: tensorflow/tensorflow
 - count: 58
   name: mkandes/naked-singularity
@@ -41,7 +41,7 @@ bases:
   name: bilbydev/bilby-test-suite-python37
 - count: 22
   name: khanlab/tar2bids
-- count: 21
+- count: 22
   name: cokelaer/damona/conda
 - count: 20
   name: nvcr.io/nvidia/pytorch
@@ -78,8 +78,6 @@ bases:
 - count: 11
   name: conda/miniconda2
 - count: 10
-  name: dcgc-bfx/dcgc-jupyter-rstudio
-- count: 10
   name: continuumio/miniconda
 - count: 10
   name: nvcr.io/nvidia/cuda
@@ -89,6 +87,8 @@ bases:
   name: hariszaf/pema
 - count: 10
   name: poldracklab/mriqc
+- count: 9
+  name: dcgc-bfx/dcgc-jupyter-rstudio
 - count: 8
   name: quay.io/vgteam/vg
 - count: 8
@@ -131,6 +131,8 @@ bases:
   name: vitchyr/railrl-torch4cuda9
 - count: 6
   name: provarepro/openvino
+- count: 6
+  name: bids/hcppipelines
 - count: 5
   name: drneavin/SingularityBaseImages
 - count: 5
@@ -138,9 +140,9 @@ bases:
 - count: 5
   name: metabat/metabat
 - count: 5
-  name: node
+  name: mambaorg/micromamba
 - count: 5
-  name: bids/hcppipelines
+  name: node
 - count: 5
   name: neuronets/kwyk
 - count: 5
@@ -169,8 +171,6 @@ bases:
   name: finalduty/archlinux
 - count: 4
   name: /tmp/base.simg
-- count: 4
-  name: mambaorg/micromamba
 - count: 4
   name: mattocci/rstan
 - count: 4
@@ -290,6 +290,8 @@ bases:
 - count: 2
   name: rynlib
 - count: 2
+  name: richelbilderbeek/default/plinkr
+- count: 2
   name: registry.gitlab.com/rode0day/fuzzer-testing/afl_runner
 - count: 2
   name: registry.gitlab.com/rode0day/fuzzer-testing/qsym_runner
@@ -396,6 +398,8 @@ bases:
 - count: 2
   name: bids/spm
 - count: 2
+  name: sebastientourbier/mialsuperresolutiontoolkit
+- count: 2
   name: ../../R/r/r_3.5.1.simg
 - count: 2
   name: ../../R/r-minimal/r-minimal_3.5.1.simg
@@ -405,6 +409,8 @@ bases:
   name: combinelab/salmon
 - count: 2
   name: rocker/r-ubuntu
+- count: 2
+  name: maplesond/portcullis
 - count: 2
   name: barbagroup/landspill
 - count: 2
@@ -470,7 +476,13 @@ bases:
 - count: 1
   name: ghcr.io/truatpasteurdotfr/singularity-docker-centos8-warewulf4-builder
 - count: 1
+  name: ghcr.io/truatpasteurdotfr/singularity-docker-stream8-warewulf4-builder
+- count: 1
   name: gnina/gnina
+- count: 1
+  name: ghcr.io/truatpasteurdotfr/singularity-docker-busybox
+- count: 1
+  name: ghcr.io/truatpasteurdotfr/singularity-docker-fidle-gpu
 - count: 1
   name: ghcr.io/truatpasteurdotfr/singularity-docker-pytorch-a40
 - count: 1
@@ -577,8 +589,6 @@ bases:
   name: SavuCore.simg
 - count: 1
   name: intel/oneapi-basekit
-- count: 1
-  name: richelbilderbeek/default/plinkr
 - count: 1
   name: registry.gitlab.com/rode0day/fuzzer-testing/i386/afl_runner
 - count: 1
@@ -926,8 +936,6 @@ bases:
 - count: 1
   name: OSKAR-2.7.6-base.sif
 - count: 1
-  name: maplesond/portcullis
-- count: 1
   name: tswetnam/cloudcompare
 - count: 1
   name: ubuntu-focal
@@ -975,8 +983,6 @@ bases:
   name: bids/fibredensityandcrosssection
 - count: 1
   name: sebastientourbier/connectomemapper-bidsapp
-- count: 1
-  name: sebastientourbier/mialsuperresolutiontoolkit
 - count: 1
   name: repronim/simple_workflow
 - count: 1
@@ -1146,15 +1152,15 @@ bases:
 - count: 1
   name: willprice/gpu-flow
 bootstraps:
-- count: 3021
+- count: 3039
   name: docker
-- count: 313
+- count: 318
   name: debootstrap
-- count: 237
+- count: 236
   name: shub
-- count: 183
+- count: 187
   name: library
-- count: 81
+- count: 83
   name: yum
 - count: 72
   name: localimage
@@ -1172,10 +1178,10 @@ bootstraps:
   name: self
 - count: 5
   name: docker-daemon
+- count: 2
+  name: 'library  '
 - count: 1
   name: tensorflow
-- count: 1
-  name: 'library  '
 orgs:
 - count: 35
   name: quay.io/biocontainers
@@ -1189,6 +1195,8 @@ orgs:
   name: rocker
 - count: 9
   name: nvcr.io/nvidia
+- count: 7
+  name: ghcr.io/truatpasteurdotfr
 - count: 6
   name: library
 - count: 6
@@ -1199,8 +1207,6 @@ orgs:
   name: continuumio
 - count: 6
   name: nvidia
-- count: 4
-  name: ghcr.io/truatpasteurdotfr
 - count: 4
   name: godloved
 - count: 4
@@ -1644,8 +1650,6 @@ orgs:
 - count: 1
   name: NuWro
 - count: 1
-  name: maplesond
-- count: 1
   name: tswetnam
 - count: 1
   name: pdal
@@ -1681,6 +1685,8 @@ orgs:
   name: combinelab
 - count: 1
   name: cyberbotics
+- count: 1
+  name: maplesond
 - count: 1
   name: barbagroup
 - count: 1
@@ -1744,8 +1750,8 @@ orgs:
 - count: 1
   name: tensorflow
 tags:
-  latest: 293
-  other: 2758
+  latest: 295
+  other: 2776
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -1797,7 +1803,7 @@ versions:
     '3.5': 1
     '3.6': 2
     '3.7': 2
-    '3.8': 4
+    '3.8': 5
     edge: 29
     latest: 18
   alpine/git:
@@ -1992,8 +1998,8 @@ versions:
     centos7.5.1804: 1
     centos7.6.1810: 3
     centos7.8.2003: 2
-    centos8: 3
-    latest: 4
+    centos8: 4
+    latest: 5
   charade/xlibbox@sha256:
     04b1aca63f51cd18972b44380a7fcf2da0115c9e21e80fb9d375f39f229f686d: 1
   clottaz/fastqpuri:
@@ -2001,7 +2007,7 @@ versions:
   cokelaer/damona:
     r_4.0.2: 1
   cokelaer/damona/conda:
-    4.7.12: 14
+    4.7.12: 15
     4.9.2: 7
   cokelaer/damona/sequana:
     0.9.1: 1
@@ -2028,6 +2034,7 @@ versions:
     4.7.12: 5
   continuumio/miniconda3:
     4.10.3: 2
+    4.10.3-alpine: 1
     4.5.12: 1
     4.6.14: 4
     4.7.10: 2
@@ -2064,7 +2071,7 @@ versions:
   dcgc-bfx/dcgc-jupyter-rstudio:
     '0.1': 4
     0.2.0: 2
-    0.2.1: 4
+    0.2.1: 3
   debian:
     10.2-slim: 1
     '7': 1
@@ -2185,14 +2192,20 @@ versions:
     ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0-openmpi-3.1.6: 1
     ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0-openmpi-4.0.5: 1
     ubuntu-18.04-openmpi-3.1.6: 1
+  ghcr.io/truatpasteurdotfr/singularity-docker-busybox:
+    main: 1
   ghcr.io/truatpasteurdotfr/singularity-docker-centos7-ci:
     latest: 2
   ghcr.io/truatpasteurdotfr/singularity-docker-centos8-warewulf4-builder:
+    main: 1
+  ghcr.io/truatpasteurdotfr/singularity-docker-fidle-gpu:
     main: 1
   ghcr.io/truatpasteurdotfr/singularity-docker-pytorch-a40:
     main: 1
   ghcr.io/truatpasteurdotfr/singularity-docker-stream8-ci:
     latest: 2
+  ghcr.io/truatpasteurdotfr/singularity-docker-stream8-warewulf4-builder:
+    main: 1
   gipert/default/arch-base:
     latest: 6
   gitlab.archlinux.org:
@@ -2361,8 +2374,9 @@ versions:
     latest: 1
   mambaorg/micromamba:
     0.17.0: 4
+    latest: 1
   maplesond/portcullis:
-    test: 1
+    test: 2
   markito3/gluex_docker_devel:
     latest: 1
   markito3/gluex_docker_prod:
@@ -2951,7 +2965,7 @@ versions:
   repronim/simple_workflow:
     1.1.0: 1
   richelbilderbeek/default/plinkr:
-    0.17.2.1: 1
+    0.17.2.1: 2
   ro47014:
     20-10-3: 1
   rocker/geospatial:
@@ -3005,6 +3019,7 @@ versions:
     v3.0.0-diffcourse: 1
   sebastientourbier/mialsuperresolutiontoolkit:
     v2.0.1: 1
+    v2.0.2: 1
   sebastientourbier/multiscalebrainparcellator:
     v1.1.1: 1
   semc/appion-protomo:
@@ -3068,6 +3083,7 @@ versions:
     1.13.2-py3: 1
     1.14.0-gpu-py3: 2
     1.15.2-gpu-py3: 1
+    1.15.5: 1
     1.7.0-devel-gpu: 3
     1.7.0-devel-gpu-py3: 1
     2.0.0-gpu-py3: 2
@@ -3130,11 +3146,11 @@ versions:
   uazhlt/pytorch-example:
     pytorch-1.3.0: 1
   ubuntu:
-    '14.04': 15
+    '14.04': 16
     '16.04': 131
     '17.04': 6
-    '18.04': 207
-    '18.04 ': 1
+    '18.04': 210
+    '18.04 ': 2
     '19.04': 10
     '19.10': 4
     '20.04': 162
@@ -3150,9 +3166,9 @@ versions:
     bionic-20210222: 1
     bionic-20210827: 1
     cosmic: 4
-    disco: 2
+    disco: 3
     eoan-20200410: 2
-    focal: 20
+    focal: 22
     focal-20200729: 1
     focal-20200925: 3
     focal-20210827: 1

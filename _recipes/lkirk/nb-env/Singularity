@@ -20,12 +20,12 @@ Stage: build-singularity
 	    cryptsetup-bin \
 	    ca-certificates
 
-	wget https://dl.google.com/go/go$GO_VERSION.$OS-$ARCH.tar.gz
+	wget -q https://dl.google.com/go/go$GO_VERSION.$OS-$ARCH.tar.gz
 	tar -C /usr/local -xzf go$GO_VERSION.$OS-$ARCH.tar.gz
 	rm go$GO_VERSION.$OS-$ARCH.tar.gz
 	export PATH="/usr/local/go/bin:${PATH}"
 
-	wget https://github.com/sylabs/singularity/releases/download/v${SINGULARITY_VERSION}/singularity-ce-${SINGULARITY_VERSION}.tar.gz
+	wget -q https://github.com/sylabs/singularity/releases/download/v${SINGULARITY_VERSION}/singularity-ce-${SINGULARITY_VERSION}.tar.gz
 	tar -xzf singularity-ce-${SINGULARITY_VERSION}.tar.gz
 	cd singularity-ce-${SINGULARITY_VERSION}
 	./mconfig --without-suid
@@ -36,15 +36,8 @@ Bootstrap: docker
 From: python:3.8-slim
 Stage: final
 
-%runscript
-export GRML_COMP_CACHING=no ZDOTDIR=/opt/home DIRSTACKFILE=
-/usr/bin/zsh ${@}
-
 %startscript
 jupyter lab --no-browser ${@}
-
-%files
-etc/zshrc.local /opt/home/.zshrc.local
 
 %files from build-singularity
        /usr/local/bin /usr/local
@@ -60,28 +53,25 @@ etc/zshrc.local /opt/home/.zshrc.local
     apt-get install -y --no-install-recommends \
         locales \
         ca-certificates \
-        curl \
         fonts-texgyre \
         less \
         libssl-dev \
         libcurl4-openssl-dev \
         libgit2-dev \
         libxml2-dev \
-        zsh \
         squashfs-tools \
-        libseccomp-dev
+        libseccomp-dev \
+        wget
 
     # Fix locale
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
     locale-gen en_US.utf8
     /usr/sbin/update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 
-    curl -Lo $HOME/.zshrc 'https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc'
-
     # Install Node
-    # TODO: replace curl w/ wget and bash
-    curl -sL https://deb.nodesource.com/setup_15.x | bash -
-    # curl -sL https://deb.nodesource.com/setup_14.x | bash -
+    wget -qO install-node.bash https://deb.nodesource.com/setup_16.x
+    bash install-node.bash
+    rm install-node.bash
     apt-get install -y nodejs
 
     # Install JupyterLab
@@ -119,11 +109,11 @@ etc/zshrc.local /opt/home/.zshrc.local
         devtools
 
     r --eval '
-    library('IRkernel')
+    library("IRkernel")
     IRkernel::installspec(user = FALSE)
 
     devtools::install_github("hadley/devtools")
-    library('remotes')
+    library("remotes")
     remotes::install_github("rstudio/renv")
     '
 
@@ -134,7 +124,5 @@ etc/zshrc.local /opt/home/.zshrc.local
     rm /etc/apt/apt.conf.d/90local-no-recommends
     rm -rf /tmp/downloaded_packages/ /tmp/*.rds
     rm -rf /var/lib/apt/lists/*
-
-    chsh -s /usr/bin/zsh
 
     mkdir -p /usr/local/var/singularity/mnt/session

@@ -1,5 +1,10 @@
-Bootstrap: shub
-From:  dcgc-bfx/dcgc-jupyter-rstudio:0.2.1
+Bootstrap: docker
+From: mambaorg/micromamba:latest
+
+%labels
+    Author fabian.rost@tu-dresden.de
+    Organisation DcGC
+    Version latest
 
 %help
   Container for single cell analysis.
@@ -9,139 +14,122 @@ From:  dcgc-bfx/dcgc-jupyter-rstudio:0.2.1
 
   Start rstudio server listening on port 8787:
     singularity run --writable-tmpfs --app rserver shub://dcgc-bfx/dcgc-single-cell 8787
-    
+
 %files
-  tests/scanpy_test.py
+  tests /opt
+  environment.yml /opt
+  .bashrc
+  jupyter_notebook_config.json /opt/conda/etc/jupyter/
+  rserver.conf /etc/rstudio/rserver.conf
 
 %environment
   export DEBIAN_FRONTEND=noninteractive
   export PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-  export NUMBA_CACHE_DIR=/tmp 
+  export NUMBA_CACHE_DIR=/tmp
 
 %post
-  SINGULARITY_BUILD_DATE=`date`
-  echo "export SINGULARITY_BUILD_DATE=\"Container build date: ${SINGULARITY_BUILD_DATE}\"" >> $SINGULARITY_ENVIRONMENT
+  set -eu
 
+  # Build date (when building, pass via SINGULARITYENV_CONTAINER_BUILD_DATE otherwise date when building)
+  if [ -z ${CONTAINER_BUILD_DATE+x} ]
+  then
+    CONTAINER_BUILD_DATE=$(date)
+  fi
+  echo "export CONTAINER_BUILD_DATE=\"${CONTAINER_BUILD_DATE}\"" >> $SINGULARITY_ENVIRONMENT
+
+  # Git repository names (when building, pass via SINGULARITYENV_CONTAINER_GIT_NAME otherwise empty)
+  if [ -z ${CONTAINER_GIT_NAME+x} ]
+  then
+    CONTAINER_GIT_NAME=''
+  fi
+  echo "export CONTAINER_GIT_NAME=\"${CONTAINER_GIT_NAME}\"" >> $SINGULARITY_ENVIRONMENT
+
+  # Git repository url (when building, pass via SINGULARITYENV_CONTAINER_GIT_URL otherwise empty)
+  if [ -z ${CONTAINER_GIT_URL+x} ]
+  then
+    CONTAINER_GIT_URL=''
+  fi
+  echo "export CONTAINER_GIT_URL=\"${CONTAINER_GIT_URL}\"" >> $SINGULARITY_ENVIRONMENT
+
+  # Git repository commit id (when building, pass via SINGULARITYENV_CONTAINER_GIT_COMMIT_ID otherwise empty)
+  if [ -z ${CONTAINER_GIT_COMMIT_ID+x} ]
+  then
+    CONTAINER_GIT_COMMIT_ID=''
+  fi
+  echo "export CONTAINER_GIT_COMMIT_ID=\"${CONTAINER_GIT_COMMIT_ID}\"" >> $SINGULARITY_ENVIRONMENT
+
+  # the linux command 'make' supports the compilation of independent targets in parallel; this is also passed to R 'install.packages' since it uses 'make' internally
+  COMPILE_CPUS=4
+
+  # deactive interactive dialogs
   export DEBIAN_FRONTEND=noninteractive
+
+  # install and reconfigure locale
+  apt-get clean && apt-get update -y && apt-get upgrade -y
+  apt-get install -y locales
+  apt-get clean
+  export LANGUAGE="en_US.UTF-8"
+  export LANG="en_US.UTF-8"
+  export LC_ALL="en_US.UTF-8"
+  echo "LC_ALL=en_US.UTF-8" >> /etc/environment
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  echo "LANG=en_US.UTF-8" > /etc/locale.conf
+  locale-gen --purge en_US.UTF-8
+  dpkg-reconfigure --frontend=noninteractive locales
+
+  # set PATH for use of conda/mamba
   export PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-  # install python packages with mamba
-  mamba install --quiet --yes \
-    anndata \
-    anndata2ri \
-    bbknn \
-    bioservices \
-    cellrank \
-    cython \
-    gsl \
-    h5py \
-    joblib \
-    leidenalg \
-    libtiff=4.1 `# version 4.2 breaks plotting` \
-    loompy \
-    louvain \
-    numba=0.52 `# version 0.53 breaks scanpy neighbors` \
-    pybedtools \
-    pybiomart \
-    pypairs \
-    pytables \
-    python-igraph \
-    rpy2=3.4.2 \
-    scanpy \
-    scikit-learn \
-    scrublet \
-    scvi \
-    statsmodels \
-    xlrd \
-    xlwt \
-    `# R packages` \
-    bioconductor-annotationhub \
-    bioconductor-biomart \
-    bioconductor-clusterexperiment \
-    bioconductor-complexheatmap \
-    bioconductor-deseq2 \
-    bioconductor-dropletutils \
-    bioconductor-genomeinfodb \
-    bioconductor-genomeinfodbdata \
-    bioconductor-hsmmsinglecell \
-    bioconductor-loomexperiment \
-    bioconductor-mast \
-    bioconductor-monocle \
-    bioconductor-scater \
-    bioconductor-scran \
-    bioconductor-singlecellexperiment \
-    bioconductor-slingshot \
-    r-argparse \
-    r-biocmanager \
-    r-enrichr \
-    r-factoextra \
-    r-fastmatch \
-    r-furrr \
-    r-future \
-    r-gam \
-    r-ggthemes \
-    r-kableextra \
-    r-loomr \
-    r-monocle3 \
-    r-openxlsx \
-    r-parallelly \
-    r-pheatmap \
-    r-readr \
-    r-remotes \
-    r-rgl \
-    r-sctransform \
-    r-seurat=4 \
-    r-seuratobject>=4.0.2 \
-    r-spam \
-    r-spatstat=1.64_1 \
-    r-spatstat.core \
-    r-upsetr \
-    r-utf8 \
-    r-venndiagram \
-    `# cerebro app deps` \
-    bioconductor-biocparallel \
-    bioconductor-delayedarray \
-    bioconductor-gseabase  \
-    bioconductor-gsva \
-    bioconductor-iranges \
-    bioconductor-matrixgenerics \
-    bioconductor-qvalue \
-    bioconductor-s4vectors \
-    bioconductor-glmgampoi \
-    r-colourpicker \
-    r-formatr \
-    r-msigdbr \
-    r-shinycssloaders \
-    r-shinydashboard \
-    r-shinyfiles \
-    r-shinyjs \
-    r-shinywidgets
+  # some packages via apt-get
+  apt-get update --fix-missing -q
+  apt-get install -y -q\
+    build-essential \
+    gawk \
+    gdebi-core \
+    git \
+    libatlas-base-dev \
+    libxrender1 \
+    p7zip-full \
+    unzip \
+    uuid \
+    wget
 
-  # clean conda cache
-  mamba clean -ai --quiet --yes
+  # rstudio server
+  wget --no-verbose https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2021.09.1-372-amd64.deb
+  gdebi -q -n rstudio-server-2021.09.1-372-amd64.deb
+  rm rstudio-server-2021.09.1-372-amd64.deb
+  chmod -R a+rw /var/lib/rstudio-server
+  # for running rstudio server with conda R
+  git clone --depth 1 https://github.com/grst/rstudio-server-conda.git
+
+  apt-get clean -q
+  rm -rf /var/lib/apt/lists/*
+
+  # conda environment
+  micromamba install --quiet -y -n base -f /opt/environment.yml
+  micromamba clean --all --yes
+
+  # jupyterlab extensions
+  jupyter labextension install "@jupyterlab/toc"
 
   # pip
   pip -q --no-cache-dir install -U \
-    fa2 \
-    gprofiler-official \
-    harmonypy \
-    magic-impute 
+    magic-impute
 
   pip install -q --no-cache-dir git+https://github.com/theislab/diffxpy
   pip install -q --no-cache-dir git+https://github.com/theislab/scachepy
   pip install -q --no-cache-dir git+https://github.com/calico/solo.git
-  
+
   # install R dependencies that are difficult to install from conda or make problems
   R --quiet -e 'install.packages("deldir", repos="http://cran.r-project.org")'
+  R --quiet -e 'devtools::install_github("cellgeni/sceasy", dependencies = FALSE, quiet = TRUE)'
 
   # install R dependencies not available from conda
   R --quiet -e 'devtools::install_github("ropensci/RefManageR")'
-  R --quiet -e 'devtools::install_github(repo = "yanlinlin82/ggvenn", dependencies = FALSE, quiet = TRUE)'
-  R --quiet -e 'devtools::install_github("cellgeni/sceasy", dependencies = FALSE, quiet = TRUE)'
+  R --quiet -e "devtools::install_github(repo = 'yanlinlin82/ggvenn', dependencies = FALSE, quiet = TRUE)"
   R --quiet -e 'remotes::install_github("chris-mcginnis-ucsf/DoubletFinder")'
 
   R --quiet -e 'BiocManager::install(c(
-      "GenomeInfoDbData",
       "romanhaa/cerebroApp"
     ), ask = FALSE, update = FALSE, dependencies = FALSE, quiet = TRUE)'
 
@@ -152,32 +140,51 @@ From:  dcgc-bfx/dcgc-jupyter-rstudio:0.2.1
         "singleCellHaystack"), repos="http://cran.r-project.org", quiet = TRUE)'
 
   chmod -R a+w /opt
-  cp /root/.bashrc /.bashrc
   chmod a+rw /.bashrc
+
+####################
+## rstudio server ##
+####################
+
+%apprun rserver
+  bash <<-EOF
+	source activate /opt/conda
+	/rstudio-server-conda/local/start_rstudio_server.sh "${@}"
+EOF
+
+#################
+## jupyter lab ##
+#################
+
+%apprun jupyter
+  bash <<-EOF
+	source activate /opt/conda
+	jupyter lab --no-browser "${@}"
+EOF
 
 %test
   # scanpy
   bash <<-EOF
     source /.bashrc
-    conda activate /opt/conda
-    python /tests/scanpy_test.py
+    mamba activate /opt/conda
+    python /opt/tests/scanpy_test.py
 EOF
   if [ $? -eq 0 ]; then
       echo "scanpy tests passed."
   else
-      echo "scanpy error."
+      echo "scanpy error!"
       exit 1
   fi
 
-  # Seurat
+  # R
   bash <<-EOF
     source /.bashrc
-    conda activate /opt/conda
-    R --quiet -e "library(Seurat); sessionInfo()"
+    mamba activate /opt/conda
+    Rscript --quiet /opt/tests/R_tests.R
 EOF
   if [ $? -eq 0 ]; then
-      echo "Seurat tests passed."
+      echo "R tests passed."
   else
-      echo "Seurat error"
+      echo "R test error!"
       exit 1
   fi

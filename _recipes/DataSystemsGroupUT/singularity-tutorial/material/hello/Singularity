@@ -1,0 +1,11 @@
+BootStrap: debootstrap
+OSVersion: trusty
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+
+%runscript
+    echo "Hello World from a Singularity container"
+
+
+%post
+    echo "Hello from inside the container"

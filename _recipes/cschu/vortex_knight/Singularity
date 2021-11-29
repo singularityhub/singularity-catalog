@@ -30,7 +30,7 @@ export PATH=$PATH:/opt/software/miniconda3/bin:/opt/software/mOTUs
 
   #/opt/software/miniconda3/bin/conda install -y -c conda-forge -c bioconda 'samtools>=1.13' bwa kraken2 fastqc multiqc bbmap 'motus==2.6.0'
 
-  /opt/software/miniconda3/bin/conda install -y -c conda-forge -c bioconda hmmer 'samtools>=1.13' bwa kraken2 'gatk4==4.1.6.0-0' fastqc multiqc bbmap
+  /opt/software/miniconda3/bin/conda install -y -c conda-forge -c bioconda hmmer 'samtools>=1.13' bwa kraken2 'gatk4==4.1.6.0-0' fastqc multiqc bbmap seqtk
 
   # mOTUs installation
   # bwa and samtools via conda 
