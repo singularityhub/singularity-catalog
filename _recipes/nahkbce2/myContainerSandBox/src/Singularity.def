@@ -1,0 +1,240 @@
+# 
+# HPC Base image
+# 
+# Contents:
+#   CUDA version 10.1
+#   FFTW version 3.3.8
+#   GNU compilers (upstream)
+#   HDF5 version 1.10.5
+#   Mellanox OFED version 4.6-1.0.1.1
+#   OpenMPI version 4.0.2
+#   Python 2 and 3 (upstream)
+# 
+
+# NOTE: this definition file depends on features only available in
+# Singularity 3.2 and later.
+BootStrap: docker
+From: nvcr.io/nvidia/cuda:10.1-devel-ubuntu16.04
+Stage: devel
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+# Python
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python \
+        python3
+    rm -rf /var/lib/apt/lists/*
+
+# GNU compiler
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++ \
+        gcc \
+        gfortran
+    rm -rf /var/lib/apt/lists/*
+
+# Mellanox OFED version 4.6-1.0.1.1
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        gnupg \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    wget -qO - https://www.mellanox.com/downloads/ofed/RPM-GPG-KEY-Mellanox | apt-key add -
+    mkdir -p /etc/apt/sources.list.d && wget -q -nc --no-check-certificate -P /etc/apt/sources.list.d https://linux.mellanox.com/public/repo/mlnx_ofed/4.6-1.0.1.1/ubuntu16.04/mellanox_mlnx_ofed.list
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ibverbs-utils \
+        libibmad \
+        libibmad-devel \
+        libibumad \
+        libibumad-devel \
+        libibverbs-dev \
+        libibverbs1 \
+        libmlx4-1 \
+        libmlx4-dev \
+        libmlx5-1 \
+        libmlx5-dev \
+        librdmacm-dev \
+        librdmacm1
+    rm -rf /var/lib/apt/lists/*
+
+# OpenMPI version 4.0.2
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bzip2 \
+        file \
+        hwloc \
+        libnuma-dev \
+        make \
+        openssh-client \
+        perl \
+        tar \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.open-mpi.org/software/ompi/v4.0/downloads/openmpi-4.0.2.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/openmpi-4.0.2.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/openmpi-4.0.2 &&  CC=gcc CXX=g++ F77=gfortran F90=gfortran FC=gfortran ./configure --prefix=/usr/local/openmpi --disable-getpwuid --enable-orterun-prefix-by-default --with-cuda --with-verbs
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/openmpi-4.0.2 /var/tmp/openmpi-4.0.2.tar.bz2
+%environment
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+
+# FFTW version 3.3.8
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        file \
+        make \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp ftp://ftp.fftw.org/pub/fftw/fftw-3.3.8.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/fftw-3.3.8.tar.gz -C /var/tmp -z
+    cd /var/tmp/fftw-3.3.8 &&  CC=gcc CXX=g++ F77=gfortran F90=gfortran FC=gfortran ./configure --prefix=/usr/local/fftw --enable-mpi --enable-openmp --enable-shared --enable-sse2 --enable-threads
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/fftw-3.3.8 /var/tmp/fftw-3.3.8.tar.gz
+%environment
+    export LD_LIBRARY_PATH=/usr/local/fftw/lib:$LD_LIBRARY_PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/fftw/lib:$LD_LIBRARY_PATH
+
+# HDF5 version 1.10.5
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bzip2 \
+        file \
+        make \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.5/src/hdf5-1.10.5.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/hdf5-1.10.5.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/hdf5-1.10.5 &&  CC=gcc CXX=g++ F77=gfortran F90=gfortran FC=gfortran ./configure --prefix=/usr/local/hdf5 --enable-cxx --enable-fortran
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/hdf5-1.10.5 /var/tmp/hdf5-1.10.5.tar.bz2
+%environment
+    export CPATH=/usr/local/hdf5/include:$CPATH
+    export HDF5_DIR=/usr/local/hdf5
+    export LD_LIBRARY_PATH=/usr/local/hdf5/lib:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/hdf5/lib:$LIBRARY_PATH
+    export PATH=/usr/local/hdf5/bin:$PATH
+%post
+    export CPATH=/usr/local/hdf5/include:$CPATH
+    export HDF5_DIR=/usr/local/hdf5
+    export LD_LIBRARY_PATH=/usr/local/hdf5/lib:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/hdf5/lib:$LIBRARY_PATH
+    export PATH=/usr/local/hdf5/bin:$PATH
+
+BootStrap: docker
+From: nvcr.io/nvidia/cuda:10.1-runtime-ubuntu16.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+# Python
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python \
+        python3
+    rm -rf /var/lib/apt/lists/*
+
+# GNU compiler runtime
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        libgfortran3 \
+        libgomp1
+    rm -rf /var/lib/apt/lists/*
+
+# Mellanox OFED version 4.6-1.0.1.1
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        gnupg \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    wget -qO - https://www.mellanox.com/downloads/ofed/RPM-GPG-KEY-Mellanox | apt-key add -
+    mkdir -p /etc/apt/sources.list.d && wget -q -nc --no-check-certificate -P /etc/apt/sources.list.d https://linux.mellanox.com/public/repo/mlnx_ofed/4.6-1.0.1.1/ubuntu16.04/mellanox_mlnx_ofed.list
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ibverbs-utils \
+        libibmad \
+        libibmad-devel \
+        libibumad \
+        libibumad-devel \
+        libibverbs-dev \
+        libibverbs1 \
+        libmlx4-1 \
+        libmlx4-dev \
+        libmlx5-1 \
+        libmlx5-dev \
+        librdmacm-dev \
+        librdmacm1
+    rm -rf /var/lib/apt/lists/*
+
+# OpenMPI
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        hwloc \
+        openssh-client
+    rm -rf /var/lib/apt/lists/*
+%files from devel
+    /usr/local/openmpi /usr/local/openmpi
+%environment
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+
+# FFTW
+%files from devel
+    /usr/local/fftw /usr/local/fftw
+%environment
+    export LD_LIBRARY_PATH=/usr/local/fftw/lib:$LD_LIBRARY_PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/fftw/lib:$LD_LIBRARY_PATH
+
+# HDF5
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        zlib1g
+    rm -rf /var/lib/apt/lists/*
+%files from devel
+    /usr/local/hdf5 /usr/local/hdf5
+%environment
+    export CPATH=/usr/local/hdf5/include:$CPATH
+    export HDF5_DIR=/usr/local/hdf5
+    export LD_LIBRARY_PATH=/usr/local/hdf5/lib:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/hdf5/lib:$LIBRARY_PATH
+    export PATH=/usr/local/hdf5/bin:$PATH
+%post
+    export CPATH=/usr/local/hdf5/include:$CPATH
+    export HDF5_DIR=/usr/local/hdf5
+    export LD_LIBRARY_PATH=/usr/local/hdf5/lib:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/hdf5/lib:$LIBRARY_PATH
+    export PATH=/usr/local/hdf5/bin:$PATH

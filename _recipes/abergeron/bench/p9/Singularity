@@ -1,0 +1,37 @@
+Bootstrap: docker
+From: ibmcom/powerai:1.5.3-all-ubuntu16.04-py3
+
+%setup
+  mkdir ${SINGULARITY_ROOTFS}/workspace
+  chmod -R a+w ${SINGULARITY_ROOTFS}/workspace
+
+%files
+  ../pytorch/main.py /workspace/main.py
+  pytorch-run.sh /workspace/pytorch-run.sh
+  ../tensorflow/benchmark_deep.py /workspace/benchmark_deep.py
+  tensorflow-run.sh /workspace/tensorflow-run.sh
+  setup.sh /workspace/setup.sh
+
+%post
+  PATH=/opt/anaconda3/bin:$PATH
+  export PATH
+  bash /workspace/setup.sh
+
+  rm /workspace/setup.sh
+  conda clean -ya --all
+  rm -rf /var/lib/apt/lists/*
+  rm -rf /root/.cache
+
+
+%apprun pytorch
+  /workspace/pytorch-run.sh
+
+%appenv pytorch
+  PATH=/opt/anaconda3/bin:$PATH
+
+
+%apprun tensorflow
+  /workspace/tensorflow-run.sh
+
+%appenv tensorflow
+  PATH=/opt/anaconda3/bin:$PATH

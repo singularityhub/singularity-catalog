@@ -35,7 +35,7 @@ From: mattocci/rstan:4.1.2
     && Rscript -e "BiocManager::install(c('marray', 'affy', 'Biobase'))"
 
     installGithub.r \
-    rstudio/fontawesome\ hadley/emo\ gordy2x/ecoCopula\ yihui/xaringan
+    rstudio/fontawesome\ hadley/emo\ gordy2x/ecoCopula\ yihui/xaringan\ curso-r/treesnip
 
     install2.r -n -2 --skipinstalled --error \
     --deps TRUE \
@@ -86,4 +86,10 @@ From: mattocci/rstan:4.1.2
         lavaan \
         lavaanPlot \
         semPlot \
+        tidymodels \
+        skimr \
+        janitor \
+        lightgbm \
+        AmesHousing \
+        ParBayesianOptimization \
     && rm -rf /tmp/downloaded_packages

@@ -4,10 +4,18 @@ From: ubuntu:20.04
 MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 
 %setup
+    ls -la  ${GITHUB_WORKSPACE}
+    export CACHEDIR=${GITHUB_WORKSPACE}/../../../cache
+    ls -lrt ${CACHEDIR}
+    ls -la  ${CACHEDIR}/ || true
+    ls -la  ${CACHEDIR}/ompi || true
+    ls -la  ${CACHEDIR}/ompi/lib || true
+    ls -la  ${CACHEDIR}/simint.l5_p5_d1.install/lib/libnwc_simint.a || true
+    ls -la  ${CACHEDIR}/simint.l5_p5_d1.install/lib/libsimint.a ||true
     bash -c "if [[ ! -z "${GITHUB_WORKSPACE}" ]]; then mkdir -p ${SINGULARITY_ROOTFS}/nwchem; rsync -a ${GITHUB_WORKSPACE}/nwchem/src ${SINGULARITY_ROOTFS}/nwchem/. ;fi"
-    bash -c "if [[  -f ${GITHUB_WORKSPACE}/opt/ompi/lib/libmpi.so ]]; then mkdir -p ${SINGULARITY_ROOTFS}/opt ;rsync -a ${GITHUB_WORKSPACE}/opt/ompi ${SINGULARITY_ROOTFS}/opt/. ; echo ompi/ucx cache fetched ;fi"
-    bash -c "if [[  -f ${GITHUB_WORKSPACE}/libext/lib/libnwc_openblas.a ]]; then rsync -a ${GITHUB_WORKSPACE}/libext/* ${SINGULARITY_ROOTFS}/nwchem/src/libext/. ; echo libext cache fetched ;fi"
-    bash -c "if [[  -f ${GITHUB_WORKSPACE}/simint_install/lib/lib_nwcsimint.a ]]; then rsync -a ${GITHUB_WORKSPACE}/simint_install ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/. ; echo libext cache fetched ;fi"
+    bash -c "if [[  -f ${CACHEDIR}/ompi/lib/libmpi.so ]]; then mkdir -p ${SINGULARITY_ROOTFS}/opt ;rsync -a ${CACHEDIR}/ompi ${SINGULARITY_ROOTFS}/opt/. ; echo ompi/ucx cache fetched ;fi"
+    bash -c "if [[  -f ${CACHEDIR}/libext/lib/libnwc_openblas.a ]]; then rsync -a ${CACHEDIR}/libext/* ${SINGULARITY_ROOTFS}/nwchem/src/libext/. ; echo libext cache fetched ;fi"
+    bash -c "if [[  -f ${CACHEDIR}/simint.l5_p5_d1.install/lib/libsimint.a ]]; then rsync -av ${CACHEDIR}/simint.l5_p5_d1.install ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/. ; ln -sf ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/simint.l5_p5_d1.install  ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/simint_install;  ls -l ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/; echo simint cache fetched ;fi"
     echo '@@@ ls -l SINGULARITY_ROOTFS'
     ls -l ${SINGULARITY_ROOTFS}
 
@@ -103,6 +111,8 @@ ls -l nwchem* || true \
 && du -sh /opt/nwchem \
 && du -sk /opt/nwchem/*|sort -n \
 && rm -rf tce tools nwdft NWints/simint/libsimint_source/simint.l?_p?_d? geom symmetry util nwxc ddscf lapack blas rism argos peigs rmdft gradients symmetry property smd lucia dplot propery hessian ccsd mp2_grad moints cafe analyz dimqm   develop libext/scalapack libext/openblas libext/libxc/libxc*   ../lib || true\
+&& ls -la NWints/simint/libsimint_source || true \
+&& ls -la NWints/simint || true \
 && du -sk *|sort -n  || true\
 && cd .. \
 && du -sk *|sort -n || true \

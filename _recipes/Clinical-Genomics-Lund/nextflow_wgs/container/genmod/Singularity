@@ -1,0 +1,25 @@
+Bootstrap:docker
+From:nfcore/base:1.8
+
+%labels
+	MAINTAINER Viktor henmyr <viktor.henmyr@skane.se>
+	DESCRIPTION Singularity container for CMD WGS pipeline
+	VERSION 0.0.2
+
+%environment
+	PATH=/opt/conda/envs/CMD-WGS/bin:$PATH
+	umask 0002
+
+%files
+    genmod.patch /
+	environment.yml /
+
+%post
+	rm -rf /var/lib/apt/lists/*
+	apt -y clean
+	apt -y update
+	apt -y install libz-dev build-essential gettext cmake libxml2-dev libcurl4-openssl-dev libssl-dev make libbz2-dev cpanminus
+
+    pip install genmod
+    patch /opt/conda/lib/python3.7/site-packages/genmod/score_variants/compound_scorer.py /genmod.patch
+	/opt/conda/bin/conda env create -f /environment.yml

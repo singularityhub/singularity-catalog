@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: nvidia/cuda:9.2-cudnn7-runtime
+
+%setup
+  mkdir ${SINGULARITY_ROOTFS}/workspace
+  chmod -R a+w ${SINGULARITY_ROOTFS}/workspace
+
+%files
+  main.py /workspace/main.py
+  run.sh /workspace/run.sh
+
+%environment
+  PATH=/opt/conda/bin:$PATH
+  LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64
+  export PATH
+
+
+%post
+  apt-get update && apt-get install -y --no-install-recommends curl bzip2
+  rm -rf /var/lib/apt/lists/*
+
+  curl -o ~/miniconda.sh -O https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+  chmod +x ~/miniconda.sh
+  ~/miniconda.sh -b -p /opt/conda
+  rm ~/miniconda.sh
+  /opt/conda/bin/conda install numpy pyyaml scipy
+  /opt/conda/bin/conda install pytorch torchvision cuda92 magma-cuda92 -c pytorch
+  /opt/conda/bin/conda clean -ya
+  cd /workspace
+  /opt/conda/bin/python /workspace/main.py --epoch 0
+
+%runscript
+  /workspace/run.sh

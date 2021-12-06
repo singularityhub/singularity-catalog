@@ -19,13 +19,11 @@ From: continuumio/miniconda3
     git clone https://github.com/sokovninn/yolact-artwin.git
 
 %runscript
-    exec bash -c "source activate /opt/conda/envs/yolact-env/ && python /yolact-artwin/$@"
+    exec bash -c "source activate /opt/conda/envs/yolact-env/ && cd /yolact-artwin && python $@"
 
 # Examples:
 # sudo singularity build yolact.sif Singularity
 # sudo singularity exec --nv yolact.sif bash
 # sudo singularity exec --nv yolact.sif bash -c "source activate /opt/conda/envs/yolact-env/
 && python /yolact-artwin/eval.py"
-# sudo singularity run --nv --bind /local/datagen/yolact-artwin/data/weights/:/weights yolact
-.sif "eval.py --score_threshold=0.15 --trained_model=/weights/yolact_base_54_800000.pth --image=/yolact-artwin/my_image.png:/weights/re
-sult.png"
+# sudo singularity run --nv --bind /local/datagen/yolact-artwin/data/weights/:/weights yolact.sif "eval.py --score_threshold=0.15 --trained_model=/weights/yolact_base_54_800000.pth --image=/yolact-artwin/my_image.png:/weights/result.png"
