@@ -1,5 +1,5 @@
 bases:
-- count: 938
+- count: 939
   name: ubuntu
 - count: 262
   name: nvidia/cuda
@@ -64,8 +64,6 @@ bases:
 - count: 13
   name: r-base
 - count: 12
-  name: qiime2/core
-- count: 12
   name: pawsey/openfoam
 - count: 12
   name: khanlab/heudiconv
@@ -75,6 +73,8 @@ bases:
   name: nitishnarula/secure/ubuntu-focal
 - count: 11
   name: deeplearnphysics/larcv2
+- count: 11
+  name: qiime2/core
 - count: 11
   name: conda/miniconda2
 - count: 11
@@ -135,6 +135,8 @@ bases:
   name: 'GodloveD/busybox   '
 - count: 6
   name: trinityrnaseq/trinityrnaseq
+- count: 5
+  name: quay.io/qiime2/core
 - count: 5
   name: neuronets/kwyk
 - count: 5
@@ -436,8 +438,6 @@ bases:
 - count: 2
   name: postgres
 - count: 2
-  name: letaylor/sc_qc_cluster
-- count: 2
   name: stevekm/phoenix-demo
 - count: 2
   name: condaforge/mambaforge
@@ -633,6 +633,8 @@ bases:
   name: nvidia/vulkan
 - count: 1
   name: thinca/vim
+- count: 1
+  name: mariadb
 - count: 1
   name: dota
 - count: 1
@@ -996,6 +998,8 @@ bases:
 - count: 1
   name: nvidia/opencl
 - count: 1
+  name: letaylor/sc_qc_cluster
+- count: 1
   name: godlovedc/lolcow
 - count: 1
   name: thinkplayhack/r_rstudio
@@ -1162,7 +1166,7 @@ bases:
 - count: 1
   name: airl_lab/default/airl_env
 bootstraps:
-- count: 3064
+- count: 3069
   name: docker
 - count: 321
   name: debootstrap
@@ -1355,6 +1359,8 @@ orgs:
   name: libatomsquip
 - count: 1
   name: qiime2
+- count: 1
+  name: quay.io/qiime2
 - count: 1
   name: charade
 - count: 1
@@ -1686,6 +1692,8 @@ orgs:
 - count: 1
   name: tikk3r
 - count: 1
+  name: letaylor
+- count: 1
   name: tyson-swetnam
 - count: 1
   name: images
@@ -1728,8 +1736,6 @@ orgs:
 - count: 1
   name: tikhonovapolly
 - count: 1
-  name: letaylor
-- count: 1
   name: bioperl
 - count: 1
   name: trinityrnaseq
@@ -1764,8 +1770,8 @@ orgs:
 - count: 1
   name: airl_lab
 tags:
-  latest: 299
-  other: 2800
+  latest: 298
+  other: 2806
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -2375,7 +2381,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 2
+    latest: 1
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2401,6 +2407,8 @@ versions:
     latest: 1
   maplesond/portcullis:
     test: 2
+  mariadb:
+    10.3.9: 1
   markito3/gluex_docker_devel:
     latest: 1
   markito3/gluex_docker_prod:
@@ -2828,7 +2836,7 @@ versions:
     '2019.7': 2
     '2020.2': 1
     '2020.6': 1
-    '2020.8': 2
+    '2020.8': 1
   qtimlab/deepneuro_segment_gbm:
     latest: 1
   quay.io/biocontainers/__SOFTWARE_QUAY__:
@@ -2915,6 +2923,11 @@ versions:
     v1.2.0: 1
   quay.io/fenicsproject/stable:
     current: 1
+  quay.io/qiime2/core:
+    '2020.11': 1
+    '2021.2': 1
+    '2021.4': 1
+    '2021.8': 2
   quay.io/vgteam/vg:
     v1.10.0-0-ga4811915-t226-run: 1
     v1.11.0-0-gea4aaded-t238-run: 1
@@ -3187,7 +3200,7 @@ versions:
     '18.04 ': 2
     '19.04': 10
     '19.10': 4
-    '20.04': 163
+    '20.04': 164
     '20.10': 2
     '21.04': 3
     '21.10': 1

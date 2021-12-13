@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: quay.io/qiime2/core:2020.11
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 2020.11
+
+%post
+  chmod 775 /home/qiime2/q2cli/cache/completion.sh
+
+%runscript
+if [ -x /opt/conda/envs/qiime2-2020.11/bin/$SINGULARITY_NAME ]; then
+    exec $SINGULARITY_NAME "$@"
+else
+  /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+  exec echo biom qiime
+fi

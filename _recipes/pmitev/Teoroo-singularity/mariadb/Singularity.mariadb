@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: mariadb:10.3.9
+
+# https://github.com/sylabs/examples/tree/master/database/mariadb
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export LC_ALL=C
+
+  apt update && apt -y install vim 
+  # replace `your-name` with your username, run `whoami` to see your username
+  #YOUR_USERNAME="your-name"
+
+  #sed -ie "s/^#user.*/user = ${YOUR_USERNAME}/" /etc/mysql/my.cnf
+  #chmod 1777 /run/mysqld
+
+%runscript
+exec "mysqld" "$@"
+
+%startscript
+exec "mysqld_safe"
