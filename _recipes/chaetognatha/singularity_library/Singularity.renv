@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: docker://bioconductor/bioconductor_docker
+
+%labels
+Maintainer Chaetognatha
+
+%post
+  # installing packages from cran and bioc
+  R --slave -e 'BiocManager::install("SummarizedExperiment")'
+  R --slave -e 'BiocManager::install("DESeq2")'
+  R --slave -e 'install.packages("gplots",repos="https://cran.rstudio.com/")'
+  R --slave -e 'install.packages("RColorBrewer",repos="https://cran.rstudio.com/")'
+  

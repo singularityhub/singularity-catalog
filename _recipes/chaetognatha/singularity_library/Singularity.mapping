@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: continuumio/miniconda3
+
+%labels
+Maintainer Chaetognatha
+Hisat2
+
+%post
+	opt/conda/bin/conda install -c conda-forge -c bioconda hisat2
