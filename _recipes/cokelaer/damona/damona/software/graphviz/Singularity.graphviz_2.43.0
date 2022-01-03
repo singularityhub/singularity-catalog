@@ -1,0 +1,22 @@
+BootStrap: docker
+#From: ubuntu:20.04
+From: alpine:3.8
+
+%labels
+
+    AUTHOR thomas cokelaer
+    VERSION v2.43.0
+
+%post
+
+    apk update
+    apk add  graphviz
+
+
+%environment
+    export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/bin:$PATH
+
+%runscript
+    exec "$@"
+

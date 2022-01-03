@@ -1,0 +1,27 @@
+BootStrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%environment
+export PATH=/bioinf-tools/:$PATH
+export LANG=C.UTF-8
+
+
+%setup
+    mkdir $SINGULARITY_ROOTFS/triphecta
+    rsync -a .ci/install_dependencies.sh MANIFEST.in triphecta requirements.txt setup.py tests tox.ini $SINGULARITY_ROOTFS/triphecta/
+
+
+%post
+    #_____________________ setup $PATH _______________________#
+    export PATH=/bioinf-tools/:$PATH
+    export LANG=C.UTF-8
+
+    /triphecta/install_dependencies.sh /bioinf-tools
+    cd /triphecta
+    tox
+    pip3 install .
+
+
+%runscript
+    triphecta "$@"

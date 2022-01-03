@@ -56,8 +56,11 @@ From: rocker/tidyverse:4.1.2
   wget https://bootstrap.pypa.io/pip/2.7/get-pip.py
   python2 get-pip.py
   python2 -m pip install pysam==0.16.0.1
+
   python2 -m pip install https://github.com/NagaComBio/BioMine/archive/master.zip
-  python2 -m pip install https://github.com/NagaComBio/CharGer/archive/master.zip
+  # Commit: Prioritize severe cons from GOI
+  pip install git+https://github.com/NagaComBio/CharGer.git@bba1f0e13437582ef1e989426a0625e6f0a73ca
+
   python2 -m pip install matplotlib==1.4.3
 
   ## Installing cyvcf2 package

@@ -1,0 +1,27 @@
+Bootstrap: library
+From: cokelaer/damona/conda:4.7.12
+
+
+%labels
+    Author thomas cokelaer
+    Version v2.35.0
+    DAMONA_TYPE exe
+    DAMONA_BIN rnaseqc
+
+%post
+
+    export PATH=$PATH:/usr/local/anaconda/bin
+    export LANG=C   # prevents perl for raising warnings
+    export PERL5LIB=/usr/local/anaconda/lib/perl5/5.22.0
+
+    conda install RNA-seQC==2.3.5
+
+    conda clean --packages -y
+    conda clean --all -y # next requires lots of space
+
+%environment
+    #echo "backend:agg" > matplotlibrc
+
+%runscript
+    exec rnaseqc "$@"
+

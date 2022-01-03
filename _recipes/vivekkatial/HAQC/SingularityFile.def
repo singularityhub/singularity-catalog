@@ -96,8 +96,9 @@ From: python:3.9.2
   # Print valid arguments
   echo $instance
   # Run experiment
-  python qaoa_vrp/run_nelder_mead.py -f $instance -m 5 -p 10 -T True
-
+  # python qaoa_vrp/run_nelder_mead.py -f $instance -m 5 -p 10 -T True
+  python qaoa_vrp/run_initial_methods.py -f $instance -m 5 -p 10 -T -E 7.5 -T True
+  # python qaoa_vrp/run_initial_methods.py -f $instance -m 5 -p 15 -E 1.0 -T True
 
 
 ####################################################

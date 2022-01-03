@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%apprun igv.sh
+  exec igv.sh "${@}"
+
+%environment
+  export LC_ALL=en_US.UTF-8
+
+%files
+  bin/igv.sh /opt
+
+%post
+  apt update && \
+  apt upgrade -y && \
+  DEBIAN_FRONTEND=noninteractive && \
+  apt install -y glib-networking-common libcanberra-gtk-module locales openjdk-11-jre unzip wget
+  locale-gen en_US.UTF-8 && \
+  dpkg-reconfigure locales -f noninteractive && \
+  update-locale en_US.UTF-8
+
+%post
+  VER=2.11.9 && \
+  VER_=$(echo ${VER} | cut -d. -f1,2) && \
+  wget http://data.broadinstitute.org/igv/projects/downloads/${VER_}/IGV_${VER}.zip && \
+  unzip IGV_${VER}.zip && \
+  rm IGV_${VER}.zip && \
+  mv IGV_${VER} /opt && \
+  echo "export PATH=$PATH:/opt/IGV_$VER" >> $SINGULARITY_ENVIRONMENT && \
+  chmod a+x /opt/igv.sh && \
+  mv /opt/igv.sh /opt/IGV_${VER}

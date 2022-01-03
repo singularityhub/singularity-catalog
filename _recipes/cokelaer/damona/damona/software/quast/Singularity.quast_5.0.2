@@ -1,0 +1,33 @@
+Bootstrap: library
+From: cokelaer/damona/conda:4.7.12
+
+
+%labels
+    Author thomas cokelaer
+    Version v1.0
+    DAMONA_TYPE exe
+    DAMONA_BIN quast
+
+%post
+
+    export PATH=$PATH:/usr/local/anaconda/bin
+    export LANG=C   # prevents perl for raising warnings
+    export PERL5LIB=/usr/local/anaconda/lib/perl5/5.22.0
+
+    conda install quast==5.0.2 bwa bedtools minimap2
+
+
+    quast-download-gridss
+    quast-download-silva
+    quast-download-busco
+
+
+    # Let us save some space
+    conda clean --packages -y
+    conda clean --all -y # next requires lots of space
+    ###rm -rf /usr/local/anaconda/pkgs
+
+
+%runscript
+    exec quast "$@"
+

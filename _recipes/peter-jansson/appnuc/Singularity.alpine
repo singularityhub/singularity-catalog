@@ -1,0 +1,10 @@
+Bootstrap: docker
+From: alpine:3.15.0
+
+%files
+    scripts/* /usr/local/bin/
+
+%post
+    install-apk-packages.sh
+    # Need permissive g++ compilation for Root.
+    CXXFLAGS="-fpermissive" setup.sh

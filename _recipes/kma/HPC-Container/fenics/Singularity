@@ -1,0 +1,22 @@
+
+BootStrap: docker
+From: ubuntu:xenial
+%help
+Fenics from ppa:fenics-packages/fenics
+%label
+Version 2017
+Maintainer kma
+%post
+    # commands to be executed inside container during bootstrap
+     apt-get update
+    # install fenics
+      apt-get -y install software-properties-common
+      add-apt-repository ppa:fenics-packages/fenics
+      apt-get update
+      apt-get -y install --no-install-recommends fenics
+      ## for matplotlib
+      apt-get -y install python-tk
+
+%runscript
+    # commands to be executed when the container runs
+    python "$@"

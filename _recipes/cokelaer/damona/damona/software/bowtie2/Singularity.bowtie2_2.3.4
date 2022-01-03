@@ -1,0 +1,34 @@
+Bootstrap: library
+From: ubuntu:16.04
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    apt-get update --fix-missing
+    apt-get install -y wget gcc g++ make zlib1g zlib1g-dev perl python libtbb2 libtbb-dev 
+
+
+    cd /usr/local/ \
+    && wget -O bowtie.tar.gz  https://github.com/BenLangmead/bowtie2/archive/v2.3.4.1.tar.gz \
+    && tar -xzvf bowtie.tar.gz \
+    && rm -rf bowtie.tar.gz \
+    && cd bowtie2-2.3.4.1 \
+    && make \
+    && mv bowtie2 bowtie2-align-s bowtie2-align-l bowtie2-build \
+       bowtie2-build-s bowtie2-build-l bowtie2-inspect \
+       bowtie2-inspect-s bowtie2-inspect-l /usr/local/bin/
+
+    # some cleanup
+    cd /usr/local \
+    && rm -rf /usr/local/bowtie2-2.3.4.1 \
+    && rm -rf /var/lib/apt/lists/*  \
+    && apt-get remove -y wget gcc g++ make  zlib1g-dev libtbb-dev \
+    && apt-get autoremove -y \
+    && apt-get clean 
+
+%environment
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+

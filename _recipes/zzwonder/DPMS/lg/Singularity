@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: debian:buster-slim
+
+%setup
+  cp -R solvers ${SINGULARITY_ROOTFS}/solvers
+  mkdir ${SINGULARITY_ROOTFS}/lg
+  rsync -r --exclude '*.o' src/ ${SINGULARITY_ROOTFS}/lg/src/
+  cp -R Makefile ${SINGULARITY_ROOTFS}/lg/Makefile
+
+%post
+  apt-get update
+
+  # FlowCutter
+   apt-get -y install g++
+   make -C /solvers/flow-cutter-pace17
+  
+  # LG
+  apt-get -y install g++ make libboost-graph-dev libboost-system-dev
+  cd /lg
+  make
+
+%help
+  This is a Singularity container for the LG tool.
+
+%runscript
+  /lg/build/lg "$@"

@@ -10,7 +10,7 @@ apt dist-upgrade -y
 apt install -y python3 python3-setuptools lmod
 apt install -y python3-pip
 apt install -y bzip2 gzip tar zip unzip xz-utils 
-apt install -y curl wget rsync
+apt install -y curl wget rsync cpio locales
 apt install -y patch make
 apt install -y file git debianutils
 apt install -y gcc libxml2-dev 
@@ -18,7 +18,7 @@ apt install -y libibverbs-dev
 apt install -y libssl-dev
 apt install -y binutils libthread-queue-any-perl
 apt install -y procps
-apt install -y man libdb-dev
+apt install -y man libdb-dev libpam0g-dev
 apt clean
 
 # install EasyBuild using pip3
@@ -27,6 +27,7 @@ pip3 install wheel
 pip3 install -U setuptools==58.5.3
 pip3 install easybuild==4.4.2
 pip3 install rich
+pip3 install PyYAML
 
 # create 'easybuild' user (if missing)
 id easybuild || useradd -s /bin/bash -m easybuild
@@ -78,6 +79,10 @@ export MODULEPATH=/apps/easybuild/modules/all
 alias eb="eb --robot --download-timeout=1000"
 export PYTHONIOENCODING='utf-8'
 ulimit -l unlimited
+# For interative runs, we need to remove all the SLURM environments
+echo "For interactive runs, please do:"
+echo "# for i in \$(export | grep SLURM); do unset \$( echo \$i | grep SLURM | awk -F "=" '{print \$1}' )  ; done"
+echo "# for i in \$(export | grep SLURM); do echo \$i; done"
 EOD
 
 chmod a+x /home/easybuild/eb-environment.sh

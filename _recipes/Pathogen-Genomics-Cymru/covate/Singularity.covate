@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: python:3.9-slim
+
+%files
+requirements.txt /app
+
+%post
+cd /app
+
+apt-get update \
+&& apt-get install -y git \
+&& pip install --upgrade pip \
+&& pip install --no-cache-dir -r requirements.txt \
+&& pip install git+https://github.com/Pathogen-Genomics-Cymru/covate.git
+
+%runscript
+cd /app
+exec covate "$@"

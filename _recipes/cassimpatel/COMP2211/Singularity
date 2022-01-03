@@ -1,0 +1,23 @@
+BootStrap: docker
+From: ubuntu:latest
+
+
+%labels
+    Maintainer Sam Wilson (s.s.wilson@leeds.ac.uk)
+    Version v1.1
+
+%runscript
+    echo "Singularity image containing the build tools for Operating Systems (COMP2211)."
+	echo "Support is available via the module team."
+	echo "Bugs & Issues can be reported via the module team."
+
+%post
+    apt-get -y update
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+    apt-get -y install git build-essential gdb-multiarch qemu-system-misc gcc-riscv64-linux-gnu binutils-riscv64-linux-gnu
+    apt-get -y autoclean
+    apt-get -y autoremove
+
+
+
+

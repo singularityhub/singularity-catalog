@@ -1,11 +1,11 @@
 Bootstrap: docker
-From: centos:8.3.2011
+From: centos:8.4.2105
 %files
 	dnf.conf /etc/dnf
 	TSUBASA-soft-release-*.noarch.rpm /etc/yum.repos.d
 	TSUBASA-repo.repo /etc/yum.repos.d
 	TSUBASA-restricted.repo /etc/yum.repos.d
-	MLNX_OFED_LINUX-4.9-3.1.5.0-rhel8.3-x86_64.tgz
+	MLNX_OFED_LINUX-4.9-4.0.8.0-rhel8.4-x86_64.tgz
 
 %post
 	mv /etc/yum.repos.d/TSUBASA-repo.repo /etc/yum.repos.d/TSUBASA-repo.repo.bk
@@ -19,10 +19,9 @@ From: centos:8.3.2011
 
 	yum -y install perl pciutils gtk2 atk cairo tcsh lsof libnl3 libmnl ethtool tcl tk numactl-libs python36 -d 10
 	yum -y install pkgconf-pkg-config gcc-gfortran -d 10
-	yum -y install http://mirror.centos.org/centos/8.3.2011/BaseOS/x86_64/os/Packages/hwloc-libs-1.11.9-3.el8.x86_64.rpm -d 10
 
-	tar zxvf MLNX_OFED_LINUX-4.9-3.1.5.0-rhel8.3-x86_64.tgz
-	cd MLNX_OFED_LINUX-4.9-3.1.5.0-rhel8.3-x86_64 && \
+	tar zxvf MLNX_OFED_LINUX-4.9-4.0.8.0-rhel8.4-x86_64.tgz
+	cd MLNX_OFED_LINUX-4.9-4.0.8.0-rhel8.4-x86_64 && \
         mkdir tmp && \
 	./mlnxofedinstall --tmpdir ./tmp --user-space-only --without-fw-update -q --all && \
 	cd ../ && rm -rf ./MLNX*

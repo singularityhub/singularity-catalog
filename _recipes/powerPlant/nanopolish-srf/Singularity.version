@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: ubuntu:bionic
+Stage: build
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install git make build-dependency1
+  
+  ## Build
+  cd /opt
+  git clone URL
+  make
+
+Bootstrap: docker
+From: ubuntu:bionic
+Stage: final
+
+%labels
+Maintainer @plantandfood.co.nz
+Version 
+
+%files from build
+  /opt/URL/bin/tool /usr/local/bin/
+
+%runscript
+  exec tool "$@"
+
+==OR==
+
+if [ -x /usr/local/bin/$SINGULARITY_NAME ]; then
+    exec $SINGULARITY_NAME "$@"
+else
+  /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+  exec ls /usr/local/bin
+fi

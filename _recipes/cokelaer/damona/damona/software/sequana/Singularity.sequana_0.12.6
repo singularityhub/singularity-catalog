@@ -1,0 +1,39 @@
+BootStrap: library
+From: ubuntu:20.04
+
+%labels
+
+    AUTHOR Thomas Cokelaer
+
+%post
+
+    apt-get update
+    apt-get install -y wget python3-setuptools
+    python3 -m easy_install install pip
+
+    # Sequana source code
+    pip install sequana==0.12.6
+
+    apt-get remove -y wget \
+    && apt-get autoremove -y \
+    && apt-get clean
+
+    if [ ! -d /data ]; then mkdir /data; fi
+
+    echo "backend:agg" > matplotlibrc
+
+%environment
+    export PATH=$PATH:/usr/local/anaconda/bin
+    export LANG=C   # prevents perl for raising warnings
+    export PERL5LIB=/usr/local/anaconda/lib/perl5/5.22.0
+    # Issue with multiqc/click should be solved with those 2 exports
+    # This one raises a warning: Error: Fontconfig warning: ignoring C.UTF-8:
+    # not a valid language tag.
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+    # according to https://github.com/uncss/uncss/issues/166, should use
+    #export LC_ALL=C  but does not work ! Same error as above
+    ###export LC_ALL=C.UTF-8
+    #echo "backend:agg" > matplotlibrc
+
+
