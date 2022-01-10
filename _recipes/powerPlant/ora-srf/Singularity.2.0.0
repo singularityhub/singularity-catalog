@@ -1,0 +1,68 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 2.0.0
+
+%environment
+  LANGUAGE=en_NZ.UTF-8
+  LANG=en_NZ.UTF-8
+  LC_ALL=C
+
+%post
+
+  ## Download prerequisites
+  apt-get update
+  apt-get -y install bioperl g++ gcc git libbz2-dev liblzma-dev libmodule-build-perl make python3 sudo wget zlib1g-dev
+
+  ## FASTA36
+  cd /opt
+  wget https://github.com/wrpearson/fasta36/archive/v36.3.8h_11-Feb-2020.tar.gz
+  tar -xzf v36.3.8h_11-Feb-2020.tar.gz
+  cd fasta36-36.3.8h_11-Feb-2020/src
+  make -f ../make/Makefile.linux64_sse2 all
+  cd ../bin
+  cp * /usr/local/bin
+  cd /opt
+  rm -f v36.3.8h_11-Feb-2020.tar.gz
+  rm -rf fasta36-36.3.8h_11-Feb-2020
+
+  ## HMMER v3.3.2
+  wget http://eddylab.org/software/hmmer/hmmer-3.3.2.tar.gz
+  tar -xzf hmmer-3.3.2.tar.gz
+  cd hmmer-3.3.2
+  ./configure
+  make
+  make check
+  make install
+  cd /opt
+  rm -f hmmer-3.3.2.tar.gz
+  rm -rf hmmer-3.3.2
+
+  ## Bio::ORA
+  wget https://github.com/pseudogene/ora/archive/v2.0.tar.gz
+  tar -xzf v2.0.tar.gz
+  cd ora-2.0
+  perl Makefile.PL
+  make
+  make test
+  make install
+  cd /opt
+  rm -f v2.0.tar.gz
+  rm -rf ora-2.0
+
+  ## Cleanup
+  SUDO_FORCE_REMOVE=yes apt-get -y remove g++ gcc git libbz2-dev liblzma-dev libmodule-build-perl make python3 sudo wget zlib1g-dev
+  apt-get -y autoremove
+  apt-get -y clean all
+
+%runscript
+if [ $# -eq 0 ]; then
+  /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"$SINGULARITY_NAME <cmd>\" or \"singularity exec $SINGULARITY_NAME perl <cmd>\", where <cmd> is one of the following:\n"
+  exec ls /usr/local/bin
+else
+  cd /usr/local/bin
+  exec perl "$@"
+fi
+

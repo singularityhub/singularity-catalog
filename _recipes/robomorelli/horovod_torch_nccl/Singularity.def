@@ -1,0 +1,50 @@
+BootStrap: docker
+#From: ubuntu:18.04
+From: nvidia/cuda:11.0-devel-ubuntu18.04
+
+%environment
+    export PATH="$MPI_DIR/bin:$PATH"
+    export LD_LIBRARY_PATH="$MPI_DIR/lib:$LD_LIBRARY_PATH"
+
+#git \
+%post
+    apt-get update && apt-get install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
+        build-essential \
+        cmake \
+        g++-7 \
+        curl \
+        vim \
+        wget \
+        ca-certificates \
+        libcudnn8=8.1.1.33-1+cuda11.2 \
+        libnccl2=2.8.4-1+cuda11.2 \
+        libnccl-dev=2.8.4-1+cuda11.2 \
+        libjpeg-dev \
+        libpng-dev \
+        python3.7 \
+        python3.7-dev \
+        python3.7-distutils \
+        librdmacm1 \
+        libibverbs1 \
+        ibverbs-providers
+
+    ln -s /usr/bin/python3.7 /usr/bin/python
+    
+    # Install Python modules.
+
+    curl -O https://bootstrap.pypa.io/get-pip.py && \
+        python get-pip.py && \
+        rm get-pip.py
+
+    pip install torch==1.8.0+cu111 -f https://download.pytorch.org/whl/torch_stable.html
+
+    ldconfig /usr/local/cuda/targets/x86_64-linux/lib/stubs && \
+    HOROVOD_GPU_OPERATIONS=NCCL HOROVOD_WITH_MPI=1 HOROVOD_WITH_PYTORCH=1 \
+         pip install --no-cache-dir horovod[pytorch] && \
+    ldconfig
+
+    pip install pandas numpy scikit-learn
+
+%labels
+    RobertoMorelliLabs
+

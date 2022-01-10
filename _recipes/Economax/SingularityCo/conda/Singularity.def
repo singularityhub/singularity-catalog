@@ -1,0 +1,68 @@
+Bootstrap: library
+From: ubuntu:18.04
+
+%setup
+    cd /home/vagrant
+    touch .bashrc
+    cd /
+    touch .condarc
+
+%post
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    apt-get update && apt-get -y upgrade
+    apt-get -y install \
+    build-essential \
+    libpoppler-cpp-dev \
+    pkg-config \
+    python3-dev \
+    wget \
+    bzip2 \
+    ca-certificates \
+    libglib2.0-0 \
+    libxext6 \
+    libsm6 \
+    libxrender1 \
+    git \
+    software-properties-common
+    apt-get update
+    add-apt-repository universe
+    apt-get update
+
+    apt-get install tesseract-ocr-all -y
+
+    rm -rf /var/lib/apt/lists/*
+    apt-get clean
+
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/anaconda.sh 
+    /bin/bash /tmp/anaconda.sh -bp /usr/local/miniconda
+    eval "$(/usr/local/miniconda/bin/conda shell.bash hook)" 
+    conda init
+
+    conda create -n ocr python=3.9
+    conda activate ocr
+    conda install -y -c conda-forge numpy pandas psutil pip pytesseract poppler pillow opencv pdf2image 
+    pip install pdftotext
+    conda deactivate
+    conda create -n nlp python=3.6
+    conda activate nlp
+    conda install pytorch torchvision torchaudio cpuonly -c pytorch
+    conda install -y -c conda-forge spacy
+    python -m spacy download en_core_web_trf
+    python -m spacy download nb_core_news_lg
+    conda config --file /.condarc --add channels defaults
+    conda config --file /.condarc --add channels conda-forge
+
+    conda list
+
+%environment
+    cd /home/vagrant
+    printf '\n# add path to conda\nexport PATH="usr/local/miniconda/bin:$PATH"\n' >> /home/vagrant/.bashrc
+
+
+
+ 
+
+
+
+
