@@ -1,0 +1,31 @@
+Bootstrap: localimage
+From: codeaster-seq-15.0.16.sif
+
+%help
+salome_meca 2019.0.1 universal + code_aster 15.0.16 sequential.
+
+%files
+salome_meca-2019.0.1-2-LGPL.run /salome_meca.run
+
+%environment
+export PATH=$PATH:/scif/apps/salome_meca/appli_V2019_univ
+
+%post
+export LANG=en_US.UTF-8 LC_MESSAGES=POSIX
+apt-get update -y
+apt-get install -y net-tools
+
+# salome_meca
+%appinstall salome_meca
+VERSION=2019.0.1
+
+bash /salome_meca.run -t /scif/apps/salome_meca -d -m -l English
+rm -f /salome_meca.run
+
+# use development version as 'stable'
+sed -i 's#vers : stable:.*$#vers : stable:/scif/apps/aster/share/aster#g' \
+    /scif/apps/salome_meca/V2019_univ/tools/Code_aster_frontend-20190/etc/codeaster/aster
+
+# clean directories
+apt-get clean
+rm -rf /var/lib/apt/lists/* /var/tmp/*

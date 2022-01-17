@@ -1,0 +1,43 @@
+Bootstrap: docker
+From: ubuntu:20.04
+#Bootstrap: localimage
+#From: /home/zed/.singularity/darachm-containers-guppy.simg
+
+%labels
+MAINTAINER darachm
+DATE 2021-09-15
+
+%help
+
+    For canu 
+
+%environment
+
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    export PATH=$PATH:/canu-2.2/bin
+
+%post
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    export DEBIAN_FRONTEND="noninteractive"
+    # Got the below from somewhere else, opening up the sources list
+    #sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+    apt-get -y update
+
+    apt-get -y install wget gnupg2 perl gnuplot default-jre libgomp1 #python3 python3-pip
+    apt-get -y install samtools make gcc zlib1g-dev libbz2-dev liblzma-dev libcurl4 libcurl4-openssl-dev git
+
+    #curl -L https://github.com/marbl/canu/releases/download/v2.2/canu-2.2.Linux-amd64.tar.xz --output canu-2.2.Linux.tar.xz 
+    wget https://github.com/marbl/canu/releases/download/v2.2/canu-2.2.tar.xz
+    tar -xJf canu-2.2.tar.xz
+    cd canu-2.2/src
+    make -j 8
+    cd ..
+
+%test
+
+    # ?
+
+
+

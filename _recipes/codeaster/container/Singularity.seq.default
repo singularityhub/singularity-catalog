@@ -1,0 +1,47 @@
+Bootstrap: localimage
+From: codeaster-common-20190513.sif
+
+%help
+code_aster sequential version.
+
+Run testcases
+-------------
+
+To limit the image size only a few testcases are provided.
+They can be executed using:
+
+    singularity exec <path-to-this-image> run_testcases unstable
+
+Testcases results are available in '/tmp/workdir.XXXX'.
+
+To execute more testcases, pass '--tests' option to 'run_testcases' to give a
+directory that contains testcases files.
+The directory containing the testcases can also be mounted as
+'/scif/apps/aster/share/aster/tests'.
+Some testcases may need confidential data files. This kind of directories
+('tests_data', 'datg', 'materiau') can be mounted
+as '/scif/apps/aster/share/aster/tests_data', etc..
+
+See 'run_testcases --help' for all options.
+
+
+Installation
+------------
+
+To allow a salome_meca/asterstudy installation to use this code_aster version
+from outside the container, just use the 'install' app:
+
+    singularity run --app aster <path-to-this-image>
+
+This command will create some files near the image.
+
+%files
+    run_testcases /usr/local/bin/
+    bld/build_aster.sh /
+
+# aster
+%appinstall aster
+/build_aster.sh && rm -f /build_aster.sh
+
+%apprun aster
+/scif/apps/aster/share/aster/create_install_script

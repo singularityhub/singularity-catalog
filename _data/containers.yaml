@@ -1,21 +1,21 @@
 bases:
-- count: 980
+- count: 1026
   name: ubuntu
 - count: 262
   name: nvidia/cuda
 - count: 211
   name: debian
-- count: 153
+- count: 155
   name: centos
-- count: 102
+- count: 104
   name: continuumio/miniconda3
-- count: 96
+- count: 101
   name: alpine
 - count: 68
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
 - count: 67
   name: tensorflow/tensorflow
-- count: 58
+- count: 60
   name: python
 - count: 58
   name: mkandes/naked-singularity
@@ -23,10 +23,10 @@ bases:
   name: nfcore/base
 - count: 44
   name: cokelaer/damona/conda
+- count: 39
+  name: aibasel/downward
 - count: 36
   name: conda/miniconda3
-- count: 35
-  name: aibasel/downward
 - count: 35
   name: fedora
 - count: 31
@@ -38,39 +38,41 @@ bases:
 - count: 27
   name: modakopt/modak
 - count: 26
+  name: provarepro/mlperf_inference
+- count: 26
   name: ghcr.io/mkandes/naked-singularity
 - count: 23
   name: osrf/ros
+- count: 23
+  name: busybox
 - count: 22
   name: khanlab/tar2bids
-- count: 21
-  name: busybox
-- count: 21
+- count: 22
   name: nvcr.io/nvidia/pytorch
 - count: 19
   name: poldracklab/fmriprep
 - count: 18
   name: vitchyr/railrl_v12_cuda10-1_mj2-0-2-2_torch1-1-0_gym0-12-5_py3-6-5
-- count: 16
-  name: bids/validator
-- count: 16
+- count: 17
   name: nvcr.io/nvidia/tensorflow
 - count: 16
   name: ezlabgva/busco
+- count: 16
+  name: bids/validator
 - count: 15
   name: pytorch/pytorch
 - count: 14
-  name: provarepro/mlperf_inference
-- count: 13
-  name: r-base
-- count: 13
   name: rocker/r-ver
-- count: 12
-  name: pawsey/openfoam
+- count: 14
+  name: r-base
 - count: 12
   name: khanlab/heudiconv
 - count: 12
   name: nitishnarula/secure/ubuntu-focal
+- count: 12
+  name: continuumio/miniconda
+- count: 12
+  name: pawsey/openfoam
 - count: 12
   name: pennbbl/qsiprep
 - count: 11
@@ -81,8 +83,6 @@ bases:
   name: qiime2/core
 - count: 11
   name: nvcr.io/nvidia/cuda
-- count: 11
-  name: continuumio/miniconda
 - count: 10
   name: hariszaf/pema
 - count: 10
@@ -92,87 +92,91 @@ bases:
 - count: 9
   name: dcgc-bfx/dcgc-jupyter-rstudio
 - count: 8
-  name: nvcr.io/nvidia/nvhpc
+  name: slaclab/relion
+- count: 8
+  name: ewels/multiqc
+- count: 8
+  name: quay.io/vgteam/vg
 - count: 8
   name: provarepro/openvino
 - count: 8
   name: bids/rshrf
 - count: 8
-  name: slaclab/relion
+  name: 'GodloveD/busybox   '
 - count: 8
-  name: quay.io/vgteam/vg
-- count: 8
-  name: ewels/multiqc
+  name: nvcr.io/nvidia/nvhpc
+- count: 7
+  name: tpall/singularity-r
 - count: 7
   name: jekriske/r-base
 - count: 7
   name: continuumio/miniconda2
 - count: 7
-  name: 'GodloveD/busybox   '
-- count: 7
-  name: tpall/singularity-r
-- count: 7
-  name: julia
+  name: intel/oneapi-hpckit
 - count: 7
   name: nipreps/fmriprep
 - count: 7
-  name: intel/oneapi-hpckit
+  name: julia
 - count: 6
   name: bud42/fs6
 - count: 6
-  name: i386/ubuntu
+  name: gipert/default/arch-base
 - count: 6
   name: pranithavangala/singularity
 - count: 6
-  name: vitchyr/railrl-torch4cuda9
-- count: 6
   name: mambaorg/micromamba
 - count: 6
-  name: gipert/default/arch-base
+  name: vitchyr/railrl-torch4cuda9
 - count: 6
-  name: bids/hcppipelines
+  name: i386/ubuntu
 - count: 6
   name: ml4ai/UA-hpc-containers
 - count: 6
-  name: rocker/tidyverse
+  name: trinityrnaseq/trinityrnaseq
 - count: 6
   name: thomasrobinson/centos7-netcdff
 - count: 6
-  name: trinityrnaseq/trinityrnaseq
-- count: 5
-  name: sequana.img
+  name: rocker/tidyverse
+- count: 6
+  name: bids/hcppipelines
+- count: 6
+  name: golang
 - count: 5
   name: drneavin/SingularityBaseImages
 - count: 5
-  name: bioconductor/release_core2
-- count: 5
   name: shreyaskamathkm/cluster_images
 - count: 5
-  name: anibali/pytorch
-- count: 5
-  name: golang
-- count: 5
-  name: node
-- count: 5
-  name: neuronets/kwyk
-- count: 5
-  name: bioconductor/bioconductor_docker
-- count: 5
-  name: broadinstitute/gatk3
+  name: sequana.img
 - count: 5
   name: rocker/geospatial
 - count: 5
-  name: quay.io/qiime2/core
+  name: broadinstitute/gatk3
 - count: 5
   name: metabat/metabat
+- count: 5
+  name: quay.io/qiime2/core
+- count: 5
+  name: bioconductor/release_core2
+- count: 5
+  name: anibali/pytorch
+- count: 5
+  name: bioconductor/bioconductor_docker
+- count: 5
+  name: neuronets/kwyk
+- count: 5
+  name: node
+- count: 5
+  name: continuumio/anaconda3
 - count: 4
   name: mattocci/rstan
 - count: 4
-  name: nvcr.io/hpc/namd
+  name: slaclab/slac-jupyterlab
 - count: 4
-  name: danabl/glimslib
+  name: ResearchIT/spack-singularity
 - count: 4
-  name: continuumio/anaconda3
+  name: /tmp/base.simg
+- count: 4
+  name: matmu/vep
 - count: 4
   name: quay.io/biocontainers/bowtie2
 - count: 4
@@ -180,373 +184,433 @@ bases:
 - count: 4
   name: godloved/secure/centos8
 - count: 4
-  name: quay.io/wtsicgp/dockstore-cgpwgs
-- count: 4
-  name: letaylor/sc_qc_cluster
-- count: 4
   name: finalduty/archlinux
 - count: 4
-  name: registry.gitlab.com/rode0day/fuzzer-testing/aflpp_runner
+  name: quay.io/wtsicgp/dockstore-cgpwgs
 - count: 4
   name: anair17/railrl_hand_v2
 - count: 4
   name: rust
 - count: 4
-  name: willgpaik/qt5_aci
-- count: 4
-  name: slaclab/slac-jupyterlab
-- count: 4
-  name: matmu/vep
-- count: 4
-  name: ResearchIT/spack-singularity
+  name: openresty/openresty
 - count: 4
   name: intel2021.2_netcdfc4.7.4_ubuntu.sif
 - count: 4
-  name: /tmp/base.simg
+  name: registry.gitlab.com/rode0day/fuzzer-testing/aflpp_runner
+- count: 4
+  name: willgpaik/qt5_aci
+- count: 4
+  name: bids/mrtrix3_connectome
+- count: 4
+  name: danabl/glimslib
+- count: 4
+  name: nvcr.io/hpc/namd
+- count: 3
+  name: NuWro/builds
 - count: 3
   name: bud42/tracula
 - count: 3
-  name: mesnardo/petibm-decoupledibpm
+  name: granek/default/singularity-rstudio
 - count: 3
-  name: DeepLearnPhysics/larcv2-singularity
+  name: slaclab/cryosparc-docker
 - count: 3
-  name: larbys/ubdl
-- count: 3
-  name: rockylinux/rockylinux
-- count: 3
-  name: centos-7.7.1908.sif
-- count: 3
-  name: openresty/openresty
+  name: google/deepvariant
 - count: 3
   name: library/ubuntu
 - count: 3
   name: pennbbl/xcpengine
 - count: 3
-  name: google/deepvariant
-- count: 3
-  name: r/r_3.5.1.simg
-- count: 3
-  name: fcpindi/c-pac
-- count: 3
-  name: biocorecrg/debian-perlbrew-pyenv3-java
-- count: 3
-  name: registry.gitlab.com/rode0day/fuzzer-testing/honggfuzz_runner
-- count: 3
-  name: NuWro/builds
+  name: ubuntu_base/
 - count: 3
   name: modakopt/containers
 - count: 3
-  name: ubuntu_base/
+  name: rocker/rstudio
 - count: 3
-  name: nvcr.io/nvidia/deepstream
+  name: ghcr.io/truatpasteurdotfr/singularity-docker-stream8-ci
 - count: 3
-  name: sebastientourbier/mialsuperresolutiontoolkit
+  name: DeepLearnPhysics/larcv2-singularity
 - count: 3
-  name: bids/freesurfer
+  name: mesnardo/petibm-decoupledibpm
 - count: 3
-  name: bids/baracus
-- count: 3
-  name: bids/mrtrix3_connectome
-- count: 3
-  name: bids/example
+  name: singularityhub/ubuntu
 - count: 3
   name: quay.io/biocontainers/gatk4
 - count: 3
-  name: nickjer/singularity-r
+  name: quay.io/biocontainers/edta
+- count: 3
+  name: centos-7.7.1908.sif
+- count: 3
+  name: registry.gitlab.com/rode0day/fuzzer-testing/honggfuzz_runner
 - count: 3
   name: willgpaik/centos8_roar
 - count: 3
   name: willgpaik/centos7_aci
 - count: 3
-  name: slaclab/cryosparc-docker
-- count: 3
   name: mongo
+- count: 3
+  name: biocorecrg/debian-perlbrew-pyenv3-java
+- count: 3
+  name: fcpindi/c-pac
+- count: 3
+  name: darachm/itermae
 - count: 3
   name: bioconductor/bioconductor_full
 - count: 3
-  name: ghcr.io/truatpasteurdotfr/singularity-docker-stream8-ci
-- count: 3
-  name: rocker/rstudio
-- count: 3
-  name: rocker/shiny
+  name: rockylinux/rockylinux
 - count: 3
   name: condaforge/mambaforge
 - count: 3
-  name: singularityhub/ubuntu
+  name: larbys/ubdl
 - count: 3
-  name: quay.io/biocontainers/edta
+  name: bids/freesurfer
 - count: 3
-  name: granek/default/singularity-rstudio
+  name: bids/baracus
+- count: 3
+  name: bids/example
+- count: 3
+  name: sebastientourbier/connectomemapper-bidsapp
+- count: 3
+  name: sebastientourbier/mialsuperresolutiontoolkit
+- count: 3
+  name: nvcr.io/nvidia/deepstream
+- count: 3
+  name: nickjer/singularity-r
+- count: 3
+  name: r/r_3.5.1.simg
+- count: 3
+  name: rocker/shiny
 - count: 2
-  name: mysql
+  name: nickjer/singularity-rstudio
 - count: 2
-  name: openvino/ubuntu18_runtime
+  name: stevekm/phoenix-demo
 - count: 2
-  name: marcchpc/pytorch_cuda9
+  name: build/spades_base.sif
 - count: 2
-  name: sriggi/caesar-base
+  name: arcsUVA/anaconda
 - count: 2
-  name: gcr.io/self-fluids/self-base
-- count: 2
-  name: barbagroup/landspill
-- count: 2
-  name: bethgelab/deeplearning
-- count: 2
-  name: valian/docker-python-opencv-ffmpeg
-- count: 2
-  name: buisciii/centos7_base_image
-- count: 2
-  name: rocker/ml
-- count: 2
-  name: openjdk
-- count: 2
-  name: jcsda/public/jedi-gnu-openmpi-dev
-- count: 2
-  name: cokelaer/damona
-- count: 2
-  name: centos-7.7.1908-cuda-11.0.sif
-- count: 2
-  name: alexisespinosa/openfoam
-- count: 2
-  name: darachm/itermae
-- count: 2
-  name: mbhall88/Singularity_recipes
+  name: richelbilderbeek/default/plinkr
 - count: 2
   name: icbi/quantiseq2
 - count: 2
-  name: broadinstitute/gatk
+  name: APPIAN-PET/APPIAN
 - count: 2
-  name: nextgenusfs/funannotate
+  name: rocker/ml
+- count: 2
+  name: ctpelok77/cerberus
+- count: 2
+  name: cokelaer/damona
+- count: 2
+  name: nysbc/topaz
+- count: 2
+  name: slaclab/fah
+- count: 2
+  name: gcr.io/self-fluids/self-base
 - count: 2
   name: gw000/debian-cuda
 - count: 2
-  name: quay.io/biocontainers/bwa
+  name: alexisespinosa/openfoam
 - count: 2
-  name: quay.io/biocontainers/star
+  name: maplesond/portcullis
 - count: 2
-  name: gnuoctave/octave
+  name: archlinux/base
 - count: 2
-  name: quay.io/biocontainers/spades
+  name: nistmni/minc-toolkit-min
 - count: 2
   name: quay.io/biocontainers/bamtools
 - count: 2
-  name: granek/default/singularity-rstudio-base
+  name: quay.io/biocontainers/spades
 - count: 2
-  name: nickjer/singularity-rstudio
+  name: quay.io/biocontainers/bwa
+- count: 2
+  name: gnuoctave/octave
+- count: 2
+  name: quay.io/biocontainers/star
+- count: 2
+  name: quay.io/biocontainers/picard
 - count: 2
   name: brentp/smoove
 - count: 2
   name: uhrigs/arriba
 - count: 2
-  name: sangerpathogens/gubbins
-- count: 2
-  name: poldracklab/fitlins
+  name: combinelab/salmon
 - count: 2
   name: taiji
 - count: 2
   name: quay.io/wtsicgp/ascatngs
 - count: 2
-  name: griffithlab/pvactools
+  name: maoj/cicero
 - count: 2
-  name: fooliu/macs2
+  name: griffithlab/pvactools
 - count: 2
   name: trinityctat/fusioninspector
 - count: 2
-  name: maoj/cicero
+  name: poldracklab/fitlins
 - count: 2
-  name: combinelab/salmon
+  name: vitchyr/railrl-v8-cuda10-1
 - count: 2
-  name: ''
+  name: vitchyr/railrl_v9_cuda10-1_mj1-50-1-59_torch0-4-1_gym0-10-5_py3-5-2
 - count: 2
-  name: vanessa/pokemon
+  name: vitchyr/railrl-vitchyr-v5
 - count: 2
-  name: vanessa/salad
+  name: railrl_v9p5_cuda10-1_mj1-50-1-59_torch1-1-0_gym0-10-5_py3-5-2_local
 - count: 2
-  name: nistmni/minc-toolkit-min
+  name: vitchyr/railrl-v7-cuda8
 - count: 2
-  name: OSKAR-base-dep.sif
+  name: vitchyr/railrl_v11_cuda10-1_mj2-0-2-2_torch0-3-1_gym0-10-5_py3-5-2
 - count: 2
-  name: build/spades_base.sif
+  name: vitchyr/railrl-vitchyr-gpu-v4
+- count: 2
+  name: vitchyr/railrl-torch4cuda8-v7
+- count: 2
+  name: vitchyr/railrl_v10_cuda10-1_mj2-0-2-2_torch0-4-1_gym0-10-5_py3-5-2
+- count: 2
+  name: vitchyr/railrl-tmp
+- count: 2
+  name: larbys/geant4
 - count: 2
   name: stevekm/ngs580-nf
 - count: 2
-  name: maplesond/portcullis
+  name: halfpipe/halfpipe
 - count: 2
-  name: ../../R/r/r_3.5.1.simg
+  name: ghcr.io/truatpasteurdotfr/singularity-docker-centos7-ci
 - count: 2
-  name: ../../R/r-minimal/r-minimal_3.5.1.simg
+  name: vanessa/salad
+- count: 2
+  name: vanessa/pokemon
+- count: 2
+  name: tikk3r/lofar-grid-hpccloud
+- count: 2
+  name: uppmax/offline-uppmax-env
 - count: 2
   name: rocker/r-ubuntu
 - count: 2
-  name: rynlib
+  name: spellrun/tensorflow
 - count: 2
-  name: registry.gitlab.com/rode0day/fuzzer-testing/afl_runner
+  name: quay.io/biocontainers/hisat2
+- count: 2
+  name: quay.io/biocontainers/methylpy
+- count: 2
+  name: quay.io/biocontainers/phylip
+- count: 2
+  name: openjdk
+- count: 2
+  name: marcchpc/pytorch_cuda9
+- count: 2
+  name: sangerpathogens/gubbins
+- count: 2
+  name: fooliu/macs2
+- count: 2
+  name: bethgelab/deeplearning
+- count: 2
+  name: valian/docker-python-opencv-ffmpeg
+- count: 2
+  name: powerPlant/open-mpi-srf
+- count: 2
+  name: amazon/aws-cli
+- count: 2
+  name: opendronemap/odm@sha256
+- count: 2
+  name: urgi/docker_vre_aio
+- count: 2
+  name: barbagroup/landspill
+- count: 2
+  name: xsede/centos-nix-base
+- count: 2
+  name: nvidia/cudagl
+- count: 2
+  name: intel_netcdf_ubuntu.sif
+- count: 2
+  name: sriggi/caesar-base
+- count: 2
+  name: centos-7.7.1908-cuda-11.0.sif
 - count: 2
   name: registry.gitlab.com/rode0day/fuzzer-testing/qsym_runner
+- count: 2
+  name: registry.gitlab.com/rode0day/fuzzer-testing/angora_runner
 - count: 2
   name: registry.gitlab.com/rode0day/fuzzer-testing/symcc_runner
 - count: 2
   name: postgres
 - count: 2
-  name: registry.gitlab.com/rode0day/fuzzer-testing/angora_runner
+  name: registry.gitlab.com/rode0day/fuzzer-testing/afl_runner
 - count: 2
-  name: vitchyr/railrl-v7-cuda8
+  name: broadinstitute/gatk
 - count: 2
-  name: vitchyr/railrl_v9_cuda10-1_mj1-50-1-59_torch0-4-1_gym0-10-5_py3-5-2
-- count: 2
-  name: vitchyr/railrl_v10_cuda10-1_mj2-0-2-2_torch0-4-1_gym0-10-5_py3-5-2
-- count: 2
-  name: railrl_v9p5_cuda10-1_mj1-50-1-59_torch1-1-0_gym0-10-5_py3-5-2_local
-- count: 2
-  name: vitchyr/railrl_v11_cuda10-1_mj2-0-2-2_torch0-3-1_gym0-10-5_py3-5-2
-- count: 2
-  name: vitchyr/railrl-torch4cuda8-v7
-- count: 2
-  name: vitchyr/railrl-v8-cuda10-1
-- count: 2
-  name: vitchyr/railrl-vitchyr-v5
-- count: 2
-  name: vitchyr/railrl-vitchyr-gpu-v4
-- count: 2
-  name: vitchyr/railrl-tmp
-- count: 2
-  name: APPIAN-PET/APPIAN
-- count: 2
-  name: archlinux/base
-- count: 2
-  name: uppmax/offline-uppmax-env
-- count: 2
-  name: larbys/geant4
-- count: 2
-  name: arcsUVA/anaconda
-- count: 2
-  name: bids/broccoli
-- count: 2
-  name: bids/pymvpa
-- count: 2
-  name: bids/spm
-- count: 2
-  name: micalab/micapipe
-- count: 2
-  name: peerherholz/bidsonym
-- count: 2
-  name: sebastientourbier/connectomemapper-bidsapp
-- count: 2
-  name: adigenova/nf-gene-fusions
-- count: 2
-  name: quay.io/biocontainers/methylpy
-- count: 2
-  name: quay.io/biocontainers/hisat2
-- count: 2
-  name: quay.io/biocontainers/phylip
-- count: 2
-  name: nvidia/cudagl
-- count: 2
-  name: slaclab/fah
-- count: 2
-  name: nysbc/topaz
-- count: 2
-  name: stevekm/phoenix-demo
+  name: buisciii/centos7_base_image
 - count: 2
   name: ubuntu@sha256
 - count: 2
-  name: ctpelok77/cerberus
+  name: ncbi/blast
 - count: 2
-  name: xsede/centos-nix-base
+  name: nextgenusfs/funannotate
 - count: 2
-  name: spellrun/tensorflow
+  name: mysql
+- count: 2
+  name: andersenlabapps/ivar
+- count: 2
+  name: openvino/ubuntu18_runtime
+- count: 2
+  name: adigenova/nf-gene-fusions
+- count: 2
+  name: OSKAR-base-dep.sif
+- count: 2
+  name: bids/broccoli
+- count: 2
+  name: peerherholz/bidsonym
+- count: 2
+  name: bids/spm
+- count: 2
+  name: bids/pymvpa
+- count: 2
+  name: micalab/micapipe
+- count: 2
+  name: granek/default/singularity-rstudio-base
+- count: 2
+  name: ''
+- count: 2
+  name: mbhall88/Singularity_recipes
+- count: 2
+  name: ../../R/r-minimal/r-minimal_3.5.1.simg
+- count: 2
+  name: ../../R/r/r_3.5.1.simg
+- count: 2
+  name: jcsda/public/jedi-gnu-openmpi-dev
+- count: 2
+  name: rynlib
 - count: 2
   name: vuiiscci/fmriqa
 - count: 2
   name: vuiiscci/temporal_lobe
 - count: 2
   name: vuiiscci/multi_atlas
-- count: 2
-  name: ghcr.io/truatpasteurdotfr/singularity-docker-centos7-ci
-- count: 2
-  name: halfpipe/halfpipe
-- count: 2
-  name: intel_netcdf_ubuntu.sif
-- count: 2
-  name: powerPlant/open-mpi-srf
-- count: 2
-  name: opendronemap/odm@sha256
-- count: 2
-  name: amazon/aws-cli
-- count: 2
-  name: urgi/docker_vre_aio
-- count: 2
-  name: tikk3r/lofar-grid-hpccloud
 - count: 1
-  name: oboratav/speaker-tagging
+  name: mcin/qeeg
 - count: 1
-  name: danigoland/py36-alpine-llvm6
-- count: 1
-  name: tikhonovapolly/phigaro
-- count: 1
-  name: jlabsolid/jlabsolidbase
-- count: 1
-  name: electronioncollider/jleic
-- count: 1
-  name: qtimlab/deepneuro_segment_gbm
+  name: continuumio/conda-ci-linux-64-python3.8
 - count: 1
   name: conda/miniconda3-centos7
 - count: 1
-  name: mustxyk/fsl
+  name: quay.io/biocontainers/r-ngsplot
 - count: 1
-  name: intelpython/intelpython3_full
+  name: jupyter/r-notebook
 - count: 1
-  name: nextflow/rnatoy
+  name: quay.io/biocontainers/sicer2
 - count: 1
-  name: ctpelok77/forbiditerative
+  name: yh549848/r/rstudio
 - count: 1
-  name: spack-singularity.img
+  name: bdgenomics/rhapsody
 - count: 1
-  name: spack-rhel7.simg
+  name: joey3639570/tensorflow_without_ofed_cuda9.0
 - count: 1
-  name: spack.Simg
+  name: joey3639570/tensorflow_with_dali
 - count: 1
-  name: lmod.Simg
+  name: joey3639570/mellanox4.4-tensorflow1.13
 - count: 1
-  name: spack-lmod.img
+  name: joey3639570/tensorflow_mfoed4.0
 - count: 1
-  name: richelbilderbeek/default/plinkr
+  name: rocker/verse
+- count: 1
+  name: psadil/stahb
+- count: 1
+  name: nipype/nipype
+- count: 1
+  name: shengwei/das_tool
+- count: 1
+  name: jncc/arcsi-base
+- count: 1
+  name: arcsi-base-mpi
+- count: 1
+  name: vibpsb/i-adhore
 - count: 1
   name: richelbilderbeek/default/ormr
 - count: 1
-  name: scr.svc.stanford.edu/deisseroth-lab/bruker-rip
-- count: 1
-  name: jupyter/datascience-notebook
-- count: 1
-  name: base.sif
-- count: 1
-  name: cokelaer/damona/sequana
-- count: 1
-  name: linuxserver/code-server
-- count: 1
-  name: nginx
-- count: 1
-  name: httpd
-- count: 1
   name: mtmiller/octave
 - count: 1
-  name: vanessa/rustarok
+  name: nvcr.io/nvidia/cuda-arm64
 - count: 1
-  name: amd64/ubuntu
+  name: nvidia/opengl
 - count: 1
-  name: rocker/tensorflow-gpu
+  name: bgruening/busybox-bash
 - count: 1
-  name: dalbohn/rstudio_aci
+  name: madslupe/hddm
 - count: 1
-  name: andreweiner/of_pytorch
+  name: arm32v7/ubuntu
 - count: 1
-  name: openfoamplus/of_v2012_centos73
+  name: delhommet/test_ith
+- count: 1
+  name: iarcbioinfo/imputation-nf
+- count: 1
+  name: iarcbioinfo/vcf_normalization-nf
+- count: 1
+  name: iarcbioinfo/svaba-nf
+- count: 1
+  name: stimong/caffe2-cuda10-python3.6
+- count: 1
+  name: wav2letter/wav2letter
+- count: 1
+  name: ctpelok77/forbiditerative
+- count: 1
+  name: hkmo/fragpipe
+- count: 1
+  name: pawsey/openmpi-base
+- count: 1
+  name: clottaz/fastqpuri
+- count: 1
+  name: cyberbotics/webots
+- count: 1
+  name: default/centos
+- count: 1
+  name: miccourse/jupyter-mic-2021
+- count: 1
+  name: pinellolab/haystack_bio
+- count: 1
+  name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software_1804-cuda9
+- count: 1
+  name: ctpelok77/kstar
+- count: 1
+  name: library/default/centos
+- count: 1
+  name: fredjaya/rec-bench/base
+- count: 1
+  name: granek/duke-chsi-informatics/singularity-rnaseq
+- count: 1
+  name: bioperl/bioperl
+- count: 1
+  name: asciinema/asciinema
+- count: 1
+  name: conda/conda_4.9.1.img
+- count: 1
+  name: mustxyk/fsl
 - count: 1
   name: tin6150/r4eta
 - count: 1
-  name: willprice/opencv2-cuda8
+  name: /data/ubuntu-cuda10-20190226.sif
 - count: 1
-  name: willprice/nvidia-ffmpeg
+  name: pcpaquette/ubuntu-cuda10
+- count: 1
+  name: pcpaquette/tensorflow-serving
+- count: 1
+  name: caid/tgvqsm
+- count: 1
+  name: caid/tgvqsm_amd
+- count: 1
+  name: slaclab/xfce
+- count: 1
+  name: alpine/git
+- count: 1
+  name: semc/appion-protomo
+- count: 1
+  name: dpokidov/imagemagick
+- count: 1
+  name: continuumio/anaconda
+- count: 1
+  name: detlab/cdms-jupyterlab
+- count: 1
+  name: slaclab/slac-jupyterlab-gpu
+- count: 1
+  name: gitlab.archlinux.org
+- count: 1
+  name: hansencb/synb0
 - count: 1
   name: '{{ cookiecutter.dockerhub_username }}/{{ cookiecutter.image_name }}'
 - count: 1
@@ -554,267 +618,207 @@ bases:
 - count: 1
   name: willprice/gpu-flow
 - count: 1
-  name: arm32v7/ubuntu
+  name: willprice/opencv2-cuda8
+- count: 1
+  name: willprice/nvidia-ffmpeg
+- count: 1
+  name: arch
+- count: 1
+  name: godlovedc/lolcow
+- count: 1
+  name: andreweiner/of_pytorch
+- count: 1
+  name: scleveland/centos7-base-singularity
+- count: 1
+  name: /nrs/funke/singularity/linajea/pylp_base
+- count: 1
+  name: funkey/gunpowder
+- count: 1
+  name: cokelaer/damona/sequana
+- count: 1
+  name: theasp/emacs
+- count: 1
+  name: rstatstartu/rstanverse
+- count: 1
+  name: uazhlt/pytorch-example
+- count: 1
+  name: pangeo/pangeo-notebook
+- count: 1
+  name: nextflow/rnatoy
+- count: 1
+  name: rockylinux
+- count: 1
+  name: quay.io/biocontainers/__SOFTWARE_QUAY__
+- count: 1
+  name: biobb_md
+- count: 1
+  name: biobb_cmip
+- count: 1
+  name: biobb_structure_utils
 - count: 1
   name: thinkplayhack/r_rstudio
 - count: 1
   name: thinkplayhack/python_jupyter
 - count: 1
-  name: airl_lab/default/airl_env
+  name: gcr.io/deepvariant-docker/deepvariant_gpu
 - count: 1
-  name: rstatstartu/rstanverse
-- count: 1
-  name: biobb_md
-- count: 1
-  name: biobb_structure_utils
-- count: 1
-  name: biobb_cmip
-- count: 1
-  name: shengwei/das_tool
-- count: 1
-  name: clottaz/fastqpuri
-- count: 1
-  name: openfoam/openfoam5-paraview54
+  name: gcr.io/deepvariant-docker/deepvariant
 - count: 1
   name: trlandet/fenics-dev
 - count: 1
-  name: theasp/emacs
+  name: openfoam/openfoam5-paraview54
 - count: 1
-  name: rbartelme/anvio-pangenomics
+  name: multiphenics/multiphenics
 - count: 1
-  name: thomaschln/r-devtools
+  name: electronioncollider/jleic
 - count: 1
-  name: agilly/burden_testing
+  name: jlabsolid/jlabsolidbase
 - count: 1
-  name: dota
-- count: 1
-  name: intelpython/intelpython2_full
-- count: 1
-  name: underworldcode/underworld2
-- count: 1
-  name: opensuse/leap
-- count: 1
-  name: spmallick/opencv-docker
-- count: 1
-  name: awokeknowing/cuda-opencv
-- count: 1
-  name: java
-- count: 1
-  name: mercury/indelible
-- count: 1
-  name: nunofonseca/irap_fedora
-- count: 1
-  name: cellprofiler/cellprofiler
-- count: 1
-  name: tesseractshadow/tesseract4re
-- count: 1
-  name: arch
-- count: 1
-  name: intel/oneapi-basekit
-- count: 1
-  name: nvidia/container-toolkit
-- count: 1
-  name: nvcr.io/nvidia/hpc-benchmarks
-- count: 1
-  name: caid/tgvqsm_amd
-- count: 1
-  name: caid/tgvqsm
-- count: 1
-  name: vibpsb/i-adhore
-- count: 1
-  name: hansencb/synb0
-- count: 1
-  name: markito3/gluex_docker_prod
-- count: 1
-  name: markito3/gluex_docker_devel
-- count: 1
-  name: nvcr.io/hpc/milc
-- count: 1
-  name: nvcr.io/hpc/lammps
-- count: 1
-  name: nvcr.io/hpc/gromacs
-- count: 1
-  name: nvcr.io/hpc/relion
-- count: 1
-  name: jcsda/docker-gnu-openmpi-dev
-- count: 1
-  name: jcsda/docker-clang-mpich-dev
-- count: 1
-  name: impica
-- count: 1
-  name: lbnl-science-it/atlas
-- count: 1
-  name: larbys/uboonecode
-- count: 1
-  name: larbys/sparseconvnet
-- count: 1
-  name: nvidia/opencl
-- count: 1
-  name: conda/conda_4.9.1.img
-- count: 1
-  name: bioconductor/release_base2
-- count: 1
-  name: continuumio/conda-ci-linux-64-python3.8
-- count: 1
-  name: bdgenomics/rhapsody
-- count: 1
-  name: r-3.6.1.sif
-- count: 1
-  name: anaconda/anaconda3-py38-2020.11-ubuntu-18.04.sif
-- count: 1
-  name: miniconda/miniconda3-py38-4.9.2-ubuntu-18.04.sif
-- count: 1
-  name: centos/centos-7.7.1908-openmpi-3.1.6.sif
-- count: 1
-  name: centos/centos-7.7.1908-openmpi-4.0.5.sif
-- count: 1
-  name: centos/centos-7.7.1908-cuda-11.0-openmpi-3.1.6.sif
-- count: 1
-  name: alexisespinosa/polar
+  name: rocker/ropensci
 - count: 1
   name: alexisespinosa/pangolin
 - count: 1
-  name: ax3l/picongpu
+  name: alexisespinosa/polar
 - count: 1
-  name: computationalradiationphysics/picongpu
+  name: scr.svc.stanford.edu/deisseroth-lab/bruker-rip
 - count: 1
-  name: darachm/miniconda3
+  name: amd64/ubuntu
 - count: 1
-  name: ncbi/blast
+  name: tensorflow
 - count: 1
-  name: itermae_test_base.simg
+  name: jupyter/minimal-notebook
 - count: 1
-  name: darachm/singularity_ubuntu
+  name: i386/debian
 - count: 1
-  name: alantrrs/py-faster-rcnn
-- count: 1
-  name: delhommet/test_ith
-- count: 1
-  name: iarcbioinfo/vcf_normalization-nf
-- count: 1
-  name: iarcbioinfo/imputation-nf
-- count: 1
-  name: iarcbioinfo/svaba-nf
-- count: 1
-  name: quay.io/biocontainers/__SOFTWARE_QUAY__
-- count: 1
-  name: uazhlt/pytorch-example
-- count: 1
-  name: ghcr.io/junghawoo/simpleg_tool
-- count: 1
-  name: lizhen0909/graph_clustering_toolkit
-- count: 1
-  name: lizhen0909/pylshvec
-- count: 1
-  name: lizhen0909/lshvec
-- count: 1
-  name: scleveland/centos7-base-singularity
-- count: 1
-  name: tyson-swetnam/turbovnc-singularity
-- count: 1
-  name: andresquintero/bratwurst_tensorflow2
-- count: 1
-  name: nvcr.io/hpc/pgi-compilers
-- count: 1
-  name: nvcr.io/nvidia/tlt-streamanalytics
-- count: 1
-  name: rapidsai/rapidsai
-- count: 1
-  name: TomHarrop/funannotate-singularity
-- count: 1
-  name: danabl/meshtool
-- count: 1
-  name: default/centos
-- count: 1
-  name: adriansevcenco/alienpy.dock
-- count: 1
-  name: cornellcac/pulsar-pipeline
-- count: 1
-  name: cornellcac/presto
-- count: 1
-  name: cyberbotics/webots
-- count: 1
-  name: granek/duke-chsi-informatics/singularity-rnaseq
-- count: 1
-  name: library/default/centos
-- count: 1
-  name: registry.scicore.unibas.ch/schwede/openstructure
+  name: rbartelme/anvio-pangenomics
 - count: 1
   name: wangyoucao577/centos7-gcc7.4
 - count: 1
-  name: quay.io/biocontainers/kraken2
-- count: 1
-  name: quay.io/biocontainers/sra-tools
-- count: 1
-  name: quay.io/biocontainers/viennarna
-- count: 1
-  name: quay.io/biocontainers/homer
-- count: 1
-  name: quay.io/biocontainers/blast
-- count: 1
-  name: quay.io/biocontainers/picard
-- count: 1
-  name: quay.io/biocontainers/prodigal
-- count: 1
-  name: quay.io/biocontainers/bismark
-- count: 1
-  name: spack/ubuntu-bionic
-- count: 1
-  name: quay.io/biocontainers/fastx_toolkit
-- count: 1
-  name: quay.io/biocontainers/augustus
-- count: 1
-  name: staphb/prokka
-- count: 1
-  name: quay.io/biocontainers/cutadapt
-- count: 1
-  name: quay.io/biocontainers/bcftools
-- count: 1
-  name: quay.io/biocontainers/blat
-- count: 1
-  name: quay.io/biocontainers/fastqc
-- count: 1
-  name: quay.io/biocontainers/raxml
-- count: 1
-  name: quay.io/biocontainers/bedops
-- count: 1
-  name: quay.io/biocontainers/flash
+  name: thakk/bioinformatics
 - count: 1
   name: waldronlab/sratoolkit
 - count: 1
   name: waldronlab/curatedmetagenomics
 - count: 1
-  name: jupyter/r-notebook
+  name: ghcr.io/junghawoo/simpleg_tool
 - count: 1
-  name: quay.io/biocontainers/r-ngsplot
+  name: markito3/gluex_docker_devel
 - count: 1
-  name: yh549848/r/rstudio
+  name: markito3/gluex_docker_prod
 - count: 1
-  name: quay.io/biocontainers/sicer2
+  name: adriansevcenco/alienpy.dock
 - count: 1
-  name: antismash/standalone
+  name: lbnl-science-it/atlas
 - count: 1
-  name: soedinglab/mmseqs2
+  name: quay.io/biocontainers/prodigal
 - count: 1
-  name: quay.io/biocontainers/metawrap
+  name: quay.io/biocontainers/bcftools
 - count: 1
-  name: multiphenics/multiphenics
+  name: quay.io/biocontainers/homer
 - count: 1
-  name: khanlab/neuroglia-core-minc
+  name: staphb/prokka
 - count: 1
-  name: nvcr.io/nvidia/cuda-arm64
+  name: quay.io/biocontainers/fastx_toolkit
 - count: 1
-  name: anair17/railrl-hand-v1a
+  name: quay.io/biocontainers/blat
+- count: 1
+  name: meren/anvio
+- count: 1
+  name: quay.io/biocontainers/raxml
+- count: 1
+  name: quay.io/biocontainers/blast
+- count: 1
+  name: quay.io/biocontainers/fastqc
+- count: 1
+  name: quay.io/biocontainers/bismark
+- count: 1
+  name: quay.io/biocontainers/sra-tools
+- count: 1
+  name: quay.io/biocontainers/flash
+- count: 1
+  name: spack/ubuntu-bionic
+- count: 1
+  name: quay.io/biocontainers/viennarna
+- count: 1
+  name: quay.io/biocontainers/augustus
+- count: 1
+  name: quay.io/biocontainers/cutadapt
+- count: 1
+  name: quay.io/biocontainers/kraken2
+- count: 1
+  name: quay.io/biocontainers/bedops
+- count: 1
+  name: intelpython/intelpython3_full
 - count: 1
   name: eagenomics/starseqr
 - count: 1
   name: ikester/blender
 - count: 1
+  name: silasysh/annogesic
+- count: 1
+  name: godloved/secure/centos7
+- count: 1
+  name: haoyangz/deepsea-predict-docker
+- count: 1
+  name: humanlongevity/hla
+- count: 1
+  name: maoj/augustus
+- count: 1
+  name: suluxan/bamgineer-v2
+- count: 1
+  name: quay.io/comparative-genomics-toolkit/cactus
+- count: 1
+  name: polyactis/accurity
+- count: 1
+  name: accurity.simg
+- count: 1
+  name: wzhou88/saige
+- count: 1
+  name: quay.io/encode-dcc/chip-seq-pipeline
+- count: 1
+  name: tobneu/slamdunk
+- count: 1
+  name: pinellolab/stream
+- count: 1
+  name: godlovedc/ascatngs
+- count: 1
+  name: gridss/gridss
+- count: 1
+  name: mnedmonson/public
+- count: 1
+  name: library/centos
+- count: 1
+  name: quay.io/biocontainers/multiqc
+- count: 1
+  name: bruggerk/ricopili
+- count: 1
+  name: quay.io/wtsicgp/brass
+- count: 1
+  name: etal/cnvkit
+- count: 1
+  name: msahraeian/neusomatic
+- count: 1
+  name: dfam/tetools
+- count: 1
+  name: godlovedc/cgpbattenberg
+- count: 1
+  name: pkrusche/hap.py
+- count: 1
+  name: gaow/seqx
+- count: 1
+  name: library/default/ubuntu
+- count: 1
+  name: zhouwanding/transvar
+- count: 1
+  name: wanpinglee/sve
+- count: 1
+  name: tejahpc/parliament2
+- count: 1
   name: quay.io/biocontainers/whatshap
 - count: 1
-  name: sangerpathogens/ariba
-- count: 1
   name: quay.io/biocontainers/longshot
+- count: 1
+  name: sangerpathogens/ariba
 - count: 1
   name: quay.io/biocontainers/uropa
 - count: 1
@@ -824,299 +828,77 @@ bases:
 - count: 1
   name: caffe2ai/caffe2
 - count: 1
-  name: maoj/augustus
-- count: 1
-  name: quay.io/comparative-genomics-toolkit/cactus
-- count: 1
-  name: suluxan/bamgineer-v2
-- count: 1
-  name: humanlongevity/hla
-- count: 1
-  name: haoyangz/deepsea-predict-docker
-- count: 1
-  name: godloved/secure/centos7
-- count: 1
-  name: accurity.simg
-- count: 1
-  name: polyactis/accurity
-- count: 1
-  name: quay.io/encode-dcc/chip-seq-pipeline
-- count: 1
-  name: wzhou88/saige
-- count: 1
-  name: silasysh/annogesic
-- count: 1
-  name: mcin/civet
+  name: nistmni/minc-toolkit
 - count: 1
   name: vfonov/minc-toolkit-containers
 - count: 1
-  name: nistmni/minc-toolkit
+  name: mcin/civet
 - count: 1
   name: godloved/secure/ubuntu-xenial
 - count: 1
-  name: mnedmonson/public
+  name: lizhen0909/graph_clustering_toolkit
 - count: 1
-  name: godlovedc/ascatngs
+  name: lizhen0909/lshvec
 - count: 1
-  name: dfam/tetools
+  name: lizhen0909/pylshvec
 - count: 1
-  name: godlovedc/cgpbattenberg
+  name: anair17/railrl-hand-v1a
 - count: 1
-  name: gridss/gridss
+  name: spack-singularity.img
 - count: 1
-  name: wanpinglee/sve
+  name: lmod.Simg
 - count: 1
-  name: tobneu/slamdunk
+  name: spack.Simg
 - count: 1
-  name: bruggerk/ricopili
+  name: spack-rhel7.simg
 - count: 1
-  name: quay.io/biocontainers/multiqc
+  name: spack-lmod.img
 - count: 1
-  name: etal/cnvkit
+  name: adamwilsonlab/emma
 - count: 1
-  name: quay.io/wtsicgp/brass
-- count: 1
-  name: library/centos
-- count: 1
-  name: gaow/seqx
-- count: 1
-  name: pinellolab/stream
-- count: 1
-  name: library/default/ubuntu
-- count: 1
-  name: tejahpc/parliament2
-- count: 1
-  name: zhouwanding/transvar
-- count: 1
-  name: pkrusche/hap.py
-- count: 1
-  name: msahraeian/neusomatic
-- count: 1
-  name: fredjaya/rec-bench/base
-- count: 1
-  name: https
-- count: 1
-  name: registry
-- count: 1
-  name: pangeo/pangeo-notebook
-- count: 1
-  name: mcin/qeeg
-- count: 1
-  name: bigdatalabteam/hcp-prefreesurfer
-- count: 1
-  name: sarah145/batch_correct
-- count: 1
-  name: jupyter/minimal-notebook
-- count: 1
-  name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software_1804-cuda9
-- count: 1
-  name: pinellolab/haystack_bio
-- count: 1
-  name: scrin/dev-spconv
-- count: 1
-  name: thakk/bioinformatics
-- count: 1
-  name: SavuDeps.simg
-- count: 1
-  name: SavuCore.simg
-- count: 1
-  name: nvidia/opengl
-- count: 1
-  name: bgruening/busybox-bash
-- count: 1
-  name: OSKAR-2.7.6-base.sif
-- count: 1
-  name: rootproject/root
-- count: 1
-  name: recount-rs4
-- count: 1
-  name: recount-base
-- count: 1
-  name: recount-rs3
-- count: 1
-  name: recount-pump
-- count: 1
-  name: pawsey/openmpi-base
+  name: docker.pkg.github.com/adamwilsonlab/docker_geospatial_plus/docker_geospatial_plus
 - count: 1
   name: stevekm/containers
 - count: 1
-  name: nvcr.io/nvidia/mxnet
+  name: quay.io/fenicsproject/stable
 - count: 1
-  name: amd64/centos
+  name: danigoland/py36-alpine-llvm6
 - count: 1
-  name: i686/python
-- count: 1
-  name: r-minimal/r-minimal_3.5.1.simg
-- count: 1
-  name: wav2letter/wav2letter
-- count: 1
-  name: stimong/caffe2-cuda10-python3.6
+  name: oboratav/speaker-tagging
 - count: 1
   name: libatomsquip/quip-base
 - count: 1
-  name: quay.io/fenicsproject/stable
-- count: 1
-  name: nipype/nipype
-- count: 1
-  name: bioperl/bioperl
-- count: 1
-  name: library/mariadb
-- count: 1
-  name: biocorecrg/debian-perlbrew
-- count: 1
-  name: registry.gitlab.com/rode0day/fuzzer-testing/eclipser_runner
-- count: 1
-  name: registry.gitlab.com/rode0day/fuzzer-testing/i386/afl_runner
-- count: 1
-  name: registry.gitlab.com/rode0day/fuzzer-testing/parmesan_runner
-- count: 1
-  name: registry.gitlab.com/rode0day/fuzzer-testing/intriguer_runner
-- count: 1
-  name: registry.gitlab.com/rode0day/fuzzer-testing/i386/aflpp_runner
-- count: 1
-  name: registry.gitlab.com/rode0day/fuzzer-testing/ankou_runner
-- count: 1
-  name: registry.gitlab.com/rode0day/fuzzer-testing/i386/honggfuzz_runner
-- count: 1
-  name: registry.gitlab.com/rode0day/fuzzer-testing/aflgo_runner
-- count: 1
-  name: registry.gitlab.com/fuzzing/directed-fuzzing/llvm-12
-- count: 1
-  name: sng425
-- count: 1
-  name: ubuntu_base.simg
-- count: 1
-  name: ubuntu_pw_1
-- count: 1
-  name: /nrs/funke/singularity/linajea/pylp_base
-- count: 1
-  name: funkey/gunpowder
-- count: 1
-  name: kkelchte/ros_gazebo_tensorflow
-- count: 1
-  name: crown421/default/juliabase
+  name: khanlab/neuroglia-core-minc
 - count: 1
   name: bitnami/minideb
 - count: 1
-  name: asciinema/asciinema
+  name: crown421/default/juliabase
 - count: 1
-  name: tensorflow
+  name: ghcr.io/truatpasteurdotfr/singularity-docker-centos8-ci
 - count: 1
-  name: rstudio/r-base
+  name: gnina/gnina
 - count: 1
-  name: cfusting/conditional-growth
+  name: ghcr.io/truatpasteurdotfr/singularity-docker-busybox
 - count: 1
-  name: GOMAP-Base.sif
+  name: ghcr.io/truatpasteurdotfr/singularity-docker-fidle
 - count: 1
-  name: faustus123/hddeps
+  name: ghcr.io/truatpasteurdotfr/singularity-docker-pytorch-a40
 - count: 1
-  name: repronim/simple_workflow
+  name: ghcr.io/truatpasteurdotfr/ambertools-miniconda
 - count: 1
-  name: bids/magetbrain
+  name: ghcr.io/truatpasteurdotfr/singularity-docker-fidle-gpu
 - count: 1
-  name: bids/rs_signal_extract
+  name: ghcr.io/truatpasteurdotfr/singularity-docker-centos8-warewulf4-builder
 - count: 1
-  name: bids/cpac
+  name: ghcr.io/truatpasteurdotfr/singularity-docker-stream8-warewulf4-builder
 - count: 1
-  name: bids/mindboggle
-- count: 1
-  name: khanlab/hippunfold
-- count: 1
-  name: bids/oppni
-- count: 1
-  name: bids/afni_proc
-- count: 1
-  name: bids/dparsf
-- count: 1
-  name: bids/antscorticalthickness
-- count: 1
-  name: bids/tracula
-- count: 1
-  name: bids/brainiak-srm
-- count: 1
-  name: sebastientourbier/multiscalebrainparcellator
-- count: 1
-  name: bids/fibredensityandcrosssection
-- count: 1
-  name: bids/ndmg
-- count: 1
-  name: bids/niak
-- count: 1
-  name: bids/nipypelines
-- count: 1
-  name: bids/aa
-- count: 1
-  name: poldracklab/ds003-example
-- count: 1
-  name: jncc/arcsi-base
-- count: 1
-  name: arcsi-base-mpi
-- count: 1
-  name: ucr-singularity/ml-software
-- count: 1
-  name: ucrdocker/cuda-10.1-base
-- count: 1
-  name: bvlc/caffe
-- count: 1
-  name: ro47014
+  name: bioconductor/release_base2
 - count: 1
   name: ibmcom/powerai
 - count: 1
-  name: yonoia/mpi_base
+  name: computationalradiationphysics/picongpu
 - count: 1
-  name: kulhanek/target-driven-visual-navigation
-- count: 1
-  name: kulhanek/deep-rl-pytorch
-- count: 1
-  name: gcr.io/deepvariant-docker/deepvariant
-- count: 1
-  name: gcr.io/deepvariant-docker/deepvariant_gpu
-- count: 1
-  name: willgpaik/ubuntu_aci
-- count: 1
-  name: nipy/heudiconv
-- count: 1
-  name: andersenlabapps/ivar
-- count: 1
-  name: pdal/pdal
-- count: 1
-  name: tswetnam/cloudcompare
-- count: 1
-  name: ubuntu-focal
-- count: 1
-  name: detlab/cdms-jupyterlab
-- count: 1
-  name: semc/appion-protomo
-- count: 1
-  name: slaclab/slac-jupyterlab-gpu
-- count: 1
-  name: continuumio/anaconda
-- count: 1
-  name: alpine/git
-- count: 1
-  name: dpokidov/imagemagick
-- count: 1
-  name: slaclab/xfce
-- count: 1
-  name: cibiobcg/pacbam
-- count: 1
-  name: mariadb
-- count: 1
-  name: thinca/vim
-- count: 1
-  name: nvidia/vulkan
-- count: 1
-  name: ctpelok77/kstar
-- count: 1
-  name: jec/mandle
-- count: 1
-  name: xsede/centos-nix-openmpi
-- count: 1
-  name: library/debian@sha256
-- count: 1
-  name: xsede/nix-sc-benchmark
-- count: 1
-  name: madslupe/hddm
+  name: ax3l/picongpu
 - count: 1
   name: ml4ai/automates
 - count: 1
@@ -1126,91 +908,341 @@ bases:
 - count: 1
   name: spellrun/dynet
 - count: 1
-  name: i386/debian
+  name: bigdatalabteam/hcp-prefreesurfer
 - count: 1
-  name: psadil/stahb
+  name: base.sif
 - count: 1
-  name: rocker/verse
+  name: jupyter/datascience-notebook
 - count: 1
-  name: adamwilsonlab/emma
+  name: antismash/standalone
 - count: 1
-  name: docker.pkg.github.com/adamwilsonlab/docker_geospatial_plus/docker_geospatial_plus
+  name: quay.io/biocontainers/metawrap
 - count: 1
-  name: gitlab.archlinux.org
+  name: soedinglab/mmseqs2
 - count: 1
-  name: ghcr.io/truatpasteurdotfr/singularity-docker-fidle-gpu
+  name: yonoia/mpi_base
 - count: 1
-  name: gnina/gnina
+  name: scrin/dev-spconv
 - count: 1
-  name: ghcr.io/truatpasteurdotfr/singularity-docker-busybox
-- count: 1
-  name: ghcr.io/truatpasteurdotfr/singularity-docker-pytorch-a40
-- count: 1
-  name: ghcr.io/truatpasteurdotfr/singularity-docker-stream8-warewulf4-builder
-- count: 1
-  name: ghcr.io/truatpasteurdotfr/singularity-docker-centos8-ci
-- count: 1
-  name: ghcr.io/truatpasteurdotfr/singularity-docker-centos8-warewulf4-builder
-- count: 1
-  name: ghcr.io/truatpasteurdotfr/singularity-docker-fidle
-- count: 1
-  name: pcpaquette/tensorflow-serving
-- count: 1
-  name: /data/ubuntu-cuda10-20190226.sif
-- count: 1
-  name: pcpaquette/ubuntu-cuda10
-- count: 1
-  name: fzimmermann89/idi/idi/latest
+  name: kkelchte/ros_gazebo_tensorflow
 - count: 1
   name: weatherhub/metview
 - count: 1
-  name: joey3639570/tensorflow_without_ofed_cuda9.0
+  name: cfusting/conditional-growth
 - count: 1
-  name: joey3639570/tensorflow_mfoed4.0
+  name: linuxserver/code-server
 - count: 1
-  name: joey3639570/mellanox4.4-tensorflow1.13
+  name: httpd
 - count: 1
-  name: joey3639570/tensorflow_with_dali
+  name: nginx
 - count: 1
-  name: rocker/ropensci
+  name: mercury/indelible
 - count: 1
-  name: godlovedc/lolcow
+  name: java
 - count: 1
-  name: opendronemap/opendronemap
+  name: nunofonseca/irap_fedora
 - count: 1
-  name: charade/xlibbox@sha256
+  name: spmallick/opencv-docker
+- count: 1
+  name: awokeknowing/cuda-opencv
+- count: 1
+  name: underworldcode/underworld2
+- count: 1
+  name: opensuse/leap
+- count: 1
+  name: cellprofiler/cellprofiler
+- count: 1
+  name: tesseractshadow/tesseract4re
+- count: 1
+  name: impica
+- count: 1
+  name: ro47014
 - count: 1
   name: archlinux
 - count: 1
-  name: miccourse/jupyter-mic-2021
+  name: charade/xlibbox@sha256
+- count: 1
+  name: opendronemap/opendronemap
+- count: 1
+  name: library/debian@sha256
+- count: 1
+  name: xsede/nix-sc-benchmark
+- count: 1
+  name: xsede/centos-nix-openmpi
+- count: 1
+  name: jec/mandle
+- count: 1
+  name: i686/python
+- count: 1
+  name: library/mariadb
+- count: 1
+  name: biocorecrg/debian-perlbrew
+- count: 1
+  name: codeaster-common-20190513.sif
+- count: 1
+  name: codeaster-seq-15.0.16.sif
+- count: 1
+  name: codeastersolver/codeaster-mpi
+- count: 1
+  name: codeastersolver/codeaster-mpi-asterxx
+- count: 1
+  name: centos/centos-7.7.1908-cuda-11.0-openmpi-3.1.6.sif
+- count: 1
+  name: centos/centos-7.7.1908-openmpi-3.1.6.sif
+- count: 1
+  name: centos/centos-7.7.1908-openmpi-4.0.5.sif
+- count: 1
+  name: miniconda/miniconda3-py38-4.9.2-ubuntu-18.04.sif
+- count: 1
+  name: r-3.6.1.sif
+- count: 1
+  name: anaconda/anaconda3-py38-2020.11-ubuntu-18.04.sif
+- count: 1
+  name: openfoamplus/of_v2012_centos73
+- count: 1
+  name: registry.gitlab.com/rode0day/fuzzer-testing/aflgo_runner
+- count: 1
+  name: registry.gitlab.com/fuzzing/directed-fuzzing/llvm-12
+- count: 1
+  name: registry.gitlab.com/rode0day/fuzzer-testing/ankou_runner
+- count: 1
+  name: registry.gitlab.com/rode0day/fuzzer-testing/parmesan_runner
+- count: 1
+  name: registry.gitlab.com/rode0day/fuzzer-testing/i386/honggfuzz_runner
+- count: 1
+  name: registry.gitlab.com/rode0day/fuzzer-testing/eclipser_runner
+- count: 1
+  name: registry.gitlab.com/rode0day/fuzzer-testing/i386/aflpp_runner
+- count: 1
+  name: registry.gitlab.com/rode0day/fuzzer-testing/intriguer_runner
+- count: 1
+  name: registry.gitlab.com/rode0day/fuzzer-testing/i386/afl_runner
+- count: 1
+  name: sarah145/batch_correct
+- count: 1
+  name: ubuntu_base.simg
+- count: 1
+  name: sng425
+- count: 1
+  name: ubuntu_pw_1
+- count: 1
+  name: willgpaik/ubuntu_aci
+- count: 1
+  name: qtimlab/deepneuro_segment_gbm
+- count: 1
+  name: fzimmermann89/idi/idi/latest
+- count: 1
+  name: nvcr.io/nvidia/mxnet
+- count: 1
+  name: SavuCore.simg
+- count: 1
+  name: SavuDeps.simg
+- count: 1
+  name: rocker/tensorflow-gpu
+- count: 1
+  name: dalbohn/rstudio_aci
+- count: 1
+  name: rootproject/root
+- count: 1
+  name: cibiobcg/pacbam
+- count: 1
+  name: amd64/centos
+- count: 1
+  name: intelpython/intelpython2_full
+- count: 1
+  name: nvidia/vulkan
+- count: 1
+  name: thinca/vim
+- count: 1
+  name: mariadb
+- count: 1
+  name: agilly/burden_testing
+- count: 1
+  name: thomaschln/r-devtools
+- count: 1
+  name: nvidia/container-toolkit
+- count: 1
+  name: nvcr.io/nvidia/hpc-benchmarks
+- count: 1
+  name: nvidia/opencl
+- count: 1
+  name: cornellcac/presto
+- count: 1
+  name: cornellcac/pulsar-pipeline
+- count: 1
+  name: recount-rs3
+- count: 1
+  name: recount-base
+- count: 1
+  name: recount-rs4
+- count: 1
+  name: recount-pump
+- count: 1
+  name: darachm/miniconda3
+- count: 1
+  name: darachm/singularity_ubuntu
+- count: 1
+  name: zymoresearch/bcl2fastq
+- count: 1
+  name: ontresearch/medaka
+- count: 1
+  name: darachm/nanopore
+- count: 1
+  name: /home/zed/.singularity/ubuntu2004.sif
+- count: 1
+  name: bengen/kalign-v2
+- count: 1
+  name: biocontainers/t-coffee
+- count: 1
+  name: bdgp/mummer4
+- count: 1
+  name: itermae_test_base.simg
+- count: 1
+  name: TomHarrop/funannotate-singularity
+- count: 1
+  name: alantrrs/py-faster-rcnn
+- count: 1
+  name: GOMAP-Base.sif
+- count: 1
+  name: airl_lab/default/airl_env
+- count: 1
+  name: vanessa/rustarok
+- count: 1
+  name: pdal/pdal
+- count: 1
+  name: tswetnam/cloudcompare
+- count: 1
+  name: ubuntu-focal
+- count: 1
+  name: base/archlinux
+- count: 1
+  name: intel/oneapi-basekit
+- count: 1
+  name: kulhanek/deep-rl-pytorch
+- count: 1
+  name: kulhanek/target-driven-visual-navigation
+- count: 1
+  name: registry.scicore.unibas.ch/schwede/openstructure
+- count: 1
+  name: larbys/uboonecode
+- count: 1
+  name: larbys/sparseconvnet
+- count: 1
+  name: OSKAR-2.7.6-base.sif
+- count: 1
+  name: poldracklab/ds003-example
+- count: 1
+  name: sebastientourbier/multiscalebrainparcellator
+- count: 1
+  name: bids/oppni
+- count: 1
+  name: bids/dparsf
+- count: 1
+  name: bids/rs_signal_extract
+- count: 1
+  name: bids/cpac
+- count: 1
+  name: bids/mindboggle
+- count: 1
+  name: bids/niak
+- count: 1
+  name: khanlab/hippunfold
+- count: 1
+  name: bids/ndmg
+- count: 1
+  name: bids/brainiak-srm
+- count: 1
+  name: bids/afni_proc
+- count: 1
+  name: bids/tracula
+- count: 1
+  name: bids/antscorticalthickness
+- count: 1
+  name: bids/fibredensityandcrosssection
+- count: 1
+  name: bids/nipypelines
+- count: 1
+  name: bids/aa
+- count: 1
+  name: bids/magetbrain
+- count: 1
+  name: repronim/simple_workflow
+- count: 1
+  name: andresquintero/bratwurst_tensorflow2
+- count: 1
+  name: danabl/meshtool
+- count: 1
+  name: https
+- count: 1
+  name: registry
+- count: 1
+  name: nvcr.io/hpc/pgi-compilers
+- count: 1
+  name: rapidsai/rapidsai
+- count: 1
+  name: nvcr.io/nvidia/tlt-streamanalytics
+- count: 1
+  name: tyson-swetnam/turbovnc-singularity
+- count: 1
+  name: r-minimal/r-minimal_3.5.1.simg
+- count: 1
+  name: jcsda/docker-clang-mpich-dev
+- count: 1
+  name: jcsda/docker-gnu-openmpi-dev
+- count: 1
+  name: rstudio/r-base
+- count: 1
+  name: tikhonovapolly/phigaro
+- count: 1
+  name: dota
+- count: 1
+  name: letaylor/sc_qc_cluster
+- count: 1
+  name: nvcr.io/hpc/gromacs
+- count: 1
+  name: nvcr.io/hpc/milc
+- count: 1
+  name: nvcr.io/hpc/relion
+- count: 1
+  name: nvcr.io/hpc/lammps
+- count: 1
+  name: faustus123/hddeps
+- count: 1
+  name: ucrdocker/cuda-10.1-base
+- count: 1
+  name: bvlc/caffe
+- count: 1
+  name: ucr-singularity/ml-software
+- count: 1
+  name: nipy/heudiconv
 bootstraps:
-- count: 3172
+- count: 3267
   name: docker
-- count: 322
+- count: 327
   name: debootstrap
-- count: 239
+- count: 240
   name: shub
-- count: 221
+- count: 224
   name: library
-- count: 86
+- count: 89
   name: yum
-- count: 72
+- count: 75
   name: localimage
 - count: 30
   name: oras
-- count: 14
+- count: 17
   name: zypper
-- count: 14
+- count: 16
   name: scratch
-- count: 8
+- count: 9
   name: busybox
-- count: 7
+- count: 8
   name: arch
-- count: 6
+- count: 7
   name: self
-- count: 5
+- count: 6
   name: docker-daemon
-- count: 2
+- count: 3
   name: 'library  '
 - count: 1
   name: tensorflow
@@ -1224,551 +1256,451 @@ orgs:
 - count: 11
   name: vitchyr
 - count: 10
+  name: ghcr.io/truatpasteurdotfr
+- count: 10
   name: rocker
 - count: 9
-  name: ghcr.io/truatpasteurdotfr
-- count: 9
   name: nvcr.io/nvidia
-- count: 6
-  name: nvcr.io/hpc
 - count: 6
   name: slaclab
 - count: 6
   name: library
 - count: 6
-  name: nvidia
-- count: 6
   name: continuumio
+- count: 6
+  name: nvcr.io/hpc
+- count: 6
+  name: nvidia
+- count: 4
+  name: joey3639570
 - count: 4
   name: willprice
 - count: 4
   name: godloved
 - count: 4
-  name: larbys
-- count: 4
-  name: khanlab
-- count: 4
   name: willgpaik
 - count: 4
-  name: poldracklab
+  name: darachm
+- count: 4
+  name: larbys
 - count: 4
   name: bioconductor
 - count: 4
+  name: khanlab
+- count: 4
   name: conda
 - count: 4
-  name: joey3639570
-- count: 3
-  name: jcsda
-- count: 3
-  name: cokelaer
-- count: 3
-  name: centos
-- count: 3
-  name: alexisespinosa
-- count: 3
-  name: darachm
+  name: poldracklab
 - count: 3
   name: iarcbioinfo
 - count: 3
-  name: lizhen0909
+  name: ctpelok77
 - count: 3
-  name: quay.io/wtsicgp
-- count: 3
-  name: vanessa
-- count: 3
-  name: jupyter
-- count: 3
-  name: sebastientourbier
+  name: cokelaer
 - count: 3
   name: gcr.io
 - count: 3
-  name: stevekm
-- count: 3
-  name: ctpelok77
-- count: 3
-  name: xsede
-- count: 3
-  name: spellrun
-- count: 3
-  name: vuiiscci
+  name: alexisespinosa
 - count: 3
   name: godlovedc
 - count: 3
+  name: quay.io/wtsicgp
+- count: 3
+  name: lizhen0909
+- count: 3
+  name: stevekm
+- count: 3
+  name: spellrun
+- count: 3
+  name: jupyter
+- count: 3
+  name: xsede
+- count: 3
+  name: centos
+- count: 3
+  name: vanessa
+- count: 3
+  name: sebastientourbier
+- count: 3
   name: granek
-- count: 2
-  name: bud42
+- count: 3
+  name: jcsda
+- count: 3
+  name: vuiiscci
 - count: 2
   name: richelbilderbeek
 - count: 2
-  name: thinkplayhack
-- count: 2
-  name: intelpython
-- count: 2
-  name: caid
-- count: 2
-  name: markito3
-- count: 2
-  name: danabl
-- count: 2
-  name: cornellcac
-- count: 2
-  name: waldronlab
-- count: 2
-  name: sangerpathogens
-- count: 2
-  name: maoj
-- count: 2
-  name: mcin
-- count: 2
-  name: nistmni
-- count: 2
-  name: pinellolab
-- count: 2
-  name: pawsey
-- count: 2
-  name: amd64
-- count: 2
-  name: Characterisation-Virtual-Laboratory
-- count: 2
-  name: biocorecrg
-- count: 2
-  name: anair17
-- count: 2
-  name: provarepro
-- count: 2
-  name: modakopt
-- count: 2
-  name: pennbbl
-- count: 2
-  name: nickjer
-- count: 2
-  name: kulhanek
-- count: 2
-  name: broadinstitute
-- count: 2
-  name: ml4ai
-- count: 2
-  name: i386
+  name: bud42
 - count: 2
   name: pcpaquette
 - count: 2
-  name: intel
+  name: caid
+- count: 2
+  name: thinkplayhack
+- count: 2
+  name: waldronlab
+- count: 2
+  name: markito3
+- count: 2
+  name: pinellolab
+- count: 2
+  name: maoj
+- count: 2
+  name: nistmni
+- count: 2
+  name: mcin
+- count: 2
+  name: anair17
+- count: 2
+  name: modakopt
+- count: 2
+  name: i386
+- count: 2
+  name: ml4ai
+- count: 2
+  name: sangerpathogens
 - count: 2
   name: opendronemap
+- count: 2
+  name: codeastersolver
+- count: 2
+  name: broadinstitute
+- count: 2
+  name: amd64
+- count: 2
+  name: intelpython
+- count: 2
+  name: cornellcac
+- count: 2
+  name: biocorecrg
+- count: 2
+  name: provarepro
+- count: 2
+  name: pawsey
+- count: 2
+  name: intel
+- count: 2
+  name: kulhanek
+- count: 2
+  name: pennbbl
+- count: 2
+  name: danabl
+- count: 2
+  name: nickjer
+- count: 2
+  name: Characterisation-Virtual-Laboratory
 - count: 1
-  name: oboratav
-- count: 1
-  name: danigoland
-- count: 1
-  name: tikhonovapolly
-- count: 1
-  name: jlabsolid
-- count: 1
-  name: electronioncollider
-- count: 1
-  name: qtimlab
-- count: 1
-  name: mustxyk
-- count: 1
-  name: nextflow
-- count: 1
-  name: scr.svc.stanford.edu
-- count: 1
-  name: openvino
-- count: 1
-  name: linuxserver
-- count: 1
-  name: mtmiller
-- count: 1
-  name: dalbohn
-- count: 1
-  name: andreweiner
-- count: 1
-  name: mesnardo
-- count: 1
-  name: openfoamplus
-- count: 1
-  name: tin6150
-- count: 1
-  name: '{{ cookiecutter.dockerhub_username }}'
-- count: 1
-  name: arm32v7
-- count: 1
-  name: deeplearnphysics
-- count: 1
-  name: DeepLearnPhysics
-- count: 1
-  name: marcchpc
-- count: 1
-  name: airl_lab
-- count: 1
-  name: rstatstartu
-- count: 1
-  name: shengwei
-- count: 1
-  name: jekriske
-- count: 1
-  name: clottaz
-- count: 1
-  name: openfoam
-- count: 1
-  name: trlandet
-- count: 1
-  name: sriggi
-- count: 1
-  name: theasp
-- count: 1
-  name: rbartelme
-- count: 1
-  name: hariszaf
-- count: 1
-  name: thomaschln
-- count: 1
-  name: agilly
-- count: 1
-  name: barbagroup
-- count: 1
-  name: underworldcode
-- count: 1
-  name: opensuse
-- count: 1
-  name: spmallick
-- count: 1
-  name: awokeknowing
-- count: 1
-  name: mercury
-- count: 1
-  name: nunofonseca
-- count: 1
-  name: cellprofiler
-- count: 1
-  name: bethgelab
-- count: 1
-  name: tesseractshadow
-- count: 1
-  name: valian
-- count: 1
-  name: vibpsb
-- count: 1
-  name: buisciii
-- count: 1
-  name: hansencb
-- count: 1
-  name: mattocci
-- count: 1
-  name: drneavin
-- count: 1
-  name: lbnl-science-it
-- count: 1
-  name: rockylinux
-- count: 1
-  name: dcgc-bfx
+  name: yh549848
 - count: 1
   name: bdgenomics
 - count: 1
-  name: anaconda
+  name: dcgc-bfx
 - count: 1
-  name: miniconda
+  name: psadil
 - count: 1
-  name: ghcr.io/mkandes
+  name: nipype
 - count: 1
-  name: ax3l
+  name: build
 - count: 1
-  name: computationalradiationphysics
+  name: shengwei
 - count: 1
-  name: ncbi
+  name: jncc
 - count: 1
-  name: alantrrs
+  name: vibpsb
 - count: 1
-  name: mbhall88
+  name: NuWro
+- count: 1
+  name: arcsUVA
+- count: 1
+  name: mtmiller
+- count: 1
+  name: bgruening
+- count: 1
+  name: madslupe
+- count: 1
+  name: arm32v7
 - count: 1
   name: delhommet
 - count: 1
   name: icbi
 - count: 1
-  name: uazhlt
-- count: 1
-  name: ghcr.io/junghawoo
-- count: 1
-  name: scleveland
-- count: 1
   name: osrf
-- count: 1
-  name: tyson-swetnam
-- count: 1
-  name: images
-- count: 1
-  name: nextgenusfs
-- count: 1
-  name: pranithavangala
-- count: 1
-  name: andresquintero
-- count: 1
-  name: rapidsai
-- count: 1
-  name: TomHarrop
-- count: 1
-  name: default
-- count: 1
-  name: adriansevcenco
-- count: 1
-  name: cyberbotics
-- count: 1
-  name: openresty
-- count: 1
-  name: registry.scicore.unibas.ch
-- count: 1
-  name: wangyoucao577
-- count: 1
-  name: gw000
-- count: 1
-  name: spack
-- count: 1
-  name: gnuoctave
-- count: 1
-  name: staphb
-- count: 1
-  name: yh549848
-- count: 1
-  name: antismash
-- count: 1
-  name: soedinglab
-- count: 1
-  name: multiphenics
-- count: 1
-  name: shreyaskamathkm
-- count: 1
-  name: eagenomics
-- count: 1
-  name: ikester
-- count: 1
-  name: datalad
-- count: 1
-  name: caffe2ai
-- count: 1
-  name: quay.io/comparative-genomics-toolkit
-- count: 1
-  name: suluxan
-- count: 1
-  name: humanlongevity
-- count: 1
-  name: brentp
-- count: 1
-  name: uhrigs
-- count: 1
-  name: haoyangz
-- count: 1
-  name: polyactis
-- count: 1
-  name: quay.io/encode-dcc
-- count: 1
-  name: wzhou88
-- count: 1
-  name: silasysh
-- count: 1
-  name: vfonov
-- count: 1
-  name: mnedmonson
-- count: 1
-  name: dfam
-- count: 1
-  name: gridss
-- count: 1
-  name: wanpinglee
-- count: 1
-  name: griffithlab
-- count: 1
-  name: tobneu
-- count: 1
-  name: bruggerk
-- count: 1
-  name: fooliu
-- count: 1
-  name: trinityctat
-- count: 1
-  name: combinelab
-- count: 1
-  name: etal
-- count: 1
-  name: gaow
-- count: 1
-  name: tejahpc
-- count: 1
-  name: zhouwanding
-- count: 1
-  name: pkrusche
-- count: 1
-  name: google
-- count: 1
-  name: msahraeian
-- count: 1
-  name: fredjaya
-- count: 1
-  name: pangeo
-- count: 1
-  name: letaylor
-- count: 1
-  name: bigdatalabteam
-- count: 1
-  name: sarah145
-- count: 1
-  name: scrin
-- count: 1
-  name: thakk
-- count: 1
-  name: anibali
-- count: 1
-  name: bgruening
-- count: 1
-  name: bilbydev
-- count: 1
-  name: build
-- count: 1
-  name: rootproject
-- count: 1
-  name: nitishnarula
-- count: 1
-  name: maplesond
-- count: 1
-  name: GodloveD
-- count: 1
-  name: i686
-- count: 1
-  name: r-minimal
-- count: 1
-  name: r
-- count: 1
-  name: wav2letter
 - count: 1
   name: stimong
 - count: 1
-  name: libatomsquip
+  name: wav2letter
 - count: 1
-  name: tpall
+  name: drneavin
 - count: 1
-  name: quay.io/fenicsproject
+  name: hkmo
 - count: 1
-  name: finalduty
+  name: clottaz
 - count: 1
-  name: nipype
-- count: 1
-  name: fcpindi
-- count: 1
-  name: bioperl
-- count: 1
-  name: registry.gitlab.com/fuzzing
-- count: 1
-  name: mambaorg
+  name: cyberbotics
 - count: 1
   name: APPIAN-PET
 - count: 1
-  name: NuWro
+  name: default
 - count: 1
-  name: funkey
+  name: miccourse
 - count: 1
-  name: ubuntu_base
+  name: mattocci
 - count: 1
-  name: kkelchte
+  name: fredjaya
 - count: 1
-  name: crown421
-- count: 1
-  name: bitnami
-- count: 1
-  name: archlinux
+  name: bioperl
 - count: 1
   name: asciinema
 - count: 1
   name: gipert
 - count: 1
-  name: uppmax
+  name: mustxyk
 - count: 1
-  name: rstudio
-- count: 1
-  name: cfusting
-- count: 1
-  name: arcsUVA
-- count: 1
-  name: faustus123
-- count: 1
-  name: repronim
-- count: 1
-  name: neuronets
-- count: 1
-  name: micalab
-- count: 1
-  name: peerherholz
-- count: 1
-  name: nipreps
-- count: 1
-  name: jncc
-- count: 1
-  name: ucr-singularity
-- count: 1
-  name: ucrdocker
-- count: 1
-  name: bvlc
-- count: 1
-  name: ibmcom
-- count: 1
-  name: yonoia
-- count: 1
-  name: adigenova
-- count: 1
-  name: nipy
-- count: 1
-  name: andersenlabapps
-- count: 1
-  name: pdal
-- count: 1
-  name: tswetnam
-- count: 1
-  name: detlab
-- count: 1
-  name: semc
+  name: tin6150
 - count: 1
   name: nysbc
 - count: 1
   name: alpine
 - count: 1
+  name: semc
+- count: 1
   name: dpokidov
 - count: 1
-  name: cibiobcg
+  name: detlab
 - count: 1
-  name: thinca
+  name: ResearchIT
 - count: 1
-  name: jec
+  name: hansencb
 - count: 1
-  name: madslupe
+  name: '{{ cookiecutter.dockerhub_username }}'
 - count: 1
-  name: nightseas
+  name: andreweiner
 - count: 1
-  name: psadil
+  name: scleveland
+- count: 1
+  name: shreyaskamathkm
+- count: 1
+  name: funkey
+- count: 1
+  name: theasp
+- count: 1
+  name: rstatstartu
+- count: 1
+  name: tpall
+- count: 1
+  name: uazhlt
+- count: 1
+  name: pangeo
+- count: 1
+  name: nextflow
+- count: 1
+  name: pranithavangala
+- count: 1
+  name: gw000
+- count: 1
+  name: trlandet
+- count: 1
+  name: openfoam
+- count: 1
+  name: multiphenics
+- count: 1
+  name: electronioncollider
+- count: 1
+  name: jlabsolid
+- count: 1
+  name: scr.svc.stanford.edu
+- count: 1
+  name: hariszaf
+- count: 1
+  name: jekriske
+- count: 1
+  name: maplesond
+- count: 1
+  name: rbartelme
+- count: 1
+  name: wangyoucao577
+- count: 1
+  name: archlinux
+- count: 1
+  name: thakk
+- count: 1
+  name: ghcr.io/junghawoo
+- count: 1
+  name: matmu
+- count: 1
+  name: adriansevcenco
+- count: 1
+  name: lbnl-science-it
+- count: 1
+  name: staphb
+- count: 1
+  name: meren
+- count: 1
+  name: gnuoctave
+- count: 1
+  name: spack
+- count: 1
+  name: eagenomics
+- count: 1
+  name: ikester
+- count: 1
+  name: silasysh
+- count: 1
+  name: brentp
+- count: 1
+  name: haoyangz
+- count: 1
+  name: humanlongevity
+- count: 1
+  name: suluxan
+- count: 1
+  name: quay.io/comparative-genomics-toolkit
+- count: 1
+  name: uhrigs
+- count: 1
+  name: polyactis
+- count: 1
+  name: wzhou88
+- count: 1
+  name: quay.io/encode-dcc
+- count: 1
+  name: combinelab
+- count: 1
+  name: tobneu
+- count: 1
+  name: gridss
+- count: 1
+  name: mnedmonson
+- count: 1
+  name: bruggerk
+- count: 1
+  name: griffithlab
+- count: 1
+  name: trinityctat
+- count: 1
+  name: etal
+- count: 1
+  name: msahraeian
+- count: 1
+  name: dfam
+- count: 1
+  name: google
+- count: 1
+  name: pkrusche
+- count: 1
+  name: gaow
+- count: 1
+  name: zhouwanding
+- count: 1
+  name: finalduty
+- count: 1
+  name: wanpinglee
+- count: 1
+  name: tejahpc
+- count: 1
+  name: datalad
+- count: 1
+  name: caffe2ai
+- count: 1
+  name: vfonov
+- count: 1
+  name: nitishnarula
+- count: 1
+  name: mambaorg
+- count: 1
+  name: ubuntu_base
 - count: 1
   name: adamwilsonlab
 - count: 1
   name: docker.pkg.github.com
 - count: 1
-  name: matmu
+  name: quay.io/fenicsproject
 - count: 1
-  name: gnina
+  name: danigoland
 - count: 1
-  name: ResearchIT
+  name: oboratav
 - count: 1
-  name: aibasel
+  name: libatomsquip
 - count: 1
-  name: condaforge
+  name: bitnami
 - count: 1
-  name: fzimmermann89
-- count: 1
-  name: weatherhub
+  name: crown421
 - count: 1
   name: halfpipe
 - count: 1
+  name: gnina
+- count: 1
+  name: ibmcom
+- count: 1
+  name: computationalradiationphysics
+- count: 1
+  name: ax3l
+- count: 1
+  name: tikk3r
+- count: 1
+  name: deeplearnphysics
+- count: 1
+  name: DeepLearnPhysics
+- count: 1
+  name: mesnardo
+- count: 1
+  name: uppmax
+- count: 1
   name: singularityhub
 - count: 1
-  name: thomasrobinson
+  name: nightseas
+- count: 1
+  name: bigdatalabteam
+- count: 1
+  name: antismash
+- count: 1
+  name: soedinglab
+- count: 1
+  name: yonoia
+- count: 1
+  name: openresty
+- count: 1
+  name: scrin
+- count: 1
+  name: kkelchte
+- count: 1
+  name: marcchpc
+- count: 1
+  name: weatherhub
+- count: 1
+  name: cfusting
+- count: 1
+  name: linuxserver
+- count: 1
+  name: mercury
+- count: 1
+  name: nunofonseca
+- count: 1
+  name: fooliu
+- count: 1
+  name: spmallick
+- count: 1
+  name: awokeknowing
+- count: 1
+  name: underworldcode
+- count: 1
+  name: opensuse
+- count: 1
+  name: bethgelab
+- count: 1
+  name: cellprofiler
+- count: 1
+  name: tesseractshadow
+- count: 1
+  name: valian
+- count: 1
+  name: trinityrnaseq
+- count: 1
+  name: metabat
 - count: 1
   name: powerPlant
+- count: 1
+  name: charade
 - count: 1
   name: quay.io/qiime2
 - count: 1
@@ -1776,34 +1708,152 @@ orgs:
 - count: 1
   name: amazon
 - count: 1
-  name: charade
-- count: 1
   name: ezlabgva
-- count: 1
-  name: urgi
-- count: 1
-  name: quay.io/vgteam
 - count: 1
   name: ewels
 - count: 1
-  name: trinityrnaseq
+  name: quay.io/vgteam
 - count: 1
-  name: metabat
+  name: urgi
+- count: 1
+  name: barbagroup
+- count: 1
+  name: jec
+- count: 1
+  name: i686
+- count: 1
+  name: thomasrobinson
+- count: 1
+  name: sriggi
+- count: 1
+  name: miniconda
+- count: 1
+  name: anaconda
+- count: 1
+  name: ghcr.io/mkandes
+- count: 1
+  name: openfoamplus
+- count: 1
+  name: registry.gitlab.com/fuzzing
+- count: 1
+  name: sarah145
+- count: 1
+  name: buisciii
+- count: 1
+  name: qtimlab
+- count: 1
+  name: fzimmermann89
+- count: 1
+  name: dalbohn
+- count: 1
+  name: rootproject
+- count: 1
+  name: cibiobcg
+- count: 1
+  name: thinca
+- count: 1
+  name: agilly
+- count: 1
+  name: thomaschln
+- count: 1
+  name: fcpindi
+- count: 1
+  name: zymoresearch
+- count: 1
+  name: ontresearch
+- count: 1
+  name: bengen
+- count: 1
+  name: biocontainers
+- count: 1
+  name: bdgp
+- count: 1
+  name: ncbi
+- count: 1
+  name: TomHarrop
+- count: 1
+  name: nextgenusfs
+- count: 1
+  name: alantrrs
+- count: 1
+  name: andersenlabapps
+- count: 1
+  name: airl_lab
+- count: 1
+  name: openvino
+- count: 1
+  name: pdal
+- count: 1
+  name: tswetnam
+- count: 1
+  name: nfcore
+- count: 1
+  name: rockylinux
+- count: 1
+  name: base
+- count: 1
+  name: condaforge
+- count: 1
+  name: adigenova
+- count: 1
+  name: anibali
+- count: 1
+  name: registry.scicore.unibas.ch
+- count: 1
+  name: bilbydev
+- count: 1
+  name: neuronets
+- count: 1
+  name: nipreps
+- count: 1
+  name: peerherholz
+- count: 1
+  name: micalab
+- count: 1
+  name: repronim
+- count: 1
+  name: andresquintero
+- count: 1
+  name: GodloveD
+- count: 1
+  name: rapidsai
+- count: 1
+  name: tyson-swetnam
+- count: 1
+  name: images
+- count: 1
+  name: mbhall88
+- count: 1
+  name: r-minimal
+- count: 1
+  name: r
+- count: 1
+  name: aibasel
+- count: 1
+  name: rstudio
+- count: 1
+  name: mkandes
+- count: 1
+  name: tikhonovapolly
+- count: 1
+  name: letaylor
 - count: 1
   name: pytorch
 - count: 1
   name: tensorflow
 - count: 1
-  name: mkandes
+  name: faustus123
 - count: 1
-  name: nfcore
+  name: ucrdocker
 - count: 1
-  name: tikk3r
+  name: bvlc
 - count: 1
-  name: miccourse
+  name: ucr-singularity
+- count: 1
+  name: nipy
 tags:
-  latest: 316
-  other: 2909
+  latest: 320
+  other: 2998
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -1834,9 +1884,9 @@ versions:
   adriansevcenco/alienpy.dock:
     latest: 1
   aibasel/downward:
-    '19.06': 9
-    '19.12': 10
-    '20.06': 16
+    '19.06': 10
+    '19.12': 11
+    '20.06': 18
   airl_lab/default/airl_env:
     base_ci: 1
   alantrrs/py-faster-rcnn:
@@ -1851,14 +1901,15 @@ versions:
   alpine:
     '3.10': 1
     3.10.3: 3
-    '3.11': 1
-    3.11.5: 12
+    '3.11': 2
+    3.11.5: 14
+    '3.15': 1
     3.15.0: 1
     '3.4': 2
     '3.5': 1
     '3.6': 2
     '3.7': 2
-    '3.8': 7
+    '3.8': 8
     edge: 29
     latest: 18
   alpine/git:
@@ -1872,7 +1923,7 @@ versions:
   anair17/railrl_hand_v2:
     latest: 4
   andersenlabapps/ivar:
-    1.3.1: 1
+    1.3.1: 2
   andreweiner/of_pytorch:
     of2106-py1.9.0-cpu: 1
   anibali/pytorch:
@@ -1894,6 +1945,10 @@ versions:
     v0.1.trusty: 1
   bdgenomics/rhapsody:
     1.9.1: 1
+  bdgp/mummer4:
+    latest: 1
+  bengen/kalign-v2:
+    latest: 1
   bethgelab/deeplearning:
     cuda10.0-cudnn7: 1
     cuda9.0-cudnn7: 1
@@ -1938,6 +1993,7 @@ versions:
     0.4.1: 1
     0.4.2: 1
     0.5.0: 1
+    0.5.1: 1
   bids/ndmg:
     v0.1.0: 1
   bids/niak:
@@ -1984,7 +2040,7 @@ versions:
   bigdatalabteam/hcp-prefreesurfer:
     exec-centos7-reprozip.fslbuild-centos5: 1
   biobb_cmip:
-    3.7.0--py_0: 1
+    3.7.1--py_0: 1
   biobb_md:
     3.5.1--py_0: 1
   biobb_structure_utils:
@@ -2001,6 +2057,8 @@ versions:
   bioconductor/release_core2:
     R3.5.0_Bioc3.7: 1
     R3.5.1_Bioc3.7: 1
+  biocontainers/t-coffee:
+    v12.00.7fb08c2-4-deb_cv1: 1
   biocorecrg/debian-perlbrew:
     buster: 1
   biocorecrg/debian-perlbrew-pyenv3-java:
@@ -2029,9 +2087,9 @@ versions:
   buisciii/centos7_base_image:
     latest: 2
   busybox:
-    1.31.1: 4
+    1.31.1: 5
     latest: 6
-    'latest   ': 7
+    'latest   ': 8
   bvlc/caffe:
     gpu: 1
   cellprofiler/cellprofiler:
@@ -2041,7 +2099,7 @@ versions:
     '6.10': 1
     '6.8': 1
     '6.9': 1
-    '7': 70
+    '7': 71
     7.4.1708: 4
     7.5.1804: 1
     7.6.1810: 2
@@ -2057,12 +2115,17 @@ versions:
     centos7.5.1804: 1
     centos7.6.1810: 3
     centos7.8.2003: 2
+    centos7.9.2009: 1
     centos8: 4
     latest: 5
   charade/xlibbox@sha256:
     04b1aca63f51cd18972b44380a7fcf2da0115c9e21e80fb9d375f39f229f686d: 1
   clottaz/fastqpuri:
     1.0.8: 1
+  codeastersolver/codeaster-mpi:
+    latest: 1
+  codeastersolver/codeaster-mpi-asterxx:
+    latest: 1
   cokelaer/damona:
     r_4.0.2: 2
   cokelaer/damona/conda:
@@ -2090,7 +2153,7 @@ versions:
     4.5.11: 1
     4.5.4: 2
     4.7.12-alpine: 1
-    latest: 6
+    latest: 7
   continuumio/miniconda2:
     4.7.12: 5
   continuumio/miniconda3:
@@ -2124,7 +2187,9 @@ versions:
   danabl/meshtool:
     latest: 1
   darachm/itermae:
-    plus: 1
+    plus: 2
+  darachm/nanopore:
+    medaka: 1
   darachm/singularity_ubuntu:
     v1.0.0: 1
   datalad/datalad:
@@ -2258,6 +2323,8 @@ versions:
     ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0-openmpi-3.1.6: 1
     ubuntu-18.04-mlnx-ofed-4.7-3.2.9.0-openmpi-4.0.5: 1
     ubuntu-18.04-openmpi-3.1.6: 1
+  ghcr.io/truatpasteurdotfr/ambertools-miniconda:
+    main: 1
   ghcr.io/truatpasteurdotfr/singularity-docker-busybox:
     main: 1
   ghcr.io/truatpasteurdotfr/singularity-docker-centos7-ci:
@@ -2293,7 +2360,7 @@ versions:
   godlovedc/cgpbattenberg:
     3.5.3: 1
   golang:
-    1.12.3-alpine3.9: 5
+    1.12.3-alpine3.9: 6
   google/deepvariant:
     0.10.0: 1
     0.9.0: 1
@@ -2426,7 +2493,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 4
+    latest: 1
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2523,6 +2590,8 @@ versions:
     latest: 1
   mysql:
     5.7.21: 2
+  ncbi/blast:
+    2.12.0: 1
   neurodebian:
     artful-non-free: 3
     bullseye: 1
@@ -2620,6 +2689,7 @@ versions:
     21.09-py3: 2
     21.10-py3: 1
     21.11-py3: 1
+    21.12-py3: 1
   nvcr.io/nvidia/tensorflow:
     20.03-tf2-py3: 2
     20.07-tf1-py3: 2
@@ -2634,6 +2704,7 @@ versions:
     21.09-tf2-py3: 1
     21.10-tf2-py3: 1
     21.11-tf2-py3: 1
+    21.12-tf2-py3: 1
   nvcr.io/nvidia/tlt-streamanalytics:
     v3.0-dp-py3: 1
   nvidia/container-toolkit:
@@ -2726,6 +2797,8 @@ versions:
     1.1.121: 1
   oboratav/speaker-tagging:
     latest: 1
+  ontresearch/medaka:
+    v1.4.4: 1
   opendronemap/odm@sha256:
     07a17c8668397272cd85f3a9fea8756cb9b51aa0850d27e525944ec37042cc74: 2
   opendronemap/opendronemap:
@@ -2737,7 +2810,7 @@ versions:
   openjdk:
     alpine: 2
   openresty/openresty:
-    1.13.6.1-2-alpine: 3
+    1.13.6.1-2-alpine: 4
   opensuse/leap:
     '15.1': 1
   openvino/ubuntu18_runtime:
@@ -2834,10 +2907,18 @@ versions:
     v0.5-OpenVINO-2019_R3.1_rt_c_tbb-py36-gcc75-ubuntu18: 1
     v0.5-OpenVINO-2019_R3.1_rt_cg_tbb-py36-gcc75-ubuntu18: 1
     v0.5-OpenVINO-2019_R3.1_src_c_omp-py36-gcc75-ubuntu18: 1
+    v0.5-OpenVINO-2019_R3.1_src_c_omp-py36-gcc75-ubuntu18-avx2: 1
+    v0.5-OpenVINO-2019_R3.1_src_c_omp-py36-gcc75-ubuntu18-sse42: 1
     v0.5-OpenVINO-2019_R3.1_src_c_omp-py38-gcc75-ubuntu20: 1
     v0.5-OpenVINO-2019_R3.1_src_c_tbb-py36-gcc75-ubuntu18: 1
     v0.5-OpenVINO-2019_R3.1_src_cg_omp-py36-gcc75-ubuntu18: 1
     v0.5-OpenVINO-2019_R3.1_src_cg_tbb-py36-gcc75-ubuntu18: 1
+    v0.5-OpenVINO-2019_pre-release_src_c_omp-py36-gcc75-ubuntu18: 1
+    v0.5-OpenVINO-2019_pre-release_src_c_omp-py36-gcc75-ubuntu18-avx2: 1
+    v0.5-OpenVINO-2019_pre-release_src_c_omp-py36-gcc75-ubuntu18-sse42: 1
+    v0.5-OpenVINO-2019_pre-release_src_c_tbb-py36-gcc75-ubuntu18: 1
+    v0.5-OpenVINO-2019_pre-release_src_cg_omp-py36-gcc75-ubuntu18: 1
+    v0.5-OpenVINO-2019_pre-release_src_cg_tbb-py36-gcc75-ubuntu18: 1
     v0.5-OpenVINO-2020.3.1_src_c_omp-py36-gcc75-ubuntu18: 1
     v0.7-OpenVINO-2019_R3.1_rt_c_tbb-py36-gcc75-ubuntu18: 1
     v0.7-OpenVINO-2019_R3.1_rt_cg_tbb-py36-gcc75-ubuntu18: 1
@@ -2845,6 +2926,10 @@ versions:
     v0.7-OpenVINO-2019_R3.1_src_c_tbb-py36-gcc75-ubuntu18: 1
     v0.7-OpenVINO-2019_R3.1_src_cg_omp-py36-gcc75-ubuntu18: 1
     v0.7-OpenVINO-2019_R3.1_src_cg_tbb-py36-gcc75-ubuntu18: 1
+    v0.7-OpenVINO-2021.1pre_src_c_omp-py36-gcc75-ubuntu18: 1
+    v0.7-OpenVINO-2021.1pre_src_c_tbb-py36-gcc75-ubuntu18: 1
+    v1.1-OpenVINO-2021.4_src_c_omp-py38-gcc93-ubuntu20: 1
+    v1.1-OpenVINO-2021.4_src_c_tbb-py38-gcc93-ubuntu20: 1
   provarepro/openvino:
     2019_c_deps-ubuntu18: 4
     2019_cg_deps-ubuntu18: 2
@@ -2872,7 +2957,7 @@ versions:
     3.8-slim: 3
     3.8.2: 1
     3.9-alpine: 1
-    3.9-buster: 2
+    3.9-buster: 4
     3.9-slim: 2
     3.9.2: 1
     3.9.5: 1
@@ -2957,6 +3042,7 @@ versions:
     3.697--h470a237_0: 2
   quay.io/biocontainers/picard:
     2.23.2--0: 1
+    2.26.10--hdfd78af_0: 1
   quay.io/biocontainers/prodigal:
     2.6.3--h516909a_2: 1
   quay.io/biocontainers/r-ngsplot:
@@ -3008,6 +3094,7 @@ versions:
   r-base:
     3.6.0: 1
     3.6.1: 1
+    3.6.3: 1
     4.0.4: 1
   railrl_v9p5_cuda10-1_mj1-50-1-59_torch1-1-0_gym0-10-5_py3-5-2_local:
     latest: 2
@@ -3071,6 +3158,7 @@ versions:
     0.6.2: 1
   richelbilderbeek/default/plinkr:
     0.17.2.1: 1
+    v0.18.0.2: 1
   ro47014:
     20-10-3: 1
   rocker/geospatial:
@@ -3087,6 +3175,7 @@ versions:
     3.5.3: 2
     3.6.0: 1
     4.0.0: 1
+    4.0.2: 1
     4.0.3: 2
     4.0.4: 3
     4.0.5: 1
@@ -3108,6 +3197,8 @@ versions:
     4.1.2: 1
   rocker/verse:
     4.1.1: 1
+  rockylinux:
+    latest: 1
   rockylinux/rockylinux:
     '8': 1
     '8.5': 1
@@ -3130,6 +3221,7 @@ versions:
   sebastientourbier/connectomemapper-bidsapp:
     v3.0.0: 1
     v3.0.0-diffcourse: 1
+    v3.0.1: 1
   sebastientourbier/mialsuperresolutiontoolkit:
     v2.0.1: 1
     v2.0.2: 1
@@ -3261,16 +3353,16 @@ versions:
   uazhlt/pytorch-example:
     pytorch-1.3.0: 1
   ubuntu:
-    '14.04': 18
-    '16.04': 141
+    '14.04': 19
+    '16.04': 142
     '17.04': 6
-    '18.04': 221
-    '18.04 ': 2
+    '18.04': 226
+    '18.04 ': 3
     '19.04': 13
     '19.10': 4
-    '20.04': 166
+    '20.04': 199
     '20.10': 2
-    '21.04': 4
+    '21.04': 6
     '21.10': 1
     UBUNTU_VERSION: 1
     artful: 7
@@ -3283,11 +3375,11 @@ versions:
     cosmic: 4
     disco: 3
     eoan-20200410: 2
-    focal: 24
+    focal: 25
     focal-20200729: 1
     focal-20200925: 3
     focal-20210827: 1
-    latest: 73
+    latest: 74
     rolling: 1
     sha256.21678b2846063434e2009dee535d3e28ded35774ca72722e1d62b37077de30da: 5
     sha256.80c52afadf3e7c3f9573de4fe79b7dca57fb3290df6c8dc46a75b02768a81146: 3
@@ -3369,5 +3461,7 @@ versions:
     1.2.5042r405: 1
   zhouwanding/transvar:
     2.5.9: 1
+  zymoresearch/bcl2fastq:
+    '2.20': 1
   '{{ cookiecutter.dockerhub_username }}/{{ cookiecutter.image_name }}':
     latest: 1

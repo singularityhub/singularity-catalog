@@ -1,4 +1,4 @@
 Bootstrap: docker
 From: khanlab/tar2bids:latest
 %labels
-CIRCLE_BUILD_URL https://circleci.com/gh/khanlab/tar2bids/1562
+CIRCLE_BUILD_URL https://circleci.com/gh/khanlab/tar2bids/1646

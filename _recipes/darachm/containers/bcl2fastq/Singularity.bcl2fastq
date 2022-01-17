@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: zymoresearch/bcl2fastq:2.20
+#Bootstrap: localimage
+#From: /home/zed/.singularity/darachm-containers-pacbio.simg 
+
+%labels
+
+    MAINTAINER darachm
+    NOTES just turning docker bcl2fastq into singularity
+
+%help
+
+%environment
+
+%post
+
+    apk update && apk add bash
+
+%test

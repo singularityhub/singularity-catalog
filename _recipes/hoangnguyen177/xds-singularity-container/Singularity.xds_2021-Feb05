@@ -1,0 +1,46 @@
+BootStrap: docker
+From: ubuntu:21.04
+
+%environment
+    export DEBIAN_FRONTEND="noninteractive"
+    export TZ="Australia/Brisbane"
+    export KMP_STACKSIZE=8m
+    export XDS_LIB_HDF5DEC=/usr/local/lib/dectris-neggia.so
+    
+%post
+    apt-get -y update
+    apt-get install -y tzdata
+    dpkg-reconfigure --frontend noninteractive tzdata
+    apt-get install -y wget bzip2 bc binutils python2.7 libgomp1 pip cmake git build-essential
+    ln -s /usr/bin/python2.7 /usr/bin/python
+    apt-get install -y libqt5gui5 libqt5printsupport5 libqt5opengl5 xxdiff python3-pip
+    wget -O /usr/local/bin/XDS-INTEL64_Linux_x86_64.tar.gz https://strucbio.biologie.uni-konstanz.de/pub/xds/2021-Feb05/XDS-INTEL64_Linux_x86_64.tar.gz
+    tar -xvf /usr/local/bin/XDS-INTEL64_Linux_x86_64.tar.gz -C /usr/local/bin/
+    ln -sf /usr/local/bin/XDS-INTEL64_Linux_x86_64/* /usr/local/bin/
+    rm /usr/local/bin/XDS-INTEL64_Linux_x86_64.tar.gz
+    wget -N https://strucbio.biologie.uni-konstanz.de/pub/linux_bin/get_folder.sh -O /usr/local/bin/get_folder.sh
+    chmod +x /usr/local/bin/get_folder.sh
+    cd /usr/local/bin/ && ./get_folder.sh
+    
+    wget -r -l1 --no-parent -A*.INP https://xds.mr.mpg.de/html_doc/INPUT_templates/
+    mv xds.mr.mpg.de/html_doc/INPUT_templates/ /usr/local/bin/INPUT_templates
+    rm -rf xds.mr.mpg.de
+    
+    pip3 install hdf5plugin h5py
+
+    wget -O /tmp/neggia-1.2.0.tar.gz https://codeload.github.com/dectris/neggia/tar.gz/refs/tags/v1.2.0
+    tar -xvf /tmp/neggia-1.2.0.tar.gz -C /tmp/
+    cd /tmp/neggia-1.2.0 && cmake . && make -j4 && make install
+    rm /tmp/neggia-1.2.0.tar.gz
+
+    cd /usr/local/bin && git clone https://github.com/legrandp/xdsme.git xdsmesrc
+    cd /usr/local/bin/xdsmesrc && git submodule init && git submodule update
+    ln -sf /usr/local/bin/xdsmesrc/bin/noarch/* /usr/local/bin/
+    ln -s /usr/bin/python2.7 /usr/bin/python2
+
+    # strip
+    strip --remove-section=.note.ABI-tag /lib/x86_64-linux-gnu/libQt5Core.so.5.15.2
+
+
+
+

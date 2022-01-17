@@ -1,0 +1,64 @@
+#Bootstrap: docker
+#From: ubuntu:18.04
+Bootstrap: localimage
+From: /home/zed/.singularity/darachm-containers-tensorflow-v1.15.4-compiled-partial.simg
+
+%labels
+
+    MAINTAINER darachm
+
+    NOTES Tensorflow2 pip, 1.15.4
+
+%help
+
+    This is to make an ubuntu 18.04 container with a pip'd Tensorflow2
+    installed in it for python3. 
+
+    Intention is that this is the base for a jupyter+pandas+etc build, since 
+    this takes a long time to compile.
+
+%environment
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%post
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+#    # Got the below from somewhere else, opening up the sources list
+#    sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+#
+#    export DEBIAN_FRONTEND="noninteractive"
+#
+#    apt -y update 
+#    apt install -y git python3.7 python3.7-dev python3-pip wget
+#    python3 -m pip install -U pip wheel numpy
+#    python3 -m pip install -U keras_preprocessing --no-deps
+## golang
+#
+#    # symlinking so that bazel's env call can find it
+#    ln -s /usr/bin/python3 /usr/local/bin/python
+
+    # Bazelisk
+    go get github.com/bazelbuild/bazelisk
+
+    # symlinking so can be found as bazel
+    ln -s ~/go/bin/bazelisk /usr/local/bin/bazel
+
+    git clone https://github.com/tensorflow/tensorflow.git
+    cd tensorflow
+    git checkout v1.15.4
+
+    python3 -m pip install 'numpy==1.18.5' --no-deps
+#    bazel clean
+#
+#    bazel build //tensorflow/tools/pip_package:build_pip_package \
+#        --python_path="/usr/bin/python3" \
+#        -s --verbose_failures
+##--config=v2 \
+#    ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+#
+#    python3 -m pip install /tmp/tensorflow_pkg/tensorflow*whl
+
+%test
+#    python3 -c "import tensorflow as tf; print(tf.__version__)"

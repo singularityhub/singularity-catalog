@@ -1,0 +1,47 @@
+#Bootstrap: docker
+#From: ubuntu:20.04
+Bootstrap: localimage
+From: SEDmeTObase
+
+%labels
+
+    MAINTAINER darachm
+
+    NOTES Based off of "Lampros Mouselimis" 's container \#1321 ! 
+
+%help
+
+    'run' this to launch a jupyter server. 
+
+    Use 'singularity exec CONTAINERNAME.simg jupyter notebook password' 
+    to set a password, I think that's global though so watch out.
+
+%post
+
+    apt -y update 
+    apt install -y git python3 python3-pip libcgraph6
+
+    python3 -m pip install -U pip jupyter jupyterlab \
+        typing_extensions \
+        pandas numpy sklearn matplotlib pydot \
+        regex jellyfish networkx biopython \
+        seaborn \
+        pysam \
+        tensorflow-model-optimization \
+        'shap==0.36.0'
+        #papermill \
+
+    python3 -m pip install nbformat --upgrade
+
+    apt autoremove -y
+    apt clean
+
+%runscript
+    # commands to be executed when the container runs
+    echo "Starting notebook..."
+    echo "Open browser to localhost:8888"
+    exec /usr/local/bin/jupyter notebook --ip=127.0.0.1 --port=8888 --no-browser
+
+%test
+
+

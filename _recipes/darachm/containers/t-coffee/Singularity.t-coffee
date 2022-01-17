@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: biocontainers/t-coffee:v12.00.7fb08c2-4-deb_cv1
+#Bootstrap: localimage
+#From: /home/zed/.singularity/darachm-containers-
+
+%labels
+
+    MAINTAINER darachm
+    NOTES just turning docker t-coffee into singularity
+
+%help
+
+%environment
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%post
+
+%test

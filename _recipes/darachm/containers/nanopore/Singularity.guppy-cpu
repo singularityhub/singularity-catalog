@@ -1,0 +1,38 @@
+#Bootstrap: docker
+#From: ubuntu:20.04
+#Bootstrap: localimage
+#From: /home/zed/.singularity/darachm-containers-pycoqc.simg
+Bootstrap: localimage
+From: SEDmeTObase
+
+%labels
+MAINTAINER darachm
+DATE 2022-01-07
+
+%help
+
+    Guppy, basic nanoporing
+
+%environment
+    #export PATH=${PATH}:/guppy/ont-guppy-cpu/bin
+
+%post
+    export DEBIAN_FRONTEND="noninteractive"
+    # Got the below from somewhere else, opening up the sources list
+    #sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+    apt-get -y update
+
+    apt-get install -y wget gnupg2 lsb-release
+    export PLATFORM=$(lsb_release -cs)
+    wget -O- https://mirror.oxfordnanoportal.com/apt/ont-repo.pub | apt-key add -
+    echo "deb http://mirror.oxfordnanoportal.com/apt ${PLATFORM}-stable non-free" | tee /etc/apt/sources.list.d/nanoporetech.sources.list
+    apt-get update
+    apt-get install -y ont-guppy-cpu
+    #apt-get install -y ont-guppy
+
+%test
+
+    # ?
+
+
+

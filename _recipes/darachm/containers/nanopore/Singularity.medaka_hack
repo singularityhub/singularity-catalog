@@ -1,0 +1,5 @@
+Bootstrap: docker-daemon
+From: darachm/nanopore:medaka
+
+%post
+    rm /usr/local/lib/python3.8/dist-packages/tensorflow/core/kernels/libtfkernel_sobol_op.so

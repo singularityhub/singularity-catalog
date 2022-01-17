@@ -1,0 +1,25 @@
+Bootstrap: localimage
+From: /home/zed/.singularity/ubuntu2004.sif
+
+%labels
+
+    MAINTAINER darachm
+    NOTES kalign3
+
+%help
+
+%environment
+
+%post
+
+    apt update
+    apt install -y git gcc libtool make
+git clone https://github.com/TimoLassmann/kalign.git
+cd kalign
+./autogen.sh
+./configure --disable-dependency-tracking
+make
+make check
+make install
+
+%test

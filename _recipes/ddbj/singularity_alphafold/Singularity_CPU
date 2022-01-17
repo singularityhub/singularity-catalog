@@ -1,0 +1,55 @@
+BootStrap: docker
+From: ubuntu:18.04
+
+%labels
+    Maintainer Yoshihiro okuda
+    Version    v1.0
+
+%files
+    alphafold /alphafold
+
+%environment
+    export PATH=/opt/alphafold:$PATH
+
+%post
+    apt-get update
+    apt-get -y install git wget
+    INSTALLDIR=/opt/
+    mkdir -p ${INSTALLDIR}
+    cd ${INSTALLDIR}
+    git clone https://github.com/deepmind/alphafold.git
+    cd alphafold
+
+    ALPHAFOLDDIR=${INSTALLDIR}/alphafold
+    wget -q -P ${ALPHAFOLDDIR}/alphafold/common/ https://git.scicore.unibas.ch/schwede/openstructure/-/raw/7102c63615b64735c4941278d92b554ec94415f8/modules/mol/alg/src/stereo_chemical_props.txt --no-check-certificate
+
+    cd ${ALPHAFOLDDIR}
+    wget -q -P . https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash ./Miniconda3-latest-Linux-x86_64.sh -b -p ${ALPHAFOLDDIR}/conda
+    rm Miniconda3-latest-Linux-x86_64.sh
+
+    . "${ALPHAFOLDDIR}/conda/etc/profile.d/conda.sh"
+    export PATH="${ALPHAFOLDDIR}/conda/condabin:${PATH}"
+    conda create -p ${ALPHAFOLDDIR}/alphafold-conda python=3.8 -y
+    conda activate ${ALPHAFOLDDIR}/alphafold-conda
+    conda update -n base conda -y
+
+    conda install -y -c conda-forge openmm==7.5.1 cudnn==8.2.1.32 cudatoolkit==11.1.1 pdbfixer==1.7
+    conda install -y -c bioconda hmmer==3.3.2 hhsuite==3.3.0 kalign3==3.2.2
+
+    pip install pandas absl-py==0.13.0 biopython==1.79 chex==0.0.7 dm-haiku==0.0.4 dm-tree==0.1.6 immutabledict==2.0.0 jax==0.2.14 ml-collections==0.1.0 numpy==1.19.5 scipy==1.7.0 tensorflow-gpu==2.5.0
+#    pip install --upgrade jax jaxlib==0.1.69+cuda111 -f https://storage.googleapis.com/jax-releases/jax_releases.html
+    pip install --upgrade jax==0.2.21 jaxlib==0.1.72+cuda111 -f https://storage.googleapis.com/jax-releases/jax_releases.html
+
+    (cd ${ALPHAFOLDDIR}/alphafold-conda/lib/python3.8/site-packages/ && patch -p0 < ${ALPHAFOLDDIR}/docker/openmm.patch)
+
+    cd ${ALPHAFOLDDIR}
+    wget https://gist.githubusercontent.com/YoshitakaMo/2625edeaaca40c5d4f7d1fff5eae319e/raw/c70adc62663cbf76b82557b4d8f9a2a4fedf6620/run_alphafold.py.patch -O run_alphafold.patch
+    patch -u run_alphafold.py -i run_alphafold.patch
+
+#    wget https://gist.githubusercontent.com/YoshitakaMo/c263016185f8eaa43733febd8b26a129/raw/bdfb14ddfe32047af94fc0fd918753e3d7dd3e2e/gpurelaxation.patch -O gpurelaxation.patch
+#    patch -u alphafold/relax/amber_minimize.py -i gpurelaxation.patch
+
+    mkdir /opt/alphafold/bin
+    mv /alphafold /opt/alphafold/bin/
+

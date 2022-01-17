@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: python:3.9-buster
+
+%post
+  export MLPERF_VER=1.1
+  python -m pip install --no-cache \
+    numpy \
+    pycocotools
+  wget https://github.com/mlcommons/inference/archive/refs/heads/r${MLPERF_VER}.zip
+  unzip r${MLPERF_VER}.zip && rm r${MLPERF_VER}.zip
+
+%help
+  Execution example
+  $ python /inference-r${MLPERF_VER}/v${MLPERF_VER}/classification_and_detection/tools/accuracy-coco.py --mlperf-accuracy-file $OUTDIR/mlperf_log_accuracy.json --coco-dir $DATADIR

@@ -1,0 +1,22 @@
+#Bootstrap: docker
+#From: ubuntu:20.04
+Bootstrap: localimage
+From: /home/zed/.singularity/darachm-containers-medaka.simg
+
+%labels
+MAINTAINER darachm
+DATE 2021-09-08
+
+%help
+
+    layering pycoqc on top of medaka on top of guppy
+
+%environment
+
+%post
+    python3 -m pip install pycoQC
+    
+%test
+
+    # ?
+

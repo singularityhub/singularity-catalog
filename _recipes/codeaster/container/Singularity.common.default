@@ -1,0 +1,179 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+Maintainer  code_aster team http://www.code-aster.org
+Version 20190513
+
+%help
+This container provides prerequisites to build sequential and parallel versions
+of code_aster (from 'default' branch).
+
+To build code_aster using these prerequisites, see:
+
+    singularity run-help --app aster <path-to-this-image>
+
+
+%apphelp aster
+This container provides prerequisites to build sequential and parallel versions
+of code_aster (from 'default' branch).
+
+Using the image to build code_aster development version:
+
+- Start a shell in the container environment:
+
+    singularity shell <path-to-this-image>
+
+- Clone 'src' repository, usually as ${HOME}/dev/codeaster/src:
+
+    mkdir -p ${HOME}/dev/codeaster
+    cd ${HOME}/dev/codeaster
+    hg clone https://bitbucket.org/code_aster/codeaster-src src
+
+- Configure using provided configuration files. For sequential build:
+
+    cd ${HOME}/dev/codeaster/src
+    ./waf configure --use-config-dir=/scif/apps/lib --use-config=scif_std \
+        --singularity-image <path-to-this-image>
+
+    The '--singularity-image' tells that code_aster will be executed through
+    this Singularity image.
+
+- For parallel build, use '--use-config=scif_mpi' instead of '--use-config=scif_std':
+
+    ln -s waf_variant waf_mpi
+    ./waf_mpi configure --use-config-dir=/scif/apps/lib --use-config=scif_mpi \
+        --singularity-image <path-to-this-image>
+
+- Install:
+
+    ./waf install
+    # or
+    ./waf_mpi install
+
+
+%environment
+export LANG=en_US.UTF-8 LC_MESSAGES=POSIX
+export DEVTOOLS_COMPUTER_ID=scif
+export LD_LIBRARY_PATH=/scif/apps/tfel/lib
+export PYTHONPATH=/scif/apps/asrun/lib/python3.6/site-packages:/scif/apps/tfel/lib/python3.6/site-packages
+alias ll='ls -lA'
+
+%files
+bld/build_common.sh /
+bld/build_hdf5.sh /
+bld/build_med.sh /
+bld/build_metis.sh /
+bld/build_parmetis.sh /
+bld/build_tfel.sh /
+bld/build_homard.sh /
+bld/build_asrun.sh /
+bld/build_scotch_seq.sh /
+bld/build_scotch_mpi.sh /
+bld/build_mumps_seq.sh /
+bld/build_mumps_mpi.sh /
+bld/build_petsc.sh /
+
+%post
+/build_common.sh && rm -f /build_common.sh
+
+# hdf5
+%applabels hdf5
+Version 1.10.3
+
+%appinstall hdf5
+/build_hdf5.sh && rm -f /build_hdf5.sh
+
+# med
+%applabels med
+Version 4.0.0
+
+%appinstall med
+/build_med.sh && rm -f /build_med.sh
+
+# metis
+%applabels metis
+Version 5.1.0_aster4
+
+%appinstall metis
+/build_metis.sh && rm -f /build_metis.sh
+
+# parmetis
+%applabels parmetis
+Version 4.0.3_aster3
+
+%appinstall parmetis
+/build_parmetis.sh && rm -f /build_parmetis.sh
+
+# tfel
+%applabels tfel
+Version 3.2.1
+
+%appinstall tfel
+/build_tfel.sh && rm -f /build_tfel.sh
+
+# homard
+%applabels homard
+Version 11.12_aster2
+
+%appinstall homard
+/build_homard.sh && rm -f /build_homard.sh
+
+# asrun (graphical packages should be removed for servers)
+%applabels asrun
+Version 2019.0-1
+
+%appfiles asrun
+asrun.external_configuration.py lib/external_configuration.py
+
+%appinstall asrun
+/build_asrun.sh && rm -f /build_asrun.sh
+
+# scotch sequential
+%applabels scotch_seq
+Version 6.0.4_aster7
+
+%appinstall scotch_seq
+/build_scotch_seq.sh && rm -f /build_scotch_seq.sh
+
+# scotch parallel
+%applabels scotch_mpi
+Version 6.0.4_aster7
+
+%appinstall scotch_mpi
+/build_scotch_mpi.sh && rm -f /build_scotch_mpi.sh
+
+# mumps sequential
+%applabels mumps_seq
+Version 5.1.2_aster6
+
+%appinstall mumps_seq
+/build_mumps_seq.sh && rm -f /build_mumps_seq.sh
+
+# mumps parallel
+%applabels mumps_mpi
+Version 5.1.2_aster6
+
+%appinstall mumps_mpi
+/build_mumps_mpi.sh && rm -f /build_mumps_mpi.sh
+
+# petsc
+%applabels petsc
+Version 3.9.4_aster
+
+%appinstall petsc
+/build_petsc.sh && rm -f /build_petsc.sh
+
+# clean source directory
+apt-get clean
+rm -rf /var/lib/apt/lists/* /var/tmp/*
+rm -rf /work
+
+# aster
+%appfiles aster
+aster.wafcfg_scif_std.py lib/scif_std.py
+aster.wafcfg_scif_mpi.py lib/scif_mpi.py
+aster.wafcfg_scif_boost.py lib/scif_boost.py
+
+%runscript
+echo "Please use: singularity run-help <path-to-this-image>"

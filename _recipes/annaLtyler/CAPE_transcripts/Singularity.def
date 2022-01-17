@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: rocker/r-ver:4.0.2
+Stage: spython-base
+
+%labels
+maintainer="atyler"
+%post
+export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
+&& apt-get install -y git-core \
+libcurl4-openssl-dev \
+libglpk-dev \
+libgmp-dev \
+libssl-dev \
+libxml2-dev \
+pandoc \
+pandoc-citeproc
+
+R --slave -e 'install.packages("here",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("rmarkdown",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("igraph",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("pheatmap",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("qlt2",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("gProfileR",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("gProfileR",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("BiocManager",repos="https://cran.rstudio.com/")'
+R --slave -e 'BiocManager::install("oposSOM")'
+
+exec /bin/bash R "$@"

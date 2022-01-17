@@ -1,0 +1,64 @@
+#Bootstrap: docker
+#From: ubuntu:20.04
+Bootstrap: localimage
+#From: /home/zed/.singularity/r-tidy.sif
+From: SEDmeTObase
+
+%labels
+MAINTAINER darachm
+
+%help
+
+    This container is to add in a bunch of packages for 'R', for Darach's use.
+
+%post
+
+    apt-get update
+    apt-get -y upgrade
+
+    Rscript -e 'update.packages()'
+    Rscript -e 'install.packages("htmltools")'
+    #Rscript -e 'install.packages("ggally",dependencies=T);'
+
+    Rscript -e 'install.packages("hash",dependencies=T);'
+    #Rscript -e 'install.packages("fst",dependencies=T);'
+    Rscript -e 'install.packages("DBI",dependencies=T);'
+    Rscript -e 'install.packages("RSQLite",dependencies=T);'
+    Rscript -e 'install.packages("jsonlite",dependencies=T);'
+    Rscript -e 'install.packages("stringdist",dependencies=T);'
+
+    #Rscript -e 'install.packages("ggalluvial",dependencies=T);'
+    Rscript -e 'install.packages("ggrepel",dependencies=T);'
+    Rscript -e 'install.packages("pheatmap",dependencies=T);'
+    Rscript -e 'install.packages("egg",dependencies=T);'
+    Rscript -e 'install.packages("cowplot",dependencies=T);'
+    Rscript -e 'install.packages("hexbin",dependencies=T);'
+    Rscript -e 'install.packages("ghibli",dependencies=T);'
+    Rscript -e 'install.packages("ggsignif",dependencies=T);'
+    Rscript -e 'devtools::install_github("LKremer/ggpointdensity",dependencies=T);'
+    Rscript -e 'install.packages("UPSetR",dependencies=T);'
+    #Rscript -e 'BiocManager::install("ggbio",version="3.14",ask=F)'
+
+    #Rscript -e 'install.packages("EBImage",dependencies=T);'
+    #Rscript -e 'install.packages("pracma",dependencies=T);'
+
+    #Rscript -e 'install.packages("limma",dependencies=T);'
+    #Rscript -e 'install.packages("vegan",dependencies=T);'
+    #Rscript -e 'install.packages("randomForest",dependencies=T);'
+    #Rscript -e 'install.packages("xgboost",dependencies=T);'
+    #Rscript -e 'install.packages("mcr",dependencies=T);'
+
+    Rscript -e 'install.packages("BiocManager",dependencies=T);'
+    Rscript -e 'BiocManager::install(version="3.14",ask=F)'
+    #Rscript -e 'BiocManager::install(version="3.14","org.Sc.sgd.db");'
+    Rscript -e 'BiocManager::install(version="3.14","Biobase");'
+    #Rscript -e 'BiocManager::install(version="3.14","GOSemSim");'
+    #Rscript -e 'BiocManager::install(version="3.14","clusterProfiler");'
+    #Rscript -e 'BiocManager::install(version="3.14","variancePartition");'
+    Rscript -e 'sessionInfo();'
+
+%test
+
+    Rscript -e 'installed.packages();'
+    Rscript -e 'installed.packages()["htmltools","Version"]'
+

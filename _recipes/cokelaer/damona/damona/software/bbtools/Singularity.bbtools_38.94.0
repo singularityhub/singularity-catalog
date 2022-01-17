@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: alpine:3.8
+
+
+%post
+
+    # https://sourceforge.net/projects/bbmap/files/
+
+    apk update\
+    && apk upgrade\
+    && apk add  make bash curl openjdk8-jre-base zlib-dev
+
+    cd /usr/local/bin
+    curl -kfsSL 'https://downloads.sourceforge.net/project/bbmap/BBMap_38.94.tar.gz' | tar -xz
+    find /usr/local/bin/bbmap -maxdepth 1 -perm /u=x -type f -exec ln -s {} /usr/local/bin/ \;
+
+
+    apk del curl make zlib-dev
+ 

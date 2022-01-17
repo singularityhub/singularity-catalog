@@ -1,0 +1,14 @@
+BootStrap: docker
+From: centos:centos7.9.2009
+    
+%post
+    yum install -y vim wget libgomp.x86_64
+    yum groupinstall -y "X Window System"
+    wget -O /usr/bin/adxv https://www.scripps.edu/tainer/arvai/adxv/adxv_1.9.14/adxv.x86_64CentOS7
+    chmod +x /usr/bin/adxv
+
+
+
+
+
+

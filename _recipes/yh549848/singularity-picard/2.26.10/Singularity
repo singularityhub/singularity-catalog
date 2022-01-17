@@ -1,0 +1,8 @@
+BootStrap: docker
+From: quay.io/biocontainers/picard:2.26.10--hdfd78af_0
+
+%apprun picard
+  exec picard "${@}"
+
+%environment
+  export TMP_DIR=/tmp

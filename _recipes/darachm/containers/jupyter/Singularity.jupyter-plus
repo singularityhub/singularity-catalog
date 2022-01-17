@@ -1,7 +1,7 @@
-Bootstrap: docker
-From: ubuntu:20.04
-#Bootstrap: localimage
-#From: /home/zed/.singularity/darachm-containers-ubuntu2004.simg
+#Bootstrap: docker
+#From: ubuntu:20.04
+Bootstrap: localimage
+From: /home/zed/.singularity/jupyter.sif
 
 %labels
 
@@ -32,8 +32,8 @@ From: ubuntu:20.04
 
     python3 -m pip install -U pip jupyter jupyterlab \
         pandas numpy sklearn matplotlib \
-        regex jellyfish networkx biopython
-    python3 -m pip install git+https://github.com/darachm/goenrich
+        regex jellyfish networkx biopython \
+        pysam 
 
     apt autoremove -y
     apt clean
@@ -41,8 +41,8 @@ From: ubuntu:20.04
 %runscript
     # commands to be executed when the container runs
     echo "Starting notebook..."
-    echo "Open browser to localhost:8889"
-    exec /usr/local/bin/jupyter notebook --ip=127.0.0.1 --port=8889 --no-browser
+    echo "Open browser to localhost:8888"
+    exec /usr/local/bin/jupyter notebook --ip=127.0.0.1 --port=8888 --no-browser
 
 %test
 

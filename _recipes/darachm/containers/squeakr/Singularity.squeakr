@@ -1,0 +1,41 @@
+Bootstrap: docker
+From: ubuntu:20.04
+#Bootstrap: localimage
+#From: /home/zed/.singularity/darachm-containers-squeakr.simg
+
+%labels
+MAINTAINER darachm
+DATE 2021-09-27
+
+%help
+
+    squeakr
+
+%environment
+
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+    export PATH=$PATH:/squeakr
+
+%post
+
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    export DEBIAN_FRONTEND="noninteractive"
+    # Got the below from somewhere else, opening up the sources list
+    #sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+
+    apt-get -y update
+    apt-get -y install git make gcc g++ zlib1g-dev bzip2 libbz2-dev openssl libssl-dev libboost-dev libboost-all-dev 
+
+    git clone https://github.com/splatlab/squeakr
+    cd /squeakr
+    make 
+
+%test
+
+    squeakr
+
+
+

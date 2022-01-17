@@ -65,9 +65,9 @@ From: mambaorg/micromamba:latest
   export DEBIAN_FRONTEND=noninteractive
 
   # install and reconfigure locale
-  apt-get clean && apt-get update -y && apt-get upgrade -y
-  apt-get install -y locales
-  apt-get clean
+  apt-get clean -q && apt-get update -y -q && apt-get upgrade -y -q
+  apt-get install -y -q locales
+  apt-get clean -q
   export LANGUAGE="en_US.UTF-8"
   export LANG="en_US.UTF-8"
   export LC_ALL="en_US.UTF-8"
@@ -77,8 +77,10 @@ From: mambaorg/micromamba:latest
   locale-gen --purge en_US.UTF-8
   dpkg-reconfigure --frontend=noninteractive locales
 
-  # set PATH for use of conda/mamba
+  # set PATH for use of conda/mamba; also add to system-wide /etc/profile
   export PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  echo >> /etc/profile
+  echo 'export PATH=/opt/conda/bin:$PATH' >> /etc/profile
 
   # some packages via apt-get
   apt-get update --fix-missing -q
@@ -92,15 +94,21 @@ From: mambaorg/micromamba:latest
     p7zip-full \
     unzip \
     uuid \
-    wget
+    wget \
+    libncurses5-dev \
+    libncursesw5-dev \
+    libreadline8 \
+    libtinfo6
 
   # rstudio server
   wget --no-verbose https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2021.09.1-372-amd64.deb
   gdebi -q -n rstudio-server-2021.09.1-372-amd64.deb
   rm rstudio-server-2021.09.1-372-amd64.deb
   chmod -R a+rw /var/lib/rstudio-server
+
   # for running rstudio server with conda R
   git clone --depth 1 https://github.com/grst/rstudio-server-conda.git
+  sed -i 's/conda activate/source activate/' /rstudio-server-conda/local/rsession.sh
 
   apt-get clean -q
   rm -rf /var/lib/apt/lists/*
@@ -114,7 +122,9 @@ From: mambaorg/micromamba:latest
 
   # pip
   pip -q --no-cache-dir install -U \
-    magic-impute
+    harmonyTS \
+    magic-impute \
+    palantir
 
   pip install -q --no-cache-dir git+https://github.com/theislab/diffxpy
   pip install -q --no-cache-dir git+https://github.com/theislab/scachepy
@@ -123,10 +133,12 @@ From: mambaorg/micromamba:latest
   # install R dependencies that are difficult to install from conda or make problems
   R --quiet -e 'install.packages("deldir", repos="http://cran.r-project.org")'
   R --quiet -e 'devtools::install_github("cellgeni/sceasy", dependencies = FALSE, quiet = TRUE)'
+  R --quiet -e 'devtools::install_github("satijalab/seurat-data", quiet = TRUE)'
 
   # install R dependencies not available from conda
   R --quiet -e 'devtools::install_github("ropensci/RefManageR")'
   R --quiet -e "devtools::install_github(repo = 'yanlinlin82/ggvenn', dependencies = FALSE, quiet = TRUE)"
+  R --quiet -e "devtools::install_github(repo = 'lhe17/nebula@v1.1.7', dependencies = FALSE, quiet = FALSE)"
   R --quiet -e 'remotes::install_github("chris-mcginnis-ucsf/DoubletFinder")'
 
   R --quiet -e 'BiocManager::install(c(
@@ -148,6 +160,7 @@ From: mambaorg/micromamba:latest
 
 %apprun rserver
   bash <<-EOF
+	cd /rstudio-server-conda/local
 	source activate /opt/conda
 	/rstudio-server-conda/local/start_rstudio_server.sh "${@}"
 EOF

@@ -2,7 +2,7 @@
 #From: tikk3r/lofar-grid-hpccloud:lofar_sksp_base
 # If building from a base image locally enable this instead.
 Bootstrap: localimage
-From: lofar_sksp_base_v3.3.1_cascadelake_avx512.sif
+From: lofar_sksp_base_v3.3.1_x86-64_generic_avx512_cuda_11_3.sif
 
 #%environment
     #export PYTHONPATH=
@@ -59,10 +59,10 @@ From: lofar_sksp_base_v3.3.1_cascadelake_avx512.sif
 
     export CC=`which gcc`
 	export CXX=`which g++`
-    #export MARCH='x86-64'
-    #export MTUNE='generic'
-    export MARCH='cascadelake'
-    export MTUNE='cascadelake'
+    export MARCH='x86-64'
+    export MTUNE='generic'
+    #export MARCH='cascadelake'
+    #export MTUNE='cascadelake'
     export NOAVX512=false
 
     if [ $NOAVX512 ]; then
@@ -113,6 +113,7 @@ From: lofar_sksp_base_v3.3.1_cascadelake_avx512.sif
     python -m pip install --no-binary h5py h5py
     python -m pip install --no-deps -r $INSTALLDIR/requirements.txt
     python -m pip install --no-deps "reproject==0.5.1"
+    python -m pip install legacystamps
     deactivate
 
     virtualenv $INSTALLDIR/pyenv-py3 --python=python3
@@ -122,6 +123,7 @@ From: lofar_sksp_base_v3.3.1_cascadelake_avx512.sif
     pip install --no-binary h5py h5py
     pip install -r $INSTALLDIR/requirements3.txt
     pip install lofar-h5plot
+    pip install legacystamps
     deactivate
 
     source $INSTALLDIR/pyenv-py2/bin/activate
@@ -475,7 +477,7 @@ From: lofar_sksp_base_v3.3.1_cascadelake_avx512.sif
 	#
 	# init-lofar
 	#
-	ln -s /opt/lofar/DPPP/bin/DPPP /opt/lofar/lofar/bin/NDPPP
+	ln -f -s /opt/lofar/DPPP/bin/DP3 /opt/lofar/lofar/bin/NDPPP
 	ln -s /opt/lofar/DPPP/bin/makesourcedb /opt/lofar/lofar/bin/makesourcedb
     ln -s $INSTALLDIR/pyenv-py3/bin/h5plot /usr/bin/h5plot
 

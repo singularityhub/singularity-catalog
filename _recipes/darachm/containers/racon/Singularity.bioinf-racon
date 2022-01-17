@@ -1,0 +1,48 @@
+#Bootstrap: docker
+#From: ubuntu:20.04
+Bootstrap: localimage
+#From: /home/zed/.singularity/bioinfmunger.sif
+From: SEDmeTObase
+
+%labels
+MAINTAINER darachm
+DATE 2022-01-07
+
+%help
+
+    racon and minimap2 yo
+
+%environment
+
+    #export PATH=$PATH:/minimap2
+    export PATH=$PATH:/racon/build/bin
+
+%post
+    export DEBIAN_FRONTEND="noninteractive"
+    # Got the below from somewhere else, opening up the sources list
+    #sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+
+    apt-get -y update
+    apt-get -y install samtools
+    apt-get -y install build-essential cmake git zlib1g-dev libbz2-dev liblzma-dev 
+
+#    cd /
+#    git clone https://github.com/lh3/minimap2 /minimap2
+#    cd /minimap2 && make
+#    cd /
+
+    cd /
+    git clone --recursive https://github.com/lbcb-sci/racon.git 
+    cd racon
+    mkdir build
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=Release ..
+    make
+    cd /
+
+
+%test
+
+
+
+

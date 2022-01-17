@@ -1,10 +1,10 @@
-BootStrap: library
-From: ubuntu:20.04
+Bootstrap: docker
+From: ubuntu:21.04
 
 %post
-    apt-get install -y software-properties-common
-    add-apt-repository universe
+    export DEBIAN_FRONTEND=noninteractive
     apt-get update -y
+    apt-get install -y texlive texlive-fonts-extra
     apt-get install -y pandoc
 
 %environment

@@ -1,21 +1,38 @@
 Bootstrap: docker
 From: ubuntu:20.04
+#Bootstrap: localimage
+#From: ~/.singularity/darachm-containers-ubuntu2004.simg
 
 %labels
 MAINTAINER darachm
-DATE 201221
+DATE 2021-09-08
 
 %help
 
-    This is a base for debugging Singularity builds.
-    
+    This is a base for debugging Singularity builds, and a template for new
+    Singularity recipies
+
+%environment
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
 %post
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    export DEBIAN_FRONTEND="noninteractive"
+    # Got the below from somewhere else, opening up the sources list
+    #sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
 
     apt-get -y update
     apt-get -y upgrade
     apt-get autoremove -qq
     apt-get clean
 
+    #apt-get -y install git g++ gcc make mawk wget tar python3
+    #ln -s /usr/bin/python3 /usr/bin/python
+    #export PATH=${PATH}:/guppy/ont-guppy-cpu/bin
+
 %test
 
     # ?
+

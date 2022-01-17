@@ -1,0 +1,25 @@
+BootStrap: debootstrap
+OSVersion: focal
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%environment
+export PATH=/bioinf-tools:$PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
+
+%setup
+    mkdir $SINGULARITY_ROOTFS/gat
+    rsync -a .ci/install_dependencies.sh MANIFEST.in tox.ini gat setup.py tests $SINGULARITY_ROOTFS/gat
+
+
+%post
+    #_____________________ setup $PATH _______________________#
+    export PATH=/bioinf-tools/:$PATH
+
+    /gat/install_dependencies.sh /bioinf-tools
+    cd /gat
+    tox
+    pip3 install .
+
+%runscript
+    gat "$@"

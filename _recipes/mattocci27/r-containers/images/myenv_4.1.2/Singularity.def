@@ -21,6 +21,7 @@ From: mattocci/rstan:4.1.2
         libpython3-dev \
         python3-dev \
         python3-pip \
+        gosu \
     && apt-get autoremove -y \
     && apt-get clean all
 
@@ -92,4 +93,16 @@ From: mattocci/rstan:4.1.2
         lightgbm \
         AmesHousing \
         ParBayesianOptimization \
+        animation \
     && rm -rf /tmp/downloaded_packages
+
+    yes | apt-get install ttf-mscorefonts-installer \
+        && fc-cache -f \
+        && apt-get autoremove -y \
+        && apt-get autoclean -y
+
+    install2.r -n -2 --skipinstalled --error \
+      extrafont
+
+    R -e 'remotes::install_version("Rttf2pt1", version = "1.3.8")'
+    R -e 'extrafont::font_import(prompt = FALSE)'

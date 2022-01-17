@@ -1,0 +1,74 @@
+Bootstrap: docker
+From: alpine:3.11
+Stage: compile
+
+%post
+
+    apk update
+    apk add bash
+    apk add git
+    apk add build-base
+    apk add unzip
+
+%appinstall fastqc
+
+    # file structure, all this bit, retyped from https://raw.githubusercontent.com/singularityhub/singularity-catalog/73f364556eb58d057e24fe63c71781ecf912b928/_recipes/thakk/biobase/Singularity.FastQC
+    mkdir /install_src
+    cd /install_src
+    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
+    unzip fastqc_v0.11.9.zip
+    chmod +x FastQC/fastqc
+
+
+Bootstrap: docker
+From: alpine:3.11
+Stage: release
+
+%files from compile
+
+    /install_src/FastQC/ ./
+
+%environment
+
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+
+%post
+
+    apk update
+    apk add bash
+
+%appinstall fastqc
+
+    apk add perl
+    apk add openjdk8-jre
+    ln -s /FastQC/fastqc /usr/bin/fastqc 
+
+%apphelp fastqc
+
+    FastQC 0.11.9 yep
+
+%apprun fastqc
+
+    exec fastqc
+
+#%appinstall multiqc
+#    # copy-pasted from https://github.com/iansealy/CSD3/blob/1a4309acbbfa8692d7d297bb5fdbab393aceaf8d/singularityfiles/MultiQC.def
+#    apk --no-cache add libpng jpeg freetype python3 py3-numpy libstdc++
+#    apk --no-cache add --virtual build-dependencies build-base libpng-dev jpeg-dev freetype-dev python3-dev py3-numpy-dev
+#    pip3 install multiqc==1.10.1
+#    apk del build-dependencies
+#
+#%apprun multiqc
+#    /usr/bin/multiqc "$@"
+
+%labels
+
+    Author "Tomi Häkkinen, copied by simg-catalog, copied by darachm"
+
+
+%help
+
+    FastQC
+
+

@@ -1,0 +1,110 @@
+# NOTE: this definition file depends on features only available in
+# Singularity 3.2 and later.
+BootStrap: docker
+From: ubuntu:20.04
+Stage: build
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+# GNU compiler
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++ \
+        gcc \
+        gfortran
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        apt-transport-https \
+        ca-certificates \
+        git
+    rm -rf /var/lib/apt/lists/*
+
+# CMake version 3.20.6
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        make \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://github.com/Kitware/CMake/releases/download/v3.20.6/cmake-3.20.6-linux-x86_64.sh
+    mkdir -p /usr/local
+    /bin/sh /var/tmp/cmake-3.20.6-linux-x86_64.sh --prefix=/usr/local --skip-license
+    rm -rf /var/tmp/cmake-3.20.6-linux-x86_64.sh
+%environment
+    export PATH=/usr/local/bin:$PATH
+%post
+    export PATH=/usr/local/bin:$PATH
+
+# Python
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3
+    rm -rf /var/lib/apt/lists/*
+
+
+# copy the source tree into the container
+%files
+    . /mrchem
+
+%post
+    update-ca-certificates
+    cd /mrchem && mkdir build
+    cmake -B build -S . -DCMAKE_INSTALL_PREFIX=/usr/local/mrchem -DCMAKE_BUILD_TYPE=Release -DENABLE_MPI=OFF -DENABLE_OPENMP=ON -DENABLE_ARCH_FLAGS=OFF
+    cmake --build build --target all -- -j$(nproc)
+    cmake --build build --target install -- -j$(nproc)
+
+
+BootStrap: docker
+From: ubuntu:20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+# GNU compiler runtime
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        libgfortran4 \
+        libgomp1
+    rm -rf /var/lib/apt/lists/*
+
+# Python
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3
+    rm -rf /var/lib/apt/lists/*
+
+
+%files from build
+    /usr/local/mrchem /usr/local/mrchem
+
+
+%environment
+    export PATH=$PATH:/usr/local/mrchem/bin
+%post
+    export PATH=$PATH:/usr/local/mrchem/bin
+
+%runscript
+    exec mrchem "$@"
+
+%labels
+    Author Stig Rune Jensen <stig.r.jensen@uit.no>
+    Description MRChem program (OpenMP version)
+
+
+%help
+    Shared memory parallel (OpenMP) build of MRChem on a Ubuntu-{os_version} base image.
+
+    For a pure OpenMP run (n threads on one process) you can run the container
+    just as the regular mrchem executable, here with input file molecule.inp:
+
+        $ export OMP_NUM_THREADS=n
+        $ ./<image-name>.sif molecule
+

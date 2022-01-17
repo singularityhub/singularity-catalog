@@ -1,0 +1,33 @@
+#Bootstrap: docker
+#From: ubuntu:20.04
+Bootstrap: localimage
+From: /home/zed/.singularity/ubuntu2004.sif
+
+%labels
+
+    MAINTAINER darachm
+    NOTES enrich2
+
+%help
+
+%environment
+
+%post
+
+    export DEBIAN_FRONTEND="noninteractive"
+
+    apt-get update
+    apt-get install -y git python2.7 python2.7-dev libffi-dev \
+        curl build-essential python-tk 
+    curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+    python2.7 get-pip.py
+    python2.7 -m pip install -U pip wheel numpy scipy pandas==0.19 \
+        tables statsmodels==0.10 matplotlib
+
+    cd /
+    git clone https://github.com/FowlerLab/Enrich2
+    cd Enrich2
+    python2.7 setup.py install
+    cd /
+
+%test
