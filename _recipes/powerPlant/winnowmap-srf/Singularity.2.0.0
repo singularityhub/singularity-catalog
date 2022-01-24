@@ -1,0 +1,58 @@
+# Written for Singularity version 3.6.3-1.el7
+# sudo singularity build winnowmap.sif winnowmap.def
+
+BootStrap: library
+# Ubuntu 20.04/focal
+# https://cloud.sylabs.io/library/_container/5baba99394feb900016ea433
+From: ubuntu:sha256.cb37e547a14249943c5a3ee5786502f8db41384deb83fa6d2b62f3c587b82b17
+Stage: build
+
+%post
+    # Dependencies
+    apt-get update
+    apt-get install -y \
+    build-essential \
+    zlib1g-dev \
+    cmake \
+    make \
+    wget
+
+    # Download and compile
+    cd /opt
+    wget https://github.com/marbl/Winnowmap/archive/v2.0.tar.gz -O Winnowmap-2.0.tar.gz
+    tar -xzvf Winnowmap-2.0.tar.gz
+    cd Winnowmap-2.0
+    make -j8
+
+BootStrap: library
+# Ubuntu 20.04/focal
+# https://cloud.sylabs.io/library/_container/5baba99394feb900016ea433
+From: ubuntu:sha256.cb37e547a14249943c5a3ee5786502f8db41384deb83fa6d2b62f3c587b82b17
+Stage: final
+
+%labels
+Maintainer bjoern.pauly@plantandfood.co.nz
+Version 2.0.0
+Author Anne-Jan Veendijk
+Email anne-jan.veendijk@plantandfood.co.nz
+
+%files from build
+  /opt/Winnowmap-2.0/bin/* /usr/local/bin/
+
+%post
+  ## Download dependencies
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get -y install libgomp1
+  apt-get clean
+
+%runscript
+    if [ -x /usr/local/bin/$SINGULARITY_NAME ]; then
+        exec $SINGULARITY_NAME "$@"
+    else
+      /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+      exec ls /usr/local/bin
+    fi
+EOF
+
+%help
+    Ubuntu 20.04 with Winnowmap v2.0 installed. https://github.com/marbl/Winnowmap

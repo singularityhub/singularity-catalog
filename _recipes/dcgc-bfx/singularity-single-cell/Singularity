@@ -124,7 +124,8 @@ From: mambaorg/micromamba:latest
   pip -q --no-cache-dir install -U \
     harmonyTS \
     magic-impute \
-    palantir
+    palantir \
+    solo-sc
 
   pip install -q --no-cache-dir git+https://github.com/theislab/diffxpy
   pip install -q --no-cache-dir git+https://github.com/theislab/scachepy
@@ -153,6 +154,14 @@ From: mambaorg/micromamba:latest
 
   chmod -R a+w /opt
   chmod a+rw /.bashrc
+  
+  # Add CONTAINER_BUILD_DATE, CONTAINER_GIT_NAME, CONTAINER_GIT_URL, CONTAINER_GIT_COMMIT_ID to /opt/conda/lib/R/etc/Renviron so that they also appear in the rstudio rsession
+  echo >> /opt/conda/lib/R/etc/Renviron
+  echo "# These environment variables should be present in R, rstudio and rserver so add them to Renviron." >> /opt/conda/lib/R/etc/Renviron
+  echo "CONTAINER_BUILD_DATE = \"${CONTAINER_BUILD_DATE}\"" >> /opt/conda/lib/R/etc/Renviron
+  echo "CONTAINER_GIT_NAME = \"${CONTAINER_GIT_NAME}\"" >> /opt/conda/lib/R/etc/Renviron
+  echo "CONTAINER_GIT_COMMIT_ID = \"${CONTAINER_GIT_COMMIT_ID}\"" >> /opt/conda/lib/R/etc/Renviron
+  echo "CONTAINER_GIT_COMMIT_ID = \"${CONTAINER_GIT_COMMIT_ID}\"" >> /opt/conda/lib/R/etc/Renviron
 
 ####################
 ## rstudio server ##
