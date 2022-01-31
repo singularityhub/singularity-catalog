@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: golang:1.11.5-stretch
+
+# sudo singularity build graphic.sif Singularity
+# singularity shell graphic.sif
+
+%post
+
+    export GOPATH=/go
+
+    # Install gotermimg
+    /usr/local/go/bin/go get github.com/moshen/gotermimg
+    /usr/local/go/bin/go install github.com/moshen/gotermimg
+
+    cd /go/src/github.com/moshen/gotermimg
+    /usr/local/go/bin/go build ./cmd/gotermimg
+    chmod u+x gotermimg && mv gotermimg /usr/bin
+
+    # Get your image from somewhere (can also be via %files)
+    wget -O /avocado.png https://vsoch.github.io/datasets/assets/img/avocado.png
+
+    cat > /.singularity.d/env/99-motd.sh <<EOF
+case \$0 in
+    /.singularity.d/actions/shell)
+        /usr/bin/gotermimg /avocado.png
+        echo Have you had an avocado today?;;
+esac
+EOF

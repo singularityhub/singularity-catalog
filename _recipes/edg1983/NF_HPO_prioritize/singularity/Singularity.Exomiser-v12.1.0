@@ -1,0 +1,32 @@
+Bootstrap: library
+From: ubuntu:bionic
+
+%environment
+    SHELL=/bin/bash
+    PATH=$PATH:/usr/local/bin
+    LC_ALL=C.UTF-8
+
+%help
+    Exomiser v12.1.0
+    Phenotype data v2007
+    Data folder must be bound to /exomiser_data
+    Remember that the application.properties file must be present in the working directorty
+
+%runscript
+    java -jar /opt/exomiser-cli-12.1.0/exomiser-cli-12.1.0.jar "$@"
+
+%post
+    apt-get update
+    apt-get -y install \
+        apt-transport-https \
+        language-pack-en-base \
+        unzip \
+        wget \
+        default-jre
+    update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+ 
+    ## Install Exomiser and supporting data
+    cd /opt
+    wget https://data.monarchinitiative.org/exomiser/12.1.0/exomiser-cli-12.1.0-distribution.zip
+    unzip exomiser-cli-12.1.0-distribution.zip
+    rm exomiser-cli-12.1.0-distribution.zip

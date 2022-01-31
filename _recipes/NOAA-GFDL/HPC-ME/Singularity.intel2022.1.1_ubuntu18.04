@@ -1,0 +1,77 @@
+# Build stage with Spack pre-installed and ready to be used
+Bootstrap: docker
+From: intel/oneapi-hpckit:2022.1.1-devel-ubuntu18.04 
+Stage: build
+
+%files
+# What we want to install and how we want to install it
+# is specified in a manifest file (spack.yaml)
+spack_intel_ubuntu.yaml /opt/spack-environment/spack.yaml
+
+%post
+
+# mkdir /opt/spack-environment
+
+ curl -O https://repo.continuum.io/archive/Anaconda3-2020.11-Linux-x86_64.sh
+    bash Anaconda3-2020.11-Linux-x86_64.sh -b -p ~/anaconda3
+    rm Anaconda3-2020.11-Linux-x86_64.sh
+    echo 'export PATH="~/anaconda3/bin:$PATH"' >> ~/.bashrc
+    conda init 
+ 
+ apt-get update  
+ apt-get install -y git
+ conda install -c conda-forge libpython-static
+
+# Setup spack
+# these instructions are from one of the current non-runner ecpe4s dockerhub images
+ git clone https://github.com/spack/spack.git /spack
+  cd /spack
+  git checkout v0.17.1
+
+# Install the software, remove unnecessary deps --fail-fast
+cd /opt/spack-environment
+    . /spack/share/spack/setup-env.sh
+    spack compiler find
+    spack env create -d .
+    spack env activate .
+    apt-get install -y cpio
+    spack install --dirty
+    spack gc -y 
+
+# Modifications to the environment that are necessary to run
+ . /etc/skel/.bashrc
+    cd /opt/spack-environment
+    . /spack/share/spack/setup-env.sh
+    spack env activate --sh -d . >> /etc/profile.d/z10_spack_environment.sh
+#
+# copy
+# /opt/view
+# /opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0
+# /opt/spack-environment
+#
+
+ apt-get install -y autoconf
+ apt-get install -y libtool
+
+%environment 
+ SPACK_ENV=/opt/spack-environment
+ ACLOCAL_PATH=/opt/view/share/aclocal
+ CLASSPATH=/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/intel-mpi-2019.10.317-by5ze47puhomk7xxqxik4ht6u7jexg7c/compilers_and_libraries_2020.4.317/linux/mpi/intel64/lib/mpi.jar:/opt/intel/oneapi/mpi/2021.5.0/lib/mpi.jar:/opt/intel/oneapi/dal/2021.5.1/lib/onedal.jar
+ CMAKE_PREFIX_PATH=/opt/view:/opt/intel/oneapi/vpl/2022.0.0:/opt/intel/oneapi/tbb/2021.5.0:/opt/intel/oneapi/dal/2021.5.1:/opt/intel/oneapi/compiler/2022.0.1/linux/IntelDPCPP
+ FI_PROVIDER_PATH=/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/intel-mpi-2019.10.317-by5ze47puhomk7xxqxik4ht6u7jexg7c/compilers_and_libraries_2020.4.317/linux/mpi/intel64/libfabric/lib/prov:/opt/intel/oneapi/mpi/2021.5.0/libfabric/lib/prov:/usr/lib64/libfabric
+ I_MPI_ROOT=/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/intel-mpi-2019.10.317-by5ze47puhomk7xxqxik4ht6u7jexg7c/compilers_and_libraries_2020.4.317/linux/mpi
+ LD_LIBRARY_PATH=/opt/view/lib:/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/intel-mpi-2019.10.317-by5ze47puhomk7xxqxik4ht6u7jexg7c/compilers_and_libraries_2020.4.317/linux/mpi/intel64/libfabric/lib:/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/intel-mpi-2019.10.317-by5ze47puhomk7xxqxik4ht6u7jexg7c/compilers_and_libraries_2020.4.317/linux/mpi/intel64/lib/release:/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/intel-mpi-2019.10.317-by5ze47puhomk7xxqxik4ht6u7jexg7c/compilers_and_libraries_2020.4.317/linux/mpi/intel64/lib:/opt/view/lib64:/opt/intel/oneapi/vpl/2022.0.0/lib:/opt/intel/oneapi/tbb/2021.5.0/lib/intel64/gcc4.8:/opt/intel/oneapi/mpi/2021.5.0/libfabric/lib:/opt/intel/oneapi/mpi/2021.5.0/lib/release:/opt/intel/oneapi/mpi/2021.5.0/lib:/opt/intel/oneapi/mkl/2022.0.1/lib/intel64:/opt/intel/oneapi/itac/2021.5.0/slib:/opt/intel/oneapi/ippcp/2021.5.0/lib/intel64:/opt/intel/oneapi/ipp/2021.5.1/lib/intel64:/opt/intel/oneapi/dnnl/2022.0.1/cpu_dpcpp_gpu_dpcpp/lib:/opt/intel/oneapi/debugger/2021.5.0/gdb/intel64/lib:/opt/intel/oneapi/debugger/2021.5.0/libipt/intel64/lib:/opt/intel/oneapi/debugger/2021.5.0/dep/lib:/opt/intel/oneapi/dal/2021.5.1/lib/intel64:/opt/intel/oneapi/compiler/2022.0.1/linux/lib:/opt/intel/oneapi/compiler/2022.0.1/linux/lib/x64:/opt/intel/oneapi/compiler/2022.0.1/linux/lib/oclfpga/host/linux64/lib:/opt/intel/oneapi/compiler/2022.0.1/linux/compiler/lib/intel64_lin:/opt/intel/oneapi/ccl/2021.5.0/lib/cpu_gpu_dpcpp
+ LIBRARY_PATH=/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/intel-mpi-2019.10.317-by5ze47puhomk7xxqxik4ht6u7jexg7c/compilers_and_libraries_2020.4.317/linux/mpi/intel64/libfabric/lib:/opt/intel/oneapi/vpl/2022.0.0/lib:/opt/intel/oneapi/tbb/2021.5.0/lib/intel64/gcc4.8:/opt/intel/oneapi/mpi/2021.5.0/libfabric/lib:/opt/intel/oneapi/mpi/2021.5.0/lib/release:/opt/intel/oneapi/mpi/2021.5.0/lib:/opt/intel/oneapi/mkl/2022.0.1/lib/intel64:/opt/intel/oneapi/ippcp/2021.5.0/lib/intel64:/opt/intel/oneapi/ipp/2021.5.1/lib/intel64:/opt/intel/oneapi/dnnl/2022.0.1/cpu_dpcpp_gpu_dpcpp/lib:/opt/intel/oneapi/dal/2021.5.1/lib/intel64:/opt/intel/oneapi/compiler/2022.0.1/linux/compiler/lib/intel64_lin:/opt/intel/oneapi/compiler/2022.0.1/linux/lib:/opt/intel/oneapi/clck/2021.5.0/lib/intel64:/opt/intel/oneapi/ccl/2021.5.0/lib/cpu_gpu_dpcpp
+ LUA_CPATH='/opt/view/lib/lua/5.3/?.so/opt/view/share/lua/5.3/?.so;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/lib/lua/5.3/?.so;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/lib64/lua/5.3/?.so;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/share/lua/5.3/?.so;/opt/view/lib/lua/5.3/?.so;/opt/view/lib/lua/5.3/?.so;/opt/view/share/lua/5.3/?.so;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/lib/lua/5.3/?.so;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/lib64/lua/5.3/?.so;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/share/lua/5.3/?.so';
+ LUA_PATH='/opt/view/lib/lua/5.3/?.lua/opt/view/lib/lua/5.3/?/init.lua;/opt/view/share/lua/5.3/?.lua;/opt/view/share/lua/5.3/?/init.lua;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/lib/lua/5.3/?.lua;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/lib/lua/5.3/?/init.lua;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/lib64/lua/5.3/?.lua;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/lib64/lua/5.3/?/init.lua;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/share/lua/5.3/?.lua;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/share/lua/5.3/?/init.lua;/opt/view/lib/lua/5.3/?/init.lua;/opt/view/lib/lua/5.3/?.lua;/opt/view/share/lua/5.3/?/init.lua;/opt/view/share/lua/5.3/?.lua;/opt/view/lib/lua/5.3/?.lua;/opt/view/lib/lua/5.3/?/init.lua;/opt/view/share/lua/5.3/?.lua;/opt/view/share/lua/5.3/?/init.lua;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/lib/lua/5.3/?.lua;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/lib/lua/5.3/?/init.lua;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/lib64/lua/5.3/?.lua;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/lib64/lua/5.3/?/init.lua;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/share/lua/5.3/?.lua;/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/lua-5.3.5-tftqe2v774fgo2emxh42w3bm2otyykcd/share/lua/5.3/?/init.lua';
+ M4=/opt/view/bin/m4
+ MANPATH=/opt/view/share/man:/opt/view/man:/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/intel-mpi-2019.10.317-by5ze47puhomk7xxqxik4ht6u7jexg7c/compilers_and_libraries_2020.4.317/linux/mpi/man:/opt/intel/oneapi/mpi/2021.5.0/man:/opt/intel/oneapi/itac/2021.5.0/man:/opt/intel/oneapi/debugger/2021.5.0/documentation/man:/opt/intel/oneapi/compiler/2022.0.1/documentation/en/man/common:/opt/intel/oneapi/clck/2021.5.0/man:.:
+ MPICC=/opt/view/compilers_and_libraries_2020.4.317/linux/mpi/intel64/bin/mpiicc
+ MPICXX=/opt/view/compilers_and_libraries_2020.4.317/linux/mpi/intel64/bin/mpiicpc
+ MPIF77=/opt/view/compilers_and_libraries_2020.4.317/linux/mpi/intel64/bin/mpiifort
+ MPIF90=/opt/view/compilers_and_libraries_2020.4.317/linux/mpi/intel64/bin/mpiifort
+ MPIFC=/opt/view/compilers_and_libraries_2020.4.317/linux/mpi/intel64/bin/mpiifort
+ PATH=/opt/view/bin:/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/intel-mpi-2019.10.317-by5ze47puhomk7xxqxik4ht6u7jexg7c/compilers_and_libraries_2020.4.317/linux/mpi/intel64/libfabric/bin:/opt/intel/linux-ubuntu18.04-westmere/intel-2021.5.0/intel-mpi-2019.10.317-by5ze47puhomk7xxqxik4ht6u7jexg7c/compilers_and_libraries_2020.4.317/linux/mpi/intel64/bin:/spack/bin:/opt/intel/oneapi/vtune/2022.0.0/bin64:/opt/intel/oneapi/vpl/2022.0.0/bin:/opt/intel/oneapi/mpi/2021.5.0/libfabric/bin:/opt/intel/oneapi/mpi/2021.5.0/bin:/opt/intel/oneapi/mkl/2022.0.1/bin/intel64:/opt/intel/oneapi/itac/2021.5.0/bin:/opt/intel/oneapi/intelpython/latest/bin:/opt/intel/oneapi/intelpython/latest/condabin:/opt/intel/oneapi/inspector/2022.0.0/bin64:/opt/intel/oneapi/dev-utilities/2021.5.1/bin:/opt/intel/oneapi/debugger/2021.5.0/gdb/intel64/bin:/opt/intel/oneapi/compiler/2022.0.1/linux/lib/oclfpga/bin:/opt/intel/oneapi/compiler/2022.0.1/linux/bin/intel64:/opt/intel/oneapi/compiler/2022.0.1/linux/bin:/opt/intel/oneapi/clck/2021.5.0/bin/intel64:/opt/intel/oneapi/advisor/2022.0.0/bin64:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ PKG_CONFIG_PATH=/opt/view/lib/pkgconfig:/opt/view/share/pkgconfig:/opt/view/lib64/pkgconfig:/opt/intel/oneapi/vtune/2022.0.0/include/pkgconfig/lib64:/opt/intel/oneapi/vpl/2022.0.0/lib/pkgconfig:/opt/intel/oneapi/tbb/2021.5.0/lib/pkgconfig:/opt/intel/oneapi/mpi/2021.5.0/lib/pkgconfig:/opt/intel/oneapi/mkl/2022.0.1/lib/pkgconfig:/opt/intel/oneapi/ippcp/2021.5.0/lib/pkgconfig:/opt/intel/oneapi/inspector/2022.0.0/include/pkgconfig/lib64:/opt/intel/oneapi/dpl/2021.6.0/lib/pkgconfig:/opt/intel/oneapi/dnnl/2022.0.1/lib/pkgconfig:/opt/intel/oneapi/dal/2021.5.1/lib/pkgconfig:/opt/intel/oneapi/compiler/2022.0.1/lib/pkgconfig:/opt/intel/oneapi/ccl/2021.5.0/lib/pkgconfig:/opt/intel/oneapi/advisor/2022.0.0/include/pkgconfig/lib64:.
+ TCL_LIBRARY=/opt/view/lib/tcl8.6
+

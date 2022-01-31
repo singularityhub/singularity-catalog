@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+# sudo singularity build fortune.sif Singularity
+
+%post
+
+    # Install fortune
+    apt-get update && apt-get install -y fortune
+
+    cat > /.singularity.d/env/99-motd.sh <<EOF
+case \$0 in
+    /.singularity.d/actions/shell)
+        /usr/games/fortune;;
+esac
+EOF

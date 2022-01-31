@@ -12,7 +12,7 @@ MirrorURL: http://archive.ubuntu.com/ubuntu/
   apt install -y libmetis-dev libtbb-dev libfftw3-dev lib32gcc-7-dev libflann-dev libcilkrts5
 
   apt install -y curl vim git libhdf5-dev
-  apt install -y libssl-dev libxml2-dev python3-pip python3-igraph
+  apt install -y libssl-dev libxml2-dev python3-pip
 
   apt install -y nodejsi cmake
 
@@ -31,9 +31,7 @@ MirrorURL: http://archive.ubuntu.com/ubuntu/
   
   pip3 install Sphinx sphinx-autodoc-typehints nbsphinx sphinx_rtd_theme
 
-  pip3 install dask[array] dask[distributed]
-  pip3 install 'fsspec>=0.3.3'
-  pip3 install -U "dask[dataframe]"
+  pip3 install scarf
 
   #pip install git+https://github.com/parashardhapola/scarf.git
   #untill this is not public mount the local git filder under /mnt/git and
@@ -41,11 +39,9 @@ MirrorURL: http://archive.ubuntu.com/ubuntu/
   cd /mnt/git/scarf && pip install -U .
 
 
-  pip3 install scanpy[louvain]
-  pip3 install scanpy[leiden]
+  pip3 install scanpy louvain leiden
 
-  pip3 install igraph
-  pip3 install phate
+  pip3 install python-igraph
 
   pip3 install scvelo
 
@@ -67,6 +63,7 @@ MirrorURL: http://archive.ubuntu.com/ubuntu/
 
   pip3 install --user procpath
 
+  pip3 install cellrank
 
   pip3 install cellphonedb
 
@@ -105,4 +102,5 @@ MirrorURL: http://archive.ubuntu.com/ubuntu/
 %runscript
   /workspace/launch_jupyter.sh
 
-
+%environment
+    export MYVAR="Hello"

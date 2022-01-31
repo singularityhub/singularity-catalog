@@ -100,7 +100,7 @@ from: debian:buster-20201012
     
     # install basic system tools and libs 
     apt-get clean && apt-get update -y && apt-get upgrade -y
-    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc pandoc-citeproc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpango1.0-dev  libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-dev gawk
+    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline7 libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc pandoc-citeproc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpango1.0-dev  libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-dev gawk libmariadb-dev
     
     # no texlive-fonts-extra due to mmap
     
@@ -122,7 +122,7 @@ from: debian:buster-20201012
     cd /opt && wget -O R-${R_VERSION}.tar.gz -nv https://cran.rstudio.com/src/base/R-4/R-${R_VERSION}.tar.gz && \
     tar -zxf R-${R_VERSION}.tar.gz  && \
     cd R-${R_VERSION} && \
-    ./configure --prefix=/opt/R/${R_VERSION} --with-blas --with-lapack --with-readline=no --with-pcre2 --with-tcltk --with-cairo --with-libpng --with-jpeglib --with-libtiff && \
+    ./configure --prefix=/opt/R/${R_VERSION} --with-blas --with-lapack --with-readline=yes --with-pcre2 --with-tcltk --with-cairo --with-libpng --with-jpeglib --with-libtiff && \
     make -j $COMPILE_CPUS -k && \
     make install && \
     ln -s /opt/R/${R_VERSION}/bin/R /opt/bin/R && \
@@ -132,13 +132,22 @@ from: debian:buster-20201012
     
     # R set time zone manually
     echo "TZ=Europe/Berlin" >> /opt/R/${R_VERSION}/lib/R/etc/Renviron.site 
+    
+    # Add CONTAINER_BUILD_DATE, CONTAINER_GIT_NAME, CONTAINER_GIT_URL, CONTAINER_GIT_COMMIT_ID to /opt/R/${R_VERSION}/lib/R/etc/Renviron so that they also appear in the rstudio rsession
+    echo >> /opt/R/${R_VERSION}/lib/R/etc/Renviron
+    echo "# These environment variables should be present in R, rstudio and rserver so add them to Renviron." >> /opt/R/${R_VERSION}/lib/R/etc/Renviron
+    echo "CONTAINER_BUILD_DATE=\"${CONTAINER_BUILD_DATE}\"" >> /opt/R/${R_VERSION}/lib/R/etc/Renviron
+    echo "CONTAINER_GIT_NAME=\"${CONTAINER_GIT_NAME}\"" >> /opt/R/${R_VERSION}/lib/R/etc/Renviron
+    echo "CONTAINER_GIT_COMMIT_ID=\"${CONTAINER_GIT_COMMIT_ID}\"" >> /opt/R/${R_VERSION}/lib/R/etc/Renviron
+    echo "CONTAINER_GIT_URL=\"${CONTAINER_GIT_URL}\"" >> /opt/R/${R_VERSION}/lib/R/etc/Renviron
+    echo >> /opt/R/${R_VERSION}/lib/R/etc/Renviron
 
     # CRAN packages
 	# --no-init-file prevents R from loading user settings since all should be independent from the user
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'install.packages("tidyverse", repos="http://cran.r-project.org", Ncpus='"$COMPILE_CPUS"')'
     ## tidyverse contains:  broom,cli,crayon,dbplyr,dplyr,forcats,ggplot2,haven,hms,httr,jsonlite,lubridate,magrittr,modelr,pillar,purrr,readr,readxl,reprex,rlang,rstudioapi,rvest,stringr,tibble,tidyr,xml2,tidyverse
     
-    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'install.packages(c("reshape2","plyr","scales","gridExtra","ggrepel","data.table","R.utils","openxlsx","WriteXLS","hwriter","factoextra","pheatmap","RColorBrewer","PoiClaClu","knitr","devtools","remotes","cowplot","patchwork","ggsci","ggpubr","ggthemes","argparse","pander","shiny","shinydashboard","shinythemes","shinyjs","reticulate","enrichR","future","Matrix","glmGamPoi","kableExtra","sessioninfo"), repos="http://cran.r-project.org", Ncpus='"$COMPILE_CPUS"')'
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'install.packages(c("reshape2","plyr","scales","gridExtra","ggrepel","data.table","R.utils","openxlsx","WriteXLS","hwriter","factoextra","pheatmap","RColorBrewer","PoiClaClu","knitr","devtools","remotes","cowplot","patchwork","ggsci","ggpubr","ggthemes","argparse","pander","shiny","shinydashboard","shinythemes","shinyjs","reticulate","enrichR","future","Matrix","glmGamPoi","kableExtra","sessioninfo", "markdown", "rmarkdown", "RMySQL"), repos="http://cran.r-project.org", Ncpus='"$COMPILE_CPUS"')'
 
     # Bioconductor packages
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'if (!requireNamespace("BiocManager",quietly=TRUE)) install.packages("BiocManager", repos="http://cran.r-project.org")'

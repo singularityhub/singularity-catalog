@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: rockylinux:latest
+
+IncludeCmd: yes
+
+%labels
+    AUTHOR SerTan
+    VERSION 1.0
+
+%environment
+    export PATH=/usr/local/bin:$PATH
+    export LANG=en_US.UTF-8
+    export LC_ALL=C
+
+%post
+  dnf -y install epel-release
+  dnf -y python3-pip
+
+####################################################################################
+%appinstall ansible
+  dnf -y install ansible
+
+%apphelp ansiblle
+  For more information about goto visit https://www.ansible.org/
+
+%apprun ansible
+  "$@"
+
+%runscript
+  echo "Running ansible"
+  "$@"
+

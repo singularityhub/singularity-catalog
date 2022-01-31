@@ -1,44 +1,44 @@
 bases:
-- count: 1029
+- count: 1051
   name: ubuntu
-- count: 262
+- count: 264
   name: nvidia/cuda
-- count: 211
+- count: 212
   name: debian
-- count: 155
+- count: 157
   name: centos
 - count: 104
   name: continuumio/miniconda3
-- count: 101
+- count: 102
   name: alpine
 - count: 68
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
 - count: 67
   name: tensorflow/tensorflow
-- count: 60
+- count: 62
   name: python
 - count: 58
   name: mkandes/naked-singularity
-- count: 48
+- count: 51
   name: nfcore/base
 - count: 44
   name: cokelaer/damona/conda
-- count: 39
+- count: 43
   name: aibasel/downward
+- count: 38
+  name: fedora
 - count: 36
   name: conda/miniconda3
-- count: 35
-  name: fedora
 - count: 31
   name: godloved/secure/ubuntu-bionic
+- count: 28
+  name: provarepro/mlperf_inference
 - count: 28
   name: bilbydev/bilby-test-suite-python37
 - count: 28
   name: neurodebian
 - count: 27
   name: modakopt/modak
-- count: 26
-  name: provarepro/mlperf_inference
 - count: 26
   name: ghcr.io/mkandes/naked-singularity
 - count: 23
@@ -54,14 +54,14 @@ bases:
 - count: 18
   name: vitchyr/railrl_v12_cuda10-1_mj2-0-2-2_torch1-1-0_gym0-12-5_py3-6-5
 - count: 17
+  name: ezlabgva/busco
+- count: 17
   name: nvcr.io/nvidia/tensorflow
 - count: 16
   name: bids/validator
-- count: 16
-  name: ezlabgva/busco
 - count: 15
   name: pytorch/pytorch
-- count: 14
+- count: 15
   name: rocker/r-ver
 - count: 14
   name: r-base
@@ -105,16 +105,18 @@ bases:
   name: ewels/multiqc
 - count: 8
   name: quay.io/vgteam/vg
+- count: 8
+  name: intel/oneapi-hpckit
 - count: 7
   name: nipreps/fmriprep
 - count: 7
   name: jekriske/r-base
 - count: 7
+  name: golang
+- count: 7
   name: julia
 - count: 7
   name: continuumio/miniconda2
-- count: 7
-  name: intel/oneapi-hpckit
 - count: 7
   name: tpall/singularity-r
 - count: 6
@@ -133,8 +135,6 @@ bases:
   name: bids/hcppipelines
 - count: 6
   name: vitchyr/railrl-torch4cuda9
-- count: 6
-  name: golang
 - count: 6
   name: trinityrnaseq/trinityrnaseq
 - count: 6
@@ -157,6 +157,8 @@ bases:
   name: broadinstitute/gatk3
 - count: 5
   name: node
+- count: 5
+  name: openresty/openresty
 - count: 5
   name: bioconductor/release_core2
 - count: 5
@@ -195,8 +197,6 @@ bases:
   name: ResearchIT/spack-singularity
 - count: 4
   name: anair17/railrl_hand_v2
-- count: 4
-  name: openresty/openresty
 - count: 4
   name: finalduty/archlinux
 - count: 4
@@ -270,9 +270,15 @@ bases:
 - count: 3
   name: r/r_3.5.1.simg
 - count: 3
+  name: combinelab/salmon
+- count: 3
   name: registry.gitlab.com/rode0day/fuzzer-testing/honggfuzz_runner
 - count: 3
+  name: archlinux/base
+- count: 3
   name: ghcr.io/truatpasteurdotfr/singularity-docker-stream8-ci
+- count: 3
+  name: nvcr.io/nvidia/mxnet
 - count: 3
   name: mongo
 - count: 3
@@ -340,6 +346,8 @@ bases:
 - count: 2
   name: APPIAN-PET/APPIAN
 - count: 2
+  name: letaylor/sc_qc_cluster
+- count: 2
   name: larbys/geant4
 - count: 2
   name: uppmax/offline-uppmax-env
@@ -369,6 +377,8 @@ bases:
   name: valian/docker-python-opencv-ffmpeg
 - count: 2
   name: bethgelab/deeplearning
+- count: 2
+  name: rockylinux
 - count: 2
   name: spellrun/tensorflow
 - count: 2
@@ -442,8 +452,6 @@ bases:
 - count: 2
   name: quay.io/biocontainers/picard
 - count: 2
-  name: combinelab/salmon
-- count: 2
   name: nickjer/singularity-rstudio
 - count: 2
   name: broadinstitute/gatk
@@ -461,8 +469,6 @@ bases:
   name: postgres
 - count: 2
   name: registry.gitlab.com/rode0day/fuzzer-testing/afl_runner
-- count: 2
-  name: archlinux/base
 - count: 2
   name: arcsUVA/anaconda
 - count: 2
@@ -553,6 +559,8 @@ bases:
   name: itermae_test_base.simg
 - count: 1
   name: cfusting/conditional-growth
+- count: 1
+  name: magland/mlsing
 - count: 1
   name: cyberbotics/webots
 - count: 1
@@ -752,8 +760,6 @@ bases:
 - count: 1
   name: willprice/opencv2-cuda8
 - count: 1
-  name: letaylor/sc_qc_cluster
-- count: 1
   name: i386/debian
 - count: 1
   name: base.sif
@@ -763,6 +769,8 @@ bases:
   name: willgpaik/ubuntu_aci
 - count: 1
   name: mcin/qeeg
+- count: 1
+  name: nvcr.io/hpc/quantum_espresso
 - count: 1
   name: nvcr.io/hpc/gromacs
 - count: 1
@@ -827,8 +835,6 @@ bases:
   name: /nrs/funke/singularity/linajea/pylp_base
 - count: 1
   name: scleveland/centos7-base-singularity
-- count: 1
-  name: rockylinux
 - count: 1
   name: nextflow/rnatoy
 - count: 1
@@ -988,6 +994,8 @@ bases:
 - count: 1
   name: alpine/git
 - count: 1
+  name: ufscar/ubuntu_ompi
+- count: 1
   name: vibpsb/i-adhore
 - count: 1
   name: bigdatalabteam/hcp-prefreesurfer
@@ -1009,6 +1017,8 @@ bases:
   name: hansencb/synb0
 - count: 1
   name: intelpython/intelpython3_full
+- count: 1
+  name: nemo_baseOS.sif
 - count: 1
   name: joey3639570/mellanox4.4-tensorflow1.13
 - count: 1
@@ -1072,6 +1082,8 @@ bases:
 - count: 1
   name: library/default/centos
 - count: 1
+  name: gitlab-registry.cern.ch/sft/docker/centos7
+- count: 1
   name: richelbilderbeek/default/ormr
 - count: 1
   name: nipy/heudiconv
@@ -1103,8 +1115,6 @@ bases:
   name: charade/xlibbox@sha256
 - count: 1
   name: opendronemap/opendronemap
-- count: 1
-  name: nvcr.io/nvidia/mxnet
 - count: 1
   name: r-minimal/r-minimal_3.5.1.simg
 - count: 1
@@ -1216,17 +1226,17 @@ bases:
 - count: 1
   name: anaconda/anaconda3-py38-2020.11-ubuntu-18.04.sif
 bootstraps:
-- count: 3269
+- count: 3322
   name: docker
-- count: 327
+- count: 332
   name: debootstrap
-- count: 240
+- count: 241
   name: shub
-- count: 225
+- count: 228
   name: library
-- count: 89
+- count: 93
   name: yum
-- count: 75
+- count: 76
   name: localimage
 - count: 30
   name: oras
@@ -1261,7 +1271,7 @@ orgs:
   name: rocker
 - count: 9
   name: nvcr.io/nvidia
-- count: 6
+- count: 7
   name: nvcr.io/hpc
 - count: 6
   name: slaclab
@@ -1427,6 +1437,8 @@ orgs:
   name: sriggi
 - count: 1
   name: cfusting
+- count: 1
+  name: magland
 - count: 1
   name: cyberbotics
 - count: 1
@@ -1684,6 +1696,8 @@ orgs:
 - count: 1
   name: alpine
 - count: 1
+  name: ufscar
+- count: 1
   name: vibpsb
 - count: 1
   name: bigdatalabteam
@@ -1745,6 +1759,8 @@ orgs:
   name: clottaz
 - count: 1
   name: openresty
+- count: 1
+  name: gitlab-registry.cern.ch
 - count: 1
   name: nipy
 - count: 1
@@ -1852,8 +1868,8 @@ orgs:
 - count: 1
   name: mkandes
 tags:
-  latest: 320
-  other: 3001
+  latest: 327
+  other: 3046
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -1884,9 +1900,9 @@ versions:
   adriansevcenco/alienpy.dock:
     latest: 1
   aibasel/downward:
-    '19.06': 10
-    '19.12': 11
-    '20.06': 18
+    '19.06': 11
+    '19.12': 12
+    '20.06': 20
   airl_lab/default/airl_env:
     base_ci: 1
   alantrrs/py-faster-rcnn:
@@ -1911,7 +1927,7 @@ versions:
     '3.7': 2
     '3.8': 8
     edge: 29
-    latest: 18
+    latest: 19
   alpine/git:
     1.0.4: 1
   amazon/aws-cli:
@@ -2099,7 +2115,7 @@ versions:
     '6.10': 1
     '6.8': 1
     '6.9': 1
-    '7': 71
+    '7': 72
     7.4.1708: 4
     7.5.1804: 1
     7.6.1810: 2
@@ -2117,7 +2133,7 @@ versions:
     centos7.8.2003: 2
     centos7.9.2009: 1
     centos8: 4
-    latest: 5
+    latest: 6
   charade/xlibbox@sha256:
     04b1aca63f51cd18972b44380a7fcf2da0115c9e21e80fb9d375f39f229f686d: 1
   clottaz/fastqpuri:
@@ -2136,6 +2152,7 @@ versions:
   combinelab/salmon:
     1.4.0: 1
     1.5.0: 1
+    1.6.0: 1
   computationalradiationphysics/picongpu:
     0.6.0: 1
   conda/miniconda3-centos7:
@@ -2209,7 +2226,7 @@ versions:
     '9.13': 2
     bullseye: 1
     bullseye-slim: 1
-    buster: 63
+    buster: 64
     buster-20200908-slim: 2
     buster-20201012: 1
     buster-slim: 23
@@ -2277,6 +2294,7 @@ versions:
     v5.0.0_cv1: 1
     v5.1.2_cv1: 1
     v5.2.2_cv1: 2
+    v5.2.2_cv2: 1
   faustus123/hddeps:
     c7: 1
   fcpindi/c-pac:
@@ -2290,7 +2308,7 @@ versions:
     '32': 1
     '33': 1
     '34': 3
-    '35': 1
+    '35': 4
     latest: 2
   finalduty/archlinux:
     daily: 4
@@ -2346,6 +2364,8 @@ versions:
     main: 1
   gipert/default/arch-base:
     latest: 6
+  gitlab-registry.cern.ch/sft/docker/centos7:
+    latest: 1
   gitlab.archlinux.org:
     5050/archlinux/archlinux-docker:base-master: 1
   gnina/gnina:
@@ -2360,6 +2380,7 @@ versions:
   godlovedc/cgpbattenberg:
     3.5.3: 1
   golang:
+    1.11.5-stretch: 1
     1.12.3-alpine3.9: 6
   google/deepvariant:
     0.10.0: 1
@@ -2417,6 +2438,7 @@ versions:
     latest: 1
   intel/oneapi-hpckit:
     2021.2-devel-ubuntu18.04: 4
+    2022.1.1-devel-ubuntu18.04: 1
     devel-centos8: 1
     devel-ubuntu18.04: 2
   intelpython/intelpython2_full:
@@ -2493,7 +2515,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 1
+    latest: 2
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -2657,6 +2679,8 @@ versions:
     3.0-alpha3-singlenode: 2
   nvcr.io/hpc/pgi-compilers:
     ce: 1
+  nvcr.io/hpc/quantum_espresso:
+    qe-6.8: 1
   nvcr.io/hpc/relion:
     3.1.2: 1
   nvcr.io/nvidia/cuda:
@@ -2671,6 +2695,7 @@ versions:
   nvcr.io/nvidia/hpc-benchmarks:
     21.4-hpl: 1
   nvcr.io/nvidia/mxnet:
+    20.03-py3: 2
     21.02-py3: 1
   nvcr.io/nvidia/nvhpc:
     20.11-devel-cuda_multi-ubuntu20.04: 4
@@ -2747,7 +2772,7 @@ versions:
     11.0-cudnn8-runtime-ubuntu18.04: 1
     11.0-devel-centos7: 1
     11.1-cudnn8-devel-centos8: 1
-    11.1-cudnn8-devel-ubuntu18.04: 1
+    11.1-cudnn8-devel-ubuntu18.04: 2
     '11.1-devel ': 1
     11.1.1-devel-ubuntu20.04: 3
     11.2.0-devel-ubuntu16.04: 1
@@ -2755,6 +2780,7 @@ versions:
     11.2.2-cudnn8-devel-ubuntu18.04: 1
     11.2.2-devel-centos7: 2
     11.2.2-devel-ubuntu20.04: 2
+    11.3.1-cudnn8-runtime-centos7: 1
     11.4.2-base-ubuntu20.04: 2
     7.0-cudnn4-devel-ubuntu14.04: 1
     7.5-cudnn5-devel-ubuntu14.04: 2
@@ -2810,7 +2836,7 @@ versions:
   openjdk:
     alpine: 2
   openresty/openresty:
-    1.13.6.1-2-alpine: 4
+    1.13.6.1-2-alpine: 5
   opensuse/leap:
     '15.1': 1
   openvino/ubuntu18_runtime:
@@ -2920,6 +2946,8 @@ versions:
     v0.5-OpenVINO-2019_pre-release_src_cg_omp-py36-gcc75-ubuntu18: 1
     v0.5-OpenVINO-2019_pre-release_src_cg_tbb-py36-gcc75-ubuntu18: 1
     v0.5-OpenVINO-2020.3.1_src_c_omp-py36-gcc75-ubuntu18: 1
+    v0.7-MXNet-1.7.0-py38-gcc93-ubuntu20: 1
+    v0.7-MXNet-1.7.0_6ae469a-py38-gcc93-ubuntu20: 1
     v0.7-OpenVINO-2019_R3.1_rt_c_tbb-py36-gcc75-ubuntu18: 1
     v0.7-OpenVINO-2019_R3.1_rt_cg_tbb-py36-gcc75-ubuntu18: 1
     v0.7-OpenVINO-2019_R3.1_src_c_omp-py36-gcc75-ubuntu18: 1
@@ -2952,10 +2980,12 @@ versions:
     3.7.7-slim-buster: 1
     3.7.9: 1
     '3.8': 2
-    3.8-alpine: 1
+    3.8-alpine: 2
     3.8-buster: 2
     3.8-slim: 3
+    3.8.12-bullseye: 1
     3.8.2: 1
+    '3.9': 1
     3.9-alpine: 1
     3.9-buster: 4
     3.9-slim: 2
@@ -2964,7 +2994,7 @@ versions:
     3.9.6: 1
     alpine3.6: 3
     latest: 1
-    slim-buster: 3
+    slim-buster: 2
   pytorch/pytorch:
     1.10.0-cuda11.3-cudnn8-devel: 1
     1.2-cuda10.0-cudnn7-devel: 4
@@ -3158,7 +3188,7 @@ versions:
     0.6.2: 1
   richelbilderbeek/default/plinkr:
     0.17.2.1: 1
-    v0.18.0.2: 1
+    0.18.0.2: 1
   ro47014:
     20-10-3: 1
   rocker/geospatial:
@@ -3177,11 +3207,11 @@ versions:
     4.0.0: 1
     4.0.2: 1
     4.0.3: 2
-    4.0.4: 3
+    4.0.4: 2
     4.0.5: 1
     4.1.0: 1
     4.1.1: 1
-    4.1.2: 1
+    4.1.2: 3
   rocker/rstudio:
     3.5.3: 1
     '4.0.2 ': 1
@@ -3198,7 +3228,7 @@ versions:
   rocker/verse:
     4.1.1: 1
   rockylinux:
-    latest: 1
+    latest: 2
   rockylinux/rockylinux:
     '8': 1
     '8.5': 1
@@ -3354,19 +3384,19 @@ versions:
     pytorch-1.3.0: 1
   ubuntu:
     '14.04': 19
-    '16.04': 143
+    '16.04': 150
     '17.04': 6
-    '18.04': 227
+    '18.04': 234
     '18.04 ': 3
     '19.04': 13
     '19.10': 4
-    '20.04': 199
-    '20.10': 2
+    '20.04': 202
+    '20.10': 3
     '21.04': 6
     '21.10': 1
     UBUNTU_VERSION: 1
     artful: 7
-    bionic: 169
+    bionic: 172
     'bionic   ': 1
     bionic-20180526: 1
     bionic-20190307: 4
@@ -3379,7 +3409,7 @@ versions:
     focal-20200729: 1
     focal-20200925: 3
     focal-20210827: 1
-    latest: 74
+    latest: 75
     rolling: 1
     sha256.21678b2846063434e2009dee535d3e28ded35774ca72722e1d62b37077de30da: 5
     sha256.80c52afadf3e7c3f9573de4fe79b7dca57fb3290df6c8dc46a75b02768a81146: 3
@@ -3393,6 +3423,8 @@ versions:
     xenial-20210429: 3
   ubuntu@sha256:
     e4a134999bea4abb4a27bc437e6118fdddfb172e1b9d683129b74d254af51675: 2
+  ufscar/ubuntu_ompi:
+    latest: 1
   uhrigs/arriba:
     1.2.0: 1
     2.0.0: 1

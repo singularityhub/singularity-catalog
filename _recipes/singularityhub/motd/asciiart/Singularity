@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+# sudo singularity build asciiart.sif Singularity
+
+%post
+
+    # Install figlet!
+    apt-get update && apt-get install -y figlet
+
+    # Write a figlet command, see fonts available in README
+    cat > /.singularity.d/env/99-motd.sh <<EOF
+case \$0 in
+    /.singularity.d/actions/shell)
+        figlet "\${USER}!"
+        echo "fwoop! ...you are in a container...";;
+esac
+EOF

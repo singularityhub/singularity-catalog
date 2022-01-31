@@ -1,0 +1,60 @@
+Bootstrap: docker
+From: python:3.9
+
+        
+%files
+    requirements.txt /src/requirements.txt
+    tests /src/tests    
+
+%post
+    # This code runs while building the container, to get everything installed.  Runs as Root
+    mkdir -p /data/raw                        # Create empty /data/raw folder (will be bound at runtime by user), needed for sandbox mode
+    python -m venv /opt/venv                  # create python virtual environments
+    . /opt/venv/bin/activate                  # activate it
+    pip install --upgrade pip             # upgrade package manager (to avoid warnings)
+    pip install -r /src/requirements.txt  # install all python dependencies
+    chmod -R 777 /opt/venv                    # make it writable by users (good for interactive mode)
+
+%environment
+    # This code runs just before opening the container, to set everything up properly for use.
+    
+    # note: the venv prompt does not show up, but it should work
+    . /opt/venv/bin/activate
+
+
+%test
+    if pip freeze | grep -q 'snakemake'; then
+        echo "Snakemake installation found."
+    else
+        echo "Snakemake installation not found."
+        exit 1
+    fi
+    echo "Current Directory:"
+    cd /src
+    pwd
+    ls
+    pytest --disable-pytest-warnings
+
+
+
+##############################
+# Jupyter Lab App
+##############################
+%apphelp jupyter
+    A collaborative jupyter lab instance
+    To get full interactiveness, launch in "writable" mode.
+
+%appinstall jupyter
+   pip install jupyterlab jupyterlab-link-share
+
+%appfiles jupyter
+    # Files go to SCIF_APPROOT: https://sylabs.io/guides/3.1/user-guide/cli/singularity_apps.html
+    # https://academic.oup.com/view-large/116684314
+    # SCIF_APPROOT looks like /scif/apps/jupyter
+    # https://academic.oup.com/gigascience/article/7/5/giy023/4931737
+    jupyter_server_config.json
+
+%apprun jupyter
+    jupyter lab --no-browser --ip "*" --collaborative --allow-root --config=$SCIF_APPROOT/jupyter_server_config.json
+
+

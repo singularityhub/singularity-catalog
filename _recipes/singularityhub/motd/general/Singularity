@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+# sudo singularity build greeting.sif Singularity
+# Thanks to @cclerget for this snippet!
+
+%post
+    cat > /.singularity.d/env/99-motd.sh <<EOF
+case \$0 in
+    /.singularity.d/actions/shell)
+        echo "Hello \$USER from shell" ;;
+    /.singularity.d/actions/exec)
+        echo "Hello \$USER from exec" ;;
+    /.singularity.d/actions/run)
+        echo "Hello \$USER from run" ;;
+    /.singularity.d/actions/test)
+        echo "Hello \$USER from test" ;;
+esac
+EOF

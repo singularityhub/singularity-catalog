@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+# sudo singularity build helpme.sif Singularity
+
+%help
+Oh, hi there! This is the help section. Here is how to run the container:
+    singularity run <container>
+
+Here is how to shell into the container:
+    singularity shell <container>
+
+Here is how to execute a custom command
+    singularity exec <container> ls /
+
+
+%post
+
+    # cat the help file that is generated via the %help section
+    cat > /.singularity.d/env/99-motd.sh <<EOF
+case \$0 in
+    /.singularity.d/actions/shell)
+        cat /.singularity.d/runscript.help;;
+esac
+EOF

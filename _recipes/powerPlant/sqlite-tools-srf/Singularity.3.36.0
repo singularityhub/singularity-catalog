@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: fedora:35
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 3.36.0
+
+%post
+  ## Download build prerequisites
+  dnf -y install sqlite-tools
+
+%runscript
+  exec /usr/bin/sqldiff "$@"

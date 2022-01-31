@@ -1,0 +1,44 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/resources/GADO
+
+%environment
+    SHELL=/bin/bash
+    PATH=$PATH:/usr/local/bin
+    LC_ALL=C.UTF-8
+
+%files
+    resources/ROH.ExpHunter.GADO/GADO/* /resources/GADO
+
+%help
+    GADO HPO-based prioritization
+    exec java -jar /opt/GADO/GADO.jar
+    resources files are in /resources
+
+%runscript
+    java -jar /opt/GADO/GADO.jar "$@"
+
+%post
+    apt-get update
+    apt-get -y install \
+        apt-transport-https \
+        language-pack-en-base \
+        unzip \
+        wget \
+        default-jre
+    update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+ 
+    ## Install GADO
+    cd /opt
+    wget https://github.com/molgenis/systemsgenetics/releases/download/v1.0.4/GadoCommandline-1.0.1-dist.zip
+    unzip GadoCommandline-1.0.1-dist.zip
+    rm GadoCommandline-1.0.1-dist.zip
+    mv GadoCommandline-1.0.1/ GADO/    
+    cd /resources/GADO
+    unzip hpo_predictions_sigOnly_spiked_01_02_2018.zip
+    rm hpo_predictions_sigOnly_spiked_01_02_2018.zip
+
+%test
+    java -jar /opt/GADO/GADO.jar

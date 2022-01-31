@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: ufscar/ubuntu_ompi:latest
+
+%help
+First task of "Introduction to HPC" discipline
+
+%files
+  ./pi-integral/* /opt
+
+%post
+  cd /opt
+  make sequential
+  make pthread
+  make openmp
+  chmod 555 /opt/run.sh
+
+%environment
+  export TIMEFORMAT=%R
+  export N=1000000000
+
+%runscript
+  /opt/run.sh
+
+%test
+  # Test existence of binaries
+  [ -f /opt/pi_seq ] && echo "\e[31mSuccess: compile seq!\e[0m" || echo "\e[31m\aFailed: compile seq\e[0m"
+  [ -f /opt/pi_pth ] && echo "\e[31mSuccess: compile pthread!\e[0m" || echo "\e[31m\aFailed: compile pthread\e[0m"
+  [ -f /opt/pi_omp ] && echo "\e[31mSuccess: compile omp!\e[0m" || echo "\e[31m\aFailed: compile omp\e[0m"
+
