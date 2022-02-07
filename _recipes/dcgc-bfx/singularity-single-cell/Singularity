@@ -99,16 +99,19 @@ From: mambaorg/micromamba:latest
     libncursesw5-dev \
     libreadline8 \
     libtinfo6
-    
+
   # rstudio server
-  wget --no-verbose https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2021.09.2-382-amd64.deb
-  gdebi -q -n rstudio-server-2021.09.2-382-amd64.deb
-  rm rstudio-server-2021.09.2-382-amd64.deb
+  wget --no-verbose https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2021.09.1-372-amd64.deb
+  gdebi -q -n rstudio-server-2021.09.1-372-amd64.deb
+  rm rstudio-server-2021.09.1-372-amd64.deb
   chmod -R a+rw /var/lib/rstudio-server
 
   # for running rstudio server with conda R
   git clone --depth 1 https://github.com/grst/rstudio-server-conda.git
   sed -i 's/conda activate/source activate/' /rstudio-server-conda/local/rsession.sh
+
+  apt-get clean -q
+  rm -rf /var/lib/apt/lists/*
 
   # conda environment
   micromamba install --quiet -y -n base -f /opt/environment.yml
@@ -131,6 +134,7 @@ From: mambaorg/micromamba:latest
 
   # install R dependencies that are difficult to install from conda or make problems
   R --quiet -e 'install.packages("deldir", repos="http://cran.r-project.org")'
+  R --quiet -e 'install.packages("rmarkdown", repos = "https://packagemanager.rstudio.com/all/latest")'
   R --quiet -e 'devtools::install_github("cellgeni/sceasy", dependencies = FALSE, quiet = TRUE)'
   R --quiet -e 'devtools::install_github("satijalab/seurat-data", quiet = TRUE)'
 
@@ -150,20 +154,16 @@ From: mambaorg/micromamba:latest
         "hutils",
         "singleCellHaystack"), repos="http://cran.r-project.org", quiet = TRUE)'
 
-  apt-get clean -q
-  rm -rf /var/lib/apt/lists/*
-
   chmod -R a+w /opt
   chmod a+rw /.bashrc
   
   # Add CONTAINER_BUILD_DATE, CONTAINER_GIT_NAME, CONTAINER_GIT_URL, CONTAINER_GIT_COMMIT_ID to /opt/conda/lib/R/etc/Renviron so that they also appear in the rstudio rsession
   echo >> /opt/conda/lib/R/etc/Renviron
   echo "# These environment variables should be present in R, rstudio and rserver so add them to Renviron." >> /opt/conda/lib/R/etc/Renviron
-  echo "CONTAINER_BUILD_DATE=\"${CONTAINER_BUILD_DATE}\"" >> /opt/conda/lib/R/etc/Renviron
-  echo "CONTAINER_GIT_NAME=\"${CONTAINER_GIT_NAME}\"" >> /opt/conda/lib/R/etc/Renviron
-  echo "CONTAINER_GIT_COMMIT_ID=\"${CONTAINER_GIT_COMMIT_ID}\"" >> /opt/conda/lib/R/etc/Renviron
-  echo "CONTAINER_GIT_URL=\"${CONTAINER_GIT_URL}\"" >> /opt/conda/lib/R/etc/Renviron
-  echo >> /opt/conda/lib/R/etc/Renviron
+  echo "CONTAINER_BUILD_DATE = \"${CONTAINER_BUILD_DATE}\"" >> /opt/conda/lib/R/etc/Renviron
+  echo "CONTAINER_GIT_NAME = \"${CONTAINER_GIT_NAME}\"" >> /opt/conda/lib/R/etc/Renviron
+  echo "CONTAINER_GIT_COMMIT_ID = \"${CONTAINER_GIT_COMMIT_ID}\"" >> /opt/conda/lib/R/etc/Renviron
+  echo "CONTAINER_GIT_COMMIT_ID = \"${CONTAINER_GIT_COMMIT_ID}\"" >> /opt/conda/lib/R/etc/Renviron
 
 ####################
 ## rstudio server ##

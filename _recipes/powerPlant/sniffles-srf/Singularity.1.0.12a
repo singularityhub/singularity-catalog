@@ -1,0 +1,47 @@
+Bootstrap: docker
+From: ubuntu:focal
+Stage: build
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get -y install wget build-essential libz-dev cmake make
+  
+  ## Build
+  cd /opt
+  wget https://github.com/fritzsedlazeck/Sniffles/archive/v1.0.12a.tar.gz -O Sniffles-1.0.12a.tar.gz
+  tar xzvf Sniffles-1.0.12a.tar.gz
+  cd Sniffles-1.0.12a/
+  mkdir -p build/
+  cd build/
+  cmake ..
+  make
+
+Bootstrap: docker
+From: ubuntu:focal
+Stage: final
+
+%labels
+Maintainer bjoern.pauly@plantandfood.co.nz
+Version 1.0.12a 
+
+%files from build
+  /opt/Sniffles-1.0.12a/bin/sniffles-core-1.0.12/* /usr/local/bin/
+
+%post
+  ## Download dependencies
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get -y install libgomp1
+  apt-get clean
+
+%runscript
+  exec sniffles "$@"
+
+#==OR==
+#
+#if [ -x /usr/local/bin/$SINGULARITY_NAME ]; then
+#    exec $SINGULARITY_NAME "$@"
+#else
+#  /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+#  exec ls /usr/local/bin
+#fi
