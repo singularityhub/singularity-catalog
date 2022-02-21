@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: continuumio/miniconda3
+
+%setup
+
+%files
+
+%environment
+  export LC_ALL=C
+
+%post
+  export LC_ALL=C
+  
+  conda install -c conda-forge mamba
+  mamba install hicexplorer -c bioconda -c conda-forge
+
+  conda clean --all --yes
+
+%runscript
+  /bin/bash "$@"

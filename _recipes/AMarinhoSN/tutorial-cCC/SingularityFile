@@ -1,0 +1,23 @@
+Bootstrap: docker
+From:  ubuntu:20.04
+
+
+%post
+    # update base
+    apt-get -y update
+    apt-get -y install git pip
+
+    # install python libraries
+    pip install pandas pandarallel
+
+    # create folders to store code and data access
+    mkdir /MyData/
+    mkdir /MyCode/
+
+    # download code from github
+    cd /MyCode/
+    git clone https://github.com/AMarinhoSN/tutorial-cCC.git
+
+%runscript
+    # run this commands
+    python3 /MyCode/tutorial-cCC/findSite.py /MyData/$FASTA $SITE -ncpus $NCPUS -output_dir /MyData/

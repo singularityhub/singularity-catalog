@@ -1,0 +1,46 @@
+Bootstrap: docker
+
+From: pytorch/pytorch:1.10.0-cuda11.3-cudnn8-runtime
+
+%post
+
+    apt-get update && apt-get install -y --no-install-recommends \
+        software-properties-common \
+        build-essential \
+        curl \
+        git \
+        ffmpeg \
+        texlive-latex-extra \
+        texlive-fonts-recommended \
+        texlive-base \
+        dvipng
+
+    conda create -n ffcv python=3.9 \
+        cupy \
+        pkg-config \
+        compilers \
+        libjpeg-turbo \
+        opencv \
+        pytorch \
+        torchvision \
+        ipykernel \
+        requests \
+        imageio \
+        scikit-image \
+        einops \
+        vit-pytorch \
+        cudatoolkit=11.3 \
+        numba -c pytorch -c conda-forge
+
+    echo "source activate" >> ~/.bashrc
+    echo "conda activate ffcv" >> ~/.bashrc
+
+    git clone https://github.com/libffcv/ffcv.git
+
+    conda run -n ffcv pip install ffcv
+
+
+%runscript
+    exec "$@"
+
+

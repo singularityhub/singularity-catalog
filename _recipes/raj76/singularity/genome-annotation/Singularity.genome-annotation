@@ -1,0 +1,26 @@
+BootStrap: shub
+From: raj76/singularity:biocontainers
+
+%labels
+Maintainer Raj Ayyampalayam
+Version v1.0
+
+%post
+export LC_ALL=C
+export DEBIAN_FRONTEND noninteractive
+export PATH=$PATH:/opt/conda/bin
+conda config --add channels defaults
+conda config --add channels conda-forge
+conda install perl-hash-merge
+conda install perl-yaml
+conda install perl-parallel-forkmanager
+conda install perl-file-spec
+conda install perl-file-which 
+conda install perl-scalar-util-numeric
+conda install -c thiesgehrmann perl-logger-simple
+conda install maker=2.31.9
+
+%environment
+export LC_ALL=C
+export DEBIAN_FRONTEND noninteractive
+export PATH=$PATH:/opt/conda/bin

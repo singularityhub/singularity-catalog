@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: debian:latest
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-aws-cli
+    COPYRIGHT Copyright © 2021-2022 Pittsburgh Supercomputing Center. All Rights Reserved.   
+    VERSION 2.4.17
+
+%post
+   apt update
+   apt install -y curl unzip groff
+   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+   unzip awscliv2.zip
+   cd aws
+   ./install -i /opt/aws-cli -b /usr/local/bin
+   cd ..
+   rm -f awscliv2.zip
+   rm -rfv aws

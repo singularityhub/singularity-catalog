@@ -1,0 +1,21 @@
+# Singularity.ml - singularity recipe for constructing workflow container. 
+# This workflow uses SLURM to run jobs in parallel.
+# This is hh
+# Originally From:tensorflow/tensorflow.
+# Trying the jupter/tensorflow-notebook base container.
+Bootstrap:docker
+From: jupyter/tensorflow-notebook
+# From: nvidia/cuda:11.4.2-devel-ubuntu20.04
+
+%labels
+Maintainer brett.milash@utah.edu
+Version 1.0.0
+
+%files
+
+%post
+
+pip3 install torch torchvision torchaudio
+#conda install -c anaconda cudatoolkit -y
+
+%runscript

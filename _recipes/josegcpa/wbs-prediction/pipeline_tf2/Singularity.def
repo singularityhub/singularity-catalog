@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: python:3.6.8-slim-jessie
+Stage: spython-base
+
+%files
+requirements.txt requirements.txt
+scripts scripts
+Snakefile Snakefile
+pipeline.sh pipeline.sh
+%post
+
+apt-get update \
+&& apt-get install -y wget \
+&& apt-get install openslide-tools gcc zlib1g -y \
+&& rm -rf /var/lib/apt/lists/*
+
+cd /app
+
+
+pip3 install --upgrade pip
+pip3 install absl-py==0.14.1 albumentations==1.1.0 argon2-cffi==21.1.0 astunparse==1.6.3 async-generator==1.10 attrs==21.2.0 backcall==0.2.0 backports.entry-points-selectable==1.1.1 bleach==4.1.0 cachetools==4.2.4
+pip3 install certifi==2021.10.8 cffi==1.15.0 charset-normalizer==2.0.7 cloudpickle==1.3.0 cycler==0.10.0 dataclasses==0.8 decorator==4.4.2 defusedxml==0.7.1 distlib==0.3.3 dm-tree==0.1.6
+pip3 install entrypoints==0.3 gast==0.3.3 google-auth==2.3.0 google-auth-oauthlib==0.4.6 google-pasta==0.2.0 grpcio==1.41.0 h5py==2.10.0 idna==3.3 imageio==2.9.0 importlib-metadata==4.8.1
+pip3 install importlib-resources==5.4.0 ipykernel==5.5.6 ipython==7.16.1 ipython-genutils==0.2.0 ipywidgets==7.6.5 jedi==0.18.0 Jinja2==3.0.2 joblib==1.1.0 jsonschema==3.2.0 jupyter==1.0.0
+pip3 install jupyter-client==7.0.6 jupyter-console==6.4.0 jupyter-core==4.8.1 jupyterlab-pygments==0.1.2 jupyterlab-widgets==1.0.2 Keras-Preprocessing==1.1.2 kiwisolver==1.3.1 Markdown==3.3.4 MarkupSafe==2.0.1 matplotlib==3.3.4
+pip3 install mistune==0.8.4 nbclient==0.5.4 nbconvert==6.0.7 nbformat==5.1.3 nest-asyncio==1.5.1 networkx==2.5.1 notebook==6.4.4 numpy==1.18.5 oauthlib==3.1.1 opencv-python==4.5.3.56
+pip3 install opencv-python-headless==4.5.3.56 openslide-python==1.1.2 opt-einsum==3.3.0 packaging==21.0 pandas==1.1.5 pandocfilters==1.5.0 parso==0.8.2 pexpect==4.8.0 pickleshare==0.7.5 Pillow==8.4.0
+pip3 install platformdirs==2.4.0 prometheus-client==0.11.0 prompt-toolkit==3.0.20 protobuf==3.18.1 psutil==5.8.0 ptyprocess==0.7.0 pyasn1==0.4.8 pyasn1-modules==0.2.8 pycparser==2.20 Pygments==2.10.0
+pip3 install pyparsing==2.4.7 pyrsistent==0.18.0 python-dateutil==2.8.2 pytz==2021.3 PyWavelets==1.1.1 PyYAML==6.0 pyzmq==22.3.0 qtconsole==5.1.1 QtPy==1.11.2 qudida==0.0.4
+pip3 install requests==2.26.0 requests-oauthlib==1.3.0 rsa==4.7.2 scikit-image==0.17.2 scikit-learn==0.20.0 scipy==1.4.1 seaborn==0.11.2 Send2Trash==1.8.0 six==1.16.0 tensorboard==2.7.0
+pip3 install tensorboard-data-server==0.6.1 tensorboard-plugin-wit==1.8.0 tensorflow==2.3.0 tensorflow-estimator==2.3.0 tensorflow-probability==0.11.0 termcolor==1.1.0 terminado==0.12.1 testpath==0.5.0 threadpoolctl==3.0.0 tifffile==2020.9.3
+pip3 install tornado==6.1 tqdm==4.62.3 traitlets==4.3.3 typing-extensions==3.10.0.2 urllib3==1.26.7 virtualenv==20.10.0 wcwidth==0.2.5 webencodings==0.5.1 Werkzeug==2.0.2 widgetsnbextension==3.5.1
+pip3 install wrapt==1.13.2 xgboost==1.3.3
+%runscript
+cd /app
+exec /bin/bash "$@"
+%startscript
+cd /app
+exec /bin/bash "$@"

@@ -1,0 +1,33 @@
+Bootstrap: oras
+From: ghcr.io/sinzlab/pytorch-singularity:v3.9-torch1.10.2-dj0.12.7.def
+
+%labels
+    MAINTAINER Arne Nix <arnenix@gmail.com>
+%post
+    # install third-party libraries
+    # needed for vim extension in jupyter and tex export in matplotlib:
+    apt update && apt install -y libturbojpeg \
+    libturbojpeg-dev \
+        libopencv-dev \
+                          python3-venv \
+                          zsh \
+         python3-opencv
+                          # texlive-latex-extra \
+                          # texlive-fonts-recommended \
+                          # texlive-base \
+                          # dvipng \
+
+
+    python3.9 -m pip --no-cache-dir install \
+        ipykernel \
+        requests \
+        imageio \
+        scikit-image \
+        einops \
+        vit-pytorch
+
+
+%runscript
+    exec "$@"
+
+

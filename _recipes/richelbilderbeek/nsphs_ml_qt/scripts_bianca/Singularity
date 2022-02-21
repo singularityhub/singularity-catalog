@@ -1,0 +1,45 @@
+Bootstrap: library
+# From: philarevalo/dev/ubuntu-pymol-biopython
+# From: anna872/default/python38:latest
+# From: omatt/python/python38:undefined
+# From: anna873/default/python36:latest
+# From: niharika2021/default/ubuntu-python
+From: emmeff/default/ubuntu:20.04
+
+%post
+    apt-get -y update
+    # apt-get -y install libssl-dev libcurl4-openssl-dev wget --fix-missing
+    apt-get -y install libssl-dev libcurl4-openssl-dev wget python3 --fix-missing
+    apt-get -y install python3-pip
+    wget https://raw.githubusercontent.com/kausmees/GenoCAE/master/requirements.txt
+    python3 -m pip install -r requirements.txt
+
+%runscript
+exec python3 "$@"
+
+%test
+    python3 -m pip list
+
+%help
+
+This container installs the Python packages needed by GCAE installed.
+
+To make the container run a script called, e.g. `run_gcae.py`, do:
+
+```
+cat run_gcae.py | ./nsphs_ml_qt.sif
+```
+
+%labels
+
+    AUTHOR Richel J.C. Bilderbeek
+
+    NAME nsphs_ml_qt
+
+    DESCRIPTION The nsphs_ml_qt project
+
+    USAGE send a Python script to the container, e.g. `cat run_gcae.py | ./nsphs_ml_qt.sif`
+
+    URL https://github.com/richelbilderbeek/nsphs_ml_qt
+
+    VERSION 0.1

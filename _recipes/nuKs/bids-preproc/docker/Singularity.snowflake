@@ -1,0 +1,295 @@
+Bootstrap: docker
+From: debian:buster-20200908-slim
+Stage: spython-base
+
+%post
+
+# The popularity-contest is causing docker build to hang on apt install.
+# cf. https://github.com/BRAINSia/BRAINSTools/issues/382
+DEBIAN_FRONTEND=noninteractive
+
+# Install neurodebian.
+# cf. https://github.com/neurodebian/dockerfiles/blob/54ea480e6e3b2563e3e5dcd3df74ca3d280876e1/dockerfiles/xenial/Dockerfile
+# - PGP to prevent "gnupg, gnupg2 and gnupg1 do not seem to be installed, but 
+# one of them is required for this operation"
+# - Neurodebian for debian buster cf. https://neuro.debian.net/
+# - Minimalistic package to assist with freezing the APT configuration
+# which would be coming from neurodebian repo.
+# Also install and enable eatmydata to be used for all apt-get calls
+# to speed up docker builds.
+set -x \
+# cf. https://bugs.debian.org/830696 (apt uses gpgv by default in newer releases, rather than gpg)
+&& apt-get update \
+&& { \
+which gpg \
+|| apt-get install -y --no-install-recommends gnupg \
+; } \
+# Ubuntu includes "gnupg" (not "gnupg2", but still 2.x), but not dirmngr, and gnupg 2.x requires dirmngr
+# so, if we're not running gnupg 1.x, explicitly install dirmngr too
+	&& { \
+		gpg --version | grep -q '^gpg (GnuPG) 1\.' \
+		|| apt-get install -y --no-install-recommends dirmngr \
+	; } \
+	&& rm -rf /var/lib/apt/lists/* \
+# apt-key is a bit finicky during "docker build" with gnupg 2.x, so install the repo key the same way debian-archive-keyring does (/etc/apt/trusted.gpg.d)
+# this makes "apt-key list" output prettier too!
+	&& export GNUPGHOME="$(mktemp -d)" \
+	&& gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys DD95CC430502E37EF840ACEEA5D32F012649A5A9 \
+	&& gpg --batch --export DD95CC430502E37EF840ACEEA5D32F012649A5A9 > /etc/apt/trusted.gpg.d/neurodebian.gpg \
+	&& rm -rf "$GNUPGHOME" \
+	&& apt-key list | grep neurodebian \
+# install neurodebian cf. https://neuro.debian.net/ 
+    && wget -O- http://neuro.debian.net/lists/buster.de-md.full \
+    | tee /etc/apt/sources.list.d/neurodebian.sources.list \
+# cf. https://bugs.debian.org/830696
+    && apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9 \
+	&& apt-get update \
+	&& apt-get install -y --no-install-recommends neurodebian-freeze eatmydata \
+	&& ln -s /usr/bin/eatmydata /usr/local/bin/apt-get \
+# install nodejs (for bids-validator)
+# cf. https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions
+    && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+# install npm
+    && apt-get install -y --no-install-recommends npm \
+    && npm install npm@latest -g \
+	&& rm -rf apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
+# in/stall bids-validator.
+npm install -g bids-validator@1.5.6
+
+
+
+# Install fmriprep dependances. - removed nodejs and bids validator, previously installed.
+# cf. https://github.com/nipreps/fmriprep/blob/master/Dockerfile
+# Prepare environment
+apt-get update && \
+apt-get install -y --no-install-recommends \
+curl \
+bzip2 \
+ca-certificates \
+xvfb \
+build-essential \
+autoconf \
+libtool \
+pkg-config \
+git && \
+apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Install latest pandoc
+curl -o pandoc-2.2.2.1-1-amd64.deb -sSL "https://github.com/jgm/pandoc/releases/download/2.2.2.1/pandoc-2.2.2.1-1-amd64.deb" && \
+dpkg -i pandoc-2.2.2.1-1-amd64.deb && \
+rm pandoc-2.2.2.1-1-amd64.deb
+
+# Installing freesurfer
+curl -sSL https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.1/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.1.tar.gz | tar zxv --no-same-owner -C /opt \
+--exclude='freesurfer/diffusion' \
+--exclude='freesurfer/docs' \
+--exclude='freesurfer/fsfast' \
+--exclude='freesurfer/lib/cuda' \
+--exclude='freesurfer/lib/qt' \
+--exclude='freesurfer/matlab' \
+--exclude='freesurfer/mni/share/man' \
+--exclude='freesurfer/subjects/fsaverage_sym' \
+--exclude='freesurfer/subjects/fsaverage3' \
+--exclude='freesurfer/subjects/fsaverage4' \
+--exclude='freesurfer/subjects/cvs_avg35' \
+--exclude='freesurfer/subjects/cvs_avg35_inMNI152' \
+--exclude='freesurfer/subjects/bert' \
+--exclude='freesurfer/subjects/lh.EC_average' \
+--exclude='freesurfer/subjects/rh.EC_average' \
+--exclude='freesurfer/subjects/sample-*.mgz' \
+--exclude='freesurfer/subjects/V1_average' \
+--exclude='freesurfer/trctrain'
+
+FSL_DIR="/usr/share/fsl/5.0"
+OS="Linux"
+FS_OVERRIDE=0
+FIX_VERTEX_AREA=""
+FSF_OUTPUT_FORMAT="nii.gz"
+FREESURFER_HOME="/opt/freesurfer"
+SUBJECTS_DIR="$FREESURFER_HOME/subjects"
+FUNCTIONALS_DIR="$FREESURFER_HOME/sessions"
+MNI_DIR="$FREESURFER_HOME/mni"
+LOCAL_DIR="$FREESURFER_HOME/local"
+MINC_BIN_DIR="$FREESURFER_HOME/mni/bin"
+MINC_LIB_DIR="$FREESURFER_HOME/mni/lib"
+MNI_DATAPATH="$FREESURFER_HOME/mni/data"
+PERL5LIB="$MINC_LIB_DIR/perl5/5.8.5"
+MNI_PERL5LIB="$MINC_LIB_DIR/perl5/5.8.5"
+PATH="$FREESURFER_HOME/bin:$FSFAST_HOME/bin:$FREESURFER_HOME/tktools:$MINC_BIN_DIR:$PATH"
+
+# Installing Neurodebian packages (FSL, AFNI, git)
+# RUN curl -sSL "http://neuro.debian.net/lists/$( lsb_release -c | cut -f2 ).us-ca.full" >> /etc/apt/sources.list.d/neurodebian.sources.list && \
+#     apt-key add /usr/local/etc/neurodebian.gpg && \
+#     (apt-key adv --refresh-keys --keyserver hkp://ha.pool.sks-keyservers.net 0xA5D32F012649A5A9 || true)
+
+apt-get update && \
+apt-get install -y --no-install-recommends wget \
+&& wget -O- http://neuro.debian.net/lists/buster.de-fzj.full | tee /etc/apt/sources.list.d/neurodebian.sources.list \
+&& apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
+apt-get update && \
+apt-get install -y --no-install-recommends \
+fsl-core=5.0.9-5~nd100+1 \
+fsl-mni152-templates=5.0.7-2 \
+afni=18.0.05+git24-gb25b21054~dfsg.1-1~nd100+1 \
+convert3d \
+connectome-workbench=1.4.2-1~nd100+1 \
+git-annex-standalone && \
+apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+FSLDIR="/usr/share/fsl/5.0"
+FSLOUTPUTTYPE="NIFTI_GZ"
+FSLMULTIFILEQUIT="TRUE"
+POSSUMDIR="/usr/share/fsl/5.0"
+LD_LIBRARY_PATH="/usr/lib/fsl/5.0:$LD_LIBRARY_PATH"
+FSLTCLSH="/usr/bin/tclsh"
+FSLWISH="/usr/bin/wish"
+AFNI_MODELPATH="/usr/lib/afni/models"
+AFNI_IMSAVE_WARNINGS="NO"
+AFNI_TTATLAS_DATASET="/usr/share/afni/atlases"
+AFNI_PLUGINPATH="/usr/lib/afni/plugins"
+PATH="/usr/lib/fsl/5.0:/usr/lib/afni/bin:$PATH"
+
+# Installing ANTs 2.3.4 (NeuroDocker build)
+ANTSPATH=/usr/lib/ants
+mkdir -p $ANTSPATH && \
+curl -sSL "https://dl.dropbox.com/s/gwf51ykkk5bifyj/ants-Linux-centos6_x86_64-v2.3.4.tar.gz" \
+| tar -xzC $ANTSPATH --strip-components 1
+PATH=$ANTSPATH:$PATH
+
+# Installing SVGO
+curl -sL https://deb.nodesource.com/setup_10.x | bash -
+apt-get install -y nodejs
+npm install -g svgo
+
+# Installing and setting up ICA_AROMA
+mkdir -p /opt/ICA-AROMA && \
+curl -sSL "https://github.com/oesteban/ICA-AROMA/archive/v0.4.5.tar.gz" \
+| tar -xzC /opt/ICA-AROMA --strip-components 1 && \
+chmod +x /opt/ICA-AROMA/ICA_AROMA.py
+PATH="/opt/ICA-AROMA:$PATH"
+AROMA_VERSION="0.4.5"
+
+# Installing and setting up miniconda
+curl -sSLO https://repo.continuum.io/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh && \
+bash Miniconda3-4.5.11-Linux-x86_64.sh -b -p /usr/local/miniconda && \
+rm Miniconda3-4.5.11-Linux-x86_64.sh
+
+# Set CPATH for packages relying on compiled libs (e.g. indexed_gzip)
+PATH="/usr/local/miniconda/bin:$PATH"
+CPATH="/usr/local/miniconda/include/:$CPATH"
+LANG="C.UTF-8"
+LC_ALL="C.UTF-8"
+PYTHONNOUSERSITE=1
+
+# Installing precomputed python packages
+conda install -y python=3.7.1 \
+pip=19.1 \
+mkl=2018.0.3 \
+mkl-service \
+numpy=1.15.4 \
+scipy=1.1.0 \
+scikit-learn=0.19.1 \
+matplotlib=2.2.2 \
+pandas=0.23.4 \
+libxml2=2.9.8 \
+libxslt=1.1.32 \
+graphviz=2.40.1 \
+traits=4.6.0 \
+zlib; sync && \
+chmod -R a+rX /usr/local/miniconda; sync && \
+chmod +x /usr/local/miniconda/bin/*; sync && \
+conda build purge-all; sync && \
+conda clean -tipsy && sync
+
+# Unless otherwise specified each process should only use one thread - nipype
+# will handle parallelization
+MKL_NUM_THREADS=1
+OMP_NUM_THREADS=1
+
+# Create a shared $HOME directory
+useradd -m -s /bin/bash -G users fmriprep
+cd /home/fmriprep
+HOME="/home/fmriprep"
+
+# Precaching fonts, set 'Agg' as default backend for matplotlib
+python -c "from matplotlib import font_manager" && \
+sed -i 's/\(backend *: \).*$/\1Agg/g' $( python -c "import matplotlib; print(matplotlib.matplotlib_fname())" )
+
+# Precaching atlases - install templateflow (1.4.1)
+pip install --no-cache-dir templateflow == 1.4.1 && \
+python -c "from templateflow import api as tfapi; \
+tfapi.get('MNI152NLin6Asym', resolution=(1, 2), suffix='T1w', desc=None); \
+tfapi.get('MNI152NLin6Asym', resolution=(1, 2), desc='brain', suffix='mask'); \
+tfapi.get('MNI152NLin2009cAsym', resolution=(1, 2), suffix='T1w', desc=None); \
+tfapi.get('MNI152NLin2009cAsym', resolution=(1, 2), desc='brain', suffix='mask'); \
+tfapi.get('MNI152NLin2009cAsym', resolution=1, desc='carpet', suffix='dseg'); \
+tfapi.get('MNI152NLin2009cAsym', resolution=1, label='brain', suffix='probseg'); \
+tfapi.get('MNI152NLin2009cAsym', resolution=2, desc='fMRIPrep', suffix='boldref'); \
+tfapi.get('OASIS30ANTs'); \
+tfapi.get('fsaverage', density='164k', desc='std', suffix='sphere'); \
+tfapi.get('fsaverage', density='164k', desc='vaavg', suffix='midthickness'); \
+tfapi.get('fsLR', density='32k'); \
+tfapi.get('MNI152NLin6Asym', resolution=2, atlas='HCP', suffix='dseg')" && \
+find $HOME/.cache/templateflow -type d -exec chmod go=u {} + && \
+find $HOME/.cache/templateflow -type f -exec chmod go=u {} +
+
+# InstallFMRIPREP
+python3 -m pip install fmriprep==20.2.0
+
+find $HOME -type d -exec chmod go=u {} + && \
+find $HOME -type f -exec chmod go=u {} + && \
+rm -rf $HOME/.npm $HOME/.conda $HOME/.empty
+
+IS_DOCKER_8395080871=1
+
+ldconfig
+cd /tmp/
+
+%environment
+export FSL_DIR="/usr/share/fsl/5.0"
+export OS="Linux"
+export FS_OVERRIDE=0
+export FIX_VERTEX_AREA=""
+export FSF_OUTPUT_FORMAT="nii.gz"
+export FREESURFER_HOME="/opt/freesurfer"
+export SUBJECTS_DIR="$FREESURFER_HOME/subjects"
+export FUNCTIONALS_DIR="$FREESURFER_HOME/sessions"
+export MNI_DIR="$FREESURFER_HOME/mni"
+export LOCAL_DIR="$FREESURFER_HOME/local"
+export MINC_BIN_DIR="$FREESURFER_HOME/mni/bin"
+export MINC_LIB_DIR="$FREESURFER_HOME/mni/lib"
+export MNI_DATAPATH="$FREESURFER_HOME/mni/data"
+export PERL5LIB="$MINC_LIB_DIR/perl5/5.8.5"
+export MNI_PERL5LIB="$MINC_LIB_DIR/perl5/5.8.5"
+export PATH="$FREESURFER_HOME/bin:$FSFAST_HOME/bin:$FREESURFER_HOME/tktools:$MINC_BIN_DIR:$PATH"
+export FSLDIR="/usr/share/fsl/5.0"
+export FSLOUTPUTTYPE="NIFTI_GZ"
+export FSLMULTIFILEQUIT="TRUE"
+export POSSUMDIR="/usr/share/fsl/5.0"
+export LD_LIBRARY_PATH="/usr/lib/fsl/5.0:$LD_LIBRARY_PATH"
+export FSLTCLSH="/usr/bin/tclsh"
+export FSLWISH="/usr/bin/wish"
+export AFNI_MODELPATH="/usr/lib/afni/models"
+export AFNI_IMSAVE_WARNINGS="NO"
+export AFNI_TTATLAS_DATASET="/usr/share/afni/atlases"
+export AFNI_PLUGINPATH="/usr/lib/afni/plugins"
+export PATH="/usr/lib/fsl/5.0:/usr/lib/afni/bin:$PATH"
+export ANTSPATH=/usr/lib/ants
+export PATH=$ANTSPATH:$PATH
+export PATH="/opt/ICA-AROMA:$PATH"
+export AROMA_VERSION="0.4.5"
+export PATH="/usr/local/miniconda/bin:$PATH"
+export CPATH="/usr/local/miniconda/include/:$CPATH"
+export LANG="C.UTF-8"
+export LC_ALL="C.UTF-8"
+export PYTHONNOUSERSITE=1
+export MKL_NUM_THREADS=1
+export OMP_NUM_THREADS=1
+export HOME="/home/fmriprep"
+export IS_DOCKER_8395080871=1
+%runscript
+cd /tmp/
+exec /usr/local/miniconda/bin/fmriprep "$@"
+%startscript
+cd /tmp/
+exec /usr/local/miniconda/bin/fmriprep "$@"

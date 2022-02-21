@@ -1,0 +1,13 @@
+BootStrap: docker
+From: continuumio/miniconda3:4.10.3
+
+%post
+  VER=2.0.19-2 && \
+  VER_SHORT=${VER%-*}  && \
+  apt update && \
+  apt install -y \
+    curl && \
+  rm -rf /var/lib/apt/lists/* && \
+  cd /tmp && curl -LO https://github.com/harelba/q/releases/download/${VER_SHORT}/q-text-as-data_${VER}_amd64.deb && \
+  dpkg -i q-text-as-data_${VER}_amd64.deb && \
+  rm -f q-text-as-data_${VER}_amd64.deb

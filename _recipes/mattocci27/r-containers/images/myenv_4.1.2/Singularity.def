@@ -36,7 +36,7 @@ From: mattocci/rstan:4.1.2
     && Rscript -e "BiocManager::install(c('marray', 'affy', 'Biobase'))"
 
     installGithub.r \
-    rstudio/fontawesome\ hadley/emo\ gordy2x/ecoCopula\ yihui/xaringan\ curso-r/treesnip
+    rstudio/fontawesome\ hadley/emo\ gordy2x/ecoCopula\ yihui/xaringan\ curso-r/treesnip\ ropensci/stantargets
 
     install2.r -n -2 --skipinstalled --error \
     --deps TRUE \
@@ -95,6 +95,11 @@ From: mattocci/rstan:4.1.2
         ParBayesianOptimization \
         animation \
         targets \
+        tarchetypes \
+        future \
+        future.callr \
+        future.batchtools \
+        clustermq \
     && rm -rf /tmp/downloaded_packages
 
     yes | apt-get install ttf-mscorefonts-installer \

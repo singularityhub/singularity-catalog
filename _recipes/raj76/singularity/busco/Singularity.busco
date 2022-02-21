@@ -1,0 +1,19 @@
+BootStrap: shub
+From: raj76/singularity:biocontainers
+
+%labels
+Maintainer Raj Ayyampalayam
+Version v1.0
+
+%post
+export LC_ALL=C
+export DEBIAN_FRONTEND noninteractive
+export PATH=$PATH:/opt/conda/bin
+conda config --add channels defaults
+conda config --add channels conda-forge
+conda install busco
+
+%environment
+export LC_ALL=C
+export DEBIAN_FRONTEND noninteractive
+export PATH=$PATH:/opt/conda/bin
