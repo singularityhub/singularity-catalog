@@ -1,20 +1,25 @@
 Bootstrap: library
-From: richelbilderbeek/default/plinkr:0.18.0.2
+From: richelbilderbeek/default/plinkr:0.19
 
 %post
-    sed -i 's/$/ universe/' /etc/apt/sources.list
-    apt-get -y update
-    apt-get -y install git python3 wget
+    # Install python3
+    apt-get update
+    apt-get install -y git wget python3-pip
+
+    # python3 -m pip install --upgrade pip
+    # Tip from Pavlin Mitev
+    python3 -m pip install --no-cache-dir --upgrade pip
+
     apt-get -y clean
 
-    echo "********************************"
-    echo "Install conda: 'ormr' needs this"
-    echo "********************************"
-    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    bash Miniconda3-latest-Linux-x86_64.sh -b -p miniconda
-    export PATH=/miniconda/bin:$PATH
-    rm Miniconda3-latest-Linux-x86_64.sh
-    conda update conda
+    # echo "********************************"
+    # echo "Install conda: 'ormr' needs this"
+    # echo "********************************"
+    # wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    # bash Miniconda3-latest-Linux-x86_64.sh -b -p miniconda
+    # export PATH=/miniconda/bin:$PATH
+    # rm Miniconda3-latest-Linux-x86_64.sh
+    # conda update conda
 
     echo "******************"
     echo "Install R packages"
@@ -22,39 +27,49 @@ From: richelbilderbeek/default/plinkr:0.18.0.2
     Rscript -e 'install.packages(c("remotes", "reticulate", "semver"))'
     Rscript -e 'remotes::install_github("richelbilderbeek/ormr")'
     Rscript -e 'devtools::session_info()'
-    Rscript -e 'ormr::ormr_report(ormr_folder_name = "/opt/ormr")'
-    Rscript -e 'devtools::session_info()'
+
+    echo "*******************************************"
+    echo "Report before Python packages are installed"
+    echo "*******************************************"
+    # Rscript -e 'ormr::ormr_report(ormr_folder_name = "/opt/ormr", verbose = TRUE)'
+    Rscript -e 'ormr::ormr_report(ormr_folder_name = "python3", verbose = TRUE)'
 
     echo "***********************"
     echo "Install Python packages"
     echo "***********************"
-    Rscript -e 'ormr::install_python_package(ormr_folder_name = "/opt/ormr", package_name = "scipy")'
+    # Rscript -e 'ormr::install_python_package(ormr_folder_name = "/opt/ormr", package_name = "scipy")'
+    Rscript -e 'ormr::install_python_package(ormr_folder_name = "python3", package_name = "scipy")'
 
-    echo "******************"
-    echo "Report after build"
-    echo "******************"
-    Rscript -e 'ormr::ormr_report(ormr_folder_name = "/opt/ormr")'
+    echo "******"
+    echo "Report"
+    echo "******"
+    # Rscript -e 'ormr::ormr_report(ormr_folder_name = "/opt/ormr")'
+    Rscript -e 'ormr::ormr_report(ormr_folder_name = "python3")'
 
 %runscript
-exec R --vanilla --silent --no-echo "$@"
+echo "'ormr.sif' running with arguments '$@'"
+Rscript "$@"
 
 %test
-    echo "*******************************"
-    echo "Show list of Conda environments"
-    echo "*******************************"
-    conda-env list
+    # echo "*******************************"
+    # echo "Show list of Conda environments"
+    # echo "*******************************"
+    # conda-env list
     echo "***********"
     echo "Show plinkr"
     echo "***********"
-    Rscript -e 'plinkr::plinkr_report(plink_optionses = plinkr::create_plink_optionses(plink_folder = "/opt/plinkr"))'
+    # Rscript -e 'plinkr::plinkr_report(plink_optionses = plinkr::create_plink_optionses(plink_folder = "/opt/plinkr"))'
+    Rscript -e 'plinkr::plinkr_report(plink_optionses = plinkr::create_plink_optionses(plink_folder = "python3"))'
     echo "********************************"
     echo "Run 'ormr::ormr_report'"
     echo "********************************"
-    Rscript -e 'ormr::ormr_report(ormr_folder_name = "/opt/ormr", verbose = TRUE)'
+    # Rscript -e 'ormr::ormr_report(ormr_folder_name = "/opt/ormr", verbose = TRUE)'
+    Rscript -e 'ormr::ormr_report(ormr_folder_name = "python3", verbose = TRUE)'
     echo "******************************"
     echo "Show that 'scipy' is installed"
     echo "******************************"
-    Rscript -e 'ormr::is_python_package_installed(ormr_folder_name = "/opt/ormr", package_name = "scipy", verbose = TRUE)'
+    # Rscript -e 'ormr::is_python_package_installed(ormr_folder_name = "/opt/ormr", package_name = "scipy", verbose = TRUE)'
+    Rscript -e 'ormr::is_python_package_installed(ormr_folder_name = "python3", package_name = "scipy", verbose = TRUE)'
 
 %help
 
@@ -63,10 +78,22 @@ This container has the R package ormr installed.
 To make the container run a script called, e.g. `script.R`, do:
 
 ```
+
 cat script.R | ./ormr.sif
 ```
 
-Within the script, set `ormr_folder_name` to `"/opt/ormr"`, for example:
+The container can be run with and without conda.
+
+When you do not want to use conda,
+within the script, set `ormr_folder_name` to `"python3"`, for example:
+
+```
+library(ormr)
+ormr_report(ormr_folder_name = "python3")
+```
+
+When you want to use conda, 
+within the script, set `ormr_folder_name` to `"/opt/ormr"`, for example:
 
 ```
 library(ormr)
@@ -85,5 +112,5 @@ ormr_report(ormr_folder_name = "/opt/ormr")
 
     URL https://github.com/richelbilderbeek/ormr
 
-    VERSION 0.6.2.1
+    VERSION 0.6.2.2
 

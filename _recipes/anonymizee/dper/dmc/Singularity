@@ -2,7 +2,6 @@ Bootstrap: docker
 From: ubuntu:20.04
 
 %setup
-  make -C ../addmc clean-libraries
   mkdir ${SINGULARITY_ROOTFS}/addmc
   cp -t ${SINGULARITY_ROOTFS}/addmc -r ../addmc/libraries ../addmc/src ../addmc/Makefile
 
@@ -17,7 +16,7 @@ From: ubuntu:20.04
   apt -y install libgmp-dev
   apt -y install make
 
-  make -C /addmc dmc opt=-Ofast
+  make -C /addmc dmc opt=-Ofast link=-static
 
 %help
   This is a container for the tool DMC.

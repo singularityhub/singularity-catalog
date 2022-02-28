@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: debian:buster
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-cwltool
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.  
+    VERSION 3.1.20220210171524
+
+%post
+    apt update
+    apt install -y python3 python3-pip
+    pip3 install cwltool==3.1.20220210171524 cwlref-runner

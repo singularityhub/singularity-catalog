@@ -11,6 +11,7 @@ rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc && \
 dnf -y install \
 	libglvnd-glx \
 	mesa-dri-drivers \
+	yum-utils \
 	brave-browser && \
 dnf clean packages
 

@@ -1,0 +1,13 @@
+Bootstrap: localimage
+From: ubuntu-vnc-xfce.sif
+
+%files
+	./*.sh /usr/local/bin
+
+%post
+
+export DEBIAN_FRONTEND=noninteractive
+
+# until closing of github:conda-forge/texlive-core/feedstock/issues/19
+apt-get install -y --no-install-recommends git emacs texlive texlive-latex-extra texlive-fonts-extra texlive-plain-generic # qpdfview
+apt-get clean -y

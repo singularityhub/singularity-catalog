@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: aylab/fithichip:latest
+IncludeCmd: yes
+%environment
+   export PATH=$PATH:/FitHiChIP/Imp_Scripts/scripts
+   export PATH=$PATH:/FitHiChIP/Imp_Scripts
+   export PATH=$PATH:/FitHiChIP
+   export PATH=$PATH:/FitHiChIP/Analysis
+   export PATH=$PATH:/FitHiChIP/code
+   export PATH=$PATH:/FitHiChIP/code/Imp_Scripts
+   export PATH=$PATH:/HiC-Pro-2.11.1/scripts
+   export PATH=$PATH:/HiC-Pro-2.11.1/bin
+   export PATH=$PATH:/HiC-Pro-2.11.1/bin/utils
+
+%post
+    chmod -R 777 /root
+    echo "FitHiChIP"

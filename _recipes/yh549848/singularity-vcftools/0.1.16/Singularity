@@ -1,0 +1,90 @@
+BootStrap: docker
+From: continuumio/miniconda3:4.7.12
+
+%apprun vcf-annotate
+  exec vcf-annotate "${@}"
+
+%apprun vcf-compare
+  exec vcf-compare "${@}"
+
+%apprun vcf-concat
+  exec vcf-concat "${@}"
+
+%apprun vcf-consensus
+  exec vcf-consensus "${@}"
+
+%apprun vcf-contrast
+  exec vcf-contrast "${@}"
+
+%apprun vcf-convert
+  exec vcf-convert "${@}"
+
+%apprun vcf-fix-newlines
+  exec vcf-fix-newlines "${@}"
+
+%apprun vcf-fix-ploidy
+  exec vcf-fix-ploidy "${@}"
+
+%apprun vcf-indel-stats
+  exec vcf-indel-stats "${@}"
+
+%apprun vcf-isec
+  exec vcf-isec "${@}"
+
+%apprun vcf-merge
+  exec vcf-merge "${@}"
+
+%apprun vcf-phased-join
+  exec vcf-phased-join "${@}"
+
+%apprun vcf-query
+  exec vcf-query "${@}"
+
+%apprun vcf-shuffle-cols
+  exec vcf-shuffle-cols "${@}"
+
+%apprun vcf-sort
+  exec vcf-sort "${@}"
+
+%apprun vcf-stats
+  exec vcf-stats "${@}"
+
+%apprun vcf-subset
+  exec vcf-subset "${@}"
+
+%apprun vcf-to-tab
+  exec vcf-to-tab "${@}"
+
+%apprun vcf-tstv
+  exec vcf-tstv "${@}"
+
+%apprun vcf-validator
+  exec vcf-validator "${@}"
+
+%apprun vcftools
+  exec vcftools "${@}"
+
+# NOTE: samtools required vcf-merge sub-command
+%post
+  VER=0.1.16 && \
+  apt update --allow-releaseinfo-change && \
+  apt install -y \
+    curl \
+    build-essential \
+    cmake \
+    zlib1g-dev \
+    pkg-config && \
+  rm -rf /var/lib/apt/lists/* && \
+  cd /tmp && curl -LO https://github.com/vcftools/vcftools/releases/download/v${VER}/vcftools-${VER}.tar.gz && \
+  tar -xvf vcftools-${VER}.tar.gz && \
+  cd vcftools-${VER} && \
+  ./configure && \
+  make && \
+  make install && \
+  cd .. && rm -rf vcftools-${VER} && \
+  . /opt/conda/bin/activate && \
+  conda install -q -y \
+    -c bioconda samtools=1.9 && \
+  conda install -q -y \
+    -c bioconda vcftools=0.1.16 && \
+  conda clean -a -q -f -y

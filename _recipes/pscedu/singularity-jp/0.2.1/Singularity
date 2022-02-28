@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: alpine:edge
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-jp
+    COPYRIGHT Copyright © 2022 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    VERSION 0.2.1
+
+%post 
+   apk update
+   apk add wget
+   wget https://github.com/jmespath/jp/releases/latest/download/jp-linux-amd64 -O /usr/local/bin/jp
+   chmod +x /usr/local/bin/jp            

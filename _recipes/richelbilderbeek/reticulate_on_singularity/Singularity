@@ -1,5 +1,5 @@
 Bootstrap: library
-From: richelbilderbeek/default/plinkr:0.17.2.1
+From: richelbilderbeek/default/plinkr:0.18.0.2
 
 %post
     # Install apt
@@ -31,21 +31,21 @@ From: richelbilderbeek/default/plinkr:0.17.2.1
 exec R --vanilla --silent --no-echo "$@"
 
 %test
-    echo "**************"
-    echo "Show me '/opt'"
-    echo "**************"
+    echo "******************"
+    echo " test 1/4: show '/opt'"
+    echo "******************"
     ls /opt
-    echo "*******************"
-    echo "Show me '/opt/ormr'"
-    echo "*******************"
+    echo "***********************"
+    echo " test 2/4: show '/opt/ormr'"
+    echo "***********************"
     ls /opt/ormr
-    echo "****************************"
-    echo "Run 'reticulate::use_condaenv'"
-    echo "****************************"
+    echo "*************************************"
+    echo " test 3/4: run 'reticulate::use_condaenv'"
+    echo "*************************************"
     Rscript -e 'reticulate::use_condaenv(condaenv = "/opt/ormr")'
-    echo "*************"
-    echo "List packages"
-    echo "*************"
+    echo "********************"
+    echo " test 4/4: list packages"
+    echo "********************"
     Rscript -e 'reticulate:::conda_list_packages(envname = "/opt/ormr")'
 
 %help

@@ -1,0 +1,146 @@
+Bootstrap: localimage
+From: nemo_baseOS.sif
+
+####
+##
+## Authors:      James Harle, National Oceanography Centre <jdha@noc.ac.uk>
+## Date:         2022-02-18
+##
+## Definition file for building SETTE Singularity Containers
+##
+#####
+
+%files
+    input_files/NEMO_in /input_files/NEMO_in
+    input_files/MY_SRC.tar.gz /input_files/MY_SRC.tar.gz
+    input_files/setup_nemo /input_files/setup_nemo
+    input_files/arch/nemo/arch-singularity.fcm /input_files/arch/nemo/arch-singularity.fcm
+    input_files/arch/xios/arch-singularity.fcm /input_files/arch/xios/arch-singularity.fcm
+    input_files/arch/xios/arch-singularity.env /input_files/arch/xios/arch-singularity.env
+    input_files/arch/xios/arch-singularity.path /input_files/arch/xios/arch-singularity.path
+
+%post
+    
+    . /input_files/NEMO_in
+
+    WORK_DIR=/nemo >> $SINGULARITY_ENVIRONMENT
+    cd $WORK_DIR
+    chown nemo:nemo -R $WORK_DIR
+
+    PATH=$PATH:/opt/mpi/install/bin:/opt/hdf5/install/bin
+    LD_LIBRARY_PATH=/opt/hdf5/install/lib:$LD_LIBRARY_PATH
+   
+    cd $WORK_DIR
+
+    . /input_files/NEMO_in
+   
+    chmod u+x /input_files/setup_nemo 
+    #/input_files/setup_nemo -x /nemo -w /nemo -s /nemo/AMM7_lite -m singularity -v $NEMO_VERSION -c gnu
+
+    #cd /nemo/nemo/cfgs/NEMO/EXP00
+    
+    # Need to put in here if TOP include top namelist etc    
+    #ln -s ../../SHARED/namelist_ref namelist_ref
+    #ln -s ../../SHARED/namelist_ice_ref namelist_ice_ref
+    #ln -s ../../SHARED/grid_def_nemo.xml grid_def_nemo.xml
+    #ln -s ../../SHARED/field_def_nemo-oce.xml field_def_nemo-oce.xml
+    #ln -s ../../SHARED/field_def_nemo-ice.xml field_def_nemo-ice.xml
+    #ln -s ../../SHARED/domain_def_nemo.xml domain_def_nemo.xml
+    #ln -s ../../SHARED/axis_def_nemo.xml axis_def_nemo.xml
+   
+    #cd $WORK_DIR
+    
+    #mkdir /opt/nemo
+    #mv /nemo/nemo/cfgs/NEMO/EXP00/nemo /opt/nemo/
+
+    #mkdir /opt/xios
+    #mv /nemo/nemo/cfgs/NEMO/EXP00/xios_server.exe /opt/xios/xios
+
+    # make everything we've built be owned by `nemo` 
+    #chown -Rv nemo:nemo /opt
+    
+    # minimal possible permissions: directories executable; binaries read + executable (need to be readable to that library headers can be read!); everything else only readable for g+o
+    #chmod -Rv 644 /opt
+    #find /opt -type d -print0 | xargs -0 chmod -v 511
+    #find /opt -type f -exec file -i {} + | grep ":[^:]*binary[^:]*$" |  sed 's/^\(.*\):[^:]*$/\1/' | xargs chmod -v 555
+    
+    # The above didn't seem to work so blanket chmod for time being 
+    #chmod -Rv 755 /opt
+
+    # Clean up
+    rm -rf /var/lib/apt/lists/* /var/lib/dpkg/info/*
+
+%environment
+    
+    export LD_LIBRARY_PATH=/opt/hdf5/install/lib:$LD_LIBRARY_PATH
+
+%runscript
+    #!/bin/bash
+
+    # This runscript will take 2 arguments: program to run (NEMO or XIOS), and an 
+    # output directory. By default, the output directory will be the job id 
+    # (passed using $SLURM_JOB_ID).    
+
+    if ! [[ $1 == "nemo" || $1 == "xios" ]]    
+    then
+      echo "The program argument should be either 'nemo' or 'xios'"
+      exit 1
+    fi
+
+    results_dir=$2
+
+    if [[ -z $2 ]]
+    then
+      results_dir=$SLURM_JOB_ID
+    fi
+
+    if [[ -z $results_dir ]]
+    then
+        echo "Please supply an output directory"
+        exit 1
+    fi
+
+    if [[ ! -d $results_dir ]]
+    then
+        mkdir $results_dir
+    fi 
+
+    cd $results_dir
+
+    for file in /nemo/nemo/cfgs/NEMO/EXP00/*
+    do
+    
+        # Check if the file is already symlinked to prevent lots of spurious 
+        # error messages
+        
+        linkfile=`basename $file`
+
+        if ! [[ -L $linkfile ]]
+        then
+            ln -s $file $linkfile
+        fi
+    done
+    
+
+    if [[ $1 == 'nemo' ]]
+    then
+        /opt/nemo/nemo
+    else
+        /opt/xios/xios
+    fi
+
+%labels
+    Author jdha@noc.ac.uk
+    Author c.wood@epcc.ed.ac.uk
+    Version v0.0.1
+
+%help
+    The definition file used to build NEMO and XIOS:
+        - HDF5 (1.10.5)
+        - NetCDF C (4.7.1) and Fortran (4.5.2) libraries
+
+    This container
+
+    To build the container, run
+
+        singularity build nemo_mpich.sif Singularity.nemo_mpich_bootstrap

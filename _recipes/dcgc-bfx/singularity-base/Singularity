@@ -295,8 +295,8 @@ from: debian:buster-20201012
     cd /opt && wget -O ${PRESEQ_DIR}.tar.gz -nv https://github.com/smithlabcode/preseq/releases/download/v${PRESEQ_VERSION}/preseq-${PRESEQ_VERSION}.tar.gz && \
     tar -zxf ${PRESEQ_DIR}.tar.gz && \
     cd /opt/${PRESEQ_DIR}/ && \
-    CPPFLAGS='-I/opt/include' LDFLAGS="-L/opt/lib/" ./configure --prefix=/opt --enable-htslib && \
-    make && make install && \
+    ./configure --prefix=/opt --enable-hts CPPFLAGS='-I/opt/include' LDFLAGS='-L/opt/lib/' && \
+    make all && make install && \
     cd /opt && rm -rf ${PRESEQ_DIR}.tar.gz ${PRESEQ_DIR}
     
     ############

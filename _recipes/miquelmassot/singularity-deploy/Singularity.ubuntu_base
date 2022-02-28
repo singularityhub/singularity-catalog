@@ -1,0 +1,37 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+    Author miquel.massot-campos@soton.ac.uk
+    Version v0.0.1
+
+%help
+    This is a singularity container for laser_bathymetry
+
+%post -c /bin/bash
+    apt-get update && apt-get install -y software-properties-common
+    add-apt-repository ppa:ubuntu-toolchain-r/test
+    apt-get update && apt-get install -y --no-install-recommends \
+        cmake \
+        build-essential \
+        libboost-all-dev \
+        libopencv-dev \
+        libcgal-dev \
+        libcgal-qt5-dev \
+        libgdal-dev \
+        libopencv-dev \
+        libyaml-cpp-dev \
+        python3-pip \
+        git \
+        gcc-9 \
+        g++-9 \
+        && rm -rf /var/lib/apt/lists/*
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 20 --slave /usr/bin/g++ g++ /usr/bin/g++-9
+    mkdir /opt
+    git clone --recursive https://github.com/jbeder/yaml-cpp.git /opt/yaml-cpp \
+        && cd /opt/yaml-cpp
+    git checkout 01226975 \
+        && mkdir -p /opt/yaml-cpp/build \
+        && cd /opt/yaml-cpp/build
+    cmake -DCMAKE_BUILD_TYPE=Release .. && make install
+
