@@ -1,0 +1,41 @@
+Bootstrap: docker
+From: conda/miniconda3-centos7
+Include: yum which wget
+
+
+%environment
+	export CPC_HOME=/opt/software/CPC2-beta
+	#export PATH=$PATH:$CPC_HOME/bin:/opt/software/gffread
+	export PATH=$PATH:$CPC_HOME/bin
+
+
+%post
+
+	yum makecache fast && yum update -y
+	yum -y install git bzip2 wget which sudo vi
+	yum -y group install "Development Tools"
+
+	conda install -c conda-forge -c bioconda -y kallisto=0.44.0 diamond=0.9.34 bedtools=2.29.2 blast biopython prinseq numpy genometools-genometools gffread=0.11.6 seqkit=2.1.0
+
+	mkdir -p /opt/software
+
+	#cd /opt/software
+	#git clone https://github.com/gpertea/gclib
+	#git clone https://github.com/gpertea/gffread
+	#cd gffread
+	#mv gffread.cpp gffread.cpp.bak
+	#head -n 648 gffread.cpp.bak >> gffread.cpp
+	#tail -n +649 gffread.cpp.bak | head -n 1 | sed "s/^/\/\//" >> gffread.cpp
+	#tail -n +650 gffread.cpp.bak | head -n 6 >> gffread.cpp
+	#tail -n +656 gffread.cpp.bak | head -n 1 | sed "s/^/\/\//" >> gffread.cpp
+	#tail -n +657 gffread.cpp.bak | head -n 89 >> gffread.cpp
+	#tail -n +746 gffread.cpp.bak | head -n 1 | sed "s/^/\/\//" >> gffread.cpp
+	#tail -n +747 gffread.cpp.bak >> gffread.cpp
+	#rm gffread.cpp.bak
+  	#make release
+
+	cd /opt/software
+	mkdir -p CPC2
+	tar xvaf CPC2.tar.gz --strip-components=1 -C CPC2
+	cd CPC2
+	python3 setup.py bdist_wheel && pip3 install dist/*whl

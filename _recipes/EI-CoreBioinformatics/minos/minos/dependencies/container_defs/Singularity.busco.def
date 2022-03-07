@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: conda/miniconda3-centos7
+Include: yum which wget
+
+
+%environment
+	export BUSCO_CONFIG_FILE=/opt/software/busco/config/container_config.ini
+
+%post
+
+	yum makecache fast && yum update -y
+	yum -y install git bzip2 wget which sudo vi
+	yum -y group install "Development Tools"
+
+	conda install -c bioconda -c conda-forge -y busco=4.0.6
+	conda remove -y busco
+	mkdir /opt/software
+	cd /opt/software
+	git clone https://gitlab.com/ezlab/busco.git
+	cd busco
+	python3 setup.py install
+	python3 scripts/busco_configurator.py config/config.ini config/container_config.ini
+    cat config/container_config.ini

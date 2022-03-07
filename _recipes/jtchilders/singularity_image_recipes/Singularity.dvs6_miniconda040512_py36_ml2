@@ -1,0 +1,41 @@
+Bootstrap: shub
+From: jtchilders/singularity_image_recipes:dvs6_miniconda040512_py36_ml
+
+%post
+   # setup devtoolset6
+   scl enable devtoolset-6 bash
+   
+   # setup MPICH 
+   export PATH=$PATH:/mpich/install/bin
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mpich/install/lib
+   export PATH=/miniconda3/4.5.12/bin:$PATH
+
+   echo python binary: $(which python)
+
+   echo install cython
+   mkdir /cython
+   cd /cython
+   git clone https://github.com/cython/cython.git .
+   git checkout 0.29.6
+   CFLAGS='-I/miniconda3/4.5.12/include' CXXFLAGS='-I/miniconda3/4.5.12/include' /miniconda3/4.5.12/bin/python setup.py build
+   CFLAGS='-I/miniconda3/4.5.12/include' CXXFLAGS='-I/miniconda3/4.5.12/include' /miniconda3/4.5.12/bin/python setup.py install
+
+   echo install mpi4py
+   mkdir /mpi4py
+   cd /mpi4py
+   git clone https://github.com/mpi4py/mpi4py.git .
+   git checkout tags/3.0.1
+   CC=/mpich/install/bin/mpicc CXX=/mpich/install/bin/mpicxx python setup.py build
+   python setup.py install
+
+   # install keras and horovod
+   echo install horovod
+   pip install horovod
+
+
+%environment
+   export PATH=/miniconda3/4.5.12/bin:$PATH
+
+%runscript
+   python /test/keras_mnist.py
+

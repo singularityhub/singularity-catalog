@@ -1,0 +1,14 @@
+Bootstrap: shub
+From: jtchilders/singularity_image_recipes:py36_ml_mpi33
+
+%post
+   echo add mpich to env
+   export LD_LIBRARY_PATH=/mpich/install/lib:$LD_LIBRARY_PATH
+   export PATH=/mpich/install/bin:$PATH
+
+   echo install horovod
+
+   HOROVOD_WITH_TENSORFLOW=1 HOROVOD_WITH_PYTORCH=1 HOROVOD_WITHOUT_MXNET=1 CC=mpicc CXX=mpicxx pip3.6 install horovod
+   
+
+

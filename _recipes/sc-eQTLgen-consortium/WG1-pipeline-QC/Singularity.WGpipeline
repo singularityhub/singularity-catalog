@@ -1,5 +1,5 @@
 Bootstrap: shub
-From: shub://drneavin/SingularityBaseImages:r363_python368
+From: drneavin/SingularityBaseImages:r363_python368
 %environment
     export PATH=/opt/DoubletDetection/:/opt/popscle/bin/:/opt:/usr/games:/opt/bedtools2/bin:/opt/conda/envs/py36/bin:/opt/souporcell:/opt/souporcell/troublet/target/release:/opt/conda/bin:/opt/minimap2-2.7:/root/.cargo/bin:/opt/vartrix-v1.1.3-x86_64-linux/:/opt/freebayes/scripts:/opt/freebayes:/opt/vcflib/bin:/opt/vcflib/scripts:$PATH
     export PYTHONPATH=/opt/conda/envs/py36/lib/python3.6/site-packages/
@@ -74,7 +74,7 @@ From: shub://drneavin/SingularityBaseImages:r363_python368
         make install
 
     cd /opt
-    git clone https://github.com/sc-eQTLgen-consortium/WG1-pipeline-QC.git
+        git clone --single-branch --branch v1.0.0 https://github.com/sc-eQTLgen-consortium/WG1-pipeline-QC.git
 
     cd /opt
         wget https://github.com/samtools/samtools/releases/download/1.10/samtools-1.10.tar.bz2
@@ -146,5 +146,5 @@ From: shub://drneavin/SingularityBaseImages:r363_python368
 
 %labels 
     Authors Drew Neavin and Anne Senabouth
-	Image_version = 0.0.2
+	Image_version = 1.0.0
 

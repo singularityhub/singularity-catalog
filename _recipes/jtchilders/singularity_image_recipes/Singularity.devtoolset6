@@ -1,0 +1,11 @@
+Bootstrap: docker
+From: centos
+
+%post
+   # install development tools
+   yum update -y
+   yum install -y centos-release-scl
+   yum install -y devtoolset-6
+   yum install -y java-1.8.0-openjdk-devel.x86_64
+
+

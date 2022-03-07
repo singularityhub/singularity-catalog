@@ -1,0 +1,14 @@
+Bootstrap: shub
+From: jtchilders/singularity_image_recipes:py36
+
+%post
+   echo install development tools
+   yum update -y
+   yum groupinstall -y "Development Tools"
+   yum install -y gcc gcc-c++
+   
+   echo install ML modules
+   pip3.6 install intel-tensorflow torch torch-vision matplotlib h5py pandas scikit-learn scikit-image mxnet psutil cffi cloudpickle pycparser mkl
+   
+
+

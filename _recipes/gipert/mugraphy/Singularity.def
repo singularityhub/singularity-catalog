@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: gipert/remage-base:latest
+
+%files
+    . /opt/src/mugraphy
+
+%post
+    cd /opt/src/mugraphy
+    mkdir -p build && cd build && rm -rf *
+    cmake .. -DCMAKE_INSTALL_PREFIX=/opt
+    make -j"$(nproc)" install
+    cd /opt && rm -r /opt/src
+
+%environment
+    export PATH="$PATH:/opt/bin"
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/opt/lib"
+
+%runscript
+    mugraphy

@@ -1,20 +1,22 @@
 Bootstrap:  docker
-From: ubuntu:18.04
+From: ubuntu:20.04
 
-%runscript
-  /usr/local/jmol-14.29.31/jmol.sh $@
 
 %setup
 
 %files
-  Jmol-14.29.31-binary.tar.gz /
+  Jmol-14.32.27-binary.tar.gz /
 
 %environment
-  export JMOL_HOME=/usr/local/jmol-14.29.31
+  export VERSION=14.32.27
+  export JMOL_HOME=/usr/local/jmol-${VERSION}
 
 %post
+  export VERSION=14.32.27
   ls -l /
-  tar -C /usr/local -xvf /Jmol-14.29.31-binary.tar.gz
-  rm /Jmol-14.29.31-binary.tar.gz
-  apt-get update && apt-get install -y gawk povray openjdk-11-jre
+  tar -C /usr/local -xvf /Jmol-${VERSION}-binary.tar.gz
+  rm /Jmol-${VERSION}-binary.tar.gz
+  apt-get update && apt-get install -y gawk povray openjdk-17-jre
 
+%runscript
+  /usr/local/jmol-14.32.27/jmol.sh "$@"

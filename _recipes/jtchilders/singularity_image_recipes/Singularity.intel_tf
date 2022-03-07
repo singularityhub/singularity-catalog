@@ -1,0 +1,43 @@
+Bootstrap: docker
+From: intelaipg/intel-optimized-tensorflow:latest-devel-mkl-py3
+
+
+%post
+
+   MPICH_VERSION=3.3
+   echo installing mpich $MPICH_VERSION
+   mkdir /mpich
+   cd /mpich
+   wget http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz
+   tar xf mpich-$MPICH_VERSION.tar.gz --strip-components=1
+   ./configure --prefix=/mpich/install --disable-wrapper-rpath --disable-fortran
+   make -j 4 install
+   
+   # setup MPICH 
+   export PATH=$PATH:/mpich/install/bin
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mpich/install/lib
+
+    echo install cython
+   mkdir /cython
+   cd /cython
+   git clone https://github.com/cython/cython.git .
+   git checkout 0.29.6
+   CFLAGS='-I/usr/include' CXXFLAGS='-I/usr/include' python setup.py build
+   CFLAGS='-I/usr/include' CXXFLAGS='-I/usr/include' python setup.py install
+
+   echo install mpi4py
+   mkdir /mpi4py
+   cd /mpi4py
+   git clone https://github.com/mpi4py/mpi4py.git .
+   git checkout tags/3.0.1
+   CC=/mpich/install/bin/mpicc CXX=/mpich/install/bin/mpicxx python setup.py build
+   python setup.py install
+   
+
+
+   # install keras and horovod
+   echo install horovod
+   HOROVOD_WITHOUT_PYTORCH=1 HOROVOD_WITHOUT_MXNET=1 HOROVOD_WITH_TENSORFLOW=1 CC=/mpich/install/bin/mpicc CXX=/mpich/install/bin/mpicxx pip install horovod 
+
+
+

@@ -1,0 +1,41 @@
+Bootstrap: shub
+From: jtchilders/singularity_image_recipes:dvs6_py36_mpi33
+
+%setup
+   # copy test script to container
+   mkdir $SINGULARITY_ROOTFS/test
+   cp example_codes/keras_mnist.py $SINGULARITY_ROOTFS/test
+   cp example_codes/mnist.npz $SINGULARITY_ROOTFS/test
+   git clone https://github.com/horovod/horovod.git $SINGULARITY_ROOTFS/horovod --recursive
+   cd $SINGULARITY_ROOTFS/horovod
+   git checkout tags/v0.16.1
+
+%post
+   yum install -y wget
+   echo setting up devtoolset6
+   # setup devtoolset6
+   scl enable devtoolset-6 bash
+   
+   # add mpich to environment
+   export PATH=$PATH:/mpich/install/bin
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mpich/install/lib
+   
+   echo install ML modules
+   pip3.6 install tensorflow torch torch-vision matplotlib h5py pandas scikit-learn scikit-image mxnet psutil cffi cloudpickle pycparser
+   
+   cd /horovod
+   
+   echo build horovod
+   HOROVOD_WITH_TENSORFLOW=1 HOROVOD_WITH_PYTORCH=1 CC=/mpich/install/bin/mpicc CXX=/mpich/install/bin/mpicxx python3.6 setup.py build
+   echo install horovod
+   HOROVOD_WITH_TENSORFLOW=1 HOROVOD_WITH_PYTORCH=1 CC=/mpich/install/bin/mpicc CXX=/mpich/install/bin/mpicxx python3.6 setup.py install
+   
+   echo print ldd
+   ldd /horovod/build/lib.linux-x86_64-3.6/horovod/tensorflow/mpi_lib.cpython-36m-x86_64-linux-gnu.so
+
+   
+
+%runscript
+   python3.6 /test/keras_mnist.py
+
+

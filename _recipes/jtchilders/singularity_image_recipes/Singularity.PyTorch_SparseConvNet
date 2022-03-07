@@ -1,0 +1,30 @@
+Bootstrap: shub
+From: jtchilders/singularity_image_recipes:dvs6_miniconda040512_py36_ml2
+
+%post
+   # setup devtoolset6
+   scl enable devtoolset-6 bash
+
+   # setup MPICH 
+   export PATH=$PATH:/mpich/install/bin
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mpich/install/lib
+   export PATH=/miniconda3/4.5.12/bin:$PATH
+
+   echo python binary: $(which python)
+   
+   echo install SparseConvNet dependencies
+   conda install -y -c bioconda google-sparsehash
+   conda install -y -c anaconda pillow
+
+   mkdir /SparseConvNet
+   cd /SparseConvNet
+   export INSTALL_PREFIX=/miniconda3/4.5.12
+   git clone https://github.com/facebookresearch/SparseConvNet.git  .
+   CFLAGS='-march=knl -O3' CXXFLAGS='-march=knl -O3' python setup.py develop
+   python setup.py install
+
+
+%environment
+   export PATH=/miniconda3/4.5.12/bin:$PATH
+
+

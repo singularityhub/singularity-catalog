@@ -1,0 +1,8 @@
+Bootstrap:docker  
+From: bensonyang88/tensorflow-rdma:v6
+
+%post  
+echo "This section happens once after bootstrap to build the image." 
+
+#set enviroment
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH

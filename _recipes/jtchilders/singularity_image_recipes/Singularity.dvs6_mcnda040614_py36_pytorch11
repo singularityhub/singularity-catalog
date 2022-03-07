@@ -1,0 +1,85 @@
+Bootstrap: shub
+From: jtchilders/singularity_image_recipes:dvs6_mpich33
+
+%post
+   # install development tools
+   yum update -y
+   yum install -y wget bzip2 which make libfabric git
+   
+   # setup devtoolset6
+   scl enable devtoolset-6 bash
+
+   #####
+   #  miniconda install
+   ############
+   
+   # change this if you want different versions
+   CONDAVER=3
+   VERSION=4.6.14
+   BASE_DIR=/miniconda$CONDAVER
+   PREFIX_PATH=$BASE_DIR/$VERSION
+   DOWNLOAD_PATH=$BASE_DIR/DOWNLOADS
+
+   # make install area
+   mkdir -p $PREFIX_PATH
+   mkdir -p $DOWNLOAD_PATH
+
+   MINICONDA_INSTALL_FILE=Miniconda$CONDAVER-$VERSION-Linux-x86_64.sh
+
+   echo Downloading miniconda installer
+   wget https://repo.continuum.io/miniconda/$MINICONDA_INSTALL_FILE -P $DOWNLOAD_PATH
+      
+   chmod +x $DOWNLOAD_PATH/Miniconda$CONDAVER-$VERSION-Linux-x86_64.sh
+
+   echo Installing Miniconda
+   $DOWNLOAD_PATH/Miniconda$CONDAVER-$VERSION-Linux-x86_64.sh -b -p $PREFIX_PATH -u
+
+   # add conda to environment
+   export PATH=$PREFIX_PATH/bin:$PATH
+
+   echo moving into $PREFIX_PATH
+   cd $PREFIX_PATH
+
+   echo CONDA BINARY: $(which conda)
+   echo CONDA VERSION: $(conda --version)
+   
+   echo Setting intel channel to the primary
+   conda config --add channels intel
+
+   echo install ML support libraries
+   conda install -y keras pandas h5py matplotlib scikit-learn scikit-image
+   pip install tensorboardX
+   
+   echo install pytorch
+   conda install -y pytorch-cpu torchvision-cpu -c pytorch
+      
+   # setup MPICH 
+   export PATH=$PATH:/mpich/install/bin
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mpich/install/lib
+
+   echo install cython
+   mkdir /cython
+   cd /cython
+   git clone https://github.com/cython/cython.git .
+   git checkout 0.29.6
+   CFLAGS='-I/usr/include' CXXFLAGS='-I/usr/include' python setup.py build
+   CFLAGS='-I/usr/include' CXXFLAGS='-I/usr/include' python setup.py install
+
+   echo install mpi4py
+   mkdir /mpi4py
+   cd /mpi4py
+   git clone https://github.com/mpi4py/mpi4py.git .
+   git checkout tags/3.0.1
+   CC=/mpich/install/bin/mpicc CXX=/mpich/install/bin/mpicxx python setup.py build
+   python setup.py install
+
+   # install keras and horovod
+   echo install horovod
+   HOROVOD_WITH_PYTORCH=1 HOROVOD_WITHOUT_MXNET=1 HOROVOD_WITHOUT_TENSORFLOW=1 CC=/mpich/install/bin/mpicc CXX=/mpich/install/bin/mpicxx pip install --no-cache-dir horovod
+
+%environment
+   export PATH=/miniconda3/4.6.14/bin:$PATH
+
+%runscript
+   python /test/keras_mnist.py
+

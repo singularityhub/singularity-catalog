@@ -1,0 +1,56 @@
+Bootstrap: docker
+From: nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
+
+%environment
+	SHELL=/bin/bash
+	
+	#Add nvidia driver paths
+	PATH="/nvbin:$PATH"
+	LD_LIBRARY_PATH="/nvlib;$LD_LIBRARY_PATH"
+
+	#Add CUDA paths
+	CPATH="/usr/local/cuda/include:$CPATH"
+	PATH="/usr/local/cuda/bin:$PATH"
+	LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+	CUDA_HOME="/usr/local/cuda"
+
+	#Add Bazel Path
+	export PATH=/home/bazel/bin:$PATH
+	
+
+%post
+	#Post setup script
+
+	#Load environment variables
+	. /environment
+
+	#Default mount paths
+	mkdir /scratch /data /shared /fastdata
+
+	#Nvidia Library mount paths
+	mkdir /nvlib /nvbin
+
+#Updating and getting required packages
+  apt-get update
+  apt-get install -y wget git vim
+  apt-get install -y build-essential
+  apt-get install -y python3
+
+#Install Bazel
+   cd /home
+   apt-get update
+   apt-get install -y pkg-config zip g++ zlib1g-dev unzip python
+   wget https://github.com/bazelbuild/bazel/releases/download/0.24.0/bazel-0.24.0-installer-linux-x86_64.sh
+   chmod 777 bazel-0.24.0-installer-linux-x86_64.sh
+   mkdir -p /home/bazel
+   ./bazel-0.24.0-installer-linux-x86_64.sh --prefix=/home/bazel
+   touch bazel.sh
+   echo "#!/bin/bash" > bazel.sh
+   echo "source /home/bazel/lib/bazel/bin/bazel-complete.bash" >> bazel.sh
+   sh bazel.sh
+   #source /home/bazel/lib/bazel/bin/bazel-complete.bash
+
+#Install Tensorflow
+
+
+

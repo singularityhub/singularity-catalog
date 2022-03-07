@@ -12,7 +12,7 @@ From: nemo_baseOS.sif
 
 %files
     input_files/NEMO_in /input_files/NEMO_in
-    input_files/MY_SRC.tar.gz /input_files/MY_SRC.tar.gz
+    input_files/param.cfg /input_files/param.cfg
     input_files/setup_nemo /input_files/setup_nemo
     input_files/arch/nemo/arch-singularity.fcm /input_files/arch/nemo/arch-singularity.fcm
     input_files/arch/xios/arch-singularity.fcm /input_files/arch/xios/arch-singularity.fcm
@@ -22,6 +22,7 @@ From: nemo_baseOS.sif
 %post
     
     . /input_files/NEMO_in
+    NEMO_VERSION=4.0.4
 
     WORK_DIR=/nemo >> $SINGULARITY_ENVIRONMENT
     cd $WORK_DIR
@@ -35,29 +36,18 @@ From: nemo_baseOS.sif
     . /input_files/NEMO_in
    
     chmod u+x /input_files/setup_nemo 
-    #/input_files/setup_nemo -x /nemo -w /nemo -s /nemo/AMM7_lite -m singularity -v $NEMO_VERSION -c gnu
+    /input_files/setup_nemo -x /nemo -w /nemo -s /nemo/AMM7_lite -m singularity -v $NEMO_VERSION -c gnu
 
-    #cd /nemo/nemo/cfgs/NEMO/EXP00
-    
-    # Need to put in here if TOP include top namelist etc    
-    #ln -s ../../SHARED/namelist_ref namelist_ref
-    #ln -s ../../SHARED/namelist_ice_ref namelist_ice_ref
-    #ln -s ../../SHARED/grid_def_nemo.xml grid_def_nemo.xml
-    #ln -s ../../SHARED/field_def_nemo-oce.xml field_def_nemo-oce.xml
-    #ln -s ../../SHARED/field_def_nemo-ice.xml field_def_nemo-ice.xml
-    #ln -s ../../SHARED/domain_def_nemo.xml domain_def_nemo.xml
-    #ln -s ../../SHARED/axis_def_nemo.xml axis_def_nemo.xml
-   
-    #cd $WORK_DIR
+    cd $WORK_DIR
     
     #mkdir /opt/nemo
     #mv /nemo/nemo/cfgs/NEMO/EXP00/nemo /opt/nemo/
 
-    #mkdir /opt/xios
-    #mv /nemo/nemo/cfgs/NEMO/EXP00/xios_server.exe /opt/xios/xios
+    mkdir /opt/xios
+    mv /nemo/xios/bin/xios_server.exe /opt/xios/xios
 
     # make everything we've built be owned by `nemo` 
-    #chown -Rv nemo:nemo /opt
+    chown -Rv nemo:nemo /opt
     
     # minimal possible permissions: directories executable; binaries read + executable (need to be readable to that library headers can be read!); everything else only readable for g+o
     #chmod -Rv 644 /opt
@@ -65,7 +55,7 @@ From: nemo_baseOS.sif
     #find /opt -type f -exec file -i {} + | grep ":[^:]*binary[^:]*$" |  sed 's/^\(.*\):[^:]*$/\1/' | xargs chmod -v 555
     
     # The above didn't seem to work so blanket chmod for time being 
-    #chmod -Rv 755 /opt
+    chmod -Rv 755 /opt
 
     # Clean up
     rm -rf /var/lib/apt/lists/* /var/lib/dpkg/info/*
