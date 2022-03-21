@@ -1,0 +1,117 @@
+BootStrap: docker
+From: ubuntu:20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm -f /bin/sh && ln -s /bin/bash /bin/sh
+    rm -f /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
+    /bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        locales \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+# Installing vglrun and TurboVNC
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        mesa-utils \
+        pyqt5-dev \
+        python3-pip \
+        python3-pyqt5 \
+        python3-tk \
+        ubuntu-desktop \
+        vim
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/turbovnc_2.2.5_amd64.deb && dpkg -i turbovnc_2.2.5_amd64.deb && rm turbovnc_2.2.5_amd64.deb
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/virtualgl_2.6.4_amd64.deb && dpkg -i virtualgl_2.6.4_amd64.deb && rm virtualgl_2.6.4_amd64.deb
+    apt update
+    apt -y upgrade
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        autoconf \
+        autogen \
+        doxygen \
+        freeglut3-dev \
+        libglu1-mesa-dev \
+        mesa-common-dev
+    rm -rf /var/lib/apt/lists/*
+
+# GNU compiler
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++-10 \
+        gcc-10 \
+        gfortran-10
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    update-alternatives --install /usr/bin/g++ g++ $(which g++-10) 30
+    update-alternatives --install /usr/bin/gcc gcc $(which gcc-10) 30
+    update-alternatives --install /usr/bin/gcov gcov $(which gcov-10) 30
+    update-alternatives --install /usr/bin/gfortran gfortran $(which gfortran-10) 30
+
+# Boost version 1.74.0
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bzip2 \
+        libbz2-dev \
+        tar \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://dl.bintray.com/boostorg/release/1.74.0/source/boost_1_74_0.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/boost_1_74_0.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/boost_1_74_0 && ./bootstrap.sh --prefix=/usr/local/boost --without-libraries=python
+    ./b2 -j$(nproc) -q install
+    rm -rf /var/tmp/boost_1_74_0.tar.bz2 /var/tmp/boost_1_74_0
+%environment
+    export LD_LIBRARY_PATH=/usr/local/boost/lib:$LD_LIBRARY_PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/boost/lib:$LD_LIBRARY_PATH
+
+# https://github.com/coin3d/coin
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --recursive https://github.com/coin3d/coin coin && cd -
+    mkdir -p /var/tmp/coin/build && cd /var/tmp/coin/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCOIN_BUILD_DOCUMENTATION=OFF -DCMAKE_INSTALL_PREFIX=/usr/local/coin3d /var/tmp/coin
+    cmake --build /var/tmp/coin/build --target all -- -j$(nproc)
+    cmake --build /var/tmp/coin/build --target install -- -j$(nproc)
+    cd /usr/local
+    cd cpack.d
+    cpack --config debian.cmake
+    rm -rf /var/tmp/coin

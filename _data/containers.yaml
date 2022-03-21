@@ -1,5 +1,5 @@
 bases:
-- count: 1082
+- count: 1085
   name: ubuntu
 - count: 265
   name: nvidia/cuda
@@ -69,6 +69,8 @@ bases:
   name: rocker/r-ver
 - count: 14
   name: r-base
+- count: 13
+  name: nvcr.io/nvidia/cuda
 - count: 12
   name: khanlab/heudiconv
 - count: 12
@@ -83,8 +85,6 @@ bases:
   name: deeplearnphysics/larcv2
 - count: 11
   name: conda/miniconda2
-- count: 11
-  name: nvcr.io/nvidia/cuda
 - count: 10
   name: images/common.simg
 - count: 10
@@ -497,6 +497,8 @@ bases:
   name: slaclab/fah
 - count: 2
   name: build/spades_base.sif
+- count: 2
+  name: kulhanek/target-driven-visual-navigation
 - count: 2
   name: larbys/geant4
 - count: 2
@@ -1192,8 +1194,6 @@ bases:
 - count: 1
   name: kulhanek/deep-rl-pytorch
 - count: 1
-  name: kulhanek/target-driven-visual-navigation
-- count: 1
   name: cfusting/conditional-growth
 - count: 1
   name: bioperl/bioperl
@@ -1276,7 +1276,7 @@ bases:
 - count: 1
   name: recount-pump
 bootstraps:
-- count: 3461
+- count: 3467
   name: docker
 - count: 334
   name: debootstrap
@@ -1946,8 +1946,8 @@ orgs:
 - count: 1
   name: buisciii
 tags:
-  latest: 340
-  other: 3170
+  latest: 341
+  other: 3175
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -2624,7 +2624,7 @@ versions:
   kulhanek/deep-rl-pytorch:
     latest: 1
   kulhanek/target-driven-visual-navigation:
-    latest: 1
+    latest: 2
   larbys/geant4:
     10.02.p03: 1
     10.6.p03: 1
@@ -2808,8 +2808,9 @@ versions:
   nvcr.io/nvidia/cuda:
     10.1-devel-ubuntu16.04: 1
     10.2-devel-ubuntu18.04: 3
-    11.0-devel-ubuntu20.04: 6
+    11.0-devel-ubuntu20.04: 7
     11.0.3-devel-ubuntu20.04: 1
+    11.3.0-runtime-ubuntu20.04: 1
   nvcr.io/nvidia/cuda-arm64:
     11.2.2-devel-ubuntu20.04: 1
   nvcr.io/nvidia/deepstream:
@@ -3541,7 +3542,7 @@ versions:
     '18.04 ': 4
     '19.04': 13
     '19.10': 4
-    '20.04': 214
+    '20.04': 217
     '20.10': 3
     '21.04': 6
     '21.10': 2
