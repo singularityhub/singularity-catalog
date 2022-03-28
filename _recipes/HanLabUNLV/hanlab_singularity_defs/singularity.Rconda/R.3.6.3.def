@@ -29,7 +29,7 @@ Include: yum
     R.3.6.3.list
 
 %runscript
-    exec /bin/bash "$@"
+    exec /bin/bash --noprofile  "$@"
 
 %startscript
     python --version
@@ -84,13 +84,10 @@ Include: yum
     done
 
     # create custom bash script to set env
-cat > /.singularity.d/env/99-custom.sh <<EOF
-#!/bin/bash
-SINGULARITY_SHELL=/bin/bash
-## Activate conda environment
-source /opt/conda/etc/profile.d/conda.sh
-conda activate R.3.6.3
-EOF
+    echo "## Activate conda environment" >> $SINGULARITY_ENVIRONMENT
+    echo "source /opt/conda/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
+    echo "conda activate R.3.6.3" >> $SINGULARITY_ENVIRONMENT
+
 
     # create condarc
 cat > /opt/conda/.condarc <<EOF
@@ -98,6 +95,8 @@ channels:
   - conda-forge
   - defaults
   - bioconda
+envs_dirs:
+  - /opt/conda/envs
 EOF
 
 

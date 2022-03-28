@@ -32,7 +32,7 @@ Include: yum
 %files 
 
 %runscript
-    exec R "$@"
+    exec /bin/bash --noprofile  "$@"
 
 %startscript
     R --version
@@ -97,13 +97,16 @@ Include: yum
     R --slave -e 'BiocManager::install()'
     R --slave -e 'BiocManager::install("tximport",ask=FALSE)'
     R --slave -e 'BiocManager::install("biomaRt",ask=FALSE)'
+    R --slave -e 'BiocManager::install("SplicingGraphs",ask=FALSE)'
     R --slave -e 'BiocManager::install("DESeq2",ask=FALSE)'
+    R --slave -e 'BiocManager::install("DEXSeq",ask=FALSE)'
     R --slave -e 'BiocManager::install("edgeR",ask=FALSE)'
     R --slave -e 'BiocManager::install("limma",ask=FALSE)'
     R --slave -e 'BiocManager::install("sva",ask=FALSE)'
     R --slave -e 'BiocManager::install("minfi",ask=FALSE)'
     R --slave -e 'BiocManager::install("qvalue",ask=FALSE)'
     R --slave -e 'BiocManager::install("WGCNA",ask=FALSE)'
+    R --slave -e 'devtools::install_github("areyesq89/DEXSeqAlt")'
 
 
 
@@ -115,12 +118,9 @@ Include: yum
     done
 
     # create custom bash script to set env
-cat > /.singularity.d/env/99-custom.sh <<EOF
-#!/bin/bash
-SINGULARITY_SHELL=/bin/bash
-export PATH=/opt/R/4.0.2/bin/:$PATH
-mkdir -p ~/R/singularity-library/4.0.2/Bioc
-export R_LIBS_USER=~/R/singularity-library/4.0.2/Bioc
-EOF
+    echo "## setup R env" >> $SINGULARITY_ENVIRONMENT
+    echo "export PATH=/opt/R/4.0.2/bin/:$PATH" >> $SINGULARITY_ENVIRONMENT
+    echo "mkdir -p ~/R/singularity-library/4.0.2/Bioc" >> $SINGULARITY_ENVIRONMENT
+    echo "export R_LIBS_USER=~/R/singularity-library/4.0.2/Bioc" >> $SINGULARITY_ENVIRONMENT
 
 %test

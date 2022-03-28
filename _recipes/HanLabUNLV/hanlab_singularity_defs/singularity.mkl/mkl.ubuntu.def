@@ -22,7 +22,7 @@ exec R "$@"
 exec Rscript "$@"
 
 %runscript
-exec /bin/bash "$@"
+exec /bin/bash --noprofile  "$@"
 
 %post
   apt-get update

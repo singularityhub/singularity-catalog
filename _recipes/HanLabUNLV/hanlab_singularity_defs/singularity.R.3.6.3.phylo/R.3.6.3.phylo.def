@@ -30,9 +30,10 @@ Include: yum
     alias vi='vim'
 
 %files 
+    mvMORPH.tgz /mvMORPH.tgz
 
 %runscript
-    exec R "$@"
+    exec /bin/bash --noprofile  "$@"
 
 %startscript
     R --version
@@ -92,7 +93,6 @@ Include: yum
     R --slave -e 'install.packages("dplyr",repos="https://cran.rstudio.com/")'
     R --slave -e 'install.packages("tidyverse",repos="https://cran.rstudio.com/")'
     R --slave -e 'install.packages("optimr",repos="https://cran.rstudio.com/")'
-    R --slave -e 'install.packages("optimx", repos="http://R-Forge.R-project.org")'
     R --slave -e 'install.packages("ape",repos="https://cran.rstudio.com/")'
     R --slave -e 'install.packages("phangorn",repos="https://cran.rstudio.com/")'
     yum install -y ImageMagick-c++-devel libssh2-devel
@@ -101,14 +101,13 @@ Include: yum
     R --slave -e 'install.packages("geiger",repos="https://cran.rstudio.com/")'
     R --slave -e 'install.packages("ouch",repos="https://cran.rstudio.com/")'
     R --slave -e 'install.packages("pmc",repos="https://cran.rstudio.com/")'
-    R --slave -e 'devtools::install_github("lamho86/phylolm")'
-    R --slave -e 'devtools::install_github("JClavel/mvMORPH")'
-    R --slave -e 'install.packages("OUwie",repos="https://cran.rstudio.com/")'
+    #R --slave -e 'devtools::install_github("JClavel/mvMORPH")'
+    R --slave -e 'install.packages("car",repos="https://cran.rstudio.com/")'
+    R --slave -e 'install.packages("mvMORPH.tgz", repos=NULL, type="source")'
 
     # installing from bioc
-    R --slave -e 'install.packages("BiocManager",repos="https://cran.rstudio.com/")'
-    R --slave -e 'BiocManager::install()'
-    #R --slave -e 'BiocManager::install("WGCNA",ask=FALSE)'
+    #R --slave -e 'install.packages("BiocManager",repos="https://cran.rstudio.com/")'
+    #R --slave -e 'BiocManager::install()'
 
 
 
@@ -120,12 +119,10 @@ Include: yum
     done
 
     # create custom bash script to set env
-cat > /.singularity.d/env/99-custom.sh <<EOF
-#!/bin/bash
-SINGULARITY_SHELL=/bin/bash
-mkdir -p ~/R/singularity-library/3.6.3/phylo
-export PATH=/opt/R/3.6.3/bin:$PATH
-export R_LIBS_USER=~/R/singularity-library/3.6.3/phylo
-EOF
+    echo "## setup R env" >> $SINGULARITY_ENVIRONMENT
+    echo "mkdir -p ~/R/singularity-library/3.6.3/phylo" >> $SINGULARITY_ENVIRONMENT
+    echo "export PATH=/opt/R/3.6.3/bin:$PATH" >> $SINGULARITY_ENVIRONMENT
+    echo "export R_LIBS_USER=~/R/singularity-library/3.6.3/phylo" >> $SINGULARITY_ENVIRONMENT
+
 
 %test
