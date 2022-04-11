@@ -1,0 +1,89 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804-cuda9
+
+%files
+    protomo-2.4.2.tar.bz2 /tmp/
+    i3-0.9.8.tar.bz2 /tmp/
+
+%environment
+    export CONDA_SHLVL=1
+    export CONDA_EXE=/opt/eman/bin/conda
+    export CONDA_PREFIX=/opt/eman
+    export CONDA_PYTHON_EXE=/opt/eman/bin/python
+    #export CONDA_PROMPT_MODIFIER=(base)
+    export CONDA_DEFAULT_ENV=base
+    export EMAN2DIR=/opt/eman
+    export I3ROOT=/opt/protomo-2.4.2
+    export I3LIB=$I3ROOT/lib/linux/x86-64
+    export I3DEPLIB=/usr/lib/x86_64-linux-gnu/
+    export I3LIBPATH=$I3LIB:$I3DEPLIB:$EMAN2DIR/lib
+    export I3EXEPATH=$I3ROOT/bin/linux/x86-64:${I3ROOT}/bin:$EMAN2DIR/bin:/usr/bin:/bin
+    export I3PYPATH=$I3LIB:$EMAN2DIR/lib
+    export LD_LIBRARY_PATH=$I3LIBPATH:/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+    export PYTHONPATH=$I3PYPATH:$PYTHONPATH
+    export PATH=$I3EXEPATH:$PATH
+
+%post -c /bin/bash
+    echo "================================"
+    echo "Installing Protomo 2.4.2 deps   "
+    echo "================================"
+    mkdir -p /opt/
+    apt -y update
+    apt -y install sfftw-dev libgtk-3-0 libgtkglext1 libgtkglext1-dev gv plotutils libminpack1 libcanberra-gtk-module libsm6 libxext6 libxrender-dev
+    #apt -y install sfftw-dev libgtk-3-0 libgtkglext1 libgtkglext1-dev gv plotutils libminpack1 libcanberra-gtk-module libsm6 libxext6 libxrender-dev strace ltrace
+
+    echo "================================="
+    echo " Installing libtiff4 for Protomo "
+    echo "================================="
+    cd /tmp/
+    wget http://old-releases.ubuntu.com/ubuntu/pool/universe/t/tiff3/libtiff4_3.9.7-2ubuntu1_amd64.deb
+    dpkg -i libtiff4_3.9.7-2ubuntu1_amd64.deb
+
+    # *** dbjfft fails to build correctly, not mandatory for Protomo. Unable to resolve ***
+    #cd /tmp/
+    #wget http://cr.yp.to/djbfft/djbfft-0.76.tar.gz
+    #tar zxvf djbfft-0.76.tar.gz
+    #mv djbfft-0.76/ /opt/
+    #cd /opt/djbfft-0.76/
+    #make
+    #make setup check
+    #./accuracy
+    #./accuracy2
+    #./speed
+
+    echo "================================"
+    echo "Downloading EMAN 2.3           "
+    echo "================================"
+    cd /tmp
+    #wget --no-check-certificate https://cryoem.bcm.edu/cryoem/static/software/release-2.3/eman2.3.linux64.sh
+    wget https://cryoem.bcm.edu/cryoem/static/software/release-2.3/eman2.3.linux64.sh
+    chmod u+x eman2.3.linux64.sh
+
+    echo "================================"
+    echo "Installing EMAN 2.3             "
+    echo "================================"
+    export PATH=/opt/eman/bin:$PATH
+    echo "/opt/eman/" | bash eman2.3.linux64.sh
+
+    # ** Don't install, protomo errors with Sparx, using python instead. Unable to resolve.
+    #pip install sparx
+
+    echo "========================="
+    echo "Installing Protomo 2.4.2 "
+    echo "========================="
+    cd /tmp/
+    tar xjf protomo-2.4.2.tar.bz2 -C /opt/
+    cd /opt/protomo-2.4.2
+    chown -R root:root /opt/protomo-2.4.2
+    chmod -R g+r,o+r /opt/protomo-2.4.2
+
+    echo "================================"
+    echo "Installing i3-0.9.8             "
+    echo "================================"
+    cd /tmp/
+    tar xjf i3-0.9.8.tar.bz2 -C /opt/
+    chown -R root:root /opt/i3-0.9.8
+    chmod -R g+r,o+r /opt/i3-0.9.8
+
+%runscript
+    $*

@@ -1,0 +1,46 @@
+#Bootstrap: shub
+#From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804-cuda10.1
+Bootstrap: localimage
+From:      ../ubuntu-base-image/1804-cuda10.1.sif
+
+
+%labels
+MAINTAINER jay.vanschyndel@monash.edu
+HARDWARE   gpu
+
+%environment
+    export FSLDIR=/opt/fsl
+    export FSLBIN=/opt/fsl/bin
+    export FSLOUTPUTTYPE=NIFTI_GZ
+    export FSLMULTIFILEQUIT=TRUE
+    export FSLTCLSH=/opt/fsl/bin/fsltclsh
+    export FSLWISH=/opt/fsl/bin/fslwish
+    export FSLCONFDIR=/opt/fsl/config
+    export FSLMACHTYPE=linux_64-gcc7.5.0
+    export PATH=/opt/MRtrix3Tissue/bin:/opt/fsl/bin:$PATH
+
+%files
+    fslinstaller.py
+
+%post
+    echo "==============================="
+    echo " Installing dependencies       "
+    echo "==============================="
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    apt -y update && apt -y upgrade
+    apt -y install git g++ python libeigen3-dev zlib1g-dev libqt4-opengl-dev libgl1-mesa-dev libfftw3-dev libtiff5-dev libpng-dev
+
+    #Installing FSL 6
+    python fslinstaller.py --dest=/opt/fsl --fslbuild=6.0.4
+
+    cd /opt
+    git clone https://github.com/3Tissue/MRtrix3Tissue.git MRtrix3Tissue
+    cd MRtrix3Tissue
+    git checkout 3Tissue_v5.2.9
+    ./configure
+    ./build
+
+%runscript
+    $*

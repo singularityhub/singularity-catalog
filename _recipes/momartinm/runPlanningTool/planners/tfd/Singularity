@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: ubuntu:latest
+
+%setup
+REPO_ROOT=`dirname $SINGULARITY_BUILDDEF`
+cp -r $REPO_ROOT/ $SINGULARITY_ROOTFS/planner
+
+%post
+apt-get update
+apt-get -y install g++ make flex bison cmake g++-multilib libc6-i386 python
+cd /planner/source
+./build
+
+%runscript
+DOMAINFILE=$1
+PROBLEMFILE=$2
+PLANFILE=$3
+/planner/source/downward/plan $DOMAINFILE $PROBLEMFILE $PLANFILE
+
+%labels
+Name        Temporal Fast Downward
+Description 2014 version of TFD
+Authors     Gabriele Röger, Patrick Eyerich, Christian Dornhege, and Robert Mattmüller.
+SupportsDerivedPredicates yes
+SupportsQuantifiedPreconditions yes
+SupportsQuantifiedEffects yes

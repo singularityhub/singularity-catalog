@@ -1,0 +1,26 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804-cuda10.1
+
+%labels
+MAINTAINER jay.vanschyndel@monash.edu
+HARDWARE   gpu
+
+%environment
+    export PATH=/opt/UCSF/Chimera64-1.10.2/bin:$PATH
+
+%files
+    script-1.10.2.exp /tmp
+    chimera-1.10.2-linux_x86_64.bin /tmp
+
+%post
+    echo "==========================="
+    echo " Installing Chimera 1.10.2 "
+    echo "==========================="
+    apt install -y expect
+ 
+    cd /tmp
+    expect script-1.10.2.exp
+    
+
+%runscript
+    $*

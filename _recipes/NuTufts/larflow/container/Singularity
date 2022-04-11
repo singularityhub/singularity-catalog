@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: twongjirad/larflow:latest
+
+%post
+  echo "LARFLOW POST"
+  cd /usr/local/
+  git clone https://github.com/NuTufts/larflow.git
+  cd larflow
+  git checkout cilantro_test
+  bash -c "source compile_on_tuftsgrid.sh /usr/local/larflow"
+  cp /tmp/uboone_photon_library_v6_70kV_EnhancedExtraTPCVis.root /usr/local/larflow/larlite/UserDev/SelectionTool/OpT0Finder/PhotonLibrary/dat/
+  mkdir -p /cluster/home
+  mkdir -p /cluster/kappa
+  mkdir -p /cluster/shared
+  mkdir -p /opt/shared

@@ -1,0 +1,36 @@
+Bootstrap: debootstrap
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+OSVersion:  xenial
+Include: apt wget sudo vim build-essential git sudo software-properties-common
+
+%labels
+MAINTAINER alex.joos@uwa.edu.au
+HARDWARE ?
+
+%post
+    echo "*********************************************************"
+    echo "Setup and display environment"
+    echo "*********************************************************"
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    echo $LC_ALL
+    echo $LANGUAGE
+    echo $DEBIAN_FRONTEND
+    echo "*********************************************************"
+    echo "Installing Octave"
+    echo "*********************************************************"
+    add-apt-repository universe
+    apt update
+    apt -y install octave
+
+    # installling some additional packages
+    apt -y install libgdcm2.6
+    apt -y install octave-data-smoothing octave-dataframe octave-general octave-htmldoc octave-image octave-info octave-io octave-linear-algebra octave-ltfat-common octave-missing-functions octave-mpi octave-nan octave-nlopt octave-odepkg octave-optim octave-optiminterp octave-parallel octave-signal octave-splines octave-statistics octave-strings octave-struct octave-symbolic octave-tsa
+    
+    echo "*********************************************************"
+    echo "All Done"
+    echo "*********************************************************"
+
+%runscript
+    $*

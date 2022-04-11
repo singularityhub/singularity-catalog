@@ -1,0 +1,21 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804
+
+%labels
+MAINTAINER jay.vanschyndel@monash.edu
+HARDWARE   cpu
+
+%post
+    echo "==========================="
+    echo " Installing VS Code 1.39.2 "
+    echo "==========================="
+    apt-get -y update
+    cd /tmp
+    # Link obtained from Microsoft download site: https://code.visualstudio.com/
+    wget https://az764295.vo.msecnd.net/stable/6ab598523be7a800d7f3eb4d92d7ab9a66069390/code_1.39.2-1571154070_amd64.deb
+    dpkg -i code_1.39.2-1571154070_amd64.deb
+    rm -f code_1.39.2-1571154070_amd64.deb
+
+%runscript
+    $*
+

@@ -17,14 +17,14 @@ From: ubuntu:16.04
     libopenmpi1.10 \
     libopenmpi-dev 
 # Install libxc from source
-    wget --output-document=libxc.tar.gz http://www.tddft.org/programs/octopus/down.php?file=libxc/4.3.4/libxc-4.3.4.tar.gz
+    wget --output-document=libxc.tar.gz https://gitlab.com/libxc/libxc/-/archive/5.2.2/libxc-5.2.2.tar.gz
     tar xvf libxc.tar.gz
-    cd libxc-4.3.4/
+    cd libxc-5.2.2/
     ./configure --enable-mpi --enable-openmp
     make
     make install
 # Install octopus from source
-    wget --output-document=octopus.tar.gz http://www.tddft.org/programs/octopus/down.php?file=8.4/octopus-8.4.tar.gz
+    wget --output-document=octopus.tar.gz http://octopus-code.org/down.php?file=8.4/octopus-8.4.tar.gz
     tar xf octopus.tar.gz
     cd octopus-8.4/
     ./configure --with-libxc-prefix=/opt/etsf/ --enable-mpi --enable-openmp

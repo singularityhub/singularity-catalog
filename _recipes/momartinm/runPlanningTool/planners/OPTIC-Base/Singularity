@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: ubuntu:latest
+
+%setup
+REPO_ROOT=`dirname $SINGULARITY_BUILDDEF`
+cp -r $REPO_ROOT/ $SINGULARITY_ROOTFS/planner
+
+%post
+apt-get update
+apt-get -y install g++ make flex bison cmake doxygen coinor-clp coinor-libcbc-dev coinor-libclp-dev coinor-libcoinutils-dev coinor-libosi-dev coinor-libcgl-dev libbz2-dev libgsl-dev libz-dev
+cd /planner/optic/src
+ls -la
+cmake .
+make clean
+make all
+
+%runscript
+DOMAINFILE=$1
+PROBLEMFILE=$2
+PLANFILE=$3
+/planner/optic/src/optic/optic-clp $DOMAINFILE $PROBLEMFILE $PLANFILE
+
+%labels
+Name        Optic-base
+Description 2018 version of OPTIC BASE
+Authors     Andrew Coles and Amanda Coles
+SupportsDerivedPredicates yes
+SupportsQuantifiedPreconditions yes
+SupportsQuantifiedEffects yes

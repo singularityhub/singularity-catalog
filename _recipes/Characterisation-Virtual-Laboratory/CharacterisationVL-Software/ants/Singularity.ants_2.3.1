@@ -1,7 +1,5 @@
-Bootstrap: debootstrap
-MirrorURL: http://us.archive.ubuntu.com/ubuntu/
-OSVersion:  xenial
-Include: apt wget sudo vim build-essential git sudo software-properties-common
+Bootstrap: shub
+From: Characterisation-Virtual-Laboratory/CharacterisationVL-Software:2004
 
 %labels
     MAINTAINER_NAME  Edan Scriven
@@ -11,32 +9,9 @@ Include: apt wget sudo vim build-essential git sudo software-properties-common
     export PATH=/install/bin:$PATH
 
 %post
-    echo "*********************************************************"
-    echo "Setup and display environment"
-    echo "*********************************************************"
-    export LC_ALL=en_AU.UTF-8
-    export LANGUAGE=en_AU.UTF-8
-    export DEBIAN_FRONTEND=noninteractive
-    echo $LC_ALL
-    echo $LANGUAGE
-    echo $DEBIAN_FRONTEND
-    echo "*********************************************************"
-    echo "Install repositories"
-    echo "*********************************************************"
-    sed -i 's/main/main restricted universe multiverse/g' /etc/apt/sources.list
-    apt update
-    apt install -y apt-transport-https ca-certificates gnupg software-properties-common wget
-    wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add -
-    apt-add-repository 'deb https://apt.kitware.com/ubuntu bionic main'
-    echo "*********************************************************"
-    echo "Update repositories and install desktop"
-    echo "*********************************************************"
-    apt update
-    apt upgrade -y
-    apt install -y locales
-    locale-gen en_AU.UTF-8
-    apt install -y wget ubuntu-desktop vim software-properties-common git cmake
+    apt update -y
     apt install -y zlib1g zlib1g-dev
+    apt install -y cmake
 
     echo "================================="
     echo "Building ANTs v2.3.1             "
@@ -44,6 +19,9 @@ Include: apt wget sudo vim build-essential git sudo software-properties-common
 
     workingDir=${PWD}
     git clone -b v2.3.1 https://github.com/ANTsX/ANTs.git
+    cd ANTs 
+    git pull origin pull/1324/head
+    cd ..
     mkdir build install
     cd build
     cmake -DCMAKE_INSTALL_PREFIX=${workingDir}/install ../ANTs

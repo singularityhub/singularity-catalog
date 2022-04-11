@@ -1,0 +1,57 @@
+Bootstrap: debootstrap
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+OSVersion:  bionic
+Include: apt wget sudo vim build-essential git sudo software-properties-common
+
+%labels
+MAINTAINER alex.joos@uwa.edu.au
+HARDWARE ?
+
+%environment
+    #NANCONVERTPATH=/usr/local/bin
+    #export PATH=$NANCONVERTPATH:$PATH
+
+%post
+    echo "*********************************************************"
+    echo "Setup and display environment"
+    echo "*********************************************************"
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    echo $LC_ALL
+    echo $LANGUAGE
+    echo $DEBIAN_FRONTEND
+    echo "*********************************************************"
+    echo "Installing ITK"
+    echo "*********************************************************"
+    # ITK and nanconvert need cmake
+    apt -y install cmake
+    git clone -b v5.0.0 https://itk.org/ITK.git /ITK-5.0.0
+    mkdir /ITK-build
+    cd /ITK-build
+    cmake /ITK-5.0.0/
+    make -j4
+    make install	
+    echo "*********************************************************"
+    echo "Installing nanconvert"
+    echo "*********************************************************"
+    cd /
+    git clone --recursive https://github.com/spinicist/nanconvert.git
+    cd nanconvert
+    git submodule init
+    git submodule update
+    mkdir /nanconvert-build
+    cd /nanconvert-build
+    cmake /nanconvert
+    make -j
+    make install    
+    echo "*********************************************************"
+    echo "Removing all build folders"
+    echo "*********************************************************"
+    rm -rf /ITK-5.0.0 /ITK-build /nanconvert /nanconvert-build
+    echo "*********************************************************"
+    echo "All Done"
+    echo "*********************************************************"
+
+%runscript
+    $*

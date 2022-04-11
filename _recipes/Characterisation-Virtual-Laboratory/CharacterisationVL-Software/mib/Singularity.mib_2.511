@@ -1,0 +1,66 @@
+Bootstrap: debootstrap
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+OSVersion:  xenial
+Include: apt wget sudo vim build-essential git sudo software-properties-common
+
+%labels
+MAINTAINER alex.joos@uwa.edu.au
+HARDWARE ?
+
+%environment
+    MIBPATH=/MIB/application
+    export PATH=$MIBPATH:$PATH
+
+%setup
+    cp -R /home/ajoos/Desktop/Singularity/MIB/MIB_Linux/for_redistribution ${SINGULARITY_ROOTFS}/MIB_file
+    # once the Linux standalone version is publicly available for download, this can be replaced by:
+    # wget -P /MIB_file <url> 
+
+%post
+    echo "*********************************************************"
+    echo "Setup and display environment"
+    echo "*********************************************************"
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    echo $LC_ALL
+    echo $LANGUAGE
+    echo $DEBIAN_FRONTEND
+
+    echo "*********************************************************"
+    echo "Installing some extra libraries"
+    echo "*********************************************************"
+    apt update
+    apt -y install unzip xserver-xorg openjdk-8-jdk
+
+    echo "*********************************************************"
+    echo "Downloading and extracting Matlab Runtime 2019a"
+    echo "*********************************************************"
+    wget -P /MATLAB_Runtime http://ssd.mathworks.com/supportfiles/downloads/R2019a/Release/2/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2019a_Update_2_glnxa64.zip
+    unzip /MATLAB_Runtime/MATLAB_Runtime_R2019a_Update_2_glnxa64.zip -d /MATLAB_Runtime
+    rm -f /MATLAB_Runtime/MATLAB_Runtime_R2019a_Update_2_glnxa64.zip
+
+    echo "*********************************************************"
+    echo "Installing MIB and Matlab runtime"
+    echo "*********************************************************"
+    /MATLAB_Runtime/install -mode silent -agreeToLicense yes -destinationFolder /MIB
+    rm -rf /MATLAB_Runtime/
+    chmod +x /MIB_file/MIB2_Linux_mib_deploy.install
+    /MIB_file/MIB2_Linux_mib_deploy.install -mode silent -agreeToLicense yes -destinationFolder /MIB
+    rm -rf /MIB_file
+
+    echo "*********************************************************"
+    echo "Making MIB and run_MIB.sh executable"
+    echo "*********************************************************"
+    chmod +x /MIB/application/MIB
+    chmod +x /MIB/application/run_MIB.sh
+
+    echo "*********************************************************"
+    echo "All Done"
+    echo "*********************************************************"
+
+%runscript
+    $*
+    # second part of run command has to specify the path to Matlab Runtime:
+    # /MIB/application/run_MIB.sh /MIB/v96
+    

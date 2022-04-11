@@ -1,0 +1,20 @@
+Bootstrap:docker  
+From:ubuntu:latest  
+
+
+%runscript
+echo `date` "Hello from inside the image!"
+/usr/local/sleep/sleep_x.sh 60
+
+%post  
+echo "Hello from the post-build script!"
+mkdir -p /usr/local/sleep
+cat << EOF > /usr/local/sleep/sleep_x.sh
+#!/bin/bash
+
+echo \`date\` "Going to sleep..."
+sleep \$1
+echo \`date\` "Woke up."
+EOF
+chmod 755 /usr/local/sleep/sleep_x.sh
+

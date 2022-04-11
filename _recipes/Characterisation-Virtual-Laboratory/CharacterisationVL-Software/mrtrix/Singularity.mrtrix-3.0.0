@@ -1,0 +1,65 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804
+
+%labels
+MAINTAINER jay.vanschyndel@monash.edu
+HARDWARE   cpu
+
+%environment
+    MRTRIXPATH=/opt/mrtrix3/bin
+    ANTSPATH=/opt/ants/bin
+    FSLPATH=/opt/fsl/6.0.1/bin:/opt/fsl/6.0.1/extras/bin
+    export PATH=$FSLPATH:$ANTSPATH:$MRTRIXPATH:$PATH
+    export LD_LIBRARY_PATH=/opt/mrtrix3/lib:/opt/fsl/6.0.1/lib/:/opt/fsl/6.0.1/extras/lib:$LD_LIBRARY_PATH
+    export FSLDIR=/opt/fsl/6.0.1/
+    export FSLOUTPUTTYPE=NIFTI_GZ
+    export FSLMULTIFILEQUIT=TRUE
+    export FSLTCLSH=$FSLDIR/bin/fsltclsh
+    export FSLWISH=$FSLDIR/bin/fslwish
+    export FSLCONFDIR=$FSLDIR/config
+    export FSLMACHTYPE=linux_64-gcc4.8
+
+%files
+    fslinstaller.py /opt/fsl/fslinstaller.py
+
+%post
+    echo "============================================="
+    echo "Installing MRTRIX 3 dependencies"
+    echo "============================================="
+    mkdir -p /opt/
+    apt-get -y update --fix-missing
+    apt-get -y upgrade
+    apt -y clean
+    apt -y install git g++ python python-numpy libeigen3-dev zlib1g zlib1g-dev libqt4-opengl-dev libgl1-mesa-dev libfftw3-dev libtiff5-dev
+    echo "============================================="
+    echo "Building MRTRIX 3.0 RC3 latest"
+    echo "============================================="
+
+    cd /opt/
+    git clone -b 3.0.0 https://github.com/MRtrix3/mrtrix3.git
+    cd mrtrix3
+    ./configure
+    ./build
+
+    echo "==============="
+    echo "Installing ANTs"
+    echo "==============="
+    apt -y install zlib1g zlib1g-dev
+    git clone -b v2.3.1 https://github.com/stnava/ANTs.git
+    cd ANTs
+    mkdir build
+    cd build
+    cmake ..
+    make -j 4
+    mkdir /opt/ants/
+    cp -r bin /opt/ants/
+    export PATH=/opt/ants/bin/:$PATH
+
+    echo "=============="
+    echo "Installing FSL"
+    echo "=============="
+    mkdir -p /opt/fsl
+    python /opt/fsl/fslinstaller.py -D -d /opt/fsl/6.0.1 -V 6.0.1
+
+%runscript
+    $*

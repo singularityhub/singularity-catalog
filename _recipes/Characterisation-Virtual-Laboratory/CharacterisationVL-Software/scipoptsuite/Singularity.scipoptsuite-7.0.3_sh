@@ -1,0 +1,73 @@
+Bootstrap:  shub
+From:       Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804-cuda10.1
+
+%labels
+    MAINTAINER shu.chia@monash.edu
+
+    APPLICATION_NAME ubuntu
+    APPLICATION_VERSION 18.04
+
+    HARDWARE CPU
+
+    LAST_UPDATED 01-FEB-2022
+
+%files
+    SCIPOptSuite-7.0.3-Linux-ubuntu.sh /opt
+
+%environment
+    # Add SCIP to PATH
+    export PATH=$PATH:/opt/SCIPOptSuite-7.0.3-Linux/bin
+    # Add hMETIS to PATH
+    export PATH=$PATH:/opt/hmetis-2.0pre1/Linux-x86_64
+    # Fix GCG error
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/SCIPOptSuite-7.0.3-Linux/lib
+
+%post
+    echo "*********************************************************"
+    echo "Setup and display environment"
+    echo "*********************************************************"
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    echo $LC_ALL
+    echo $LANGUAGE
+    echo $DEBIAN_FRONTEND
+    echo "*********************************************************"
+    echo "Install repositories"
+    echo "*********************************************************"
+    apt-get install -y software-properties-common
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ bionic main restricted'
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ bionic-updates main restricted'
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ bionic universe'
+    apt-add-repository -y 'deb http://us.archive.ubuntu.com/ubuntu/ bionic-updates universe'
+    echo "*********************************************************"
+    echo "Update repositories and install desktop"
+    echo "*********************************************************"
+    apt update
+    apt upgrade -y
+    apt install -y locales
+    locale-gen en_AU.UTF-8
+
+    # Install dependencies
+    apt -y update
+    apt -y install gcc g++ gfortran liblapack3 libtbb2 libcliquer1 libopenblas-dev libgsl23 libboost-program-options1.65.1 zsh
+    
+    # Install hMETIS
+    cd /opt
+    wget http://glaros.dtc.umn.edu/gkhome/fetch/sw/hmetis/hmetis-2.0pre1.tar.gz
+    gunzip hmetis-2.0pre1.tar.gz
+    tar -xvf hmetis-2.0pre1.tar
+    rm hmetis-2.0pre1.tar
+    mv hmetis-2.0pre1/Linux-i686/hmetis2.0pre1 hmetis-2.0pre1/Linux-i686/hmetis
+    mv hmetis-2.0pre1/Linux-x86_64/hmetis2.0pre1 hmetis-2.0pre1/Linux-x86_64/hmetis
+
+    # Fix permissions error with hMETIS
+    chmod -R o+rx /opt/hmetis-2.0pre1
+
+    # Install SCIP
+    cd /opt
+    ./SCIPOptSuite-7.0.3-Linux-ubuntu.sh --prefix=/opt --include-subdir --skip-license
+    rm SCIPOptSuite-7.0.3-Linux-ubuntu.sh
+
+%runscript
+    $*

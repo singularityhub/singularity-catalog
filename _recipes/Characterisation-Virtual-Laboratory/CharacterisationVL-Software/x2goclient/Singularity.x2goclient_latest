@@ -1,0 +1,21 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804
+
+%labels
+MAINTAINER jay.vanschyndel@monash.edu
+HARDWARE   cpu
+
+%post
+    echo "==============================="
+    echo " Installing x2goclient         "
+    echo "==============================="
+    #apt-get -y update
+    #apt install -y x2goclient
+
+    sudo apt-add-repository ppa:x2go/stable
+    sudo apt-get -y update
+    sudo apt-get install -y x2goclient
+
+
+%runscript
+    $*

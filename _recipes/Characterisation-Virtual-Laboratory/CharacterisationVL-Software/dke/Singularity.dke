@@ -1,0 +1,43 @@
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804
+
+%labels
+    MAINTAINER_NAME  Alexander Joos
+    MAINTAINER_EMAIL alex.joos@uwa.edu.au
+
+    APPLICATION_NAME ubuntu
+    APPLICATION_VERSION 18.04
+
+%environment
+    DKEPATH=/DKE
+    export PATH=$DKEPATH:$PATH
+
+%setup
+    cp -R DKE_Linux64 ${SINGULARITY_ROOTFS}/DKE
+
+%post
+    echo "*********************************************************"
+    echo "Setup and display environment"
+    echo "*********************************************************"
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    echo $LC_ALL
+    echo $LANGUAGE
+    echo $DEBIAN_FRONTEND
+    echo "*********************************************************"
+    echo "Downloading and extracting Matlab Runtime 2012a"
+    echo "*********************************************************"
+    wget -P /MATLAB_Runtime https://ssd.mathworks.com/supportfiles/MCR_Runtime/R2012a/MCR_R2012a_glnxa64_installer.zip
+    unzip /MATLAB_Runtime/MCR_R2012a_glnxa64_installer.zip -d /MATLAB_Runtime
+    rm -f /MATLAB_Runtime/MCR_R2012a_glnxa64_installer.zip
+    /MATLAB_Runtime/install -mode silent -agreeToLicense yes -destinationFolder /MCR
+    rm -rf /MATLAB_Runtime/
+
+    chmod o=rx /DKE/run_dke.sh /DKE/dke
+    echo "*********************************************************"
+    echo "All Done"
+    echo "*********************************************************"
+
+%runscript
+    $*

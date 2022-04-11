@@ -1,0 +1,67 @@
+BootStrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://au.archive.ubuntu.com/ubuntu/
+
+
+%runscript
+    echo "This is what happens when you run the container..."
+
+%files
+    meshlab-2016.12-remove-header.patch /opt
+    virtualgl_2.5.2_amd64.deb /opt
+
+
+%post
+    # Enable universe to get all the necessary qt packages
+    sed -i '/deb/ s/$/ universe/' /etc/apt/sources.list
+    apt -y update
+    echo "Post creation not yet filled in"
+    dpkg -i /opt/virtualgl_2.5.2_amd64.deb
+    apt -y install git
+    apt -y install qt5-qmake
+    apt -y install qtbase5-dev
+    apt -y install qtchooser
+    apt -y install qtcreator
+    apt -y install qtscript5-dev
+    apt -y install libqt5script5
+    apt -y install qt5-default
+    apt -y install libqt5xmlpatterns5-dev
+    apt -y install g++
+    apt -y install gcc
+
+    # Clone Meshlab and vcglib
+    mkdir -p /opt
+    cd /opt
+    export MESHLABSHA1=42ef8f6c99e01bee9fd0152edba96dbba310fc29
+    export VCGLIBSHA1=91947c0f7e4b634cd67d960acbad6549db50c912
+    export QMAKE_FLAGS="'-spec' 'linux-g++' 'CONFIG+=release' 'CONFIG+=qml_release' 'CONFIG+=c++11' 'QMAKE_CXXFLAGS+=-fPIC' 'QMAKE_CXXFLAGS+=-std=c++11' 'QMAKE_CXXFLAGS+=-fpermissive' 'INCLUDEPATH+=/usr/include/eigen3' 'LIBS+=-L/opt/meshlab/src/external/lib/linux-g++'"
+    if [ ! -d meshlab ] ; then
+        git clone https://github.com/cnr-isti-vclab/meshlab.git
+        cd meshlab
+        git checkout $MESHLABSHA1
+        cd ..
+    fi
+    if [ ! -d vcglib ] ; then
+        git clone  https://github.com/cnr-isti-vclab/vcglib.git -b devel
+        cd vcglib
+        git checkout $VCGLIBSHA1
+        cd /opt
+        patch --forward -p1 < meshlab-2016.12-remove-header.patch
+    fi
+
+    # Patch vcglib
+    cd /opt/meshlab/src/external
+    qmake external.pro
+    make
+    cp /opt/meshlab/src/external/lib/linux/* /opt/meshlab/src/external/lib/linux-g++/
+    cd /opt/meshlab/src/common
+    qmake common.pro
+    make
+    cd ..
+    qmake meshlab_mini.pro
+    make
+    qmake meshlab_full.pro
+    make
+
+
+

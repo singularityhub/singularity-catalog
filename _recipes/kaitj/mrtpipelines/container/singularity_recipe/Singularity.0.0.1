@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: ubuntu:xenial
+
+%setup
+
+mkdir -p $SINGULARITY_ROOTFS/src
+cp -Rv . $SINGULARITY_ROOTFS/src
+
+
+%post
+
+cd /src/install_scripts
+
+bash 00_install_basics.sh
+bash 01_install_freesurfer.sh
+bash 02_install_mrtrix.sh
+bash 03_install_mrtpipeline.sh
+bash 04_install_nipype_custom.sh
+
+# remove install scripts
+rm -rf /src
+
+
+%environment
+
+#freesurfer
+export FREESURFER_HOME=/opt/freesurfer
+export PATH=$FREESURFER_HOME/bin:$PATH
+
+#mrtrix
+export MRTRIX_HOME=/opt/git/mrtrix3
+export PATH=$MRTRIX_HOME/bin:$PATH

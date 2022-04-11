@@ -1,0 +1,44 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%post
+    apt-get -y update
+    apt-get -y install wget \
+    vim \
+    sudo \
+    cmake \
+    build-essential \
+    gfortran \
+    liblapack3 \
+    liblapack-dev \
+    libgsl-dev \
+    libfftw3-dev \
+    libfftw3-bin \
+    libopenmpi1.10 \
+    libopenmpi-dev
+# Install libxc from source
+    wget --output-document=libxc.tar.gz https://gitlab.com/libxc/libxc/-/archive/5.2.2/libxc-5.2.2.tar.gz
+    tar xvf libxc.tar.gz
+    cd libxc-5.2.2/
+    ./configure
+    make
+    make install
+# Install octopus from source
+    wget --output-document=octopus.tar.gz http://octopus-code.org/down.php?file=11.4/octopus-11.4.tar.gz
+    tar xf octopus.tar.gz
+    cd octopus-11.4/
+    ./configure --with-libxc-prefix=/opt/etsf/
+    
+#    Install BLAS libraries from source
+#    wget http://www.netlib.org/blas/blas-3.8.0.tgz
+#    tar xvf blas.tgz
+#    cd BLAS-3.8.0/
+#    make 
+    
+
+%environment
+    export LC_ALL=C
+    export PATH=/usr/games:$PATH
+
+%runscript
+    fortune | cowsay | lolcat

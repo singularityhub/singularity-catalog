@@ -1,0 +1,64 @@
+Bootstrap: debootstrap
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+OSVersion:  xenial
+Include: apt wget sudo vim build-essential git sudo software-properties-common
+
+%labels
+MAINTAINER alex.joos@uwa.edu.au
+HARDWARE ?
+
+%setup
+    cp -R jmrui-5.2 ${SINGULARITY_ROOTFS}/jMRUI
+    cp jre-8u191-linux-i586.tar.gz ${SINGULARITY_ROOTFS}/
+
+%post
+    echo "*********************************************************"
+    echo "Setup and display environment"
+    echo "*********************************************************"
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    echo $LC_ALL
+    echo $LANGUAGE
+    echo $DEBIAN_FRONTEND
+    echo "*********************************************************"
+    echo "Installing additional software"
+    echo "*********************************************************"
+
+    # Java 64 bit
+    apt -y install openjdk-8-jdk
+
+    # Java 32 bit from repository
+    dpkg --add-architecture i386
+    apt update
+    apt -y install openjdk-8-jdk:i386
+
+    # Java 32 bit (downloaded from Oracle)
+    mkdir /usr/local/java32
+    cp -r jre-8u191-linux-i586.tar.gz /usr/local/java32
+    cd /usr/local/java32
+    tar xvzf jre-8u191-linux-i586.tar.gz
+    rm -r jre-8u191-linux-i586.tar.gz
+    echo "JAVA_HOME=/usr/local/java32/jre1.8.0_191" >> /etc/profile
+    echo "PATH=$PATH:$HOME/bin:$JAVA_HOME/bin" >> /etc/profile
+    echo "export JAVA_HOME" >> /etc/profile
+    echo "PATH=$PATH:$HOME/bin:$JAVA_HOME/bin" >> /etc/profile
+    . /etc/profile
+    update-alternatives --install "/usr/bin/java" "java" "/usr/local/java32/jre1.8.0_191/bin/java" 1
+    update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/local/java32/jre1.8.0_191/bin/javaws" 1
+    update-alternatives --set java /usr/local/java32/jre1.8.0_191/bin/java
+    update-alternatives --set javaws /usr/local/java32/jre1.8.0_191/bin/javaws
+
+    # Install libg2c0
+    cd /
+    wget http://old-releases.ubuntu.com/ubuntu/pool/universe/g/gcc-3.4/libg2c0_3.4.6-6ubuntu5_i386.deb
+    dpkg -i --force-all libg2c0_3.4.6-6ubuntu5_i386.deb
+
+    echo "*********************************************************"
+    echo "All Done"
+    echo "*********************************************************"
+
+%runscript
+    cd /jMRUI
+    ./jmrui.sh
+#    /jMRUI/jmrui.sh

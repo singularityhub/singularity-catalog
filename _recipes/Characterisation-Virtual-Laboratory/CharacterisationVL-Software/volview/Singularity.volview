@@ -1,0 +1,30 @@
+BootStrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://au.archive.ubuntu.com/ubuntu/
+
+
+%runscript
+    echo "This is what happens when you run the container..."
+
+%files
+    virtualgl_2.5.2_amd64.deb /opt
+
+
+
+%post
+    # Enable universe to get all the necessary qt packages
+    sed -i '/deb/ s/$/ universe/' /etc/apt/sources.list
+    apt -y update
+    apt install -y curl
+    apt install -y libxt-dev
+    apt install -y libxext-dev
+    apt install -y libxss1
+    apt install -y libxft-dev
+    apt install -y libxv1
+    apt install -y libfontconfig1-dev
+    mkdir -p /opt
+    cd /opt
+    curl https://www.kitware.com/VolView/files/VolView-3.4-Linux-x86_64.sh -o VolView-3.4-Linux-x86_64.sh
+    dpkg -i virtualgl_2.5.2_amd64.deb
+    chmod 755 VolView-3.4-Linux-x86_64.sh
+    ./VolView-3.4-Linux-x86_64.sh --skip-license

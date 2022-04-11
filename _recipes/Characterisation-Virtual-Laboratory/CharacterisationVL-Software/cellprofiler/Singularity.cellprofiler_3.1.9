@@ -28,7 +28,7 @@ From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804
 
 
 %files
-    environment_3.1.9.yml /tmp
+    environment_3.1.9.yml /opt/
 
 %post
     echo "*********************************************************"
@@ -74,7 +74,7 @@ From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804
     #conda env create -f environment_3.1.9.yml
     #conda info --envs
     #conda env update -f environment_3.1.9.yml --prune
-    conda env update -f environment_3.1.9.yml
+    conda env update -f /opt/environment_3.1.9.yml
 
     #echo "## Activate cellprofiler environment" >> /.singularity_bash
     echo "source /opt/miniconda/etc/profile.d/conda.sh" >> /.singularity_bash

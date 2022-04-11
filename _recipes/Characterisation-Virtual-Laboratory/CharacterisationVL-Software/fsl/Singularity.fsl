@@ -1,50 +1,49 @@
-Bootstrap: debootstrap
-MirrorURL: http://us.archive.ubuntu.com/ubuntu/
-OSVersion:  bionic
-Include: apt wget
-
-%labels
-    MAINTAINER_NAME  Jay van Schyndel
-    MAINTAINER_EMAIL jay.vanschyndel@monash.edu
+BootStrap: docker
+From: ubuntu:20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
 
 %environment
- 
-%post
-    echo "*********************************************************"
-    echo "Setup and display environment"
-    echo "*********************************************************"
-    export LC_ALL=en_AU.UTF-8
     export LANGUAGE=en_AU.UTF-8
-    export DEBIAN_FRONTEND=noninteractive
-    echo $LC_ALL
-    echo $LANGUAGE
-    echo $DEBIAN_FRONTEND
-    echo "*********************************************************"
-    echo "Install repositories"
-    echo "*********************************************************"
-    echo "deb http://au.archive.ubuntu.com/ubuntu bionic-updates main" >> /etc/apt/sources.list
-    echo "deb-src http://au.archive.ubuntu.com/ubuntu bionic-updates main" >> /etc/apt/sources.list
-    echo "deb http://au.archive.ubuntu.com/ubuntu bionic universe" >> /etc/apt/sources.list
-    echo "deb-src http://au.archive.ubuntu.com/ubuntu bionic universe" >> /etc/apt/sources.list
-    echo "deb http://au.archive.ubuntu.com/ubuntu bionic-updates universe" >> /etc/apt/sources.list
-    echo "deb-src http://au.archive.ubuntu.com/ubuntu bionic-updates universe" >> /etc/apt/sources.list
-    apt update
-    apt install -y wget add-apt-key
-    wget -O /etc/apt/sources.list.d/neurodebian.sources.list http://neuro.debian.net/lists/bionic.au.full
-    apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
-    echo "*********************************************************"
-    echo "Update repositories and install desktop"
-    echo "*********************************************************"
-    apt update
-    apt upgrade -y
-    apt install -y locales
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm -f /bin/sh && ln -s /bin/bash /bin/sh
+    rm -f /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
+    /bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        dirmngr \
+        git \
+        gpg-agent \
+        locales \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
     locale-gen en_AU.UTF-8
 
-    echo "================================="
-    echo "Installing FSL from Neurodebian  "
-    echo "================================="
+%post
+    cd /
+    wget -O- http://neuro.debian.net/lists/bionic.us-ca.full | tee /etc/apt/sources.list.d/neurodebian.sources.list
+    apt-key adv --recv-keys --keyserver hkps://keyserver.ubuntu.com 0xA5D32F012649A5A9 2>&1
 
-    apt install -y fsl
-
-%runscript
-    $*
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        fsl-complete
+    rm -rf /var/lib/apt/lists/*

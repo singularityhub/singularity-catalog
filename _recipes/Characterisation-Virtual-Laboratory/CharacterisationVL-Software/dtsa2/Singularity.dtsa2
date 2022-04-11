@@ -1,0 +1,33 @@
+Bootstrap: debootstrap
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+OSVersion:  cosmic
+Include: apt wget sudo vim build-essential git sudo software-properties-common
+
+%labels
+MAINTAINER alex.joos@uwa.edu.au
+HARDWARE ?
+
+%setup
+
+%post
+    echo "*********************************************************"
+    echo "Setup and display environment"
+    echo "*********************************************************"
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    echo $LC_ALL
+    echo $LANGUAGE
+    echo $DEBIAN_FRONTEND
+    echo "*********************************************************"
+    echo "Installing Java"
+    echo "*********************************************************"
+
+    apt -y install openjdk-11-jdk
+
+    echo "*********************************************************"
+    echo "All Done"
+    echo "*********************************************************"
+
+%runscript
+    $*

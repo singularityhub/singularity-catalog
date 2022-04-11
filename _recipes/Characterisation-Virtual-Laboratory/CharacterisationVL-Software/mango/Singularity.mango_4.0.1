@@ -1,53 +1,12 @@
-Bootstrap: debootstrap
-MirrorURL: http://us.archive.ubuntu.com/ubuntu/
-OSVersion:  xenial
-Include: apt wget sudo vim build-essential git sudo software-properties-common
+Bootstrap: shub
+From:      Characterisation-Virtual-Laboratory/CharacterisationVL-Software:1804-cuda9
 
 %environment
     MANGOPATH=/opt/Mango
     export PATH=$MANGOPATH:$PATH
  
 %post
-    echo "*********************************************************"
-    echo "Setup and display environment"
-    echo "*********************************************************"
-    export LC_ALL=en_AU.UTF-8
-    export LANGUAGE=en_AU.UTF-8
-    export DEBIAN_FRONTEND=noninteractive
-    echo $LC_ALL
-    echo $LANGUAGE
-    echo $DEBIAN_FRONTEND
-    echo "*********************************************************"
-    echo "Install repositories"
-    echo "*********************************************************"
-    sed -i 's/main/main restricted universe multiverse/g' /etc/apt/sources.list
-    echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/cuda.list
-    apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
-    echo "*********************************************************"
-    echo "Update repositories and install desktop"
-    echo "*********************************************************"
-    apt update
-    apt upgrade -y
-    apt install -y locales
-    locale-gen en_AU.UTF-8
-    apt install -y wget ubuntu-desktop vim software-properties-common git cmake 
-    echo "*********************************************************"
-    echo "Installing CUDA"
-    echo "*********************************************************"
-    apt install -y cuda-9-0
-    echo "*********************************************************"
-    echo "Installing python dependencies"
-    echo "*********************************************************"
     apt install -y python-pip python-pyqt5 pyqt5-dev python-tk
-    echo "*********************************************************"
-    echo "Installing vglrun and TurboVNC"
-    echo "*********************************************************"
-    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/turbovnc_2.1.2_amd64.deb
-    dpkg -i turbovnc_2.1.2_amd64.deb
-    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/virtualgl_2.5.2_amd64.deb
-    dpkg -i virtualgl_2.5.2_amd64.deb
-    apt update
-    apt -y upgrade
 
     echo "================================="
     echo "Downloading Mango 4.0.1          "

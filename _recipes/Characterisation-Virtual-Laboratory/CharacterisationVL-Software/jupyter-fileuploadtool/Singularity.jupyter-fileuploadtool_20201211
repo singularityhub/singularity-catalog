@@ -8,7 +8,7 @@ MAINTAINER chris.hines@monash.edu
 jupyter_start /start
 jupyter_params.py /params
 tree.html /tree.html
-pages.html /page.html
+page.html /page.html
 
 %post
 #export LC_ALL=en_AU.UTF-8
@@ -39,5 +39,6 @@ apt -y install texlive-xetex
 apt -y install pandoc
 apt -y install python3-pypandoc python3-pandocfilters
 
+mkdir -p /usr/local/lib/python3.6/dist-packages/notebook/templates
 cp /page.html /usr/local/lib/python3.6/dist-packages/notebook/templates/page.html
 cp /tree.html /usr/local/lib/python3.6/dist-packages/notebook/templates/tree.html
