@@ -7,11 +7,9 @@
 
 import logging
 import fnmatch
-import numpy
 import os
 import re
 import yaml
-from pathlib import Path
 from operator import itemgetter
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape

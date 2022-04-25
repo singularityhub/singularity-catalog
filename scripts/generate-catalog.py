@@ -178,9 +178,9 @@ def validate_recipe(filename):
         content = read_file(filename)
         if re.search("bootstrap[:]", content, re.IGNORECASE):
             return True
-    except yaml.YAMLError as exc:
+    except yaml.YAMLError:
         return False
-    except UnicodeDecodeError as exc:
+    except UnicodeDecodeError:
         return False
     return False
 

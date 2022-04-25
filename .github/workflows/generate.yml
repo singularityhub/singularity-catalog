@@ -8,16 +8,21 @@ jobs:
   generate-catalog:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: deployment
-        uses: mamba-org/provision-with-micromamba@6f4b1b6c62b65deebcb3a37cd30af2ba2e232877
+      - uses: actions/checkout@v3
+      - name: Setup environment
+        run: conda create --quiet --name stacks
       - name: generate-catalog
         shell: bash -l {0}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          export PATH="/usr/share/miniconda/bin:$PATH"
+          source activate stacks
+          conda install scikit-learn pandas
+          pip install jinja2 pygithub gitpython pyaml
           python scripts/generate-catalog.py
           python scripts/generate-graph-data.py
+ 
       - name: Commit files
         id: commit
         run: |
