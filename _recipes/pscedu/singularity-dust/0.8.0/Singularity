@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: rust:slim-buster
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY https://github.com/icaoberg/singularity-dust
+    VERSION 0.8.0
+
+%post
+    cargo install --version 0.8.0 du-dust
+    ln -s /usr/local/cargo/bin/dust /usr/local/bin/dust

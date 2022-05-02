@@ -1,0 +1,106 @@
+BootStrap: docker
+From: ubuntu:20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        ca-certificates \
+        curl \
+        git \
+        libbz2-dev \
+        libffi-dev \
+        libibverbs-dev \
+        liblzma-dev \
+        libncurses5-dev \
+        libncursesw5-dev \
+        libreadline-dev \
+        libsqlite3-dev \
+        libssl-dev \
+        llvm \
+        tar \
+        tk-dev \
+        wget \
+        xz-utils \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    wget  --no-check-certificate https://www.python.org/ftp/python/3.9.9/Python-3.9.9.tgz
+    tar xvf Python-3.9.9.tgz
+    cd Python-3.9.9
+    ./configure  --enable-optimizations --with-ensurepip=install
+    make -j 8
+    make altinstall
+
+%post
+    cd /
+    /usr/local/bin/python3.9 -m venv /venv
+    /venv/bin/pip3.9 install --upgrade pip
+    /venv/bin/pip3.9 install wheel
+    /venv/bin/pip3.9 install matplotlib
+    /venv/bin/pip3.9 install pandas
+    /venv/bin/pip3.9 install -U ray
+
+%post
+    cd /
+    git clone https://github.com/devitocodes/devito
+    cd devito
+    /venv/bin/pip3.9 install .
+
+%post
+    cd /
+    git clone https://github.com/Sohl-Dickstein/Sum-of-Functions-Optimizer
+    cd Sum-of-Functions-Optimizer
+
+%environment
+    export PYTHONPATH=/Sum-of-Functions-Optimizer
+%post
+    export PYTHONPATH=/Sum-of-Functions-Optimizer
+
+# NVIDIA HPC SDK version 21.11
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bc \
+        debianutils \
+        g++ \
+        gcc \
+        gfortran \
+        libatomic1 \
+        libnuma1 \
+        openssh-client \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://developer.download.nvidia.com/hpc-sdk/21.11/nvhpc_2021_2111_Linux_x86_64_cuda_multi.tar.gz && \
+    mkdir -p /var/tmp && tar -x -f /var/tmp/nvhpc_2021_2111_Linux_x86_64_cuda_multi.tar.gz -C /var/tmp -z
+    cd /var/tmp/nvhpc_2021_2111_Linux_x86_64_cuda_multi && NVHPC_ACCEPT_EULA=accept NVHPC_INSTALL_DIR=/opt/nvidia/hpc_sdk NVHPC_SILENT=true ./install
+    rm -rf /var/tmp/nvhpc_2021_2111_Linux_x86_64_cuda_multi /var/tmp/nvhpc_2021_2111_Linux_x86_64_cuda_multi.tar.gz
+%environment
+    export LD_LIBRARY_PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/comm_libs/nvshmem/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/comm_libs/nccl/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/math_libs/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/compilers/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/cuda/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/comm_libs/mpi/lib:$LD_LIBRARY_PATH
+    export MANPATH=/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/compilers/man:$MANPATH
+    export PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/comm_libs/nvshmem/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/comm_libs/nccl/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/profilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/compilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/cuda/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/comm_libs/mpi/bin:$PATH
+%post
+    export LD_LIBRARY_PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/comm_libs/nvshmem/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/comm_libs/nccl/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/math_libs/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/compilers/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/cuda/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/comm_libs/mpi/lib:$LD_LIBRARY_PATH
+    export MANPATH=/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/compilers/man:$MANPATH
+    export PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/comm_libs/nvshmem/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/comm_libs/nccl/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/profilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/compilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/cuda/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/21.11/comm_libs/mpi/bin:$PATH
+
+%post
+    cd /
+    env MPICC=/opt/nvidia/hpc_sdk/Linux_x86_64/21.3/comm_libs/mpi/bin/mpicc CC=pgcc CFLAGS=-noswitcherror /venv/bin/pip3.9 install --no-cache-dir mpi4py
+
+%environment
+    export DEVITO_ARCH=nvc
+    export DEVITO_LANGUAGE=openacc
+    export DEVITO_LOGGING=DEBUG
+    export DEVITO_PLATFORM=nvidiaX
+%post
+    export DEVITO_ARCH=nvc
+    export DEVITO_LANGUAGE=openacc
+    export DEVITO_LOGGING=DEBUG
+    export DEVITO_PLATFORM=nvidiaX

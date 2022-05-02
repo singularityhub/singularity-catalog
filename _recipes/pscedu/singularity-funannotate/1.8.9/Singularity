@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: continuumio/anaconda3
+From: nextgenusfs/funannotate:v1.8.9
 
 %labels
     MAINTAINER icaoberg
@@ -8,10 +8,3 @@ From: continuumio/anaconda3
     REPOSITORY https://github.com/pscedu/singularity-funannotate
     COPYRIGHT Copyright © 2022 Pittsburgh Supercomputing Center. All Rights Reserved.
     VERSION 1.8.9
-
-%post
-    apt update
-    conda config --add channels defaults
-    conda config --add channels bioconda
-    conda config --add channels conda-forge
-    conda create -n funannotate "python>=3.6,<3.9" funannotate=1.8.9

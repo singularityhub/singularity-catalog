@@ -1,0 +1,86 @@
+Bootstrap: docker
+From: debian:9-slim
+Stage: build-singularity
+
+%post
+	set -ex
+
+	export GO_VERSION=1.14.12 OS=linux ARCH=amd64
+	export SINGULARITY_VERSION=3.8.1
+
+	apt-get update
+	apt-get install -y --no-install-recommends \
+	    build-essential \
+	    uuid-dev \
+	    libgpgme-dev \
+	    squashfs-tools \
+	    libseccomp-dev \
+	    wget \
+	    pkg-config \
+	    cryptsetup-bin \
+	    ca-certificates
+
+	wget -q https://dl.google.com/go/go$GO_VERSION.$OS-$ARCH.tar.gz
+	tar -C /usr/local -xzf go$GO_VERSION.$OS-$ARCH.tar.gz
+	rm go$GO_VERSION.$OS-$ARCH.tar.gz
+	export PATH="/usr/local/go/bin:${PATH}"
+
+	wget -q https://github.com/sylabs/singularity/releases/download/v${SINGULARITY_VERSION}/singularity-ce-${SINGULARITY_VERSION}.tar.gz
+	tar -xzf singularity-ce-${SINGULARITY_VERSION}.tar.gz
+	cd singularity-ce-${SINGULARITY_VERSION}
+	./mconfig --without-suid
+	make -C ./builddir
+	make -C ./builddir install
+
+Bootstrap: docker
+From: python:3.10-slim-bullseye
+Stage: final
+
+%startscript
+jupyter lab --no-browser ${@}
+
+%files from build-singularity
+       /usr/local/bin/* /usr/local/bin
+       /usr/local/etc/singularity
+       /usr/local/libexec/singularity
+       /usr/local/etc/bash_completion.d/singularity
+
+%post
+    apt-get update
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        fonts-texgyre \
+        libgit2-dev \
+        libseccomp-dev \
+        libssl-dev \
+        libxml2-dev \
+        locales \
+        squashfs-tools \
+        wget
+
+    # Fix locale
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+
+    # Install Node
+    wget -qO install-node.bash https://deb.nodesource.com/setup_16.x
+    bash install-node.bash
+    rm install-node.bash
+    apt-get install -y nodejs
+
+    # Install JupyterLab
+    pip install --upgrade pip setuptools
+    pip install \
+        jupyterlab \
+        jupyterlab-vim \
+        jupyterlab_theme_solarized_dark
+
+    # If possible, record the git hash (works in GHA)
+    echo '{"github_sha": "'$GITHUB_SHA'"}' > /.singularity.d/labels.json
+
+    # So that sub-containers work correctly
+    mkdir -p /usr/local/var/singularity/mnt/session
+
+    # Clean up
+    rm -rf /var/lib/apt/lists/*

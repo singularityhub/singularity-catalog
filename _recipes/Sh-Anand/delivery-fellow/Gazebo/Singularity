@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: osrf/ros:noetic-desktop-full
+
+%files
+	.
+
+%post
+    apt-get update
+    apt-get install -y dbus
+    apt-get install ros-noetic-joint-state-controller ros-noetic-effort-controllers ros-noetic-position-controllers ros-noetic-rviz ros-noetic-genpy
+    rosdep update
+    dbus-uuidgen --ensure
+
+%runscript 
+	chmod +x ./src/delivery_fellow_gazebo/launch/delivery_fellow_world.launch 
+    ./start_simulation.sh

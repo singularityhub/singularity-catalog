@@ -1,0 +1,46 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+    
+    AUTHOR James Santangelo
+    EMAIL james.santangelo37@gmail.com
+    XPCLR_VERSION 1.2.1 
+
+%environment
+
+    export PATH="/opt/bin:$PATH"
+    export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+
+%post
+    
+    apt-get update && \
+    apt-get -y --no-install-recommends install \
+        build-essential \
+        wget \
+        git \
+        curl \
+        ca-certificates \
+        locales
+    
+    # Configure default locale
+    # Taken from https://github.com/nickjer/singularity-r/blob/master/Singularity.3.6.2
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+    # ===========================
+    # Install XPCLR
+    # ===========================
+
+    apt-get install -y python3 python3-pip
+
+    cd /opt &&
+    mkdir bin &&
+    git clone  https://github.com/James-S-Santangelo/xpclr.git &&
+    cd xpclr &&
+    pip3 install -r requirements.txt &&
+    python3 setup.py install
+

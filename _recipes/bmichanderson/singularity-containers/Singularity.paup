@@ -1,0 +1,47 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using the program PAUP*
+
+
+Bootstrap: docker
+From: ubuntu:20.04
+
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM PAUP*
+	VERSION 4a168
+
+
+%post
+	# install dependencies
+	export DEBIAN_FRONTEND=noninteractive
+	apt update && apt upgrade -y && \
+	apt install -y wget libpython2.7 && \
+	apt autoremove -y && apt clean
+
+	# install the program
+	PAUP_VERSION=4a168
+	URL=http://phylosolutions.com/paup-test/paup"${PAUP_VERSION}"_ubuntu64.gz
+	mkdir paup && cd paup
+	wget "$URL"
+	gzip -d paup"${PAUP_VERSION}"_ubuntu64.gz
+	chmod 755 paup"${PAUP_VERSION}"_ubuntu64
+	ln -s paup"${PAUP_VERSION}"_ubuntu64 paup
+	echo "export PATH=$PATH:/paup" >> $SINGULARITY_ENVIRONMENT
+
+
+%environment
+	# set environmental variables for the container
+	export PATH="$PATH":/paup
+
+
+%runscript
+	# this will be exected when the container is run
+	paup "$@"
+
+
+%help
+	This container is for running PAUP*
+	To use: singularity exec paup.sif paup [args]
+	OR: singularity run paup.sif [args]
+	Check contents by entering it as: singularity shell paup.sif

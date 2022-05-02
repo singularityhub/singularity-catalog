@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: python:3.8
+
+# copy files required for the app to run (this might be subsumed by pip command)
+
+# get files from host (but we don't need any)
+
+%environment
+  # set environment variable to retrieve new image each time
+  export SINGULARITY_DISABLE_CACHE=True
+
+%post
+  # install Robospect
+
+
+
+%runscript
+  echo "Runscript; Python version is"
+  python --version

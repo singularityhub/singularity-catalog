@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: python:3.6.6
+
+# copy files required for the app to run
+%setup
+  mkdir -p ${SINGULARITY_ROOTFS}/rrlfe
+  mkdir -p ${SINGULARITY_ROOTFS}/robospect
+  git clone https://github.com/mwanakijiji/rrlfe.git
+
+# get files from host (but we don't need any)
+
+%environment
+  # set environment variable to retrieve new image each time
+  export SINGULARITY_DISABLE_CACHE=True
+
+%post
+  # install pip
+  apt-get update
+  apt-get install -y python3-pip
+  pip install -U pip
+  # get dependencies
+  pip install -r requirements.txt
+
+# run the application (step not necessary if the verbose version
+# of the command is in the PBS file)
+
+%runscript
+  echo "Runscript; Python version is"
+  python --version
+  #exec /bin/bash python3 /usr/src/app/altair_pipeline.py "$@"
+%startscript
+  echo "Startscript"
+  #exec /bin/bash python3 /usr/src/app/altair_pipeline.py "$@"

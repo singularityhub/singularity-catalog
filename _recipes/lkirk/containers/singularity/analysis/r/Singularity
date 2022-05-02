@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: debian:bullseye-slim
+
+%post
+    # Use Debian unstable via pinning -- new style via APT::Default-Release
+    echo "deb http://http.debian.net/debian sid main" > /etc/apt/sources.list.d/debian-unstable.list
+    echo 'apt::default-release "testing";' > /etc/apt/apt.conf.d/default
+    echo 'apt::install-recommends "false";' > /etc/apt/apt.conf.d/90local-no-recommends
+
+    apt-get update
+    apt-get install -t unstable -y --no-install-recommends \
+        ca-certificates \
+        gcc-9-base \
+        libopenblas0-pthread \
+        locales \
+        r-base \
+        r-base-dev \
+        r-recommended
+
+    # Fix locale
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+
+    # Install R packages
+    Rscript -e '
+        install.packages(c("IRkernel", "remotes"))
+        library("remotes")
+        remotes::install_github("rstudio/renv")
+    '
+
+    rm /etc/apt/sources.list.d/debian-unstable.list
+    rm /etc/apt/apt.conf.d/default
+    rm /etc/apt/apt.conf.d/90local-no-recommends
+    rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+    rm -rf /var/lib/apt/lists/*
+
+    # If possible, record the git hash (works in GHA)
+    echo '{"github_sha": "'$GITHUB_SHA'"}' > /.singularity.d/labels.json

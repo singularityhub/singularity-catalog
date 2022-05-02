@@ -1,5 +1,5 @@
 Bootstrap: library
-From: richelbilderbeek/default/plinkr:0.19
+From: richelbilderbeek/default/plinkr:0.20.1
 
 %post
     # Install python3
@@ -11,15 +11,6 @@ From: richelbilderbeek/default/plinkr:0.19
     python3 -m pip install --no-cache-dir --upgrade pip
 
     apt-get -y clean
-
-    # echo "********************************"
-    # echo "Install conda: 'ormr' needs this"
-    # echo "********************************"
-    # wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    # bash Miniconda3-latest-Linux-x86_64.sh -b -p miniconda
-    # export PATH=/miniconda/bin:$PATH
-    # rm Miniconda3-latest-Linux-x86_64.sh
-    # conda update conda
 
     echo "******************"
     echo "Install R packages"

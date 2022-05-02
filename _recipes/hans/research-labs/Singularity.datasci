@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: jupyter/datascience-notebook:latest
+
+%environment
+	XDG_RUNTIME_DIR=
+	HOME=/home/jgauthie
+
+%post
+	/opt/conda/bin/conda install --yes simplegeneric r-brms nltk spacy "tensorflow=1.12*" "keras=2.2*"
+	/opt/conda/bin/conda clean -tipsy
+
+%runscript
+	jupyter lab

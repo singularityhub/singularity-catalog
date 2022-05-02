@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: alpine:edge
+
+%labels
+    AUTHOR icaoberg
+    MAINTAINER icaoberg@psc.edu
+    WEBSITE https://www.andrew.cmu.edu/~icaoberg
+    VERSION 12.1.2
+
+%post
+    apk update
+    apk add tokei

@@ -1,0 +1,40 @@
+Bootstrap: docker
+From: python:3.10-slim-bullseye
+
+%post
+    apt-get update
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        locales
+
+    # Fix locale
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+
+    pip install --upgrade \
+        pip \
+        setuptools
+
+    pip install \
+        black \
+        ipdb \
+        ipykernel \
+        ipython \
+        matplotlib \
+        mypy \
+        numpy \
+        pandas \
+        plotly \
+        requests \
+        scikit-learn \
+        scipy \
+        statsmodels \
+        tabulate \
+        xarray
+
+    # If possible, record the git hash (works in GHA)
+    echo '{"github_sha": "'$GITHUB_SHA'"}' > /.singularity.d/labels.json
+
+    # Clean up
+    rm -rf /var/lib/apt/lists/*

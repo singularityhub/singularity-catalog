@@ -1,0 +1,10 @@
+Bootstrap: docker
+From: jupyter/datascience-notebook:latest
+
+%environment
+	XDG_RUNTIME_DIR=
+	HOME=/home/jgauthie
+
+%post
+	/opt/conda/bin/conda install --yes simplegeneric nltk spacy pymc3
+	/opt/conda/bin/conda clean -tipsy

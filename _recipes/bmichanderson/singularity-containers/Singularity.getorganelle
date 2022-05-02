@@ -1,0 +1,87 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using the GetOrganelle pipeline
+# Running the program requires a copy of the database and setting a system shell variable
+# Here are the steps:
+# GETORG_PATH=/your_path/.GetOrganelle
+# export GETORG_PATH
+# singularity exec getorganelle.sif get_organelle_config.py -a embplant_pt,embplant_mt
+
+
+Bootstrap: docker
+From: ubuntu:20.04
+
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM GetOrganelle
+	VERSION 1.7.5.3
+
+
+%post
+	export DEBIAN_FRONTEND=noninteractive
+
+	# install dependencies
+	apt update && apt upgrade -y && apt install -y \
+		autoconf \
+		automake \
+		bowtie2 \
+		build-essential \
+		cmake \
+		git \
+		libbz2-dev \
+		make \
+		ncbi-blast+ \
+		pigz \
+		python3-matplotlib \
+		python3-numpy \
+		python3-psutil \
+		python3-requests \
+		python3-scipy \
+		python3-sympy \
+		python3-setuptools \
+		unzip \
+		wget \
+		zlib1g-dev
+
+	# SPAdes
+	SPADES_VER=3.15.3
+	URL=http://cab.spbu.ru/files/release"$SPADES_VER"/SPAdes-"$SPADES_VER".tar.gz
+	wget "$URL"
+	tar -xzf SPAdes-"$SPADES_VER".tar.gz && rm SPAdes-"$SPADES_VER".tar.gz
+	cd SPAdes-"$SPADES_VER"
+	PREFIX=/usr ./spades_compile.sh
+	cd ..
+	rm -r SPAdes-"$SPADES_VER"
+
+	# python alias
+	ln -s /usr/bin/python3 /usr/bin/python
+
+	# clean-up
+	apt autoremove -y && apt clean all
+
+
+	# install GetOrganelle
+	G_VER=1.7.5.3
+	URL=https://github.com/Kinggerm/GetOrganelle/archive/"$G_VER".tar.gz
+	wget "$URL"
+	tar -xzf "$G_VER".tar.gz && rm "$G_VER".tar.gz
+	cd GetOrganelle-"$G_VER"
+	python setup.py install
+	cd ../
+	rm -r GetOrganelle-"$G_VER"
+
+
+%environment
+	# Set up environmental variables within the container
+
+
+%runscript
+	# This will be executed when the container is run (singularity run [container])
+
+
+%help
+	# This message is displayed when called as: singularity run-help [container]
+
+	This container is for running GetOrganelle
+	To run, use: singularity exec getorganelle.sif script_name.py [args]
+	Check contents by entering it as: singularity shell getorganelle.sif

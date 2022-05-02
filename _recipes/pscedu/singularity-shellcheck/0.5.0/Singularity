@@ -2,13 +2,17 @@ Bootstrap: docker
 From: debian:latest
 
 %labels
-    AUTHOR icaoberg
-    MAINTAINER icaoberg@psc.edu
-    WEBSITE https://github.com/icaoberg/singularity-shellcheck
-    VERSION 0.5.0
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY https://github.com/icaoberg/singularity-shellcheck
+    VERSION 0.5.0 
+
+%files
+    shellcheck-v0.5.0/shellcheck /opt/
 
 %post
     apt update
-    apt install -y shellcheck
-
-####################################################################################
+    cd /opt
+    ln -s /opt/shellcheck /usr/local/bin/shellcheck
+    apt clean

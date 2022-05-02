@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: debian:latest
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY https://github.com/icaoberg/singularity-shellcheck
+    VERSION 0.8.0 
+
+%files
+    shellcheck-v0.8.0/shellcheck /opt/
+
+%post
+    apt update
+    cd /opt
+    ln -s /opt/shellcheck /usr/local/bin/shellcheck
+    apt clean

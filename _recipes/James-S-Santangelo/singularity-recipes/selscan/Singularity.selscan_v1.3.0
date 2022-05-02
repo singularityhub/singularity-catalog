@@ -1,0 +1,51 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+    
+    AUTHOR James Santangelo
+    EMAIL james.santangelo37@gmail.com
+    LASSP_VERSION 1.1.1
+
+%environment
+
+    export PATH="/opt/bin:$PATH"
+    export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+
+%post
+    
+    apt-get update && \
+    apt-get -y --no-install-recommends install \
+        build-essential \
+        wget \
+        git \
+        curl \
+        ca-certificates \
+        locales
+    
+    # Configure default locale
+    # Taken from https://github.com/nickjer/singularity-r/blob/master/Singularity.3.6.2
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+    # ===========================
+    # Install selscan 
+    # ===========================
+
+    apt-get update && \
+    apt-get -y --no-install-recommends install \
+        libgsl-dev \
+        libpthread-stubs0-dev \
+        zlib1g-dev
+
+    cd /opt &&
+    mkdir bin &&
+    wget https://github.com/szpiech/selscan/releases/download/v1.3.0/selscan-linux-1.3.0.tar.gz &&
+    tar -xvzf selscan-linux-1.3.0.tar.gz &&
+
+    ln -s /opt/selscan-linux-1.3.0/selscan /opt/bin/selscan
+    ln -s /opt/selscan-linux-1.3.0/norm /opt/bin/norm
+

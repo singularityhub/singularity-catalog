@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: python:3.8
+
+# copy files required for the app to run (this might be subsumed by pip command)
+
+# get files from host (but we don't need any)
+
+%environment
+  # set environment variable to retrieve new image each time
+  export SINGULARITY_DISABLE_CACHE=True
+
+%post
+  # clone rrlfe
+  git clone https://github.com/mwanakijiji/rrlfe.git
+  cd rrlfe
+  # install pip
+  apt-get update
+  apt-get install -y python3-pip
+  pip install --upgrade pip
+  # install dependencies
+  pip install --upgrade rrlfe -t .
+  pip install -r requirements_bare_versions.txt
+  # install Robospect
+  git clone https://github.com/czwa/robospect.py.git
+  cd robospect.py
+  git checkout tags/v0.76
+  python ./setup.py install
+  cd ..
+
+
+%runscript
+  echo "Runscript; Python version is"
+  python --version
+  cd ./rrlfe/
+  python high_level_reduction_script.py

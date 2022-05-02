@@ -1,0 +1,10 @@
+Bootstrap: docker
+From: ufoym/deepo:all-py36-cpu
+
+%environment
+	XDG_RUNTIME_DIR=
+
+%post
+	pip --no-cache-dir install seaborn statsmodels nltk spacy
+	python -m spacy download en
+	python -m nltk.downloader punkt

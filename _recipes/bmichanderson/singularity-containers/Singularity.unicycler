@@ -3,107 +3,90 @@
 
 
 Bootstrap: docker
-From: ubuntu:18.04
+From: ubuntu:20.04
 
 
 %labels
 	MAINTAINER bmichanderson
 	PROGRAM Unicycler
-	VERSION latest
+	VERSION 0.5.0
 
 
 %post
-	# install essentials for obtaining and building software
 	export DEBIAN_FRONTEND=noninteractive
 
-	apt update && apt upgrade -y && apt install -y autoconf automake build-essential cmake git \
-						libtool libpthread-stubs0-dev make python3-dev \
-						python3-setuptools wget zlib1g-dev
-	#apt install -y locales
-	#locale-gen en_US.UTF-8
-	#dpkg-reconfigure locales -f noninteractive
-	#update-locale en_US.UTF-8
-
+	# install essentials for obtaining and building software
+	apt update && apt upgrade -y && apt install -y \
+		autoconf \
+		automake \
+		build-essential \
+		cmake \
+		git \
+		libtool \
+		libpthread-stubs0-dev \
+		libbz2-dev \
+		make \
+		python3-dev \
+		python3-setuptools \
+		wget \
+		zlib1g-dev
 
 	# install additional dependencies
+	# note: no longer require bowtie2 openjdk-11-jre samtools
+	apt install -y \
+		ncbi-blast+
 
-		apt install -y bowtie2 ncbi-blast+ openjdk-11-jre samtools
+	# SPAdes
+	SPADES_VER=3.15.3
+	URL=http://cab.spbu.ru/files/release"$SPADES_VER"/SPAdes-"$SPADES_VER".tar.gz
+	wget "$URL"
+	tar -xzf SPAdes-"$SPADES_VER".tar.gz && rm SPAdes-"$SPADES_VER".tar.gz
+	cd SPAdes-"$SPADES_VER"
+	PREFIX=/usr ./spades_compile.sh
+	cd ..
+	rm -r SPAdes-"$SPADES_VER"
 
+	# python alias
+	ln -s /usr/bin/python3 /usr/bin/python
 
-		# SPAdes
-		# NOTE: newest Unicycler release suggests SPAdes shouldn't be newer than v. 3.13.0
-
-		SPADES_VERSION=3.13.0
-		URL=https://github.com/ablab/spades/releases/download/v"$SPADES_VERSION"/SPAdes-"$SPADES_VERSION"-Linux.tar.gz
-		wget "$URL"
-		tar -xzf SPAdes-"$SPADES_VERSION"-Linux.tar.gz
-		rm SPAdes-"$SPADES_VERSION"-Linux.tar.gz
-		#echo "export PATH=${PATH}:/SPAdes-${SPADES_VERSION}-Linux/bin" >>$SINGULARITY_ENVIRONMENT
-
-
-		# Pilon
-
-		PILON_VERSION=1.23
-		URL=https://github.com/broadinstitute/pilon/releases/download/v"$PILON_VERSION"/pilon-"$PILON_VERSION".jar
-		wget "$URL"
-		mv pilon-"$PILON_VERSION".jar /usr/local/bin/
-
-
-		# Racon
-
-		git clone --recursive https://github.com/isovic/racon.git racon
-		cd racon
-		mkdir build && cd build
-		cmake -DCMAKE_BUILD_TYPE=Release ..
-		make
-		make install
-		cd ../..
-		rm -r racon/
+	# Racon
+	git clone --recursive https://github.com/isovic/racon.git racon
+	cd racon
+	mkdir build && cd build
+	cmake -DCMAKE_BUILD_TYPE=Release ..
+	make
+	make install
+	cd ../..
+	rm -r racon/
 
 
 	# clean-up
-
-	apt update && apt upgrade -y &&	apt autoremove -y && apt clean all
+	apt autoremove -y && apt clean all
 
 
 	# install Unicycler
-
-	git clone https://github.com/rrwick/Unicycler.git
-	cd Unicycler
+	UNI_VER=0.5.0
+	URL=https://github.com/rrwick/Unicycler/archive/refs/tags/v"$UNI_VER".tar.gz
+	wget "$URL"
+	tar -xzf v"$UNI_VER".tar.gz && rm v"$UNI_VER".tar.gz
+	cd Unicycler-"$UNI_VER"
 	./setup.py install
 	cd ../
-	rm -r Unicycler/
-
-
-%test
-	# test that the program works
+	rm -r Unicycler-"$UNI_VER"
 
 
 %environment
 	# Set up environmental variables within the container
 
-	SPADES_VERSION=3.13.0	
-	PATH="$PATH":/SPAdes-"$SPADES_VERSION"-Linux/bin
-	export PATH
-
-	#export LC_ALL=en_US.UTF-8
-
 
 %runscript
 	# This will be executed when the container is run (singularity run [container])
-
 	unicycler "$@"
 
 
 %help
 	# This message is displayed when called as: singularity run-help [container]
 
-	******************************************************************************
-
 	This container is for running Unicycler
-
 	To run, use: singularity run unicycler.sif [args]
-
 	Check contents by entering it as: singularity shell unicycler.sif
-
-	******************************************************************************

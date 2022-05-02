@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-fastq-tools
+    COPYRIGHT Copyright © 2022 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    VERSION 0.8
+
+%post
+    apt-get update
+    apt-get -y install wget
+    apt-get -y install autoconf libtool build-essential
+    apt-get -y install libpcre3 libpcre3-dev
+    apt-get -y install zlibc libz-dev
+    cd /opt
+    wget https://github.com/dcjones/fastq-tools/archive/v0.8.tar.gz -O fastq-tools-0.8.tar.gz
+    tar --extract --gzip --file fastq-tools-0.8.tar.gz
+    rm fastq-tools-0.8.tar.gz
+    cd fastq-tools-0.8
+    ./autogen.sh && ./configure && make
+    cd ..
+    cp  fastq-tools-0.8/src/fastq-grep    /usr/local/bin/fastq-grep
+    cp  fastq-tools-0.8/src/fastq-kmers   /usr/local/bin/fastq-kmers
+    cp  fastq-tools-0.8/src/fastq-match   /usr/local/bin/fastq-match
+    cp  fastq-tools-0.8/src/fastq-uniq    /usr/local/bin/fastq-uniq
+    cp  fastq-tools-0.8/src/fastq-qual    /usr/local/bin/fastq-qual
+    cp  fastq-tools-0.8/src/fastq-sample  /usr/local/bin/fastq-sample
+    cp  fastq-tools-0.8/src/fastq-qualadj /usr/local/bin/fastq-qualadj
+    cp  fastq-tools-0.8/src/fastq-sort  /usr/local/bin/fastq-sort
+    cp  fastq-tools-0.8/src/fastq-qscale  /usr/local/bin/fastq-qscale
+    chmod u+x /usr/local/bin/fastq*

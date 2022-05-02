@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: nvidia/cuda:11.0-devel-ubuntu20.04
+
+%post
+export TZ=UTC
+apt update
+DEBIAN_FRONTEND=noninteractive apt install -y \
+  git \
+  tzdata \
+  cmake \
+  python3\
+  python3-pip \
+  sox \
+  portaudio19-dev \
+  ffmpeg \
+  libsndfile1
+pip install \
+  sox \
+  numpy==1.20 \
+  pyopenjtalk \
+  pyaudio \
+  pysoundfile \
+  pyyaml \
+  attrdict \
+  librosa \
+pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+pip install \
+  datasets \
+  transformers \
+  fairseq \
+  git+https://github.com/1vket/defect
+
+python3 -c "
+import defect
+from datasets import load_dataset
+defect.text.sentence2phoneSymbol('テストだよ')
+load_dataset('common_voice', 'ja', split='train+validation+test')
+"

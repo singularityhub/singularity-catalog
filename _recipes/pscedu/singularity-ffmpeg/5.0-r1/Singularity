@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: alpine:edge
+Includecmd: no
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY  https://gitlab.psc.edu/icaoberg/singularity-ffmpeg
+    COPYRIGHT Copyright © 2022 Pittsburgh Supercomputing Center. All Rights Reserved. 
+    VERSION 5.0-r1
+
+%post
+    apk add --update ffmpeg=5.0-r1
