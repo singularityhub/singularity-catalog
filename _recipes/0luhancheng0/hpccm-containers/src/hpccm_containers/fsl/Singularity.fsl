@@ -1,0 +1,49 @@
+BootStrap: docker
+From: ubuntu:20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm -f /bin/sh && ln -s /bin/bash /bin/sh
+    rm -f /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
+    /bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        dirmngr \
+        git \
+        gpg-agent \
+        locales \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+%post
+    cd /
+    wget -O- http://neuro.debian.net/lists/bionic.us-ca.full | tee /etc/apt/sources.list.d/neurodebian.sources.list
+    apt-key adv --recv-keys --keyserver hkps://keyserver.ubuntu.com 0xA5D32F012649A5A9 2>&1
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        fsl-complete
+    rm -rf /var/lib/apt/lists/*

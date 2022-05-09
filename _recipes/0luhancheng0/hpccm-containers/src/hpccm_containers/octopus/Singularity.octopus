@@ -1,0 +1,72 @@
+BootStrap: docker
+From: ubuntu:20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm -f /bin/sh && ln -s /bin/bash /bin/sh
+    rm -f /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
+    /bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        cmake \
+        gfortran \
+        git \
+        libfftw3-bin \
+        libfftw3-dev \
+        libgsl-dev \
+        liblapack-dev \
+        liblapack3 \
+        locales \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+# OpenMPI version 4.0.5
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bzip2 \
+        file \
+        hwloc \
+        libnuma-dev \
+        make \
+        openssh-client \
+        perl \
+        tar \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.open-mpi.org/software/ompi/v4.0/downloads/openmpi-4.0.5.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/openmpi-4.0.5.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/openmpi-4.0.5 &&   ./configure --prefix=/usr/local/openmpi --disable-getpwuid --enable-orterun-prefix-by-default --with-cuda --with-verbs
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/openmpi-4.0.5 /var/tmp/openmpi-4.0.5.tar.bz2
+%environment
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8

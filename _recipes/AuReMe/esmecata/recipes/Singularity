@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+    Maintainer Belcour A.
+    Version v0.2.1
+    Description EsMeCaTa Singularity recipe
+
+%environment
+    export PATH=/opt/conda/bin:${PATH}
+    export PYTHONIOENCODING=utf8
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%post
+    apt-get update && \
+    apt-get update && apt-get -y upgrade
+    apt-get -y install \
+    git \
+    wget ;\
+    rm -rf /var/lib/apt/lists/* ;\
+    apt-get clean ;\
+    wget -c https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh ;\
+    /bin/bash Miniconda3-latest-Linux-x86_64.sh -bfp /usr/local ;\
+    conda update conda ;\
+    conda install mmseqs2=13.45111 pandas=1.4.0 sparqlwrapper=1.8.5 requests=2.26.0 biopython=1.79 ete3=3.1.2 -c conda-forge -c bioconda;\
+    python3 -c 'from ete3 import NCBITaxa; ncbi = NCBITaxa()';\
+    pip install esmecata==0.2.1

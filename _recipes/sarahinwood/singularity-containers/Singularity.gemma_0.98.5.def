@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+    Container for gemma 0.98.5
+    https://github.com/genetics-statistics/GEMMA
+
+%labels
+
+    MAINTAINER "Sarah Inwood (sninwood@gmail.com)"
+    VERSION "gemma 0.98.5"
+
+%post
+
+# install wget
+    apt-get update
+    apt-get install -y wget
+
+# install gemma
+    wget -O gemma.gz \
+        --no-check-certificate \
+        https://github.com/genetics-statistics/GEMMA/releases/download/v0.98.5/gemma-0.98.5-linux-static-AMD64.gz
+    mkdir gemma
+    mv gemma.gz gemma/
+    cd gemma
+    gunzip gemma.gz
+    chmod 755 gemma
+
+%runscript
+
+    exec /gemma/gemma "$@"

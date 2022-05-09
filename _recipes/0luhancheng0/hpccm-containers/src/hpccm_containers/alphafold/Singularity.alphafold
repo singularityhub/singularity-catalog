@@ -1,5 +1,5 @@
 BootStrap: docker
-From: nvcr.io/nvidia/cuda:11.3.0-runtime-ubuntu20.04
+From: nvcr.io/nvidia/cuda:11.3.0-devel-ubuntu20.04
 %post
     . /.singularity.d/env/10-docker*.sh
 
@@ -40,6 +40,7 @@ From: nvcr.io/nvidia/cuda:11.3.0-runtime-ubuntu20.04
         git \
         locales \
         software-properties-common \
+        vim \
         wget \
         zlib1g-dev
     rm -rf /var/lib/apt/lists/*

@@ -1,0 +1,121 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using HybPhaser
+# see: https://github.com/LarsNauheimer/HybPhaser/
+
+
+Bootstrap: docker
+From: r-base:4.0.0
+
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM HybPhaser
+	VERSION 2.0
+
+
+%help
+	This container is for running HybPhaser scripts from Lars Nauheimer
+	Scripts are stored in /HybPhaser (in the PATH)
+	You will need a config.txt file in the current directory
+
+	To run Rscripts, use: 
+		singularity run -H $(pwd) hybphaser.sif [script_name]
+	To run the bash script, use: 
+		singularity exec hybphaser.sif [script_name]
+
+	The list of scripts:
+	1_generate_consensus_sequences.sh
+	1a_count_snps.R
+	1b_assess_dataset.R
+	1c_generate_sequence_lists.R
+	2_extract_mapped_reads.sh
+	2a_prepare_bbsplit_script.R
+	2b_collate_bbsplit_results.R
+	3a_prepare_phasing_script.R
+	3b_collate_phasing_stats.R
+	4_merge_sequence_lists.R
+	HybPhaser_Main_script.R
+
+
+%post
+	export DEBIAN_FRONTEND=noninteractive
+
+	# install dependencies
+	apt update && apt install -y \
+		autoconf \
+		automake \
+		build-essential \
+		cmake \
+		gawk \
+		git \
+		libbz2-dev \
+		make \
+		openjdk-8-jre \
+		wget \
+		zlib1g-dev
+
+	## R packages
+	### remotes
+	R -e 'install.packages("remotes")'
+	
+	### ape
+	R -e 'require(remotes); install.packages("ape", version = "5.4")'
+
+	### seqinR
+	R -e 'require(remotes); install.packages("seqinr", version = "4.2")'
+
+	### stringR
+	R -e 'require(remotes); install.packages("stringr", version = "1.4")'
+
+	## BBMap scripts
+	URL=https://sourceforge.net/projects/bbmap/files/latest/download
+	wget "$URL"
+	tar -xzf download && rm download
+	
+	## bcftools
+	BCF_VER=1.9
+	URL=https://github.com/samtools/bcftools/releases/download/"$BCF_VER"/bcftools-"$BCF_VER".tar.bz2
+	wget "$URL"
+	tar -xjf bcftools-"$BCF_VER".tar.bz2 && rm bcftools-"$BCF_VER".tar.bz2
+	cd bcftools-"$BCF_VER"
+	./configure --prefix=/usr
+	make
+	make install
+	cd .. && rm -r bcftools-"$BCF_VER"
+
+	## BWA
+	git clone https://github.com/lh3/bwa.git
+	cd bwa
+	make
+	mv bwa /usr/bin/
+	cd .. && rm -r bwa
+
+	## samtools
+	SAM_VER=1.9
+	URL=https://github.com/samtools/samtools/releases/download/"$SAM_VER"/samtools-"$SAM_VER".tar.bz2
+	wget "$URL"
+	tar -xjf samtools-"$SAM_VER".tar.bz2 && rm samtools-"$SAM_VER".tar.bz2
+	cd samtools-"$SAM_VER"
+	./configure --prefix=/usr
+	make
+	make install
+	cd .. && rm -r samtools-"$SAM_VER"
+
+
+	# clean-up
+	apt autoremove -y && apt clean all
+
+
+	# install HybPhaser scripts
+	git clone https://github.com/LarsNauheimer/HybPhaser.git
+	chmod 755 HybPhaser/*.sh
+
+
+%environment
+	# Set up environmental variables within the container
+	export PATH="$PATH":/bbmap:/HybPhaser
+
+
+%runscript
+	# This will be executed when the container is run (singularity run [container])
+	Rscript /HybPhaser/"$@"

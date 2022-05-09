@@ -23,5 +23,8 @@ apt-get update
 apt-get install -y software-properties-common
 add-apt-repository universe
 apt-get upgrade -y
-apt-get install -y --no-install-recommends tigervnc-standalone-server tigervnc-common x11-xserver-utils xfonts-base xfce4 xfce4-goodies desktop-base tango-icon-theme thunar-volman xfce4-notifyd dbus-x11 novnc websockify python-numpy net-tools openssh-client gawk less at-spi2-core
+apt-get install -y --no-install-recommends tigervnc-standalone-server tigervnc-common x11-xserver-utils xfonts-base xfce4 xfce4-goodies desktop-base tango-icon-theme thunar-volman xfce4-notifyd dbus-x11 net-tools openssh-client gawk less at-spi2-core
 apt-get clean -y
+
+%startscript
+	vncserver -xstartup xstartup.sh $@

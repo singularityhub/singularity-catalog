@@ -90,7 +90,7 @@ From: nvcr.io/nvidia/cuda:11.0-devel-ubuntu20.04
 %post
     cd /
     cd /opt/cp2k-toolchain
-    ./install_cp2k_toolchain.sh --mpi-mode=mpich --math-mode=mkl --with-reflapack=no --with-scalapack=no --with-elpa=no --gpu-ver=V100
+    ./install_cp2k_toolchain.sh --mpi-mode=openmpi --math-mode=mkl --with-reflapack=no --with-scalapack=no --with-elpa=no --gpu-ver=V100
     rm -rf ./build
 
 %post

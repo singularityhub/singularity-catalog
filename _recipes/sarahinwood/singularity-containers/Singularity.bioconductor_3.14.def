@@ -1,0 +1,42 @@
+Bootstrap: docker
+From: bioconductor/bioconductor_docker:RELEASE_3_14
+
+%help
+
+    R 4.1.3 with Bioconductor 3.14
+
+%labels
+
+    MAINTAINER "Sarah Inwood (sninwood@gmail.com)"
+    VERSION "Bioconductor 3.14"
+
+%post
+    # install packages from bioconductor
+    Rscript -e "options(Ncpus=8); \
+        BiocManager::install(c( \
+            'adegenet', \
+            'BatchJobs', \
+            'Biostrings', \
+            'clusterProfiler', \
+            'dada2', \
+            'data.table', \
+            'DESeq2', \
+            'DEXSeq', \
+            'fgsea', \
+            'pcadapt', \
+            'pheatmap', \
+            'phyloseq', \
+            'qqman', \
+            'ShortRead', \
+            'S4Vectors', \
+            'tidyverse', \
+            'tximport', \
+            'vcfR', \
+            'VennDiagram', \
+            'viridis'
+            ), \
+        type='source', ask=FALSE)"
+
+%runscript
+
+    exec /usr/local/bin/R "$@"

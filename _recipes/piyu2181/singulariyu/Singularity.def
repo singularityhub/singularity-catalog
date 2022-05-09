@@ -1,0 +1,12 @@
+BootStrap: docker
+From: ubuntu:18.04
+
+%post
+    apt -y update
+    apt -y upgrade
+    apt -y install software-properties-common
+    apt -y install python3-pip
+    apt -y install build-essential libssl-dev libffi-dev python3-dev
+
+    pip3 install numpy pandas comet_ml Pillow
+    pip3 install --no-cache-dir torch torchvision matplotlib ipython

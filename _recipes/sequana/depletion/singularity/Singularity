@@ -1,0 +1,23 @@
+Bootstrap: localimage
+From: sequana.img
+
+%labels
+    Author thomas cokelaer
+    Version v1.0
+
+%post
+
+    export PATH=$PATH:/usr/local/anaconda/bin
+    export LANG=C   # prevents perl for raising warnings
+    export PERL5LIB=/usr/local/anaconda/lib/perl5/5.22.0
+
+    pip install sequana_depletion
+
+%runscript
+    echo "Welcome to sequana depletion pipeline"
+    exec sequana_pipelines_depletion --version
+    exec sequana_pipelines_depletion "$@"
+
+
+
+

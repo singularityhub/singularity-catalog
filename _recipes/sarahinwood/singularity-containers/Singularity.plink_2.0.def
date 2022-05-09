@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+    Container for plink 2.00a2LM
+    https://www.cog-genomics.org/plink/2.0/
+
+%labels
+
+    MAINTAINER "Sarah Inwood (sninwood@gmail.com)"
+    VERSION "plink 2.00a2LM"
+
+%post
+
+# install wget
+    apt-get update
+    apt-get install -y wget
+    apt-get install -y zip
+
+# install plink
+    wget -O plink.zip \
+        --no-check-certificate \
+        https://s3.amazonaws.com/plink2-assets/alpha2/plink2_linux_x86_64.zip
+    mkdir plink
+    mv plink.zip plink/
+    cd plink
+    unzip plink.zip
+    chmod 755 plink2
+
+%runscript
+
+    exec /plink/plink2 "$@"

@@ -1,0 +1,117 @@
+BootStrap: docker
+From: ubuntu:18.04
+
+%post
+
+
+## Install dependance of R software
+    apt -y update
+    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+    apt install -y python3-all-dev python3-pip python-virtualenv
+    apt install -y software-properties-common locales
+    apt install -y libpng16-16 libblas3 libblas-dev liblapack-dev liblapack3 libreadline7 r-recommended r-doc-html libxml2-dev libcurl4-openssl-dev libssl-dev libmagick++-dev libcurl3-gnutls perl
+    apt install -y dirmngr
+    apt install -y libv8-3.14-dev
+
+    echo 'export LC_ALL=C.UTF-8' >> /environment
+    echo 'export LANG=C.UTF-8' >> /environment
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    apt -y update
+    apt install -y git wget rsync tzdata
+
+#### Miniconda
+    # install miniconda
+    if [ ! -d /opt/conda ]; then
+         wget https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh -O ~/miniconda.sh && \
+         bash ~/miniconda.sh -b -p /opt/conda && \
+         rm ~/miniconda.sh && \
+         /opt/conda/bin/conda clean -tipsy && \
+         ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+         echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+         echo "conda activate base" >> ~/.bashrc
+    fi
+    # set miniconda path
+    export PATH="/opt/conda/bin:$PATH"
+
+    # update conda
+    conda update -n base -c defaults conda
+    # activate conda
+    #eval "$(/opt/conda/bin/conda shell.bash hook)"
+    # configuring channels
+    conda config --add channels defaults
+    conda config --add channels bioconda
+    conda config --add channels conda-forge
+
+## Add repository for download latest version of R
+
+    curl "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x51716619E084DAB9" | apt-key add -
+
+    #apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
+    add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/"
+    apt -y update
+
+## Install R
+    apt install -y r-base-core pandoc
+
+##  add R packages from CRAN
+### Install RMarkdown and TinyTeX
+    R --slave -e 'install.packages(c("rmarkdown","tinytex"))'
+
+# add R packages from bioconductor
+    Rscript -e "install.packages('BiocManager')"
+    Rscript -e "library(BiocManager); install('devtools')"
+
+    R -e "install.packages('ggplot2')"
+    R -e "install.packages('optparse')"
+
+    R -e "install.packages('dplyr')"
+    R -e "install.packages('here')"
+    R -e "install.packages('reshape2')"
+    R -e "install.packages('png')"
+    R -e "BiocManager::install('ComplexHeatmap')"
+    R -e "install.packages('RColorBrewer')"
+    R -e "install.packages('DT')"
+    R -e "BiocManager::install('Rsamtools')"
+    R -e "install.packages('Cairo')"
+    R -e "install.packages('plotly')"
+    R -e "install.packages('knitr')"
+    R -e "BiocManager::install('GenomicRanges')"
+    R -e "BiocManager::install('GenomicFeatures')"
+    R -e "BiocManager::install('rtracklayer')"
+    R -e "BiocManager::install('GenomicAlignments')"
+    R -e "BiocManager::install(\
+                    c('edger', 'mixOmics', 'baySeq', 'svglite', 'readr', \
+                    'paletteer', 'ShortRead', 'Rsubread', \
+                    'genefilter', 'systemPipeR', 'UpSetR', 'limma') \
+    )"
+    
+
+#######################################################################fastqc
+
+conda create -n fastqc
+conda install fastqc=0.11.9 -n fastqc
+
+conda create -n hisat2
+conda install hisat2=2.2.1 -n hisat2
+
+conda create -n samtools
+conda install samtools=1.14 -n samtools
+
+conda create -n stringtie
+conda install stringtie=2.1.7 -n stringtie
+
+conda create -n gffcompare
+conda install -c bioconda gffcompare=0.11.2 -n gffcompare
+
+%environment
+  export PATH="/opt/conda/bin:$PATH"
+  export PATH="/opt/conda/envs/fastqc/bin:$PATH"
+  export PATH="/opt/conda/envs/hisat2/bin:$PATH"
+  export PATH="/opt/conda/envs/samtools/bin:$PATH"
+  export PATH="/opt/conda/envs/stringtie/bin:$PATH"
+  export PATH="/opt/conda/envs/gffcompare/bin:$PATH"
+
+%runscript
+exec /bin/bash "$@"
+

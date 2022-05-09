@@ -100,7 +100,7 @@ from: debian:buster-20201012
     
     # install basic system tools and libs 
     apt-get clean && apt-get update -y && apt-get upgrade -y
-    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline7 libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc pandoc-citeproc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpango1.0-dev  libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-dev gawk libmariadb-dev
+    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline7 libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc pandoc-citeproc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpango1.0-dev  libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-dev gawk mariadb-client-10.3 libmariadb-dev libnlopt-dev libtry-tiny-perl libdigest-perl-md5-perl libdbi-perl libdbd-mysql-perl
     
     # no texlive-fonts-extra due to mmap
     
@@ -146,13 +146,15 @@ from: debian:buster-20201012
 	# --no-init-file prevents R from loading user settings since all should be independent from the user
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'install.packages("tidyverse", repos="http://cran.r-project.org", Ncpus='"$COMPILE_CPUS"')'
     ## tidyverse contains:  broom,cli,crayon,dbplyr,dplyr,forcats,ggplot2,haven,hms,httr,jsonlite,lubridate,magrittr,modelr,pillar,purrr,readr,readxl,reprex,rlang,rstudioapi,rvest,stringr,tibble,tidyr,xml2,tidyverse
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'install.packages(c("reshape2","plyr","scales","gridExtra","ggrepel","data.table","R.utils","openxlsx","WriteXLS","hwriter","factoextra","pheatmap","RColorBrewer","PoiClaClu","knitr","devtools","remotes","cowplot","patchwork","ggsci","ggpubr","ggthemes","argparse","pander","shiny","shinydashboard","shinythemes","shinyjs","reticulate","enrichR","future","Matrix","kableExtra","sessioninfo", "markdown", "rmarkdown", "RMySQL"), repos="http://cran.r-project.org", Ncpus='"$COMPILE_CPUS"')'
     
-    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'install.packages(c("reshape2","plyr","scales","gridExtra","ggrepel","data.table","R.utils","openxlsx","WriteXLS","hwriter","factoextra","pheatmap","RColorBrewer","PoiClaClu","knitr","devtools","remotes","cowplot","patchwork","ggsci","ggpubr","ggthemes","argparse","pander","shiny","shinydashboard","shinythemes","shinyjs","reticulate","enrichR","future","Matrix","glmGamPoi","kableExtra","sessioninfo", "markdown", "rmarkdown", "RMySQL"), repos="http://cran.r-project.org", Ncpus='"$COMPILE_CPUS"')'
+    # CRAN packages where the current version cannot be used and older versions need to be installed
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'devtools::install_version("locfit", version="1.5-9.4",  repos="http://cran.us.r-project.org")'
 
     # Bioconductor packages
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'if (!requireNamespace("BiocManager",quietly=TRUE)) install.packages("BiocManager", repos="http://cran.r-project.org")'
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'BiocManager::install(ask=FALSE)'
-    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'BiocManager::install(c("biomaRt","DESeq2","MAST","edgeR","BiocParallel","IHW","clusterProfiler","ReportingTools","genefilter","org.Mm.eg.db","org.Hs.eg.db","org.Dr.eg.db", "LoomExperiment", "SingleCellExperiment", "rtracklayer"), ask=FALSE, Ncpus='"$COMPILE_CPUS"')'
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'BiocManager::install(c("biomaRt","DESeq2","MAST","edgeR","BiocParallel","IHW","clusterProfiler","ReportingTools","genefilter","org.Mm.eg.db","org.Hs.eg.db","org.Dr.eg.db", "LoomExperiment", "SingleCellExperiment", "rtracklayer", "glmGamPoi", "DEGreport"), ask=FALSE, Ncpus='"$COMPILE_CPUS"')'
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'BiocManager::install("romanhaa/cerebroApp",ask=FALSE, Ncpus='"$COMPILE_CPUS"')'
     
     # github/dev packages
@@ -454,7 +456,7 @@ from: debian:buster-20201012
     
     # note: we need to disable memory-mapping since it causes problems with the cluster
     # note: we need to compile avx versions separately
-    GSNAP_VERSION="2021-05-08"
+    GSNAP_VERSION="2021-12-17"
     GSNAP_DIR=gmap-${GSNAP_VERSION}
     
     cd /opt && wget -O ${GSNAP_DIR}.tar.gz -nv http://research-pub.gene.com/gmap/src/gmap-gsnap-${GSNAP_VERSION}.tar.gz && \

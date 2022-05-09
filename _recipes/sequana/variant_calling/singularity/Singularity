@@ -1,0 +1,28 @@
+Bootstrap: library
+From: cokelaer/damona/conda:4.7.12
+
+
+%labels
+    Author thomas cokelaer
+    Version v0.9.5
+
+
+%post
+
+    export PATH=$PATH:/usr/local/anaconda/bin
+    export LANG=C   # prevents perl for raising warnings
+    export PERL5LIB=/usr/local/anaconda/lib/perl5/5.22.0
+
+    conda install freebayes sambamba snpEff  bwa samtools picard
+    conda clean --packages -y
+    conda clean --all -y # next requires lots of space
+
+    pip install sequana_variant_calling
+
+
+%runscript
+    echo "Welcome to sequana variant_calling pipeline"
+    exec sequana_variant_calling --version
+    exec sequana_variant_calling "$@"
+
+

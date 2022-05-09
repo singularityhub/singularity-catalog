@@ -1,0 +1,53 @@
+Bootstrap: docker
+From: ecpe4s/ubuntu20.04-oneapi-x86_64:22.02
+Stage: build
+
+%files
+spack_intel_ubuntu20.04_e4s.yaml /spack.yaml
+
+%post
+ export SPACK_DISABLE_LOCAL_CONFIG=1
+ export SPACK_USER_CACHE_PATH=/tmp/_spack_cache
+ . /spack/share/spack/setup-env.sh
+ spack -e . concretize -f | tee concretize.log
+ spack -e . buildcache keys -it
+ spack -e . install --cache-only
+ spack clean -a
+
+%environment
+  ACL_BOARD_VENDOR_PATH='/opt/Intel/OpenCLFPGA/oneAPI/Boards'
+  ADVISOR_2022_DIR='/opt/intel/oneapi/advisor/2022.0.0'
+  APM='/opt/intel/oneapi/advisor/2022.0.0/perfmodels'
+  CCL_CONFIGURATION='cpu_gpu_dpcpp'
+  CCL_ROOT='/opt/intel/oneapi/ccl/2021.5.1'
+  CLASSPATH='/opt/intel/oneapi/mpi/2021.5.1//lib/mpi.jar:/opt/intel/oneapi/dal/2021.5.3/lib/onedal.jar'
+  CLCK_ROOT='/opt/intel/oneapi/clck/2021.5.0'
+  CMAKE_PREFIX_PATH='/opt/intel/oneapi/vpl/2022.0.0:/opt/intel/oneapi/tbb/2021.5.1/env/..:/opt/intel/oneapi/dal/2021.5.3:/opt/intel/oneapi/compiler/2022.0.2/linux/IntelDPCPP'
+  CMPLR_ROOT='/opt/intel/oneapi/compiler/2022.0.2'
+  CONDA_DEFAULT_ENV='intelpython-python3.9'
+  CONDA_EXE='/opt/intel/oneapi/intelpython/latest/bin/conda'
+  CONDA_PREFIX='/opt/intel/oneapi/intelpython/latest'
+  CONDA_PROMPT_MODIFIER='(intelpython-python3.9) '
+  CONDA_PYTHON_EXE='/opt/intel/oneapi/intelpython/latest/bin/python'
+  CONDA_SHLVL='1'
+  CPATH='/opt/intel/oneapi/vpl/2022.0.0/include:/opt/intel/oneapi/tbb/2021.5.1/env/../include:/opt/intel/oneapi/mpi/2021.5.1//include:/opt/intel/oneapi/mkl/2022.0.2/include:/opt/intel/oneapi/ippcp/2021.5.1/include:/opt/intel/oneapi/ipp/2021.5.2/include:/opt/intel/oneapi/dpl/2021.6.0/linux/include:/opt/intel/oneapi/dnnl/2022.0.2/cpu_dpcpp_gpu_dpcpp/lib:/opt/intel/oneapi/dev-utilities/2021.5.2/include:/opt/intel/oneapi/dal/2021.5.3/include:/opt/intel/oneapi/ccl/2021.5.1/include/cpu_gpu_dpcpp'
+  CPLUS_INCLUDE_PATH='/opt/intel/oneapi/clck/2021.5.0/include'
+  DAALROOT='/opt/intel/oneapi/dal/2021.5.3'
+  DALROOT='/opt/intel/oneapi/dal/2021.5.3'
+  DAL_MAJOR_BINARY='1'
+  DAL_MINOR_BINARY='1'
+  DNNLROOT='/opt/intel/oneapi/dnnl/2022.0.2/cpu_dpcpp_gpu_dpcpp'
+  DPL_ROOT='/opt/intel/oneapi/dpl/2021.6.0'
+  FI_PROVIDER_PATH='/opt/intel/oneapi/mpi/2021.5.1//libfabric/lib/prov:/usr/lib64/libfabric'
+  FPGA_VARS_ARGS=''
+  FPGA_VARS_DIR='/opt/intel/oneapi/compiler/2022.0.2/linux/lib/oclfpga'
+  GDB_INFO='/opt/intel/oneapi/debugger/2021.5.0/documentation/info/'
+  INFOPATH='/opt/intel/oneapi/debugger/2021.5.0/gdb/intel64/lib'
+  INSPECTOR_2022_DIR='/opt/intel/oneapi/inspector/2022.0.0'
+  INTELFPGAOCLSDKROOT='/opt/intel/oneapi/compiler/2022.0.2/linux/lib/oclfpga'
+  INTEL_LICENSE_FILE='/opt/intel/licenses:/root/intel/licenses:/opt/intel/oneapi/clck/2021.5.0/licensing:/opt/intel/licenses:/root/intel/licenses:/Users/Shared/Library/Application Support/Intel/Licenses'
+  INTEL_PYTHONHOME='/opt/intel/oneapi/debugger/2021.5.0/dep'
+  IPPCP_TARGET_ARCH='intel64'
+ PATH=/opt/intel/oneapi/vpl/2022.0.0/bin:/opt/intel/oneapi/mpi/2021.5.0//libfabric/bin:/opt/intel/oneapi/mpi/2021.5.0//bin:/opt/intel/oneapi/mkl/2022.0.1/bin/intel64:/opt/intel/oneapi/itac/2021.5.0/bin:/opt/intel/oneapi/inspector/2022.0.0/bin64:/opt/intel/oneapi/dpcpp-ct/2022.0.0/bin:/opt/intel/oneapi/dev-utilities/2021.5.1/bin:/opt/intel/oneapi/debugger/2021.5.0/gdb/intel64/bin:/opt/intel/oneapi/compiler/2022.0.1/linux/lib/oclfpga/bin:/opt/intel/oneapi/compiler/2022.0.1/linux/bin/intel64:/opt/intel/oneapi/compiler/2022.0.1/linux/bin:/opt/intel/oneapi/clck/2021.5.0/bin/intel64:/spack/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ LIBRARY_PATH=/opt/intel/oneapi/vpl/2022.0.0/lib:/opt/intel/oneapi/tbb/2021.5.0/env/../lib/intel64/gcc4.8:/opt/intel/oneapi/mpi/2021.5.0//libfabric/lib:/opt/intel/oneapi/mpi/2021.5.0//lib/release:/opt/intel/oneapi/mpi/2021.5.0//lib:/opt/intel/oneapi/mkl/2022.0.1/lib/intel64:/opt/intel/oneapi/ipp/2021.5.1/lib/intel64:/opt/intel/oneapi/ippcp/2021.5.0/lib/intel64:/opt/intel/oneapi/ipp/2021.5.1/lib/intel64:/opt/intel/oneapi/dnnl/2022.0.1/cpu_dpcpp_gpu_dpcpp/lib:/opt/intel/oneapi/dal/2021.5.1/lib/intel64:/opt/intel/oneapi/compiler/2022.0.1/linux/compiler/lib/intel64_lin:/opt/intel/oneapi/compiler/2022.0.1/linux/lib:/opt/intel/oneapi/clck/2021.5.0/lib/intel64:/opt/intel/oneapi/ccl/2021.5.0/lib/cpu_gpu_dpcpp
+ LD_LIBRARY_PATH=/opt/intel/oneapi/vpl/2022.0.0/lib:/opt/intel/oneapi/tbb/2021.5.0/env/../lib/intel64/gcc4.8:/opt/intel/oneapi/mpi/2021.5.0//libfabric/lib:/opt/intel/oneapi/mpi/2021.5.0//lib/release:/opt/intel/oneapi/mpi/2021.5.0//lib:/opt/intel/oneapi/mkl/2022.0.1/lib/intel64:/opt/intel/oneapi/itac/2021.5.0/slib:/opt/intel/oneapi/ipp/2021.5.1/lib/intel64:/opt/intel/oneapi/ippcp/2021.5.0/lib/intel64:/opt/intel/oneapi/ipp/2021.5.1/lib/intel64:/opt/intel/oneapi/dnnl/2022.0.1/cpu_dpcpp_gpu_dpcpp/lib:/opt/intel/oneapi/debugger/2021.5.0/gdb/intel64/lib:/opt/intel/oneapi/debugger/2021.5.0/libipt/intel64/lib:/opt/intel/oneapi/debugger/2021.5.0/dep/lib:/opt/intel/oneapi/dal/2021.5.1/lib/intel64:/opt/intel/oneapi/compiler/2022.0.1/linux/lib:/opt/intel/oneapi/compiler/2022.0.1/linux/lib/x64:/opt/intel/oneapi/compiler/2022.0.1/linux/lib/oclfpga/host/linux64/lib:/opt/intel/oneapi/compiler/2022.0.1/linux/compiler/lib/intel64_lin:/opt/intel/oneapi/ccl/2021.5.0/lib/cpu_gpu_dpcpp

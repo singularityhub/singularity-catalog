@@ -1,0 +1,250 @@
+Bootstrap: debootstrap
+OSVersion: stretch
+MirrorURL: http://ftp.ca.debian.org/debian/
+
+%files
+    apt.gpg
+    setup.R
+    ghostscript-9.27.tar.gz
+    meme-5.0.5.tar.gz
+    class_7.3-15.tar.gz
+    emapper.sh
+    secator.tar.gz
+    xdet_linux64
+    TFTargetCaller_0.7.tar
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update
+    apt-get install -y curl gnupg2 python3 wget python3-pip git
+    apt-get install -y build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev
+    apt-get install -y ca-certificates lsb-release apt-transport-https dirmngr
+    echo "deb http://cran.rstudio.com/bin/linux/debian stretch-cran35/" >> /etc/apt/sources.list
+    apt-key add /apt.gpg
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-key 'FCAE2A0E115C3D8A'
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B8F25A8A73EACF41
+    apt-get -qqq update
+    apt-get -qqq upgrade
+
+    pip3 install biopython==1.76
+    git clone https://github.com/jhcepas/eggnog-mapper.git
+    find eggnog-mapper | grep "\.git/" | xargs rm -rf
+    mv eggnog-mapper /usr/bin/eggnog-mapper
+    cp emapper.sh /usr/bin
+    chmod 755 /usr/bin/emapper.sh
+    cp xdet_linux64 /usr/bin/xdet
+    chmod 755 /usr/bin/xdet
+
+    apt-get install -y clustalo mafft muscle fsa clustalw amap-align dialign-tx kalign libsoap-lite-perl libxml-simple-perl mustang poa prank probcons proda tm-align boxshade seaview ncbi-blast+ t-coffee hmmer amap-align
+
+    ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+    dpkg-reconfigure --frontend noninteractive tzdata
+    apt-get -y --allow-unauthenticated install gfortran g++ perl alien git r-base libcurl4-openssl-dev libxml2-dev
+    echo | cpan
+    cpan File::Which
+    cpan HTML::Template
+    cpan HTML::TreeBuilder
+    cpan JSON
+    cpan Log::Log4perl
+    cpan Math::CDF
+    cpan XML::Simple
+    cpan XML::Compile::SOAP11
+    cpan XML::Compile::WSDL11
+
+    git clone https://github.com/desmid/mview.git
+    cd mview
+    perl Makefile.PL
+    make install
+    cd ..
+    rm -rf mview
+
+    tar -xzf ghostscript-9.27.tar.gz
+    cd ghostscript-9.27
+    ./configure
+    make
+    make install
+    cd ..
+    rm -rf ghostscript-9.27
+
+    Rscript setup.R
+    R CMD INSTALL class_7.3-15.tar.gz
+
+    git clone https://github.com/dmlc/xgboost
+    cd xgboost
+    git checkout tags/v1.5.2
+    git submodule init
+    git submodule update
+    cd R-package
+    R CMD INSTALL .
+    cd ../..
+    rm -rf xgboost
+
+
+    git clone https://github.com/cbcrg/tcoffee.git tcoffee
+    cd tcoffee/t_coffee/src
+    make t_coffee
+    cp t_coffee /usr/bin/
+    cd ../../..
+    rm -r tcoffee
+    apt-get update && apt-get install -y && \
+
+    apt-get install -y locales locales-all && \
+     export LANGUAGE=en_US.UTF-8 && \
+     export LANG=en_US.UTF-8 && \
+     export LC_ALL=en_US.UTF-8 && \
+     locale-gen en_US.UTF-8 && \
+     dpkg-reconfigure locales
+    rm -r /var/lib/apt/lists/*
+    tar zxf meme-5.0.5.tar.gz
+    cd meme-5.0.5
+    ./configure --prefix=/home/meme --with-url=http://meme-suite.org/ --enable-build-libxml2 --enable-build-libxslt
+    make
+    make install
+    cd ..
+
+    tar xzf secator.tar.gz
+    cd Secator
+    make
+    cp secator /usr/bin/secator
+    chmod 755 /usr/bin/secator
+    cd ..
+    rm -rf Secator
+    
+    ln -s /home/meme/bin/* /usr/local/bin
+    ln -s /home/meme/libexec/meme-5.0.5/* /usr/local/bin
+
+    rm -rf meme-5.0.5
+    rm setup.R
+    rm ghostscript-9.27.tar.gz
+    rm meme-5.0.5.tar.gz
+    rm class_7.3-15.tar.gz
+    rm emapper.sh
+    rm secator.tar.gz
+    rm xdet_linux64
+    rm TFTargetCaller_0.7.tar
+
+    apt-get clean
+    rm -r /var/lib/apt/lists/*
+
+###
+# TranCEP
+###
+
+%apprun TranCEP
+    /usr/local/bin/TranCEP.R $@
+
+%applabels TranCEP
+    A tool to predict the substrate class of a given transporter
+
+%apphelp TranCEP
+    Usage: TranCEP -query=<input> [-trancepdir=<trancepdir>] [-out=<outdir>] [-db=<database directory>]
+
+%appinstall TranCEP
+    git clone https://github.com/bioinformatics-group/TranCEP.git
+    mkdir /usr/local/bin/TranCEPv1.00
+    cp TranCEP/src/TranCEPTool.R /usr/local/bin/TranCEP.R
+    chmod 755 /usr/local/bin/TranCEP.R
+    cp TranCEP/src/TCS_MSA_PAAC.R /usr/local/bin/TranCEPv1.00/
+    cp -R TranCEP/db /usr/local/bin/TranCEPv1.00/
+    cp -R TranCEP/tranCEP.rda /usr/local/bin/TranCEPv1.00/
+    sed -i 's/trancepdir <- "."/trancepdir <- "\/usr\/local\/bin\/TranCEPv1.00"/g' /usr/local/bin/TranCEP.R
+    sed -i "s/\(require([^)]*)\)/suppressMessages(suppressWarnings(\1))/g" /usr/local/bin/TranCEP.R
+    sed -i "s/\(library([^)]*)\)/suppressMessages(suppressWarnings(\1))/g" /usr/local/bin/TranCEP.R
+    rm -rf TranCEP
+
+###
+# TooT-T
+###
+
+%apprun TooT-T
+    /usr/local/bin/TooT-T.R $@
+
+%applabels TooT-T
+    A tool that predicts transporter proteins
+
+%apphelp TooT-T
+    Usage: TooT-T.R -query=<input> [-out=<outdir>] [-db=<database path>] [-work=<work path>] [-TooTT=<TooTTdir>]
+    <input> is your sequence input file in fasta format
+    <out> is the output directory where you want the predicted results, formatted as csv
+        <out> defaults to '.'
+    <database path> is the relative path to the database, it should include TCDB for retrieving ATH prediction
+        in addition to the choice of homology database for psi-compositions, tested using Swiss-Port databses (2018)
+        <database path> defaults to './db'
+    <work path> is the path to the working directory for intermediate files. It will be created as needed.
+        <work path> defaults to './work'
+    <TooTTdir> is the directory where the base TooT-T files are located")
+        <TooTTdir> defaults to '/usr/local/bin/TooT-T'
+
+
+
+%appinstall TooT-T
+    git clone https://github.com/bioinformatics-group/TooT-T.git
+    mkdir /usr/local/bin/TooT-T
+    cp -r TooT-T/* /usr/local/bin/TooT-T
+    chmod 755 /usr/local/bin/TooT-T/src/TooT-T.R
+    rm -rf TooT-T
+    cat <<'EOF' > /usr/local/bin/TooT-T.R
+#!/bin/sh
+
+/usr/local/bin/TooT-T/src/TooT-T.R $@
+EOF
+    chmod 755 /usr/local/bin/TooT-T.R
+
+###
+# TooT-SC
+###
+
+%apprun TooT-SC
+    /usr/local/bin/TooT-SC.R $@
+
+%applabels TooT-SC
+    A tool to predict the substrate class of a given transporter
+
+
+%apphelp TooT-SC
+    Usage: TooT-SC.R -query=<input> [-out=<outdir>] [-db=<database path>] [-work=<work path>] [-TooTSC=<TooTSCdir>]
+    <input> is your sequence input file in fasta format
+    <out> is the output directory where you want the predicted results, formatted as csv
+        <out> defaults to '.'
+    <database path> is the path to the database
+        <database path> defaults to './db'
+    <work path> is the path to the working directory for intermediate files. It will be created as needed.
+        <work path> defaults to './work'
+    <TooTSCdir> is the directory where the base TooT-SC files are located\n")
+        <TooTSCdir> defaults to '/usr/local/bin/TooT-SC'
+
+%appinstall TooT-SC
+    git clone https://github.com/bioinformatics-group/TooT-SC.git
+    mkdir /usr/local/bin/TooT-SC
+    cp -r TooT-SC/* /usr/local/bin/TooT-SC
+    chmod 755 /usr/local/bin/TooT-SC/src/TooT-SC.R
+    rm -rf TooT-SC
+    cat <<'EOF' > /usr/local/bin/TooT-SC.R
+#!/bin/sh
+
+/usr/local/bin/TooT-SC/src/TooT-SC.R $@
+EOF
+    chmod 755 /usr/local/bin/TooT-SC.R
+
+###
+# TooT-P
+###
+
+%apprun TooT-P
+    /usr/local/bin/TooT-P.py $@
+
+%applabels TooT-P
+    A tool to classify transporter proteins. It will filter a fasta-formatted file through TooT-T before sending it through TooT-SC and collating the results
+
+%apphelp TooT-P
+    Usage: TooT-P.py [-h] -query QUERY [-work WORK] [-out OUT] [-db DB]
+                 [-TooTT TOOTT] [-TooTSC TOOTSC]
+
+
+%appinstall TooT-P
+    git clone https://github.com/bioinformatics-group/TooT-Proteome.git
+    cp TooT-Proteome/TooT-P/TooT-P.py /usr/local/bin
+    chmod 755 /usr/local/bin/TooT-P.py
+    rm -rf TooT-Proteome 
+
+
