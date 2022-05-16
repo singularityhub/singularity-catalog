@@ -55,5 +55,5 @@ from: rocker/r-ver:4.1.2
     else
         # if there's an argument, then run it and hope it's an R script
         cd /Project
-        R --vanilla -s -e "source(\"experiments/$@\")"
+        Rscript --vanilla "$@"
     fi

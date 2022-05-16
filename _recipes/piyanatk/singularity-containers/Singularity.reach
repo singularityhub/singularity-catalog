@@ -12,8 +12,8 @@ From: ubuntu:20.04
 # Define environment variables that will be set at runtime.
 # -----------------------------------------------------------------------------
 %environment
-  export CONDA_INSTALL_PATH="/usr/local/miniconda3"
-  export CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
+  export CONDA_PATH="/usr/local/miniconda3"
+  export CONDA_SH="$CONDA_PATH/etc/profile.d/conda.sh"
 
 
 # -----------------------------------------------------------------------------
@@ -35,19 +35,19 @@ From: ubuntu:20.04
   # DONE with OS install and update
 
   # Define environment variables for install paths
-  ROOT_INSTALL_PATH="/usr/local"
-  CONDA_INSTALL_PATH="$ROOT_INSTALL_PATH/miniconda3"
-  CONDA_INIT_SCRIPT="$CONDA_INSTALL_PATH/etc/profile.d/conda.sh"
+  INSTALL_PATH="/usr/local"
+  CONDA_PATH="$INSTALL_PATH/miniconda3"
+  CONDA_SH="$CONDA_PATH/etc/profile.d/conda.sh"
 
   # Download and install miniconda
-  cd $ROOT_INSTALL_PATH && \
+  cd $INSTALL_PATH && \
   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-  bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_INSTALL_PATH && \
+  bash Miniconda3-latest-Linux-x86_64.sh -b -p $CONDA_PATH && \
   rm Miniconda3-latest-Linux-x86_64.sh
 
   # Make conda executable available during build and update.
   # This does not make the executable available during runtime.
-  . $CONDA_INIT_SCRIPT && conda update -n base conda
+  . $CONDA_SH && conda update -n base conda
 
   # Create `hera1` enviroment and install dependencies for HEREA packages.
   conda create -n reach -c conda-forge python=3.8 ipython ipykernel numpy \

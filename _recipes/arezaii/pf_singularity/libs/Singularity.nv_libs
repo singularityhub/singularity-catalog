@@ -1,0 +1,190 @@
+Bootstrap: shub
+From: arezaii/pf_singularity:nv_base
+#Bootstrap: localimage
+#From: ./singularity_nv_base
+%labels
+    # Build the necessary LIBS for ParFlow on top of base OS image
+%help
+    no usage as-is, a middle layer in the build process to hold the librarires
+    to use in a another recipe file:
+    Bootstrap localimage
+    From: /path/to/singularity_libs
+
+%post 
+    cat /etc/yum.repos.d/CentOS-Base.repo
+    yum -y update
+    yum -y install centos-release-scl
+    yum -y install devtoolset-6-gcc \
+    devtoolset-6-gcc-c++ \
+    devtoolset-6-libquadmath-devel \
+    devtoolset-6-gcc-gfortran
+
+    export CORE_COUNT=2
+    HOME_DIR=/home/parflow
+    export PARFLOW_LIB_DIR=${HOME_DIR}/pflib
+    export DOWNLOAD_DIR=${HOME_DIR}/downloads
+    mkdir -p ${PARFLOW_LIB_DIR}
+    cd ${HOME_DIR}   
+
+    #-----------------------------------------------------------------------------
+    # Build libraries
+    #-----------------------------------------------------------------------------
+    # shopt -s expand_aliases
+    # alias cmake=cmake=/usr/bin/cmake3
+    ln -s /usr/bin/cmake3 /usr/bin/cmake
+    #
+    # Rapids Memory Manager
+    #
+
+    echo "Installing RMM"
+    export PATH=/usr/local/cuda/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export RMM_DIR=${PARFLOW_LIB_DIR}/rmm
+    export RMM_ROOT=${RMM_DIR}/install
+    export RMM_VERSION=0.10.0
+    export RMM_URL="https://github.com/rapidsai/rmm/archive/v${RMM_VERSION}.tar.gz"      
+    mkdir -p ${RMM_DIR}
+    mkdir -p ${DOWNLOAD_DIR}/rmm
+    cd ${DOWNLOAD_DIR}/rmm
+    #wget ${RMM_URL} && \
+    #tar xf v${RMM_VERSION}.tar.gz && \
+    #cd rmm-${RMM_VERSION} && \
+    git clone -b branch-0.10 --single-branch --recurse-submodules https://github.com/rapidsai/rmm.git &&\
+    cd rmm && \
+    ./build.sh librmm && \
+    cd .. && \
+    rm -fr rmm-${RMM_VERSION} v${RMM_VERSION}.tar.gz 
+
+
+    #
+    # Only build EITHER OMPI OR MPICH, not both!
+    #
+
+    #
+    # OMPI
+    # 
+    echo "Installing Open MPI"
+    export OMPI_DIR=${PARFLOW_LIB_DIR}/ompi
+    export OMPI_VERSION=4.0.1
+    export OMPI_URL="https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-$OMPI_VERSION.tar.gz"
+    mkdir -p ${DOWNLOAD_DIR}/ompi    
+    mkdir -p $OMPI_DIR
+    # Download
+    cd ${DOWNLOAD_DIR}/ompi && wget -O openmpi-$OMPI_VERSION.tar.gz $OMPI_URL && tar -xf openmpi-$OMPI_VERSION.tar.gz
+    # Compile and install
+    cd ${DOWNLOAD_DIR}/ompi/openmpi-$OMPI_VERSION && ./configure --prefix=$OMPI_DIR && make install -j${CORE_COUNT}
+    cd ../..
+    rm -fr ompi openmpi-$OMPI_VERSION.tar.gz
+    # Set env variables so we can
+    # compile our application
+    export PATH=$OMPI_DIR/bin:$PATH
+    export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+    #export MANPATH=$OMPI_DIR/share/man:$MANPATH
+
+
+    #
+    # MPICH
+    #
+    # echo "Installing MPICH"
+    # export MPICH_DIR=${PARFLOW_LIB_DIR}/mpich
+    # export MPICH_VERSION=3.2.1
+    # export MPICH_URL="http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz"
+    # mkdir -p ${DOWNLOAD_DIR}/mpich    
+    # mkdir -p $MPICH_DIR
+    # # Download
+    # cd ${DOWNLOAD_DIR}/mpich && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar -xf mpich-$MPICH_VERSION.tar.gz
+    # # Compile and install
+    # cd ${DOWNLOAD_DIR}/mpich/mpich-$MPICH_VERSION && ./configure --prefix=$MPICH_DIR && make install -j${CORE_COUNT}
+    # cd ../..
+    # rm -fr mpich mpich-$MPICH_VERSION.tar.gz
+    # # Set env variables so we can
+    # # compile our application
+    # export PATH=$MPICH_DIR/bin:$PATH
+    # export LD_LIBRARY_PATH=$MPICH_DIR/lib:$LD_LIBRARY_PATH
+
+
+
+
+
+
+
+
+    #
+    # HDF5
+    #
+    echo "Installing HDF5"
+    export HDF5_DIR=${PARFLOW_LIB_DIR}/hdf5
+    export HDF5_VERSION=1.10.5
+    export HDF5_URL="https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-${HDF5_VERSION}/src/hdf5-${HDF5_VERSION}.tar.gz"
+    mkdir -p $HDF5_DIR
+    mkdir -p ${DOWNLOAD_DIR}/hdf5
+    cd ${DOWNLOAD_DIR}/hdf5 && \
+    wget ${HDF5_URL} && \
+    tar -xf hdf5-${HDF5_VERSION}.tar.gz && \
+    cd hdf5-${HDF5_VERSION} && \
+    CC=mpicc ./configure \
+      --prefix=$HDF5_DIR \
+      --enable-parallel && \
+    make -j${CORE_COUNT} && make install -j${CORE_COUNT} && \
+    cd .. && \
+    rm -fr hdf5-${HDF5_VERSION} hdf5-${HDF5_VERSION}.tar.gz
+    export LD_LIBRARY_PATH=$HDF5_DIR/lib:$LD_LIBRARY_PATH
+
+    #
+    # NetCDF
+    #
+    echo "Installing NetCDF"
+    export NETCDF_DIR=${PARFLOW_LIB_DIR}/netcdf
+    export NETCDF_VERSION=4.7.3
+    export NETCDF_URL="https://github.com/Unidata/netcdf-c/archive/v$NETCDF_VERSION.tar.gz"
+    mkdir -p $NETCDF_DIR
+    mkdir -p ${DOWNLOAD_DIR}/netcdf
+    cd ${DOWNLOAD_DIR}/netcdf
+
+    wget ${NETCDF_URL} && \
+    tar -xf v${NETCDF_VERSION}.tar.gz && \
+    cd netcdf-c-${NETCDF_VERSION} && \
+    CC=mpicc CPPFLAGS=-I${HDF5_DIR}/include LDFLAGS=-L${HDF5_DIR}/lib \
+    ./configure --disable-shared --disable-dap --prefix=${NETCDF_DIR} && \
+    make -j${CORE_COUNT} && \
+    make install -j${CORE_COUNT} && \
+    cd .. && \
+    rm -fr netcdf-c-$NETCDF_VERSION v$NETCDF_VERSION.tar.gz
+
+
+    #
+    # SILO 
+    #
+    echo "Installing SILO"
+    export SILO_DIR=${PARFLOW_LIB_DIR}/silo
+    export SILO_VERSION=4.10.2    
+    mkdir -p $SILO_DIR
+    mkdir -p ${DOWNLOAD_DIR}/silo
+    cd ${DOWNLOAD_DIR}/silo
+
+    wget -O silo-${SILO_VERSION}.tar.gz \
+        https://wci.llnl.gov/content/assets/docs/simulation/computer-codes/silo/silo-${SILO_VERSION}/silo-${SILO_VERSION}.tar.gz && \
+    tar -xf silo-${SILO_VERSION}.tar.gz && \
+    cd silo-${SILO_VERSION} && \
+    ./configure  --prefix=$SILO_DIR --disable-silex --disable-hzip --disable-fpzip FC=/usr/bin/gfortran F77=/usr/bin/gfortran && \
+    make install -j${CORE_COUNT} && \
+    cd .. && \
+    rm -fr silo-${SILO_VERSION} silo-${SILO_VERSION}.tar.gz
+
+
+    #
+    # Hypre
+    #
+    echo "Installing Hypre"
+    export HYPRE_DIR=${PARFLOW_LIB_DIR}/hypre
+    export HYPRE_VERSION=2.18.2
+    mkdir -p ${DOWNLOAD_DIR}/hypre
+    cd ${DOWNLOAD_DIR}/hypre
+    wget https://github.com/hypre-space/hypre/archive/v${HYPRE_VERSION}.tar.gz && \
+    tar xf v${HYPRE_VERSION}.tar.gz && \
+    cd hypre-${HYPRE_VERSION}/src && \
+    ./configure --prefix=${HYPRE_DIR} && \
+    CC=mpicc && \
+    make install -j${CORE_COUNT} && \
+    cd .. && \
+    rm -fr hypre-${HYPRE_VERSION} v${HYPRE_VERSION}.tar.gz

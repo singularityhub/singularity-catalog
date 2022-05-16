@@ -1,0 +1,72 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:nightly-gpu-py3
+# adapted from: https://github.com/marcc-hpc/tensorflow
+
+%environment
+  # use bash as default shell
+  SHELL=/bin/bash
+  export SHELL
+  export HDF5_USE_FILE_LOCKING='FALSE'
+  alias ll="ls -al"
+
+%setup
+  # runs on host
+  # the path to the image is $SINGULARITY_ROOTFS
+
+%post
+  # post-setup script
+
+  # load environment variables
+  . /environment
+
+  # use bash as default shell
+  echo 'SHELL=/bin/bash' >> /environment
+
+  # make environment file executable
+  chmod +x /environment
+
+  # default mount paths
+  mkdir /scratch
+
+  # fix this issue: https://github.com/singularityware/singularity/issues/1182#issuecomment-381796545
+  touch /usr/bin/nvidia-smi
+
+  apt-get update && apt-get -y install locales
+  locale-gen en_US.UTF-8
+  apt-get install -y git wget
+  # python3-dev python3-pip python3-tk cmake
+  apt-get clean
+
+  # scikit, scipy
+  apt-get install -y python3-scipy
+  # pip3 install scipy scikit-learn scikit-image
+
+  # tf addons
+  pip install tensorflow_addons
+
+  # pandas
+  apt-get update
+  apt-get install build-essential
+  # apt-get install libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev
+  # apt-get install python3-pandas
+
+  # SimpleITK
+  pip install simpleitk
+
+  # TODO: SimpleElastix
+  # git clone https://github.com/SuperElastix/SimpleElastix
+  # mkdir SimpleElastix.build
+  # cd SimpleElastix.build
+  # #cmake ../SimpleElastix/SuperBuild
+  # cmake -DWRAP_CSHARP:BOOL=OFF -DWRAP_JAVA:BOOL=OFF -DWRAP_LUA:BOOL=OFF -DWRAP_PYTHON:BOOL=ON -DWRAP_R:BOOL=OFF -DWRAP_RUBY:BOOL=OFF -DWRAP_TCL=BOOL=OFF ../SimpleElastix/SuperBuild
+  # #make
+  # make >/dev/null --jobs=4
+  # cd SimpleITK-build/Wrapping/Python/Packaging
+  # python setup.py --upgrade install
+
+%runscript
+  # executes with the singularity run command
+  # delete this section to use existing docker ENTRYPOINT command
+
+%test
+  # test that script is a success

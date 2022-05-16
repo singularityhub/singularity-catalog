@@ -1,0 +1,211 @@
+#Bootstrap: localimage
+#From: ./singularity_libs_mpich
+Bootstrap: shub
+From: arezaii/pf_singularity:libs_mpich
+
+%labels
+    # Add ParFlow to base with libs
+
+   
+
+##############################
+
+# SequentialIO=TRUE
+
+##############################
+
+
+%apprun seq
+
+    exec tclsh "$@"
+
+%applabels seq
+
+    Parflow with sequentialIO set to true, so no need to distribute inputs or undistribute outputs
+
+%appinstall seq
+
+    cd /home/parflow
+    
+    export CORE_COUNT=2
+    export PARFLOW_DIR=/home/parflow/pfdir_seq
+    export MPI_DIR=/home/parflow/pflib/mpich
+    export HDF5_DIR=/home/parflow/pflib/hdf5
+    export NETCDF_DIR=/home/parflow/pflib/netcdf
+    export SILO_DIR=/home/parflow/pflib/silo
+    export HYPRE_DIR=/home/parflow/pflib/hypre
+    export PATH=${MPI_DIR}/bin:$PATH
+    export LD_LIBRARY_PATH=${HDF5_DIR}/lib:${MPI_DIR}/lib:$LD_LIBRARY_PATH
+    
+    #-----------------------------------------------------------------------------
+    # Parflow configure and build
+    #-----------------------------------------------------------------------------
+    
+    
+        
+    git clone -b master --single-branch https://github.com/parflow/parflow.git parflow_seq && \
+    mkdir -p build_seq && \
+    cd build_seq && \
+    CC=mpicc
+    CXX=mpicxx
+    cmake3 ../parflow_seq \
+    -DPARFLOW_AMPS_LAYER=mpi1 \
+    -DPARFLOW_AMPS_SEQUENTIAL_IO=TRUE \
+    -DHYPRE_ROOT=${HYPRE_DIR} \
+    -DSILO_ROOT=${SILO_DIR} \
+    -DHDF5_ROOT=${HDF5_DIR} \
+    -DPARFLOW_ENABLE_TIMING=TRUE \
+    -DPARFLOW_HAVE_CLM=ON \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=${PARFLOW_DIR} && \
+    make install -j${CORE_COUNT}
+    #cd .. && \
+    #rm -fr parflow build
+
+
+%appenv seq
+    export PARFLOW_DIR=/home/parflow/pfdir_seq
+
+%apphelp seq
+
+    This is the help for seq. This app runs parflow compiled with SequentialIO=TRUE
+    To run: $ singularity run --app seq <path_to_singularity_container> <tcl_file> [optional arguments passed to tcl_file]
+
+%apptest seq
+    export PARFLOW_DIR=/home/parflow/pfdir_seq
+    cd /home/parflow/build_seq
+    make test    
+
+
+##############################
+
+# SequentialIO=False
+
+##############################
+
+
+%apphelp par
+
+    This is the help for par.
+
+
+%appinstall par
+
+    cd /home/parflow    
+    
+    export CORE_COUNT=2
+    export PARFLOW_DIR=/home/parflow/pfdir_par
+    export MPI_DIR=/home/parflow/pflib/mpich
+    export HDF5_DIR=/home/parflow/pflib/hdf5
+    export NETCDF_DIR=/home/parflow/pflib/netcdf
+    export SILO_DIR=/home/parflow/pflib/silo
+    export HYPRE_DIR=/home/parflow/pflib/hypre
+    export PATH=${MPI_DIR}/bin:$PATH
+    export LD_LIBRARY_PATH=${HDF5_DIR}/lib:${MPI_DIR}/lib:$LD_LIBRARY_PATH
+    
+    #-----------------------------------------------------------------------------
+    # Parflow configure and build
+    #-----------------------------------------------------------------------------
+    
+    #PARFLOW_MPIEXEC_EXTRA_FLAGS="--mca mpi_yield_when_idle 1 --oversubscribe --allow-run-as-root"
+        
+    git clone -b master --single-branch https://github.com/parflow/parflow.git parflow_par && \
+    mkdir -p build_par && \
+    cd build_par && \
+    CC=mpicc
+    CXX=mpicxx
+    cmake3 ../parflow_par \
+    -DPARFLOW_AMPS_LAYER=mpi1 \
+    -DPARFLOW_AMPS_SEQUENTIAL_IO=FALSE \
+    -DHYPRE_ROOT=${HYPRE_DIR} \
+    -DSILO_ROOT=${SILO_DIR} \
+    -DHDF5_ROOT=${HDF5_DIR} \
+    -DPARFLOW_ENABLE_TIMING=TRUE \
+    -DPARFLOW_HAVE_CLM=ON \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=${PARFLOW_DIR} && \
+    make install -j${CORE_COUNT} 
+    # cd .. && \
+    # rm -fr build
+
+
+%appenv par
+
+    export PARFLOW_DIR=/home/parflow/pfdir_par
+
+%apprun par
+
+    exec tclsh "$@"
+
+%apptest par
+    # These tests can't be run inside the immutable container because of how parflow requires to write to disk
+    export PARFLOW_DIR=/home/parflow/pfdir_par
+    cd /home/parflow/build_par
+    make test
+
+
+
+# %post    
+    
+#     #useradd -ms /bin/bash parflow
+#     mkdir -p /home/parflow/pflib    
+#     cd /home/parflow
+
+    
+#     export CORE_COUNT=2
+#     export PARFLOW_DIR=/home/parflow/pfdir
+#     export MPI_DIR=/home/parflow/pflib/mpich
+#     export HDF5_DIR=/home/parflow/pflib/hdf5
+#     export NETCDF_DIR=/home/parflow/pflib/netcdf
+#     export SILO_DIR=/home/parflow/pflib/silo
+#     export HYPRE_DIR=/home/parflow/pflib/hypre
+#     export PATH=${MPI_DIR}/bin:$PATH
+#     export LD_LIBRARY_PATH=${HDF5_DIR}/lib:${MPI_DIR}/lib:$LD_LIBRARY_PATH
+    
+#     #-----------------------------------------------------------------------------
+#     # Parflow configure and build
+#     #-----------------------------------------------------------------------------
+    
+#     #PARFLOW_MPIEXEC_EXTRA_FLAGS="--mca mpi_yield_when_idle 1 --oversubscribe --allow-run-as-root"
+        
+#     git clone -b master --single-branch https://github.com/parflow/parflow.git parflow && \
+#     mkdir -p build && \
+#     cd build && \
+#     CC=mpicc
+#     CXX=mpicxx
+#     cmake3 ../parflow \
+#     -DPARFLOW_AMPS_LAYER=mpi1 \
+#     -DPARFLOW_AMPS_SEQUENTIAL_IO=FALSE \
+#     -DHYPRE_ROOT=${HYPRE_DIR} \
+#     -DSILO_ROOT=${SILO_DIR} \
+#     -DHDF5_ROOT=${HDF5_DIR} \
+#     -DPARFLOW_ENABLE_TIMING=TRUE \
+#     -DPARFLOW_HAVE_CLM=ON \
+#     -DCMAKE_BUILD_TYPE=Release \
+#     -DCMAKE_INSTALL_PREFIX=${PARFLOW_DIR} && \
+#     make install -j${CORE_COUNT} && \
+#     cd .. && \
+#     rm -fr parflow build
+
+# %environment
+#     export PARFLOW_DIR=/home/parflow/pfdir
+#     export MPI_DIR=/home/parflow/pflib/mpich
+#     export HDF5_DIR=/home/parflow/pflib/hdf5
+#     export NETCDF_DIR=/home/parflow/pflib/netcdf
+#     export SILO_DIR=/home/parflow/pflib/silo
+#     export HYPRE_DIR=/home/parflow/pflib/hypre
+#     export PATH=${MPI_DIR}/bin:$PATH
+#     export LD_LIBRARY_PATH=${HDF5_DIR}/lib:${MPI_DIR}/lib:$LD_LIBRARY_PATH
+#     #export PARFLOW_MPIEXEC_EXTRA_FLAGS="--mca mpi_yield_when_idle 1 --oversubscribe --allow-run-as-root"
+#     #export OMPI_DIR=/opt/ompi
+#     #export SINGULARITY_OMPI_DIR=$OMPI_DIR
+#     #export SINGULARITYENV_APPEND_PATH=$OMPI_DIR/bin
+#     #export SINGULAIRTYENV_APPEND_LD_LIBRARY_PATH=$OMPI_DIR/lib
+
+# %runscript
+#      exec tclsh "$@"
+
+# %startscript
+#      exec tclsh "$@"
+
+

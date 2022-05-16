@@ -4,26 +4,31 @@ From: debian:sid
 %post
     apt update
     apt upgrade -y
-    apt install -y wget locales last-align htop sudo
+    apt install -y eatmydata # https://manpages.debian.org/eatmydata
+    ln -s /usr/bin/eatmydata ./apt
+    ln -s /usr/bin/eatmydata ./R
+    ./apt install -y wget locales last-align htop sudo
     sed -i /etc/locale.gen -e '/en_[UG].*.UTF-8/s/# //'
     locale-gen
-    apt install -y pandoc qpdf texlive # For vignette builds and package checks
-    apt install -y libxml2-dev libcurl4-openssl-dev libssl-dev libfftw3-dev libtiff-dev libgsl-dev
-    apt install -y libfontconfig1-dev libharfbuzz-dev libfribidi-dev # For pkgdown
-    apt install -y libproj-dev # For proj4, for ggmsa
-    apt install -y git bash-completion
-    apt install -y libgl1 libnss3 libasound2 libxdamage1
+    ./apt install -y pandoc qpdf texlive # For vignette builds and package checks
+    ./apt install -y libxml2-dev libcurl4-openssl-dev libssl-dev libfftw3-dev libtiff-dev libgsl-dev
+    ./apt install -y libfontconfig1-dev libharfbuzz-dev libfribidi-dev # For pkgdown
+    ./apt install -y libproj-dev # For proj4, for ggmsa
+    ./apt install -y git bash-completion
+    ./apt install -y libgl1 libnss3 libasound2 libxdamage1
     wget https://download1.rstudio.org/desktop/bionic/amd64/rstudio-2021.09.1-372-amd64.deb
-    apt --fix-broken -y install ./rstudio-2021.09.1-372-amd64.deb
+    ./apt --fix-broken -y install ./rstudio-2021.09.1-372-amd64.deb
     wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2021.09.1-372-amd64.deb
-    apt --fix-broken -y install ./rstudio-server-2021.09.1-372-amd64.deb
+    ./apt --fix-broken -y install ./rstudio-server-2021.09.1-372-amd64.deb
     rm rstudio-*-amd64.deb
 
-    R -e 'install.packages("BiocManager")'
-    R -e 'install.packages("tidyverse")'
-    R -e 'install.packages("devtools")' 
-    R -e 'install.packages("remotes")'
-    R -e 'BiocManager::install(c("rmarkdown"))'
-    R -e 'remotes::install_github("oist/GenomicBreaks", repos=BiocManager::repositories(), dependencies=TRUE)'
+    ./R -e 'install.packages("BiocManager")'
+    ./R -e 'install.packages("tidyverse")'
+    ./R -e 'install.packages("devtools")' 
+    ./R -e 'install.packages("remotes")'
+    ./R -e 'BiocManager::install(c("rmarkdown"))'
+    ./R -e 'remotes::install_github("oist/GenomicBreaks", repos=BiocManager::repositories(), dependencies=TRUE)'
 
     printf 'R_LIBS=~/R/library/GBreaks_singularity\n' | tee -a /etc/R/Renviron.site >/dev/null
+    
+    rm ./apt ./R

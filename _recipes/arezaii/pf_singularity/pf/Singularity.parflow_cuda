@@ -1,0 +1,67 @@
+Bootstrap: localimage
+From: ./singularity_nv_libs
+
+%post
+
+    mkdir -p /home/parflow/pflib
+    cd /home/parflow
+    export CORE_COUNT=2
+    export PARFLOW_DIR=/home/parflow/pfdir
+    export MPI_DIR=/home/parflow/pflib/openmpi
+    export HDF5_DIR=/home/parflow/pflib/hdf5
+    export NETCDF_DIR=/home/parflow/pflib/netcdf
+    export SILO_DIR=/home/parflow/pflib/silo
+    export HYPRE_DIR=/home/parflow/pflib/hypre
+    export PATH=${MPI_DIR}/bin:$PATH    
+    export LD_LIBRARY_PATH=${HDF5_DIR}/lib:${MPI_DIR}/lib:$LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export RMM_DIR=${PARFLOW_LIB_DIR}/rmm
+    export RMM_ROOT=${RMM_DIR}
+    
+    #-----------------------------------------------------------------------------
+    # Parflow configure and build
+    #-----------------------------------------------------------------------------
+    
+    #PARFLOW_MPIEXEC_EXTRA_FLAGS="--mca mpi_yield_when_idle 1 --oversubscribe --allow-run-as-root"
+    export PATH=/usr/local/cuda/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
+    mkdir -p $PARFLOW_DIR
+
+    git clone -b CUDA --single-branch https://github.com/hokkanen/parflow.git parflow_cuda && \
+    cd parflow_cuda && \
+    git checkout -q b415a38160fb101047acf16ba13f815fbc389e29 && \
+    cd .. && \
+    mkdir -p build && \
+    cd build && \
+    cmake3 ../parflow_cuda \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=TRUE \
+    -DPARFLOW_AMPS_LAYER=cuda \
+    -DPARFLOW_AMPS_SEQUENTIAL_IO=FALSE \
+    -DHYPRE_ROOT=${HYPRE_DIR} \
+    -DSILO_ROOT=${SILO_DIR} \
+    -DHDF5_ROOT=${HDF5_DIR} \
+    -DPARFLOW_ENABLE_TIMING=TRUE \
+    -DPARFLOW_HAVE_CLM=ON \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DPARFLOW_ENABLE_CUDA=TRUE \
+    -DCMAKE_INSTALL_PREFIX=${PARFLOW_DIR} && \
+    make install -j${CORE_COUNT} && \
+    cd .. && \
+    rm -fr parflow build
+
+
+%environment
+    export PARFLOW_DIR=/home/parflow/pfdir
+    export MPI_DIR=/home/parflow/pflib/openmpi
+    export HDF5_DIR=/home/parflow/pflib/hdf5
+    export NETCDF_DIR=/home/parflow/pflib/netcdf
+    export SILO_DIR=/home/parflow/pflib/silo
+    export HYPRE_DIR=/home/parflow/pflib/hypre
+    export PATH=${MPI_DIR}/bin:$PATH
+    export LD_LIBRARY_PATH=${HDF5_DIR}/lib:${MPI_DIR}/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
+%runscript
+    exec tclsh "$@"

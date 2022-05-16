@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: ubuntu:focal
+
+%labels
+
+AUTHOR Mainak
+
+%post
+ 
+apt update
+apt upgrade -y
+apt-get -y install net-tools
+apt-get -y install curl wget \
+    python3-pip python3.8
+
+pip3 install numpy \
+    pandas \
+    jsonmerge \
+    jsonlines \
+    elasticsearch \
+    parquet \
+    python-dotenv
+

@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: centos:7.4.1708
+%labels
+    # A base OS image to use for building ParFlow 
+%post    
+
+    # update OS
+
+    yum -y update
+
+    #-----------------------------------------------------------------------------
+    #  Package dependencies
+    #-----------------------------------------------------------------------------
+    yum -y  install  epel-release
+    yum  install -y  \
+    autoconf \
+    automake \
+    binutils \
+    cmake3 \
+    file \
+    gcc  \
+    gcc-c++  \
+    gcc-gfortran \
+    git \
+    libtool \
+    lsof \
+    make \
+    tcl-devel \
+    tcsh \
+    time \
+    tk-devel \
+    wget \
+    which \
+    zlib \
+    zlib-devells
+    

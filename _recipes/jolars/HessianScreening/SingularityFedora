@@ -16,12 +16,15 @@ from: fedora:35
     renv.lock /Project/renv.lock
     .Rbuildignore
 
-    /home/gerd-jln/.cache/R/renv/cache /renv/cache
+    renv-cache /Project/renv-cache
+
+%environment
+    export RENV_PATHS_CACHE=/Project/renv-cache
 
 %post
     export R_VERSION=4.1.2
     export RENV_VERSION=0.15.1
-    export RENV_PATHS_CACHE=/renv/cache
+    export RENV_PATHS_CACHE=/Project/renv-cache
 
     dnf update -y
 

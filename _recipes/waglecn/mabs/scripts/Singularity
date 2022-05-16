@@ -1,0 +1,13 @@
+Bootstrap: docker
+
+From: continuumio/miniconda3
+
+%environment
+    export PATH="/opt/conda/bin:$PATH"
+    export PATH="/opt/conda/envs/gubbins/bin:$PATH"
+
+%post
+    /opt/conda/bin/conda create -n gubbins -c bioconda gubbins
+
+%runscript
+    exec "$@"

@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%setup
+  make -C ../addmc clean-libraries
+  mkdir ${SINGULARITY_ROOTFS}/addmc
+  cp -t ${SINGULARITY_ROOTFS}/addmc -r ../addmc/libraries ../addmc/src ../addmc/Makefile
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+
+  apt update
+
+  apt -y install automake
+  apt -y install cmake
+  apt -y install g++
+  apt -y install libgmp-dev
+  apt -y install make
+
+  make -C /addmc dmc opt=-Ofast
+
+%help
+  This is a container for the tool DMC.
+
+%runscript
+  /addmc/dmc "$@"

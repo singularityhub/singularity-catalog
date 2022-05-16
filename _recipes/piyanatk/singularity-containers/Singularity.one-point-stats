@@ -12,6 +12,8 @@ From: continuumio/conda-ci-linux-64-python3.8
 
 # Define environment variables that will be set at runtime.
 # %environment
+  export CONDA_PATH="/usr/local/miniconda3"
+  export CONDA_SH="$CONDA_PATH/etc/profile.d/conda.sh"
 
 
 # Commands to be executed at build time after the base OS has been installed.
@@ -22,7 +24,7 @@ From: continuumio/conda-ci-linux-64-python3.8
     jupyterlab numpy scipy matplotlib pandas xarray dask netcdf4 h5netcdf h5py bottleneck \
     astropy healpy
 
-  echo "export CONDA_INIT_SCRIPT=/opt/conda/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
+  echo "export CONDA_SH=/opt/conda/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
 
 
 # The contents of the %runscript section are written to a file within the

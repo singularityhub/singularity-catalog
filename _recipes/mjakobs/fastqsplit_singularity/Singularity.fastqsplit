@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%help
+    A singularity container to run fastqsplit
+
+%labels
+    CREATOR Maria Jakobsdottir
+
+%environment
+   export PATH=/bin:$PATH 
+
+%files
+    run_fastqsplit.sh    /
+
+%post
+    apt-get -qq -y update
+    DEBIAN_FRONTEND=noninteractive apt-get -qq -y install golang-go > /dev/null
+    DEBIAN_FRONTEND=noninteractive apt-get -qq -y install git-all > /dev/null
+
+    go get github.com/klauspost/pgzip/
+    git clone https://github.com/supernifty/fastqsplit.git
+    cd fastqsplit
+    go build fastqsplit.go
+    cp fastqsplit /usr/local/bin/
+
+
+%runscript
+    echo "$@"

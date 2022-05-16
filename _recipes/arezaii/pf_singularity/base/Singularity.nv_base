@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/cuda:10.2-devel-centos7
+%labels
+    # A base OS image to use for building ParFlow with CUDA 
+%post    
+
+    #-----------------------------------------------------------------------------
+    #  Package dependencies
+    #-----------------------------------------------------------------------------
+    yum -y  install  epel-release
+    yum  install -y  \
+    autoconf \
+    automake \
+    binutils \
+    cmake3 \
+    file \
+    gcc  \
+    gcc-c++  \
+    gcc-gfortran \
+    git \
+    libtool \
+    lsof \
+    make \
+    tcl-devel \
+    tcsh \
+    time \
+    tk-devel \
+    wget \
+    which \
+    zlib \
+    zlib-devel 
+

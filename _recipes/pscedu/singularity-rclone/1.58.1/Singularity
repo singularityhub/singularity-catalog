@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: alpine:latest
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/icaoberg/singularity-rclone
+    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.   
+    VERSION 1.58.1
+
+%post
+    apk update
+    apk add wget
+    wget https://downloads.rclone.org/v1.58.1/rclone-v1.58.1-linux-amd64.zip
+    unzip rclone-v1.58.1-linux-amd64.zip 
+    rm -f rclone-v1.58.1-linux-amd64.zip
+    cp -v rclone-v1.58.1-linux-amd64/rclone /usr/local/bin
+    rm -rf rclone-v1.58.1-linux-amd64

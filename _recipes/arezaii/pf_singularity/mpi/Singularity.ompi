@@ -1,0 +1,44 @@
+Bootstrap: shub
+From: arezaii/pf_singularity:base
+#Bootstrap: localimage
+#From: ./singularity_base
+%labels
+    # Build the necessary LIBS for ParFlow on top of base OS image
+%help
+    no usage as-is, a middle layer in the build process to hold the librarires
+    to use in a another recipe file:
+    Bootstrap localimage
+    From: /path/to/singularity_libs
+
+%post    
+    
+    export CORE_COUNT=$(nproc)
+    HOME_DIR=/home/parflow
+    export PARFLOW_LIB_DIR=${HOME_DIR}/pflib
+    export DOWNLOAD_DIR=${HOME_DIR}/downloads
+    mkdir -p ${PARFLOW_LIB_DIR}
+    cd ${HOME_DIR}   
+
+    #-----------------------------------------------------------------------------
+    # Build libraries
+    #-----------------------------------------------------------------------------
+    
+    #
+    # OMPI
+    # 
+    echo "Installing Open MPI"
+    export OMPI_DIR=${PARFLOW_LIB_DIR}/ompi
+    export OMPI_VERSION=4.0.1
+    export OMPI_URL="https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-$OMPI_VERSION.tar.gz"
+    mkdir -p ${DOWNLOAD_DIR}/ompi    
+    mkdir -p $OMPI_DIR
+    # Download
+    cd ${DOWNLOAD_DIR}/ompi && wget -O openmpi-$OMPI_VERSION.tar.gz $OMPI_URL && tar -xf openmpi-$OMPI_VERSION.tar.gz
+    # Compile and install
+    cd ${DOWNLOAD_DIR}/ompi/openmpi-$OMPI_VERSION && ./configure --prefix=$OMPI_DIR && make install -j${CORE_COUNT}
+    cd ..
+    rm -fr ompi openmpi-$OMPI_VERSION.tar.gz
+    # Set env variables so we can
+    # compile our application
+    export PATH=$OMPI_DIR/bin:$PATH
+    export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH

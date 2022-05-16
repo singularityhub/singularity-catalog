@@ -4,7 +4,6 @@ From: debian:latest
 %environment
     export PATH="/opt/miniconda3/bin:$PATH"
     export PATH="/opt/miniconda3/envs/octree/bin:$PATH"
-    export PATH="/bin:$PATH"
 
     export NUM_MKL_THREADS=1
     export OPENBLAS_NUM_THREADS=1
@@ -46,10 +45,13 @@ From: debian:latest
 
     git clone https://github.com/carshadi/pyktx.git
     git clone https://github.com/carshadi/tiff2octree.git
-    conda env create -f tiff2octree/environment.yml -p /opt/miniconda3/envs/octree
+    cd tiff2octree/
+    git checkout slurm
+    conda env create -f environment.yml -p /opt/miniconda3/envs/octree
     conda activate /opt/miniconda3/envs/octree
-    pip install pyktx/
+
+    pip install ../pyktx/
 
     chmod --recursive a+rw /opt/miniconda3
 
-    rm /Miniconda3-py39_4.11.0-Linux-x86_64.sh
+    rm ../Miniconda3-py39_4.11.0-Linux-x86_64.sh

@@ -56,3 +56,4 @@ alias python="python3"
   python3 setup.py
   
   ## blargh
+  # trigger rebuild
