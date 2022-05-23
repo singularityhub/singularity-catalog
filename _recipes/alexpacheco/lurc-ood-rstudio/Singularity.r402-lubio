@@ -1,0 +1,40 @@
+BootStrap: docker
+From: alexpacheco/rstudio:r-402
+
+%labels
+  MAINTAINER alp514@lehigh.edu
+
+%help 
+  This container provides RStudio and R 4.0.2 
+   with some basic, tidyverse and bioinformatics packages
+
+%files
+    install_rpack.R /opt
+
+%post
+    Rscript /opt/install_rpack.R lubio
+
+%apprun R
+  exec R "${@}"
+
+%apprun Rscript
+  exec Rscript "${@}"
+
+%apprun rserver
+  if ! [[ "$USER_PATH" = "" ]]; then
+    export PATH="$USER_PATH"
+  fi
+
+  exec rserver "${@}"
+
+%environment
+  export PATH=/usr/lib/rstudio-server/bin:${PATH}
+  export USER_PATH=${PATH}
+
+%runscript
+  if ! [[ "$USER_PATH" = "" ]]; then
+    export PATH="$USER_PATH"
+  fi
+
+  exec rserver "${@}"
+

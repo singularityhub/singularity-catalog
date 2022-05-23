@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%post
+  apt update
+  apt install -y locales-all
+  apt install -y wget
+  apt install -y gcc
+  apt install -y g++
+  apt install -y make
+  apt install -y cmake
+  apt install -y cpio
+  apt install -y git
+  apt install -y zlib1g-dev
+  apt install -y libzstd-dev
+
+  cd
+  wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.13.0/ncbi-blast-2.13.0+-src.tar.gz
+  tar -xzvf ncbi-blast-2.13.0+-src.tar.gz
+  cd ncbi-blast-2.13.0+-src/c++
+  ./configure --prefix=$HOME/BLAST2.11 --with-static --without-debug --without-exe --without-boost --without-gui
+  make -j8
+  make install
+
+  cd
+  wget https://github.com/bbuchfink/diamond/archive/v2.0.13.tar.gz
+  tar -xzvf v2.0.13.tar.gz
+  mkdir diamond-2.0.13/bin
+  cd diamond-2.0.13/bin
+  cmake -DBLAST_INCLUDE_DIR=$HOME/BLAST2.11/include/ncbi-tools++ -DBLAST_LIBRARY_DIR=$HOME/BLAST2.11/lib ..
+  make -j8
+  make install

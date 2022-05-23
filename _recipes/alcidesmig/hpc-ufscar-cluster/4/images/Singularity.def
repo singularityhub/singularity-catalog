@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: ufscar/ubuntu_mpich:latest
+
+%help
+Fourth task of "Introduction to HPC" discipline
+
+%files
+  ./sum_vec/* /opt
+
+%post
+  cd /opt
+  make mpi
+  chmod 555 /opt/run.sh
+  chmod 555 /opt/main
+
+%runscript
+  /opt/run.sh
+
+%test
+  # Test existence of binaries
+  [ -f /opt/main ] && echo "\e[31mSuccess: compile mpi!\e[0m" || echo "\e[31m\aFailed: compile mpi\e[0m"
+

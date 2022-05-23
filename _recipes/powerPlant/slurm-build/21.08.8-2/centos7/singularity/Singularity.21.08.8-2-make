@@ -1,0 +1,65 @@
+Bootstrap: docker
+From: centos:7
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 21.08.8-2
+
+%environment
+export LC_ALL="C"
+
+%post
+## set SLURM version to build
+export SLURMVERSION="21.08.8-2"
+export IPREFIX="/software/slurm/$SLURMVERSION"
+
+## Download build prerequisites
+yum clean all
+yum -y install epel-release
+yum groupinstall -y 'Development Tools'
+yum -y install \
+  freeipmi \
+  gtk2 gtk2-devel \
+  hdf5 hdf5-devel \
+  http-parser-devel \
+  hwloc hwloc-devel \
+  json-c-devel \
+  libaec \
+  libcgroup \
+  libconfuse \
+  libcurl-devel \
+  libyaml libyaml-devel \
+  lua lua-devel lua-filesystem lua-json lua-lpeg lua-posix lua-term \
+  mariadb mariadb-devel \
+  mlocate \
+  munge munge-devel munge-libs \
+  ncurses-devel \
+  numactl numactl-devel \
+  oniguruma \
+  openssl-devel \
+  pam-devel \
+  parallel \
+  perl-DBI perl-ExtUtils-MakeMaker perl-Switch \
+  pigz \
+  pmix pmix-devel \
+  python3 python3-pip \
+  readline-devel \
+  redhat-lsb-core \
+  rrdtool rrdtool-devel \
+  tcl tcl-devel \
+  ucx ucx-cma ucx-devel \
+  wget
+
+#Prepare buildroot
+  
+mkdir -p /opt/slurm
+cd /opt/slurm
+
+wget https://download.schedmd.com/slurm/slurm-${SLURMVERSION}.tar.bz2 || wget http://www.schedmd.com/download/archive/slurm-${SLURMVERSION}.tar.bz2
+tar -xjf slurm-$SLURMVERSION.tar.bz2
+cd slurm-$SLURMVERSION
+
+#Build
+./configure --prefix $IPREFIX --libdir=$IPREFIX/lib64 --with-systemdsystemunitdir=$IPREFIX/etc/systemd --enable-slurmrestd --with-ucx
+make install
+

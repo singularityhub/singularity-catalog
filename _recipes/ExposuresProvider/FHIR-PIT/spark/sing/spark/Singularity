@@ -1,0 +1,55 @@
+# based on nickjer/singularity-rstudio-spark:latest
+
+BootStrap: docker
+From: ubuntu:18.04
+
+%labels
+  Maintainer Hao Xu
+  Spark_Version 2.3.1
+  Hadoop_Version 2.7
+
+%help
+  Start master
+  singularity run -B /tmp/logs:/opt/spark/logs -B /tmp/work:/opt/spark/work spark.img -B <data dir>:/data --app spark-master
+  Start worker
+  singularity run -B /tmp/logs:/opt/spark/logs -B /tmp/work:/opt/spark/work spark.img -B <data dir>:/data --app spark-worker
+%apprun spark-class
+  exec spark-class "${@}"
+
+%apprun spark-master
+  exec spark-class "org.apache.spark.deploy.master.Master" "${@}"
+
+%apprun spark-worker
+  exec spark-class "org.apache.spark.deploy.worker.Worker" "${@}"
+
+%runscript
+  exec spark-class "$@"
+
+%environment
+  export SPARK_HOME=/opt/spark
+  export PATH=${SPARK_HOME}/bin:${SPARK_HOME}/sbin:${PATH}
+
+%post
+  # Install python
+  apt-get update
+  apt-get install python3-pip -y
+  pip3 install pandas joblib
+
+  # Software versions
+  export SPARK_VERSION=2.3.1
+  export HADOOP_VERSION=2.7
+
+  # Install Spark
+  apt-get install gnupg ca-certificates wget -y
+  echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
+  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+  apt-get update
+  apt-get install sbt openjdk-8-jdk sbt -y
+  mkdir -p /opt/spark
+  wget "http://mirror.cc.columbia.edu/pub/software/apache/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz"
+  tar zxvf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz --strip-components=1 -C /opt/spark
+  rm spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
+
+  
+  
+

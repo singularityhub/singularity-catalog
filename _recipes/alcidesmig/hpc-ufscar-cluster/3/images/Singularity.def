@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: ufscar/ubuntu_ompi:latest
+
+%help
+Third task of "Introduction to HPC" discipline
+
+%files
+  ./laplace/* /opt
+
+%environment
+  export N=2000
+
+%post
+  cd /opt
+  make openmp
+  chmod 555 /opt/run.sh
+
+%runscript
+  /opt/run.sh
+
+%test
+  # Test existence of binaries
+  [ -f /opt/main ] && echo "\e[31mSuccess: compile openmp!\e[0m" || echo "\e[31m\aFailed: compile openmp\e[0m"
+

@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: debian:stretch
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    WEBSITE http://github.com/icaoberg/singularity-bioformats2raw
+    COPYRIGHT Copyright © 2021-2022 Pittsburgh Supercomputing Center. All Rights Reserved. 
+    VERSION 0.3.0
+
+%environment
+    export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
+
+%post
+    apt update
+    apt install -y libblosc1 wget unzip openjdk-8-jdk
+    cd /opt/
+    wget -nc https://github.com/glencoesoftware/bioformats2raw/releases/download/v0.3.0/bioformats2raw-0.3.0.zip
+    unzip bioformats2raw-0.3.0.zip && rm -f bioformats2raw-0.3.0.zip
+    ln -s /opt/bioformats2raw-0.3.0/bin/bioformats2raw /usr/local/bin/bioformats2raw
+    apt remove -y wget unzip
+    apt clean
+
+%runscript
+    /usr/local/bin/bioformats2raw

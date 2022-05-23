@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: nvidia/cuda:11.3.1-cudnn8-runtime-centos7
+
+%post
+	# Downloads the latest package lists (important).
+	# yum -y update
+
+	# Install python and other tools
+	# Non-interactive is used to ensure prompts are omitted.
+	yum -y install \
+	gcc-c++ \
+	python3-devel \
+	python3-tk \
+	python3-pip \
+	python3-setuptools \
+	systemd \
+	imagemagick \
+	curl \
+	openslide-tools
+
+	# Update pip
+	python3 -m pip install --upgrade pip
+
+	# Install python libraries
+	pip3 install wheel
+    pip3 install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+	pip3 install numpy matplotlib torchsummary tensorboardX \
+	scikit-learn Pillow pandas scikit-image scipy opencv-python pytest pylint jupyterlab \
+	numba matplotlib
+    pip3 install py-spy
+	pip3 install pyyaml
+	pip3 install kaggle --upgrade
+	pip3 install pepit

@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: continuumio/miniconda3
+
+%environment
+  export LC_ALL=C
+
+
+%post
+  export LC_ALL=C
+  #export CONDA_PKGS_DIRS=/$HOME/conda_pkgs_dir
+  #mkdir -p ${CONDA_PKGS_DIRS}
+
+  conda update -n base -c defaults conda
+  conda install -c conda-forge pip mamba
+
+  python3 -m pip install -U --no-cache-dir setuptools pip 
+
+  conda clean --all --yes
+
+%runscript
+  /bin/bash --rcfile /opt/conda/etc/profile.d/conda.sh "$@"

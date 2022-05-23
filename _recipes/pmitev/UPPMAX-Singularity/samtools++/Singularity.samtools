@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%environment
+  export LC_ALL=C
+
+
+%post
+  export LC_ALL=C
+  export DEBIAN_FRONTEND=noninteractive
+
+  mkdir -p /tmp/apt
+  echo "Dir::Cache /tmp/apt;" > /etc/apt/apt.conf.d/singularity-cache.conf
+
+  apt-get update && \
+  apt-get --no-install-recommends -y install  wget unzip git bwa samtools bcftools bowtie
+  
+
+%runscript
+  if command -v $SINGULARITY_NAME &> /dev/null; then
+    exec $SINGULARITY_NAME "$@"
+  else
+    echo "# ERROR !!! Command $SINGULARITY_NAME not found in the container"
+  fi
