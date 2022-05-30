@@ -1,11 +1,11 @@
 bases:
-- count: 1164
+- count: 1172
   name: ubuntu
-- count: 281
+- count: 282
   name: nvidia/cuda
 - count: 226
   name: debian
-- count: 181
+- count: 182
   name: centos
 - count: 119
   name: alpine
@@ -13,12 +13,12 @@ bases:
   name: continuumio/miniconda3
 - count: 95
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 85
-  name: ghcr.io/mkandes/naked-singularity
-- count: 77
-  name: tensorflow/tensorflow
-- count: 76
+- count: 92
   name: python
+- count: 89
+  name: ghcr.io/mkandes/naked-singularity
+- count: 78
+  name: tensorflow/tensorflow
 - count: 67
   name: aibasel/downward
 - count: 54
@@ -49,10 +49,10 @@ bases:
   name: nvcr.io/nvidia/cuda
 - count: 24
   name: osrf/ros
+- count: 23
+  name: nvcr.io/nvidia/tensorflow
 - count: 22
   name: khanlab/tar2bids
-- count: 20
-  name: nvcr.io/nvidia/tensorflow
 - count: 19
   name: poldracklab/fmriprep
 - count: 18
@@ -60,9 +60,9 @@ bases:
 - count: 18
   name: bids/validator
 - count: 18
-  name: pytorch/pytorch
-- count: 17
   name: rocker/r-ver
+- count: 18
+  name: pytorch/pytorch
 - count: 17
   name: ezlabgva/busco
 - count: 15
@@ -79,6 +79,8 @@ bases:
   name: khanlab/heudiconv
 - count: 12
   name: nitishnarula/secure/ubuntu-focal
+- count: 12
+  name: nvcr.io/nvidia/nvhpc
 - count: 11
   name: qiime2/core
 - count: 11
@@ -132,8 +134,6 @@ bases:
 - count: 7
   name: tpall/singularity-r
 - count: 7
-  name: nvcr.io/nvidia/nvhpc
-- count: 7
   name: perl
 - count: 7
   name: rust
@@ -169,6 +169,8 @@ bases:
   name: conda/miniconda3-centos7
 - count: 5
   name: bioconductor/release_core2
+- count: 5
+  name: nvcr.io/nvidia/deepstream
 - count: 5
   name: anibali/pytorch
 - count: 5
@@ -264,8 +266,6 @@ bases:
 - count: 3
   name: r/r_3.5.1.simg
 - count: 3
-  name: nvcr.io/nvidia/deepstream
-- count: 3
   name: nvcr.io/nvidia/mxnet
 - count: 3
   name: willgpaik/centos7_aci
@@ -358,6 +358,10 @@ bases:
 - count: 2
   name: granek/default/singularity-rstudio-base
 - count: 2
+  name: jkwmoore/centos8-eb
+- count: 2
+  name: jkwmoore/centos7-eb
+- count: 2
   name: barbagroup/landspill
 - count: 2
   name: kulhanek/target-driven-visual-navigation
@@ -427,6 +431,10 @@ bases:
   name: rynlib
 - count: 2
   name: ghcr.io/sinzlab/pytorch-singularity
+- count: 2
+  name: rapidsai/rapidsai
+- count: 2
+  name: nvcr.io/nvidia/tlt-streamanalytics
 - count: 2
   name: jtduda/python-itk-sitk-ants
 - count: 2
@@ -990,10 +998,6 @@ bases:
 - count: 1
   name: base.sif
 - count: 1
-  name: rapidsai/rapidsai
-- count: 1
-  name: nvcr.io/nvidia/tlt-streamanalytics
-- count: 1
   name: nvcr.io/hpc/pgi-compilers
 - count: 1
   name: arm32v7/ubuntu
@@ -1097,6 +1101,8 @@ bases:
   name: poldracklab/ds003-example
 - count: 1
   name: repronim/simple_workflow
+- count: 1
+  name: repronim/reproin
 - count: 1
   name: bids/dparsf
 - count: 1
@@ -1336,17 +1342,17 @@ bases:
 - count: 1
   name: clottaz/fastqpuri
 bootstraps:
-- count: 3733
+- count: 3777
   name: docker
-- count: 340
+- count: 341
   name: debootstrap
 - count: 294
   name: shub
-- count: 244
+- count: 245
   name: library
 - count: 96
   name: yum
-- count: 91
+- count: 95
   name: oras
 - count: 85
   name: localimage
@@ -1466,6 +1472,8 @@ orgs:
 - count: 2
   name: pawsey
 - count: 2
+  name: jkwmoore
+- count: 2
   name: kulhanek
 - count: 2
   name: amd64
@@ -1491,6 +1499,8 @@ orgs:
   name: dalbohn
 - count: 2
   name: provarepro
+- count: 2
+  name: repronim
 - count: 2
   name: pennbbl
 - count: 2
@@ -1832,8 +1842,6 @@ orgs:
 - count: 1
   name: neuronets
 - count: 1
-  name: repronim
-- count: 1
   name: nipy
 - count: 1
   name: micalab
@@ -2034,8 +2042,8 @@ orgs:
 - count: 1
   name: clottaz
 tags:
-  latest: 369
-  other: 3490
+  latest: 374
+  other: 3534
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -2328,7 +2336,7 @@ versions:
     centos7.8.2003: 2
     centos7.9.2009: 1
     centos8: 5
-    latest: 7
+    latest: 8
   charade/xlibbox@sha256:
     04b1aca63f51cd18972b44380a7fcf2da0115c9e21e80fb9d375f39f229f686d: 1
   clottaz/fastqpuri:
@@ -2543,6 +2551,7 @@ versions:
     ubuntu-18.04-cuda-11.2-mlnx-ofed-4.7-3.2.9.0-openmpi-3.1.6: 1
     ubuntu-18.04-cuda-11.2-mlnx-ofed-4.7-3.2.9.0-openmpi-4.0.5: 3
     ubuntu-18.04-cuda-11.2-mlnx-ofed-4.9-4.1.7.0: 2
+    ubuntu-18.04-cuda-11.2-mlnx-ofed-4.9-4.1.7.0-openmpi-3.1.6: 1
     ubuntu-18.04-cuda-11.4: 1
     ubuntu-18.04-cuda-11.4-mlnx-ofed-4.9-4.1.7.0: 2
     ubuntu-18.04-mlnx-ofed-4.6-1.0.1.1: 1
@@ -2555,10 +2564,11 @@ versions:
     ubuntu-18.04-mlnx-ofed-4.9-4.1.7.0-openmpi-3.1.6: 5
     ubuntu-18.04-mlnx-ofed-4.9-4.1.7.0-openmpi-4.1.3: 3
     ubuntu-18.04-openmpi-3.1.6: 1
-    ubuntu-20.04: 7
+    ubuntu-20.04: 8
     ubuntu-20.04-cuda-11.2: 1
     ubuntu-20.04-cuda-11.2-mlnx-ofed-4.9-4.1.7.0: 2
-    ubuntu-20.04-cuda-11.2-mlnx-ofed-4.9-4.1.7.0-openmpi-4.1.3: 1
+    ubuntu-20.04-cuda-11.2-mlnx-ofed-4.9-4.1.7.0-openmpi-3.1.6: 1
+    ubuntu-20.04-cuda-11.2-mlnx-ofed-4.9-4.1.7.0-openmpi-4.1.3: 2
     ubuntu-20.04-cuda-11.4: 1
     ubuntu-20.04-cuda-11.4-mlnx-ofed-4.9-4.1.7.0: 2
     ubuntu-20.04-cuda-11.4-mlnx-ofed-4.9-4.1.7.0-openmpi-3.1.6: 1
@@ -2702,6 +2712,10 @@ versions:
     latest: 2
   jec/mandle:
     latest: 1
+  jkwmoore/centos7-eb:
+    latest: 2
+  jkwmoore/centos8-eb:
+    latest: 2
   jlabsolid/jlabsolidbase:
     devel: 1
   jncc/arcsi-base:
@@ -2981,7 +2995,7 @@ versions:
   nvcr.io/nvidia/cuda-arm64:
     11.2.2-devel-ubuntu20.04: 1
   nvcr.io/nvidia/deepstream:
-    5.0-20.07-triton: 3
+    5.0-20.07-triton: 5
   nvcr.io/nvidia/hpc-benchmarks:
     21.4-hpl: 1
   nvcr.io/nvidia/mxnet:
@@ -2989,9 +3003,9 @@ versions:
     21.02-py3: 1
   nvcr.io/nvidia/nvhpc:
     20.11-devel-cuda_multi-ubuntu20.04: 2
-    21.3-devel-cuda_multi-ubuntu20.04: 1
-    21.5-devel-cuda_multi-ubuntu20.04: 1
-    22.3-devel-cuda_multi-ubuntu20.04: 3
+    21.3-devel-cuda_multi-ubuntu20.04: 2
+    21.5-devel-cuda_multi-ubuntu20.04: 2
+    22.3-devel-cuda_multi-ubuntu20.04: 6
   nvcr.io/nvidia/pytorch:
     19.03-py3: 1
     19.04-py3: 1
@@ -3015,8 +3029,8 @@ versions:
     20.08-tf2-py3: 1
     20.10-tf2-py3: 1
     21.03-tf2-py3: 1
-    21.05-tf2-py3: 2
-    21.07-tf2-py3: 1
+    21.05-tf2-py3: 4
+    21.07-tf2-py3: 2
     21.08-tf1-py3: 1
     21.08-tf2-py3: 1
     21.09-tf2-py3: 1
@@ -3027,7 +3041,7 @@ versions:
     22.02-tf2-py3: 1
     22.04-tf2-py3: 1
   nvcr.io/nvidia/tlt-streamanalytics:
-    v3.0-dp-py3: 1
+    v3.0-dp-py3: 2
   nvidia/container-toolkit:
     1.0.0-alpha1: 1
   nvidia/cuda:
@@ -3076,7 +3090,7 @@ versions:
     11.2.1-cudnn8-devel-ubuntu18.04: 1
     11.2.2-cudnn8-devel-ubuntu18.04: 1
     11.2.2-devel-centos7: 2
-    11.2.2-devel-ubuntu20.04: 3
+    11.2.2-devel-ubuntu20.04: 4
     11.3.0-cudnn8-devel-ubuntu20.04: 1
     11.3.1-cudnn8-runtime-centos7: 3
     11.4.2-base-ubuntu20.04: 1
@@ -3290,14 +3304,14 @@ versions:
     3.6.6: 1
     3.6.8-slim-jessie: 1
     '3.7': 1
-    3.7-slim: 16
+    3.7-slim: 30
     3.7.4-slim: 3
     3.7.7-slim-buster: 1
     3.7.9: 1
     '3.8': 8
     3.8-alpine: 4
     3.8-buster: 2
-    3.8-slim: 3
+    3.8-slim: 5
     3.8.12-bullseye: 1
     3.8.2: 1
     '3.9': 1
@@ -3449,7 +3463,7 @@ versions:
   raj76/singularity:
     biocontainers: 2
   rapidsai/rapidsai:
-    cuda11.0-runtime-ubuntu18.04-py3.7: 1
+    cuda11.0-runtime-ubuntu18.04-py3.7: 2
   rbartelme/anvio-pangenomics:
     latest: 1
   recount-base:
@@ -3502,6 +3516,8 @@ versions:
     '20.04': 1
   registry.scicore.unibas.ch/schwede/openstructure:
     2.0.0: 1
+  repronim/reproin:
+    0.11.3: 1
   repronim/simple_workflow:
     1.1.0: 1
   richelbilderbeek/default/gcaer:
@@ -3540,7 +3556,7 @@ versions:
     4.1.1: 1
     4.1.2: 1
     4.1.3: 3
-    4.2.0: 1
+    4.2.0: 2
   rocker/rstudio:
     3.5.3: 1
     '4.0.2 ': 1
@@ -3681,7 +3697,7 @@ versions:
     2.3.1-gpu: 1
     2.3.3-gpu: 1
     2.4.0-custom-op-gpu-ubuntu16: 1
-    2.4.1-gpu: 4
+    2.4.1-gpu: 5
     2.4.3-gpu: 1
     2.4.3-gpu-jupyter: 1
     2.5.0-gpu: 1
@@ -3739,16 +3755,16 @@ versions:
     pytorch-1.3.0: 1
   ubuntu:
     '14.04': 20
-    '16.04': 163
+    '16.04': 164
     '17.04': 6
     '18.04': 257
     '18.04 ': 5
-    '19.04': 13
+    '19.04': 16
     '19.10': 4
-    '20.04': 246
+    '20.04': 249
     '20.10': 3
     '21.04': 6
-    '21.10': 2
+    '21.10': 3
     '22.04': 2
     UBUNTU_VERSION: 1
     artful: 7

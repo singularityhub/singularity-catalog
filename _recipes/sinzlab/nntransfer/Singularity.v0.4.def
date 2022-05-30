@@ -1,0 +1,114 @@
+BootStrap: docker
+From: ubuntu:21.10
+
+%labels
+    MAINTAINER Arne Nix <arnenix@gmail.com>
+%files
+    ../bias_transfer /src/bias_transfer
+    ../nntransfer /src/nntransfer
+    ../neuralpredictors /src/neuralpredictors
+    ../pytorch_warmup /src/pytorch_warmup
+    ../nnfabrik /src/nnfabrik
+    ../ffcv /src/ffcv
+
+%environment
+    export PATH="/opt/conda/bin:${PATH}"
+
+%post
+    apt update && apt install -y software-properties-common
+    add-apt-repository universe
+
+    apt update && apt install -y \
+        build-essential \
+        git \
+        wget \
+        vim \
+        curl \
+        zip \
+        zlib1g-dev \
+        unzip \
+        pkg-config \
+        libblas-dev \
+        liblapack-dev \
+        python3-tk \
+        python3-wheel \
+        graphviz \
+        libhdf5-dev \
+        texlive-latex-extra \
+        texlive-fonts-recommended \
+        texlive-base \
+        dvipng
+
+
+    # apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
+    # wget  https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    #         && mkdir /root/.conda \
+    #         && bash Miniconda3-latest-Linux-x86_64.sh -b \
+    #         && rm -f Miniconda3-latest-Linux-x86_64.sh
+
+    curl -fsSL -v -o ~/miniconda.sh -O  https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh  && \
+    chmod +x ~/miniconda.sh && \
+    ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh && \
+    /opt/conda/bin/conda install -y python=${PYTHON_VERSION} conda-build pyyaml numpy ipython&& \
+    /opt/conda/bin/conda clean -ya
+
+    export PATH="/opt/conda/bin:${PATH}"
+
+    # conda create -y -n ffcv python=3.9 ipython cupy pkg-config compilers libjpeg-turbo opencv pytorch torchvision cudatoolkit=11.3 numba -c pytorch -c conda-forge
+    conda create -y -n ffcv python=3.9 ipython cupy pkg-config compilers libjpeg-turbo opencv numba  -c conda-forge
+
+    echo "source activate" >> ~/.bashrc
+    echo "conda activate ffcv" >> ~/.bashrc
+
+    conda run -n ffcv pip --no-cache-dir  install \
+        torch==1.10.2+cu113 \
+        torchvision==0.11.3+cu113 \
+        torchaudio==0.10.2+cu113 \
+        -f https://download.pytorch.org/whl/cu113/torch_stable.html
+
+
+    conda run -n ffcv pip install --no-cache-dir jupyterlab_vim \
+                                        checkout_code \
+                                        requests \
+                                        imageio \
+                                        scikit-image \
+                                        einops \
+                                        vit-pytorch \
+                                        blackcellmagic\
+        pytest \
+        pytest-cov \
+        numpy \
+        matplotlib \
+        scipy \
+        pandas \
+        jupyter \
+        scikit-learn \
+        scikit-image \
+        seaborn \
+        graphviz \
+        gpustat \
+        h5py \
+        gitpython \
+        Pillow==8.0.1 \
+        jupyterlab \
+        ipykernel \
+        opencv-python \
+        datajoint==0.12.7
+
+    conda run -n ffcv pip install -e /src/bias_transfer
+    conda run -n ffcv pip install -e /src/nntransfer
+    conda run -n ffcv pip install -e /src/nnfabrik
+    conda run -n ffcv pip install -e /src/neuralpredictors
+    conda run -n ffcv pip install -e /src/pytorch_warmup
+    conda run -n ffcv pip install -e /src/ffcv
+
+    conda run -n ffcv python -m ipykernel install --user --name=ffcv
+
+%startscript
+    exec "$@"
+
+%runscript
+    exec "$@"
+
+

@@ -1,0 +1,37 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%labels
+MAINTAINER vibaotram
+
+%help
+  A container to hold the nanopore barcode demultiplexer deepbinner and ont_fast5_api.
+
+%environment
+  PATH=/usr/local/bin:$PATH
+
+%post
+    apt update
+    apt install -y software-properties-common
+    apt-add-repository universe
+    apt update
+    apt install -y wget zlib1g-dev git python3-pip rsync
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    echo 'export LC_ALL=C.UTF-8' >> $SINGULARITY_ENVIRONMENT
+    echo 'export LANG=C.UTF-8' >> $SINGULARITY_ENVIRONMENT
+
+    #================================
+    # INSTALL DEEPBINNER
+    #================================
+    git clone https://github.com/rrwick/Deepbinner.git
+    cd Deepbinner
+    pip3 install -r requirements.txt
+    python3 setup.py install
+
+    #================================
+    # INSTALL ONT_FAST5_API
+    #================================
+    # pip3 install git+https://github.com/nanoporetech/ont_fast5_api
+    pip3 install ont-fast5-api=3.1.3

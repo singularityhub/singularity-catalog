@@ -15,7 +15,13 @@ From: ubuntu:20.04
 
 %help
 	This container is for running the Yang and Smith pipeline from Chris Jackson
-	It will be called by the Nextflow pipeline, so shouldn't be run independently
+	It will be called by the Nextflow pipeline, but can also be used to access phylogenetic programs
+	To use programs in it, call as:
+		singularity exec -H "$(pwd)" yangsmith.sif [program]
+	For example, for ASTRAL:
+		singularity exec -H "$(pwd)" yangsmith.sif java -jar /Astral/astral.5.7.1.jar [options]
+	or for trimal:
+		singularity exec -H "$(pwd)" yangsmith.sif trimal [options]
 
 
 %post
@@ -36,6 +42,7 @@ From: ubuntu:20.04
 		mafft \
 		make \
 		muscle \
+		openjdk-8-jre \
 		perl \
 		pkg-config \
 		python3 \
@@ -88,7 +95,7 @@ From: ubuntu:20.04
 	rm -r iqtree-"$IQ_VER"-Linux
 
 
-	## Trimal
+	## trimAl
 	TA_VER=1.4.1
 	URL=https://github.com/inab/trimal/archive/refs/tags/v"$TA_VER".tar.gz
 	wget "$URL"
@@ -104,6 +111,18 @@ From: ubuntu:20.04
 	wget "$URL"
 	chmod 755 FastTreeMP
 	mv FastTreeMP /usr/bin/
+
+
+	## ASTRAL
+	AS_VER=5.7.1
+	URL=https://github.com/smirarab/ASTRAL/archive/refs/tags/v"$AS_VER".tar.gz
+	wget $URL
+	tar -xzf v"$AS_VER".tar.gz && rm v"$AS_VER".tar.gz
+	cd ASTRAL-"$AS_VER"
+	unzip Astral."$AS_VER".zip
+	mv Astral/ /Astral
+	cd .. && rm -r ASTRAL-"$AS_VER"
+	chmod -R a+rX /Astral
 
 
 	# clean-up
@@ -122,6 +141,7 @@ From: ubuntu:20.04
 
 
 %environment
+	export PATH="$PATH":/Astral
 
 
 %runscript

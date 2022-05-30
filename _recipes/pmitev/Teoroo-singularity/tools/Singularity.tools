@@ -1,0 +1,23 @@
+Bootstrap:  docker
+From: ubuntu:20.04
+
+%setup
+
+%files
+
+%environment
+  export LC_ALL=C
+
+%post
+  export LC_ALL=C
+  export DEBIAN_FRONTEND=noninteractive
+
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y mc xclip vim gawk
+  apt-get clean
+
+%runscript
+  if command -v $SINGULARITY_NAME > /dev/null 2> /dev/null; then
+    exec $SINGULARITY_NAME "$@"
+  else
+    echo "# ERROR !!! Command $SINGULARITY_NAME not found in the container"
+  fi

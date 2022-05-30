@@ -25,7 +25,10 @@ From: ubuntu:20.04
   export SHELL="/bin/bash"
 
   ## Add Biodiverse to Perl's @INC
-  export PERL5LIB="/opt/biodiverse/lib:/opt/perllibs/lib/perl5"
+  export PERL5LIB="/opt/biodiverse/lib:/opt/perllibs/lib/perl5/lib/perl5:/opt/perl5/perlbrew/perls/perl-5.34.0/lib/5.34.0"
+  
+  ## if `/opt/perllibs/lib/perl5/lib/perl5/x86_64-linux-gnu-thread-multi` is in @INC
+  # >> ListUtil.c: loadable library and perl binaries are mismatched (got handshake key 0xcd00080, needed 0xdf80000)
 
   ## Add Perl to the PATH
   export PATH=/opt/perl5/perlbrew/perls/perl-5.34.0/bin/:/opt/perllibs/bin/:$PATH
@@ -49,17 +52,15 @@ From: ubuntu:20.04
   export MANPATH="$PERL_BASE/man${MANPATH:+:$MANPATH}"
   mkdir -p "${PERLBREW_ROOT}" "${PERLBREW_HOME}" "${PERL5LIB}"
   
+  perl=${PERLBREW_ROOT}"/perls/perl-5.34.0/bin/perl"
   perlbrew=${PERLBREW_ROOT}"/bin/perlbrew"
   cpanm=${PERLBREW_ROOT}"/bin/cpanm"
-  export PERL_CPANM_OPT="--notest --local-lib $PERL5LIB"
 
   ## Assign read and execute access for everyone (+ write access for the owner) to the /opt dir
   chmod -R 755 /opt
 
   ## cpanm default options
   export PERL_CPANM_OPT="--notest --skip-satisfied --local-lib $PERL5LIB"
-
-  yes | unminimize
 
   ## Install the required dependencies
   apt update -y \
@@ -103,11 +104,13 @@ From: ubuntu:20.04
 
   ## Install modules
   ${cpanm} \
+    rlib \
     ExtUtils::Embed@1.35 \
     Catalyst::Devel@1.42 \
     Module::Compile@0.38 \
     FFI::Build::MM@1.56 \
     FFI::Platypus@1.56 \
+    List::Util@1.62 \
     List::MoreUtils@0.430 \
     PDL@2.068 \
     Test2::Harness@1.000042 \
@@ -126,7 +129,7 @@ From: ubuntu:20.04
     Alien::gdal@1.27
 
   ## Export LD_LIBRARY_PATH and install Geo::GDAL::FFI
-  export LD_LIBRARY_PATH=`perl -MAlien::geos::af -E'print Alien::geos::af->dist_dir . q{/lib}'` \
+  export LD_LIBRARY_PATH=`${perl} -MAlien::geos::af -E'print Alien::geos::af->dist_dir . q{/lib}'` \
     && ${cpanm} Geo::GDAL::FFI@0.09
 
   cd /opt
@@ -155,8 +158,9 @@ From: ubuntu:20.04
     https://github.com/shawnlaffan/biodiverse-utils/archive/refs/tags/v1.07.tar.gz
 
   ## Test Biodiverse
+  # cd /opt/biodiverse
   # export BD_NO_TEST_GUI=1  #  no need to test the GUI libs load
-  # prove -l
+  # /opt/perl5/perlbrew/perls/perl-5.34.0/bin/prove -l
 
 %test
   /opt/perl5/perlbrew/perls/perl-5.34.0/bin/perl -V
