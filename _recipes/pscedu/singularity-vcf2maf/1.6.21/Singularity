@@ -15,7 +15,8 @@ From: perl:5.32.1
 
 %post
     export DEBIAN_FRONTEND=noninteractive
-    apt update && apt-get install -y locales libipc-run3-perl git
+    apt update
+    apt install -y locales libipc-run3-perl git
     locale-gen en_US.UTF-8
     cd /opt
     wget https://github.com/mskcc/vcf2maf/archive/refs/tags/v1.6.21.tar.gz
@@ -25,3 +26,5 @@ From: perl:5.32.1
     ln -s $(pwd)/maf2vcf.pl /usr/local/bin/maf2vcf.pl && chmod +x /usr/local/bin/maf2vcf.pl
     ln -s $(pwd)/vcf2maf.pl /usr/local/bin/vcf2maf.pl && chmod +x /usr/local/bin/vcf2maf.pl
     ln -s $(pwd)/vcf2vcf.pl /usr/local/bin/vcf2vcf.pl && chmod +x /usr/local/bin/vcf2vcf.pl
+    apt -y autoremove
+    apt -y clean

@@ -1,5 +1,5 @@
 Bootstrap:  docker
-From: ubuntu:20.04
+From: ubuntu:22.04
 
 %setup
 
@@ -12,7 +12,7 @@ From: ubuntu:20.04
   export LC_ALL=C
   export DEBIAN_FRONTEND=noninteractive
 
-  apt-get update && apt-get -y dist-upgrade && apt-get install -y mc xclip vim gawk
+  apt-get update && apt-get -y dist-upgrade && apt-get install -y mc xclip vim gawk ncdu
   apt-get clean
 
 %runscript

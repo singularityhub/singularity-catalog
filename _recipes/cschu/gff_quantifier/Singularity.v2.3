@@ -32,7 +32,7 @@ export PATH=$PATH:/opt/software/miniconda3/bin:/opt/software/mOTUs
   bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/software/miniconda3
   rm -f Miniconda3-latest-Linux-x86_64.sh
 
-  # /opt/software/miniconda3/bin/conda install -y -c conda-forge -c bioconda 'samtools>=1.13' bwa kraken2 fastqc multiqc bbmap seqtk
+  /opt/software/miniconda3/bin/conda install -y -c conda-forge -c bioconda 'samtools>=1.13' bwa minimap2
   git clone https://github.com/cschu/gff_quantifier.git
   cd gff_quantifier
   git checkout refactor/optimise_gene_mode_20220518

@@ -1,0 +1,75 @@
+Bootstrap: docker
+From: ubuntu:16.04
+%labels
+MAINTAINER Craig B Rafter (c.b.rafter@soton.ac.uk)
+Description="Docker Container Simulation of Urban MObility(SUMO) + Python TraCI"
+%post
+
+# Environment Variables
+#SINGULARITY_LOCALCACHEDIR=/hardmem/SUMOsingularity/tmp/
+#SINGULARITY_TMPDIR=/hardmem/SUMOsingularity/tmp/
+#export SINGULARITY_LOCALCACHEDIR
+#export SINGULARITY_TMPDIR
+#SINGULARITY_DISABLE_CACHE=True
+#export SINGULARITY_DISABLE_CACHE
+
+SUMO_VERSION=0.30.0
+SUMO_HOME=/usr/share/sumo/
+# No interactivity but only during build (ARGs are deleted after build ENV persist)
+
+# Updates system 
+apt-get update -y
+
+# Install system tools
+apt-get install -y apt-utils
+apt-get install -y build-essential python-pip git wget
+apt-get install -y nano
+# apt-get install -y netstat
+apt-get install -y net-tools
+apt-get install -y lsof
+
+# Upgrade pip
+# RUN pip install --upgrade pip
+
+# Install python prerequisites
+# pip install scipy numpy matplotlib psutil
+apt-get install -y python-scipy
+apt-get install -y python-numpy
+apt-get install -y python-matplotlib
+apt-get install -y python-psutil
+
+# Install SUMO Prerequistites
+apt-get install -y autoconf
+apt-get clean
+apt-get install -y proj-bin
+apt-get install -y libproj-dev
+apt-get install -y proj-data
+apt-get install -y libtool
+apt-get install -y libgdal1-dev
+apt-get install -y libxerces-c3-dev
+apt-get install -y libfox-1.6-0
+apt-get install -y libfox-1.6-dev
+
+# Fetch and build SUMO
+# RUN wget https://sourceforge.net/projects/sumo/files/sumo/version\ $SUMO_VERSION/sumo-all-$SUMO_VERSION.tar.gz/download
+wget http://prdownloads.sourceforge.net/sumo/sumo-all-$SUMO_VERSION.tar.gz
+tar -xvf sumo-all-$SUMO_VERSION.tar.gz
+cd /sumo-$SUMO_VERSION
+./configure
+make install
+mkdir -p $SUMO_HOME/tools/
+mkdir -p $SUMO_HOME/data/
+cp -r /sumo-$SUMO_VERSION/tools/ $SUMO_HOME
+cp -r /sumo-$SUMO_VERSION/data/ $SUMO_HOME
+cd /
+mkdir /hardmem/
+
+# Post install clean-up
+rm -rf /sumo-$SUMO_VERSION/
+rm -rf /sumo-all-$SUMO_VERSION.tar.gz
+apt-get clean
+apt-get autoremove -y
+%environment
+export SUMO_HOME=/usr/share/sumo/
+%runscript
+exec /bin/bash "$@"

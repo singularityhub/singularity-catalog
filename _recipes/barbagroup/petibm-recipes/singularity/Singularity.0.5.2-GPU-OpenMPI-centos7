@@ -1,0 +1,64 @@
+# vim:ft=singularity
+
+Bootstrap: docker
+From: barbagroup/petibm:0.5.2-GPU-OpenMPI-centos7
+
+# default to shell for "run" command; overwrite the Docker image's SSHD cmd
+%runscript
+    exec /bin/bash
+
+%apprun poisson
+    poisson $@
+
+%apprun solveFromFile
+    solveFromFile $@
+
+%apprun createxdmf
+    petibm-createxdmf $@
+
+%apprun decoupledibpm
+    petibm-decoupledibpm $@
+
+%apprun ibpm
+    petibm-ibpm $@
+
+%apprun navierstokes
+    petibm-navierstokes $@
+
+%apprun vorticity
+    petibm-vorticity $@
+
+%apprun writemesh
+    petibm-writemesh $@
+
+%labels
+    Author  Pi-Yueh Chuang <pychuang@gwu.edu>
+    PetIBM      v0.5.2
+    PETSc       v3.12.5
+    OpenMPI     v4.0.5
+    CUDA        v10.1
+    AmgX        919fb92
+    AmgXWrapper 1a93865
+
+%help
+
+    $ singularity run <the name of this image>
+
+        This will start a shell in the container.
+
+
+    $ singularity run --app <app name> <the name of this image> [app arguments]
+
+        apps:
+            poisson: from the Poisson example in AmgXWrapper
+            solveFromFile: from the solveFromFile example in AmgXWrapper
+            createxdmf: PetIBM application code.
+            decoupledibpm: PetIBM application code.
+            ibpm: PetIBM application code.
+            navierstokes: PetIBM application code.
+            vorticity: PetIBM application code.
+            writemesh: PetIBM application code.
+
+    $ singularity exec <the name of this image> <program name>
+        
+        This will execute the specified program in container.

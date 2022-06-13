@@ -1,0 +1,105 @@
+BootStrap: docker
+From: ubuntu:bionic
+
+%labels
+    APPLICATION_NAME SomaLogic Command Line Power Tool
+    AUTHOR_NAME Rohit Farmer
+    AUTHOR_EMAIL rohit.farmer@gmail.com
+    YEAR 2022
+
+%help
+    This container conatins:
+        Python 3.9.2
+
+%environment
+    # Set system locale
+    PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+    LANG=C.UTF-8 LC_ALL=C.UTF-8
+    
+
+%post
+    # Change to tmp directory to download temporary files
+    cd /tmp
+
+    echo "Installing compilers and libraries"
+    apt-get -qq -y update
+    
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get -qq install -y --no-install-recommends tzdata apt-utils 
+
+    ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime 
+    dpkg-reconfigure --frontend noninteractive  tzdata
+    
+	    apt-get -y update 
+	    apt-get install -y --no-install-recommends \
+		autoconf \
+		automake \
+		build-essential \
+		bzip2 \
+		ca-certificates \
+		cmake \
+		checkinstall \
+		gcc \
+		g++ \
+		gfortran \
+		gobjc \
+		git \
+		libtool \
+		libnlopt-dev \
+		libncursesw5-dev \
+		libjpeg-dev \
+		libpng-dev \
+		libtiff-dev \
+		libatlas-base-dev \
+		libxml2-dev \
+		zlib1g-dev \
+		libcairo2-dev \
+		libc6-dev \
+		libeigen3-dev \
+		libcupti-dev \
+		libpcre3-dev \
+		libssl-dev \
+		libsqlite3-dev \
+		libcurl4-openssl-dev \
+		libboost-dev \
+		libboost-system-dev \
+		libboost-thread-dev \
+		libboost-serialization-dev \
+		libboost-regex-dev \
+		libffi-dev \
+		libgtk2.0-dev \
+		libgdbm-dev \
+		libreadline-dev \
+		libbz2-dev \
+		liblzma-dev \
+		libzmq3-dev \
+		libpcre++-dev \
+		libpango1.0-dev \
+		libopenblas-dev \
+		liblapack-dev \
+		libpcre2-dev \
+		libpoppler-cpp-dev \
+		libxt-dev \
+		openjdk-8-jdk \
+		tcl8.6-dev \
+		tk8.6-dev \
+		texlive \
+		texlive-fonts-extra \
+		texinfo \
+		wget \
+		xvfb \
+		xauth \
+		xfonts-base \
+		zip
+
+	apt-get -qq -y update 
+	apt-get -qq -y upgrade
+	
+	export LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+
+# Cleanup
+    echo "Cleaning"
+    apt-get -qq clean
+    rm -rf /var/lib/apt/lists/* 
+

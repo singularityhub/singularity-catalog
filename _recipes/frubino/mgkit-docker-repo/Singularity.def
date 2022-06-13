@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: continuumio/miniconda3:latest
+
+%environment
+    export PATH=/opt/conda/envs/mgkit/bin:$PATH
+    export CONDA_PREFIX=/opt/conda/envs/mgkit
+
+%post
+    echo "name: mgkit
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - pip
+  - python=3.7
+  - samtools
+  - bcftools
+  - pytables
+  - pyvcf
+" > /root/mgkit-env.yml
+    
+    export PATH=/opt/conda/envs/mgkit/bin:$PATH
+    export CONDA_PREFIX=/opt/conda/envs/mgkit
+    
+    conda env create --name mgkit -f /root/mgkit-env.yml
+    apt update
+    apt install -y build-essential
+    pip install --prefix=$CONDA_PREFIX git+https://github.com/frubino/mgkit.git@0.6.0
+
+%labels
+    Version v0.6.0
+
+%help
+    Included the echo to get a file inside the image, remote build does not offer using %files

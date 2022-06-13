@@ -1,0 +1,16 @@
+# Copyright © 2022 Pittsburgh Supercomputing Center.
+# All Rights Reserved.
+
+Bootstrap: docker
+From: alpine:edge
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE http://github.com/icaoberg/singularity-chalk-cli
+    COPYRIGHT Copyright © 2022 Pittsburgh Supercomputing Center. All Rights Reserved. 
+    VERSION 5.0.0
+
+%post
+    apk add --update nodejs npm
+    npm install --global chalk-cli

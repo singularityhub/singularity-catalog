@@ -1,0 +1,166 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE http://github.com/icaoberg/singularity-hmmer
+    COPYRIGHT Copyright © 2021-2022, Pittsburgh Supercomputing Center. All Rights Reserved. 
+    VERSION 3.3.2
+
+%post
+    apt-get update && apt-get -y upgrade
+    apt-get update --fix-missing
+    apt-get install -y --no-install-recommends apt-utils hmmer
+
+#######################################################
+%apphelp alimask
+    alimask -h
+
+%apprun alimask
+    alimask "$@"
+#######################################################
+
+#######################################################
+%apphelp hmmalign
+    hmmalign -h
+
+%apprun hmmalign
+    hmmalign "$@"
+#######################################################
+
+#######################################################
+%apphelp hmmbuild
+    hmmbuild -h
+
+%apprun hmmbuild
+    hmmbuild "$@"
+#######################################################
+
+#######################################################
+%apphelp hmmc2
+    hmmc2 -h
+
+%apprun hmmc2
+    hmmc2 "$@"
+#######################################################
+
+#######################################################
+%apphelp hmmconvert
+    hmmconvert -h
+
+%apprun hmmconvert
+    hmmconvert "$@"
+#######################################################
+
+#######################################################
+%apphelp hmmemit
+    hmmemit -h
+
+%apprun hmmemit
+    hmmemit "$@"
+#######################################################
+
+#######################################################
+%apphelp hmmfetch
+    hmmfetch -h
+
+%apprun hmmfetch
+    hmmfetch "$@"
+#######################################################
+
+#######################################################
+%apphelp hmmlogo
+    hmmlogo -h
+
+%apprun hmmlogo
+    hmmlogo "$@"
+#######################################################
+
+#######################################################
+%apphelp hmmpgmd
+    hmmpgmd -h
+
+%apprun hmmpgmd
+    hmmpgmd "$@"
+#######################################################
+
+#######################################################
+%apphelp hmmpgmd_shard
+    hmmpgmd_shard -h
+
+%apprun hmmpgmd_shard
+    hmmpgmd_shard "$@"
+#######################################################
+
+#######################################################
+%apphelp hmmpress
+    hmmpress -h
+
+%apprun hmmpress
+    hmmpress "$@"
+#######################################################
+
+#######################################################
+%apphelp hmmscan
+    hmmscan -h
+
+%apprun hmmscan
+    hmmscan "$@"
+#######################################################
+
+#######################################################
+%apphelp hmmsearch
+    hmmsearch -h
+
+%apprun hmmsearch
+    hmmsearch "$@"
+#######################################################
+
+#######################################################
+%apphelp hmmsim
+    hmmsim -h
+
+%apprun hmmsim
+    hmmsim "$@"
+#######################################################
+
+#######################################################
+%apphelp hmmstat
+    hmmstat -h
+
+%apprun hmmstat
+    hmmstat "$@"
+#######################################################
+
+#######################################################
+%apphelp jackhmmer
+    jackhmmer -h
+
+%apprun jackhmmer
+    jackhmmer "$@"
+#######################################################
+
+#######################################################
+%apphelp makehmmerdb
+    makehmmerdb -h
+
+%apprun makehmmerdb
+    makehmmerdb "$@"
+#######################################################
+
+#######################################################
+%apphelp nhmmer
+    nhmmer -h
+
+%apprun nhmmer
+    nhmmer "$@"
+#######################################################
+
+#######################################################
+%apphelp phmmer
+    phmmer -h
+
+%apprun phmmer
+    phmmer "$@"
+#######################################################

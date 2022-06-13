@@ -1,0 +1,17 @@
+Bootstrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/x86_64/
+Include: yum
+
+%post
+    yum install -y wget file bc tar gzip libquadmath which bzip2 libgomp tcsh perl less vim zlib zlib-devel hostname
+    yum groupinstall -y "Development Tools"
+    wget https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-Linux-x86_64.sh
+    mkdir -p /opt/cmake
+    /bin/bash cmake-3.14.0-Linux-x86_64.sh --prefix=/opt/cmake --skip-license
+    rm cmake-3.14.0-Linux-x86_64.sh
+
+%labels
+    Maintainer Steven Tilley
+    Version dev
+

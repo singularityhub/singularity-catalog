@@ -1,0 +1,26 @@
+BootStrap: yum
+OSVersion: 8
+MirrorURL: http://dl.rockylinux.org/pub/rocky/%{OSVERSION}/BaseOS/x86_64/os/
+Include: dnf
+
+%runscript
+    exec "$@"
+
+%post
+    COMPOPT="--nodocs --setopt install_weak_deps=False"
+    dnf install -y $COMPOPT epel-release
+    dnf install -y 'dnf-command(config-manager)'
+    dnf config-manager --set-enabled powertools
+    dnf config-manager --set-enabled appstream
+
+    dnf copr enable -y simc/stable
+# install packages required for scacchiera
+    dnf install -y $COMPOPT python3-pandas python3-matplotlib python3-numpy 
+# install smnd packages from simc repository
+    dnf install -y $COMPOPT wreport bufr2netcdf dballe arkimet libsim
+# other useful packages
+    dnf install -y $COMPOPT ncview
+# save some space
+    dnf clean all
+    # rm -rf /var/lib/{dnf,rpm,yum} /var/cache/*
+
