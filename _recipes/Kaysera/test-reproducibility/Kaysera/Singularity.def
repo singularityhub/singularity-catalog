@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: python:3
+Stage: spython-base
+
+%setup
+	cd ${EXP_PATH}
+	git clone https://github.com/Kaysera/${REPO_NAME}
+	cd ${REPO_NAME}
+	git checkout ${COMMIT}
+
+%files
+	${REPO_NAME}/requirements.txt ./
+
+
+%post
+	pip install --no-cache-dir -r requirements.txt
+
+%runscript
+	cd ${EXP_PATH}/${REPO_NAME}
+	python3 ./docker-test.py singularity

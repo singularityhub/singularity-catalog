@@ -6,7 +6,7 @@ From: r-base
 %post
     sed -i 's/$/ universe/' /etc/apt/sources.list
     apt-get update
-    apt-get -y install libssl-dev libcurl4-openssl-dev libxml2-dev r-cran-stringi libicu-dev r-cran-rjava
+    apt-get -y install libssl-dev libcurl4-openssl-dev libxml2-dev r-cran-rjava
     apt-get clean
     Rscript -e 'install.packages(c("remotes", "devtools"))'
     Rscript -e 'remotes::install_github("ropensci/beastier")'
@@ -14,7 +14,8 @@ From: r-base
     Rscript -e 'beastierinstall::install_beast2(folder_name = "/opt/beastier")'
 
 %runscript
-exec R --vanilla --silent --no-echo "$@"
+echo "'beastier.sif' running with arguments '$@'"
+exec "$@"
 
 %test
     Rscript -e 'beastier::beastier_report(beast2_folder = "/opt/beastier")'
@@ -61,4 +62,4 @@ run_beast2_from_options(beast2_options)
 
     URL https://github.com/ropensci/beastier
 
-    VERSION 2.4.6
+    VERSION 2.4.10

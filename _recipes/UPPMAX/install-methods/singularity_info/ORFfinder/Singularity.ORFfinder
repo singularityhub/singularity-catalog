@@ -1,0 +1,29 @@
+Bootstrap:  docker
+From: rockylinux:8.5
+
+%setup
+
+%files
+
+%environment
+  export LC_ALL=C
+
+%post
+  export LC_ALL=C
+
+  yum update -y && yum install -y libuv wget gzip libnghttp2 && yum clean all
+
+  wget -P /tmp -c https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/ORFfinder/linux-i64/ORFfinder.gz
+  gunzip -k -f  /tmp/ORFfinder.gz
+  cp /tmp/ORFfinder /usr/bin/
+  chmod +x /usr/bin/ORFfinder
+
+  
+
+%runscript
+  if command -v $SINGULARITY_NAME > /dev/null 2> /dev/null; then
+    exec $SINGULARITY_NAME "$@"
+  else
+    echo "# ERROR !!! Command $SINGULARITY_NAME not found in the container"
+    exec /usr/bin/vlc "$@"
+  fi

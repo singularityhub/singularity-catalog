@@ -1,0 +1,122 @@
+Bootstrap: library
+From: ubuntu:20.04
+
+%labels
+  Version 0.0.2
+  Author Vladimir Mikryukov, Kessy Abarenkov
+  Maintainer vladimir.mikryukov@ut.ee
+  Biodiverse 3.1
+  Perl 5.30.0
+
+%runscript
+  exec "$@"
+
+%environment
+  export SHELL="/bin/bash"
+  export PERL5LIB="/opt/biodiverse/lib"
+
+%post -c /bin/bash
+
+  export DEBIAN_FRONTEND="noninteractive"
+  export TZ=UTC
+
+  ## Assign variables with perl path
+
+  ## Assign read and execute access for everyone (+ write access for the owner) to the /opt dir
+  chmod -R 755 /opt
+  
+  ## cpanm default options
+  export PERL_CPANM_OPT="--notest --skip-satisfied"
+  
+  ## Install the required dependencies
+  apt update -y \
+    && apt install -y software-properties-common \
+    && add-apt-repository universe \
+    && apt update -y \
+    && apt upgrade -y \
+    && apt install -y \
+      software-properties-common \
+      python3 python3-pip \
+      zip unzip \
+      curl git wget less \
+      build-essential ca-certificates \
+      cpanminus \
+      make cmake libtool automake autoconf pkg-config \
+      libffi-dev zlib1g-dev libminizip-dev libexpat1-dev libssl-dev \
+      libarmadillo-dev libpoppler-dev libepsilon-dev liblzma-dev \
+      libkml-dev libfreexl-dev libogdi-dev \
+      libgdal-dev gdal-bin \
+      libgeos-dev librttopo-dev \
+      libsqlite3-dev sqlite3 \
+      locales language-pack-fi language-pack-en && \
+        export LANGUAGE=en_US.UTF-8 && \
+        export LANG=en_US.UTF-8 && \
+        export LC_ALL=en_US.UTF-8 && \
+        locale-gen en_US.UTF-8 && \
+        dpkg-reconfigure locales \
+    && apt-get autoremove -y \
+    && apt-get autoclean -y \
+    && rm -rf /var/lib/apt/lists/*
+  
+  ## Install modules
+  cpanminus \
+    rlib@0.02 \
+    ExtUtils::Embed@1.35 \
+    Catalyst::Devel@1.42 \
+    Module::Compile@0.38 \
+    FFI::Build::MM@1.56 \
+    FFI::Platypus@1.56 \
+    List::Util@1.62 \
+    List::MoreUtils@0.430 \
+    PDL@2.068 \
+    Test2::Harness@1.000042 \
+    Text::CSV@2.01 \
+    Text::CSV_XS@1.47 \
+    Alien::Build@2.25 \
+    Alien::freexl@1.03 \
+    Alien::libtiff@1.01 \
+    Alien::cmake3@0.08 \
+    Alien::sqlite@1.06 \
+    Alien::patch@0.15 \
+    FFI::Platypus::Declare@1.34 \
+    Alien::geos::af@1.008 \
+    Alien::proj@1.16 \
+    Alien::spatialite@1.04 \
+    Alien::gdal@1.27
+  
+  ## Export LD_LIBRARY_PATH and install Geo::GDAL::FFI
+  export LD_LIBRARY_PATH=`perl -MAlien::geos::af -E'print Alien::geos::af->dist_dir . q{/lib}'` \
+    && cpanm Geo::GDAL::FFI@0.09
+  
+  cd /opt
+  
+  ## Download Biodiverse repo (pull only the latest commit from GitHub)
+  ## Latest commit from the master branch (development version)
+  git clone --depth 1 https://github.com/shawnlaffan/biodiverse.git
+  cd  "biodiverse"
+  
+  ## Get the updated `cpanfile` with fixed module versions
+  wget https://raw.githubusercontent.com/vmikk/biodiverse-docker/main/cpanfile -O cpanfile
+  
+  ## Install Biodiverse + deps for the current directory
+  cpanm --installdeps .
+  
+  ## Install remaining modules
+  cpanm \
+    Data::Recursive@1.1.0 \
+    Getopt::Long::Descriptive@0.110 \
+    List::BinarySearch@0.25 \
+    LWP::Protocol::https@6.10 \
+    Inline::Module@0.34
+  
+  ## Install Biodiverse Utils
+  cpanm \
+    https://github.com/shawnlaffan/biodiverse-utils/archive/refs/tags/v1.07.tar.gz
+  
+%test
+  perl -V
+
+  ## Test Biodiverse
+  # cd /opt/biodiverse
+  # export BD_NO_TEST_GUI=1  #  no need to test the GUI libs load
+  # /opt/perl5/perlbrew/perls/perl-5.34.0/bin/prove -l

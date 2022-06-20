@@ -1,0 +1,45 @@
+Bootstrap: docker
+From: darsh3/openfoam_hisa_pytorch:of2112_hisa1.4.6_pt1.10.2_ub22.04
+  
+%runscript
+
+  CMD="${1:?[Please specify a command; singularity run-help of2112_hisa1.4.6_pt1.10.2_ub22.04.sif]}"
+
+  # openFOAM environment variables
+  . /usr/lib/openfoam/openfoam2112/etc/bashrc
+
+  if [ "$#" -eq "1" ]; then
+    $CMD
+  elif [ "$#" -eq "2" ]; then
+    cd $2
+    $CMD
+  elif [ "$#" -eq "3" ]; then
+    cd $2
+    $CMD $3
+  else
+    echo "Error: expected exactly one, two, or three arguments."
+  fi
+
+%help
+  Simple Singularity image containing OpenFOAM-v2112, HiSA-v1.4.6,
+  and libtorch (PyTorch 1.10.2). The generic syntax to execute
+  a command with arguments is
+
+  singularity run image_name.sif command [path] [argument]
+
+  Examples:
+  - run OpenFoam example
+    singularity run of2112_hisa1.4.6_pt1.10.2_ub22.04.sif ./Allrun ./test/cavity/
+
+  - run HiSA example
+    singularity run of2112_hisa1.4.6_pt1.10.2_ub22.04.sif ./setupMesh ./test/rae2822/
+    singularity run of2112_hisa1.4.6_pt1.10.2_ub22.04.sif ./runSim ./test/rae2822/
+
+  - compile the application tensorCreation using wmake
+    singularity run of2112_hisa1.4.6_pt1.10.2_ub22.04.sif wmake test/tensorCreation/
+
+  - clean tensorCreation build
+    singularity run of2112_hisa1.4.6_pt1.10.2_ub22.04.sif wclean test/tensorCreation/
+
+  - run tensorCreation
+    singularity run of2112_hisa1.4.6_pt1.10.2_ub22.04.sif ./tensorCreation test/tensorCreation/

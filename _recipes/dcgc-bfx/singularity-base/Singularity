@@ -29,6 +29,7 @@ from: debian:buster-20201012
         - velocyto
         - cutadapt
         - umi_tools
+		- ucsc_tools (partly)
 
 %labels
     Version 1.0.0
@@ -100,7 +101,7 @@ from: debian:buster-20201012
     
     # install basic system tools and libs 
     apt-get clean && apt-get update -y && apt-get upgrade -y
-    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline7 libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc pandoc-citeproc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpango1.0-dev  libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-dev gawk mariadb-client-10.3 libmariadb-dev libnlopt-dev libtry-tiny-perl libdigest-perl-md5-perl libdbi-perl libdbd-mysql-perl
+    apt-get install -y build-essential gnupg2 software-properties-common cmake wget tar rsync curl bzip2 libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline7 libreadline-dev libffi-dev libtbb-dev zip unzip perl-base default-jre parallel pigz zlibc libc6 gcc g++ gfortran git coreutils pandoc pandoc-citeproc gdebi-core pkg-config autoconf uuid libx11-dev libxt-dev libpcre2-dev libcurl4-openssl-dev libxml2-dev texinfo texlive-latex-base texlive-fonts-recommended texlive-latex-extra libjpeg-dev libpng-dev libtiff-dev xfonts-75dpi xfonts-100dpi xfonts-traditional xfstt libcairo2-dev libpango1.0-dev  libpangocairo-1.0-0 vim pdftk libboost-regex-dev libboost-filesystem-dev libclang-dev libxkbcommon-x11-0 libpq5 libgd-graph-perl libhdf5-dev gawk mariadb-client-10.3 libmariadb-dev libnlopt-dev libtry-tiny-perl libdigest-perl-md5-perl libdbi-perl libdbd-mysql-perl libsodium-dev libsodium23
     
     # no texlive-fonts-extra due to mmap
     
@@ -146,7 +147,7 @@ from: debian:buster-20201012
 	# --no-init-file prevents R from loading user settings since all should be independent from the user
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'install.packages("tidyverse", repos="http://cran.r-project.org", Ncpus='"$COMPILE_CPUS"')'
     ## tidyverse contains:  broom,cli,crayon,dbplyr,dplyr,forcats,ggplot2,haven,hms,httr,jsonlite,lubridate,magrittr,modelr,pillar,purrr,readr,readxl,reprex,rlang,rstudioapi,rvest,stringr,tibble,tidyr,xml2,tidyverse
-    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'install.packages(c("reshape2","plyr","scales","gridExtra","ggrepel","data.table","R.utils","openxlsx","WriteXLS","hwriter","factoextra","pheatmap","RColorBrewer","PoiClaClu","knitr","devtools","remotes","cowplot","patchwork","ggsci","ggpubr","ggthemes","argparse","pander","shiny","shinydashboard","shinythemes","shinyjs","reticulate","enrichR","future","Matrix","kableExtra","sessioninfo", "markdown", "rmarkdown", "RMySQL"), repos="http://cran.r-project.org", Ncpus='"$COMPILE_CPUS"')'
+    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'install.packages(c("reshape2","plyr","scales","gridExtra","ggrepel","data.table","R.utils","openxlsx","WriteXLS","hwriter","factoextra","pheatmap","RColorBrewer","PoiClaClu","knitr","devtools","remotes","cowplot","patchwork","ggsci","ggpubr","ggthemes","argparse","pander","shiny","shinydashboard","shinythemes","shinyjs","reticulate","enrichR","future","Matrix","kableExtra","sessioninfo", "markdown", "rmarkdown", "RMySQL", "Seurat"), repos="http://cran.r-project.org", Ncpus='"$COMPILE_CPUS"')'
     
     # CRAN packages where the current version cannot be used and older versions need to be installed
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'devtools::install_version("locfit", version="1.5-9.4",  repos="http://cran.us.r-project.org")'
@@ -158,7 +159,6 @@ from: debian:buster-20201012
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'BiocManager::install("romanhaa/cerebroApp",ask=FALSE, Ncpus='"$COMPILE_CPUS"')'
     
     # github/dev packages
-    /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');remotes::install_github(repo = "satijalab/seurat", ref = "develop")'
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');remotes::install_github("chris-mcginnis-ucsf/DoubletFinder")'
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');devtools::install_github("cellgeni/sceasy")'
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');devtools::install_github("cboettig/knitcitations")'
@@ -166,20 +166,12 @@ from: debian:buster-20201012
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');devtools::install_github("rstudio/bookdown")'
     /opt/R/${R_VERSION}/bin/R --no-init-file --slave -e 'options(Ncpus='"$COMPILE_CPUS"');devtools::install_github("ROpenSci/bibtex")'
     
-    ###########
-    # RStudio #
-    ###########
-    
-    RSTUDIO_VERSION="1.4.1103"
-    cd /opt && wget -nv https://download1.rstudio.org/desktop/bionic/amd64/rstudio-${RSTUDIO_VERSION}-amd64.deb && \
-    dpkg -i /opt/rstudio-${RSTUDIO_VERSION}-amd64.deb && \
-    cd /opt/ && rm rstudio-${RSTUDIO_VERSION}-amd64.deb
-    apt-get clean 
     
     ############
     # kallisto #
     ############
     
+    # HTS static
     # kallisto needs to be installed before otherwise it will pick an incorrect libhdf5
     
     KALLISTO_VERSION="0.46.1"
@@ -205,9 +197,7 @@ from: debian:buster-20201012
     rm ${MINICONDA_DIR}.sh
     export PATH="/opt/bin:/opt/conda/bin:$PATH"
     
-    conda update conda
-    conda install -c conda-forge mamba
-    
+    conda install mamba -n base -c conda-forge
     mamba install --quiet --yes -c conda-forge -c bioconda \
     snakemake \
     multiqc \
@@ -239,10 +229,38 @@ from: debian:buster-20201012
     numpy \
     mysql-python
     
+    
+    ##########
+    # htslib #
+    ##########
+
+    HTSLIB_VERSION="1.15.1"
+    HTSLIB_DIR=htslib-${HTSLIB_VERSION}
+    
+    cd /opt && wget -nv https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/${HTSLIB_DIR}.tar.bz2 && \
+        tar -jxf ${HTSLIB_DIR}.tar.bz2 && \
+        cd ${HTSLIB_DIR} && \
+        ./configure --prefix=/opt && \
+        make -j $COMPILE_CPUS -k && \
+        make install && \
+        cd /opt && rm -r ${HTSLIB_DIR}.tar.bz2 ${HTSLIB_DIR}
+        
+        
+    ##################
+    # hfile-crypt4gh #
+    ##################
+    
+    cd /opt && git clone https://github.com/samtools/htslib-crypt4gh.git && \
+    cd htslib-crypt4gh && autoheader && autoconf && \
+    ./configure --prefix=/opt --with-htslib=/opt/ CFLAGS="-I. -I/opt/include" && \
+    make && make install && \
+    cd /opt && rm -r htslib-crypt4gh
+    
     ###############
     # RNA-SeQC v2 #
     ###############
-    
+
+    # HTS static
     RNASEQCV2_VERSION="2.4.2"
     RNASEQCV2_DIR=rnaseqc-${RNASEQCV2_VERSION}
     
@@ -261,6 +279,7 @@ from: debian:buster-20201012
     # subread #
     ###########
     
+    # No HTS
     SUBREAD_VERSION="2.0.1"
     SUBREAD_DIR=subread-${SUBREAD_VERSION}
     
@@ -273,24 +292,10 @@ from: debian:buster-20201012
     rm -rf ${SUBREAD_DIR}-source ${SUBREAD_DIR}-source.tar.gz
     
     ##########
-    # htslib #
-    ##########
-
-    HTSLIB_VERSION="1.13"
-    HTSLIB_DIR=htslib-${HTSLIB_VERSION}
-    
-    cd /opt && wget -nv https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/${HTSLIB_DIR}.tar.bz2 && \
-        tar -jxf ${HTSLIB_DIR}.tar.bz2 && \
-        cd ${HTSLIB_DIR} && \
-        ./configure --prefix=/opt && \
-        make -j $COMPILE_CPUS -k && \
-        make install && \
-        cd /opt && rm -r ${HTSLIB_DIR}.tar.bz2 ${HTSLIB_DIR}
-    
-    ##########
     # preseq #
     ##########
-        
+    
+    # System HTS
     PRESEQ_VERSION="3.1.2"
     PRESEQ_DIR=preseq-${PRESEQ_VERSION}
     
@@ -305,6 +310,7 @@ from: debian:buster-20201012
     # samtools #
     ############
     
+    # System HTS
     SAMTOOLS_VERSION="1.13"
     SAMTOOLS_DIR=samtools-${SAMTOOLS_VERSION}
     
@@ -320,6 +326,7 @@ from: debian:buster-20201012
     # bcftools #
     ############
     
+    # System HTS
     BCFTOOLS_VERSION="1.11"
     BCFTOOLS_DIR=bcftools-${BCFTOOLS_VERSION}
     
@@ -335,6 +342,7 @@ from: debian:buster-20201012
     # bedtools #
     ############
     
+    # HTS static
     BEDTOOLS_VERSION="2.29.2"
     BEDTOOLS_DIR="bedtools-${BEDTOOLS_VERSION}"  
     
@@ -527,8 +535,34 @@ from: debian:buster-20201012
     ############
     # velocyto #
     ############
-    
+   
     pip install velocyto
+	
+    #####################
+    # UCSC tools (part) #
+    #####################
+    
+	cd /opt/bin && rsync -aP hgdownload.soe.ucsc.edu::genome/admin/exe/linux.x86_64/liftOver \
+    hgdownload.soe.ucsc.edu::genome/admin/exe/linux.x86_64/bedToPsl \
+    hgdownload.soe.ucsc.edu::genome/admin/exe/linux.x86_64/pslToBed \
+    hgdownload.soe.ucsc.edu::genome/admin/exe/linux.x86_64/pslToChain \
+    hgdownload.soe.ucsc.edu::genome/admin/exe/linux.x86_64/chainToPsl \
+    hgdownload.soe.ucsc.edu::genome/admin/exe/linux.x86_64/chainSwap \
+    hgdownload.soe.ucsc.edu::genome/admin/exe/linux.x86_64/gtfToGenePred \
+    hgdownload.soe.ucsc.edu::genome/admin/exe/linux.x86_64/genePredToGtf \
+    hgdownload.soe.ucsc.edu::genome/admin/exe/linux.x86_64/genePredToBed \
+    hgdownload.soe.ucsc.edu::genome/admin/exe/linux.x86_64/bedToGenePred \
+    hgdownload.soe.ucsc.edu::genome/admin/exe/linux.x86_64/gff3ToGenePred ./
+    
+    ################
+    # igv/igvtools #
+    ################
+   
+    cd /opt && wget https://data.broadinstitute.org/igv/projects/downloads/2.13/IGV_2.13.0.zip && \
+    cd /opt && unzip /opt/IGV_2.13.0.zip && \
+    cd /opt/bin && ln -s /opt/IGV_2.13.0/igvtools && \
+    cd /opt/bin && ln -s /opt/IGV_2.13.0/igv.sh && \
+    cd /opt && rm /opt/IGV_2.13.0.zip
     
     ##############
     # cellranger #

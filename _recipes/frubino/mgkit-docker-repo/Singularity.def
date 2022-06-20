@@ -23,10 +23,11 @@ dependencies:
     export PATH=/opt/conda/envs/mgkit/bin:$PATH
     export CONDA_PREFIX=/opt/conda/envs/mgkit
     
-    conda env create --name mgkit -f /root/mgkit-env.yml
-    apt update
-    apt install -y build-essential
-    pip install --prefix=$CONDA_PREFIX git+https://github.com/frubino/mgkit.git@0.6.0
+    conda env create --name mgkit -f /root/mgkit-env.yml; \
+        conda clean -a -y; \
+        apt update; \
+        apt install -y build-essential; \
+        pip install --prefix=$CONDA_PREFIX git+https://github.com/frubino/mgkit.git@0.6.0
 
 %labels
     Version v0.6.0

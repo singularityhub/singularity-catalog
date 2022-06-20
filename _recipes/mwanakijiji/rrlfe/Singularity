@@ -22,7 +22,10 @@ From: python:3.8
   python --version
 
   # cd into a defined dir
-  cd Private/rrlfe_work
+  #cd Private/rrlfe_work
+
+  echo "sing home"
+  echo $HOME
 
   # install dependencies into default python interpreter
   wget https://raw.githubusercontent.com/mwanakijiji/rrlfe/main/requirements_bare_versions.txt
@@ -34,6 +37,8 @@ From: python:3.8
   python -m pip install --user -r requirements_bare_versions.txt
 
   # install Robospect, suppress comments about being in detached HEAD state
+  echo "pwd inside sing"
+  pwd
   git clone https://github.com/czwa/robospect.py.git
   cd robospect.py
   git -c advice.detachedHead=false checkout tags/v0.77

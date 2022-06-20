@@ -1,0 +1,24 @@
+Bootstrap: docker
+
+From: ubuntu:18.04
+
+%help
+
+use this container to run r-index executables
+
+%post
+
+# installing pre-reqs
+
+apt-get update
+apt-get -y install time build-essential zlib1g-dev git cmake python3
+
+# installing r-index!
+
+git clone --recursive https://github.com/alshai/r-index
+cd r-index
+mkdir build
+cd build
+cmake ..
+make
+make install
