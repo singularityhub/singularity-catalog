@@ -1,7 +1,7 @@
 bases:
-- count: 1194
+- count: 1197
   name: ubuntu
-- count: 283
+- count: 287
   name: nvidia/cuda
 - count: 234
   name: debian
@@ -208,6 +208,8 @@ bases:
 - count: 4
   name: ResearchIT/spack-singularity
 - count: 4
+  name: dcgc-bfx/dcgc-base-conda
+- count: 4
   name: danabl/glimslib
 - count: 4
   name: matmu/vep
@@ -368,6 +370,8 @@ bases:
 - count: 2
   name: ufoym/deepo
 - count: 2
+  name: khanlab/template-circleci
+- count: 2
   name: spellrun/tensorflow
 - count: 2
   name: quay.io/biocontainers/bwa
@@ -447,6 +451,8 @@ bases:
   name: vitchyr/railrl_v9_cuda10-1_mj1-50-1-59_torch0-4-1_gym0-10-5_py3-5-2
 - count: 2
   name: vitchyr/railrl-tmp
+- count: 2
+  name: letaylor/sc_qc_cluster
 - count: 2
   name: uppmax/offline-uppmax-env
 - count: 2
@@ -952,8 +958,6 @@ bases:
 - count: 1
   name: r-3.6.1.sif
 - count: 1
-  name: letaylor/sc_qc_cluster
-- count: 1
   name: nvidia/opencl
 - count: 1
   name: nvcr.io/nvidia/isaac-sim
@@ -1121,8 +1125,6 @@ bases:
   name: SavuDeps.simg
 - count: 1
   name: SavuCore.simg
-- count: 1
-  name: stimong/caffe2-cuda10-python3.6
 - count: 1
   name: wav2letter/wav2letter
 - count: 1
@@ -1364,11 +1366,11 @@ bases:
 - count: 1
   name: amd64/ubuntu
 bootstraps:
-- count: 3852
+- count: 3861
   name: docker
 - count: 341
   name: debootstrap
-- count: 296
+- count: 300
   name: shub
 - count: 249
   name: library
@@ -1416,11 +1418,11 @@ orgs:
 - count: 6
   name: slaclab
 - count: 6
+  name: khanlab
+- count: 6
   name: library
 - count: 6
   name: nvidia
-- count: 5
-  name: khanlab
 - count: 4
   name: willgpaik
 - count: 4
@@ -1493,6 +1495,8 @@ orgs:
   name: opendronemap
 - count: 2
   name: thinkplayhack
+- count: 2
+  name: dcgc-bfx
 - count: 2
   name: gipert
 - count: 2
@@ -1611,8 +1615,6 @@ orgs:
   name: '{{ cookiecutter.dockerhub_username }}'
 - count: 1
   name: bdgenomics
-- count: 1
-  name: dcgc-bfx
 - count: 1
   name: asciinema
 - count: 1
@@ -1892,8 +1894,6 @@ orgs:
 - count: 1
   name: trinityrnaseq
 - count: 1
-  name: stimong
-- count: 1
   name: wav2letter
 - count: 1
   name: drneavin
@@ -2072,8 +2072,8 @@ orgs:
 - count: 1
   name: computationalradiationphysics
 tags:
-  latest: 381
-  other: 3603
+  latest: 383
+  other: 3614
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -2459,6 +2459,9 @@ versions:
     of2112_hisa1.4.6_pt1.10.2_ub22.04: 1
   datalad/datalad:
     fullmaster: 1
+  dcgc-bfx/dcgc-base-conda:
+    '0.1': 2
+    0.1.1: 2
   dcgc-bfx/dcgc-jupyter-rstudio:
     '0.1': 4
     0.2.0: 2
@@ -2848,6 +2851,9 @@ versions:
     v0.0.6b: 1
     v0.05a: 1
     v0.06b: 1
+  khanlab/template-circleci:
+    latest: 1
+    v0.3: 1
   kitware/paraviewweb:
     pvw-osmesa-demo-v5.6.0: 1
   kkelchte/ros_gazebo_tensorflow:
@@ -2868,7 +2874,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 1
+    latest: 2
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -3111,7 +3117,7 @@ versions:
     1.0.0-alpha1: 1
   nvidia/cuda:
     10.0-cudnn7-devel-ubuntu16.04: 12
-    10.0-cudnn7-devel-ubuntu18.04: 5
+    10.0-cudnn7-devel-ubuntu18.04: 6
     10.0-cudnn7-runtime-centos6: 2
     10.0-cudnn7-runtime-centos7: 1
     10.0-cudnn7-runtime-ubuntu16.04: 1
@@ -3148,7 +3154,7 @@ versions:
     11.0-devel-centos7: 1
     11.0-devel-ubuntu20.04: 3
     11.1-cudnn8-devel-centos8: 1
-    11.1-cudnn8-devel-ubuntu18.04: 1
+    11.1-cudnn8-devel-ubuntu18.04: 2
     '11.1-devel ': 1
     11.1.1-devel-ubuntu20.04: 3
     11.2.0-devel-ubuntu16.04: 1
@@ -3172,7 +3178,7 @@ versions:
     8.0-runtime-centos7: 7
     9.0-cudnn7-devel: 2
     9.0-cudnn7-devel-centos7: 1
-    9.0-cudnn7-devel-ubuntu16.04: 33
+    9.0-cudnn7-devel-ubuntu16.04: 35
     9.0-cudnn7-runtime: 1
     9.0-cudnn7-runtime-ubuntu16.04: 9
     9.0-devel-centos7: 1
@@ -3734,8 +3740,6 @@ versions:
   stevekm/phoenix-demo:
     base: 1
     demo1: 1
-  stimong/caffe2-cuda10-python3.6:
-    densepose-python3_v0.210.67: 1
   team113sanger/t113-singularity:
     r-3.6.0.base-1.0.0: 1
   tejahpc/parliament2:
@@ -3823,10 +3827,11 @@ versions:
   uazhlt/pytorch-example:
     pytorch-1.3.0: 1
   ubuntu:
+    $VERSION: 1
     '14.04': 20
     '16.04': 165
     '17.04': 6
-    '18.04': 257
+    '18.04': 258
     '18.04 ': 6
     '19.04': 16
     '19.10': 4
@@ -3856,6 +3861,7 @@ versions:
     sha256.80c52afadf3e7c3f9573de4fe79b7dca57fb3290df6c8dc46a75b02768a81146: 3
     sha256.cb37e547a14249943c5a3ee5786502f8db41384deb83fa6d2b62f3c587b82b17: 3
     trusty: 4
+    trusty-20170119: 1
     xenial: 43
     'xenial  ': 1
     xenial-20180525: 1

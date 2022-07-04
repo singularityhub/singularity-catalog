@@ -1,44 +1,55 @@
 Bootstrap: docker
-From: stimong/caffe2-cuda10-python3.6:densepose-python3_v0.210.67
+From: nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
+Stage: spython-base
 
-%setup
-  #Runs on host. The path to the image is $SINGULARITY_ROOTFS
-
+%labels
+maintainer="mdoulaty@gmail.com"
 %post
-  #Post setup, runs inside the image
-  APT_INSTALL="apt-get install -y --no-install-recommends" && \
-  apt-get update && \
-  DEBIAN_FRONTEND=noninteractive $APT_INSTALL git wget
-    
-  #Default mount point used in Shef Uni's ShARC cluster
-  mkdir /scratch /data /shared /fastdata
 
-  #Nvidia driver file mount paths
-  mkdir /nvlib /nvbin
 
-  #Add nvidia driver paths to the environment variables
-  echo "\n #Nvidia driver paths \n" >> /environment
-  echo 'export PATH="/nvbin:$PATH"' >> /environment
-  echo 'export LD_LIBRARY_PATH="/nvlib:$LD_LIBRARY_PATH"' >> /environment
+apt-get update && \
+apt-get install -y --no-install-recommends \
+g++ \
+make \
+automake \
+autoconf \
+bzip2 \
+unzip \
+wget \
+sox \
+libtool \
+git \
+subversion \
+python2.7 \
+python3 \
+zlib1g-dev \
+gfortran \
+ca-certificates \
+patch \
+ffmpeg \
+vim && \
+rm -rf /var/lib/apt/lists/*
 
-  #Add CUDA paths
-  echo "\n #Cuda paths \n" >> /environment
-  echo 'export CPATH="/usr/local/cuda/include:$CPATH"' >> /environment
-  echo 'export PATH="/usr/local/cuda/bin:$PATH"' >> /environment
-  echo 'export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"' >> /environment
-  echo 'export CUDA_HOME="/usr/local/cuda"' >> /environment
-  
-  wget http://us.download.nvidia.com/XFree86/Linux-x86_64/410.78/NVIDIA-Linux-x86_64-410.78.run
-  git clone https://github.com/klm122/w2l.git
-  cd w2l
-  chmod +x extract_nvdriver_and_moveto.sh
-  extractnvdriver.sh 410.78 ~/mynvdriver
-  cd ..
-  
+ln -s /usr/bin/python2.7 /usr/bin/python
+
+git clone --depth 1 https://github.com/kaldi-asr/kaldi.git /opt/kaldi && \
+cd /opt/kaldi/tools && \
+./extras/install_mkl.sh && \
+make -j $(nproc) && \
+cd /opt/kaldi/src && \
+./configure --shared --use-cuda && \
+make depend -j $(nproc) && \
+make -j $(nproc) && \
+find /opt/kaldi  -type f \( -name "*.o" -o -name "*.la" -o -name "*.a" \) -exec rm {} \; && \
+find /opt/intel -type f -name "*.a" -exec rm {} \; && \
+find /opt/intel -type f -regex '.*\(_mc.?\|_mic\|_thread\|_ilp64\)\.so' -exec rm {} \; && \
+rm -rf /opt/kaldi/.git
+
+cd /opt/kaldi/
+
 %runscript
-  #Executes when the "singularity run" command is used
-  #Useful when you want the container to run as an executable
-
-
-%test
-  #Test script to verify that the image is built and running correctly
+cd /opt/kaldi/
+exec /bin/bash "$@"
+%startscript
+cd /opt/kaldi/
+exec /bin/bash "$@"

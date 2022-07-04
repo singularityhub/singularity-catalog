@@ -1,0 +1,67 @@
+Bootstrap: shub
+From: dcgc-bfx/dcgc-base-conda:0.1
+
+%labels
+  Author fabian.rost@tu-dresden.de
+  Organisation DcGC
+  Version v0.1
+
+%help
+  Start jupyter lab:
+    singularity run --writable-tmpfs --app jupyter library://fabianrost84/dcgc/single-cell.sif
+
+  Start rstudio server listening on port 8787:
+    singularity run --writable-tmpfs --app rserver library://fabianrost84/dcgc/single-cell.sif 8787
+
+%files
+  jupyter_notebook_config.json /opt/conda/etc/jupyter/
+
+%environment
+  DEBIAN_FRONTEND=noninteractive
+
+%post
+  chmod -R a+w /opt
+  export PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+  mamba install --quiet --yes \
+    ipykernel \
+    jupyter_nbextensions_configurator \
+    jupyterlab \
+    nodejs \
+    r-irkernel
+
+  # clean conda cache
+  mamba clean -ai
+
+  # jupyterlab extensions
+  jupyter labextension install "@jupyterlab/toc"
+
+  # rstudio server
+  apt-get update
+  apt-get install -y \
+    gdebi-core \
+    uuid
+
+  wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-1.3.1093-amd64.deb
+  gdebi -n rstudio-server-1.3.1093-amd64.deb
+  rm rstudio-server-1.3.1093-amd64.deb
+
+  apt-get clean
+  rm -rf /var/lib/apt/lists/*
+
+  # for running rstudio server with conda R
+  git clone https://github.com/grst/rstudio-server-conda.git
+
+  ####################
+  ## rstudio server ##
+  ####################
+
+%apprun rserver
+  conda run --no-capture-output -p /opt/conda /rstudio-server-conda/start_rstudio_server.sh "${@}"
+
+#################
+## jupyter lab ##
+#################
+
+%apprun jupyter
+  conda run --no-capture-output -p /opt/conda jupyter lab --no-browser "${@}"
