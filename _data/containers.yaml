@@ -1,13 +1,13 @@
 bases:
-- count: 1197
+- count: 1204
   name: ubuntu
-- count: 287
+- count: 292
   name: nvidia/cuda
-- count: 234
+- count: 235
   name: debian
 - count: 182
   name: centos
-- count: 120
+- count: 122
   name: continuumio/miniconda3
 - count: 120
   name: alpine
@@ -15,12 +15,12 @@ bases:
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
 - count: 93
   name: python
-- count: 89
+- count: 90
   name: ghcr.io/mkandes/naked-singularity
+- count: 81
+  name: aibasel/downward
 - count: 79
   name: tensorflow/tensorflow
-- count: 78
-  name: aibasel/downward
 - count: 55
   name: nfcore/base
 - count: 53
@@ -72,11 +72,13 @@ bases:
 - count: 14
   name: continuumio/miniconda
 - count: 13
-  name: r-base
+  name: rocker/tidyverse
 - count: 12
   name: pawsey/openfoam
 - count: 12
   name: khanlab/heudiconv
+- count: 12
+  name: r-base
 - count: 12
   name: nitishnarula/secure/ubuntu-focal
 - count: 12
@@ -87,8 +89,6 @@ bases:
   name: qiime2/core
 - count: 11
   name: deeplearnphysics/larcv2
-- count: 11
-  name: rocker/tidyverse
 - count: 10
   name: hariszaf/pema
 - count: 10
@@ -132,6 +132,8 @@ bases:
 - count: 7
   name: rust
 - count: 7
+  name: rockylinux
+- count: 7
   name: rocker/geospatial
 - count: 7
   name: mattocci/rstan
@@ -161,8 +163,6 @@ bases:
   name: mambaorg/micromamba
 - count: 6
   name: vitchyr/railrl-torch4cuda9
-- count: 6
-  name: rockylinux
 - count: 6
   name: openresty/openresty
 - count: 6
@@ -278,6 +278,10 @@ bases:
 - count: 3
   name: rockylinux/rockylinux
 - count: 3
+  name: richelbilderbeek/default/gcaer
+- count: 3
+  name: richelbilderbeek/default/plinkr
+- count: 3
   name: centos-7.7.1908.sif
 - count: 3
   name: rstudio/r-base
@@ -289,6 +293,8 @@ bases:
   name: nvcr.io/nvidia/mxnet
 - count: 3
   name: ctpelok77/cerberus
+- count: 3
+  name: jupyter/r-notebook
 - count: 3
   name: ufscar/ubuntu_ompi
 - count: 3
@@ -418,13 +424,15 @@ bases:
 - count: 2
   name: andersenlabapps/ivar
 - count: 2
+  name: comses/osg-julia
+- count: 2
   name: vuiiscci/temporal_lobe
 - count: 2
   name: vuiiscci/fmriqa
 - count: 2
   name: vuiiscci/multi_atlas
 - count: 2
-  name: richelbilderbeek/default/plinkr
+  name: philarevalo/dev/ubuntu-pymol-biopython
 - count: 2
   name: mysql
 - count: 2
@@ -796,6 +804,8 @@ bases:
 - count: 1
   name: waldronlab/curatedmetagenomics
 - count: 1
+  name: ibmjava
+- count: 1
   name: bgruening/busybox-bash
 - count: 1
   name: tensorflow
@@ -805,6 +815,8 @@ bases:
   name: tensorflow/tensorflow.
 - count: 1
   name: ro47014
+- count: 1
+  name: jeffquinnmsk/bayestme
 - count: 1
   name: mustxyk/fsl
 - count: 1
@@ -916,7 +928,7 @@ bases:
 - count: 1
   name: detlab/cdms-jupyterlab
 - count: 1
-  name: comses/osg-julia
+  name: comses/osg-netlogo
 - count: 1
   name: iarcbioinfo/fastqc-nf
 - count: 1
@@ -933,10 +945,6 @@ bases:
   name: markito3/gluex_docker_devel
 - count: 1
   name: markito3/gluex_docker_prod
-- count: 1
-  name: philarevalo/dev/ubuntu-pymol-biopython
-- count: 1
-  name: richelbilderbeek/default/gcaer
 - count: 1
   name: richelbilderbeek/default/ormr
 - count: 1
@@ -1026,8 +1034,6 @@ bases:
 - count: 1
   name: yh549848/r/rstudio
 - count: 1
-  name: jupyter/r-notebook
-- count: 1
   name: quay.io/biocontainers/sicer2
 - count: 1
   name: ufscar/ubuntu_mpich
@@ -1047,6 +1053,8 @@ bases:
   name: agilly/burden_testing
 - count: 1
   name: conda/conda_4.9.1.img
+- count: 1
+  name: openfoam/openfoam7-paraview56
 - count: 1
   name: nvcr.io/nvidia/cuda-arm64
 - count: 1
@@ -1169,6 +1177,8 @@ bases:
   name: ghcr.io/truatpasteurdotfr/singularity-docker-pytorch-a40
 - count: 1
   name: gnina/gnina
+- count: 1
+  name: /master/home/tru/singularity.d/containers/c7-conda-pytorch-10.1-2020-02-04-1920.sif
 - count: 1
   name: ghcr.io/truatpasteurdotfr/singularity-docker-miniconda-quicksom
 - count: 1
@@ -1366,19 +1376,19 @@ bases:
 - count: 1
   name: amd64/ubuntu
 bootstraps:
-- count: 3861
+- count: 3888
   name: docker
-- count: 341
+- count: 342
   name: debootstrap
 - count: 300
   name: shub
-- count: 249
+- count: 253
   name: library
 - count: 99
   name: yum
-- count: 95
+- count: 96
   name: oras
-- count: 85
+- count: 86
   name: localimage
 - count: 19
   name: zypper
@@ -1482,6 +1492,8 @@ orgs:
 - count: 3
   name: granek
 - count: 3
+  name: openfoam
+- count: 3
   name: godlovedc
 - count: 3
   name: quay.io/wtsicgp
@@ -1512,6 +1524,8 @@ orgs:
 - count: 2
   name: kulhanek
 - count: 2
+  name: comses
+- count: 2
   name: markito3
 - count: 2
   name: anair17
@@ -1535,8 +1549,6 @@ orgs:
   name: repronim
 - count: 2
   name: biocorecrg
-- count: 2
-  name: openfoam
 - count: 2
   name: uiuccs484parallelprog
 - count: 2
@@ -1690,6 +1702,8 @@ orgs:
 - count: 1
   name: bgruening
 - count: 1
+  name: jeffquinnmsk
+- count: 1
   name: raj76
 - count: 1
   name: arcsUVA
@@ -1773,8 +1787,6 @@ orgs:
   name: detlab
 - count: 1
   name: andersenlabapps
-- count: 1
-  name: comses
 - count: 1
   name: uazhlt
 - count: 1
@@ -2072,8 +2084,8 @@ orgs:
 - count: 1
   name: computationalradiationphysics
 tags:
-  latest: 383
-  other: 3614
+  latest: 385
+  other: 3639
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -2105,8 +2117,8 @@ versions:
   adriansevcenco/alienpy.dock:
     latest: 1
   aibasel/downward:
-    '19.06': 18
-    '19.12': 19
+    '19.06': 19
+    '19.12': 21
     '20.06': 30
     '21.12': 9
     '22.06': 2
@@ -2398,7 +2410,9 @@ versions:
     0.6.0: 1
     0.7.0-dev: 2
   comses/osg-julia:
-    1.7.3: 1
+    1.7.3: 2
+  comses/osg-netlogo:
+    6.2.2: 1
   conda/miniconda3-centos7:
     latest: 1
   condaforge/mambaforge:
@@ -2471,7 +2485,7 @@ versions:
     10.2-slim: 1
     '11': 1
     '7': 1
-    '8': 2
+    '8': 3
     '9': 7
     9-slim: 12
     '9.13': 2
@@ -2588,6 +2602,7 @@ versions:
   ghcr.io/junghawoo/simpleg_tool:
     latest: 1
   ghcr.io/mkandes/naked-singularity:
+    anaconda3-py39-2021.11-ubuntu-20.04: 1
     ubuntu-18.04: 12
     ubuntu-18.04-cuda-10.2: 6
     ubuntu-18.04-cuda-10.2-mlnx-ofed-4.6-1.0.1.1: 1
@@ -2732,6 +2747,8 @@ versions:
     v1.1: 1
   ibmcom/powerai:
     1.5.3-all-ubuntu16.04-py3: 1
+  ibmjava:
+    latest: 1
   icaoberg/braker2:
     2.1.5: 1
     2.1.6: 1
@@ -2771,6 +2788,8 @@ versions:
     latest: 2
   jec/mandle:
     latest: 1
+  jeffquinnmsk/bayestme:
+    latest: 1
   jiaqiknight/openfoam-blastfoam:
     v2: 1
   jiaqiknight/openfoam-wenoext:
@@ -2807,7 +2826,8 @@ versions:
   jupyter/datascience-notebook:
     latest: 3
   jupyter/r-notebook:
-    r-4.1.0: 1
+    r-4.1.0: 2
+    r-4.1.3: 1
   kaitj/mrtpipelines:
     0.0.3: 1
     0.0.4: 1
@@ -3145,8 +3165,9 @@ versions:
     10.2-cudnn7-devel-ubuntu16.04: 3
     10.2-cudnn7-devel-ubuntu18.04: 5
     10.2-cudnn7-runtime-ubuntu16.04: 1
-    '10.2-devel ': 2
     10.2-devel-centos7: 3
+    10.2-devel-ubuntu18.04: 1
+    '10.2-devel-ubuntu18.04 ': 2
     10.2-runtime-centos7: 3
     11.0-cudnn8-devel-ubuntu18.04: 2
     11.0-cudnn8-runtime-centos7: 1
@@ -3163,7 +3184,9 @@ versions:
     11.2.2-devel-centos7: 2
     11.2.2-devel-ubuntu20.04: 4
     11.3.0-cudnn8-devel-ubuntu20.04: 1
+    11.3.0-devel-ubuntu20.04: 1
     11.3.1-cudnn8-runtime-centos7: 3
+    11.3.1-devel-ubuntu20.04: 3
     11.4.2-base-ubuntu20.04: 1
     11.4.3-base-ubuntu20.04: 1
     11.6.0-devel-ubuntu20.04: 1
@@ -3595,12 +3618,12 @@ versions:
   repronim/simple_workflow:
     1.1.0: 1
   richelbilderbeek/default/gcaer:
-    0.6.6: 1
+    0.6.6: 3
   richelbilderbeek/default/ormr:
     0.6.2.2: 1
   richelbilderbeek/default/plinkr:
     0.18.0.2: 1
-    0.20.2: 1
+    0.20.2: 2
   ro47014:
     20-10-3: 1
   rocker/geospatial:
@@ -3649,7 +3672,7 @@ versions:
   rocker/verse:
     4.1.1: 1
   rockylinux:
-    '8.5': 3
+    '8.5': 4
     8.5.20220308: 1
     latest: 2
   rockylinux/rockylinux:
@@ -3831,15 +3854,15 @@ versions:
     '14.04': 20
     '16.04': 165
     '17.04': 6
-    '18.04': 258
+    '18.04': 259
     '18.04 ': 6
     '19.04': 16
     '19.10': 4
-    '20.04': 263
+    '20.04': 269
     '20.10': 3
-    '21.04': 6
+    '21.04': 5
     '21.10': 4
-    '22.04': 4
+    '22.04': 5
     UBUNTU_VERSION: 1
     artful: 7
     bionic: 179

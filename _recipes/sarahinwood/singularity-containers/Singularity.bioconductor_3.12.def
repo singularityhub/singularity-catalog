@@ -38,6 +38,9 @@ From: bioconductor/bioconductor_docker:RELEASE_3_12
             ), \
         type='source', ask=FALSE)"
 
+    Rscript -e "options(Ncpus=8); \
+        install.packages(c('cowplot', 'dendsort'))"
+
 %runscript
 
     exec /usr/local/bin/R "$@"

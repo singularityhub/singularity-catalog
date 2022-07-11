@@ -1,6 +1,5 @@
 Bootstrap: docker
-From:  nvidia/cuda:10.2-devel # Needed for fetch
-# I think this is ~ubuntu 18 base
+From:  nvidia/cuda:10.2-devel-ubuntu18.04 # Needed for fetch
 
 
 %post
@@ -208,9 +207,10 @@ From:  nvidia/cuda:10.2-devel # Needed for fetch
     echo "your Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)"  >> "$SINGULARITY_LABELS"
     cd ~ && rm -rf your
 
-    echo "Building FETCH"
-    conda install -y -c anaconda cudatoolkit==10.0.130 tensorflow-gpu==1.13.1
-    conda install -y -c anaconda keras scikit-learn pandas scipy numpy matplotlib scikit-image tqdm numba pyyaml==3.13
+    echo "Installing FETCH"
+    conda install -y -c anaconda "tensorflow-gpu>=2.0,<=2.6"
+    # https://stackoverflow.com/a/68601733 use 1.3.0 until this is fixed
+    conda install -y -c anaconda keras pandas==1.3.0 scipy numpy
     git clone https://github.com/devanshkv/fetch.git
     cd fetch
     pip install .

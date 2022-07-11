@@ -1,0 +1,64 @@
+Bootstrap: library
+From: richelbilderbeek/default/gcaer:0.6.6
+
+%post
+    # Update prerequisites
+    Rscript -e 'remotes::install_github("richelbilderbeek/plinkr")'
+    Rscript -e 'remotes::install_github("richelbilderbeek/ormr")'
+    Rscript -e 'remotes::install_github("richelbilderbeek/gcaer")'
+    Rscript -e 'remotes::install_github("richelbilderbeek/uppmaxr")'
+    
+    # The package it is about
+    Rscript -e 'remotes::install_github("richelbilderbeek/nsphs_ml_qt")'
+
+    # Get debug version
+    wget https://raw.githubusercontent.com/richelbilderbeek/nsphs_ml_qt/master/scripts_local/issue_61/run_gcae.py --output-document=/opt/gcae_richel/run_gcae.py
+
+
+%runscript
+echo "'nsphs_ml_qt.sif' running with arguments '$@'"
+exec "$@"
+
+%test
+    Rscript -e 'gcaer::gcaer_report(gcae_options = gcaer::create_gcae_options(gcae_folder = "/opt/gcae_richel", ormr_folder_name = "python3"))'
+
+%help
+
+This container has the R package 'nsphs_ml_qt' and GCAE installed,
+including the needed Python packages.
+
+To make the container run a script called, e.g. `script.R`, do:
+
+```
+singularity run nsphs_ml_qt.sif Rscript script.R
+```
+
+NOTE: The GCAE scripts can be found at '/opt/GenoCAE',
+which is the same as the `gcae_folder` parameter.
+
+NOTE: The installed Python packages can be found at '/opt/ormr_gcaer',
+which is the same as the `ormr_folder_name` parameter.
+
+NOTE: Due to this, within your scripts,
+set `gcae_options` to `create_gcae_options(gcae_folder = "/opt/GenoCAE", ormr_folder_name = "/opt/ormr_gcaer")`,
+for example:
+
+```
+# library(nsphs_ml_qt)
+# gcae_options <- create_gcae_options(gcae_folder = "/opt/GenoCAE", ormr_folder_name = "/opt/ormr_gcaer")
+# run_gcae(args = "--help", gcae_options = gcae_options)
+```
+
+%labels
+
+    AUTHOR Richel J.C. Bilderbeek
+
+    NAME nsphs_ml_qt
+
+    DESCRIPTION The nsphs_ml_qt R package, with PLINK and Python packages installed
+
+    USAGE Run as usual, i.e. `singularity run nsphs_ml_qt.sif Rscript script.R`
+
+    URL https://github.com/richelbilderbeek/nsphs_ml_qt
+
+    VERSION 0.4 with debug

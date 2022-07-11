@@ -1,9 +1,8 @@
 Bootstrap: docker
-From: ubuntu:21.04
+From: ubuntu:22.04
 
 %files
     scripts/* /usr/local/bin/
 
 %post
-    install-apt-packages.sh
     setup.sh

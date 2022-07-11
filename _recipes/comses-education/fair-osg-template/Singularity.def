@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: comses/osg-netlogo:6.2.2
+Stage: spython-base
+
+%labels
+    author Your Name
+    git-repository https://github.com/comses-education/fair-osg-template
+
+
+%help
+This container bundles the software and system dependencies and computational model source code for <your-model-name>
+
+%files
+	. /srv/code
+
+%post
+
+	chmod -R a+rX /srv/code
+    ln -s /srv/results /srv/code/
+
+%runscript
+	exec /opt/netlogo/netlogo-headless.sh "$@"

@@ -13,7 +13,7 @@ From: ubuntu:20.04
 %files
   # Used to copy files into the container
   examcard2txt 		  /opt/pipeline
-  README.txt        /opt/pipeline
+  README.md        /opt/pipeline
   dcm4che-2.0.25    /opt/dcm4che-2.0.25
 
 

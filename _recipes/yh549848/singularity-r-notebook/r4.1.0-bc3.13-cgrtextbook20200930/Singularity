@@ -1,0 +1,55 @@
+BootStrap: docker
+From: jupyter/r-notebook:r-4.1.0
+
+# Dependencies
+%post
+  chmod -R o+w /etc/profile && \
+  echo "export R_HOME=/opt/conda/lib/R" >> /etc/profile && \
+  . /etc/profile && \
+  echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl')" >> ${R_HOME}/etc/Rprofile.site && \
+  chmod -R o-w /etc/profile && \
+  apt update --allow-insecure-repositories && \
+  apt -y install ghostscript \
+                 libcairo2-dev \
+                 g++
+
+# R basis
+%post
+  R -e 'install.packages("docopt")' && \
+  R -e 'install.packages("formatR", repos = "http://cran.rstudio.com")' && \
+  R -e 'install.packages("furrr")' && \
+  R -e 'install.packages("ggcorrplot")' && \
+  R -e 'install.packages("ggedit")' && \
+  R -e 'install.packages("ggplotify")' && \
+  R -e 'install.packages("ggpubr")' && \
+  R -e 'install.packages("ggrepel")' && \
+  R -e 'install.packages("gprofiler2")' && \
+  R -e 'install.packages("here")' && \
+  R -e 'install.packages("plotly")' && \
+  R -e 'install.packages("rpanel")' && \
+  R -e 'install.packages("tidyverse")' && \
+  R -e 'install.packages("XML")'
+
+# cgrtextbook
+%post
+  conda install -q -y -c bioconda r-enrichr \
+    bioconductor-complexheatmap && \
+  conda clean -a -q -f -y && \
+  R -e 'install.packages("BiocManager")' && \
+  R -e 'BiocManager::install(version = "3.13", ask = FALSE)' && \
+  R -e 'BiocManager::install(c("AnnotationHub", "biomaRt", "BSgenome.Hsapiens.UCSC.hg19", "BSgenome.Hsapiens.UCSC.hg38", "caret", "circlize", "citr", "cluster", "compcodeR", "corrplot", "cowplot", "DALEX", "DESeq2", "EDASeq", "FactoMineR", "fastICA", "gage", "gageData", "genomation", "GenomeInfoDb", "GenomicAlignments", "GenomicFeatures", "GenomicRanges", "ggbio", "ggfortify", "glmnet", "gProfileR", "Gviz", "iClusterPlus", "JASPAR2018", "kernlab", "knitr", "matrixStats", "methylKit", "mosaic", "MotifDb", "NbClust", "NMF", "nnet", "normr", "org.Hs.eg.db", "pheatmap", "plot3D", "pROC", "QuasR", "qvalue", "ranger", "RANN", "rGADEM", "Rqc", "rtracklayer", "Rtsne", "RUVSeq", "ShortRead", "sva", "svglite", "TFBSTools", "topGO", "xgboost"), force = TRUE)' && \
+
+  R -e 'install.packages("devtools")' && \
+  R -e 'options(timeout = 3600); devtools::install_github("compgenomr/compGenomRData")'
+
+# Jupyter extensions
+%post
+  apt -y install nodejs \
+                 npm && \
+  conda install -c conda-forge jupyter_contrib_nbextensions
+
+# Set .libPaths
+%post
+  . /etc/profile && \
+  echo "export R_LIBS_SITE=${HOME}/R/x86_64-conda-linux-gnu-library/4.1:$R_LIBS_SITE" >> ${R_HOME}/etc/Renviron.site && \
+  echo 'export R_LIBS=${HOME}/R/x86_64-conda-linux-gnu-library/4.1:$R_LIBS' >> ${R_HOME}/etc/Renviron

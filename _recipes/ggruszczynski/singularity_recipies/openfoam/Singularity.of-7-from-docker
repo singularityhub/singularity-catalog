@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: openfoam/openfoam7-paraview56
+#https://sylabs.io/guides/3.0/user-guide/environment_and_metadata.html
+
+
+%help
+    This recipe builds OpenFOAM-7.
+
+%labels
+    Author ggruszczynski @ ICM UW
+
+%post
+    #!/bin/bash
+    apt-get update -y
+    apt-get install -y libcanberra-gtk-module
+    #apt-get install -y libcanberra-gtk3-module
+
+%runscript
+    echo
+    echo "Please load the enviroment: '. /opt/openfoam7/etc/bashrc'"
+    echo "Then you shall be able to run: icoFoam -help"
+    echo "OpenFOAM installation is available under \$WM_PROJECT_DIR"
+    echo

@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: comses/osg-julia:1.7.3
+Stage: spython-base
+
+%labels
+    author Manuela Vanegas-Ferro
+    git-repository https://github.com/comses-education/spatialrust-model
+
+
+%help
+This container bundles the Julia packages and computational model for the coffee leaf rust model by Manuela
+Vanegas-Ferro
+
+%files
+	. /code
+
+%post
+
+	export JULIA_DEPOT_PATH=/opt/julia/share/julia
+
+	cd /code
+	mkdir -p /srv/results # leaving it here as a reminder that the results folder has to exist in the 
+	# original filesystem or be created at the build step
+	julia /code/install.jl
+	chmod -R a+rX $JULIA_DEPOT_PATH /code
+    ln -s /srv/results /code/
+
+%runscript
+	exec /opt/julia/bin/julia "$@"
