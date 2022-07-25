@@ -1,0 +1,51 @@
+Bootstrap: shub
+From: pmitev/Teoroo-singularity:rstudio-server
+# Or from any other already build image
+#Bootstrap: localimage
+#From: ./rstudio.simg
+ 
+%files
+  installBiocSeurat.R  /
+
+
+%apprun rserver
+  exec rserver "${@}"
+
+%environment
+#  export PYTHONNOUSERSITE=True
+  export PATH=/usr/lib/rstudio-server/bin:${PATH}
+  export LANG=C.UTF-8 LC_ALL=C.UTF-8
+  export XDG_RUNTIME_DIR=/tmp/.run_$(uuidgen)
+  export RETICULATE_MINICONDA_PATH=/opt/miniconda
+ 
+%runscript
+  export XDG_RUNTIME_DIR=/tmp/.run_$(uuidgen)
+  mkdir -p $XDG_RUNTIME_DIR
+  exec rserver "${@}"
+
+ 
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export LC_ALL=C
+  export NCPU=$(grep -c ^processor /proc/cpuinfo)
+  
+  apt-get update && apt-get -y install --fix-missing \
+        less vim nano wget curl build-essential uuid-runtime emacs tmux \
+        libcurl4-openssl-dev libssl-dev libbz2-dev liblzma-dev libxml2-dev libcairo2-dev libsqlite3-dev \
+        apt-utils libv8-dev libmagick++-dev \
+        texlive texlive-latex-extra texlive-fonts-extra texlive-bibtex-extra texlive-science texi2html texinfo \
+        default-jre default-jdk libgsl-dev \
+        libproj-dev libgeos-dev libudunits2-dev libnode-dev libcairo2-dev libnetcdf-dev \
+        libglu1-mesa-dev freeglut3-dev mesa-common-dev \
+        r-base
+
+  # Install R packages ====================
+  R CMD javareconf
+  R -f /installBiocSeurat.R
+
+
+
+  # Clean
+  cd /
+  rm -rf /var/lib/apt/lists/*
+  rm /installBiocSeurat.R

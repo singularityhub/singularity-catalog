@@ -1,0 +1,50 @@
+Bootstrap: shub
+From: pmitev/Teoroo-singularity:rstudio-server
+# Or from any other already build image
+#Bootstrap: localimage
+#From: ./rstudio.simg
+ 
+%files
+  r-reticulate.yaml /
+  conda-env.sh /etc/profile.d/
+
+
+%apprun rserver
+  exec rserver "${@}"
+
+%environment
+#  export PYTHONNOUSERSITE=True
+  export PATH=/usr/lib/rstudio-server/bin:${PATH}
+  export LANG=C.UTF-8 LC_ALL=C.UTF-8
+  export XDG_RUNTIME_DIR=/tmp/.run_$(uuidgen)
+  export CONDA_ENVS_PATH=/opt/conda_envs
+ 
+%runscript
+  export XDG_RUNTIME_DIR=/tmp/.run_$(uuidgen)
+  mkdir -p $XDG_RUNTIME_DIR
+  export CONDA_ENVS_PATH=/opt/conda_envs
+  source /etc/profile.d/conda-env.sh
+  exec rserver "${@}"
+
+ 
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export LC_ALL=C
+  export NCPU=$(grep -c ^processor /proc/cpuinfo)
+  export CONDA_ENVS_PATH=/opt/conda_envs &&  mkdir -p ${CONDA_ENVS_PATH}
+  
+  mkdir /installs && cd /installs
+
+  mconda="Miniconda3-py38_4.9.2-Linux-x86_64.sh"
+  wget https://repo.anaconda.com/miniconda/${mconda} && \
+  chmod +x ${mconda} && \
+  ./${mconda} -b -p /opt/miniconda3 && \
+  ln -s /opt/miniconda3/bin/conda /usr/bin/conda
+
+  conda config --add channels conda-forge
+  conda env create -f /r-reticulate.yaml
+
+
+  # Clean
+  cd /
+  rm -rf /var/lib/apt/lists/*
