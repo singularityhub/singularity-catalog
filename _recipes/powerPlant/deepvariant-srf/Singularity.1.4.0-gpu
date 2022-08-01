@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: google/deepvariant:1.4.0-gpu
+
+%labels
+Maintainer Ben.Warren@plantandfood.co.nz
+Version 1.4.0-gpu
+
+%runscript
+if [ -x /opt/deepvariant/bin/$SINGULARITY_NAME ]; then
+    exec /opt/deepvariant/bin/$SINGULARITY_NAME "$@"
+else
+  /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+  exec ls /opt/deepvariant/bin
+fi

@@ -1,0 +1,94 @@
+Bootstrap: docker
+From: nvidia/cuda:11.3.1-base-ubuntu20.04
+
+%labels
+    Author till.korten@tu-dresden.de
+    Organisation BiAPoL
+    Version latest
+
+%help
+  Container for py-clesperanto.
+
+%files
+#   tests /opt
+    environment.yml
+    runner.sh
+#   jupyter_notebook_config.json /opt/conda/etc/jupyter/
+ 
+%environment
+  export DEBIAN_FRONTEND=noninteractive
+  export PATH=/app/env/bin:/miniconda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  export NUMBA_CACHE_DIR=/tmp
+  export APP=/app
+
+%post
+  set -eu
+  touch /tmp/test
+
+  # set up the environment
+  ## deactive interactive dialogs
+  export DEBIAN_FRONTEND=noninteractive
+
+  ## define the app directory
+  export APP=/app
+
+  ## set PATH for use of conda/mamba; also add to system-wide /etc/profile
+  export PATH=/miniconda/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  echo >> /etc/profile
+  echo 'export PATH=/miniconda/bin/:$PATH' >> /etc/profile
+
+  # install and reconfigure locale
+  apt-get clean -q && apt-get update -y -q && apt-get upgrade -y -q
+  apt-get install -y -q locales
+  apt-get clean -q
+  export LANGUAGE="en_US.UTF-8"
+  export LANG="en_US.UTF-8"
+  export LC_ALL="en_US.UTF-8"
+  echo "LC_ALL=en_US.UTF-8" >> /etc/environment
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  echo "LANG=en_US.UTF-8" > /etc/locale.conf
+  locale-gen --purge en_US.UTF-8
+  dpkg-reconfigure --frontend=noninteractive locales
+
+  # some packages via apt-get
+  apt-get update && apt-get install -y curl ca-certificates sudo git bzip2 libx11-6  
+  rm -rf /var/lib/apt/lists/*
+
+  mkdir $APP
+
+  # install miniconda
+  curl -sLo /app/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh
+  chmod +x /app/miniconda.sh
+  /app/miniconda.sh -b -p /miniconda
+  rm /app/miniconda.sh
+
+  # install environment including all dependencies
+  conda env create -p $APP/env -f /environment.yml
+  conda clean -ya
+  rm /environment.yml
+
+  # move the run script to the app directory
+  mv /runner.sh $APP
+  chmod a+x $APP/runner.sh
+
+#####################
+## run python file ##
+#####################
+
+%apprun runner
+  bash <<-EOF
+	/app/runner.sh "${@}"
+EOF
+
+# %test
+#   # scanpy
+#   bash <<-EOF
+#     source /.bashrc
+#     python /opt/tests/scanpy_test.py
+# EOF
+#   if [ $? -eq 0 ]; then
+#       echo "scanpy tests passed."
+#   else
+#       echo "scanpy error!"
+#       exit 1
+#   fi

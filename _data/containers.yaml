@@ -1,11 +1,11 @@
 bases:
-- count: 1211
+- count: 1214
   name: ubuntu
-- count: 292
+- count: 293
   name: nvidia/cuda
 - count: 235
   name: debian
-- count: 182
+- count: 183
   name: centos
 - count: 124
   name: continuumio/miniconda3
@@ -13,11 +13,11 @@ bases:
   name: alpine
 - count: 95
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 94
+- count: 95
   name: python
 - count: 90
   name: ghcr.io/mkandes/naked-singularity
-- count: 82
+- count: 85
   name: aibasel/downward
 - count: 79
   name: tensorflow/tensorflow
@@ -35,7 +35,7 @@ bases:
   name: provarepro/mlperf_inference
 - count: 31
   name: godloved/secure/ubuntu-bionic
-- count: 29
+- count: 30
   name: neurodebian
 - count: 28
   name: bilbydev/bilby-test-suite-python37
@@ -53,7 +53,7 @@ bases:
   name: osrf/ros
 - count: 22
   name: khanlab/tar2bids
-- count: 20
+- count: 22
   name: bids/validator
 - count: 19
   name: poldracklab/fmriprep
@@ -96,13 +96,13 @@ bases:
 - count: 10
   name: intel/oneapi-hpckit
 - count: 10
+  name: nipreps/fmriprep
+- count: 10
   name: poldracklab/mriqc
 - count: 9
   name: dcgc-bfx/dcgc-jupyter-rstudio
 - count: 9
   name: julia
-- count: 9
-  name: nipreps/fmriprep
 - count: 9
   name: golang
 - count: 9
@@ -133,6 +133,8 @@ bases:
   name: rocker/geospatial
 - count: 7
   name: mattocci/rstan
+- count: 7
+  name: google/deepvariant
 - count: 7
   name: bioconductor/bioconductor_docker
 - count: 7
@@ -172,6 +174,8 @@ bases:
 - count: 6
   name: bids/example
 - count: 5
+  name: bids/mrtrix3_connectome
+- count: 5
   name: neuronets/kwyk
 - count: 5
   name: shreyaskamathkm/cluster_images
@@ -210,8 +214,6 @@ bases:
 - count: 4
   name: intel2021.2_netcdfc4.7.4_ubuntu.sif
 - count: 4
-  name: bids/mrtrix3_connectome
-- count: 4
   name: khanlab/hippunfold
 - count: 4
   name: ResearchIT/spack-singularity
@@ -249,6 +251,8 @@ bases:
   name: slaclab/cryosparc-docker
 - count: 3
   name: gnuoctave/octave
+- count: 3
+  name: quay.io/biocontainers/spades
 - count: 3
   name: icaoberg/meme-suite
 - count: 3
@@ -295,8 +299,6 @@ bases:
   name: computationalradiationphysics/picongpu
 - count: 3
   name: bids/freesurfer
-- count: 3
-  name: google/deepvariant
 - count: 3
   name: pennbbl/xcpengine
 - count: 3
@@ -348,8 +350,6 @@ bases:
 - count: 2
   name: quay.io/biocontainers/bwa
 - count: 2
-  name: quay.io/biocontainers/spades
-- count: 2
   name: icaoberg/braker2
 - count: 2
   name: quay.io/biocontainers/bamtools
@@ -379,6 +379,8 @@ bases:
   name: bids/spm
 - count: 2
   name: peerherholz/bidsonym
+- count: 2
+  name: nipreps/smriprep
 - count: 2
   name: build/spades_base.sif
 - count: 2
@@ -761,8 +763,6 @@ bases:
   name: bids/nipypelines
 - count: 1
   name: bids/cpac
-- count: 1
-  name: nipreps/smriprep
 - count: 1
   name: bids/mindboggle
 - count: 1
@@ -1378,9 +1378,13 @@ bases:
 - count: 1
   name: bitnami/minideb
 - count: 1
+  name: rocker/shiny-verse
+- count: 1
   name: dalbohn/openface_ics
 - count: 1
   name: openfoamplus/of_v2012_centos73
+- count: 1
+  name: mvdenbog/centos83_barebones
 - count: 1
   name: gcr.io/deepvariant-docker/deepvariant
 - count: 1
@@ -1392,13 +1396,13 @@ bases:
 - count: 1
   name: caid/tgvqsm
 bootstraps:
-- count: 3912
+- count: 3933
   name: docker
 - count: 342
   name: debootstrap
 - count: 302
   name: shub
-- count: 253
+- count: 254
   name: library
 - count: 99
   name: yum
@@ -1433,10 +1437,10 @@ orgs:
   name: ghcr.io/truatpasteurdotfr
 - count: 11
   name: vitchyr
+- count: 11
+  name: rocker
 - count: 10
   name: nvcr.io/nvidia
-- count: 10
-  name: rocker
 - count: 7
   name: nvcr.io/hpc
 - count: 7
@@ -2094,6 +2098,8 @@ orgs:
 - count: 1
   name: bitnami
 - count: 1
+  name: mvdenbog
+- count: 1
   name: condaforge
 - count: 1
   name: nfcore
@@ -2104,8 +2110,8 @@ orgs:
 - count: 1
   name: trinityrnaseq
 tags:
-  latest: 386
-  other: 3661
+  latest: 387
+  other: 3681
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.3.img: 1
@@ -2137,9 +2143,9 @@ versions:
   adriansevcenco/alienpy.dock:
     latest: 1
   aibasel/downward:
-    '19.06': 19
-    '19.12': 21
-    '20.06': 30
+    '19.06': 20
+    '19.12': 22
+    '20.06': 31
     '21.12': 8
     '22.06': 4
   airl_lab/default/airl_env:
@@ -2278,6 +2284,7 @@ versions:
     0.4.2: 1
     0.5.0: 1
     0.5.1: 1
+    0.5.2: 1
   bids/ndmg:
     v0.1.0: 1
   bids/niak:
@@ -2325,6 +2332,8 @@ versions:
     v1.9.3: 1
     v1.9.4: 1
     v1.9.5: 1
+    v1.9.6: 1
+    v1.9.7: 1
   bigdatalabteam/hcp-prefreesurfer:
     exec-centos7-reprozip.fslbuild-centos5: 1
   biobb_cmip:
@@ -2407,7 +2416,7 @@ versions:
     centos7.6.1810: 3
     centos7.8.2003: 2
     centos7.9.2009: 1
-    centos8: 5
+    centos8: 6
     latest: 8
   charade/xlibbox@sha256:
     04b1aca63f51cd18972b44380a7fcf2da0115c9e21e80fb9d375f39f229f686d: 1
@@ -2721,7 +2730,10 @@ versions:
   google/deepvariant:
     0.10.0: 1
     0.9.0: 1
+    1.0.0: 1
     1.1.0: 1
+    1.4.0: 1
+    1.4.0-gpu: 2
   granek/default/singularity-rstudio:
     3.6.0: 1
     3.6.1: 1
@@ -3026,6 +3038,7 @@ versions:
     focal-non-free: 1
     jessie: 5
     latest: 8
+    nd100: 1
     nd90: 1
     non-free: 3
     stretch-non-free: 5
@@ -3061,6 +3074,7 @@ versions:
     21.0.0: 1
     21.0.1: 1
     21.0.2: 1
+    22.0.0: 1
   nipreps/mriqc:
     22.0.1: 1
   nipreps/nibabies:
@@ -3069,6 +3083,7 @@ versions:
     0.2.1: 1
   nipreps/smriprep:
     0.9.1: 1
+    0.9.2: 1
   nipy/heudiconv:
     latest: 1
     v0.11.1: 1
@@ -3219,6 +3234,7 @@ versions:
     11.2.2-devel-ubuntu20.04: 4
     11.3.0-cudnn8-devel-ubuntu20.04: 1
     11.3.0-devel-ubuntu20.04: 1
+    11.3.1-base-ubuntu20.04: 1
     11.3.1-cudnn8-runtime-centos7: 3
     11.3.1-devel-ubuntu20.04: 3
     11.4.2-base-ubuntu20.04: 1
@@ -3438,7 +3454,7 @@ versions:
     3.6.6: 1
     3.6.8-slim-jessie: 1
     '3.7': 1
-    3.7-slim: 30
+    3.7-slim: 31
     3.7.4-slim: 3
     3.7.7-slim-buster: 1
     3.7.9: 1
@@ -3549,6 +3565,7 @@ versions:
   quay.io/biocontainers/spades:
     3.14.1--h2d02072_0: 1
     3.15.3--h95f258a_0: 1
+    3.15.4--h95f258a_0: 1
   quay.io/biocontainers/sra-tools:
     2.10.8--pl526haddd2b5_0: 1
   quay.io/biocontainers/star:
@@ -3698,6 +3715,8 @@ versions:
   rocker/shiny:
     3.6.2: 1
     4.1.2: 1
+    latest: 1
+  rocker/shiny-verse:
     latest: 1
   rocker/tidyverse:
     3.4.3: 1
@@ -3891,14 +3910,14 @@ versions:
     pytorch-1.3.0: 1
   ubuntu:
     $VERSION: 1
-    '14.04': 20
+    '14.04': 21
     '16.04': 167
     '17.04': 6
     '18.04': 261
     '18.04 ': 6
     '19.04': 16
     '19.10': 4
-    '20.04': 272
+    '20.04': 274
     '20.10': 3
     '21.04': 5
     '21.10': 4

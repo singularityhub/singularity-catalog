@@ -6,10 +6,22 @@ From: rocker/tidyverse
     # From https://github.com/brucemoran/Singularity/blob/8eb44591284ffb29056d234c47bf8b1473637805/shub/bases/recipe.CentOs7-R_3.5.2#L21
     echo 'export LANG=en_US.UTF-8 LANGUAGE=C LC_ALL=C LC_CTYPE=C LC_COLLATE=C  LC_TIME=C LC_MONETARY=C LC_PAPER=C LC_MEASUREMENT=C' >> $SINGULARITY_ENVIRONMENT
 
-    sudo apt install -qq libcurl4-openssl-dev
+    sudo apt-get install -qq libcurl4-openssl-dev
+
+    apt search openjdk
+    sudo apt install -qq openjdk-11-jre-headless
+    # sudo apt install -qq default-jre
+    # sudo apt-get install -qq r-cran-rjava
+    # sudo apt-get install -qq openjdk-13-*
     sudo $(which R) CMD javareconf
 
-    Rscript -e 'install.packages(c("remotes", "devtools"))'
+    sudo apt install -qq libfontconfig1-dev
+
+    sudo apt install -qq libharfbuzz-dev libfribidi-dev
+
+    Rscript -e 'install.packages(c("remotes", "rcmdcheck"))'
+    Rscript -e 'remotes::install_cran("shiny")'
+    Rscript -e 'remotes::install_github("ropensci/beautier")'
     Rscript -e 'remotes::install_github("ropensci/beastier")'
     Rscript -e 'remotes::install_github("richelbilderbeek/beastierinstall")'
     Rscript -e 'beastierinstall::install_beast2(folder_name = "/opt/beastier")'
@@ -79,4 +91,4 @@ bbt_delete_temp_files(
 
     URL https://github.com/ropensci/babette
 
-    VERSION 2.3
+    VERSION 2.3.2
