@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: ghcr.io/dnanexus-rnd/glnexus:v1.4.3
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 1.4.3
+
+%runscript
+  exec glnexus_cli "$@"

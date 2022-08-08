@@ -1,0 +1,30 @@
+Bootstrap: library
+From: ubuntu:20.04
+
+%environment
+  export DEBIAN_FRONTEND=noninteractive
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get update
+  apt-get install -y software-properties-common
+  add-apt-repository universe
+  sed -i '1i openssl_conf = default_conf' /etc/ssl/openssl.cnf
+  echo "" >> /etc/ssl/openssl.cnf && echo "[ default_conf ]" >> /etc/ssl/openssl.cnf && echo "ssl_conf = ssl_sect" >> /etc/ssl/openssl.cnf && echo "[ssl_sect]" >> /etc/ssl/openssl.cnf && echo "system_default = ssl_default_sect" >> /etc/ssl/openssl.cnf && echo "[ssl_default_sect]" >> /etc/ssl/openssl.cnf && echo "MinProtocol = TLSv1.2" >> /etc/ssl/openssl.cnf && echo "CipherString = DEFAULT:@SECLEVEL=1" >> /etc/ssl/openssl.cnf
+
+
+  apt-get update
+  apt-get install -y libatlas-base-dev curl zlib1g zlib1g-dev libbz2-1.0 libbz2-dev libbz2-ocaml libbz2-ocaml-dev liblzma-dev lzma lzma-dev unzip python2 apt python3 python3-pip nano wget iputils-ping git gcc gfortran build-essential libc6 libc-bin libc-dev-bin make libblas-dev liblapack-dev libcairo2-dev libxt-dev libeigen3-dev libgsl0-dev libcurl4-openssl-dev source-highlight axel tree jq bsdmainutils bc autoconf libtool bc man-db freeglut3 freeglut3-dev xorg x11-utils feh cmake libboost-dev libboost-all-dev libopenblas-dev htop tofrodos libjsoncpp-dev libxml2-dev libmariadbclient-dev libssl-dev python-dev python3-dev apt-transport-https software-properties-common  moreutils ncurses-term locales libv8-dev libgit2-dev swig perl-doc rsync time dos2unix tabix
+
+  sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+  locale-gen
+  sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+  dpkg-reconfigure --frontend=noninteractive locales
+  update-locale LANG=en_US.UTF-8
+  gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+  gpg -a --export E298A3A825C0D65DFD57CBB651716619E084DAB9 | apt-key add -
+  add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/'
+  apt-get update
+  apt-get install -y r-base r-base-core
+  Rscript -e "install.packages(c('methods', 'dplyr', 'data.table', 'argparser'));"
+

@@ -56,7 +56,15 @@ From: ubuntu:20.04
     libbz2-dev \
     liblzma-dev \
     zlib1g-dev \
-    libfribidi-dev
+    libfribidi-dev \
+    python3-pip \
+    cmake \
+    bedtools \
+    openjdk-8-jre-headless \
+    g++ \
+    libopenblas-base \
+    liblapack3 \
+    libgeos-dev
 
   # Disable session timeout
   # echo "session-timeout-minutes=0" > /etc/rstudio/rsession.conf
@@ -72,6 +80,9 @@ From: ubuntu:20.04
   wget \
     --no-verbose \
     -O rstudio-server.deb \
-    "https://download2.rstudio.org/server/bionic/amd64/rstudio-server-1.4.1717-amd64.deb"
+    "https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2021.09.2-382-amd64.deb"
   gdebi -n rstudio-server.deb
   rm -f rstudio-server.deb
+
+  # Install MACS2 (for ArchR)
+  pip install macs2 hail

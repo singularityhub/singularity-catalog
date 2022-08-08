@@ -1,0 +1,85 @@
+Bootstrap: docker
+From: kaldiasr/kaldi:__TAG__
+
+%help
+Official kaldi build + PUA data.
+
+This container uses the base image kaldiasr/kaldi:__TAG__
+
+Many of the scripts in american-archive-kaldi were extracted from
+the docker hub container at hipstas/kaldi-pop-up-archive:v1
+
+%labels
+Maintainer bdwheele@indiana.edu
+Version 0.1
+
+%environment
+export SHELL=/bin/bash
+export LANGUAGE=en_US
+export LC_ALL=en_US
+
+%setup
+
+%files
+    # I'm using /mnt as a temporary directory since /tmp on my build machine
+    # is a tmpfs filesystem and it's shared between the host and the
+    # container -- and it fills up my swap.
+    resources/setup.sh /usr/local/bin/start_transcription.sh
+    resources/american-archive-kaldi /mnt
+    exp2.tar.gz /mnt
+
+
+%post
+    # install updates & dependencies
+    apt-get update -qq
+    apt-get install -qq -y  python libatlas-base-dev software-properties-common curl gawk zip  \
+        libperl4-corelibs-perl libjson-perl  python-pip libsox-dev nano rsync cmake irstlm
+
+    # update setuptools 
+    pip install --update setuptools
+    
+    # setup python
+    pip install -U ftfy==4.4.3
+    alias python=python2.7 
+    ln -s -f bash /bin/sh  # BDW What is this all about?
+
+    ## Installing Perl dependencies
+    curl -L http://cpanmin.us | perl - App::cpanminus && cpanm File::Slurp::Tiny Data::Dump
+
+    ## Installing sclite
+    #apt-get install -y sctk  # BDW NOT FOUND IN REPO?
+    alias sclite="sctk sclite"
+
+    # set working directory and batch script
+    mkdir /audio_in    
+
+    ## copy PUA resources    
+    mv /mnt/american-archive-kaldi /opt/kaldi/egs
+    tar -xzvf /mnt/exp2.tar.gz -C /opt/kaldi/egs/american-archive-kaldi/sample_experiment/
+    rm /mnt/exp2.tar.gz 
+
+    ## Installing CMUseg
+    cd /opt/kaldi/egs/american-archive-kaldi/sample_experiment/
+    sh install-cmuseg.sh 
+    chmod -R 755 ./tools/CMUseg_0.5/bin/linux/
+
+    ## Creating expected symlinks
+    ln -s /opt/kaldi/egs/wsj/s5/steps /opt/kaldi/egs/american-archive-kaldi/sample_experiment/exp
+    ln -s /opt/kaldi/egs/wsj/s5/utils /opt/kaldi/egs/american-archive-kaldi/sample_experiment/exp
+    ln -s /opt/kaldi/egs/wsj/s5/steps /opt/kaldi/egs/american-archive-kaldi/sample_experiment/
+    ln -s /opt/kaldi/egs/wsj/s5/utils /opt/kaldi/egs/american-archive-kaldi/sample_experiment/
+    ln -s /opt/kaldi /kaldi  
+    ln -s /opt/kaldi /usr/local/kaldi
+
+    # the scripts in this container want to write all over the place, so we
+    # need to make some things world-writable so it will function
+    # the container is really read-only, but with an overlay it will do the right thing(tm)
+    mkdir /audio_in_16khz
+    chmod 777 /audio_in_16khz
+    chmod -Rf 777 /opt/kaldi
+    mkdir /var/extra
+    chmod 777 /var/extra
+
+
+%runscript
+    start_transcription.sh

@@ -1,0 +1,44 @@
+Bootstrap: docker
+
+From: continuumio/miniconda3
+
+%files
+    environment.yml
+
+%post
+    git clone https://github.com/artic-network/fieldbioinformatics
+    cd fieldbioinformatics && python setup.py install
+    /opt/conda/bin/conda env create -f environment.yml
+    NOW=`date`
+    echo "export NOW=\"${NOW}\"" >> $SINGULARITY_ENVIRONMENT
+
+%environment
+    export PATH=/opt/conda/bin:$PATH
+    export PATH=/opt/conda/envs/artic/bin:$PATH
+
+%runscript
+    echo "Created on $NOW"
+    exec $*
+
+%test
+    artic -v
+    artic -h
+    artic basecaller -h
+    artic guppyplex -h
+
+%labels
+    Author kibet-gilbert
+    Version $articversion
+
+%help
+    Singularity container for artic
+    Apps availablei:
+    artic basecaller          Display basecallers in files
+    artic demultiplex         Run demultiplex
+    artic minion              Run the alignment/variant-call/consensus pipeline
+    artic gather              Gather up demultiplexed files
+    artic guppyplex           Aggregate pre-demultiplexed reads from MinKNOW/Guppy
+    artic filter              Filter FASTQ files by length
+    artic rampart             Interactive prompts to start RAMPART
+    artic export              Export reads and fAST5 into a neat archive
+    artic run                 Process an entire run folder interactively
