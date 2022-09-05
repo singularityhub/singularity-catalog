@@ -1,50 +1,55 @@
 # Author: B. Anderson
 # Singularity recipe for creating a container for using the program Stacks (https://catchenlab.life.illinois.edu/stacks/)
-# NOTE: in order to use this on the supercomputing system, I have to compile it with OpenMPI installed (see image)
+# NOTE: in order to use this on the supercomputing system, I will compile it with OpenMPI installed (see image)
 
 
 Bootstrap: docker
-From: pawsey/openmpi-base:2.1.2_ubuntu18.04
+From: pawsey/openmpi-base:2.1.2_ubuntu20.04
 
 
 %labels
 	MAINTAINER bmichanderson
 	PROGRAM Stacks
-	VERSION 2.58
+	VERSION 2.62
+
+
+%help
+	This container is for running Stacks
+	
+	To run the program, use: 
+		singularity exec stacks.sif [args]
+	
+	where [args] would include, e.g., sstacks or populations or denovo_map.pl
 
 
 %post
-	# install essentials for obtaining and building software
-
 	export DEBIAN_FRONTEND=noninteractive
 
-	apt update && apt upgrade -y && apt install -y autoconf automake build-essential wget zlib1g-dev
+	# install dependencies
+	apt update && apt install -y \
+	autoconf \
+	automake \
+	build-essential \
+	wget \
+	zlib1g-dev
 
 
 	# build and install the program
-
-	STACKS_VERSION=2.58
-	URL=https://catchenlab.life.illinois.edu/stacks/source/stacks-"${STACKS_VERSION}".tar.gz
+	VER=2.62
+	URL=https://catchenlab.life.illinois.edu/stacks/source/stacks-"$VER".tar.gz
 	wget "$URL"
-	tar -xzf stacks-"${STACKS_VERSION}".tar.gz
-	rm stacks-"${STACKS_VERSION}".tar.gz
-
-	cd stacks-"${STACKS_VERSION}"
+	tar -xzf stacks-"$VER".tar.gz
+	rm stacks-"$VER".tar.gz
+	cd stacks-"$VER"
 	./configure
 	make -j 8
 	make install
-
 	cd ..
-	rm -r stacks-"${STACKS_VERSION}"
+	rm -r stacks-"$VER"
 
 
 	# clean-up
-
-	apt update && apt upgrade -y &&	apt autoremove -y && apt clean
-
-
-%test
-	# test that the program works
+	apt update && apt autoremove -y && apt clean all
 
 
 %environment
@@ -53,18 +58,4 @@ From: pawsey/openmpi-base:2.1.2_ubuntu18.04
 
 %runscript
 	# This will be executed when the container is run (singularity run [container])
-	
 
-%help
-	# This message is displayed when called as: singularity run-help [container]
-
-	******************************************************************************
-
-	This container is for running Stacks 2.58
-
-	To run, use: singularity exec stacks.sif [args]
-	where [args] would include, e.g., sstacks or populations or denovo_map.pl
-
-	Check contents by entering it as: singularity shell stacks.sif
-
-	******************************************************************************

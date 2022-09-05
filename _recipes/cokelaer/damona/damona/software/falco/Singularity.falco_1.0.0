@@ -1,0 +1,44 @@
+Bootstrap: docker
+From: alpine:3.16.2
+
+
+
+%labels
+    MAINTAINER thomas cokelaer
+    Author thomas cokelaer
+    Version v1.0.0
+
+
+%files
+
+%post
+
+    apk update\
+     && apk upgrade\
+     && apk add wget unzip bash make g++ libtool zlib zlib-dev
+
+
+    export PYTHONUNBUFFERED=1
+    apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+    python3 -m ensurepip
+    pip3 install --no-cache --upgrade pip setuptools
+
+    apk add openjdk8
+
+
+    wget https://github.com/smithlabcode/falco/archive/v1.0.0.tar.gz
+    tar xvfz v1.0.0.tar.gz
+    cd falco-1.0.0
+    #./configure CXXFLAGS="-O3 -Wall"
+    make all
+    make install
+
+    # cleanup
+    apk del make wget zlib-dev g++ libtool
+
+%environment
+    export PATH=$PATH:/falco-1.0.0/bin
+
+%runscript
+    exec falco "$@"
+

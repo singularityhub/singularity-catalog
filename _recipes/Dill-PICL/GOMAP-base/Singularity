@@ -4,16 +4,23 @@ From: ubuntu:bionic
 %labels
 BASE_OWNER Wimalanathan Kokulapalan
 BASE_MAINTAINER Wimalanathan Kokulapalan
-BASE_VERSION 'v1.1.2'
+BASE_VERSION 'v1.1.3'
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/data
+	# && \
+	# rsync -ruP data/ ${SINGULARITY_ROOTFS}/data/
 
 %files
-	data /data
+	data/* /data/
 
 %environment
 	export IRODS_HOST="data.cyverse.org"
 	export  IRODS_PORT="1247"
     export  IRODS_USER_NAME="anonymous"
     export  IRODS_ZONE_NAME="iplant"
+
+
 
 %post
 	export LC_ALL=C
@@ -22,9 +29,13 @@ BASE_VERSION 'v1.1.2'
 	export MAKEFLAGS="-j32"
 
 	echo "Running post.sh"
-	apt-get -q -y update
-	apt-get -yq install bsdutils lsb-base passwd perl psmisc debconf libc6 libevent-core-2.1-6 libgcc1 liblz4-1 libstdc++6 zlib1g gfortran rsync build-essential less vim wget python-pip libfuse2 r-base openjdk-8-jdk libidn11-dev libssl1.0-dev libssl1.0.0 git ncbi-blast+ octave octave-dataframe sqlite3 libsqlite3-dev python3-pip
-	update-java-alternatives -s java-1.8.0-openjdk-amd64 
+	apt-get -y update
+	apt-get -y install bsdutils lsb-base passwd perl psmisc debconf libc6 \
+		libevent-core-2.1-6 libgcc1 liblz4-1 libstdc++6 zlib1g gfortran rsync \
+		build-essential less vim wget python-pip libfuse2 r-base openjdk-8-jdk \
+		libidn11-dev libssl1.0-dev libssl1.0.0 git ncbi-blast+ octave \
+		octave-dataframe sqlite3 libsqlite3-dev python3-pip
+	update-java-alternatives -s java-1.8.0-openjdk-amd64
 
 	R -e 'install.packages(c("data.table","futile.logger","ontologyIndex","yaml"), repos="https://mirror.las.iastate.edu/CRAN/", INSTALL_opts="--no-html")'
 
@@ -59,10 +70,9 @@ BASE_VERSION 'v1.1.2'
 	tar -xf azcopy_v10.tar.gz --strip-components=1 && \
 	cp azcopy /usr/bin/ && \
 	chmod 755 /usr/bin/azcopy
-
 	
-	mkdir -p /data
 	mkdir -p /opt/GOMAP
+	mkdir -p /data
 	mkdir -p /tmpdir
 	mkdir -p /workdir
 	mkdir -p /work	  
@@ -71,6 +81,8 @@ BASE_VERSION 'v1.1.2'
 	echo "=============================================="
 	echo "Completed Post" 
 	echo "=============================================="
+
+
 
 %startscript
 	chmod 777 /tmp

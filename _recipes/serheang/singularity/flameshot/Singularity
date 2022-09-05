@@ -1,0 +1,46 @@
+Bootstrap: docker 
+From: ubuntu:20.04
+
+%labels
+    MAINTAINER Ser Heang TAN
+    WHATAMI flameshot
+    URL https://flameshot.org/
+
+%environment
+    export PATH=/usr/local/bin:$PATH
+    export LANG=en_US.UTF-8
+    export LC_ALL=C
+    
+%files 
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    echo "Who am I: $(whoami) $(id -u)"
+    apt-get update && apt -y install apt-transport-https
+    apt -y install ca-certificates gnupg2 wget
+    update-ca-certificates -v -f
+    apt-get update && apt-get install -y wget bzip2 curl grep
+    apt -y install qt5-default libqt5dbus5 libqt5network5 libqt5core5a libqt5widgets5 libqt5gui5 libqt5svg5 openssl ca-certificates
+    apt -y install flameshot
+    ldconfig -v
+    apt -y autoclean
+    apt -y clean
+
+%help
+    This is a container to run flameshot.
+    To build:
+    singularity build --fakeroot /scratch/flameshot.sif flameshot.def
+    To run:
+    singularity run --nv --app flameshot flameshot.sif 
+   
+%apphelp flameshot
+    echo "To run flameshot:"
+    echo "singularity run --app flameshot flameshot.sif"
+
+%apprun flameshot
+    echo "Running flameshot"
+    /usr/bin/flameshot
+
+%runscript
+    echo "This is flameshot container"
+    $@

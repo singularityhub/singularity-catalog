@@ -2,7 +2,7 @@ Bootstrap: docker
 From: ubuntu:22.04
 
 %files
-    scripts/* /usr/local/bin/
+    scripts/* /
 
 %post
-    setup.sh
+    bash /setup.sh

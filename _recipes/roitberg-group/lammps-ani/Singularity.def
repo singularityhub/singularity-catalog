@@ -1,0 +1,58 @@
+# you could build the image with:
+# singularity build --nv --fakeroot -B $PWD:/tmp/host_pwd ../lammps-ani.sif Singularity.def  # --writable-tmpfs
+# usage:
+# singularity exec --nv --writable ../lammps-ani.sif /bin/bash
+BootStrap: docker
+# From: ubuntu:latest
+From: nvcr.io/nvidia/pytorch:22.08-py3
+
+%environment
+    # Paths
+    export LAMMPS_ANI_ROOT=/lammps-ani
+    export LAMMPS_ROOT=${LAMMPS_ANI_ROOT}/external/lammps/
+    export LAMMPS_PLUGIN_PATH=${LAMMPS_ANI_ROOT}/build/
+    # CUDA_ARCH
+    export CMAKE_CUDA_ARCHITECTURES="6.0+PTX;7.5;8.0"
+    export TORCH_CUDA_ARCH_LIST="6.0+PTX;7.5;8.0"
+    # NGC PyTorch needs CXX11_ABI
+    export CXX11_ABI=1
+    # allow run OpenMPI as root
+    export OMPI_ALLOW_RUN_AS_ROOT=1
+    export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+    # NGC Container forces using TF32, disable it
+    export TORCH_ALLOW_TF32_CUBLAS_OVERRIDE=0
+
+%post
+    # copy files
+    # a workaround to copy a folder, must set the binding at the working directory:
+    # `-B $PWD:/tmp/host_pwd`
+    cp -r /tmp/host_pwd/ /lammps-ani
+    cd /lammps-ani
+
+    # allow run OpenMPI as root
+    export OMPI_ALLOW_RUN_AS_ROOT=1
+    export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+
+    # environment
+    export LAMMPS_ANI_ROOT=/lammps-ani
+    # NGC PyTorch needs CXX11_ABI
+    export CXX11_ABI=1
+
+    # NGC Container forces using TF32, disable it
+    export TORCH_ALLOW_TF32_CUBLAS_OVERRIDE=0
+
+    # build
+    ./build.sh
+    # remove git which is huge
+    rm -rf .git
+
+%test
+    # cd ${LAMMPS_ANI_ROOT}/tests/
+    # ./test_all.sh
+    echo To Be Added
+
+%labels
+    Author roitberg-group
+
+%help
+    Lammps ANI Interface

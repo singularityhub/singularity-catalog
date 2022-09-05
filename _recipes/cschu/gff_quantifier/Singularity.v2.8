@@ -31,7 +31,7 @@ export PATH=$PATH:/opt/software/miniconda3/bin:/opt/software/mOTUs
   /opt/software/miniconda3/bin/conda install -y -c bioconda 'samtools>=1.13' bwa minimap2
   git clone https://github.com/cschu/gff_quantifier.git
   cd gff_quantifier
-  git checkout develop
+  git checkout b3afde5f24ab536e0434fbd17789242922242893
   /opt/software/miniconda3/bin/python setup.py bdist_wheel
   /opt/software/miniconda3/bin/pip install --force-reinstall dist/*whl
   cd ..

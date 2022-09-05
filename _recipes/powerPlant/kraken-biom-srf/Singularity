@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: python:3.6.15-buster
+
+%labels
+Maintainer eric.burgueno@plantandfood.co.nz
+Version 1.2.0
+
+%post
+  cd /opt
+  git clone https://github.com/smdabdoub/kraken-biom
+  cd kraken-biom
+
+  pip install biom-format==2.1.10
+  python setup.py install
+
+  # cleanup
+  cd
+  rm -rf /opt/kraken-biom
+
+%runscript
+  exec /usr/local/bin/kraken-biom "$@"

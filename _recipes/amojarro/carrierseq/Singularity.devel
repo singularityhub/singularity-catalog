@@ -1,0 +1,53 @@
+# To build the container:
+# sudo singularity build cseq-dev Singularity.devel
+#
+# This is an example of a Singularity container that serves software at the
+# smallest unit - the individual executables each being associated with an app
+# This strategy would give a user most flexibility to create custom pipelines,
+# but also be more challenging in that the user would need to know how to use
+# each tool
+
+# To create:
+# singularity create --size 2000 carrierseq.img
+# sudo singularity bootstrap carrierseq.img Singularity
+
+Bootstrap: docker
+From: continuumio/miniconda3
+
+
+%runscript
+    if [ $# -eq 0 ]; then
+        exec scif run help
+    else
+        exec scif "$@"
+    fi
+    
+
+%labels
+    bioRxiv-doi https://doi.org/10.1101/175281
+
+%files
+    carrierseq-dev.scif
+    python
+    README.md
+
+%post
+    apt-get update
+
+    # Install Shared Dependencies
+    apt-get install -y git wget build-essential 
+    apt-get install -y gcc-multilib apt-utils
+    apt-get install -y zlib1g-dev samtools 
+
+    # Install seqtk
+    git clone https://github.com/lh3/seqtk.git build
+    cd build && git checkout v1.2 && make
+    mv seqtk /usr/local/bin
+
+    # Install biopython
+    /opt/conda/bin/conda install -y numpy scipy
+    /opt/conda/bin/pip install biopython
+
+    # Install Scientific Filesystem
+    /opt/conda/bin/pip install scif
+    /opt/conda/bin/scif install /carrierseq-dev.scif

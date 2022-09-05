@@ -1,0 +1,50 @@
+Bootstrap: library
+From: ubuntu:20.04
+
+%labels
+  Version v1.0
+  Author Georgia Katsoula
+  Email georgia.katsoula@helmholtz-muenchen.de
+
+%help
+  This is the definition file for my first container including software for the multiome project:
+  -Cell Ranger ARC - 2.0.1
+  #s-Ref for Cell Ranger GRCh38
+
+%environment
+    export PATH=/opt/cellranger-arc-2.0.1:$PATH
+
+%post
+    apt-get -y update && apt-get -y upgrade
+    apt-get install -y curl apt 
+
+    # Install R
+    # https://linuxize.com/post/how-to-install-r-on-ubuntu-20-04/
+    #apt install -y dirmngr gnupg apt-transport-https ca-certificates software-properties-common
+    #apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+    #add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/'
+    #apt install -y r-base  
+  
+    # Install cell ranger arc
+    # https://support.10xgenomics.com/single-cell-multiome-atac-gex/software/downloads/latest
+    curl -o cellranger-arc-2.0.1.tar.gz "https://cf.10xgenomics.com/releases/cell-arc/cellranger-arc-2.0.1.tar.gz?Expires=1650496238&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1hcmMvY2VsbHJhbmdlci1hcmMtMi4wLjEudGFyLmd6IiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNjUwNDk2MjM4fX19XX0_&Signature=CZp~Kn5Re2SqtNsGc1SHECVq7FJQe3j83Zdylu7UIMEN8oFoIBFBVKYykNSOitKwUaTw~dWvuJEL5PriOaWcvNLzoPPF4FNVvVeCVhtYZt5bhKBGwpD1xnSjk5P3v5tqW02qkciKX9pBnJpPTsHLpY1K2hKb0pgnKgkHDC5M0N6IKbnoEWtgGVwlaKYjn-kK7svzppxD4JKKx8QwgpIAKysdbaald2~~TjTiiMETYqclWg84px0k3Ctbc0nJ606z2TCZpYno3VUSLgDHzWHK6RwZ43hl-ZH5VBveBmcURPWgbJloiNVdWnF-NrM00RLyuhffyH9BWUtEufF0nVK~-A__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"
+
+    tar -xvzf cellranger-arc-2.0.1.tar.gz 
+    rm -rf cellranger-arc-2.0.1.tar.gz 
+    mv cellranger-arc-2.0.1 /opt/
+    
+    # Download reference
+    #curl -O https://cf.10xgenomics.com/supp/cell-arc/refdata-cellranger-arc-GRCh38-2020-A-2.0.0.tar.gz
+
+    # unpack
+    #tar -xzvf refdata-cellranger-arc-GRCh38-2020-A-2.0.0.tar.gz
+    #rm -rf refdata-cellranger-arc-GRCh38-2020-A-2.0.0.tar.gz
+    #mv refdata-cellranger-arc-GRCh38-2020-A-2.0.0 /opt/
+
+    # Configure the job submission template 
+    cd /opt/cellranger-arc-2.0.1/external/martian/jobmanagers
+
+    # Make a copy of the cluster's example template
+    cp -v slurm.template.example slurm.template
+     
+

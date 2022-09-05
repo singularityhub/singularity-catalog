@@ -1,0 +1,266 @@
+Bootstrap: docker
+From: ubuntu:bionic-20200112 
+Stage: builder
+
+%post
+# Use UBUNTU Bionic
+
+# Installing FSL
+FSLDIR="/opt/fsl-6.0.4"
+PATH="/opt/fsl-6.0.4/bin:$PATH"
+FSLOUTPUTTYPE="NIFTI_GZ"
+FSLMULTIFILEQUIT="TRUE"
+FSLTCLSH="/opt/fsl-6.0.4/bin/fsltclsh"
+FSLWISH="/opt/fsl-6.0.4/bin/fslwish"
+FSLLOCKDIR=""
+FSLGECUDAQ="cuda.q"
+
+
+apt-get update -qq \
+&& apt-get install -y -q --no-install-recommends \
+bc \
+ca-certificates \
+curl \
+dc \
+file \
+libfontconfig1 \
+libfreetype6 \
+libgl1-mesa-dev \
+libgl1-mesa-dri \
+libglu1-mesa-dev \
+libgomp1 \
+libice6 \
+libopenblas-base \
+libxcursor1 \
+libxft2 \
+libxinerama1 \
+libxrandr2 \
+libxrender1 \
+libxt6 \
+nano \
+sudo \
+wget \
+&& rm -rf /var/lib/apt/lists/*
+
+# Installing freesurfer
+#RUN curl -sSL https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/7.2.0/freesurfer-linux-ubuntu18_amd64-7.2.0.tar.gz \
+#￼    | tar zxv --no-same-owner -C /opt
+
+## Simulate SetUpFreeSurfer.sh
+#ENV FSL_DIR="/opt/fsl-6.0.4" \
+    #OS="Linux" \
+    #FS_OVERRIDE=0 \
+    #FIX_VERTEX_AREA="" \
+    #FSF_OUTPUT_FORMAT="nii.gz" \
+    #FREESURFER_HOME="/opt/freesurfer"
+#ENV SUBJECTS_DIR="$FREESURFER_HOME/subjects" \
+    #FUNCTIONALS_DIR="$FREESURFER_HOME/sessions" \
+    #MNI_DIR="$FREESURFER_HOME/mni" \
+    #LOCAL_DIR="$FREESURFER_HOME/local" \
+    #MINC_BIN_DIR="$FREESURFER_HOME/mni/bin" \
+    #MINC_LIB_DIR="$FREESURFER_HOME/mni/lib" \
+    #MNI_DATAPATH="$FREESURFER_HOME/mni/data"
+#ENV PERL5LIB="$MINC_LIB_DIR/perl5/5.8.5" \
+    #MNI_PERL5LIB="$MINC_LIB_DIR/perl5/5.8.5" \
+    #PATH="$FREESURFER_HOME/bin:$FREESURFER_HOME/tktools:$MINC_BIN_DIR:$PATH"
+
+echo "Downloading FSL ..." \
+&& mkdir -p /opt/fsl-6.0.4 \
+&& curl -fL \
+https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-6.0.4-centos6_64.tar.gz \
+| tar -xz -C /opt/fsl-6.0.4 --strip-components 1
+
+echo "Installing FSL conda environment ..." \
+&& bash /opt/fsl-6.0.4/etc/fslconf/fslpython_install.sh -f /opt/fsl-6.0.4
+
+# Installing ANTS
+apt-get update \
+&& apt-get install -y --no-install-recommends \
+apt-transport-https \
+build-essential \
+gnupg \
+ninja-build \
+git \
+software-properties-common \
+zlib1g-dev
+
+wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+| apt-key add - \
+&& apt-add-repository -y 'deb https://apt.kitware.com/ubuntu/ bionic main' \
+&& apt-get update \
+&& apt-get -y install cmake=3.18.3-0kitware1 cmake-data=3.18.3-0kitware1
+
+git clone https://github.com/ANTsX/ANTs /tmp/ants/source
+
+mkdir -p /tmp/ants/build \
+&& cd /tmp/ants/build \
+&& mkdir -p /opt/ants \
+&& cmake \
+-DCMAKE_INSTALL_PREFIX=/opt/ants \
+/tmp/ants/source
+
+cd /tmp/ants/build && cmake --build . -j 4
+cd /tmp/ants/build && cmake --install .
+cd /tmp/ants/build/ANTS-build && make install 2>&1 | tee install.log
+
+ANTSPATH="/opt/ants/bin"
+PATH="/opt/ants/bin:$PATH"
+LD_LIBRARY_PATH="/opt/ants/lib:$LD_LIBRARY_PATH"
+
+apt-get update \
+&& apt install -y --no-install-recommends \
+bc \
+zlib1g-dev \
+&& apt-get clean \
+&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+
+# Install miniconda
+CONDA_DIR="/opt/miniconda-latest"
+PATH="/opt/miniconda-latest/bin:$PATH"
+
+apt-get update -qq \
+&& apt-get install -y -q --no-install-recommends \
+bzip2 \
+ca-certificates \
+unzip \
+curl \
+git gcc \
+&& rm -rf /var/lib/apt/lists/* \
+    # Install dependencies.
+    && export PATH="/opt/miniconda-latest/bin:$PATH" \
+    && echo "Downloading Miniconda installer ..." \
+    && conda_installer="/tmp/miniconda.sh" \
+    && curl -fsSL -o "$conda_installer" https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && bash "$conda_installer" -b -p /opt/miniconda-latest \
+    && rm -f "$conda_installer" \
+    && conda update -yq -nbase conda \
+
+    # Prefer packages in conda-forge
+    && conda config --system --prepend channels conda-forge \
+
+    # Packages in lower-priority channels not considered if a package with the same
+    # name exists in a higher priority channel. Can dramatically speed up installations.
+    # Conda recommends this as a default
+    # https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-channels.html
+    && conda config --set channel_priority strict \
+    && conda config --system --set auto_update_conda false \
+    && conda config --system --set show_channel_urls true \
+    # Enable `conda activate`
+    && conda init bash \
+    # Clean up
+    && sync && conda clean --all --yes && sync \
+    && rm -rf ~/.cache/pip/*
+
+
+# clone TBSS
+conda install -c conda-forge dipy
+git clone https://github.com/kcho/TBSS /opt/tbss
+
+FSLDIR="/opt/fsl-6.0.4"
+PATH="/opt/fsl-6.0.4/bin:$PATH"
+FSLOUTPUTTYPE="NIFTI_GZ"
+FSLMULTIFILEQUIT="TRUE"
+FSLTCLSH="/opt/fsl-6.0.4/bin/fsltclsh"
+FSLWISH="/opt/fsl-6.0.4/bin/fslwish"
+FSLLOCKDIR=""
+FSLMACHINELIST=""
+FSLREMOTECALL=""
+FSLGECUDAQ="cuda.q"
+
+/bin/bash /opt/tbss/install.sh setup
+
+# eddy-squeeze
+#RUN git clone https://github.com/pnlbwh/eddy-squeeze /opt/eddy-squeeze
+pwd
+pwd
+pip install eddy-squeeze
+pip install nifti-snapshot
+
+
+# clone https://github.com/pnlbwh/CNN-Diffusion-MRIBrain-Segmentation
+git clone https://github.com/kcho/CNN-Diffusion-MRIBrain-Segmentation /opt/CNN-Diffusion-MRIBrain-Segmentation
+# && conda env create -f environment_cpu.yml
+pip install tensorflow==2.9.0
+pip install keras==2.9.0
+pip install prompt-toolkit==2.0.1
+pip install scikit-image==0.16.2
+pip install git+https://github.com/pnlbwh/conversion.git
+cd /opt/CNN-Diffusion-MRIBrain-Segmentation && \
+wget https://github.com/pnlbwh/CNN-Diffusion-MRIBrain-Segmentation/releases/download/v0.3/model_folder.tar.gz && \
+tar -xzvf model_folder.tar.gz && \
+cd model_folder && \
+wget https://www.nitrc.org/frs/download.php/11290/IITmean_b0_256.nii.gz
+
+
+# ENIGMA CHR pipeline
+git clone https://github.com/kcho/ENIGMA_CHR_DTI /opt/ENIGMA_CHR_DTI
+PYTHONPATH="/opt/ENIGMA_CHR_DTI:${PYTHONPATH}"
+PATH="/opt/ENIGMA_CHR_DTI/scripts:${PATH}"
+pip install -r /opt/ENIGMA_CHR_DTI/requirements.txt
+
+
+# dcm2niix
+mkdir /opt/dcm2niix \
+&& cd /opt/dcm2niix \
+&& wget https://github.com/rordenlab/dcm2niix/releases/download/v1.0.20211006/dcm2niix_lnx.zip \
+&& unzip dcm2niix_lnx.zip
+
+PATH="/opt/dcm2niix:$PATH"
+/opt/dcm2niix/dcm2niix -h
+
+
+# unring
+apt-get update && \
+apt-get install -y libfftw3-dev wkhtmltopdf xvfb tree
+
+git clone https://bitbucket.org/reisert/unring.git /opt/unring
+PATH="/opt/unring/fsl:$PATH"
+enigma_data_dir="/opt/tbss/data/enigmaDTI"
+
+# check softwares
+dipy_gibbs_ringing -h
+
+
+cd /data
+
+apt-get install -y x11-apps
+pwd
+cd /opt/ENIGMA_CHR_DTI && git pull
+
+
+%environment
+export FSLDIR="/opt/fsl-6.0.4"
+export PATH="/opt/fsl-6.0.4/bin:$PATH"
+export FSLOUTPUTTYPE="NIFTI_GZ"
+export FSLMULTIFILEQUIT="TRUE"
+export FSLTCLSH="/opt/fsl-6.0.4/bin/fsltclsh"
+export FSLWISH="/opt/fsl-6.0.4/bin/fslwish"
+export FSLLOCKDIR=""
+export FSLGECUDAQ="cuda.q"
+export ANTSPATH="/opt/ants/bin"
+export PATH="/opt/ants/bin:$PATH"
+export LD_LIBRARY_PATH="/opt/ants/lib:$LD_LIBRARY_PATH"
+export CONDA_DIR="/opt/miniconda-latest"
+export PATH="/opt/miniconda-latest/bin:$PATH"
+export FSLDIR="/opt/fsl-6.0.4"
+export PATH="/opt/fsl-6.0.4/bin:$PATH"
+export FSLOUTPUTTYPE="NIFTI_GZ"
+export FSLMULTIFILEQUIT="TRUE"
+export FSLTCLSH="/opt/fsl-6.0.4/bin/fsltclsh"
+export FSLWISH="/opt/fsl-6.0.4/bin/fslwish"
+export FSLLOCKDIR=""
+export FSLMACHINELIST=""
+export FSLREMOTECALL=""
+export FSLGECUDAQ="cuda.q"
+export PYTHONPATH="/opt/ENIGMA_CHR_DTI:${PYTHONPATH}"
+export PATH="/opt/ENIGMA_CHR_DTI/scripts:${PATH}"
+export PATH="/opt/dcm2niix:$PATH"
+export PATH="/opt/unring/fsl:$PATH"
+export enigma_data_dir="/opt/tbss/data/enigmaDTI"
+%runscript
+cd /data
+exec /bin/bash xvfb-run python /opt/ENIGMA_CHR_DTI/scripts/enigma_chr_pipeline.py "$@"
+%startscript
+cd /data
+exec /bin/bash xvfb-run python /opt/ENIGMA_CHR_DTI/scripts/enigma_chr_pipeline.py "$@"

@@ -1,0 +1,15 @@
+BootStrap: docker
+From: continuumio/anaconda3
+
+%runscript
+
+     exec /opt/conda/bin/python "$@"
+
+%post
+
+     # Install gcc & icevision
+     apt-get update
+     apt-get -y install gcc
+     pip install icevision[all]==0.5.2
+     apt-get autoremove -y
+     apt-get clean

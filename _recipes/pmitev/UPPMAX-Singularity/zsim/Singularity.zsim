@@ -1,0 +1,50 @@
+Bootstrap: docker
+From: ubuntu:14.04
+
+%labels
+  Author pmitev@gmail.com
+
+%files
+  pin-2.14-71313-gcc.4.4.7-linux.tar.gz /opt/ 
+
+%environment
+  export LC_ALL=C
+  #export PINPATH=/opt/pin-3.13-98189-g60a6ef199-gcc-linux
+  export PINPATH=/opt/pin-2.14-71313-gcc.4.4.7-linux
+
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export LANG=C.UTF-8
+  export LC_ALL=C.UTF-8
+  #export PINPATH=/opt/pin-3.13-98189-g60a6ef199-gcc-linux
+  export PINPATH=/opt/pin-2.14-71313-gcc.4.4.7-linux
+  export CPATH="/usr/include/hdf5/serial/"
+
+
+  mkdir -p /tmp/apt
+  echo "Dir::Cache "/tmp/apt";" > /etc/apt/apt.conf.d/singularity-cache.conf
+
+  apt-get update && \
+  apt-get  -y --no-install-recommends install build-essential g++ git scons libelf-dev libhdf5-serial-dev libhdf5-dev libconfig++-dev gfortran openjdk-7-jdk vim wget 
+
+  ln -s /usr/include/asm-generic /usr/include/asm 
+
+  cd /opt
+  tar -xvf pin-2.14-71313-gcc.4.4.7-linux.tar.gz 
+  
+  #wget https://software.intel.com/sites/landingpage/pintool/downloads/pin-3.13-98189-g60a6ef199-gcc-linux.tar.gz 
+  #tar -xvf pin-3.13-98189-g60a6ef199-gcc-linux.tar.gz
+  
+
+  git clone https://github.com/s5z/zsim.git
+  cd zsim 
+  scons -j4
+
+  rm /etc/apt/apt.conf.d/singularity-cache.conf
+
+%runscript
+  if command -v $SINGULARITY_NAME > /dev/null 2> /dev/null; then
+    exec $SINGULARITY_NAME "$@"
+  else
+    echo "# ERROR !!! Command $SINGULARITY_NAME not found in the container"
+  fi

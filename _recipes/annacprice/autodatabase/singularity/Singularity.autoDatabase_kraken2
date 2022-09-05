@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: debian:buster
+%post
+
+pengu_software_version_kraken2=2.0.9
+
+apt-get update && apt-get install -y gcc g++ wget build-essential rsync unzip ncbi-blast+ \
+&& wget https://github.com/DerrickWood/kraken2/archive/v${pengu_software_version_kraken2}-beta.tar.gz \
+&& tar -xzf v${pengu_software_version_kraken2}-beta.tar.gz \
+&& rm v${pengu_software_version_kraken2}-beta.tar.gz \
+&& cd kraken2-${pengu_software_version_kraken2}-beta \
+&& ./install_kraken2.sh /usr/local/bin
+
+### Software Versions ###
+
+env | grep "pengu_software_version" | sed 's/pengu_software_version_//g' > /etc/pengu_software_version.txt
+
+if [ -d "/.singularity.d/env" ] ; \
+then grep "pengu_software_version" /.singularity.d/env/* | awk '{print $2}' | sed 's/pengu_software_version_//g' > /etc/pengu_software_version.txt ; \
+fi
+
+%environment
+export pengu_software_version_kraken2=2.0.9
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

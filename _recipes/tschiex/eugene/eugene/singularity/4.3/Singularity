@@ -1,0 +1,75 @@
+Bootstrap: docker
+From: ubuntu:trusty
+IncludeCmd: yes
+
+%files
+ubuntu.packages.build.list /opt/packages.build.list
+ubuntu.packages.run.list /opt/packages.run.list
+
+%post
+apt update 
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common 
+add-apt-repository ppa:ubuntu-toolchain-r/test
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y $(cat /opt/packages.build.list) $(cat /opt/packages.run.list) 
+update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 20
+update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 20
+update-alternatives --config gcc
+update-alternatives --config g++
+cd /opt/
+wget http://eugene.toulouse.inrae.fr/Downloads/eugene-4.3.tar.gz
+tar xfz eugene-4.3.tar.gz
+cd eugene-4.3
+export EUGENE_DIR=/opt/EUGENE
+./reconf && CXXFLAGS=-O3 CFLAGS=-O3 ./configure --prefix=$EUGENE_DIR && make && make install && make clean && make distclean
+
+mkdir -p /opt/EUGENE/share/eugene/models/WAM
+cd /opt/EUGENE/share/eugene/models/WAM
+export WAM=WAM_plant.20180615.tar.gz && wget http://eugene.toulouse.inra.fr/Downloads/$WAM && tar xfz $WAM && rm -rf $WAM
+export WAM=WAM_fungi_20180126.tar.gz && wget http://eugene.toulouse.inra.fr/Downloads/$WAM && tar xfz $WAM && rm -rf $WAM
+export WAM=WAM_nematodes_20171017.tar.gz && wget http://eugene.toulouse.inra.fr/Downloads/$WAM && tar xfz $WAM && rm -rf $WAM
+export WAM=WAM_oomycetes_20180126.tar.gz && wget http://eugene.toulouse.inra.fr/Downloads/$WAM && tar xfz $WAM && rm -rf $WAM
+chmod -R a+r /opt/EUGENE/share/eugene/models/WAM
+
+rm -rf /opt/eugene-4.3*
+apt-get remove -y $(cat /opt/packages.build.list) && apt-get autoremove -y
+apt-get clean
+apt-get purge
+
+%environment
+export LC_ALL=C
+export PATH=/opt/EUGENE/bin:$PATH
+export EUGENE_DIR=/opt/EUGENE
+export EUGENEDIR=/opt/EUGENE/share/eugene/
+
+%runscript
+"$@"
+
+%test
+echo "[test] None"
+
+%labels
+Maintainer Sebastien.Carrere@inrae.fr
+Version 4.3
+    
+%help
+## EUGENE
+
+EuGene: integrative gene finder for eukaryotic and prokaryotic genomes
+
+### USAGE
+    
+    $ {IMAGE} egn_TrainIMM
+    $ {IMAGE} eugene
+    
+### MODELS INCLUDED
+
+ - WAM_plant.20180615
+ - WAM_fungi_20180126
+ - WAM_nematodes_20171017
+ - WAM_oomycetes_20180126
+
+### CITATION
+
+Sallet E., Gouzy J., Schiex T. (2019) EuGene: An Automated Integrative Gene Finder for Eukaryotes and Prokaryotes. Methods in Molecular Biology

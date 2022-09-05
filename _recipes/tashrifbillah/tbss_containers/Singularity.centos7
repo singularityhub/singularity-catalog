@@ -1,0 +1,82 @@
+Bootstrap: docker
+From: centos:7.5.1804
+
+
+%labels
+    Maintainer: Tashrif Billah <tbillah@bwh.harvard.edu>
+    Organization: PNL-BWH-HMS
+    Version: 0.0.0
+
+
+%help
+    Singularity recipe for FSL and TBSS
+    https://github.com/pnlbwh/tbss/README.md
+
+
+%post
+    # set up user and working directory
+
+    cd /
+
+
+    # libraries and commands for FSL
+
+    yum -y update
+    yum -y install epel-release wget file bzip2 openblas-devel libmng libpng12
+
+
+    # install FSL
+
+    wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py -O fslinstaller.py
+    python fslinstaller.py -V 6.0.1 -d `pwd`/fsl-6.0.1-centos7 -p
+
+
+    # setup FSL environment
+
+    export FSLDIR=/fsl-6.0.1-centos7
+    export PATH=$FSLDIR/bin/:$PATH
+    source $FSLDIR/etc/fslconf/fsl.sh
+
+
+    # apply patch
+
+    $FSLDIR/fslpython/bin/conda install -y -n fslpython -c conda-forge deprecation==1.*
+
+
+    # install python
+
+    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+	-O Miniconda3-latest-Linux-x86_64.sh \
+    && /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -p miniconda3/
+
+
+    # activate miniconda3
+
+    source /miniconda3/bin/activate
+    export ANTSPATH=/miniconda3/bin/
+
+    # install ANTs=2.3.0
+    conda install -y -c pnlbwh ants
+
+    # libraries and commands for TBSS
+    yum -y install git bc unzip gcc
+
+    # clone TBSS
+    git clone https://github.com/pnlbwh/tbss.git
+
+    # install TBSS
+    /bin/bash tbss/install.sh setup
+
+    # run tests
+    /bin/bash tbss/install.sh test
+
+
+%environment
+    
+    export FSLDIR=/fsl-6.0.1-centos7
+    export PATH=$FSLDIR/bin/:$PATH
+    export ANTSPATH=/miniconda3/bin/
+    source $FSLDIR/etc/fslconf/fsl.sh
+    source /miniconda3/bin/activate
+
+

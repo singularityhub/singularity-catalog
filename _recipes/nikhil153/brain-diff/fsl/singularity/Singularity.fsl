@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: centos:7
+
+%labels
+  Organisation: FMRIB
+  Version: 0.0.1
+  Maintainer: Paul McCarthy
+
+%help
+  FSL Singularity image
+
+%files
+  fslinstaller.py /fslinstaller.py
+
+%post
+  yum -y update
+  yum -y install epel-release
+  yum -y install file sudo which wget bzip2 openblas-devel xeyes
+  LC_ALL=C python2 /fslinstaller.py -E -d /usr/local/fsl
+  chmod a+r /etc/profile.d/fsl.*
+  mkdir /.fsl_resources/
+  mv /fslinstaller.py /.fsl_resources/
+
+%environment
+  source /etc/profile

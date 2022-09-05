@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: alpine:3.8
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    apk update
+    apk upgrade
+    apk add gzip
+
+
+%environment
+    #
+
+%runscript
+    exec gzip "$@"
+

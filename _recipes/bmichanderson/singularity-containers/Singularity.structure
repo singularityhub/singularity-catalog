@@ -1,0 +1,60 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using the program Structure
+
+
+Bootstrap: docker
+From: ubuntu:20.04
+
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM Structure
+	VERSION 2.3.4
+
+
+%help
+	This container is for running Structure
+	
+	To run the program, use: 
+		singularity run structure.sif [args]
+	or:
+		singularity exec structure.sif structure [args]
+	
+	where [args] would include, e.g., -m mainparams -e extraparams -i infile
+
+
+%post
+	export DEBIAN_FRONTEND=noninteractive
+
+	# install dependencies
+	apt update && apt install -y \
+	autoconf \
+	automake \
+	build-essential \
+	wget
+
+
+	# build and install the program
+	VER=2.3.4
+	URL=https://web.stanford.edu/group/pritchardlab/structure_software/release_versions/v"$VER"/structure_kernel_source.tar.gz
+	wget "$URL"
+	tar -xzf structure_kernel_source.tar.gz
+	rm structure_kernel_source.tar.gz
+	cd structure_kernel_src
+	make
+	cp structure /usr/bin/
+	cd ..
+	rm -r structure_kernel_src
+
+
+	# clean-up
+	apt update && apt autoremove -y && apt clean all
+
+
+%environment
+	# Set up environmental variables within the container
+
+
+%runscript
+	# This will be executed when the container is run (singularity run [container])
+	structure "$@"

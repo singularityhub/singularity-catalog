@@ -68,15 +68,19 @@ export PATH=$PATH:/opt/software/miniconda3/bin:/opt/software/mOTUs:/opt/software
   # bwa and samtools via conda 
 
   cd /opt/software
-  git clone https://github.com/motu-tool/mOTUs.git
-  cd mOTUs
-  mkdir -p db_mOTU/
-  touch db_mOTU/db_mOTU_versions
-  git checkout 6353a64eb92471e66f085ce3d111489658809386
-  python3 setup.py
+  # mOTUs2
+  # git clone https://github.com/motu-tool/mOTUs.git
+  # cd mOTUs
+  # mkdir -p db_mOTU/
+  # touch db_mOTU/db_mOTU_versions
+  # git checkout 6353a64eb92471e66f085ce3d111489658809386
+  # python3 setup.py
 
   # mTAGs installation
   # hmmer via conda
+
+  # mOTUs3
+  pip3 install motu-profiler
 
   # vsearch
   cd /opt/software

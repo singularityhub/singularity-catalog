@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: continuumio/miniconda3
+
+%help
+	
+	MAINTAINER "Sarah Inwood (sninwood@gmail.com)"
+	VERSION "viralFlye v0.2"
+
+%post
+	
+	# install viralFlye
+		git clone https://github.com/Dmitry-Antipov/viralFlye
+		cd viralFlye
+		./install.sh
+
+	# Pham HMM database
+		wget http://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam34.0/Pfam-A.hmm.gz
+
+%runscript
+
+	source activate viralFlye
+	/viralFlye/viralFlye.py

@@ -1,0 +1,70 @@
+BootStrap: docker
+From: ubuntu:latest
+
+###############################################
+# do not change. This is a tagged version 0.6.1
+###############################################
+
+%labels
+  maintainer Thomas Cokelaer
+  package.name bioconvert
+  package.version 0.6.1
+  package.homepage https://pypi.python.org/pypi/bioconvert/0.6.1
+  package.source.url https://github.com/bioconvert/bioconvert
+  package.license GPLv3
+
+%files
+   environment_0.6.1.yml
+
+%post
+  ######### install system #########
+  export BIOCONVERT_VERSION="0.6.1"
+
+
+    apt-get update -y
+    apt-get install -y wget bzip2 build-essential
+    apt-get install -y libgl1-mesa-glx
+    apt-get install -y build-essential
+
+    # install python3.9
+    wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.12.0-Linux-x86_64.sh \
+       -O anaconda.sh && \
+      bash anaconda.sh -b -p /usr/local/anaconda && \
+      rm anaconda.sh
+
+    # set anaconda path
+    export PATH=${PATH}:/usr/local/anaconda/bin
+    conda update conda
+
+    # The main packages for sequana:
+    conda env update -f environment_0.6.1.yml --prune
+    #conda activate bioconvert
+
+    ######### install bioconvert #########
+    /usr/local/anaconda/envs/bioconvert/bin/pip3 install biocode
+    /usr/local/anaconda/envs/bioconvert/bin/pip3 install bioconvert==${BIOCONVERT_VERSION}
+
+
+    #if [ ! -d /etc/localtime ]; then
+    #  mkdir /etc/localtime
+    #fi
+
+    # Uses agg as backend instead of qt (less dependencies)
+    echo "backend:tkagg" > matplotlibrc
+
+    ######## clean image ########
+    apt-get autoremove -y
+    apt-get clean -y
+    conda clean -y --all
+    rm -rf /usr/local/anaconda/pkgs
+    export PATH=${PATH}:/usr/local/anaconda/envs/bioconvert/bin
+
+
+%environment
+  export PATH=${PATH}:/usr/local/anaconda/envs/bioconvert/bin
+
+
+%runscript
+  exec /usr/local/anaconda/envs/bioconvert/bin/bioconvert "$@"
+
+

@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/pytorch:22.03-py3
+Stage: spython-base
+
+%files
+requirements.txt .
+%labels
+MAINTAINER Jacob Arndt <arndtjw@ornl.gov>
+%post
+
+apt-get update --fix-missing && DEBIAN_FRONTEND="noninteractive" TZ="America/New_York" apt-get install postgresql-client libpq-dev gdal-bin libgdal-dev curl -y
+
+
+set -eux && pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

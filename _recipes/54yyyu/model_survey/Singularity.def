@@ -1,0 +1,31 @@
+
+# Singularity definition file to build container.
+# With tensorflow and friends.
+#
+# This bootstraps the official tensorflow Docker image
+# and installs dependencies.
+#
+# To build the singularity image, save this file as "Singularity.def"
+# (but the name is totally arbitrary). Then build...
+# 
+#    sudo apptainer build IMAGE_NAME.sif Singularity.def
+
+Bootstrap: docker
+From: tensorflow/tensorflow:2.9.1-gpu-jupyter
+
+%files
+    . /opt/model_survey
+    #../sweep_run.py /tmp
+
+%post
+    cd /opt/model_survey
+    git archive --format=tar.gz -o /tmp/model_survey.tar.gz --prefix=model_survey/ ethan
+    cd ..
+    python -m pip install --no-cache-dir /tmp/model_survey.tar.gz
+    rm -r /opt/model_survey
+    pip install wandb
+    pip install tensorflow_addons==0.17.1
+
+%runscript
+    #replace this with the wandb command you want to run
+    wandb agent model_survey/keras_transformer_sweep/mqns5t53

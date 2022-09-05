@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: debian:buster
+%post
+
+pengu_software_version_mash=2.1.1
+
+apt-get update && apt-get install -y gcc wget \
+&& wget https://github.com/marbl/Mash/releases/download/v${pengu_software_version_mash}/mash-Linux64-v${pengu_software_version_mash}.tar \
+&& tar -xf mash-Linux64-v2.1.1.tar \
+&& mv mash-Linux64-v2.1.1/mash /usr/local/bin \
+&& rm -r mash-Linux*
+
+### Software Versions ###
+
+env | grep "pengu_software_version" | sed 's/pengu_software_version_//g' > /etc/pengu_software_version.txt
+
+if [ -d "/.singularity.d/env" ] ; \
+then grep "pengu_software_version" /.singularity.d/env/* | awk '{print $2}' | sed 's/pengu_software_version_//g' > /etc/pengu_software_version.txt ; \
+fi
+
+%environment
+export pengu_software_version_mash=2.1.1
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: debian:buster
+%labels
+maintainer="pricea35@cardiff.ac.uk"
+%post
+
+
+apt-get update \
+&& apt-get install -y git make perl curl \
+&& git clone https://github.com/marbl/Krona \
+&& mkdir -p Krona/KronaTools/taxonomy \
+&& cd /Krona/KronaTools \
+&& ./install.pl \
+&& ./updateTaxonomy.sh
+
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

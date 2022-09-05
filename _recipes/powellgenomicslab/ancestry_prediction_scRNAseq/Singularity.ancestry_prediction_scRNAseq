@@ -1,0 +1,232 @@
+bootstrap: docker
+from: continuumio/miniconda3
+
+%labels
+        Image_version = 0.0.3
+        Author = Drew Neavin
+
+%environment
+    export PATH=/opt:/usr/games:/opt/conda/envs/sinto/bin:/opt/conda/bin:/opt/ancestry_prediction_scRNAseq/scripts:opt/ancestry_prediction_scRNAseq/mods:opt/vcflib/bin:/opt/vcflib/scripts:/opt/souporcell:/opt/freebayes/scripts:/opt/plink2:$PATH
+    export PYTHONPATH=/opt/conda/envs/sinto/lib/python3.6/site-packages/
+    export LC_ALL=C
+
+%post
+    #!/bin/bash
+    eval "$(command conda 'shell.bash' 'hook' 2> /dev/null)"
+    export PATH=/opt/conda/bin/:$PATH
+    export HOME=/root ## Needed for rust to behave correctly
+    apt update
+    yes | apt upgrade
+    yes | apt-get install build-essential
+    apt-get install -y --no-install-recommends apt-utils
+    gcc --version
+    yes | apt-get install wget
+    yes | apt-get install curl
+    apt install -y dirmngr --install-recommends
+    apt install -y software-properties-common
+    apt install -y apt-transport-https
+    add-apt-repository 'deb http://deb.debian.org/debian buster-backports main'
+    yes | apt-get update
+    yes | apt-get upgrade
+    apt install -y ca-certificates gnupg2
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-key '95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7'
+    add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian bullseye-cran40/'
+    apt-get update
+    apt install -y r-base
+    apt install -y r-base-dev
+    apt install -y  r-cran-devtools
+    apt install -y r-cran-caret
+    apt install -y r-cran-tidyverse
+    apt-get update
+    apt-get install -y libv8-dev
+    apt-get update
+
+
+    add-apt-repository 'deb http://security.debian.org/debian-security jessie/updates main'
+    apt-get update -y && apt-get install -y --no-install-recommends libssl1.0.0
+
+    yes | apt-get install libncurses5-dev
+    yes | apt-get install zlib1g-dev
+    yes | apt-get install libbz2-dev
+    yes | apt-get install liblzma-dev
+    yes | apt-get install zlib1g
+    yes | apt-get install zlib1g-dev
+    apt-get install -y pkg-config
+    apt-get install -y libcurl4-openssl-dev
+    apt-get install -y graphviz
+    apt-get install -y graphviz-dev
+    apt-get install -y libxml2
+    apt-get install -y libxml2-dev
+    apt-get install -y bzip2
+    apt-get install -y libssl-dev
+    apt-get install -y devscripts
+    apt-get install -y tabix
+    apt-get install -y libcairo2-dev ## for complex heatmap
+    apt-get install -y libgmp-dev
+    apt-get install -y libgtk2.0-dev
+    apt-get install -y xvfb
+    apt-get install -y xauth
+    apt-get install -y xfonts-base
+    apt-get install -y libxt-dev
+    apt-get install -y freebayes ## should also have freebayes-parallel if >= v1.3.5
+    apt-get install -y libhdf5-dev
+
+    freebayes --version
+
+    
+
+    cd /opt
+        wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz
+        tar -xzf cmake-3.14.4.tar.gz
+        cd  cmake-3.14.4
+        ./configure
+        make
+        make install
+        cmake --version
+
+
+    ## Make environment fo python 
+    yes | /opt/conda/bin/conda create -n sinto python>=3.8
+    yes | apt-get install git
+    /opt/conda/bin/conda init bash
+    eval "$(conda shell.bash hook)"
+    conda activate sinto
+
+
+    /opt/conda/envs/sinto/bin/pip install sinto
+    /opt/conda/envs/sinto/bin/pip install numpy
+    /opt/conda/envs/sinto/bin/pip install scipy
+    /opt/conda/envs/sinto/bin/pip install scikit-learn
+    /opt/conda/envs/sinto/bin/pip install pandas
+    /opt/conda/envs/sinto/bin/pip install matplotlib==3.2.2
+    /opt/conda/envs/sinto/bin/pip install scikit-image
+    /opt/conda/envs/sinto/bin/pip install numba
+    /opt/conda/envs/sinto/bin/pip install argparse
+    /opt/conda/envs/sinto/bin/pip install CrossMap
+    /opt/conda/envs/sinto/bin/pip install importlib-metadata
+
+
+    ### Get the github repo with scripts for workflow ###
+    cd /opt
+        git clone https://github.com/powellgenomicslab/ancestry_prediction_scRNAseq.git 
+        cd ancestry_prediction_scRNAseq
+        rm -rf refs/split_beds
+        rm -rf docs
+        rm -rf .git
+        rm -rf .gitignore
+
+    cd /opt
+    
+    wget https://www.dropbox.com/s/b6qhbkx9o62mbil/GRCh37_1000G_MAF0.01_GeneFiltered_ChrEncoding.tar.gz
+    tar -xvf GRCh37_1000G_MAF0.01_GeneFiltered_ChrEncoding.tar.gz
+    rm GRCh37_1000G_MAF0.01_GeneFiltered_ChrEncoding.tar.gz
+
+    wget https://www.dropbox.com/s/oj2n1qf4srbbcrq/GRCh37_1000G_MAF0.01_GeneFiltered_NoChr.tar.gz
+    tar -xvf GRCh37_1000G_MAF0.01_GeneFiltered_NoChr.tar.gz
+    rm GRCh37_1000G_MAF0.01_GeneFiltered_NoChr.tar.gz
+
+    wget https://www.dropbox.com/s/nf2ngolj03g42b9/GRCh38_1000G_MAF0.01_GeneFiltered_ChrEncoding.tar.gz
+    tar -xvf GRCh38_1000G_MAF0.01_GeneFiltered_ChrEncoding.tar.gz
+    rm GRCh38_1000G_MAF0.01_GeneFiltered_ChrEncoding.tar.gz
+
+    wget https://www.dropbox.com/s/moyptfjjigf1yob/GRCh38_1000G_MAF0.01_GeneFiltered_NoChr.tar.gz
+    tar -xvf GRCh38_1000G_MAF0.01_GeneFiltered_NoChr.tar.gz
+    rm GRCh38_1000G_MAF0.01_GeneFiltered_NoChr.tar.gz
+
+
+
+    ### Install R libraries ###
+    ## Base helper packages ##
+    R --slave -e 'install.packages("V8", repos = "http://cran.us.r-project.org")'
+#    R --slave -e 'install.packages("tidyverse", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("data.table", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("BiocManager")'
+    R --slave -e 'install.packages("remotes", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("xgboost", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("argparse", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("cowplot", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("RColorBrewer", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("colorspace", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("ggpubr", repos = "http://cran.us.r-project.org")'
+
+    # ## Other helper packages ##
+    R --slave -e 'install.packages("vcfR", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("Cairo",repo="http://cran.us.r-project.org")' ### Required for Complex Heatmap
+    R --slave -e 'BiocManager::install("ComplexHeatmap")'
+    R --slave -e 'install.packages("lsa", repos = "http://cran.us.r-project.org")'
+
+
+
+    ### Get the 1000G files needed for ref ###
+    cd /opt
+        wget https://www.dropbox.com/s/xso2vt3p9h2rh8m/1000G.tar.gz
+        tar -xzf 1000G.tar.gz
+
+    ### Install plink2 needed for pipeline ###
+    cd /opt
+    mkdir plink2
+    cd plink2
+        wget https://s3.amazonaws.com/plink2-assets/alpha3/plink2_linux_x86_64_20220603.zip
+        unzip plink2_linux_x86_64_20220603.zip
+
+
+    ### Install htslib for samtools ###
+    cd /opt
+    wget https://github.com/samtools/htslib/releases/download/1.13/htslib-1.13.tar.bz2
+        tar xvfj htslib-1.13.tar.bz2
+        cd htslib-1.13
+        ./configure
+        make
+        make install
+
+    ### Install samtools ###
+    cd /opt
+        wget https://github.com/samtools/samtools/releases/download/1.13/samtools-1.13.tar.bz2
+        tar xvfj samtools-1.13.tar.bz2
+        cd samtools-1.13
+        ./configure
+        make
+        make install
+
+    ### Install bcftools ###
+    cd /opt
+        wget https://github.com/samtools/bcftools/releases/download/1.13/bcftools-1.13.tar.bz2
+        tar xvfj bcftools-1.13.tar.bz2
+        cd bcftools-1.13
+        ./configure
+        make
+        make install
+
+
+
+    ### Needed for R libraries ###
+    cp /opt/conda/lib/libstdc++.so.6.0.28 /usr/lib/x86_64-linux-gnu/
+    mv /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so.6.bkp
+    ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.28 /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+
+
+    ### Make scripts executable ###
+    chmod 777 -R /opt/ancestry_prediction_scRNAseq/scripts
+
+
+    ### Remove unnecessary files ###
+    cd /opt
+    rm cmake-3.14.4.tar.gz
+#    rm bedtools-2.30.0.tar.gz
+#    rm vartrix-v1.1.3-x86_64-linux.tar.gz
+    rm htslib-1.13.tar.bz2
+    rm samtools-1.13.tar.bz2
+    rm bcftools-1.13.tar.bz2
+#    rm vcftools-0.1.16.tar.gz
+
+
+    conda clean --all
+
+%apphelp setup
+    This function copies pipeline scripts to the user systems from the Singularity image.
+%appenv setup
+    SCRIPT_DIR=/opt/ancestry_prediction_scRNAseq
+    export SCRIPT_DIR
+%apprun setup
+    exec cp -a ${SCRIPT_DIR}/. "$PWD"
+
