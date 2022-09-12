@@ -1,0 +1,57 @@
+Bootstrap: docker
+From: continuumio/miniconda3
+
+
+%help
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This file is a singularity definition file to create simg with conda
+It starts with a docker image of miniconda continuumio/miniconda3
+It allows direct creation of the env by specifying which package with a .yml file with the yml2sing.sh script (modifyied version to install eDMR)
+
+
+based on documentation https://singularity.lbl.gov/docs-recipes
+
+%labels
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Set labels
+    	Maintainer olivier.kirsh@u-paris.fr					
+    	Version v1.4 20220628
+
+%files
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Copy files for building		
+
+
+%post
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   	
+	
+conda create -n glew -c conda-forge glew
+
+export PATH=/opt/conda/envs/glew/bin:$PATH
+
+ls /opt/conda/envs/
+
+apt-get -y update && apt-get -y upgrade
+apt-get --assume-yes install make build-essential libxmu-dev libxi-dev libgl-dev liblapack-dev g++ libglew-dev freeglut3-dev
+
+git clone https://gitlab.com/f.nedelec/cytosim
+ls
+cd cytosim
+ls
+
+make
+
+
+
+
+%environment
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# set Conda env bin in the PATH
+
+	
+%runscript
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# This executes commands
+	echo "image startup"
+    	exec echo "$@"
+

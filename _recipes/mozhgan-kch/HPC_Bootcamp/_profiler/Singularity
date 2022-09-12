@@ -37,7 +37,8 @@ FROM: nvcr.io/nvidia/nvhpc:22.7-devel-cuda_multi-ubuntu20.04
     rm -rf ${build_tmp}
 
 %files
-    _profiler/ /labs
+    source_code/ /labs/_profiler/
+    jupyter_notebook/ /labs/_profiler/
 
 %runscript
     "$@"

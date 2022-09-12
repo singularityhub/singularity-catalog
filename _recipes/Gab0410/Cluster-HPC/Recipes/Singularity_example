@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: ufscar/ubuntu_ompi:latest
+
+%help
+Exemplo para uso no cluster openHPC da UFSCar de ubuntu com OpenMPI
+
+%files
+  # Copie seus arquivos
+  ./SourceExample/* /opt
+
+%post
+  # Execute comandos na criação do container, por exemplo para compilar seus programas
+  echo "Compilando programas..."
+  cd /opt && gcc sum_seq.c -o sum_seq && mpicc sum_par.c -o sum_par && mpicc poisson.c -o poisson
+
+%runscript
+  # Execute comandos na execução do container
+  /opt/poisson
+
+%test
+  # Teste a criação do container
+  [ -f /opt/sum_seq ] && echo "\e[31mArquivo sum_seq existe!\e[0m" || echo "\e[31m\aERRO: Arquivo sum_seq não existe!\e[0m"
+  [ -f /opt/sum_par ] && echo "\e[31mArquivo sum_par existe!\e[0m" || echo "\e[31m\aERRO: Arquivo sum_par não existe!\e[0m"
+  [ -f /opt/poisson ] && echo "\e[31mArquivo poisson existe!\e[0m" || echo "\e[31m\aERRO: Arquivo poisson não existe!\e[0m"

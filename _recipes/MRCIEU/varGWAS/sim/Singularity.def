@@ -1,0 +1,65 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%post
+export TZ=Europe/London
+export DEBIAN_FRONTEND=noninteractive
+
+# install packages
+apt-get update && \
+apt-get install -y \
+build-essential \
+cmake \
+git \
+wget \
+r-base \
+python3
+
+# alias python
+ln -s /usr/bin/python3 /usr/bin/python
+
+# install R-packages
+R -e "install.packages(c('quadprog', 'pwr', 'cqrReg', 'data.table', 'optparse', 'quantreg', 'BEDMatrix', 'broom', 'genpwr', 'dplyr', 'remotes'))"
+R -e "remotes::install_github('jrs95/jlst')"
+R -e "remotes::install_github('mrcieu/varGWASR')"
+
+# install OSCA
+wget https://yanglab.westlake.edu.cn/software/osca/download/osca-0.46.1-linux-x86_64.zip
+unzip osca-0.46.1-linux-x86_64.zip
+mv osca-0.46.1-linux-x86_64 /usr/bin/osca
+
+# install DRM
+git clone http://github.com/drewmard/DRM
+mv DRM /usr/bin
+
+# install qctool
+wget https://code.enkre.net/qctool/zip/release/qctool.tgz
+unzip qctool.tgz
+cd qctool
+./waf configure --prefix=/usr
+./waf
+./waf install
+ln -s /usr/bin/qctool_v2.2.0 /usr/bin/qctool
+
+# install BGENIX
+wget http://code.enkre.net/bgen/tarball/release/bgen.tgz
+tar -xvf bgen.tgz
+cd bgen.tgz
+./waf configure --prefix=/usr
+./waf
+./waf install
+
+# install varGWAS
+wget https://github.com/MRCIEU/varGWAS/releases/download/1.2.3/varGWAS
+chmod a+x varGWAS
+mv varGWAS /usr/bin
+
+# install QUAIL
+git clone https://github.com/qlu-lab/QUAIL
+mv QUAIL /usr/bin
+
+%runscript
+exec /bin/bash "$@"
+
+%startscript
+exec /bin/bash "$@"

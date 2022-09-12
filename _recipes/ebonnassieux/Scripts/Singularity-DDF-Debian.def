@@ -1,0 +1,132 @@
+Bootstrap: docker
+From: fedora:36
+
+
+%files
+#/home/ebonnassieux/DDFacet/ /WirtingerSoftware/DDFacet
+#/home/ebonnassieux/killMS/  /WirtingerSoftware/kMS
+/home/ebonnassieux/.ssh /.ssh
+#/home/ebonnassieux/Project_DDFsing/setup.py /setup.py
+
+%environment
+#  export INSTALLDIR=/opt/lofar
+#  . $INSTALLDIR/init.sh
+
+
+%post
+#export BOOST_DOT_VERSION=1.69.0
+#export BOOST_VERSION=1.69.0
+#export J=6
+#export HDF5_VERSION=1.10.5
+#export HDF5_USE_FILE_LOCKING=FALSE
+# export CPLUS_INCLUDE_PATH="/opt/hdf5/include:/usr/include/openmpi-x86_64:/usr/include/c++/9:$CPLUS_INCLUDE_PATH:/usr/include/python2.7:$INSTALLDIR/casacore#/include:/usr/include/boost:/usr/include/cfitsio:$INSTALLDIR/idg/include:$INSTALLDIR/EveryBeam/include:/usr/include/wcslib:/usr/include/freetype2/freetype:/#usr/include/freetype2/freetype/config:$CPLUS_INCLUDE_PATH"
+#    export CPATH="/usr/include/openmpi-x86_64/:/usr/local/cuda/include:/opt/hdf5/include:/opt/intel/mkl/include:${INSTALLDIR}/casacore/include:$INSTALLDIR/i#dg/include:$INSTALLDIR/aoflagger/include:$INSTALLDIR/EveryBeam/include:/usr/include/wcslib:/usr/include/freetype2/freetype:/usr/include/freetype2/freetype/c#onfig:$CPATH"
+#    export CMAKE_PREFIX_PATH="$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:/opt/hdf5:$INSTALLDIR/lofar:$INSTALLDIR/idg:/usr/local/cuda/lib64:/opt/intel/mkl/li#b/intel64:/usr/lib64/openmpi:$INSTALLDIR/EveryBeam"
+#    export LD_LIBRARY_PATH="$INSTALLDIR/aoflagger/lib:$INSTALLDIR/casacore/lib:/opt/hdf5/lib:$INSTALLDIR/idg/lib:/usr/local/cuda/lib64:/opt/intel/mkl/lib/in#tel64:/usr/lib64/openmpi/lib/:$INSTALLDIR/EveryBeam/lib:$LD_LIBRARY_PATH"
+#    export PATH="/opt/hdf5/bin:/usr/lib64/openmpi/bin:$PATH"
+#    export make=`which make`
+
+
+# fundamental programs
+  dnf -y update
+  dnf makecache --refresh
+  dnf -y install hdf5-openmpi-devel hdf5-devel emacs
+
+# python2.7.18
+  dnf -y install openssl1.1.x86_64  wget gcc openssl-devel bzip2-devel libffi-devel zlib-devel
+  wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz
+  tar xvf Python-2.7.18.tgz
+  cd Python-2.7.18
+  ./configure --prefix=/usr --with-ensurepip=install
+  #--enable-optimizations
+  make
+  make altinstall
+  pip2.7 install numpy
+  pip2.7 install --upgrade --force-reinstall numpy
+
+
+# convenience functions 
+
+  dnf -y install ipython
+  dnf -y install pip
+  dnf -y install dnf-plugins-core
+  dnf -y install patch sudo yum-utils hostname
+  dnf -y install git svn wget vim nano
+  dnf -y install automake autoconf cmake make
+  dnf -y install gcc gcc-c++ gcc-gfortran
+  dnf -y install arpack-devel python2-devel python3-devel lapack-devel libpng-devel libxml2-devel readline-devel ncurses\
+-devel f2py bzip2-devel libicu-devel python3-scipy python-setuptools gsl gsl-devel gdal gdal-devel libpqxx libpqxx-devel
+  dnf -y install bison flex ncurses tar bzip2 which gettext
+  dnf -y install cmake3
+  dnf -y install boost boost-devel boost-python3 boost-python3-devel
+  dnf -y install nano less jed vim mg tcsh man wget net-tools time screen htop tree ca-certificates
+  dnf -y install python2-devel python-numpy-f2py python3-numpy-f2py qt5-qtbase rsync python3-pybind11 pybind11-devel mysql mysql-devel python-devel python3-devel gdb
+
+
+    dnf -y install python-pip python3-tkinter
+    dnf -y install libsigc++20-devel gtkmm30-devel
+    dnf -y install python3-devel
+    dnf -y install lua lua-devel
+    dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://do\
+wnload1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+    dnf -y install pgplot
+    dnf -y install python3-numpy-f2py
+    dnf -y install qt5-qtbase
+    dnf -y install perf
+    dnf -y install rsync
+    dnf -y install openmpi openmpi-devel
+    dnf -y install htop
+    dnf -y install python3-pybind11 pybind11-devel mysql mysql-devel python-devel python3-devel
+    dnf -y install gdb gdbm gdbm-devel blitz-devel qdbm-devel
+
+    # install boost
+    dnf -y install boost boost-devel boost-python3 boost-python3-devel
+
+    # Install FFTW
+    #
+    dnf -y install fftw-devel fftw-libs
+
+        #
+        # Install OpenBLAS
+        #
+        dnf -y install blas-devel
+
+	#
+        # Install cfitsio
+        #
+    dnf -y install cfitsio cfitsio-devel
+
+	#
+	# Install wcslib
+        #
+    dnf -y install wcslib wcslib-devel
+
+    export HDF5_VERSION=1.10.5
+    #
+    # Install HDF5 with parallel support
+    #
+    export CC=`which mpicc`
+	export CXX=`which mpic++`
+    mkdir /opt/hdf5
+    cd /opt/hdf5
+    wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-${HDF5_VERSION}/src/hdf5-${HDF5_VERSION}.tar.gz
+    # For reference. Only needed if building with CMake.
+    #wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-${HDF5_VERSION}/src/CMake-hdf5-${HDF5_VERSION}.tar.gz
+    tar xf hdf5-${HDF5_VERSION}.tar.gz
+    cd hdf5-${HDF5_VERSION}
+    # Thread safety required for WSClean's parallel gridding with facets.
+    ./configure -prefix=/opt/hdf5 --enable-build-mode=production --enable-threadsafe --enable-shared --disable-sharedlib-rpat\
+h --disable-hl
+    make -j $J
+    #make check
+    make install
+    export CC=`which gcc`
+        export CXX=`which g++`
+
+  # exit gracefully
+  dnf -y clean dbcache
+  rm -rf /.ssh
+
+%runscript
+  echo Singularity to use Wirtinger tools, DDFacet and killMS.
+  echo TODO add da commandz

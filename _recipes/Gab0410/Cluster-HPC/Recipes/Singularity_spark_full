@@ -1,0 +1,53 @@
+Bootstrap: docker
+From: archlinux
+
+%help
+Recipe de library://ufscar/hpc/arch_spark
+
+%runscript
+  exec echo "Try running with --app master/slave"
+
+%apprun master
+  exec echo "Starting Spark Master"
+  /apache-spark/run-master.sh "$@"
+
+%apprun slave
+  exec echo "Starting Spark Slave"
+  # WIP
+  /apache-spark/run-slave.sh "$@"
+
+%environment
+  PATH=/apache-spark/:$PATH
+
+%post
+  echo "Basic setup"
+
+  ln -s /usr/share/zoneinfo/UTC /etc/localtime
+  echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
+  echo 'LANG=en_US.UTF-8' > /etc/locale.conf
+  
+  echo "Configuring pacman"
+
+  pacman-key --init
+
+  echo "Configuring mirrorlists..."
+  # echo 'Server = http://mirror.ufscar.br/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+  echo 'Server = http://br.mirror.archlinux-br.org/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
+  echo 'Server = http://archlinux.c3sl.ufpr.br/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
+  
+
+  echo "Installing needed software"
+  pacman -Syu --noconfirm base base-devel util-linux git scala pacman-contrib jdk8-openjdk
+
+  echo "Patching makepkg..." 
+
+  sed -i -e 's/EUID == 0/EUID == 8213/g' /usr/bin/makepkg
+
+
+  echo "Installing apache-spark..."
+  
+  git clone https://aur.archlinux.org/apache-spark.git
+  cd apache-spark
+  makepkg -si --noconfirm
+  
+  paccache -r -k0

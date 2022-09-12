@@ -1,5 +1,5 @@
 BootStrap: docker
-From: ubuntu:21.10
+From: ubuntu:22.04
 
 %labels
     MAINTAINER Arne Nix <arnenix@gmail.com>
@@ -10,12 +10,16 @@ From: ubuntu:21.10
     ../pytorch_warmup /src/pytorch_warmup
     ../nnfabrik /src/nnfabrik
     ../ffcv /src/ffcv
+    ../vdvae /src/vdvae
 
 %environment
     export PATH="/opt/conda/bin:${PATH}"
+    export TZ=Europe/Berlin
 
 %post
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
     apt update && apt install -y software-properties-common
+    apt update
     add-apt-repository universe
 
     apt update && apt install -y \
@@ -94,14 +98,15 @@ From: ubuntu:21.10
         jupyterlab \
         ipykernel \
         opencv-python \
+        ffcv \
         datajoint==0.12.7
 
     conda run -n ffcv pip install -e /src/bias_transfer
     conda run -n ffcv pip install -e /src/nntransfer
     conda run -n ffcv pip install -e /src/nnfabrik
+    conda run -n ffcv pip install -e /src/vdvae
     conda run -n ffcv pip install -e /src/neuralpredictors
     conda run -n ffcv pip install -e /src/pytorch_warmup
-    conda run -n ffcv pip install -e /src/ffcv
 
     conda run -n ffcv python -m ipykernel install --user --name=ffcv
 
