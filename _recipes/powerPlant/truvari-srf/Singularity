@@ -1,0 +1,45 @@
+# Written for Singularity version 3.7.0-1.el7
+# sudo singularity build truvari-2.1.0.sif Singularity.2.1.0
+
+BootStrap: library
+# Ubuntu 20.04/focal
+# https://cloud.sylabs.io/library/_container/5baba99394feb900016ea433
+From: ubuntu:sha256.cb37e547a14249943c5a3ee5786502f8db41384deb83fa6d2b62f3c587b82b17
+
+%post
+    # Install
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get -y install \
+    build-essential \
+    cmake \
+    make \
+    python3 \
+    python3-distutils \
+    python3-dev \
+    wget \
+    unzip
+
+    wget https://github.com/spiralgenetics/truvari/archive/9ab1eeff8c7acc3364efbdc6cad44f9ff40fa0f4.zip -O truvari-9ab1eeff8c7acc3364efbdc6cad44f9ff40fa0f4.zip
+    wget https://bootstrap.pypa.io/get-pip.py -O get-pip.py
+
+    python3 get-pip.py
+
+    unzip truvari-9ab1eeff8c7acc3364efbdc6cad44f9ff40fa0f4.zip
+    pip install ./truvari-9ab1eeff8c7acc3364efbdc6cad44f9ff40fa0f4
+
+    # Cleanup to reduce container size.
+    apt-get -y remove build-essential cmake make python3-dev wget unzip
+    apt -y autoremove
+    apt-get clean
+    rm -r truvari-9ab1eeff8c7acc3364efbdc6cad44f9ff40fa0f4/ truvari-9ab1eeff8c7acc3364efbdc6cad44f9ff40fa0f4.zip get-pip.py
+
+%runscript
+    truvari "$@"
+
+%labels
+    Author Anne-Jan Veendijk
+    Email anne-jan.veendijk@plantandfood.co.nz
+    Version 1.0
+
+%help
+    Ubuntu 20.04 with truvari v2.1.0 (truvari-9ab1eeff8c7acc3364efbdc6cad44f9ff40fa0f4) installed. https://github.com/spiralgenetics/truvari

@@ -1,9 +1,9 @@
 Bootstrap: docker
-From: ubuntu:bionic
+From: ubuntu:jammy
 
 %labels
 Maintainer eric.burgueno@plantandfood.co.nz
-Version 4.3.2
+Version 4.3.4
 
 %post
   ## Download build prerequisites
@@ -11,15 +11,15 @@ Version 4.3.2
   apt-get -y install wget
 
   cd /opt
-  wget https://github.com/biocore/sortmerna/releases/download/v4.3.2/sortmerna-4.3.2-Linux.sh
-  mkdir sortmerna-4.3.2-Linux
-  bash sortmerna-4.3.2-Linux.sh --skip-license --prefix=sortmerna-4.3.2-Linux
+  wget https://github.com/biocore/sortmerna/releases/download/v4.3.4/sortmerna-4.3.4-Linux.sh
+  mkdir sortmerna-4.3.4-Linux
+  bash sortmerna-4.3.4-Linux.sh --skip-license --prefix=sortmerna-4.3.4-Linux
 
 ## Cleanup
-  rm -rf /opt/sortmerna-4.3.2-Linux.sh
+  rm -rf /opt/sortmerna-4.3.4-Linux.sh
   apt-get -y remove wget
   apt-get -y autoremove
   apt-get -y clean all
 
 %runscript
-  exec /opt/sortmerna-4.3.2-Linux/bin/sortmerna "$@"
+  exec /opt/sortmerna-4.3.4-Linux/bin/sortmerna "$@"

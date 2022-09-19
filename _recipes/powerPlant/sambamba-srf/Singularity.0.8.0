@@ -1,0 +1,33 @@
+# Written for Singularity version 3.7.0-1.el7
+# sudo singularity build sambamba-0.8.0.sif Singularity.0.8.0
+
+BootStrap: library
+# Ubuntu 20.04/focal
+# https://cloud.sylabs.io/library/_container/5baba99394feb900016ea433
+From: ubuntu:sha256.cb37e547a14249943c5a3ee5786502f8db41384deb83fa6d2b62f3c587b82b17
+
+%post
+    # Dependencies
+    apt-get update
+    apt-get -y install wget
+
+    cd /usr/local/bin
+    wget https://github.com/biod/sambamba/releases/download/v0.8.0/sambamba-0.8.0-linux-amd64-static.gz -O sambamba.gz
+
+    # Remove wget to reduce container size.
+    apt-get -y remove wget
+    apt-get clean
+
+    gunzip sambamba.gz
+    chmod 755 sambamba
+
+%runscript
+    exec sambamba "$@"
+
+%labels
+    Author Anne-Jan Veendijk
+    Email anne-jan.veendijk@plantandfood.co.nz
+    Version 1.0
+
+%help
+    Ubuntu 20.04 with sambamba v0.8.0 installed. https://lomereiter.github.io/sambamba/index.html

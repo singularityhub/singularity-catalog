@@ -1,0 +1,37 @@
+BootStrap: library
+From: ubuntu:20.04
+
+%post
+    # define versions
+    CMAKE_VERSION=3.19.3
+    LSDALTON_VERSION=master
+
+    # install base software
+    apt-get -y update
+    apt-get -y install gfortran gcc g++ wget git make libblas-dev liblapack-dev python3
+
+    # install python
+    apt-get -y install python3
+    ln -s /usr/bin/python3 /usr/bin/python
+
+    # create a folder where everything will be installed into and step into it
+    mkdir /software
+    cd /software
+
+    # install cmake
+    wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz
+    tar xf cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz
+    export PATH=/software/cmake-${CMAKE_VERSION}-Linux-x86_64/bin:$PATH
+
+    # install lsdalton
+    git clone --recursive --branch ${LSDALTON_VERSION} https://gitlab.com/dalton/lsdalton.git
+    cd lsdalton
+    ./setup --type=debug
+    cd build
+    make
+
+%environment
+    export LC_ALL=C
+
+%runscript
+    exec /software/lsdalton/build/lsdalton $*

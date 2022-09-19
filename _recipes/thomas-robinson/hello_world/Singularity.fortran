@@ -1,0 +1,41 @@
+Bootstrap: docker
+From: centos:8
+Stage: build
+
+%files
+
+%post
+  # Update, install and cleanup of system packages needed at build-time
+  yum install -y git
+  yum install -y gcc-gfortran
+
+  git clone https://github.com/thomas-robinson/hello_world.git /home/hello_world
+  cd /home/hello_world
+  export CC=gcc
+  export CXX=gcc
+  export FC=gfortran
+  gfortran hello.F90 -o hello.x
+  mkdir /opt/hello
+  cp hello.x /opt/hello
+
+Bootstrap: docker
+From: centos:8
+Stage: final
+#
+%files from build
+ /opt/hello/hello.x
+
+%post
+yum install -y which
+yum install -y gcc-gfortran
+
+%environment
+PATH=/opt/hello:${PATH}
+
+%runscript
+env | grep HELLO
+echo "I love Fortran"
+hello.x
+ls /opt
+/opt/hello/hello.x
+

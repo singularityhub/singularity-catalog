@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: thomasrobinson/centos7-netcdff:4.5.3-c4.7.4-gcc-mpich-slurm 
+Stage: build
+
+
+%post
+git clone https://github.com/thomas-robinson/hello_world.git /home/hello_world 
+cd /home/hello_world
+mpifort mpi_hello.F90 -o mpi_hello.x
+mkdir -p /opt/hello
+mv mpi_hello.x /opt/hello/mpi_hello.x
+
+
+%environment
+PATH=/opt/hello:${PATH}
+
+%runscript
+/opt/hello/mpi_hello.x
