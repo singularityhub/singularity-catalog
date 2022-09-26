@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: ufscar/ubuntu_ompi:latest
+
+%help
+Tentativa de executar um script Python no cluster HPC da UFSCAR
+
+%files
+  # Copie seus arquivos
+  ./Jobs/Python/* /opt
+
+%post
+  # Execute comandos na criação do container, por exemplo para compilar seus programas
+  echo "Compilando programas..."
+  mkdir -p /opt/input
+  mkdir -p /opt/output
+  #pip install numpy
+  apt-get update 
+  apt-get install -y --no-install-recommends python3
+  apt-get -y clean
+  rm -rf rm -rf /var/lib/apt/lists/*
+
+%runscript
+    cd /opt
+    python3 -u main.py
+
+%test
+  # Teste a criação do container
+  [ -f /opt/main.py ] && echo "\e[31mArquivo main.py existe!\e[0m" || echo "\e[31m\aERRO: Arquivo main.py não existe!\e[0m"
+

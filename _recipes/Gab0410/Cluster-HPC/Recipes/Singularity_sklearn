@@ -1,0 +1,49 @@
+Bootstrap: docker
+From: archlinux
+
+%help
+Tentativa de executar um script Python(.py) com Numpy e Pandas no cluster HPC da UFSCAR
+%files
+  # Copie seus arquivos
+  ./Jobs/Scikit-Learn/* /opt
+
+%post
+  echo "Basic setup"
+
+  ln -s /usr/share/zoneinfo/UTC /etc/localtime
+  echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
+  echo 'LANG=en_US.UTF-8' > /etc/locale.conf
+
+  echo "Configuring pacman"
+
+  pacman-key --init
+
+  echo "Configuring mirrorlists..."
+  # echo 'Server = http://mirror.ufscar.br/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+  echo 'Server = http://br.mirror.archlinux-br.org/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
+  echo 'Server = http://archlinux.c3sl.ufpr.br/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
+
+
+  echo "Installing needed software"
+  pacman -Syu --noconfirm base base-devel util-linux pacman-contrib inetutils python-numpy python-pandas jupyterlab python-matplotlib python-scikit-learn python-scipy python-networkx python-pillow python-pip
+
+  pip install -U scikit-learn
+
+  echo "Patching makepkg..."
+
+  sed -i -e 's/EUID == 0/EUID == 8213/g' /usr/bin/makepkg
+
+  paccache -r -k0
+
+
+
+
+%runscript
+    cd /opt
+    python3 -u skTest.py
+
+%test
+  # Teste a criação do container
+  [ -f /opt/skTest.py ] && echo "\e[31mArquivo sklearn.py existe!\e[0m" || echo "\e[31m\aERRO: Arquivo sklearn.py não existe!\e[0m"
+  python -c "import sklearn; sklearn.show_versions()"
+

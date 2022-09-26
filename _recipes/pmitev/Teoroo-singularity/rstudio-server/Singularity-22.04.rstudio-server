@@ -1,0 +1,65 @@
+Bootstrap: docker
+From: ubuntu:22.04
+ 
+%files
+
+
+%apprun rserver
+  exec rserver "${@}"
+
+%environment
+#  export PYTHONNOUSERSITE=True
+  export PATH=/usr/lib/rstudio-server/bin:${PATH}
+  export LANG=C.UTF-8 LC_ALL=C.UTF-8
+  export XDG_RUNTIME_DIR=/tmp/.run_$(uuidgen)
+ 
+%runscript
+  export XDG_RUNTIME_DIR=/tmp/.run_$(uuidgen)
+  mkdir -p $XDG_RUNTIME_DIR
+  exec rserver "${@}"
+
+ 
+%post
+  export DEBIAN_FRONTEND=noninteractive
+  export LC_ALL=C
+  export NCPU=$(grep -c ^processor /proc/cpuinfo)
+  export TMPD=/tmp/downloads &&   mkdir -p $TMPD
+
+  mkdir -p /tmp/apt
+  echo "Dir::Cache "/tmp/apt";" > /etc/apt/apt.conf.d/singularity-cache.conf
+ 
+  apt-get update && \
+  apt-get -y --no-install-recommends install --fix-missing \
+        less vim nano wget curl build-essential \
+        python3-pip python3-venv uuid-runtime gdebi-core \
+        software-properties-common dirmngr
+  
+  mkdir /installs && cd /installs
+
+  # R-CRAN
+  wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+  add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
+  apt-get update && apt-get -y  install r-base
+  
+
+
+
+  # Add a default CRAN mirror
+  echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl')" >> /usr/lib/R/etc/Rprofile.site
+
+  # Add a directory for host R libraries
+  mkdir -p /library
+  echo "R_LIBS_SITE=/library:\${R_LIBS_SITE}" >> /usr/lib/R/etc/Renviron.site
+
+
+
+  # Rstudio server
+  #wget   https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2022.07.1-554-amd64.deb
+  wget -P $TMPD -c https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2022.07.1-554-amd64.deb
+  gdebi -n  $TMPD/rstudio-server-2022.07.1-554-amd64.deb
+
+  # Clean
+  cd /
+  rm -rf /var/lib/apt/lists/*
+  rm /etc/apt/apt.conf.d/singularity-cache.conf
+  rm -rf /installs

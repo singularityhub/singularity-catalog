@@ -1,0 +1,20 @@
+BootStrap: docker
+From: {{cookiecutter.base-OS}}
+
+{%- if "ubuntu" in cookiecutter.base-OS -%}
+%post
+  apt-get update -y
+  apt-get install wget -y
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get install {{cookiecutter.os-packages}} -y
+
+{%- if cookiecutter.python-packages == "yes" -%}
+
+%post
+  apt-get install python3-pip python3
+  pip3 install {{cookiecutter.pip-packages}}
+
+{%- elif cookiecutter.python-packages == "no" -%}
+
+
+{% endif %}

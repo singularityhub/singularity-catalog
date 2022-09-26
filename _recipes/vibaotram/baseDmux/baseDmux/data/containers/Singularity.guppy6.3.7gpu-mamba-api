@@ -1,0 +1,63 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:2.10.0-gpu
+
+# Using an image based on Ubuntu 20.04
+
+%post
+    echo 'export LC_ALL=C.UTF-8' >> /environment
+    echo 'export LANG=C.UTF-8' >> /environment
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    apt update
+    apt install -y git wget rsync zlib1g-dev dpkg python3-pip tzdata
+
+#### Miniconda
+    # install miniconda
+    if [ ! -d /opt/conda ]; then
+         wget https://repo.anaconda.com/miniconda/Miniconda3-py38_4.12.0-Linux-x86_64.sh -O ~/miniconda.sh && \
+         bash ~/miniconda.sh -b -p /opt/conda && \
+         rm ~/miniconda.sh && \
+         /opt/conda/bin/conda clean -tipsy && \
+         ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+         echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+         echo "conda activate base" >> ~/.bashrc
+    fi
+    # set miniconda path
+    export PATH="/opt/conda/bin:$PATH"
+
+    # update conda
+    conda update -n base -c defaults conda
+    # configuring channels
+    conda config --add channels defaults
+    conda config --add channels bioconda
+    conda config --add channels conda-forge
+
+#### Mamba
+    # activate conda
+    eval "$(/opt/conda/bin/conda shell.bash hook)"
+    conda install mamba -n base -c conda-forge
+
+#### GUPPY GPU
+    GUPPY_VERSION=6.3.7
+
+    apt-get update
+    apt-get install wget lsb-release
+    export PLATFORM=$(lsb_release -cs)
+    wget -O- https://mirror.oxfordnanoportal.com/apt/ont-repo.pub | apt-key add -
+    echo "deb http://mirror.oxfordnanoportal.com/apt ${PLATFORM}-stable non-free" | tee /etc/apt/sources.list.d/nanoporetech.sources.list
+    apt-get update
+    echo "## Installing guppy ${GUPPY_VERSION} on Unbuntu ${PLATFORM}...\n"
+    apt-get -y install ont-guppy=${GUPPY_VERSION}-1~${PLATFORM} --no-install-recommends
+
+#### Clean up
+    apt-get autoremove --purge --yes && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+
+#### INSTALL ONT_FAST5_API
+    pip install ont-fast5-api==4.0.2
+
+%environment
+  export PATH="/opt/conda/bin:$PATH"

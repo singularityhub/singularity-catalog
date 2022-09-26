@@ -1,0 +1,84 @@
+Bootstrap: docker 
+
+From: centos:7.4.1708
+
+%environment
+
+%post    
+
+    #-----------------------------------------------------------------------------
+    #  Package dependencies
+    #-----------------------------------------------------------------------------
+    yum -y  install  epel-release
+    yum  install -y  \
+    autoconf \
+    automake \
+    binutils \
+    cmake3 \
+    file \
+    gcc  \
+    gcc-c++  \
+    gcc-gfortran \
+    git \
+    libtool \
+    lsof \
+    make \
+    tcl-devel \
+    tcsh \
+    time \
+    tk-devel \
+    wget \
+    which \
+    zlib \
+    zlib-devel 
+
+
+
+##############################
+# 
+##############################
+
+%apprun foo
+    exec echo "RUNNING FOO"
+    exec echo $PATH
+   git clone https://github.com/tensor-compiler/taco.git
+   cd taco 
+   mkdir build
+   cd build
+   cmake -DCMAKE_BUILD_TYPE=Release ..
+   make -j8
+   export PATH=$PATH:"`pwd`\bin"
+%applabels foo
+   BESTAPP FOO
+
+%appinstall foo
+   touch foo.exec
+   #installing taco
+   
+
+%appenv foo
+    SOFTWARE=foo
+    export SOFTWARE
+
+%apphelp foo
+    This is the help for foo.
+
+%appfiles foo
+   foo.txt
+
+##############################
+# bar
+##############################
+
+%apphelp bar
+    This is the help for bar.
+
+%applabels bar
+   BESTAPP BAR
+
+%appinstall bar
+    touch bar.exec
+
+%appenv bar
+    SOFTWARE=bar
+    export SOFTWARE

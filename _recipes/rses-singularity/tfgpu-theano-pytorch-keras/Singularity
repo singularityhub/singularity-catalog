@@ -1,0 +1,161 @@
+Bootstrap: docker
+From: nvidia/cuda:8.0-cudnn6-devel-ubuntu16.04
+
+%environment
+
+	#Environment variables
+
+	#Use bash as default shell
+	SHELL=/bin/bash
+
+	#Add CUDA paths
+	CPATH="/usr/local/cuda/include:$CPATH"
+	PATH="/usr/local/cuda/bin:$PATH"
+	LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+	CUDA_HOME="/usr/local/cuda"
+	#CUDA root needed for Theano
+	CUDA_ROOT="/usr/local/cuda"
+
+	#Python 3.5 paths
+	CPATH="/usr/include/python3.5m:$CPATH"
+	PYTHONPATH="/usr/local/lib/python3.5/dist-packages:$PYTHONPATH"
+
+	export PATH LD_LIBRARY_PATH CPATH CUDA_HOME PYTHONPATH CUDA_ROOT
+
+
+%setup
+	#Runs on host
+	#The path to the image is $SINGULARITY_ROOTFS
+
+
+%post
+	#Post setup script
+
+  #Makes a root build directory
+  mkdir /build
+
+	#Load environment variables
+	. /environment
+
+	#Default mount paths
+	mkdir /scratch /data /shared /fastdata
+
+	echo "Updating ubuntu"
+	apt-get -y update
+	apt-get -y upgrade
+	apt-get -y dist-upgrade
+	apt-get -y autoremove
+
+	echo "Installing essential packages"
+	apt-get install -y wget git vim cmake cmake-curses-gui build-essential
+
+	echo "Installing OpenCV Dependencies"
+
+	## GUI (if you want to use GTK instead of Qt, replace 'qt5-default' with 'libgtkglext1-dev' and remove '-DWITH_QT=ON' option in CMake):
+	apt-get install -y qt5-default libvtk6-dev
+
+	## Media I/O:
+	apt-get install -y zlib1g-dev libjpeg-dev libwebp-dev libpng-dev libtiff5-dev libjasper-dev libopenexr-dev libgdal-dev
+
+	## Video I/O:
+	apt-get install -y libdc1394-22-dev libavcodec-dev libavformat-dev libswscale-dev libtheora-dev libvorbis-dev libxvidcore-dev libx264-dev yasm libopencore-amrnb-dev libopencore-amrwb-dev libv4l-dev libxine2-dev
+
+	## Parallelism and linear algebra libraries:
+	apt-get install -y libtbb-dev libeigen3-dev
+
+	## Python:
+	apt-get install -y python3.5-dev python3.5-tk python3.5-numpy
+
+	## Make python 3.5m the default
+	cd /usr/bin
+	rm python
+	ln -s python3.5m python
+
+	## Install pip for python 3
+	cd /build
+	wget https://bootstrap.pypa.io/get-pip.py
+	python get-pip.py
+
+	## Installed required global python packages
+	pip install pandas scipy sklearn matplotlib NLTK
+
+	## Java:
+	apt-get install -y ant default-jdk
+
+	## Documentation:
+	apt-get install -y doxygen
+
+	#Update libs links
+	ldconfig
+
+	# OpenCV - INSTALL (YOU CAN CHANGE '3.3.0' FOR THE LAST STABLE VERSION)
+  echo "Installing OpenCV"
+	cd /build
+	apt-get install -y unzip wget
+	wget https://github.com/opencv/opencv/archive/3.3.0.tar.gz
+	tar -xf 3.3.0.tar.gz
+	rm 3.3.0.tar.gz
+	cd opencv-3.3.0
+	mkdir build
+	cd build
+	cmake -DWITH_QT=ON -DWITH_OPENGL=ON -DFORCE_VTK=ON -DWITH_TBB=ON -DWITH_GDAL=ON -DWITH_XINE=ON -DBUILD_EXAMPLES=ON -DENABLE_PRECOMPILED_HEADERS=OFF -D CMAKE_BUILD_TYPE=RELEASE \
+	-D CMAKE_INSTALL_PREFIX=/usr/local \
+	-D BUILD_opencv_python3=yes \
+	-D PYTHON_DEFAULT_EXECUTABLE="/usr/bin/python3.5m" \
+	-D CUDA_ARCH_BIN="3.0 3.5 3.7 5.0 5.2 6.0 6.1" \
+	-D CUDA_CUDA_LIBRARY="/usr/local/cuda/lib64/stubs/libcuda.so" \
+	..
+	make -j4
+	make install
+	ldconfig
+
+
+  #echo "Installing SMILE" - Doesn't support python 3.5
+	#cd /build
+	#apt-get install -y python-pyo python-kivy
+	#git clone https://github.com/compmem/smile.git
+	cd smile
+	#pip install .
+
+	#Update libs links
+	ldconfig
+
+
+  echo "Installing Theano"
+	pip install cython nose pydot-ng pycuda Theano
+	#Install libgpuarray needed by theano
+	cd /build
+	wget https://github.com/Theano/libgpuarray/releases/download/v0.7.5/libgpuarray-0.7.5.tar.gz
+	tar -xf libgpuarray-0.7.5.tar.gz
+	cd libgpuarray-0.7.5
+	mkdir Build
+	cd Build
+	cmake .. -DCMAKE_BUILD_TYPE=Release
+	make
+	make install
+	cd ..
+	python setup.py build
+	python setup.py install
+
+
+	echo "Installing Tensorflow"
+	TF_PYTHON_URL="https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.4.1-cp35-cp35m-linux_x86_64.whl"
+	pip install --ignore-installed --upgrade $TF_PYTHON_URL
+
+	echo "Installing Keras"
+	pip install keras
+
+  echo "Installing Pytorch"
+	pip install http://download.pytorch.org/whl/cu80/torch-0.3.0.post4-cp35-cp35m-linux_x86_64.whl
+	pip install torchvision
+
+	#Remove the build directory
+	rm -rf /build
+
+%runscript
+	#Executes with the singularity run command
+	#delete this section to use existing docker ENTRYPOINT command
+
+
+%test
+	#Test that script is a success

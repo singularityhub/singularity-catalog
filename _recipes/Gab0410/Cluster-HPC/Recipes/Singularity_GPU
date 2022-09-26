@@ -1,0 +1,81 @@
+Bootstrap: docker
+From: nvidia/cuda:10.2-base-ubuntu18.04
+
+%help
+Recipe de library://ufscar/hpc/cuda_pytorch / Fonte desconhecida
+Tentando integrar o conda com o cudatoolkit
+
+
+%files
+  # Copie seus arquivos
+  ./Jobs/GPU/* /opt
+
+
+
+%environment
+  export HOME=/home/user
+  export CONDA_AUTO_UPDATE_CONDA=false
+  export PATH=/home/user/miniconda/bin:$PATH
+
+%post
+  # Install some basic utilities
+  apt-get update && apt-get install -y \
+  curl \
+  ca-certificates \
+  sudo \
+  git \
+  bzip2 \
+  libx11-6 \
+  && rm -rf /var/lib/apt/lists/*
+
+
+  # Create a working directory
+  echo "\e[31mCreating working directory\e[0m"
+  mkdir /app
+  cd /app
+  # Create a non-root user and switch to it
+  adduser --disabled-password --gecos '' --shell /bin/bash user \
+  && chown -R user:user /app
+  echo "user ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-user
+  su - user # USER user
+  # All users can use /home/user as their home directory
+  HOME=/home/user
+  chmod 777 /home/user
+
+
+  # Install Miniconda and Python 3.8
+  echo "\e[31mInstalling miniconda and CUDA TOOLKIT 11.5\e[0m"
+  CONDA_AUTO_UPDATE_CONDA=false
+  PATH=/home/user/miniconda/bin:$PATH
+  curl -sLo ~/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-py38_4.8.2-Linux-x86_64.sh \
+  && chmod +x ~/miniconda.sh \
+  && ~/miniconda.sh -b -p ~/miniconda \
+  && rm ~/miniconda.sh \
+  && conda clean -ya
+
+  # CUDA 11.5-specific steps
+  echo "\e[31mInstalling  CUDA TOOLKIT 11.5\e[0m"
+  conda install -c nvidia cudatoolkit=11.5 \
+  && conda install unidecode && conda clean -ya
+  
+  #Creating an Environment
+  echo "\e[31mInstalling RAPIDS 22.08\e[0m"
+  conda create -n rapids-22.08 -c rapidsai -c nvidia -c conda-forge rapids=22.08 python=3.9 cudatoolkit=11.5
+  echo "\e[32mSuccessfully Installion of RAPIDS 22.08\e[0m"
+
+  #Initiating conda
+  echo "\e[31mTrying to initiate conda\e[0m"
+  conda init "$SHELL"
+  exec "$SHELL"
+  # Activate conda env
+    echo "\e[31mTrying to activate the environment\e[0m"
+    conda activate rapids-22.08
+    echo "\e[32mEnvironment activate, good job\e[0m"
+
+
+
+%runscript
+  cd /opt
+  python3 -u gpu.py
+
+
