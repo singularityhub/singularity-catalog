@@ -1,0 +1,21 @@
+Bootstrap: docker
+#From: centos:8.2
+From: gitlab/gitlab-ce:latest
+
+%help
+	Container gitlab (docker)
+	https://gitlab.com/gitlab-org/omnibus-gitlab/-/blob/master/docker/Dockerfile
+
+%labels
+	Container.OS Ubuntu 16.04
+	Definition.Author  M. Blaschek
+	Definition.Author.Email michael.blaschek@univie.ac.at
+	Definition.File.Version 1.0
+	Definition.File.Date 16.09.2020
+
+
+%runscript
+	exec gitlab
+
+%post
+	# run once to make certificates and so on

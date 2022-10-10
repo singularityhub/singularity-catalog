@@ -1,0 +1,57 @@
+BootStrap: shub
+From: nickjer/singularity-r
+
+%labels
+  Maintainer Jeremy Nicklas
+  RStudio_Version 1.2.1335
+
+%help
+  This will run RStudio Server
+
+%apprun rserver
+  exec rserver "${@}"
+
+%runscript
+  exec rserver "${@}"
+
+%setup
+  install -Dv \
+    rserver/rstudio_auth.sh \
+    ${SINGULARITY_ROOTFS}/usr/lib/rstudio-server/bin/rstudio_auth
+  install -Dv \
+    rserver/ldap_auth.py \
+    ${SINGULARITY_ROOTFS}/usr/lib/rstudio-server/bin/ldap_auth
+
+%post
+  # Software versions
+  export RSTUDIO_VERSION=1.2.1335
+
+  # Install RStudio Server
+  apt-get update
+  apt-get install -y --no-install-recommends \
+    ca-certificates \
+    wget \
+    gdebi-core \
+    python3-pip
+  wget \
+    --no-verbose \
+    -O rstudio-server.deb \
+    "https://download2.rstudio.org/server/trusty/amd64/rstudio-server-${RSTUDIO_VERSION}-amd64.deb"
+
+  gdebi -n rstudio-server.deb
+  rm -f rstudio-server.deb
+
+  # Add support for LDAP authentication
+  pip3 install ldap3
+
+  # Clean up
+  apt clean
+  rm -rf /var/lib/apt/lists/*
+
+%startscript
+  nohup rserver --auth-none 0 --auth-pam-helper rstudio_auth --www-port $RSTUDIO_PORT > /dev/null 2>&1 < /dev/null &
+
+%environment
+  export RSTUDIO_PORT=9090
+  export RSTUDIO_PASSWORD="password"
+  export PATH=/usr/lib/rstudio-server/bin:${PATH}

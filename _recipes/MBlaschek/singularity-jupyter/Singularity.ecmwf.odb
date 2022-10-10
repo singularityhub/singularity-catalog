@@ -1,0 +1,22 @@
+BootStrap: docker
+From: ubuntu:16.04
+
+%runscript
+	echo "$@"
+    exec $@
+
+%post
+	apt-get -y update
+	apt-get -y install git cdo netcdf-bin build-essential gfortran cmake autotools-dev autoconf libnetcdf*
+    # libboost-all-dev bison flex
+    mkdir -p /opt/odb
+    cd /opt/odb
+    wget https://confluence.ecmwf.int/download/attachments/61117379/odb_api_bundle-0.18.1-Source.tar.gz
+    tar -xzf  odb_api-*-Source.tar.gz
+    mkdir build ; cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/opt ../odb_api*Source &&
+    make -j4 &&
+    ctest &&
+    make -j4 install
+
+

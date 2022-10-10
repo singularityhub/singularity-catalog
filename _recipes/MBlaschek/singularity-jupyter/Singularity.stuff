@@ -1,0 +1,36 @@
+BootStrap: docker
+From: ubuntu:16.04
+
+%files
+	run.sh /usr/bin
+
+%runscript
+	exec /usr/bin/run.sh "$@"
+
+%apprun meld
+	meld
+
+%post
+	apt-get -y update
+	DEBIAN_FRONTEND=noninteractive apt-get -y install pandoc texlive-xetex texlive-fonts-recommended texlive-generic-recommended texlive-generic-extra
+	# apt-get -y install cdo netcdf-bin nco
+	# DEBIAN_FRONTEND=noninteractive apt-get -y install git xorg meld wget nano pandoc apt-transport-https
+	# download atom editor
+	# wget https://github.com/atom/atom/releases/download/v1.41.0/atom-amd64.deb
+	# dpkg -i --force-depends atom-amd64.deb
+	# install missing dependencies
+	# DEBIAN_FRONTEND=noninteractive apt-get -y -f install
+	# typora
+	# wget -qO - https://typora.io/linux/public-key.asc | apt-key add -
+	# echo "deb https://typora.io/linux ./" > /etc/apt/sources.list.d/typora.list
+	# apt-get -y update
+	# DEBIAN_FRONTEND=noninteractive apt-get -y install typora
+	#
+	# Clean
+	#
+	apt-get -y autoremove
+	apt-get -y clean
+	apt-get -y autoclean
+
+%environment
+	XDG_RUNTIME_DIR=$PWD/.runtime/

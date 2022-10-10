@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: centos:6.10
+#From: centos:latest
+
+%help
+	Container Centos 6.10 (docker)
+	Glibc: 2.12-1.212.el6.x86_64
+	Installed: wget, git, curl, bzip2 ca-certificates
+
+%labels
+	Container.OS CentOS 6.10
+	Container.Glibc 2.12-1.212.el6.x86_64
+	Definition.Author  M. Blaschek
+	Definition.Author.Email michael.blaschek@univie.ac.at
+	Definition.File.Version 1.0
+	Definition.File.Date 5.11.2019
+
+%files
+	run.sh /usr/bin
+
+%runscript
+	exec /usr/bin/run.sh "$@"
+
+%post
+	yum check-update && yum -y update
+	yum install -y wget bzip2 ca-certificates curl git
+	yum clean all
+	cat > /etc/locale.conf <<EOF
+LANG="C.UTF-8"
+LC_CTYPE="C.UTF-8"
+EOF
+	cat > /etc/sysconfig/i18n <<EOF
+LANG="C.UTF-8"
+SYSFONT="latarcyrheb-sun16"
+EOF

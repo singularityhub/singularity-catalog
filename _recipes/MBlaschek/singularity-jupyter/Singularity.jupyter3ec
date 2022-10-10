@@ -1,0 +1,65 @@
+# BootStrap: localimage
+# From: jupyter23
+Bootstrap: shub
+From: MBlaschek/singularity-jupyter:jupyter23
+
+%help
+	Container Centos 6.10 (docker)
+	Glibc: 2.12-1.212.el6.x86_64
+	Installed: wget, git, curl, bzip2 ca-certificates
+	
+	Run a jupyter notebook-server/shell in a container
+	Usually: http://localhost:8888
+	Anaconda Python 3 (plus kernel 2.7)
+	ECMWF eccodes (v2.10, py2/3) + cfgrib (py3)
+
+%post    
+	# Install jupyter notebook
+	/opt/conda/bin/pip install cfgrib
+	# Additonal
+	apt-get update
+	apt-get install -y --no-install-recommends git build-essential gfortran cmake autotools-dev autoconf libnetcdf*
+
+	# Clean
+	apt-get autoremove -y
+	apt-get clean
+
+	# Add SRVX8 directories
+	mkdir -p /raid8/srvx1
+	mkdir -p /opt/dev
+	# Add ECMWF Software
+	
+	# required for CMAKE
+	export PATH=/opt/conda/bin:$PATH
+	export LD_LIBRARY_PATH=/opt/conda/lib:$LD_LIBRARY_PATH
+	
+	mkdir /opt/build
+	cd /opt/build
+
+	wget https://confluence.ecmwf.int/download/attachments/45757960/eccodes-2.12.0-Source.tar.gz
+	wget http://download.ecmwf.org/test-data/eccodes/eccodes_test_data.tar.gz
+	tar -xzf eccodes-2.*-Source.tar.gz
+	cd eccodes*/
+	mkdir build ; cd build
+	tar -xzf ../../eccodes_test_data.tar.gz -C .
+	cmake -DCMAKE_INSTALL_PREFIX=/usr/local ..
+	make -j4 && ctest && make install
+	# Clean up build environment
+	cd /opt/build
+	# preserve for uninstall or further changes
+	tar czf eccodes-build.tar.gz eccodes*/
+	rm -rf eccodes*/
+	# Add Eccodes to Python Path
+	echo "/usr/local/lib/python3.7/site-packages" > /opt/conda/lib/python3.7/site-packages/eccodes.pth
+
+
+%environment
+	# important part otherwise the server will try to access /run/user and fail
+	export JUPYTER_RUNTIME_DIR=$PWD/.runtime
+	# Make sure we use container kernels
+	export JUPYTER_DATA_DIR=$PWD/.kernels
+	# Development
+	export LD_LIBRARY_PATH=/opt/conda/lib:/usr/local/lib:$LD_LIBRARY_PATH
+
+
+	

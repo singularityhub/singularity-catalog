@@ -1,0 +1,8 @@
+Bootstrap: docker
+From: intelpython/intelpython3_full
+
+%post
+/opt/conda/bin/conda install -y -c intel jupyter
+/opt/conda/bin/pip install batchspawner
+
+

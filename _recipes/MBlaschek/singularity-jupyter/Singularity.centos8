@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: centos:latest
+
+%help
+	Container Centos 8 (docker)
+	Glibc: 2.28
+	Installed: wget, git, curl, bzip2 ca-certificates
+
+%labels
+	Container.OS CentOS 8
+	Container.Glibc 2.28
+	Definition.Author  M. Blaschek
+	Definition.Author.Email michael.blaschek@univie.ac.at
+	Definition.File.Version 1.0
+	Definition.File.Date 16.09.2020
+
+%files
+	run.sh /usr/bin
+
+%runscript
+	exec /usr/bin/run.sh "$@"
+
+%post
+	yum check-update && yum -y update
+	yum install -y wget bzip2 ca-certificates curl git
+	yum clean all
+	cat > /etc/locale.conf <<EOF
+LANG="C.UTF-8"
+LC_CTYPE="C.UTF-8"
+EOF
+	cat > /etc/sysconfig/i18n <<EOF
+LANG="C.UTF-8"
+SYSFONT="latarcyrheb-sun16"
+EOF

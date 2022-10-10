@@ -1,0 +1,50 @@
+#BootStrap: localimage
+#From: centos
+Bootstrap: shub
+From: MBlaschek/singularity-jupyter:centos
+
+%runscript
+	exec /usr/bin/run.sh "$@"
+
+%apprun meld
+	meld
+
+%apprun atom
+	atom
+
+%apprun typora
+	typora
+
+%post
+	# download EPEL
+	wget https://download-ib01.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+	rpm -Uvh epel-release*rpm
+	yum install -y meld
+	yum install -y xorg-x11-font* libcanberra-gtk2
+	wget https://github.com/atom/atom/releases/download/v1.41.0/atom.x86_64.rpm
+	rpm -i atom*.rpm
+
+
+	# apt-get -y update
+	# DEBIAN_FRONTEND=noninteractive apt-get -y install git xorg meld wget nano pandoc apt-transport-https
+	# # download atom editor
+	# wget https://github.com/atom/atom/releases/download/v1.41.0/atom-amd64.deb
+	# dpkg -i --force-depends atom-amd64.deb
+	# # install missing dependencies
+	# DEBIAN_FRONTEND=noninteractive apt-get -y -f install
+	# # typora
+	# wget -qO - https://typora.io/linux/public-key.asc | apt-key add -
+	# echo "deb https://typora.io/linux ./" > /etc/apt/sources.list.d/typora.list
+	# apt-get -y update
+	# DEBIAN_FRONTEND=noninteractive apt-get -y install typora
+	# #
+	# # Clean
+	# #
+	# apt-get -y autoremove
+	# apt-get -y clean
+	# apt-get -y autoclean
+
+%environment
+	XDG_RUNTIME_DIR=$PWD/.runtime/
+	LANGUAGE="en_US.UTF-8"
+	LANG="en_US.UTF-8"

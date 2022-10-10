@@ -1,0 +1,21 @@
+#BootStrap: localimage
+#From: ubuntu.sif
+BootStrap: docker
+From: ubuntu:18.04
+
+
+%post
+	apt-get -y update
+	# Require PDFlatex, pandoc, nbconvert
+	DEBIAN_FRONTEND=noninteractive apt-get -y install pandoc texlive-xetex texlive-fonts-recommended texlive-generic-recommended texlive-generic-extra python3-pip jupyter-nbconvert
+	# install notedown 
+	/usr/bin/pip3 install notedown
+	#
+	# Clean
+	#
+	apt-get -y autoremove
+	apt-get -y clean
+	apt-get -y autoclean
+
+%environment
+	XDG_RUNTIME_DIR=$PWD/.runtime/

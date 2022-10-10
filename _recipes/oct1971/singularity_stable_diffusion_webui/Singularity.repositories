@@ -15,13 +15,14 @@ From: ubuntu-20.04-python-3.10-cuda-11.3.sif
     mkdir repositories
     git clone https://github.com/CompVis/stable-diffusion.git repositories/stable-diffusion
     git clone https://github.com/CompVis/taming-transformers.git repositories/taming-transformers
+    git clone https://github.com/crowsonkb/k-diffusion.git repositories/k-diffusion
     git clone https://github.com/sczhou/CodeFormer.git repositories/CodeFormer
     git clone https://github.com/salesforce/BLIP.git repositories/BLIP
     git clone https://github.com/Hafiidz/latent-diffusion.git repositories/latent-diffusion
-    wget https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.3.pth
     pip install transformers==4.19.2 diffusers invisible-watermark --prefer-binary
     pip install git+https://github.com/crowsonkb/k-diffusion.git --prefer-binary
     pip install git+https://github.com/TencentARC/GFPGAN.git --prefer-binary
+    pip install git+https://github.com/openai/CLIP.git --prefer-binary
     pip install -U numpy --prefer-binary
     pip install torchvision==0.13.1+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
 

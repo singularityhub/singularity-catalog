@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: alpine:3.11
+
+%post
+	export MPICH_VERSION="3.2"
+	export MPICH_CONFIGURE_OPTIONS="--disable-fortran"
+	export MPICH_MAKE_OPTIONS
+
+	apk update && apk upgrade \
+	&& apk add --no-cache sudo build-base \
+	git g++ make automake autoconf
+
+	#install MPI
+	mkdir /tmp/mpich-src
+	cd /tmp/mpich-src
+	wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz \
+	&& tar -xzf mpich-${MPICH_VERSION}.tar.gz \
+	&& cd mpich-${MPICH_VERSION} \
+	&& ./configure ${MPICH_CONFIGURE_OPTIONS} \
+	&& make ${MPICH_OPTIONS} && make install \
+	&& rm -rf /tmp/mpich-src/
+
+	#install MrBayes
+	mkdir /tmp/mrbayes
+	cd /tmp/mrbayes
+	git clone --depth=1 https://github.com/NBISweden/MrBayes.git
+	cd MrBayes/ \
+	&& ./configure --with-mpi --without-beagle \
+	&& make && make install \
+	&& rm -rf /tmp/mrbayes
+
+%labels
+	author Stefano Ghignone
+	maintainer sghignone
+	name MrBayes
+	version v3.2.7a
