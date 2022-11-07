@@ -3,7 +3,7 @@ From: ubuntu:20.04
 
 %post
     apt-get -y update --fix-missing
-    apt-get -y upgrade
+    apt-get -y upgrade    
     apt-get -y install software-properties-common
     add-apt-repository -y universe
     apt-get -y update
@@ -51,15 +51,12 @@ From: ubuntu:20.04
     pip3 install checkm-genome
 
     ### get database
-    # see here: https://github.com/Ecogenomics/CheckM/pull/210
-    # ~/.checkm is now the default data directory. If files are there then checkm data setRoot is not required
     mkdir ~/.checkm
     cd ~/.checkm
     wget --no-check-certificate https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz
     tar xf checkm_data_2015_01_16.tar.gz
     rm checkm_data_2015_01_16.tar.gz
     checkm data setRoot ~/.checkm
-    
 
 %environment
     export LC_ALL=C

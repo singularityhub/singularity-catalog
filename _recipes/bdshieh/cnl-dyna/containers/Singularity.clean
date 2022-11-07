@@ -1,0 +1,54 @@
+BootStrap: docker
+From: ubuntu:latest
+
+%runscript
+	echo "This is what happens when you run the container..."	
+	/bin/bash --norc --noprofile
+	
+
+%startscript
+
+
+%environment
+	export PATH=/opt/conda/bin:${PATH}
+	export SINGULARITY_SHELL=/bin/bash
+
+
+%files
+
+
+%post
+	# install linux tools & prequisites
+	apt-get update --fix-missing
+	apt-get install -y vim nano wget bzip2 git build-essential libblas-dev liblapack-dev gfortran libomp-dev
+	apt-get clean
+	
+	# install and setup miniconda python
+	wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh -O ~/miniconda.sh && \
+	/bin/bash ~/miniconda.sh -b -p /opt/conda && \
+	rm ~/miniconda.sh && \
+	/opt/conda/bin/conda clean -tipsy && \
+	ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+	echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+	echo "conda activate base" >> ~/.bashrc
+	export PATH="/opt/conda/bin:$PATH"
+	
+	# install conda packages
+	conda update -y conda
+	conda install -y -c conda-forge numpy scipy matplotlib tqdm cython  pandas  jupyterlab nomkl namedlist
+	conda clean -ya
+       
+	# clone cnl-dyna
+	cd /opt/ && git clone https://github.com/bdshieh/cnl-dyna.git
+
+	# install H2Lib
+	cd /opt/ && git clone https://github.com/H2Lib/H2Lib.git && cd /opt/H2Lib
+	git checkout community
+	cp /opt/cnl-dyna/lib/options.inc.default /opt/H2Lib/
+	cp /opt/cnl-dyna/lib/system.inc.linux /opt/H2Lib/
+	make
+	cp libh2.a /opt/cnl-dyna/lib/
+
+	# install cnl-dyna
+	cd /opt/cnl-dyna/
+	pip install .

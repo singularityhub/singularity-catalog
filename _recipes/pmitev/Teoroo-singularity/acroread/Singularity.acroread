@@ -1,5 +1,5 @@
 Bootstrap:  docker
-From: ubuntu:20.04
+From: ubuntu:22.04
 
 %runscript
   acroread $@
@@ -13,7 +13,7 @@ From: ubuntu:20.04
 
   dpkg --add-architecture i386
 
-  apt-get update && apt-get install -y libxml2:i386 libcanberra-gtk-module:i386 gtk2-engines-murrine:i386 libatk-adaptor:i386 wget
+  apt-get update && apt-get install -y wget libxml2:i386 libcanberra-gtk-module:i386 gtk2-engines-murrine:i386 libatk-adaptor:i386 libgdk-pixbuf-xlib-2.0-0:i386
   rm -rf /var/lib/apt/lists/*
   
   wget -q http://ardownload.adobe.com/pub/adobe/reader/unix/9.x/9.5.5/enu/$acroreadPackage -O /tmp/$acroreadPackage; \

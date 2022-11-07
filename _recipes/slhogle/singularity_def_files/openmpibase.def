@@ -1,0 +1,406 @@
+BootStrap: docker
+From: ubuntu:20.04
+Stage: build
+
+%post
+
+####################
+### GNU compiler ###
+####################
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++ \
+        gcc \
+        gfortran
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        patch
+    rm -rf /var/lib/apt/lists/*
+
+#########################################
+### Mellanox OFED version 5.1-2.3.7.1 ###
+#########################################
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        gnupg \
+        wget
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    wget -qO - https://www.mellanox.com/downloads/ofed/RPM-GPG-KEY-Mellanox | apt-key add -
+    mkdir -p /etc/apt/sources.list.d && wget -q -nc --no-check-certificate -P /etc/apt/sources.list.d https://linux.mellanox.com/public/repo/mlnx_ofed/5.1-2.3.7.1/ubuntu18.04/mellanox_mlnx_ofed.list
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ibverbs-providers \
+        ibverbs-utils \
+        libibmad-dev \
+        libibmad5 \
+        libibumad-dev \
+        libibumad3 \
+        libibverbs-dev \
+        libibverbs1 \
+        librdmacm-dev \
+        librdmacm1
+    rm -rf /var/lib/apt/lists/*
+
+#########################
+### UCX version 1.9.0 ###
+#########################
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        binutils-dev \
+        file \
+        libnuma-dev \
+        make \
+        wget
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://github.com/openucx/ucx/releases/download/v1.9.0/ucx-1.9.0.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/ucx-1.9.0.tar.gz -C /var/tmp -z
+    cd /var/tmp/ucx-1.9.0 && ./configure --prefix=/usr/local/ucx --disable-assertions --disable-debug --disable-doxygen-doc --disable-logging --disable-params-check --enable-optimizations --with-rdmacm --with-verbs --without-cuda
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/ucx-1.9.0 /var/tmp/ucx-1.9.0.tar.gz
+
+%environment
+    export CPATH=/usr/local/ucx/include:$CPATH
+    export LD_LIBRARY_PATH=/usr/local/ucx/lib:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/ucx/lib:$LIBRARY_PATH
+    export PATH=/usr/local/ucx/bin:$PATH
+
+%post
+    export CPATH=/usr/local/ucx/include:$CPATH
+    export LD_LIBRARY_PATH=/usr/local/ucx/lib:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/ucx/lib:$LIBRARY_PATH
+    export PATH=/usr/local/ucx/bin:$PATH
+
+##################################
+### SLURM PMI2 version 20.11.7 ###
+##################################
+
+# matching slurm on puhti
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bzip2 \
+        file \
+        make \
+        perl \
+        tar \
+        wget
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://download.schedmd.com/slurm/slurm-20.11.7.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/slurm-20.11.7.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/slurm-20.11.7 && ./configure --prefix=/usr/local/slurm-pmi2
+    cd /var/tmp/slurm-20.11.7
+    make -C contribs/pmi2 install
+    rm -rf /var/tmp/slurm-20.11.7 /var/tmp/slurm-20.11.7.tar.bz2
+
+#############################
+### OpenMPI version 4.0.5 ###
+#############################
+
+# Version on puhti is 4.0.2??
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bzip2 \
+        file \
+        hwloc \
+        libnuma-dev \
+        make \
+        openssh-client \
+        perl \
+        tar \
+        wget
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.open-mpi.org/software/ompi/v4.0/downloads/openmpi-4.0.5.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/openmpi-4.0.5.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/openmpi-4.0.5 &&  CC=gcc CXX=g++ F77=gfortran F90=gfortran FC=gfortran ./configure --prefix=/usr/local/openmpi --disable-getpwuid --enable-orterun-prefix-by-default --with-pmi=/usr/local/slurm-pmi2 --with-ucx=/usr/local/ucx --without-cuda --without-verbs
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/openmpi-4.0.5 /var/tmp/openmpi-4.0.5.tar.bz2
+
+%environment
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+
+%post
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+
+
+############################
+### CMake version 3.20.2 ###
+############################
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        make \
+        wget
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-linux-x86_64.sh
+    mkdir -p /usr/local
+    /bin/sh /var/tmp/cmake-3.20.2-linux-x86_64.sh --prefix=/usr/local --skip-license
+    rm -rf /var/tmp/cmake-3.20.2-linux-x86_64.sh
+
+%environment
+    export PATH=/usr/local/bin:$PATH
+
+%post
+    export PATH=/usr/local/bin:$PATH
+
+##############################
+### MKL version 2020.0-088 ###
+##############################
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        apt-transport-https \
+        ca-certificates \
+        gnupg \
+        wget
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    wget -qO - https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB | apt-key add -
+    echo "deb https://apt.repos.intel.com/mkl all main" >> /etc/apt/sources.list.d/hpccm.list
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        intel-mkl-64bit-2020.0-088
+    rm -rf /var/lib/apt/lists/*
+
+%environment
+    export CPATH=/opt/intel/mkl/include:$CPATH
+    export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64:/opt/intel/lib/intel64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/opt/intel/mkl/lib/intel64:/opt/intel/lib/intel64:$LIBRARY_PATH
+    export MKLROOT=/opt/intel/mkl
+
+%post
+    export CPATH=/opt/intel/mkl/include:$CPATH
+    export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64:/opt/intel/lib/intel64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/opt/intel/mkl/lib/intel64:/opt/intel/lib/intel64:$LIBRARY_PATH
+    export MKLROOT=/opt/intel/mkl
+
+
+###############################
+###### Build from local #######
+###############################
+
+BootStrap: docker
+From: ubuntu:20.04
+%post
+
+############################
+### GNU compiler runtime ###
+############################
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        libgfortran4 \
+        libgomp1
+    rm -rf /var/lib/apt/lists/*
+
+#########################################
+### Mellanox OFED version 5.1-2.3.7.1 ###
+#########################################
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        gnupg \
+        wget
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    wget -qO - https://www.mellanox.com/downloads/ofed/RPM-GPG-KEY-Mellanox | apt-key add -
+    mkdir -p /etc/apt/sources.list.d && wget -q -nc --no-check-certificate -P /etc/apt/sources.list.d https://linux.mellanox.com/public/repo/mlnx_ofed/5.1-2.3.7.1/ubuntu18.04/mellanox_mlnx_ofed.list
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ibverbs-providers \
+        ibverbs-utils \
+        libibmad-dev \
+        libibmad5 \
+        libibumad-dev \
+        libibumad3 \
+        libibverbs-dev \
+        libibverbs1 \
+        librdmacm-dev \
+        librdmacm1
+    rm -rf /var/lib/apt/lists/*
+
+#########################
+### UCX version 1.9.0 ###
+#########################
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        libbinutils
+    rm -rf /var/lib/apt/lists/*
+
+%files from build
+    /usr/local/ucx /usr/local/ucx
+
+%environment
+    export CPATH=/usr/local/ucx/include:$CPATH
+    export LD_LIBRARY_PATH=/usr/local/ucx/lib:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/ucx/lib:$LIBRARY_PATH
+    export PATH=/usr/local/ucx/bin:$PATH
+
+%post
+    export CPATH=/usr/local/ucx/include:$CPATH
+    export LD_LIBRARY_PATH=/usr/local/ucx/lib:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/ucx/lib:$LIBRARY_PATH
+    export PATH=/usr/local/ucx/bin:$PATH
+
+##################################
+### SLURM PMI2 version 20.11.7 ###
+##################################
+
+%files from build
+    /usr/local/slurm-pmi2 /usr/local/slurm-pmi2
+
+#############################
+### OpenMPI version 4.0.5 ###
+#############################
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        hwloc \
+        openssh-client
+    rm -rf /var/lib/apt/lists/*
+
+%files from build
+    /usr/local/openmpi /usr/local/openmpi
+
+%environment
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+
+%post
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+
+############################
+### CMake version 3.20.2 ###
+############################
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        make \
+        wget
+    rm -rf /var/lib/apt/lists/*
+
+%files from build
+    /usr/local/bin/cmake /usr/local/bin/cmake
+
+%environment
+    export PATH=/usr/local/bin:$PATH
+
+%post
+    export PATH=/usr/local/bin:$PATH
+
+##############################
+### MKL version 2020.0-088 ###
+##############################
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        apt-transport-https \
+        ca-certificates \
+        gnupg \
+        wget
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    wget -qO - https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB | apt-key add -
+    echo "deb https://apt.repos.intel.com/mkl all main" >> /etc/apt/sources.list.d/hpccm.list
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        intel-mkl-64bit-2020.0-088
+    rm -rf /var/lib/apt/lists/*
+
+%environment
+    export CPATH=/opt/intel/mkl/include:$CPATH
+    export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64:/opt/intel/lib/intel64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/opt/intel/mkl/lib/intel64:/opt/intel/lib/intel64:$LIBRARY_PATH
+    export MKLROOT=/opt/intel/mkl
+
+%post
+    export CPATH=/opt/intel/mkl/include:$CPATH
+    export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64:/opt/intel/lib/intel64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/opt/intel/mkl/lib/intel64:/opt/intel/lib/intel64:$LIBRARY_PATH
+    export MKLROOT=/opt/intel/mkl
+
+################
+### Python 3 ###
+################
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3 \
+        python3-dev
+
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python-is-python3 \
+        python-dev-is-python3
+
+    rm -rf /var/lib/apt/lists/*
+
+%runscript
+    exec "$@"
+
+%labels
+    # adapted from https://github.com/robertodr/singularities/blob/main/Singularity.lsdalton-mpi-omp
+    Author "Radovan Bast and Roberto Di Remigio"
+    Dependency "OpenMPI v4.0"
+
+%help
+    Hybrid parallel (MPI+OpenMP) build of LSDALTON using
+    OpenMPI-4.0.2 on a Ubuntu-18.04 base image. Requires
+    compatible OpenMPI version on the host.
+    The image includes Mellanox OFED, UCX and PMI2 for compatibility with common
+    HPC environments with InfiniBand and SLURM.
+    For a pure OpenMP run (n threads on one process) you can run the container
+    just as the regular executable,
+
+        $ export OMP_NUM_THREADS=n
+        $ ./<image-name>.sif input.file
+
+    To run in hybrid parallel (n threads on N processes) you should launch the
+    singularity execution with mpirun/srun:
+
+        $ export OMP_NUM_THREADS=n
+        $ mpirun -np N singularity exec <image-name>.sif input.file

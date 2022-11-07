@@ -1,0 +1,79 @@
+
+Bootstrap: docker
+From: centos:centos7.6.1810
+
+%environment
+    source /opt/software/miniconda3/bin/activate /opt/software/conda_env
+    export PATH="/opt/software/pheniqs_api:$PATH"
+
+%post
+    yum -y install epel-release wget which nano curl zlib-devel git
+    yum -y groupinstall "Development Tools"
+
+    mkdir -p /opt/software
+    cd /opt/software
+    curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    sh ./Miniconda3-latest-Linux-x86_64.sh -p /opt/software/miniconda3 -b
+    rm Miniconda3-latest-Linux-x86_64.sh
+    /opt/software/miniconda3/bin/conda config --add channels bioconda
+    /opt/software/miniconda3/bin/conda update -n base -c defaults conda
+    /opt/software/miniconda3/bin/conda create -p /opt/software/conda_env pheniqs
+    /opt/software/miniconda3/bin/activate /opt/software/conda_env
+
+    cd /opt/software
+    git clone https://github.com/biosails/pheniqs
+    mv pheniqs/tool pheniqs_api
+    rm -rf pheniqs
+    cd /opt/software/pheniqs_api
+    chmod +x *.py
+    cd /opt/software
+
+%runscript
+    exec "$@"
+
+# Can use with Tykky container builder on Puhti (env.yaml)
+
+#name: conda_env
+#channels:
+#  - bioconda
+#  - conda-forge
+#  - defaults
+#dependencies:
+#  - _libgcc_mutex=0.1=conda_forge
+#  - _openmp_mutex=4.5=2_gnu
+#  - bzip2=1.0.8=h7f98852_4
+#  - c-ares=1.18.1=h7f98852_0
+#  - ca-certificates=2022.6.15=ha878542_0
+#  - htslib=1.14=h9753748_2
+#  - keyutils=1.6.1=h166bdaf_0
+#  - krb5=1.19.3=h3790be6_0
+#  - ld_impl_linux-64=2.36.1=hea4e1c9_2
+#  - libcurl=7.83.1=h7bff187_0
+#  - libdeflate=1.10=h7f98852_0
+#  - libedit=3.1.20191231=he28a2e2_2
+#  - libev=4.33=h516909a_1
+#  - libffi=3.4.2=h7f98852_5
+#  - libgcc-ng=12.1.0=h8d9b700_16
+#  - libgomp=12.1.0=h8d9b700_16
+#  - libnghttp2=1.47.0=h727a467_0
+#  - libnsl=2.0.0=h7f98852_0
+#  - libssh2=1.10.0=ha56f1ee_2
+#  - libstdcxx-ng=12.1.0=ha89aaad_16
+#  - libuuid=2.32.1=h7f98852_1000
+#  - libzlib=1.2.12=h166bdaf_1
+#  - ncurses=6.3=h27087fc_1
+#  - openssl=1.1.1o=h166bdaf_0
+#  - pheniqs=2.1.0=py39hfa25096_3
+#  - pip=22.1.2=pyhd8ed1ab_0
+#  - python=3.9.13=h9a8a25e_0_cpython
+#  - python_abi=3.9=2_cp39
+#  - rapidjson=1.1.0=he1b5a44_1002
+#  - readline=8.1.2=h0f457ee_0
+#  - setuptools=62.6.0=py39hf3d152e_0
+#  - sqlite=3.38.5=h4ff8645_0
+#  - tk=8.6.12=h27826a3_0
+#  - tzdata=2022a=h191b570_0
+#  - wheel=0.37.1=pyhd8ed1ab_0
+#  - xz=5.2.5=h516909a_1
+#  - zlib=1.2.12=h166bdaf_1
+#prefix: /opt/software/miniconda3/envs/conda_env

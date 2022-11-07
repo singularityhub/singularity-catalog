@@ -1,0 +1,49 @@
+BootStrap: library
+From: ubuntu:20.04
+
+%post
+    apt-get -y install software-properties-common
+    add-apt-repository -y universe 
+    add-apt-repository -y multiverse
+    apt-get -y update
+    apt-get -y install build-essential git cmake g++ libtbb-dev libncurses5-dev libncursesw5-dev zlib1g-dev libbz2-dev liblzma-dev wget perl bioperl bioperl-run abacas bbmap bbmap-jni blast2 embassy-domainatrix embassy-domalign embassy-domsearch embassy-phylip emboss emboss-data fsa mummer mauve-aligner progressivemauve bcftools bedops bedtools bedtools-test bowtie2 bowtie2-examples exonerate hmmer maffilter maffilter-examples less perl-doc
+
+    ### install mugsy
+    cd /usr/local/src/
+    wget https://pilotfiber.dl.sourceforge.net/project/mugsy/mugsy_x86-64-v1r2.3.tgz
+    tar -xvzf mugsy_x86-64-v1r2.3.tgz
+    cd mugsy_x86-64-v1r2.3
+    mv delta-dups.sh fixMAFnames.pl maf2fasta.pl mugsy mugsyenv.sh mugsyWGA MUMmer3.20 plot.pl splitmaf.pl synchain-mugsy xmfa2maf.pl /usr/local/bin
+
+    ### mutliz/tba 
+    cd /usr/local/src/
+    wget http://www.bx.psu.edu/miller_lab/dist/multiz-tba.012109.tar.gz
+    tar -xvzf multiz-tba.012109.tar.gz
+    cd multiz-tba.012109
+    sed -i 's/\-Werror//g' Makefile
+    make
+    mv all_bz blastzWrapper get_covered get_standard_headers lav2maf maf2fasta maf2lav maf_checkThread mafFind maf_order maf_project maf_sort multic multiz pair2tb roast single_cov2 tba /usr/local/bin
+
+    ### lastz
+    cd /usr/local/src/
+    wget http://www.bx.psu.edu/~rsharris/lastz/lastz-1.04.03.tar.gz
+    tar -xvzf lastz-1.04.03.tar.gz
+    cd lastz-distrib-1.04.03
+    sed -i 's/\-Werror//g' src/Makefile
+    make
+    make install
+    cd bin
+    mv lastz lastz_D /usr/local/bin
+
+%environment
+    export LC_ALL=C
+    export MUGSY_INSTALL=/usr/local/bin
+    #source /usr/local/bin/mugsy_x86-64-v1r2.3/mugsyenv.sh
+
+%runscript
+    exec "$@"
+
+%test
+
+%labels
+    Author SLHogle

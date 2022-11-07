@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: centos:centos7.6.1810
+
+%environment
+    source /opt/software/miniconda3/bin/activate /opt/software/tych_env
+    export PATH="/opt/software/tych/bin:$PATH"
+
+%post
+    yum -y install epel-release wget which nano curl zlib-devel git
+    yum -y groupinstall "Development Tools"
+
+    mkdir -p /opt/software
+    cd /opt/software
+    curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    sh ./Miniconda3-latest-Linux-x86_64.sh -p /opt/software/miniconda3 -b
+    rm Miniconda3-latest-Linux-x86_64.sh
+    /opt/software/miniconda3/bin/conda config --add channels conda-forge
+    /opt/software/miniconda3/bin/conda install -y -c conda-forge mamba
+    /opt/software/miniconda3/bin/mamba update --all
+
+    git clone https://github.com/thackl/pro-tycheposons
+    mv pro-tycheposons/element-finder tych
+    rm -rf pro-tycheposons
+    cd tych
+    /opt/software/miniconda3/bin/mamba env create -f conda.yaml -p /opt/software/tych_env
+    source /opt/software/miniconda3/bin/activate /opt/software/tych_env
+    
+%runscript
+    exec "$@"

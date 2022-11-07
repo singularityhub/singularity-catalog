@@ -12,10 +12,14 @@ From: ubuntu:22.04
   export LC_ALL=C
   export DEBIAN_FRONTEND=noninteractive
 
-  apt-get update && apt-get -y dist-upgrade && apt-get install -y mc xclip vim gawk ncdu squashfs-tools squashfuse
+  apt-get update && apt-get -y dist-upgrade && \
+  apt-get install -y uuid-runtime mc xclip vim gawk ncdu squashfs-tools squashfuse \
+          git git-lfs aria2 meld qemu-utils p7zip-full p7zip-rar jmol povray \
+          units putty jq sqlitebrowser gv screen dos2unix vmtouch parallel pbzip2
   apt-get clean
 
 %runscript
+  export XDG_RUNTIME_DIR=/tmp/.${USER}_$(uuidgen)
   if command -v $SINGULARITY_NAME > /dev/null 2> /dev/null; then
     exec $SINGULARITY_NAME "$@"
   else

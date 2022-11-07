@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: centos:centos7.6.1810
+
+%environment
+    source /opt/software/conda/bin/activate /opt/software/conda_env
+
+%post
+    yum -y install epel-release wget which nano curl zlib-devel
+    yum -y groupinstall "Development Tools"
+
+    mkdir -p /opt/software
+
+    cd /opt/software
+    curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    sh ./Miniconda3-latest-Linux-x86_64.sh -p /opt/software/conda -b
+
+    /opt/software/conda/bin/conda config --add channels defaults
+    /opt/software/conda/bin/conda config --add channels conda-forge
+    /opt/software/conda/bin/conda config --add channels bioconda
+    /opt/software/conda/bin/conda install -y -c conda-forge mamba
+    /opt/software/conda/bin/mamba update --all
+    /opt/software/conda/bin/mamba create -p /opt/software/conda_env -y "python=3.6.9" coinfinder
+    source /opt/software/conda/bin/activate /opt/software/conda_env
+    /opt/software/conda/bin/mamba install -c bioconda bioconductor-ggtree=2.0.0
+    /opt/software/conda/bin/mamba install -c defaults -c bioconda -c conda-forge coinfinder
+    Rscript -e 'install.packages("globals", repos="https://cloud.r-project.org")'
+    Rscript -e 'install.packages("linstenv", repos="https://cloud.r-project.org")'
+    source /opt/software/conda/bin/activate /opt/software/conda_env
+    cd /opt/software
+
+%runscript
+    exec "$@"

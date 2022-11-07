@@ -1,0 +1,34 @@
+BootStrap: library
+From: ubuntu:20.04
+
+%environment
+    export PATH="/opt/software/pheniqs_api:$PATH"
+
+%post
+    apt-get -y update --fix-missing
+    apt-get -y upgrade    
+    apt-get -y install software-properties-common
+    add-apt-repository -y universe
+    apt-get -y update
+    apt-get -y install build-essential curl python3 python3-pip wget git python-is-python3 rapidjson-dev libhts-dev liblzma-dev libdeflate-dev libbz2-dev
+
+    mkdir -p /opt/software
+    cd /opt/software
+    git clone https://github.com/biosails/pheniqs
+    cd pheniqs
+    make
+    make install
+    cd /opt/software
+    mv pheniqs/tool pheniqs_api
+    rm -rf pheniqs
+    cd /opt/software/pheniqs_api
+    chmod +x *.py
+    cd /opt/software
+    
+%runscript
+    exec "$@"
+
+%test
+
+%labels
+    Author SLHogle

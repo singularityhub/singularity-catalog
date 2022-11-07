@@ -1,15 +1,15 @@
 bases:
-- count: 1301
+- count: 1312
   name: ubuntu
 - count: 303
   name: nvidia/cuda
 - count: 266
   name: debian
-- count: 200
+- count: 205
   name: centos
-- count: 138
+- count: 139
   name: continuumio/miniconda3
-- count: 132
+- count: 133
   name: alpine
 - count: 121
   name: aibasel/downward
@@ -126,6 +126,8 @@ bases:
 - count: 8
   name: perl
 - count: 8
+  name: rockylinux
+- count: 8
   name: arezaii/pf_singularity
 - count: 7
   name: quay.io/qiime2/core
@@ -147,8 +149,6 @@ bases:
   name: bioconductor/bioconductor_docker
 - count: 7
   name: rocker/geospatial
-- count: 7
-  name: rockylinux
 - count: 7
   name: thomasrobinson/centos7-netcdff
 - count: 7
@@ -189,6 +189,8 @@ bases:
   name: khanlab/hippunfold
 - count: 5
   name: neuronets/kwyk
+- count: 5
+  name: letaylor/sc_qc_cluster
 - count: 5
   name: sternacht/hpcc_openblas
 - count: 5
@@ -413,8 +415,6 @@ bases:
   name: intel_netcdf_ubuntu.sif
 - count: 2
   name: ecpe4s/ubuntu20.04-oneapi-x86_64
-- count: 2
-  name: letaylor/sc_qc_cluster
 - count: 2
   name: kulhanek/target-driven-visual-navigation
 - count: 2
@@ -1424,6 +1424,8 @@ bases:
 - count: 1
   name: ibmjava
 - count: 1
+  name: /home/shane/singularity/openmpibase.sif
+- count: 1
   name: penngwyn/jupytercasa
 - count: 1
   name: vanessa/rustarok
@@ -1456,20 +1458,20 @@ bases:
 - count: 1
   name: /nrs/funke/singularity/linajea/pylp_base
 bootstraps:
-- count: 4198
+- count: 4214
   name: docker
 - count: 351
   name: debootstrap
 - count: 305
   name: shub
-- count: 282
+- count: 288
   name: library
 - count: 102
   name: yum
+- count: 99
+  name: localimage
 - count: 98
   name: oras
-- count: 98
-  name: localimage
 - count: 19
   name: zypper
 - count: 18
@@ -1772,8 +1774,6 @@ orgs:
 - count: 1
   name: arm32v7
 - count: 1
-  name: letaylor
-- count: 1
   name: ucr-singularity
 - count: 1
   name: bvlc
@@ -1841,6 +1841,8 @@ orgs:
   name: andreweiner
 - count: 1
   name: hub.opensciencegrid.org
+- count: 1
+  name: letaylor
 - count: 1
   name: jeffquinnmsk
 - count: 1
@@ -2192,8 +2194,8 @@ orgs:
 - count: 1
   name: funkey
 tags:
-  latest: 407
-  other: 3942
+  latest: 412
+  other: 3958
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -2515,7 +2517,7 @@ versions:
     7.6.1810: 2
     7.7.1908: 2
     7.9.2009: 1
-    '8': 21
+    '8': 20
     '8.2': 1
     8.2.2004: 1
     8.3.2011: 2
@@ -2524,7 +2526,7 @@ versions:
     centos7: 12
     centos7.4.1708: 15
     centos7.5.1804: 1
-    centos7.6.1810: 3
+    centos7.6.1810: 9
     centos7.8.2003: 2
     centos7.9.2009: 1
     centos8: 6
@@ -2582,7 +2584,7 @@ versions:
     4.7.12: 8
     4.8.2: 11
     4.9.2: 1
-    latest: 25
+    latest: 26
   cornellcac/presto:
     latest: 1
   cornellcac/pulsar-pipeline:
@@ -3056,7 +3058,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 2
+    latest: 5
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -3888,6 +3890,7 @@ versions:
     4.1.1: 1
     4.2.0: 1
   rockylinux:
+    '8': 1
     '8.5': 2
     8.5.20220308: 1
     8.6.20227707: 2
@@ -4085,16 +4088,16 @@ versions:
     '14.04': 22
     '16.04': 183
     '17.04': 6
-    '18.04': 275
+    '18.04': 277
     '18.04 ': 7
     '19.04': 19
     '19.10': 4
-    '20.04': 301
+    '20.04': 307
     '20.04  ': 1
     '20.10': 3
     '21.04': 5
     '21.10': 3
-    '22.04': 10
+    '22.04': 12
     UBUNTU_VERSION: 1
     artful: 7
     bionic: 179
@@ -4112,7 +4115,7 @@ versions:
     focal-20200925: 3
     focal-20210827: 1
     jammy: 2
-    latest: 91
+    latest: 92
     rolling: 1
     sha256.21678b2846063434e2009dee535d3e28ded35774ca72722e1d62b37077de30da: 5
     sha256.80c52afadf3e7c3f9573de4fe79b7dca57fb3290df6c8dc46a75b02768a81146: 3

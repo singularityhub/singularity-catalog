@@ -1,0 +1,83 @@
+Bootstrap: localimage
+From: /home/shane/singularity/openmpibase.sif
+
+%post
+    echo "Installing required packages..."
+    apt-get -y update --fix-missing
+    apt-get -y upgrade
+    
+    #apt-get -y install build-essential #software-properties-common
+    #apt-get -y update
+    
+    #apt-get -y install flex bison libgmp3-dev wget git bzip2 zip default-jre #default-jdk 
+
+    #apt-get -y install software-properties-common
+    #add-apt-repository -y universe
+    #apt-get -y install python3 python3-pip 
+    #apt-get -y install python-is-python3
+    #alias python=python3
+    #python --version
+
+%post    
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        build-essential \
+        g++ \
+        gcc \
+        flex \
+        bison \
+        libgmp3-dev \
+        wget \
+        git \
+        bzip2 \
+        zip \
+        default-jre
+
+    rm -rf /var/lib/apt/lists/*
+
+#default-jdk \
+#--no-install-recommends
+
+###############
+#### Cmake ####
+###############
+
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-linux-x86_64.sh
+    mkdir -p /usr/local
+    /bin/sh /var/tmp/cmake-3.20.2-linux-x86_64.sh --prefix=/usr/local --skip-license
+    rm -rf /var/tmp/cmake-3.20.2-linux-x86_64.sh
+    export PATH=/usr/local/bin:$PATH
+
+#########################
+### Remaining install ###
+#########################
+
+%post
+    mkdir -p /usr/local/src
+
+    ### install ParGenes
+    cd /usr/local/src
+    git clone --recursive https://github.com/BenoitMorel/ParGenes
+    cd ParGenes
+    ./install.sh 16
+
+    ### install GeneRax
+    cd /usr/local/src
+    git clone --recursive https://github.com/BenoitMorel/GeneRax
+    cd GeneRax
+    ./install.sh
+
+%environment
+    PATH=/usr/local/src/ParGenes/:$PATH
+    PATH=/usr/local/src/GeneRax/:$PATH
+    export PATH
+
+%runscript
+    exec "$@"
+
+%test
+
+%labels
+    Author SLHogle

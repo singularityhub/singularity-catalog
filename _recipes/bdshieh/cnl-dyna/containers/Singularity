@@ -1,0 +1,48 @@
+BootStrap: docker
+From: continuumio/miniconda3:latest
+
+%runscript
+	echo "This is what happens when you run the container..."	
+	/bin/bash --norc --noprofile
+	
+
+%startscript
+
+
+%environment
+	export PATH=/opt/conda/bin:${PATH}
+	export SINGULARITY_SHELL=/bin/bash
+
+
+%files
+
+
+%post
+	# install linux tools & prequisites
+	apt-get update
+	apt-get install -y vim nano wget bzip2 git build-essential libblas-dev liblapack-dev gfortran libomp-dev
+	apt-get clean
+	
+	# setup miniconda python
+	export PATH=/opt/conda/bin:${PATH}
+	conda init bash
+	
+	# install conda packages
+	conda update -y conda
+	conda install -y -c conda-forge numpy scipy matplotlib tqdm cython  pandas  jupyterlab nomkl namedlist
+	conda clean -ya
+       
+	# clone cnl-dyna
+	cd /opt/ && git clone https://github.com/bdshieh/cnl-dyna.git
+
+	# install H2Lib
+	cd /opt/ && git clone https://github.com/H2Lib/H2Lib.git && cd /opt/H2Lib
+	git checkout community
+	cp /opt/cnl-dyna/lib/options.inc.default /opt/H2Lib/
+	cp /opt/cnl-dyna/lib/system.inc.linux /opt/H2Lib/
+	make
+	cp libh2.a /opt/cnl-dyna/lib/
+
+	# install cnl-dyna
+	cd /opt/cnl-dyna/
+	pip install .
