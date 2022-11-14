@@ -190,8 +190,6 @@ bases:
 - count: 5
   name: neuronets/kwyk
 - count: 5
-  name: letaylor/sc_qc_cluster
-- count: 5
   name: sternacht/hpcc_openblas
 - count: 5
   name: nvcr.io/nvidia/deepstream
@@ -415,6 +413,8 @@ bases:
   name: intel_netcdf_ubuntu.sif
 - count: 2
   name: ecpe4s/ubuntu20.04-oneapi-x86_64
+- count: 2
+  name: letaylor/sc_qc_cluster
 - count: 2
   name: kulhanek/target-driven-visual-navigation
 - count: 2
@@ -1458,7 +1458,7 @@ bases:
 - count: 1
   name: /nrs/funke/singularity/linajea/pylp_base
 bootstraps:
-- count: 4214
+- count: 4211
   name: docker
 - count: 351
   name: debootstrap
@@ -1774,6 +1774,8 @@ orgs:
 - count: 1
   name: arm32v7
 - count: 1
+  name: letaylor
+- count: 1
   name: ucr-singularity
 - count: 1
   name: bvlc
@@ -1841,8 +1843,6 @@ orgs:
   name: andreweiner
 - count: 1
   name: hub.opensciencegrid.org
-- count: 1
-  name: letaylor
 - count: 1
   name: jeffquinnmsk
 - count: 1
@@ -2194,7 +2194,7 @@ orgs:
 - count: 1
   name: funkey
 tags:
-  latest: 412
+  latest: 409
   other: 3958
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
@@ -3058,7 +3058,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 5
+    latest: 2
   libatomsquip/quip-base:
     latest: 1
   library/centos:
