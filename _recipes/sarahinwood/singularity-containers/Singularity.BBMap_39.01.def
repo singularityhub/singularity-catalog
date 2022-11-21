@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+    Container for BBMap 39.01
+    https://jgi.doe.gov/data-and-tools/software-tools/bbtools/
+
+%labels
+
+    MAINTAINER "Sarah Inwood (sninwood@gmail.com)"
+    VERSION "BBMap 39.01"
+
+%post
+
+# install wget
+    apt-get update
+    apt-get install -y wget
+    apt-get install -y zip
+
+# install bbmap
+    wget --no-check-certificate \
+        https://sourceforge.net/projects/bbmap/files/BBMap_39.01.tar.gz
+    tar -xzvf BBMap_39.01.tar.gz

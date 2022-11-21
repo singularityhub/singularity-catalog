@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: ubuntu:14.04
+
+%help
+
+    Container for circos 0.69-9
+    http://circos.ca
+
+%labels
+
+    MAINTAINER "Sarah Inwood (sninwood@gmail.com)"
+    VERSION "circos 0.69-9"
+
+%post
+
+# install wget
+    apt-get update
+    apt-get install -y wget
+    apt-get -y install libgd-dev libgd2-xpm-dev libgd-gd2-perl build-essential zlib1g-dev libpng12-dev libjpeg-dev
+
+# install plink
+    wget -O circos.zip \
+        --no-check-certificate \
+        http://circos.ca/distribution/circos-0.69-9.tgz
+    mkdir circos
+    mv circos.zip circos/
+    cd circos
+    tar -xzvf circos.zip
+
+%runscript
+
+    exec /circos/circos-0.69-9/bin/circos "$@"

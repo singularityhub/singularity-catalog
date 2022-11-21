@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: pytorch/pytorch:1.13.0-cuda11.6-cudnn8-runtime
+
+# Adapted by Matthias Moller, Nov 2022
+
+%post
+    # create a writable /run/user directory or else the jupyter notebooks won't work:
+    mkdir -p /run/user  
+    chmod -R 1777 /run
+
+    # install missing python packages
+    pip install torchvision 
+
+%environment
+
+%runscript
+    exec /bin/bash -i
+

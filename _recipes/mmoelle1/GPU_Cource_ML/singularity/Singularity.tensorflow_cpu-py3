@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:latest-py3-jupyter
+
+# Adapted by Kees Lemmens, June 2019
+# Adapted by Matthias Moller, Nov 2022
+
+%post
+    # create a writable /run/user directory or else the jupyter notebooks won't work:
+    mkdir -p /run/user  
+    chmod -R 1777 /run
+
+    # install missing python packages
+    pip install tensorboard tensorboard_plugin_profile tensorflow_datasets
+
+%environment
+
+%runscript
+    exec /bin/bash -i
+

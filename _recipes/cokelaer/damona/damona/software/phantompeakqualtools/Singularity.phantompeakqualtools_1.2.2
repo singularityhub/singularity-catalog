@@ -1,29 +1,40 @@
 Bootstrap: library
-From: cokelaer/damona/conda:4.7.12
+From: cokelaer/damona/conda:4.9.2
 
 
 %labels
     Author thomas cokelaer
     Version v1.2.2
 
+%files
+
+    run_spp.R
+
 %post
 
-    export PATH=$PATH:/usr/local/anaconda/bin
-    export LANG=C   # prevents perl for raising warnings
-    export PERL5LIB=/usr/local/anaconda/lib/perl5/5.22.0
+    #export PATH=$PATH:/usr/local/anaconda/bin
+    #export LANG=C   # prevents perl for raising warnings
+    #export PERL5LIB=/usr/local/anaconda/lib/perl5/5.22.0
 
-    conda install phantompeakqualtools
+    # gawk because the awk version installed with phantompeakqualtools is actually incompatible
+    conda install mamba
+    mamba install 'phantompeakqualtools=1.2.2' gawk -c bioconda
 
     # Let us save some space
     conda clean --packages -y
     conda clean --all -y # next requires lots of space
+    rm -rf /usr/local/anaconda/pkgs
 
+
+    cp -f run_spp.R /usr/local/anaconda/bin/run_spp.R 
     export PATH=/usr/local/anaconda/bin:$PATH
+
 
 %environment
     export PATH=$PATH:/usr/local/anaconda/bin
 
 
-%runscript
-    Rscript /usr/local/anaconda/bin/run_spp.R "$@"
+#%runscript
+#    #alias run_spp.R='Rscript /usr/local/anaconda/bin/run_spp.R "$@"'
+#    #Rscript /usr/local/anaconda/bin/run_spp.R "$@"
 

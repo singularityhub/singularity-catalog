@@ -1,0 +1,31 @@
+BootStrap: yum
+OSVersion: 36
+MirrorURL: http://download.fedoraproject.org/pub/fedora/linux/releases/%{OSVERSION}/Everything/$basearch/os/
+
+# if you want a complete basic image, add @Core
+Include: dnf
+
+# If you want the updates (available at the bootstrap date) to be installed
+# inside the container during the bootstrap instead of the General Availability
+# point release then uncomment the following line
+#UpdateMetaLink: https://mirrors.fedoraproject.org/metalink?repo=updates-released-f%{OSVERSION}&arch=$basearch
+
+
+%runscript
+    exec "$@"
+
+%post
+    COMPOPT="--nodocs --setopt install_weak_deps=False"
+    dnf install -y dnf-plugins-core
+    dnf copr enable -y simc/stable
+# install packages required for scacchiera & c.
+    dnf install -y $COMPOPT python3-pandas python3-matplotlib python3-numpy python3-cartopy python3-pygrib
+# install smnd packages from simc repository
+    dnf install -y $COMPOPT wreport bufr2netcdf dballe arkimet libsim ma_utils
+# other useful packages
+    dnf install -y $COMPOPT ncview
+# debugging packages
+#    dnf install -y $COMPOPT gdb wreport-debuginfo bufr2netcdf-debuginfo dballe-debuginfo arkimet-debuginfo libsim-debuginfo
+# save some space
+    dnf clean all
+    rm -rf /var/lib/{dnf,rpm,yum} /var/cache/*

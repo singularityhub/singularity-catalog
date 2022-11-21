@@ -1,0 +1,20 @@
+Bootstrap: docker
+FROM: ubuntu:22.04
+
+%post
+
+    # Install Dependancies
+    apt-get update --fix-missing
+    apt-get install -y tar wget make
+
+    #Download tools
+    wget -O subread.tar.gz https://downloads.sourceforge.net/project/subread/subread-2.0.0/subread-2.0.0-Linux-x86_64.tar.gz
+    tar -xzvf subread.tar.gz  -C /usr/local
+    rm -rf subread.tar.gz
+    mv /usr/local/subread-2.0.0-Linux-x86_64 /usr/local/subread
+
+    # Cleaning
+    apt-get autoremove -y && apt-get clean
+
+%environment
+    export PATH=:$PATH:/usr/local/subread/bin

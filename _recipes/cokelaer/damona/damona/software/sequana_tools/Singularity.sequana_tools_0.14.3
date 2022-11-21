@@ -1,0 +1,30 @@
+Bootstrap: localimage
+From: sequana_tools_0.14.2.img
+
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    # previous image has an old ruamel_yaml package that needs to be updated
+    # for sequana, gsepay depends on rust
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    . ~/.profile
+    . ~/.cargo/env
+
+    pip install sequana==0.14.3
+
+    conda install -c conda-forge 'openjdk>=11'
+
+    # cleanup
+    conda clean --packages -y
+    conda clean --all -y # next requires lots of space
+    rm -rf /usr/local/anaconda/pkgs
+
+%environment
+    echo "backend:agg" > matplotlibrc
+
+
+%runscript
+    PYTHONNOUSERSITE=1 exec ${1+"$@"}

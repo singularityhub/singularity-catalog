@@ -1,0 +1,10 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:2.5.0-gpu
+Stage: build
+
+%post
+    pip install ipython
+    pip install tensorflow-addons
+    pip install comet-ml
+    pip install scikit-image
+    pip install scikit-learn

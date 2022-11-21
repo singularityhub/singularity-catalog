@@ -206,12 +206,14 @@ From: ubuntu:20.04
 	# since conda install doesn't seem to work, let's try directly from github
 	# note: this doesn't seem to set the version properly when pip installs
 	VER=2.2.8
+	# now I've set my development version to a specific branch
 	#URL=https://github.com/AntonelliLab/seqcap_processor/archive/refs/tags/v"$VER".tar.gz
 	# note: I've made a small patch of paralogs_to_ref.py, so I'll use my fork for now
 	#URL=https://github.com/bmichanderson/seqcap_processor/archive/refs/tags/v2.2.8_patch2.tar.gz
 	#pip install "$URL"
 	# now I've made some other changes to scripts, so I'll just point to my repo
-	URL=https://github.com/bmichanderson/seqcap_processor.git
+	# updated to now point to my develop branch with the most up to date changes
+	URL=https://github.com/bmichanderson/seqcap_processor.git@develop_b
 	pip install git+"$URL"
 
 

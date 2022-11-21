@@ -1,0 +1,53 @@
+BootStrap: library
+From: yh549848/r/rstudio:1.2.5042r405
+
+%apprun pandoc
+  exec pandoc "${@}"
+
+%apprun pandoc-citeproc
+  exec pandoc-citeproc "${@}"
+
+%post
+  apt-get update && \
+  apt-get install -y less
+
+# Install RNA-seq packages
+%post
+  R -e 'install.packages("BiocManager")' && \
+  R -e 'BiocManager::install(version = "3.12")' && \
+  R -e 'BiocManager::install("AnnotationDbi")' && \
+  R -e 'BiocManager::install("org.Hs.eg.db")' && \
+  R -e 'BiocManager::install("org.Mm.eg.db")' && \
+  R -e 'BiocManager::install("ballgown")' && \
+  # FIXME: clusterProfiler cannot install on R 4.0.5
+  # R -e 'BiocManager::install("clusterProfiler")' && \
+  R -e 'BiocManager::install("DESeq2")' && \
+  R -e 'BiocManager::install("EBSeq")' && \
+  R -e 'BiocManager::install("edgeR")' && \
+  R -e 'BiocManager::install("GO.db")' && \
+  R -e 'BiocManager::install("polyester")' && \
+  R -e 'BiocManager::install("tximport")' && \
+  R -e 'BiocManager::install("rhdf5")' && \
+  R -e 'BiocManager::install("rtracklayer")' && \
+  R -e 'install.packages("devtools")' && \
+  R -e 'devtools::install_github("pachterlab/sleuth@v0.30.0")' && \
+  ln -s /usr/lib/rstudio-server/bin/pandoc/pandoc /usr/local/bin && \
+  ln -s /usr/lib/rstudio-server/bin/pandoc/pandoc-citeproc /usr/local/bin
+
+# Install Other packages
+%post
+  R -e 'install.packages("tidyverse")' && \
+  R -e 'install.packages("here")' && \
+  R -e 'install.packages("docopt")' && \
+  R -e 'install.packages("ggpubr")' && \
+  R -e 'install.packages("ggplotify")' && \
+  R -e 'install.packages("ggrepel")' && \
+  R -e 'install.packages("ggedit")' && \
+  R -e 'install.packages("ggcorrplot")' && \
+  R -e 'install.packages("UpSetR")' && \
+  R -e 'install.packages("plotly")' && \
+  R -e 'install.packages("hydroGOF")' && \
+  R -e 'install.packages("XML")' && \
+  R -e 'install.packages("plotROC")' && \
+  apt update --allow-insecure-repositories && \
+  apt -y install ghostscript

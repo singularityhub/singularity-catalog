@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: python:3.6.7
+Stage: spython-base
+
+%post
+
+
+pip install -r environments/psp_env.yml
+
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

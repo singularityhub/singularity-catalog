@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    REPOSITORY https://github.com/pscedu/singularity-star
+    COPYRIGHT Copyright © 2022 Pittsburgh Supercomputing Center. All Rights Reserved.
+    VERSION 2.7.10b
+
+%environment
+    PATH=$PATHL:/opt/STAR_2.7.10b/Linux_x86_64_static
+
+%post
+    apt -y update
+    apt install -y g++ make wget unzip
+    cd /opt
+    wget -nc https://github.com/alexdobin/STAR/releases/download/2.7.10b/STAR_2.7.10b.zip
+    unzip STAR_2.7.10b.zip && rm -f STAR_2.7.10b.zip
+    apt clean

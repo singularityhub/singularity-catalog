@@ -1,0 +1,17 @@
+Bootstrap: docker
+FROM: ubuntu:22.04
+
+%post
+
+    # Install Dependancies
+    apt-get update
+    apt-get install -y tar wget
+
+    # FASTQ DUMP
+    apt-get install -y sra-toolkit
+
+    # Cleaning
+    apt-get autoremove -y && apt-get clean
+
+%environment
+    export PATH=:$PATH:/usr/local/sratoolkit/bin

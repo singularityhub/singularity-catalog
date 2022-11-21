@@ -6,23 +6,14 @@ From: debian:buster
     EMAIL icaoberg@psc.edu
     SUPPORT help@psc.edu
     REPOSITORY http://github.com/pscedu/singularity-bedtools
-    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved. 
+    COPYRIGHT Copyright © 2021-2022 Pittsburgh Supercomputing Center. All Rights Reserved. 
     VERSION 2.30.0
 
 %post
     apt-get update && apt-get install -y --no-install-recommends apt-utils
     apt-get update --fix-missing
     apt-get install -y wget
-
-####################################################################################
-%appinstall bedtools
-   wget -nc https://github.com/arq5x/bedtools2/releases/download/v2.30.0/bedtools.static.binary
-   mv -v bedtools.static.binary /bin/bedtools
-   chmod +x /bin/bedtools
-   apt-get remove -y wget
-
-%apphelp bedtools
-    bedtools --help    
-
-%apprun bedtools
-    bedtools "$@"
+    wget -nc https://github.com/arq5x/bedtools2/releases/download/v2.30.0/bedtools.static.binary
+    mv -v bedtools.static.binary /bin/bedtools
+    chmod +x /bin/bedtools
+    apt-get remove -y wget

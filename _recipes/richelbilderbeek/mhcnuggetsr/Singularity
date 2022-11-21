@@ -18,13 +18,13 @@ From: rocker/tidyverse
     Rscript -e 'remotes::install_github("richelbilderbeek/ormr")'
     Rscript -e 'remotes::install_github("richelbilderbeek/mhcnuggetsr")'
     Rscript -e 'remotes::install_github("richelbilderbeek/mhcnuggetsrinstall")'
-    Rscript -e 'mhcnuggetsrinstall::install_mhcnuggets(folder_name = "/opt/mhcnuggetsr")'
+    Rscript -e 'mhcnuggetsrinstall::install_mhcnuggets(mhcnuggetsr_folder = "/opt/mhcnuggetsr")'
 
 %runscript
 exec R --vanilla --silent --no-echo "$@"
 
 %test
-    Rscript -e 'mhcnuggetsr::mhcnuggetsr_report(folder_name = "/opt/mhcnuggetsr", ormr_folder_name = "python3")'
+    Rscript -e 'mhcnuggetsr::mhcnuggetsr_report(mhcnuggetsr_folder = "/opt/mhcnuggetsr", ormr_folder_name = "python3")'
 
 %help
 
@@ -36,11 +36,11 @@ To make the container run a script called, e.g. `script.R`, do:
 cat script.R | ./mhcnuggetsr.sif
 ```
 
-Within the script, set `folder_name` to `/opt/mhcnuggetsr`, for example:
+Within the script, set `mhcnuggetsr_folder` to `/opt/mhcnuggetsr`, for example:
 
 ```
 library(mhcnuggetsr)
-mhcnuggetsr_report(folder_name = "/opt/mhcnuggetsr", ormr_folder_name = "python3")
+mhcnuggetsr_report(mhcnuggetsr_folder = "/opt/mhcnuggetsr", ormr_folder_name = "python3")
 ```
 
 %labels
@@ -55,4 +55,4 @@ mhcnuggetsr_report(folder_name = "/opt/mhcnuggetsr", ormr_folder_name = "python3
 
     URL https://github.com/richelbilderbeek/mhcnuggetsr
 
-    VERSION 1.2
+    VERSION 1.2.1

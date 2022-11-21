@@ -6,6 +6,13 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 %setup
     ls -la  ${GITHUB_WORKSPACE}
     export CACHEDIR=${GITHUB_WORKSPACE}/../../../cache
+    echo '@@@ ls -l $SINGULARITY_ROOTFS'
+    ls -l ${SINGULARITY_ROOTFS}
+    rm -f ${SINGULARITY_ROOTFS}/*.txt
+    echo "FC=$FC " >> ${SINGULARITY_ROOTFS}/fc.txt
+    echo "MPI_IMPL=$MPI_IMPL " >> ${SINGULARITY_ROOTFS}/mpi_impl.txt
+    echo "BRANCH=$BRANCH " >> ${SINGULARITY_ROOTFS}/branch.txt
+    echo '@@@ ls -lart $SINGULARITY_ROOTFS'
     ls -lrt ${CACHEDIR} || true
     ls -la  ${CACHEDIR}/ || true
     ls -la  ${CACHEDIR}/ompi || true
@@ -16,12 +23,6 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
     bash -c "if [[  -f ${CACHEDIR}/ompi/lib/libmpi.so ]]; then mkdir -p ${SINGULARITY_ROOTFS}/opt ;rsync -a ${CACHEDIR}/ompi ${SINGULARITY_ROOTFS}/opt/. ; echo ompi/ucx cache fetched ;fi"
     bash -c "if [[  -f ${CACHEDIR}/libext/lib/libnwc_openblas.a ]]; then rsync -a ${CACHEDIR}/libext/* ${SINGULARITY_ROOTFS}/nwchem/src/libext/. ; echo libext cache fetched ;fi"
     bash -c "if [[  -f ${CACHEDIR}/simint.l5_p5_d1.install/lib/libsimint.a ]]; then rsync -av ${CACHEDIR}/simint.l5_p5_d1.install ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/. ; ln -sf ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/simint.l5_p5_d1.install  ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/simint_install;  ls -l ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/; echo simint cache fetched ;fi"
-    echo '@@@ ls -l $SINGULARITY_ROOTFS'
-    ls -l ${SINGULARITY_ROOTFS}
-    rm -f ${SINGULARITY_ROOTFS}/*.txt
-    echo "FC=$FC " >> ${SINGULARITY_ROOTFS}/fc.txt
-    echo "MPI_IMPL=$MPI_IMPL " >> ${SINGULARITY_ROOTFS}/mpi_impl.txt
-    echo "BRANCH=$BRANCH " >> ${SINGULARITY_ROOTFS}/branch.txt
 
 ##%files
 ##    ${GITHUB_WORKSPACE}/nwchem nwchem
@@ -36,21 +37,21 @@ export ucx=1.12.1
 export OMPI_DIR=/opt/ompi
 export SINGULARITY_ompi=4.1.4
 export SINGULARITY_ompi_prefix=ompi-$ompi
-export PATH=$OMPI_DIR/bin:/root/apps/oneapi/compiler/latest/linux/bin/intel64:/root//apps/oneapi/compiler/2022.1.0/linux/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin 
+export PATH=$OMPI_DIR/bin:/root/apps/oneapi/compiler/latest/linux/bin/intel64:/root//apps/oneapi/compiler/latest/linux/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin 
 export LD_LIBRARY_PATH=$OMPI_DIR/lib:/root/apps/oneapi/compiler/latest/linux/lib:/root/apps/oneapi/compiler/latest/linux/lib/x64:/root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin 
 export LIBRARY_PATH=/root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/root/apps/oneapi/compiler/latest/linux/lib 
 export SINGULARITY_PATH=$OMPI_DIR/bin:/root/apps/oneapi/compiler/latest/linux/bin/intel64:/root/apps/oneapi/compiler/latest/linux/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin 
 export SINGULARITY_LD_LIBRARY_PATH=$OMPI_DIR/lib:/root/apps/oneapi/compiler/latest/linux/lib:/root/apps/oneapi/compiler/latest/linux/lib/x64:~/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin 
 export SINGULARITY_LIBRARY_PATH=/root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/root/apps/oneapi/compiler/latest/linux/lib 
 export `cat ./fc.txt`
-export `cat ./impl_impl.txt`
+export `cat ./mpi_impl.txt`
 export `cat ./branch.txt`
 echo FC is $FC
 echo MPI_IMPL is $MPI_IMPL
 echo BRANCH is $BRANCH
 pwd \
 && apt-get -y update \
-&& apt-get -y install -y tzdata git moreutils  wget curl rsync \
+&& apt-get -y install -y tzdata git moreutils  wget curl rsync  \
 && pwd \
 && echo '@@ ls -lart ' \
 && ls -lart  \

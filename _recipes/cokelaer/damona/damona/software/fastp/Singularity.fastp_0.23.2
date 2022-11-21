@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: ubuntu:latest
+
+
+%post
+
+    # https://github.com/OpenGene/fastp/releases
+    apt-get update --fix-missing && apt-get install -y wget python3
+    update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+    wget --quiet http://opengene.org/fastp/fastp -O /opt/fastp
+    chmod 777 /opt/fastp
+
+    apt autoremove --purge
+    apt clean
+
+%environment
+    export PATH=$PATH:/opt
+
+%runscript
+    exec fastp "$@"
+

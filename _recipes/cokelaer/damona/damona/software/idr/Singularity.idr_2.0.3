@@ -1,0 +1,34 @@
+Bootstrap: library
+From: cokelaer/damona/conda:4.9.2
+
+%labels
+  maintainer Thomas Cokelaer
+  package.name idr
+  package.version 2.0.3
+
+
+%post
+    apt-get update
+    apt-get install -y unzip
+
+    # The main package
+    wget https://github.com/nboley/idr/archive/2.0.3.zip
+    unzip 2.0.3.zip
+    cd idr-2.0.3
+    conda install numpy scipy
+    python setup.py install
+
+    # Uses agg as backend instead of qt (less dependencies)
+    echo "backend:tkagg" > matplotlibrc
+
+    ######## clean image ########
+    apt-get autoremove -y
+    apt-get clean -y
+    conda clean -y --all
+    rm -rf /usr/local/anaconda/pkgs
+
+
+%runscript
+  exec idr "$@"
+
+

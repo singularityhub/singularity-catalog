@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: quay.io/fenicsproject/dev-env:latest
+
+%files
+    WELCOME.Singularity /usr/local/share/WELCOME
+    fenics.env.conf /usr/local/share/fenics.env.conf
+    bin/fenics-pull /usr/local/bin
+    bin/fenics-build /usr/local/bin
+    bin/fenics-update /usr/local/bin
+
+%post
+    chmod a+r /usr/local/share/WELCOME
+    ldconfig
+        
+%runscript
+    cat /usr/local/share/WELCOME
+    /bin/bash -i        

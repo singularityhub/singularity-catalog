@@ -9,18 +9,28 @@ From: python:3.9.2
     export PATH=/usr/games:$PATH
 
     # Declare experiment environment variables
-    EXPERIMENT_NAME=qaoa-tsp
+    EXPERIMENT_NAME=vqe_maxcut
+    MLFLOW_TRACKING_URI=http://45.113.234.250:5000/
     # Declare mlflow environment variables
     MLFLOW_S3_ENDPOINT_URL=https://objects.storage.unimelb.edu.au
     MLFLOW_PYTHON_BIN=/usr/local/bin/python
     MLFLOW_BIN=/usr/local/bin/mlflow
     S3_BUCKET=s3://vrp-qaoa
 
+    # Poetry Environment Variables
+    PYTHONFAULTHANDLER=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONHASHSEED=random \
+    PIP_NO_CACHE_DIR=off \
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    PIP_DEFAULT_TIMEOUT=100
+
     # Export env vars for LC_ALL
     export LC_ALL=en_US.UTF-8
     export LANG=en_US.UTF-8
     # Export env vars
     export EXPERIMENT_NAME \
+      MLFLOW_TRACKING_URI \
       MLFLOW_S3_ENDPOINT_URL \
       MLFLOW_PYTHON_BIN \
       MLFLOW_BIN \
@@ -45,15 +55,19 @@ From: python:3.9.2
   /usr/sbin/update-locale LANG=en_US.UTF-8
   export LC_ALL=en_US.UTF-8
   export LANG=en_US.UTF-8
+  export POETRY_VERSION=1.1.14
 
   ####################################################
   # Python / QISKit Installation
   ####################################################
   pip install --upgrade pip
   git clone https://github.com/vivekkatial/HAQC.git
+  pip install "poetry==$POETRY_VERSION"
   cd HAQC
-  pip install pipenv
-  pipenv install --system --deploy --ignore-pipfile
+  cat pyproject.toml
+  poetry config virtualenvs.create false \
+  && poetry install --no-interaction --no-ansi
+
 
   ####################################################
   # AWS Installation
@@ -100,6 +114,18 @@ From: python:3.9.2
   python qaoa_vrp/run_initial_methods.py -f $instance -m 5 -p 10 -T -E 7.5 -T True
   # python qaoa_vrp/run_initial_methods.py -f $instance -m 5 -p 15 -E 1.0 -T True
 
+####################################################
+# APP TO BUILD EXPERIMENTS
+####################################################
+%apphelp run_vqe_maxcut
+  This is the help running MAXCUT instances on VQE
+
+%applabels run_vqe_maxcut
+  APP_NAME VQE_MAXCUT
+
+%apprun run_vqe_maxcut
+  # Run experiment
+  python maxcut_vqe.py -T True
 
 ####################################################
 # APP TO BUILD EXPERIMENTS

@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: alpine:edge
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY https://github.com/pscedu/singularity-asciinema
+    COPYRIGHT Copyright © 2021-2022 Pittsburgh Supercomputing Center. All Rights Reserved.
+    VERSION 2.2.0
+
+%post
+    apk update
+    apk add asciinema

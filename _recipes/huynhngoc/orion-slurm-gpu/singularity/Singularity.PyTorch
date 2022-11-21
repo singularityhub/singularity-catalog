@@ -1,0 +1,8 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/pytorch:21.05-py3
+Stage: build
+
+%post
+    pip install ipython
+    pip install scikit-image
+    pip install scikit-learn

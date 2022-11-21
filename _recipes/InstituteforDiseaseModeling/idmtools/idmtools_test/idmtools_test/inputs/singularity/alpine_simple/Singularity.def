@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: python:3.8.6
+
+%setup
+    mkdir /model
+
+%files
+    Assets/run_model.py /model/
+
+%post
+    apt-get -y update && apt-get install -y gcc
+    pip3 install wheel
+    pip3 install epistoch==0.1.13
+
+%runscript
+    echo "Container was created $NOW"
+    echo "Arguments received: $*"
+    exec "$@"
+
+%environment
+    export MPLBACKEND=Agg
+
+%labels
+    Author ccollins@idmod.org
+    Version v0.0.1
+
+%help
+    This is a demo container used to demo idmtools builds

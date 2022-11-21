@@ -1,0 +1,19 @@
+Bootstrap: docker
+FROM: ubuntu:22.04
+
+%post
+
+    # Install Dependancies
+    apt-get update --fix-missing
+    DEBIAN_FRONTEND="noninteractive" TZ="Europe" apt-get install -y tzdata
+    apt-get install -y libxml2-dev libcurl4-openssl-dev libssl-dev
+    apt install -y r-base
+
+    # DESeq2
+    R -e 'install.packages("FactoMineR")
+        if (!require("BiocManager", quietly = TRUE))
+            install.packages("BiocManager")
+            BiocManager::install("DESeq2")'
+             
+    # Cleaning
+    apt-get autoremove -y && apt-get clean

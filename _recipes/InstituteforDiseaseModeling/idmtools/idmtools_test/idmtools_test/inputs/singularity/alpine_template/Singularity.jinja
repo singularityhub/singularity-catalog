@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: python:{{ python_version }}
+
+%post
+    apt-get -y update && apt-get install -y gcc
+    pip3 install wheel
+    pip3 install {% for package in packages %}{{package}} {% endfor %}
+
+%runscript
+    echo "Container was created $NOW"
+    echo "Arguments received: $*"
+    exec "$@"
+
+%environment
+    export MPLBACKEND=Agg
+
+%labels
+    Author ccollins@idmod.org
+    Version v0.0.1
+
+%help
+    This is a demo container used to demo idmtools templates

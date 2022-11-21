@@ -1,0 +1,31 @@
+BootStrap: localimage
+From: ../../singularity-rstudio/rstudio_2022072.576-r421tv132.sif
+
+%post
+  apt-get update && \
+  apt-get install -y less
+
+# Install RNA-seq packages
+%post
+  R -e 'install.packages("BiocManager")' && \
+  R -e 'BiocManager::install(version = "3.15")' && \
+  R -e 'BiocManager::install("AnnotationDbi")' && \
+  R -e 'BiocManager::install("org.Hs.eg.db")' && \
+  R -e 'BiocManager::install("org.Mm.eg.db")' && \
+  R -e 'BiocManager::install("ballgown")' && \
+  R -e 'BiocManager::install("clusterProfiler")' && \
+  R -e 'BiocManager::install("DESeq2")' && \
+  R -e 'BiocManager::install("EBSeq")' && \
+  R -e 'BiocManager::install("edgeR")' && \
+  R -e 'BiocManager::install("GO.db")' && \
+  R -e 'BiocManager::install("polyester")' && \
+  R -e 'BiocManager::install("tximport")' && \
+  R -e 'BiocManager::install("rtracklayer")' && \
+  # sleuth not work with the latest rhdf5, so install an older version of rhdf5 instead
+  wget https://bioc.ism.ac.jp/packages/3.13/bioc/src/contrib/Rhdf5lib_1.14.2.tar.gz && \
+  R CMD INSTALL Rhdf5lib_1.14.2.tar.gz && \
+  wget https://bioc.ism.ac.jp/packages/3.13/bioc/src/contrib/rhdf5filters_1.4.0.tar.gz && \
+  R CMD INSTALL rhdf5filters_1.4.0.tar.gz && \
+  wget https://bioc.ism.ac.jp/packages/3.13/bioc/src/contrib/rhdf5_2.36.0.tar.gz
+  R CMD INSTALL rhdf5_2.36.0.tar.gz && \
+  R -e 'devtools::install_github("pachterlab/sleuth@v0.30.0")'

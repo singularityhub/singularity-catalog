@@ -1,6 +1,6 @@
 Bootstrap: docker
 
-From: rocker/tidyverse:4.1.2
+From: rocker/tidyverse:4.2.2
 
 %post
   ## Updating...
@@ -8,28 +8,28 @@ From: rocker/tidyverse:4.1.2
   apt -y install wget python3-pip python2.7-dev libbz2-dev liblzma-dev libncurses5-dev poppler-utils
 
 
-  ## Install htslib 1.9
-  wget https://github.com/samtools/htslib/releases/download/1.9/htslib-1.9.tar.bz2
-  tar -vxjf htslib-1.9.tar.bz2
-  cd htslib-1.9
+  ## Install htslib 1.16
+  wget https://github.com/samtools/htslib/releases/download/1.16/htslib-1.16.tar.bz2
+  tar -vxjf htslib-1.16.tar.bz2
+  cd htslib-1.16
   ./configure
   make
   make install
   cd ..
 
-  ## Install bcftools 1.9
-  wget https://github.com/samtools/bcftools/releases/download/1.9/bcftools-1.9.tar.bz2
-  tar -vxjf bcftools-1.9.tar.bz2
-  cd bcftools-1.9
+  ## Install bcftools 1.16
+  wget https://github.com/samtools/bcftools/releases/download/1.16/bcftools-1.16.tar.bz2
+  tar -vxjf bcftools-1.16.tar.bz2
+  cd bcftools-1.16
   ./configure
   make
   make install
   cd ..
 
-  ## Install samtools 1.9
-  wget https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2
-  tar -vxjf samtools-1.9.tar.bz2
-  cd samtools-1.9
+  ## Install samtools 1.16
+  wget https://github.com/samtools/samtools/releases/download/1.16/samtools-1.16.tar.bz2
+  tar -vxjf samtools-1.16.tar.bz2
+  cd samtools-1.16
   ./configure
   make
   make install
@@ -40,16 +40,19 @@ From: rocker/tidyverse:4.1.2
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
   ## Installing R packages
-  R -e "remotes::install_version('remotes')"
-  R -e "remotes::install_version('BiocManager')"
+  R -e "options(timeout=120); remotes::install_version('remotes')"
+  R -e "options(timeout=120); remotes::install_version('BiocManager')"
 
-  R -e "remotes::install_version('gridExtra', version='2.3', dependencies= T)"
-  R -e "remotes::install_version('optparse', version='1.6.6', dependencies= T)"
-  R -e "remotes::install_version('Canopy', version='1.3.0', dependencies= T)"
-  R -e "remotes::install_version('jsonlite', version='1.6.1', dependencies= T)"
-  R -e "remotes::install_version('vcfR', version='1.10.0', dependencies= T)"
-  R -e "remotes::install_github('thomasp85/patchwork@v1.0.1')"
-  R -e "BiocManager::install('GenomicRanges', version=3.14)"
+  R -e "options(timeout=120); remotes::install_version('gridExtra', version='2.3', dependencies= T)"
+  R -e "options(timeout=120); remotes::install_version('optparse', version='1.6.6', dependencies= T)"
+  R -e "options(timeout=120); remotes::install_version('Canopy', version='1.3.0', dependencies= T)"
+  R -e "options(timeout=120); remotes::install_version('jsonlite', version='1.6.1', dependencies= T)"
+  R -e "options(timeout=120); remotes::install_version('vcfR', version='1.10.0', dependencies= T)"
+  R -e "options(timeout=120); remotes::install_github('thomasp85/patchwork@v1.0.1')"
+  R -e "options(timeout=120); BiocManager::install('GenomicRanges', version=3.16)"
+  R -e "options(timeout=120); BiocManager::install('plyranges', version=3.16)"
+  R -e "options(timeout=120); BiocManager::install('GenomicFeatures', version=3.16)"
+  R -e "options(timeout=120); remotes::install_github('NagaComBio/superintronic@b6a062c', dependencies= T)" 
 
 
   ###########################################################################
@@ -66,9 +69,13 @@ From: rocker/tidyverse:4.1.2
   python2 -m pip install matplotlib==1.4.3
 
   #########################################################################
-  ## Installing cyvcf2 package
-  pip3 install cython==0.29.24
-  pip3 install cyvcf2==0.11.7
+  ## Installing cyvcf2 package	
+  python3 -m pip install --upgrade pip
+  pip3 install --upgrade wheel
+  pip3 install --upgrade setuptools
+  pip3 install cmake
+  pip3 install cython
+  pip3 install cyvcf2==0.30.18
 
   ## Installing python3 packages
   pip3 install futures3==1.0.0

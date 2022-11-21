@@ -29,6 +29,8 @@ From: bioconductor/bioconductor_docker:RELEASE_3_14
             'pheatmap', \
             'phyloseq', \
             'qqman', \
+            'RnaSeqSampleSize', \
+            'rtracklayer', \
             'ShortRead', \
             'S4Vectors', \
             'tidyverse', \
@@ -38,6 +40,10 @@ From: bioconductor/bioconductor_docker:RELEASE_3_14
             'viridis'
             ), \
         type='source', ask=FALSE)"
+
+    # install zoo
+    Rscript -e "options(Ncpus=8); \
+        install.packages('zoo')"
 
 %runscript
 

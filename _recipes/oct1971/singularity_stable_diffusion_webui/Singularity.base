@@ -1,5 +1,5 @@
 BootStrap: docker
-From: ubuntu:20.04
+From: nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04
 
 %labels
     Maintainer oct1971
@@ -8,7 +8,6 @@ From: ubuntu:20.04
 %files
 
 %environment
-    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
 %post
     export DEBIAN_FRONTEND=noninteractive
@@ -21,14 +20,4 @@ From: ubuntu:20.04
     apt-get remove python-pip
     apt-get -y install python3.10-distutils
     curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
-
-    # install cuda-toolkit
-    export DEBIAN_FRONTEND=noninsteractive
-    apt-get -y install libxml2-dev
-    export TZ=Asia/Tokyo
-    cd /usr/local/src
-    wget https://developer.download.nvidia.com/compute/cuda/11.3.0/local_installers/cuda_11.3.0_465.19.01_linux.run
-    chmod +x cuda_11.3.0_465.19.01_linux.run
-    ./cuda_11.3.0_465.19.01_linux.run --toolkit --silent
-    rm /usr/local/src/cuda_11.3.0_465.19.01_linux.run
 
