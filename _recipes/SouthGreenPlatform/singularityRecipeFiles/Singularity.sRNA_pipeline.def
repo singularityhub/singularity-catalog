@@ -1,0 +1,22 @@
+BootStrap: docker
+From: ubuntu:16.04
+
+%labels
+Maintainer ravel
+base.image="ubuntu:last"
+version="1"
+software="BWA, Samtools, python and lib"
+software.version="last"
+
+%help
+
+    This container is for providing `bwa` `samtools` `python3 lib`  for sRNA_pipeline pipelines.
+
+%post
+    apt-get -y update && apt-get -y upgrade
+    apt-get -y install bwa samtools python3.8 python3.8-dev python3-pip zlib1g-dev libbz2-dev liblzma-dev libcurl4-openssl-dev libhts-dev libcurl4 libcrypto++6
+    apt-get -y install autoconf automake make gcc perl libcurl4-gnutls-dev libssl-dev libncurses5-dev
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
+    update-alternatives --set python /usr/bin/python3.8
+    python -m pip install cython
+    python -m pip install pysam pandas pillow biopython matplotlib

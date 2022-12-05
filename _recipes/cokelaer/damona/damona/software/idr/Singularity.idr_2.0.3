@@ -6,6 +6,8 @@ From: cokelaer/damona/conda:4.9.2
   package.name idr
   package.version 2.0.3
 
+%files
+    idr.py /opt
 
 %post
     apt-get update
@@ -15,7 +17,8 @@ From: cokelaer/damona/conda:4.9.2
     wget https://github.com/nboley/idr/archive/2.0.3.zip
     unzip 2.0.3.zip
     cd idr-2.0.3
-    conda install numpy scipy
+    cp /opt/idr.py idr/
+    conda install numpy scipy matplotlib
     python setup.py install
 
     # Uses agg as backend instead of qt (less dependencies)

@@ -1,8 +1,8 @@
 Bootstrap: docker
-From: ubuntu:cosmic
+From: ubuntu:bionic
 
 %labels
-Maintainer eric.burgueno@plantandfood.co.nz
+Maintainer ben.warren@plantandfood.co.nz
 Version 180922
 
 %environment
@@ -11,6 +11,8 @@ Version 180922
 
 %post
   ## Download build prerequisites
+  export DEBIAN_FRONTEND=noninteractive
+  export TZ="Pacific/Auckland"
   apt-get update
   apt-get -y install git make openjdk-8-jre parallel python-matplotlib python-numpy python-scipy wget
   
@@ -35,4 +37,9 @@ Version 180922
   rm -rf /lastz*
 
 %runscript
-  exec run-asm-pipeline.sh "$@"
+if [ -x /opt/3d-dna/$SINGULARITY_NAME ]; then
+    exec $SINGULARITY_NAME "$@"
+else
+    /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+    exec find /opt/3d-dna -maxdepth 1 -type f -executable -printf '%f\n'
+fi

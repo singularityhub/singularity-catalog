@@ -86,10 +86,14 @@ _EOF_
     tar zxvf rmblast-2.11.0+-x64-linux.tar.gz
 
     ## Download TRF
-    mkdir /usr/bin/trf
-	cd /usr/bin/trf
-	wget http://tandem.bu.edu/trf/downloads/trf409.linux64
-    chmod +x /usr/bin/trf
+	cd /usr/bin/
+    git clone https://github.com/Benson-Genomics-Lab/TRF.git
+    cd TRF
+    mkdir build
+    cd build
+    ../configure
+    make
+    chmod +x /usr/bin/TRF
 
 
     ##Download and install RepeatMasker
@@ -98,7 +102,7 @@ _EOF_
     tar -zxvf RepeatMasker-4.1.3-p1.tar.gz
     rm RepeatMasker-4.1.3-p1.tar.gz
     cd /usr/local/bin/RepeatMasker
-    perl ./configure --trf_prgm=/usr/bin/trf/trf409.linux64 --rmblast_dir=/usr/bin/rmblast-2.11.0/bin
+    perl ./configure --trf_prgm=/usr/bin/TRF/trf4.10.0.linux64.exe --rmblast_dir=/usr/bin/rmblast-2.11.0/bin
 
 
 %environment

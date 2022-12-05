@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: alpine:3.15
+
+%labels
+    Author Sequana Team
+    Version v2.5.1
+
+%post
+
+
+    apk update
+    apk add  unzip wget add ca-certificates && update-ca-certificates
+    #apk add --update --no-cache ncurses --force-non-repository
+    #apk add --virtual=deps --update --no-cache curl-dev ncurses-dev musl-dev g++ make zlib-dev xz-dev xz bzip2 bzip2-dev xz-libs --force-non-repository cmake
+    apk add --virtual=deps --update --no-cache g++ make zlib-dev xz-dev xz bzip2 bzip2-dev xz-libs --force-non-repository cmake
+ 
+    rm -rf /var/lib/apt/list/*
+
+    # install samtools
+    mkdir /opt/build
+    cd /opt/build
+    wget https://github.com/pezmaster31/bamtools/archive/refs/tags/v2.5.2.zip  &&  unzip v2.5.2.zip && cd bamtools-2.5.2 && cmake -DCMAKE_INSTALL_PREFIX=/usr/local/ &&  make install
+
+    # clean package needed only for install
+    #apt purge -y wget && apt autoremove -y
+
+%environment
+    export LC_ALL=C.UTF-8
+
+%runscript
+    exec bamtools "$@"
+
+

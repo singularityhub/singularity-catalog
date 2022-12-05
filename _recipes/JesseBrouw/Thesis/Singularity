@@ -49,12 +49,6 @@ From: ubuntu:xenial
         $PLANFILE \
         --image-from-lifted-task
     
-    ## Call your planner.
-    /planner/plan-ipc.py \
-        $DOMAINFILE \
-        $PROBLEMFILE \
-        $PLANFILE \
-        --image-from-grounded-task
 
 ## Update the following fields with meta data about your submission.
 ## Please use the same field names and use only one line for each value.

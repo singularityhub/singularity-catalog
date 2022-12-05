@@ -1,0 +1,53 @@
+bootstrap: docker
+From: ubuntu:20.04
+
+%post
+	apt -y update
+	apt -y install bc zip unzip wget tzdata
+	apt -y install build-essential git cmake zlib1g zlib1g-dev curl
+
+
+	cd /opt
+	mkdir bin
+
+	git clone https://github.com/lh3/wgsim
+	cd wgsim
+	gcc -g -O2 -Wall -o wgsim wgsim.c -lz -lm
+	cd ..
+	
+	git clone https://github.com/aquaskyline/SOAPdenovo2
+	cd SOAPdenovo2/
+	sed -i -e "s/-lm/-lm -no-pie/" Makefile
+	make
+	cd ..
+	
+	git clone https://github.com/sanger-pathogens/assembly-stats.git
+	cd assembly-stats/
+	mkdir build
+	cd build
+	cmake ..
+	make
+	make install
+	cd ../..
+	
+	wget https://github.com/shenwei356/seqkit/releases/download/v2.2.0/seqkit_linux_amd64.tar.gz
+	tar -xzf seqkit_linux_amd64.tar.gz 
+	chmod a+x seqkit
+	mv seqkit /opt/bin/
+	\rm seqkit_linux_amd64.tar.gz 
+	
+
+	wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.13.0+-x64-linux.tar.gz
+	tar -xzf ncbi-blast-2.13.0+-x64-linux.tar.gz
+	\rm ncbi-blast-2.13.0+-x64-linux.tar.gz
+	mv ncbi-blast-2.13.0+/bin/* /opt/bin
+
+	cd ..
+	
+%environment
+    export LC_ALL=C
+    export PATH=$PATH:/opt/wgsim:/opt/SOAPdenovo2:/opt/ncbi-blast-2.130+/nin:/opt/bin
+
+%labels
+    Maintainer vpbrendel
+    Version v1.1.0

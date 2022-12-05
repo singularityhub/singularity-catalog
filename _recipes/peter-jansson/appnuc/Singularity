@@ -5,4 +5,5 @@ From: ubuntu:22.04
     scripts/* /
 
 %post
+    for f in $(ls /*.sh); do sed -i -e 's,\r,,g' $f; done
     bash /setup.sh

@@ -1,0 +1,21 @@
+BootStrap: docker
+From: fuchs
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%post
+    cd /
+    . /load-spack-env.sh
+    spack env deactivate
+    spack install gcc@9.3.0 target=x86_64
+    spack compiler add $(spack location -i gcc@9.3.0 target=x86_64)
+
+%post
+    cd /
+    . /load-spack-env.sh
+    spack add openmpi@4.1.3%gcc@9.3.0 target=x86_64
+    spack add fftw target=IvyBridge
+    spack install
+    spack clean --all
+
+

@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: ubuntu:22.04
+Stage: spython-base
+
+%post
+#DockerFile pour sra-toolkit
+
+apt-get update
+
+apt-get install -y sra-toolkit
+
+%runscript
+exec /bin/bash which fastq-dump "$@"
+%startscript
+exec /bin/bash which fastq-dump "$@"

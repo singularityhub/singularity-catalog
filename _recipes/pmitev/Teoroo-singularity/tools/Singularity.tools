@@ -12,12 +12,17 @@ From: ubuntu:22.04
   export LC_ALL=C
   export DEBIAN_FRONTEND=noninteractive
 
+  mkdir -p /tmp/apt
+  echo "Dir::Cache "/tmp/apt";" > /etc/apt/apt.conf.d/singularity-cache.conf
+
   apt-get update && apt-get -y dist-upgrade && \
-  apt-get install -y uuid-runtime mc xclip vim gawk ncdu squashfs-tools squashfuse \
+  apt-get install -y uuid-runtime wget mc xclip vim gawk ncdu squashfs-tools squashfuse \
           git git-lfs aria2 meld qemu-utils p7zip-full p7zip-rar jmol povray \
           units putty jq sqlitebrowser gv screen dos2unix vmtouch parallel pbzip2 elinks lynx \
-          mosquitto-clients inkscape
-  apt-get clean
+          mosquitto-clients inkscape bat exa duf silversearcher-ag
+
+  cd /
+  wget https://github.com/bootandy/dust/releases/download/v0.8.3/du-dust_0.8.3_amd64.deb  && apt install -y ./du-dust_0.8.3_amd64.deb && rm du-dust_0.8.3_amd64.deb
 
 %runscript
   export XDG_RUNTIME_DIR=/tmp/.${USER}_$(uuidgen)

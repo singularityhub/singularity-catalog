@@ -1,0 +1,72 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%files
+    config.json
+
+%labels
+    Maintainer wever
+    Version v0.1a
+
+%post
+    ## Update the container
+    apt-get update
+    apt-get install -y apt-utils
+
+    ## Install packages
+    apt-get install -y software-properties-common
+    add-apt-repository ppa:cwchien/gradle
+    apt-get update
+    apt-get install -f
+    apt-get install -y openjdk-8-jdk
+    apt-get install -y git
+    apt-get install -y curl
+    apt-get install -y build-essential
+    apt-get install -y --allow-unauthenticated gradle
+    apt-get install -y mc
+    rm -rf /var/lib/apt/lists/*
+    echo "#####################################"
+    echo "# Finished first part of the setup. #"
+    echo "#####################################"
+
+    ## We can get the bootup script from git repository (a)
+    ## or copy them as files beside the image (b)
+    ## or as volume for development (c)
+
+    ## a. Clone the bootup scripts in current directory
+    ## n. Or copy from the disk
+    ## COPY . .
+
+    ## mkdir sede
+    ## The following command is not necessary as the directory already exists as config.json is copied to this directory.
+    mkdir -p /temp
+    rm -rf /temp/startup.sh
+    touch /temp/startup.sh
+    echo "#!/bin/bash" >> /temp/startup.sh
+    echo "mkdir sede" >> /temp/startup.sh
+    echo "cd sede" >> /temp/startup.sh
+
+    echo "git clone https://github.com/CRC-901-On-the-Fly-Computing/executor-bootup.git . --branch master" >> /temp/startup.sh
+    echo "cp /config.json ./config.json" >> /temp/startup.sh
+    echo "find . -type f -name '*.sh' | xargs chmod +x" >> /temp/startup.sh
+    echo "./generate.sh" >> /temp/startup.sh
+    chmod +x /temp/startup.sh
+
+%runscript
+    ## set environment variables for external address of the executor
+    export EXT_EXECUTOR_IP=$(curl ipinfo.io/ip)
+    export EXT_EXECUTOR_PORT=$1
+    export EXECUTOR_ADDRESS="${EXT_EXECUTOR_IP}:${EXT_EXECUTOR_PORT}"
+
+    ## set environment variables for internal address of the executor
+    export INT_EXECUTOR_IP=$EXT_EXECUTOR_IP
+    export INT_EXECUTOR_PORT=$EXT_EXECUTOR_PORT
+
+    ## show the environment variable configuration in the bash
+    echo "External executor ip configured as ${EXT_EXECUTOR_IP} and port as ${EXT_EXECUTOR_PORT}."
+    echo "Internal executor ip configured as ${INT_EXECUTOR_IP} and port as ${INT_EXECUTOR_PORT}."
+    echo "Executor address is set to ${EXECUTOR_ADDRESS}"
+
+    ## run the startup script for actually starting the executor.
+    echo "now execute bash script /temp/startup.sh $@"
+    exec /temp/startup.sh $@

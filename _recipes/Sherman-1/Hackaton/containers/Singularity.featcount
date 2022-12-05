@@ -1,0 +1,25 @@
+Bootstrap: docker 
+From: ubuntu:jammy
+
+
+%post
+
+apt-get update && apt-get install -y \
+	wget \
+	make \
+	gcc \
+	libz-dev \
+
+wget --no-check-certificate https://sourceforge.net/projects/subread/files/subread-2.0.3/subread-2.0.3-source.tar.gz
+
+tar -xvf subread-2.0.3-source.tar.gz --no-same-owner
+cd subread-2.0.3-source/src
+make -f Makefile.Linux
+cd ../..
+chmod 755 subread-2.0.3-source/bin/featureCounts
+
+
+%environment
+export LC_ALL=C
+export PATH=/subread-2.0.3-source/bin/:$PATH
+

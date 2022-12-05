@@ -1,25 +1,25 @@
 bases:
-- count: 1335
+- count: 1357
   name: ubuntu
-- count: 307
+- count: 308
   name: nvidia/cuda
-- count: 270
+- count: 271
   name: debian
-- count: 208
+- count: 211
   name: centos
+- count: 143
+  name: alpine
 - count: 141
   name: continuumio/miniconda3
-- count: 137
-  name: alpine
-- count: 127
+- count: 130
   name: aibasel/downward
-- count: 121
+- count: 122
   name: python
 - count: 96
   name: ghcr.io/mkandes/naked-singularity
 - count: 95
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 86
+- count: 87
   name: tensorflow/tensorflow
 - count: 56
   name: nfcore/base
@@ -69,10 +69,10 @@ bases:
   name: ezlabgva/busco
 - count: 15
   name: jtchilders/singularity_image_recipes
-- count: 15
-  name: rocker/tidyverse
 - count: 14
   name: continuumio/miniconda
+- count: 14
+  name: rocker/tidyverse
 - count: 13
   name: nvcr.io/nvidia/nvhpc
 - count: 12
@@ -83,14 +83,14 @@ bases:
   name: nipreps/fmriprep
 - count: 12
   name: nitishnarula/secure/ubuntu-focal
+- count: 12
+  name: r-base
 - count: 11
   name: qiime2/core
 - count: 11
   name: conda/miniconda2
 - count: 11
   name: deeplearnphysics/larcv2
-- count: 11
-  name: r-base
 - count: 10
   name: hariszaf/pema
 - count: 10
@@ -124,6 +124,8 @@ bases:
 - count: 8
   name: arezaii/pf_singularity
 - count: 8
+  name: tpall/singularity-r
+- count: 8
   name: ewels/multiqc
 - count: 8
   name: rust
@@ -137,8 +139,6 @@ bases:
   name: mattocci/rstan
 - count: 7
   name: quay.io/qiime2/core
-- count: 7
-  name: tpall/singularity-r
 - count: 7
   name: sebastientourbier/connectomemapper-bidsapp
 - count: 7
@@ -215,8 +215,6 @@ bases:
   name: broadinstitute/gatk3
 - count: 5
   name: bioconductor/release_core2
-- count: 5
-  name: letaylor/sc_qc_cluster
 - count: 5
   name: rocker/rstudio
 - count: 5
@@ -302,6 +300,8 @@ bases:
 - count: 3
   name: bids/pymvpa
 - count: 3
+  name: nipreps/smriprep
+- count: 3
   name: registry.gitlab.com/rode0day/fuzzer-testing/honggfuzz_runner
 - count: 3
   name: ghcr.io/truatpasteurdotfr/singularity-docker-stream8-ci
@@ -367,6 +367,8 @@ bases:
   name: willprice/furnari-flow
 - count: 3
   name: fcpindi/c-pac
+- count: 3
+  name: rocker/r-ubuntu
 - count: 2
   name: nginx
 - count: 2
@@ -432,6 +434,8 @@ bases:
 - count: 2
   name: philarevalo/dev/ubuntu-pymol-biopython
 - count: 2
+  name: repronim/reproin
+- count: 2
   name: brainiak/rttools
 - count: 2
   name: brainiak/rttoolsxl
@@ -439,8 +443,6 @@ bases:
   name: brainiak/rttoolslite
 - count: 2
   name: brainiak/rtconda
-- count: 2
-  name: nipreps/smriprep
 - count: 2
   name: micalab/micapipe
 - count: 2
@@ -532,6 +534,8 @@ bases:
 - count: 2
   name: centos610
 - count: 2
+  name: letaylor/sc_qc_cluster
+- count: 2
   name: multiphenics/multiphenics
 - count: 2
   name: nistmni/minc-toolkit-min
@@ -568,6 +572,8 @@ bases:
 - count: 2
   name: iarcbioinfo/imputation-nf
 - count: 2
+  name: sachet/polysolver
+- count: 2
   name: icbi/quantiseq2
 - count: 2
   name: adigenova/nf-gene-fusions
@@ -587,8 +593,6 @@ bases:
   name: quay.io/biocontainers/bamtools
 - count: 2
   name: quay.io/biocontainers/picard
-- count: 2
-  name: rocker/r-ubuntu
 - count: 2
   name: pndni/centos7-base
 - count: 2
@@ -890,13 +894,13 @@ bases:
 - count: 1
   name: rstatstartu/rstanverse
 - count: 1
+  name: fuchs
+- count: 1
   name: impica
 - count: 1
   name: biocorecrg/debian-perlbrew
 - count: 1
   name: library/mariadb
-- count: 1
-  name: repronim/reproin
 - count: 1
   name: repronim/simple_workflow
 - count: 1
@@ -967,6 +971,8 @@ bases:
   name: opensuse/leap
 - count: 1
   name: conda/conda_4.9.1.img
+- count: 1
+  name: sequana_tools_0.14.3.img
 - count: 1
   name: sequana_tools_0.14.1.img
 - count: 1
@@ -1286,8 +1292,6 @@ bases:
 - count: 1
   name: iarcbioinfo/svaba-nf
 - count: 1
-  name: sachet/polysolver
-- count: 1
   name: iarcbioinfo/vcf_normalization-nf
 - count: 1
   name: lizhen0909/pylshvec
@@ -1474,18 +1478,18 @@ bases:
 - count: 1
   name: ucrdocker/cuda-10.1-base
 bootstraps:
-- count: 4305
+- count: 4345
   name: docker
-- count: 351
+- count: 352
   name: debootstrap
-- count: 307
+- count: 308
   name: shub
 - count: 291
   name: library
+- count: 104
+  name: localimage
 - count: 103
   name: yum
-- count: 103
-  name: localimage
 - count: 102
   name: oras
 - count: 19
@@ -1838,8 +1842,6 @@ orgs:
 - count: 1
   name: rstatstartu
 - count: 1
-  name: tpall
-- count: 1
   name: nipy
 - count: 1
   name: neuronets
@@ -1916,6 +1918,8 @@ orgs:
 - count: 1
   name: scr.svc.stanford.edu
 - count: 1
+  name: tpall
+- count: 1
   name: sarah145
 - count: 1
   name: pranithavangala
@@ -1973,6 +1977,8 @@ orgs:
   name: raj76
 - count: 1
   name: fermilab
+- count: 1
+  name: letaylor
 - count: 1
   name: multiphenics
 - count: 1
@@ -2154,8 +2160,6 @@ orgs:
 - count: 1
   name: sriggi
 - count: 1
-  name: letaylor
-- count: 1
   name: gw000
 - count: 1
   name: drneavin
@@ -2212,8 +2216,8 @@ orgs:
 - count: 1
   name: osrf
 tags:
-  latest: 419
-  other: 4047
+  latest: 417
+  other: 4088
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -2246,10 +2250,10 @@ versions:
     latest: 1
   aibasel/downward:
     '19.06': 28
-    '19.12': 31
-    '20.06': 40
-    '21.12': 12
-    '22.06': 16
+    '19.12': 30
+    '20.06': 41
+    '21.12': 13
+    '22.06': 18
   airl_lab/default/airl_env:
     base_ci: 1
   alan0415/singularity_tf_rdma:
@@ -2271,10 +2275,12 @@ versions:
     '8': 1
   alpine:
     3.10.3: 3
-    '3.11': 2
+    '3.11': 3
     3.11.5: 20
-    '3.15': 3
+    '3.12': 1
+    '3.15': 5
     3.15.0: 1
+    '3.16': 2
     3.16.2: 2
     '3.4': 2
     '3.5': 1
@@ -2530,7 +2536,7 @@ versions:
     '6.10': 2
     '6.8': 1
     '6.9': 1
-    '7': 83
+    '7': 86
     7.4.1708: 12
     7.5.1804: 2
     7.6.1810: 2
@@ -2661,7 +2667,7 @@ versions:
     buster-slim: 27
     jessie: 8
     jessie-slim: 9
-    latest: 30
+    latest: 31
     sid: 1
     stretch: 47
     stretch-slim: 8
@@ -3082,7 +3088,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 5
+    latest: 2
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -3247,6 +3253,7 @@ versions:
   nipreps/nirodents:
     0.2.1: 1
   nipreps/smriprep:
+    0.10.0: 1
     0.9.1: 1
     0.9.2: 1
   nipy/heudiconv:
@@ -3372,7 +3379,7 @@ versions:
     10.1-base-ubuntu18.04: 1
     10.1-cudnn7-devel-centos7: 3
     10.1-cudnn7-devel-ubuntu16.04: 4
-    10.1-cudnn7-devel-ubuntu18.04: 52
+    10.1-cudnn7-devel-ubuntu18.04: 53
     10.1-cudnn7-runtime: 1
     10.1-cudnn7-runtime-centos7: 1
     10.1-cudnn7-runtime-ubuntu16.04: 5
@@ -3643,7 +3650,7 @@ versions:
     3.7.4-slim: 3
     3.7.7-slim-buster: 1
     3.7.9: 1
-    '3.8': 9
+    '3.8': 10
     3.8-alpine: 5
     3.8-buster: 2
     3.8-slim: 7
@@ -3864,6 +3871,7 @@ versions:
     2.0.0: 1
   repronim/reproin:
     0.11.3: 1
+    0.11.6: 1
   repronim/simple_workflow:
     1.1.0: 1
   richelbilderbeek/default/gcaer:
@@ -3892,6 +3900,7 @@ versions:
     latest: 1
   rocker/r-ubuntu:
     '20.04': 2
+    '22.04': 1
   rocker/r-ver:
     3.5.3: 2
     3.6.0: 1
@@ -3921,7 +3930,6 @@ versions:
     3.6.0: 1
     '3.6.3 ': 1
     4.1.1: 1
-    4.2.1: 1
     4.2.2: 1
   rocker/verse:
     4.1.1: 1
@@ -3949,6 +3957,7 @@ versions:
     1.58.1: 1
     slim-buster: 7
   sachet/polysolver:
+    v3: 1
     v4: 1
   sangerpathogens/gubbins:
     latest: 1
@@ -4072,7 +4081,7 @@ versions:
     2.9.1-gpu-jupyter: 2
     latest-gpu: 7
     latest-gpu-jupyter: 1
-    latest-gpu-py3: 5
+    latest-gpu-py3: 6
     latest-gpu-py3-jupyter: 1
     latest-py3: 3
     latest-py3-jupyter: 1
@@ -4100,7 +4109,7 @@ versions:
     v0.4.3: 1
   tpall/singularity-r:
     3.6.3: 2
-    4.0.3: 4
+    4.0.3: 5
     latest: 1
   trends/gift-bids:
     '1.000': 1
@@ -4128,35 +4137,35 @@ versions:
   ubuntu:
     $VERSION: 1
     '14.04': 23
-    '16.04': 183
+    '16.04': 185
     '17.04': 6
-    '18.04': 282
+    '18.04': 284
     '18.04 ': 7
     '19.04': 19
     '19.10': 4
-    '20.04': 311
+    '20.04': 322
     '20.04  ': 1
     '20.10': 3
     '21.04': 5
     '21.10': 3
-    '22.04': 21
+    '22.04': 27
     UBUNTU_VERSION: 1
     artful: 7
-    bionic: 179
+    bionic: 181
     'bionic   ': 1
     bionic-20180526: 1
     bionic-20190307: 4
     bionic-20200112: 1
     bionic-20210222: 1
     bionic-20210827: 1
-    cosmic: 4
+    cosmic: 2
     disco: 3
     eoan-20200410: 2
     focal: 38
     focal-20200729: 1
     focal-20200925: 3
     focal-20210827: 1
-    jammy: 2
+    jammy: 3
     latest: 93
     rolling: 1
     sha256.21678b2846063434e2009dee535d3e28ded35774ca72722e1d62b37077de30da: 5

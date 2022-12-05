@@ -1,0 +1,60 @@
+Bootstrap: docker
+From: alpine:3.16
+Stage: build
+
+%post
+VERSION='7.1.0-52'
+## Download build prerequisites
+apk add --no-cache \
+    build-base \
+    libtool \
+    libheif-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    tiff-dev \
+    librsvg-dev \
+    libraw-dev \
+    libzip-dev \
+    curl
+
+## get src
+cd /tmp
+curl -sL https://github.com/ImageMagick/ImageMagick/archive/refs/tags/${VERSION}.tar.gz | tar -xz
+cd ImageMagick-${VERSION}
+
+# build
+./configure --prefix=/opt/imagemagick --with-modules=yes --with-rsvg=yes
+make
+make install
+
+# Final stage
+Bootstrap: docker
+From: alpine:3.16
+Stage: final
+
+%labels
+Maintainer ben.warren@plantandfood.co.nz
+Version 7.1.0.52-r0
+
+%files from build
+/opt/imagemagick /opt/imagemagick
+
+%post
+# add runtime libs
+apk add --no-cache \
+    libtool \
+    libheif \
+    libpng \
+    libjpeg-turbo \
+    tiff \
+    librsvg \
+    libraw \
+    libzip
+
+%runscript
+if [ -x /opt/imagemagick/bin/$SINGULARITY_NAME ]; then
+    exec /opt/imagemagick/bin/$SINGULARITY_NAME "$@"
+else
+  /bin/echo -e "This Singularity image cannot provide a single entrypoint. Please use \"singularity exec $SINGULARITY_NAME <cmd>\", where <cmd> is one of the following:\n"
+  exec ls /opt/imagemagick/bin
+fi

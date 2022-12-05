@@ -1,0 +1,100 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%labels
+    Author Sequana Team
+    Version v0.0.2
+
+%help
+    This is a container to provide Prokka, Quast, Blast, Busco, spaDES and unicycler without break your conda environment.
+
+
+%post
+    PROKKA_VERSION=1.14.5
+    QUAST_VERSION=5.2.0
+    BUSCO_VERSION=5.4.3
+    SAMTOOLS_VERSION=1.14
+    BBMAP_VERSION=39.00
+    BEDTOOLS_VERSION=2.30.0
+    BARRNAP_VERSION=0.9
+    PRODIGAL_VERSION=2.6.3
+    AUGUSTUS_VERSION=3.5.0
+    SEPP_VERSION=4.5.1
+    SPADES_VERSION=3.15.5
+    UNICYCLER_VERSION=0.5.0
+
+    # install dependencies
+    apt update \
+    && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends tzdata \
+    && apt install -yq --no-install-recommends \
+        curl gzip wget bzip2 gawk bash grep libstdc++6 libgomp1 libatomic1 zlib1g libbz2-1.0 libbz2-dev  zlib1g-dev parallel hmmer make gcc libidn12 libncurses5-dev \
+        perl libdatetime-perl libxml-simple-perl libdigest-md5-perl default-jre bioperl bioperl-run cpanminus pkg-config libfreetype6-dev libpng-dev \
+        libbz2-dev liblzma-dev libhts-dev python3-matplotlib python3-all-dev python3-pip python3-setuptools ncbi-blast+ cmake g++ \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \
+    && rm -rf /var/lib/apt/list/*
+    cpanm --notest --force Bio::DB::GenPept Bio::SearchIO::hmmer3
+    cpanm --notest Bio::Perl
+    pip install --upgrade pip
+    pip install matplotlib pandas biopython
+    
+    # little hack for libidn
+    ln -sf /usr/lib/x86_64-linux-gnu/libidn.so.12 /usr/lib/x86_64-linux-gnu/libidn.so.11
+
+    # install barrnap
+    curl -sSL https://github.com/arq5x/bedtools2/releases/download/v$BEDTOOLS_VERSION/bedtools.static.binary -o bedtools \
+        && chmod 755 bedtools && mv bedtools /usr/local/bin
+    curl -sSL https://github.com/tseemann/barrnap/archive/refs/tags/$BARRNAP_VERSION.tar.gz | tar zx \
+        && mv barrnap-$BARRNAP_VERSION barrnap && cd barrnap && make test && cd -
+
+    # install prokka
+    curl -sSL https://ftp.ncbi.nih.gov/toolbox/ncbi_tools/converters/by_program/tbl2asn/linux64.tbl2asn.gz | gunzip > tbl2asn && chmod 755 tbl2asn && mv tbl2asn /usr/local/bin/
+    curl -sSL https://github.com/tseemann/prokka/archive/refs/tags/v$PROKKA_VERSION.tar.gz | tar zx && mv prokka-$PROKKA_VERSION prokka
+    /prokka/bin/prokka --setupdb
+
+    # install quast
+    curl -sSL https://github.com/ablab/quast/releases/download/quast_$QUAST_VERSION/quast-$QUAST_VERSION.tar.gz | tar zx \
+        && cd quast-$QUAST_VERSION && python setup.py install && cd -
+
+    # install samtools
+    curl -sSL https://github.com/samtools/samtools/releases/download/$SAMTOOLS_VERSION/samtools-$SAMTOOLS_VERSION.tar.bz2 | tar -xjf - \
+        && cd samtools-$SAMTOOLS_VERSION \
+        && ./configure && make && make install && cd -
+    # install htslib
+    cd samtools-${SAMTOOLS_VERSION}/htslib-${SAMTOOLS_VERSION} && make && make install && cd -
+    # install augustus
+    apt install -yq --no-install-recommends libgsl-dev libboost-all-dev libsuitesparse-dev liblpsolve55-dev libsqlite3-dev libmysql++-dev libbamtools-dev
+    curl -sSL https://github.com/Gaius-Augustus/Augustus/archive/refs/tags/v$AUGUSTUS_VERSION.tar.gz | tar zx \
+        && mv Augustus-$AUGUSTUS_VERSION augustus && cd augustus && make augustus && make && make install && cd -
+    # install prodigal
+    curl -sSL https://github.com/hyattpd/Prodigal/archive/refs/tags/v$PRODIGAL_VERSION.tar.gz | tar zx \
+        && cd Prodigal-$PRODIGAL_VERSION && make install && cd -
+    # install metaeuk
+    curl -sSL https://mmseqs.com/metaeuk/metaeuk-linux-avx2.tar.gz | tar zx && ln -s /metaeuk/bin/metaeuk /usr/local/bin/
+    # install BBTools
+    curl -sSL https://sourceforge.net/projects/bbmap/files/BBMap_$BBMAP_VERSION.tar.gz | tar zx \
+        && ln -s /bbmap/*.sh /usr/local/bin/
+    # install SEPP
+    curl -sSL https://github.com/smirarab/sepp/archive/refs/tags/$SEPP_VERSION.tar.gz | tar zx \
+        && cd sepp-$SEPP_VERSION && python setup.py config && python setup.py install && cd -
+    # install busco
+    curl -sSL https://gitlab.com/ezlab/busco/-/archive/$BUSCO_VERSION/busco-$BUSCO_VERSION.tar.gz | tar zx \
+        && cd busco-$BUSCO_VERSION && python setup.py install && cd -
+    apt-get install -yq --no-install-recommends r-base
+    R --vanilla -e 'install.packages("ggplot2", repos="http://cran.wu.ac.at/")'
+
+    # install SPAdes for Unicycler
+    curl -sSL http://cab.spbu.ru/files/release$SPADES_VERSION/SPAdes-$SPADES_VERSION.tar.gz | tar zx \
+      && cd SPAdes-$SPADES_VERSION && PREFIX=/usr/local/ ./spades_compile.sh && cd - \
+      || PREFIX=/usr/local/ ./spades_compile.sh && cd -   # spades need to run two times to be correctly compiled
+
+    # install Unicycler
+    curl -sSL https://github.com/rrwick/Unicycler/archive/refs/tags/v$UNICYCLER_VERSION.tar.gz | tar zx \
+        && cd Unicycler-$UNICYCLER_VERSION && python3 setup.py install && cd -
+    
+    # clean package needed only for install
+    apt purge -y curl wget && apt autoremove -y
+
+%environment
+    export PATH=$PATH:/prokka/bin:/prokka/binaries/common:/prokka/binaries/linux:/barrnap/bin
+    export AUGUSTUS_CONFIG_PATH="/augustus/config"
+    export LC_ALL=C.UTF-8
