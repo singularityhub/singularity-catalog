@@ -1,0 +1,37 @@
+# Rosetta2Go
+# https://github.com/Metaphorme/Rosetta2Go
+# MIT License
+# Copyright (c) 2022 Metaphorme <https://github.com/Metaphorme>
+
+Bootstrap: docker
+From: alpine:3.12
+
+
+%environment
+    export PATH=/rosetta/source/bin:$PATH
+    export LIB_LIBRARY_PATH=/rosetta/source/external/lib:$LIB_LIBRARY_PATH
+    export PATH=$PATH:/usr/local/openmpi/bin \
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/openmpi/lib \
+    export OMPI_ALLOW_RUN_AS_ROOT=1
+    export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+
+%post
+    export FILE_SERVER='http://127.0.0.1:28293'; DEBIAN_FRONTEND=noninteractive \
+    && set -x; buildDeps='libexecinfo libexecinfo-dev build-base coreutils python3 libc6-compat curl pigz perl linux-headers bash zlib-dev vim nano' \
+    && sed -i "s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g" /etc/apk/repositories \
+    && apk --update add --no-cache $buildDeps \
+    && ln -s /usr/bin/python3 /usr/bin/python \
+    && cd /tmp \
+    && curl -SL https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.4.tar.bz2 | tar -xjv \
+    && cd openmpi-4.1.4 \
+    && ./configure --prefix=/usr/local; make install -j 100 \
+    && export PATH=$PATH:/usr/local/openmpi/bin \
+    && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/openmpi/lib \
+    && export OMPI_ALLOW_RUN_AS_ROOT=1 \
+    && export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1 \
+    && cd /tmp \
+    && curl -SL $FILE_SERVER/rosetta_src_3.13_bundle.tgz | pigz -d | tar -x \
+    && mv /tmp/rosetta_src_2021.16.61629_bundle/main /rosetta \
+    && cd /rosetta/source \
+    && ./scons.py -j100 bin mode=release extras=mpi \
+    && rm -rf /tmp/rosetta_src_3.13_bundle.tgz /tmp/openmpi-4.1.4.tar.bz2 /tmp/rosetta_src_2021.16.61629_bundle /tmp/openmpi-4.1.4

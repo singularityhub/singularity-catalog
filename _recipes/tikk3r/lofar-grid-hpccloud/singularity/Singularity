@@ -25,7 +25,7 @@ From: fedora:34
 	# Leave at latest, release versions crash for some reason.
 	export CASAREST_VERSION=latest
 	export CFITSIO_VERSION=7.3.47
-    export DPPP_VERSION=c719014a
+    export DPPP_VERSION=v5.3
 	export DYSCO_VERSION=v1.2
     export EVERYBEAM_VERSION=78e4dc4b
     export FFTW_VERSION=3.5.8
@@ -269,7 +269,7 @@ From: fedora:34
     #cd $INSTALLDIR/casacore/src && patch --fuzz 3 -p1 < $INSTALLDIR/casacore/1033.patch
 	cd ${INSTALLDIR}/casacore/data && wget --retry-connrefused ftp://anonymous@ftp.astron.nl/outgoing/Measures/WSRT_Measures.ztar
 	cd ${INSTALLDIR}/casacore/data && tar xf WSRT_Measures.ztar && rm WSRT_Measures.ztar
-	cd ${INSTALLDIR}/casacore/build && cmake3 -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/casacore/ -DDATA_DIR=${INSTALLDIR}/casacore/data -DBUILD_PYTHON=False -DUSE_OPENMP=True -DUSE_FFTW3=TRUE -DUSE_HDF5=True -DBUILD_PYTHON3=True ../src/ 
+	cd ${INSTALLDIR}/casacore/build && cmake3 -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/casacore/ -DDATA_DIR=${INSTALLDIR}/casacore/data -DBUILD_PYTHON=False -DUSE_OPENMP=True -DUSE_FFTW3=TRUE -DUSE_HDF5=True -DBUILD_PYTHON3=True -DBUILD_DYSCO=OFF ../src/ 
 	cd ${INSTALLDIR}/casacore/build && make -s -j ${J}
 	cd ${INSTALLDIR}/casacore/build && make install
     cd $INSTALLDIR
@@ -518,15 +518,14 @@ From: fedora:34
     #
     # Install killMS
     #
-    mkdir -p $INSTALLDIR
-    cd $INSTALLDIR && git clone --single-branch -b v2.6 https://github.com/saopicc/killMS.git
+    mkdir -p $INSTALLDIR/killMS
+    cd $INSTALLDIR/killMS && git clone --single-branch -b v3.1.0 https://github.com/saopicc/killMS.git
+    sed -i "s/gcc/gcc -march=${MARCH} -mtune=${MTUNE}/" killMS/killMS/Predict/Makefile
+    sed -i "s/gcc/gcc -march=${MARCH} -mtune=${MTUNE}/" killMS/killMS/Array/Dot/Makefile
+    sed -i "s/gcc/gcc -march=${MARCH} -mtune=${MTUNE}/" killMS/killMS/Gridder/Makefile
     cd killMS
-    patch $INSTALLDIR/killMS/Predict/Makefile $PATCH_KILLMS_MAKEFILE_PREDICT
-    patch $INSTALLDIR/killMS/Array/Dot/Makefile $PATCH_KILLMS_MAKEFILE_ARRAY
-    patch $INSTALLDIR/killMS/Gridder/Makefile $PATCH_KILLMS_MAKEFILE_GRIDDER
-    cd $INSTALLDIR/killMS/Predict && $make
-    cd $INSTALLDIR/killMS/Array/Dot && $make
-    cd $INSTALLDIR/killMS/Gridder && $make
+    sed -i "s?DDFacet >= 0.7.0?DDFacet >= 0.6.0?" setup.py
+    python setup.py install --prefix=$INSTALLDIR/killMS
 
     #
     # Install DDFacet
@@ -644,8 +643,8 @@ echo "# DDF environment settings" >> $INSTALLDIR/init.sh
     echo export DDF_PIPELINE_CATALOGS=$INSTALLDIR/DDFCatalogues >> $INSTALLDIR/init.sh
     echo export KILLMS_DIR=$INSTALLDIR >> $INSTALLDIR/init.sh
     echo export PYTHONPATH=\$INSTALLDIR/DPPP/lib/python3.9/site-packages:\$INSTALLDIR/DPPP/usermodules:\$PYTHONPATH >> $INSTALLDIR/init.sh
-    echo export PYTHONPATH=$INSTALLDIR/ddf-pipeline/scripts:$INSTALLDIR/ddf-pipeline/utils:$INSTALLDIR/DDFacet/lib/python${PYTHON_VERSION}/site-packages:$INSTALLDIR/killMS:$INSTALLDIR/killMS/Predict:$INSTALLDIR/killMS/Array:$INSTALLDIR/killMS/Array/Dot:$INSTALLDIR/killMS/Gridder:$INSTALLDIR/DDFacet/bin:$INSTALLDIR/DynSpecMS:\$PYTHONPATH >> $INSTALLDIR/init.sh
-    echo export PATH=$INSTALLDIR/DDFacet/bin:$INSTALLDIR/DDFacet/src/SkyModel:$INSTALLDIR/DynSpecMS/:$INSTALLDIR/killMS:$INSTALLDIR/ddf-pipeline/scripts:\$PATH >> $INSTALLDIR/init.sh
+    echo export PYTHONPATH=\$INSTALLDIR/killMS/lib/python3.9/site-packages:\$INSTALLDIR/ddf-pipeline/scripts:$INSTALLDIR/ddf-pipeline/utils:$INSTALLDIR/DDFacet/lib/python${PYTHON_VERSION}/site-packages:$INSTALLDIR/killMS:$INSTALLDIR/killMS/Predict:$INSTALLDIR/killMS/Array:$INSTALLDIR/killMS/Array/Dot:$INSTALLDIR/killMS/Gridder:$INSTALLDIR/DDFacet/bin:$INSTALLDIR/DynSpecMS:\$PYTHONPATH >> $INSTALLDIR/init.sh
+    echo export PATH=\$INSTALLDIR/killMS/bin:\$INSTALLDIR/DDFacet/bin:$INSTALLDIR/DDFacet/src/SkyModel:\$INSTALLDIR/DynSpecMS/:\$INSTALLDIR/ddf-pipeline/scripts:\$PATH >> $INSTALLDIR/init.sh
     echo "if echo \$(hostname) | grep -qi leiden; then export DDF_PIPELINE_CLUSTER="paracluster"; else export DDF_PIPELINE_CLUSTER=; fi" >> $INSTALLDIR/init.sh
     
     #
