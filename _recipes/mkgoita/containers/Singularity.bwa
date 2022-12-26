@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%labels
+    Maintainer modibokgoita@gmail.com
+
+%post
+## Updates and essentials
+apt-get update
+apt-get install -y build-essential
+apt-get install -y wget unzip curl rsync lftp
+apt-get install -y libncurses5-dev libncursesw5-dev libbz2-dev liblzma-dev libtbb-dev zlib1g-dev
+
+## Install BWA
+cd /opt \
+    && wget --no-check-certificate https://sourceforge.net/projects/bio-bwa/files/bwa-0.7.17.tar.bz2 \
+    && tar -vxf bwa-0.7.17.tar.bz2 \
+    && cd bwa-0.7.17/ \
+    && make \
+    && rm /opt/bwa-0.7.17.tar.bz2
+
+## Install SAMTOOLS
+cd /opt \
+    && wget --no-check-certificate https://github.com/samtools/samtools/releases/download/1.7/samtools-1.7.tar.bz2 \
+    && tar -vxf samtools-1.7.tar.bz2 \
+    && cd samtools-1.7/ \
+    && ./configure \
+    && make \
+    && make install \
+    && rm /opt/samtools-1.7.tar.bz2
+
+%environment
+## Add the paths to environment
+export PATH=/opt/bwa-0.7.17:$PATH
+export PATH=/opt/samtools-1.7/bin:$PATH

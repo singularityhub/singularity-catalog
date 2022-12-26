@@ -1,0 +1,11 @@
+Bootstrap: docker
+From: centos:7      
+%post                                                                                     
+yum install -y gcc-c++ tar bzip2 make wget zlib-devel ncurses-devel ncurses xz-devel bzip2-devel.x86_64 curl-devel
+wget https://github.com/samtools/samtools/releases/download/1.16.1/samtools-1.16.1.tar.bz2
+tar xvjf samtools-1.16.1.tar.bz2
+rm samtools-1.16.1.tar.bz2                
+cd samtools-1.16.1                                       
+make
+%environment                                         
+export PATH=/samtools-1.16.1:$PATH                            

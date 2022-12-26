@@ -72,6 +72,8 @@ pwd \
 && echo ' ls -lart  ~/apps' `ls -lart  ~/apps` \
 && echo FFFFF \
 && echo 'FC -v ' `$FC -v` \
+&& if [[ "$FC" == 'ifx' ]]; then CC='icx'; fi \
+&& echo ' CC is ' "$CC" \
 && bash -o pipefail -c "if [[ ! -f /opt/ompi/lib/libmpi.so ]]; then  \
 $FC -v \
 && wget --progress=dot:giga  https://github.com/openucx/ucx/releases/download/v$ucx/ucx-$ucx.tar.gz -O - | tar xzf - \

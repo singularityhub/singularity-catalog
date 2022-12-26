@@ -2,10 +2,10 @@ Bootstrap: library
 From: ubuntu:20.04
 
 %labels
-  Version 0.0.2
+  Version 1.0.0
   Author Vladimir Mikryukov, Kessy Abarenkov
   Maintainer vladimir.mikryukov@ut.ee
-  Biodiverse 3.1
+  Biodiverse 4.0
   Perl 5.30.0
 
 %runscript
@@ -59,30 +59,30 @@ From: ubuntu:20.04
     && rm -rf /var/lib/apt/lists/*
   
   ## Install modules
-  cpanminus \
+  cpanm \
     rlib@0.02 \
     ExtUtils::Embed@1.35 \
     Catalyst::Devel@1.42 \
     Module::Compile@0.38 \
-    FFI::Build::MM@1.56 \
-    FFI::Platypus@1.56 \
-    List::Util@1.62 \
+    FFI::Build::MM@2.05 \
+    FFI::Platypus@2.05 \
+    List::Util@1.63 \
     List::MoreUtils@0.430 \
-    PDL@2.068 \
-    Test2::Harness@1.000042 \
-    Text::CSV@2.01 \
-    Text::CSV_XS@1.47 \
-    Alien::Build@2.25 \
-    Alien::freexl@1.03 \
+    PDL@2.081 \
+    Test2::Harness@1.000141 \
+    Text::CSV@2.02 \
+    Text::CSV_XS@1.48 \
+    Alien::Build@2.74 \
+    Alien::freexl@1.05 \
     Alien::libtiff@1.01 \
     Alien::cmake3@0.08 \
-    Alien::sqlite@1.06 \
+    Alien::sqlite@1.07 \
     Alien::patch@0.15 \
     FFI::Platypus::Declare@1.34 \
-    Alien::geos::af@1.008 \
-    Alien::proj@1.16 \
-    Alien::spatialite@1.04 \
-    Alien::gdal@1.27
+    Alien::geos::af@1.011 \
+    Alien::proj@1.25 \
+    Alien::spatialite@1.08 \
+    Alien::gdal@1.36
   
   ## Export LD_LIBRARY_PATH and install Geo::GDAL::FFI
   export LD_LIBRARY_PATH=`perl -MAlien::geos::af -E'print Alien::geos::af->dist_dir . q{/lib}'` \
@@ -111,7 +111,7 @@ From: ubuntu:20.04
   
   ## Install Biodiverse Utils
   cpanm \
-    https://github.com/shawnlaffan/biodiverse-utils/archive/refs/tags/v1.07.tar.gz
+    https://github.com/shawnlaffan/biodiverse-utils/releases/download/v1.08/Biodiverse-Utils-1.08.tar.gz
   
 %test
   perl -V

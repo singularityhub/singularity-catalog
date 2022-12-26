@@ -55,4 +55,4 @@ mhcnuggetsr_report(mhcnuggetsr_folder = "/opt/mhcnuggetsr", ormr_folder_name = "
 
     URL https://github.com/richelbilderbeek/mhcnuggetsr
 
-    VERSION 1.2.1
+    VERSION 1.2.2

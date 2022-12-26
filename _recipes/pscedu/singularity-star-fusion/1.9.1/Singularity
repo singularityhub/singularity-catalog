@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: quay.io/biocontainers/star-fusion:1.9.1--0
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE https://gitlab.psc.edu/icaoberg/singularity-star-fusion
+    VERSION 1.9.1
+
+%post
+   rm /etc/resolv.conf
+
+####################################################################################

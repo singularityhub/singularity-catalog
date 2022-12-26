@@ -1,0 +1,66 @@
+BootStrap: docker
+From: ubuntu:xenial
+IncludeCmd: yes
+
+%post
+    # Prerequisites
+    apt-get update
+    apt-get -y install build-essential autoconf git wget unzip libboost-all-dev libreadline-dev libncurses5-dev libncursesw5-dev zlib1g-dev libbz2-dev liblzma-dev nano
+  
+    # Harp
+    cd /opt
+    ZIPFILE=ff5cc0b01f4a.zip
+    wget https://bitbucket.org/dkessner/harp/get/$ZIPFILE
+    unzip $ZIPFILE
+    mv dkessner* harp
+    cd harp/src
+    ./get_samtools.sh
+    sed -i -e 's/<warnings>all <warnings-as-errors>on  /<warnings>all #<warnings-as-errors>on  /g' Jamroot
+    sed -i -e 's/<warnings>all <warnings-as-errors>on <include>..\/forqs\/src <variant>release/<warnings>all <include>..\/forqs\/src <variant>release #<warnings-as-errors>on/g' Jamroot
+    sed -i -e 's/<link>static <warnings>all <warnings-as-errors>on/<link>static <warnings>all #<warnings-as-errors>on/g' Jamroot
+    bjam
+
+    # clean up SAMTools
+    cd /opt/harp/src/samtools
+    samtoolsdir=/opt/samtools
+    mkdir -p ${samtoolsdir}
+    rm *.o
+    rm misc/*.o
+    mkdir ${samtoolsdir}/bin
+    bins="samtools \
+         misc/wgsim \
+         misc/md5sum-lite \
+         misc/md5fa \
+         misc/maq2sam-short \
+         misc/maq2sam-long"
+    for b in $bins; do
+        mv $b ${samtoolsdir}/bin
+    done
+    find . -name "*.pl" -exec mv {} ${samtoolsdir}/bin \;
+    find . -name "*.py" -exec mv {} ${samtoolsdir}/bin \;
+    mkdir ${samtoolsdir}/include
+    find . -name "*.h" -exec mv {} ${samtoolsdir}/include \;
+    mkdir ${samtoolsdir}/lib
+    mv libbam.a ${samtoolsdir}/lib
+
+    # bcftools cleanup
+    mv /opt/harp/src/samtools/bcftools /opt
+    mkdir /sscratch/    
+%runscript
+    exec python $@
+
+%help
+This container provides the following applications:
+    * HTSlib 1.8
+    * SAMTools 0.1.18
+    * Harp
+
+%environment
+    export HARP_HOME=/opt/harp
+    export SAMTOOLS_HOME=/opt/samtools
+    export BCFTOOLS_HOME=/opt/bcftools
+    export LD_LIBRARY_PATH=${HARP_HOME}/lib:${SAMTOOLS_HOME}/lib:$LD_LIBRARY_PATH
+    export PATH=${HARP_HOME}/bin:${SAMTOOLS_HOME}/bin:${BCFTOOLS_HOME}:/usr/local/bin:/usr/bin:/bin:
+
+%labels
+    AUTHOR khs3z@virginia.edu

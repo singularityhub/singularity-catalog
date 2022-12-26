@@ -1,0 +1,129 @@
+Bootstrap: docker
+From: ubuntu:20.04 
+
+%labels
+    
+    AUTHOR James Santangelo
+    EMAIL james.santangelo37@gmail.com
+    PERL_VERSION 5.26.1
+    GENEMARK-ES/ET/EP_VERSION 4.71_lic
+    AUGUSTUS_VERSION 3.5.0
+    SAMTOOLS_VERSION 1.10
+    HTSLIB_VERSION 1.10.2-3ubuntu0.1
+    PYTHON3_VERSION 3.8.10
+    BAMTOOLS_VERSION 2.5.1
+    DIAMOND_VERSION 0.9.30.131
+    PROTHINT_VERSION 2.6.0
+    SPALN_VERSION 2.3.3f
+    BRAKER_VERSION 2.1.6
+    TSEBRA_VERSION 1.0.3
+
+%environment
+
+    export PATH="/opt/bin:$PATH"
+    export GENEMARK_PATH="/opt/gmes_linux_64_4/"
+    export AUGUSTUS_CONFIG_PATH="/opt/Augustus-3.5.0/augustus/config/"
+
+%post
+    
+    export DEBIAN_FRONTEND="noninteractive"
+    export DEBCONF_NONINTERACTIVE_SEEN=true
+    
+    apt update && apt upgrade && \ 
+    apt -y --no-install-recommends install \
+        build-essential \
+        gnupg2 \
+        wget \
+        git \
+        curl \
+        locales \
+        unzip \
+        autoconf
+    
+    # Configure default locale
+    # Taken from https://github.com/nickjer/singularity-r/blob/master/Singularity.3.6.2
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+    # ===========================
+    # Install Perl modules
+    # ===========================
+
+    apt update &&
+    apt -y install \
+        perl \
+        cpanminus
+    
+    # Install Perl modules not available as Ubuntu packages
+    cpanm Hash::Merge List::Util MCE::Mutex Module::Load::Conditional Parallel::ForkManager POSIX \
+        Scalar::Util::Numeric YAML File::Spec::Functions Math::Utils File::HomeDir threads Thread::Queue 
+    
+    # ===================
+    # Install GeneMark-EX
+    # ===================
+
+    cd /opt && mkdir bin
+    wget http://topaz.gatech.edu/GeneMark/tmp/GMtool_pyQ_h/gmes_linux_64_4.tar.gz
+    wget http://topaz.gatech.edu/GeneMark/tmp/GMtool_pyQ_h/gm_key_64.gz
+    tar -xvzf gmes_linux_64_4.tar.gz
+    gunzip gm_key_64.gz
+    cp gm_key_64 ~/.gm_key
+
+    # ===============
+    # Instal Augustus
+    # ===============
+
+    # https://github.com/Gaius-Augustus/Augustus/blob/master/docs/INSTALL.md
+    apt update &&
+    
+    # Install dependencies for AUGUSTUS comparative gene prediction mode (CGP)
+    apt install -y libgsl-dev libboost-all-dev libsuitesparse-dev liblpsolve55-dev
+    apt install -y libsqlite3-dev libmysql++-dev
+    
+    # Install dependencies for the optional support of gzip compressed input files
+    apt install -y libboost-iostreams-dev zlib1g-dev
+    
+    # Install dependencies for bam2hints and filterBam
+    apt install -y libbamtools-dev
+    
+    # Install additional dependencies for bam2wig
+    apt install -y samtools libhts-dev
+    
+    # Install additional dependencies for homGeneMapping and utrrnaseq
+    apt install -y libboost-all-dev
+    
+    # Install additional dependencies for scripts
+    apt install -y cdbfasta diamond-aligner libfile-which-perl libparallel-forkmanager-perl libyaml-perl libdbd-mysql-perl
+    apt install -y --no-install-recommends python3-biopython
+
+    # Download and compile Augustus
+    wget https://github.com/Gaius-Augustus/Augustus/archive/refs/tags/v3.5.0.tar.gz
+    tar -xvzf v3.5.0.tar.gz
+    cd Augustus-3.5.0
+    make
+
+    # ================
+    # Install Bamtools
+    # ================
+
+    apt update && apt -y install bamtools
+
+    # =========================
+    # Install BRAKER and TSEBRA
+    # =========================
+
+    wget https://github.com/Gaius-Augustus/BRAKER/archive/refs/tags/v2.1.6.tar.gz
+    tar -xvzf v2.1.6.tar.gz
+    wget https://github.com/Gaius-Augustus/TSEBRA/archive/refs/tags/v1.0.3.tar.gz
+    tar -xvzf v1.0.3.tar.gz
+
+    ln -sf /opt/Augustus-3.5.0/bin/* /opt/bin/
+    ln -sf /opt/Augustus-3.5.0/scripts/* /opt/bin/
+    ln -sf /opt/gmes_linux_64_4/ProtHint/bin/* /opt/bin/
+    ln -sf /opt/gmes_linux_64_4/ProtHint/dependencies/* /opt/bin/
+    ln -sf /opt/BRAKER-2.1.6/scripts/*.pl /opt/bin/
+    ln -sf /opt/BRAKER-2.1.6/scripts/*.py /opt/bin/
+    ln -sf /opt/TSEBRA-1.0.3/bin/*.py /opt/bin/

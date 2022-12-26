@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%labels
+    Maintainer modibokgoita@gmail.com
+
+%post
+## Updates and essentials
+apt-get update
+apt-get install -y build-essential
+apt-get install -y python python-dev
+apt-get install -y wget unzip curl rsync
+apt-get install -y zlib1g-dev libbz2-dev liblzma-dev libcurl4-openssl-dev libssl-dev
+
+## Install Java
+apt-get install -y software-properties-common debconf-utils
+apt-add-repository ppa:openjdk-r/ppa
+apt-get update
+apt-get install -y openjdk-8-jre
+
+## Install GATK
+cd /opt \
+    && wget https://github.com/broadinstitute/gatk/releases/download/4.3.0.0/gatk-4.3.0.0.zip \
+    && unzip gatk-4.3.0.0.zip \
+    && rm gatk-4.3.0.0.zip
+
+## Install tabix
+cd /opt \
+    && wget https://github.com/samtools/htslib/releases/download/1.9/htslib-1.9.tar.bz2 \
+    && tar -vxf htslib-1.9.tar.bz2 \
+    && cd htslib-1.9 \
+    && ./configure \
+    && make \
+    && make install \
+    && rm /opt/htslib-1.9.tar.bz2
+
+%environment
+## Add the paths to environment
+export PATH=/opt/gatk-4.3.0.0:$PATH

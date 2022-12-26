@@ -1,6 +1,9 @@
 Bootstrap: docker
 From: fedora:34
 
+%files
+    /home/lofarvwf-fsweijen/DDF_Gridder_CMake.patch /opt/lofar/patches/DDF_Gridder_CMake.patch
+
 %environment
     export INSTALLDIR=/opt/lofar
     . $INSTALLDIR/init.sh
@@ -25,37 +28,41 @@ From: fedora:34
 	# Leave at latest, release versions crash for some reason.
 	export CASAREST_VERSION=latest
 	export CFITSIO_VERSION=7.3.47
+    #export DPPP_VERSION=c719014a
     export DPPP_VERSION=v5.3
-	export DYSCO_VERSION=v1.2
-    export EVERYBEAM_VERSION=78e4dc4b
+	export DYSCO_VERSION=2e7f331
+    #export EVERYBEAM_VERSION=78e4dc4b
+    export EVERYBEAM_VERSION=2d15b2a
     export FFTW_VERSION=3.5.8
 	export HDF5_VERSION=1.10.5
     export IDG_VERSION=master
 	export LAPACK_VERSION=3.8.0
 	export LOSOTO3_VERSION=latest
-    export LSMTOOL_VERSION=v1.4.7
+    #export LSMTOOL_VERSION=v1.4.9
+    export LSMTOOL_VERSION=master
 	export OPENBLAS_VERSION=3.8.0
 	export PYBDSF_VERSION=master
 	export PYTHON_CASACORE_VERSION=v3.5.0
     export RMEXTRACT_VERSION=f161b0a
 	export SUPERLU_VERSION=5.2.1
 	#export WSCLEAN_VERSION=master
-	export WSCLEAN_VERSION=77e65019
+	#export WSCLEAN_VERSION=77e65019
+	export WSCLEAN_VERSION=42c8201e
 	export WCSLIB_VERSION=6.4
 	export HDF5_USE_FILE_LOCKING=FALSE
     export OMPI_ALLOW_RUN_AS_ROOT=1
     export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
 
-    export HAS_CUDA=true
-    export HAS_MKL=true
-    export MARCH='cascadelake'
-    export MTUNE='cascadelake'
-    export NOAVX512=false
     #export HAS_CUDA=true
     #export HAS_MKL=true
-    #export MARCH='x86-64'
-    #export MTUNE='generic'
-    #export NOAVX512=true
+    #export MARCH='cascadelake'
+    #export MTUNE='cascadelake'
+    #export NOAVX512=false
+    export HAS_CUDA=false
+    export HAS_MKL=false
+    export MARCH='x86-64'
+    export MTUNE='generic'
+    export NOAVX512=true
     export CPPSTD=c++17
 
     if [ $NOAVX512 = true ]; then
@@ -206,10 +213,11 @@ From: fedora:34
     source $INSTALLDIR/pyenv-py3/bin/activate
     pip install --upgrade pip
     export HDF5_VERSION=1.10.5
-    pip install --no-binary h5py h5py
     pip install -r $INSTALLDIR/requirements3.txt
+    pip install --no-binary h5py h5py
     pip install lofar-h5plot
     pip install legacystamps
+    pip install Kittens
 
     #
     # Install Montage
@@ -279,6 +287,7 @@ From: fedora:34
 	#
 	# Install Python-CASAcore
 	#
+	pip install --no-deps --no-binary python-casacore "python-casacore==3.5.0"
 	#mkdir ${INSTALLDIR}/python-casacore
         #cd ${INSTALLDIR}/python-casacore && git clone https://github.com/casacore/python-casacore
 	#cd ${INSTALLDIR}/python-casacore/python-casacore && git checkout tags/${PYTHON_CASACORE_VERSION} && echo export PYTHON_CASACORE_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
@@ -393,6 +402,7 @@ From: fedora:34
     rm -rf $INSTALLDIR/DPPP/src
     mkdir $INSTALLDIR/DPPP/usermodules
     wget https://raw.githubusercontent.com/jurjen93/lofar_helpers/master/dp3_helpers/polconv.py -O $INSTALLDIR/DPPP/usermodules/polconv.py
+
     if [ $HAS_MKL = true ]; then
         export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64:$LD_LIBRARY_PATH
         export CPATH=/opt/intel/mkl/include:$CPATH
@@ -419,7 +429,8 @@ From: fedora:34
 	cd $INSTALLDIR/losoto/build
     git clone https://github.com/revoltek/losoto.git src
     cd src
-    # No deps is important here to avoid sneaky python-casacore updates.
+    #python setup.py build
+    #python setup.py install
 	pip install --no-deps .
     cd $INSTALLDIR
 	rm -rf $INSTALLDIR/losoto
@@ -485,15 +496,15 @@ From: fedora:34
     cd $INSTALLDIR && git clone --single-branch -b fedora https://github.com/tikk3r/lofar-grid-hpccloud.git
     mv $INSTALLDIR/lofar-grid-hpccloud/patches/* $INSTALLDIR/patches
 
-    pip --no-cache-dir install --upgrade wheel
-    pip --no-cache-dir install future
-    pip --no-cache-dir install --prefer-binary SharedArray
-    pip --no-cache-dir install astropy-healpix
-    pip --no-cache-dir install reproject
-    pip --no-cache-dir install matplotlib
-    pip --no-cache-dir install meqtrees-cattery
+    #pip --no-cache-dir install --upgrade wheel
+    #pip --no-cache-dir install future
+    #pip --no-cache-dir install --prefer-binary SharedArray
+    #pip --no-cache-dir install astropy-healpix
+    #pip --no-cache-dir install reproject
+    #pip --no-cache-dir install matplotlib
+    #pip --no-cache-dir install pybind11
+    pip --no-cache-dir install meqtrees-cattery --no-deps
     pip --no-cache-dir install owlcat --no-deps
-    pip --no-cache-dir install pybind11
 
     #
     # Install the standalone StationResponse libraries. DDFacet still uses these.
@@ -516,6 +527,29 @@ From: fedora:34
     rm -rf $INSTALLDIR/LOFARBeam/src
 
     #
+    # Install DDFacet
+    #
+    cd $INSTALLDIR
+    mkdir -p $INSTALLDIR/DDFacet && cd $INSTALLDIR/DDFacet
+    # Python-casacore overrides numpy, fix it back.
+    #pip install "numpy==1.23.4"
+    git clone --single-branch -b v0.7.1 https://github.com/saopicc/DDFacet.git src
+    #git clone --single-branch -b UseAPP_kMS https://github.com/cyriltasse/DDFacet.git src
+    #touch src/SkyModel/Mask/__init__.py
+    # Figure out how to adapt this patch
+    #patch $INSTALLDIR/DDFacet/src/DDFacet/Other/AsyncProcessPool.py $PATCH_DDFACET_CPUS
+    #rm src/setup.py
+    wget https://raw.githubusercontent.com/saopicc/DDFacet/v0.6.0/setup.py -O src/setup.py
+    #sed -i "s/MIN_REQ = 8/MIN_REQ = 9/" src/setup.py
+    #sed -i "s/python-casacore >= 3.0.0, <=3.4.0/python-casacore >= 3.0.0/" src/setup.py
+    #sed -i "s/3\.7/3\.10/" src/setup.py
+    sed -i "s/__version__ = "0.6.0.0"/__version__ = "0.7.1.0"/" src/setup.py
+    patch src/DDFacet/Gridder/CMakeLists.txt /opt/lofar/patches/DDF_Gridder_CMake.patch
+    cd src && python setup.py install --prefix=$INSTALLDIR/DDFacet
+    #cp -r SkyModel/Mask /opt/lofar/DDFacet/lib/python3.9/site-packages/SkyModel/
+    cp -r SkyModel/Sky /opt/lofar/DDFacet/lib/python3.9/site-packages/SkyModel/
+
+    #
     # Install killMS
     #
     mkdir -p $INSTALLDIR/killMS
@@ -526,22 +560,8 @@ From: fedora:34
     cd killMS
     sed -i "s?DDFacet >= 0.7.0?DDFacet >= 0.6.0?" setup.py
     python setup.py install --prefix=$INSTALLDIR/killMS
+    chmod u+x /opt/lofar/killMS/lib/python3.9/site-packages/killMS/*.py
 
-    #
-    # Install DDFacet
-    #
-    # Python-casacore overrides numpy, fix it back.
-    pip install "numpy==1.23.4"
-    git clone --single-branch -b v0.7.1 https://github.com/saopicc/DDFacet.git src
-    # Figure out how to adapt this patch
-    #patch $INSTALLDIR/DDFacet/src/DDFacet/Other/AsyncProcessPool.py $PATCH_DDFACET_CPUS
-    rm src/setup.py
-    wget https://raw.githubusercontent.com/saopicc/DDFacet/v0.6.0/setup.py -O src/setup.py
-    #sed -i "s/MIN_REQ = 8/MIN_REQ = 9/" src/setup.py
-    #sed -i "s/python-casacore >= 3.0.0, <=3.4.0/python-casacore >= 3.0.0/" src/setup.py
-    #sed -i "s/3\.7/3\.10/" src/setup.py
-    cd src && python setup.py install --prefix=$INSTALLDIR/DDFacet
-    
     #   
     # Install DynSpecMS
     #   
@@ -551,15 +571,13 @@ From: fedora:34
     #
     # Install ddf-pipeline
     #
+    rm -rf $INSTALLDIR/ddf-pipeline
     cd $INSTALLDIR && git clone https://github.com/mhardcastle/ddf-pipeline.git
-    # Commits after this break the pipeline, because they contain Python 3 preparations that NumPy 1.16.0 (required for MeqTrees) does not like.
-    cd ddf-pipeline && git checkout d0eeb4d && cd ..
-    # Download DDF catalogues.
-    mkdir -p $INSTALLDIR/DDFCatalogues
+    cd ddf-pipeline && git checkout master && cd ..
+    cd $INSTALLDIR
+    sed -i "s/DDF.py/DDF.py --Misc-IgnoreDeprecationMarking=1/" $INSTALLDIR/ddf-pipeline/scripts/pipeline.py
+    mkdir $INSTALLDIR/DDFCatalogues
     cd $INSTALLDIR/DDFCatalogues
-    #wget ftp://ftp.strw.leidenuniv.nl/pub/shimwell/bootstrap-cats.tar
-    #wget https://surfdrive.surf.nl/files/index.php/s/u7liDZH3SlWalwy/download -O bootstrap-cats.tar
-    #tar xf bootstrap-cats.tar -C $INSTALLDIR/DDFCatalogues --strip-components=1
     wget https://www.extragalactic.info/bootstrap/VLSS.fits
     wget https://www.extragalactic.info/bootstrap/wenss.fits
     wget https://www.extragalactic.info/bootstrap/B2.fits
@@ -567,6 +585,14 @@ From: fedora:34
     #wget https://lambda.gsfc.nasa.gov/data/foregrounds/tgss_adr/TGSSADR1_7sigma_catalog.fits
     wget http://tgssadr.strw.leidenuniv.nl/catalogs/TGSSADR1_7sigma_catalog.fits
     cd $INSTALLDIR
+
+   #
+   # Install lotss-query
+   #
+   cd $INSTALLDIR
+   git clone https://github.com/mhardcastle/lotss-query.git
+
+    #pip install --no-deps --no-binary python-casacore "python-casacore==3.5.0"
 
     #
     # Finaly cleanup of unnecessary stuff
@@ -608,7 +634,7 @@ From: fedora:34
     echo $'if [ "$MTUNE_MACHINE" != "$MTUNE" ]; then echo "WARNING - software has been build with -mtune=$MTUNE but current machine -mtune=$MTUNE_MACHINE.\nIf you encounter strange behaviour or Illegal instruction warnings, consider building a container with the appropriate architecture set."; fi' >> $INSTALLDIR/init.sh
 	echo export INSTALLDIR=$INSTALLDIR >> $INSTALLDIR/init.sh
 	echo export HDF5_USE_FILE_LOCKING=FALSE >> $INSTALLDIR/init.sh
-	echo export PYTHONPATH=\$INSTALLDIR/lofar/lib64/python3.9/site-packages:\$INSTALLDIR/dppp:\$INSTALLDIR/EveryBeam/lib64/python3.9/site-packages:\$PYTHONPATH >> $INSTALLDIR/init.sh
+	echo export PYTHONPATH=\$INSTALLDIR/lofar/lib64/python3.9/site-packages:\$INSTALLDIR/DPPP/lib/python3.9/site-packages:\$INSTALLDIR/DPPP/usermodules:\$INSTALLDIR/EveryBeam/lib64/python3.9/site-packages:\$PYTHONPATH >> $INSTALLDIR/init.sh
     echo export PATH=/usr/local/cuda/bin:/opt/hdf5/bin:\$PATH >> $INSTALLDIR/init.sh
 	echo export PATH=/opt/montage/Montage-6.0/bin:\$PATH  >> $INSTALLDIR/init.sh
 	echo export PATH=\$INSTALLDIR/aoflagger/bin:\$PATH  >> $INSTALLDIR/init.sh
@@ -642,8 +668,9 @@ echo "# DDF environment settings" >> $INSTALLDIR/init.sh
     echo export DDF_DIR=$INSTALLDIR >> $INSTALLDIR/init.sh
     echo export DDF_PIPELINE_CATALOGS=$INSTALLDIR/DDFCatalogues >> $INSTALLDIR/init.sh
     echo export KILLMS_DIR=$INSTALLDIR >> $INSTALLDIR/init.sh
-    echo export PYTHONPATH=\$INSTALLDIR/DPPP/lib/python3.9/site-packages:\$INSTALLDIR/DPPP/usermodules:\$PYTHONPATH >> $INSTALLDIR/init.sh
-    echo export PYTHONPATH=\$INSTALLDIR/killMS/lib/python3.9/site-packages:\$INSTALLDIR/ddf-pipeline/scripts:$INSTALLDIR/ddf-pipeline/utils:$INSTALLDIR/DDFacet/lib/python${PYTHON_VERSION}/site-packages:$INSTALLDIR/killMS:$INSTALLDIR/killMS/Predict:$INSTALLDIR/killMS/Array:$INSTALLDIR/killMS/Array/Dot:$INSTALLDIR/killMS/Gridder:$INSTALLDIR/DDFacet/bin:$INSTALLDIR/DynSpecMS:\$PYTHONPATH >> $INSTALLDIR/init.sh
+    echo export PATH=\$INSTALLDIR/killMS/lib/python3.9/site-packages/killMS:\$PATH >> $INSTALLDIR/init.sh
+    echo export PYTHONPATH=\$INSTALLDIR/DPPP/lib/python3.9/site-packages:\$PYTHONPATH >> $INSTALLDIR/init.sh
+    echo export PYTHONPATH=\$INSTALLDIR/lotss-query:\$INSTALLDIR/killMS/lib/python3.9/site-packages:\$INSTALLDIR/ddf-pipeline/scripts:$INSTALLDIR/ddf-pipeline/utils:$INSTALLDIR/DDFacet/lib/python${PYTHON_VERSION}/site-packages:$INSTALLDIR/killMS:$INSTALLDIR/killMS/Predict:$INSTALLDIR/killMS/Array:$INSTALLDIR/killMS/Array/Dot:$INSTALLDIR/killMS/Gridder:$INSTALLDIR/DDFacet/bin:$INSTALLDIR/DynSpecMS:\$PYTHONPATH >> $INSTALLDIR/init.sh
     echo export PATH=\$INSTALLDIR/killMS/bin:\$INSTALLDIR/DDFacet/bin:$INSTALLDIR/DDFacet/src/SkyModel:\$INSTALLDIR/DynSpecMS/:\$INSTALLDIR/ddf-pipeline/scripts:\$PATH >> $INSTALLDIR/init.sh
     echo "if echo \$(hostname) | grep -qi leiden; then export DDF_PIPELINE_CLUSTER="paracluster"; else export DDF_PIPELINE_CLUSTER=; fi" >> $INSTALLDIR/init.sh
     
@@ -651,7 +678,7 @@ echo "# DDF environment settings" >> $INSTALLDIR/init.sh
     # entrypoint
     #
 %runscript
-    echo LOFAR-SKSP Singularity Container v3.3.2
+    echo LOFAR-SKSP Singularity Container v4.0.1
 
 %help
     This Singularity image contains a variety of LOFAR software. In order to run your pipelines, you may need to know where the software is installed. The root directory is /opt/lofar, with most software installed as follows:

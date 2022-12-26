@@ -1,0 +1,40 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%post
+    apt-get -yq update
+    DEBIAN_FRONTEND="noninteractive" apt-get -yq install tzdata
+    apt-get -yq --no-install-recommends install \
+        software-properties-common \
+	build-essential \
+        apt-transport-https \
+        ca-certificates \
+        aptitude \
+        wget \
+        vim \
+        rsync \
+        python3-pip \
+        python3-dev \
+        python3-setuptools \
+        unzip && \
+    add-apt-repository ppa:ubuntu-toolchain-r/test
+    apt-get -yq install gcc-9 g++-9
+    apt-get -yq install libgoogle-glog-dev
+    apt-get -yq install cmake
+    apt-get -yq install libeigen3-dev
+    ln -s -f /usr/bin/gcc-9 /usr/bin/gcc
+    ln -s -f /usr/bin/g++-9 /usr/bin/g++
+    wget https://repo.anaconda.com/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh
+    chmod +x Miniconda3-py38_4.8.3-Linux-x86_64.sh
+    ./Miniconda3-py38_4.8.3-Linux-x86_64.sh -b -p /opt/miniconda3
+    ln -s /opt/miniconda3/bin/conda /usr/bin/conda
+    rm Miniconda3-py38_4.8.3-Linux-x86_64.sh
+    conda init bash
+    conda install astunparse numpy ninja pyyaml mkl mkl-include setuptools cmake cffi typing_extensions future six requests dataclasses matplotlib   
+    apt-get -yq install gdb vim
+    apt-get -yq install valgrind
+    chmod -R 777 /opt
+    chmod -R 777 /root
+%environment
+    export LC_ALL=C
+    export FADMEN_HOME=<<FADMEN_HOME>>

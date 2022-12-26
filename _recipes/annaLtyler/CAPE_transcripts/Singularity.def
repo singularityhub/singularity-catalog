@@ -6,33 +6,38 @@ Stage: spython-base
 maintainer="atyler"
 %post
 export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
-&& apt-get install -y git-core \
+&& apt-get install -y libglpk-dev \
+git-core \
 libcurl4-openssl-dev \
 libglpk-dev \
 libgmp-dev \
+libssl-dev \
 libxml2-dev \
-make \
 pandoc \
-pandoc-citeproc
-R --slave -e 'install.packages("DescTools",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("doParallel",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("rmarkdown",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("DT",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("e1071",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("foreach",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("gprofiler2",repos="https://cran.rstudio.com/")'
+pandoc-citeproc \
+libcairo2-dev
+
+R --slave -e 'install.packages("rlang",repos="https://cran.rstudio.com/")'
 R --slave -e 'install.packages("here",repos="https://cran.rstudio.com/")'
 R --slave -e 'install.packages("igraph",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("iterators",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("knitr",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("Matrix",repos="https://cran.rstudio.com/")'
 R --slave -e 'install.packages("pheatmap",repos="https://cran.rstudio.com/")'
 R --slave -e 'install.packages("qtl2",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("R.methodsS3",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("R.oo",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("R.utils",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("RCurl",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("remotes",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("XML",repos="https://cran.rstudio.com/")'
-R --slave -e 'install.packages("devtools",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("gprofiler2",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("bnstruct",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("abind",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("cluster",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("RColorBrewer",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("corpcor",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("Matrix",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("knitr",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("kableExtra",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("wordcloud",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("wordcloud2",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("bitops",repos="https://cran.rstudio.com/")'
+R --slave -e 'install.packages("rmarkdown",repos="https://cran.rstudio.com/")'
+
+R --slave -e 'install.packages("BiocManager",repos="https://cran.rstudio.com/")'
+R --slave -e 'BiocManager::install("GOSemSim")'
+R --slave -e 'BiocManager::install("iRanges")'
+
 exec /bin/bash R "$@"

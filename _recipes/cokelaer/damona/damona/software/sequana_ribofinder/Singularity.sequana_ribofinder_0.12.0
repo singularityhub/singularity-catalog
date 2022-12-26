@@ -1,0 +1,47 @@
+Bootstrap: docker
+From: alpine:3.15
+
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    # 1. packages
+    apk update
+    apk add --virtual=deps --update --no-cache bash ncurses-dev musl-dev wget xz-libs bzip2-dev gcc g++ curl cmake make zlib-dev tar xz-dev --force-non-repository 
+
+    # 2. Get Python, PIP
+    apk add --no-cache python3 \
+         && if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
+
+    #3. get bowtie
+    cd /usr/local/ \
+    && wget https://sourceforge.net/projects/bowtie-bio/files/bowtie/1.3.1/bowtie-1.3.1-src.zip/download -O bowtie-1.3.1-src.zip \
+    && unzip bowtie-1.3.1-src.zip \
+    && rm -rf bowtie-1.3.1-src.zip \
+    && cd bowtie-1.3.1-src \
+    && make \
+    && mv bowtie  bowtie-inspect-l bowtie-inspect-s bowtie-align-l \
+        bowtie-align-s bowtie-build bowtie-build-l bowtie-build-s bowtie-inspect \
+       /usr/local/bin/
+
+    cd /usr/local \
+        && curl -sSL https://github.com/samtools/samtools/releases/download/1.15/samtools-1.15.tar.bz2 | tar -xjf - \
+        && cd samtools-1.15 \
+        && ./configure && make && make install && cd -
+
+    # bamtools
+    wget https://github.com/pezmaster31/bamtools/archive/refs/tags/v2.5.2.zip  &&  unzip v2.5.2.zip && cd bamtools-2.5.2 && cmake -DCMAKE_INSTALL_PREFIX=/usr/local/ &&  make install
+
+
+
+    #4. cleanup
+    apk del curl make zlib-dev tar g++ ncurses-dev bzip2-dev musl-dev xz-dev
+    rm -rf /var/cache/apk/*
+
+
+
+%environment
+    export LANG=C.UTF-8
+

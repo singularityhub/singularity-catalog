@@ -1,0 +1,34 @@
+Bootstrap:docker
+From:debian:stretch
+
+%runscript
+
+    #exec echo "The runscript is the containers default runtime command!"
+
+%files
+
+
+%environment
+
+
+%labels
+
+   AUTHOR julia.engelmann@nioz.nl
+
+
+%post
+
+    apt-get update -y
+    apt-get install -y r-base make cmake pandoc git vim
+    Rscript -e 'install.packages(c("rmarkdown", "pheatmap"), repos="https://stat.ethz.ch/CRAN")'
+
+    # compile and install FastqPuri
+    cd /home
+    git clone https://github.com/jengelmann/FastqPuri
+    cd /home/FastqPuri
+    cmake -H. -Bbuild/ -DRSCRIPT=/usr/bin/Rscript
+    cd /home/FastqPuri/build
+    make
+    make install
+
+    # echo "The post section is where you can install, and configure your container."

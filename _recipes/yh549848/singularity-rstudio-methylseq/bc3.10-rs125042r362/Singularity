@@ -1,0 +1,40 @@
+BootStrap: shub
+From: nickjer/singularity-rstudio:3.6.2
+
+%apprun pandoc
+  exec pandoc "${@}"
+
+%apprun pandoc-citeproc
+  exec pandoc-citeproc "${@}"
+
+%post
+  apt-get update && \
+  apt-get install -y less
+
+# Install RNA-seq packages
+%post
+  R -e 'install.packages("BiocManager")' && \
+  R -e 'BiocManager::install(version = "3.10")' && \
+  R -e 'BiocManager::install("rtracklayer")' && \
+  R -e 'BiocManager::install("methylKit")' && \
+  R -e 'BiocManager::install("genomation")' && \
+  ln -s /usr/lib/rstudio-server/bin/pandoc/pandoc /usr/local/bin && \
+  ln -s /usr/lib/rstudio-server/bin/pandoc/pandoc-citeproc /usr/local/bin
+
+# Install Other packages
+%post
+  R -e 'install.packages("tidyverse")' && \
+  R -e 'install.packages("here")' && \
+  R -e 'install.packages("docopt")' && \
+  R -e 'install.packages("ggpubr")' && \
+  R -e 'install.packages("ggplotify")' && \
+  R -e 'install.packages("ggrepel")' && \
+  R -e 'install.packages("ggedit")' && \
+  R -e 'install.packages("ggcorrplot")' && \
+  R -e 'install.packages("UpSetR")' && \
+  R -e 'install.packages("plotly")' && \
+  # NOTE: Latest version of XML package does not work in R 3.6.2
+  wget https://cran.r-project.org/src/contrib/Archive/XML/XML_3.99-0.3.tar.gz && \
+  R CMD INSTALL XML_3.99-0.3.tar.gz && \
+  R -e 'install.packages("plotROC")' && \
+  rm XML_3.99-0.3.tar.gz
