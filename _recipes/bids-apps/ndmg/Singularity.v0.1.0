@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: bids/ndmg
+
+%help
+You are in the BIDS-ndmg container. To see help run
+singularity run BIDS-ndmg.simg -h
+
+%runscript
+    exec ndmg_bids "$@"
+
+%labels
+Author greg.kiar@mail.mcgill.ca
+Build-date 30/01/2018
+Vendor Ubuntu
+Version v0.1.0
+
+%post
+    echo "For more information on ndmg, go to:"
+    echo "http://m2g.io"

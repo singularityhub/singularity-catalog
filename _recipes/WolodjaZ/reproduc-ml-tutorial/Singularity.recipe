@@ -1,0 +1,31 @@
+BootStrap: docker
+From: ubuntu:20.04
+
+%labels
+    Maintainer MLCommons MLCube Working Group
+
+%post
+    apt-get update
+    apt-get install -y --no-install-recommends \
+        software-properties-common \
+        python3-dev\
+        curl
+    rm -rf /var/lib/apt/lists/*
+    ln -s /usr/bin/python3 /usr/local/bin/python
+
+    pip install --no-cache-dir -r /requirements.txt
+
+    chmod +x /workspace/run.sh
+
+%files
+    requirements.txt /requirements.txt
+    run.sh /workspace/run.sh
+    train_jax.py /workspace/train_jax.py
+    train_pytorch.py /workspace/train_pytorch.py
+    train_tensorflow.py /workspace/train_tensorflow.py
+
+    mlcube.yaml /mlcube/mlcube.yaml
+    workspace/train.yaml /mlcube/workspace/train.yaml
+
+%runscript
+    /bin/bash /workspace/run.sh "$@"

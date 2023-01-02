@@ -1,7 +1,7 @@
 bases:
-- count: 1379
+- count: 1383
   name: ubuntu
-- count: 310
+- count: 311
   name: nvidia/cuda
 - count: 277
   name: debian
@@ -9,7 +9,7 @@ bases:
   name: centos
 - count: 146
   name: alpine
-- count: 141
+- count: 142
   name: continuumio/miniconda3
 - count: 131
   name: aibasel/downward
@@ -19,7 +19,7 @@ bases:
   name: ghcr.io/mkandes/naked-singularity
 - count: 95
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 88
+- count: 89
   name: tensorflow/tensorflow
 - count: 57
   name: nfcore/base
@@ -268,6 +268,8 @@ bases:
 - count: 4
   name: rockylinux/rockylinux
 - count: 4
+  name: rocker/r-ubuntu
+- count: 4
   name: finalduty/archlinux
 - count: 4
   name: anair17/railrl_hand_v2
@@ -305,8 +307,6 @@ bases:
   name: r/r_3.5.1.simg
 - count: 3
   name: openjdk
-- count: 3
-  name: rocker/r-ubuntu
 - count: 3
   name: quay.io/biocontainers/gatk4
 - count: 3
@@ -405,6 +405,8 @@ bases:
   name: gw000/debian-cuda
 - count: 2
   name: ctpelok77/kstar
+- count: 2
+  name: netreconlab/hipaa-postgres
 - count: 2
   name: larbys/geant4
 - count: 2
@@ -560,11 +562,15 @@ bases:
 - count: 2
   name: bids/mindboggle
 - count: 2
+  name: cpplab/bidsmreye
+- count: 2
   name: bids/magetbrain
 - count: 2
   name: micalab/micapipe
 - count: 2
   name: bids/spm
+- count: 2
+  name: bids/ndmg
 - count: 2
   name: brainiak/rttoolslite
 - count: 2
@@ -732,9 +738,9 @@ bases:
 - count: 1
   name: netreconlab/parse-hipaa-dashboard
 - count: 1
-  name: netreconlab/hipaa-postgres
-- count: 1
   name: netreconlab/parse-hipaa
+- count: 1
+  name: netreconlab/hipaa-mongo
 - count: 1
   name: yonoia/mpi_base
 - count: 1
@@ -1264,6 +1270,8 @@ bases:
 - count: 1
   name: fuchs
 - count: 1
+  name: BIDS-Apps/dmg
+- count: 1
   name: base/archlinux
 - count: 1
   name: ghcr.io/truatpasteurdotfr/model-angelo
@@ -1279,8 +1287,6 @@ bases:
   name: nipreps/nirodents
 - count: 1
   name: bids/antscorticalthickness
-- count: 1
-  name: cpplab/bidsmreye
 - count: 1
   name: sebastientourbier/multiscalebrainparcellator
 - count: 1
@@ -1311,8 +1317,6 @@ bases:
   name: khanlab/funcmasker-flex
 - count: 1
   name: bids/rs_signal_extract
-- count: 1
-  name: bids/ndmg
 - count: 1
   name: bids/oppni
 - count: 1
@@ -1498,7 +1502,7 @@ bases:
 - count: 1
   name: gitlab-registry.cern.ch/sft/docker/centos7
 bootstraps:
-- count: 4416
+- count: 4427
   name: docker
 - count: 352
   name: debootstrap
@@ -1522,10 +1526,10 @@ bootstraps:
   name: arch
 - count: 10
   name: busybox
+- count: 9
+  name: 'library  '
 - count: 8
   name: self
-- count: 7
-  name: 'library  '
 - count: 1
   name: tensorflow
 - count: 1
@@ -1562,6 +1566,8 @@ orgs:
 - count: 6
   name: library
 - count: 4
+  name: netreconlab
+- count: 4
   name: willgpaik
 - count: 4
   name: joey3639570
@@ -1589,8 +1595,6 @@ orgs:
   name: bioconductor
 - count: 4
   name: conda
-- count: 3
-  name: netreconlab
 - count: 3
   name: danabl
 - count: 3
@@ -2046,6 +2050,8 @@ orgs:
 - count: 1
   name: computationalradiationphysics
 - count: 1
+  name: BIDS-Apps
+- count: 1
   name: build
 - count: 1
   name: base
@@ -2242,8 +2248,8 @@ orgs:
 - count: 1
   name: gitlab-registry.cern.ch
 tags:
-  latest: 422
-  other: 4155
+  latest: 424
+  other: 4163
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -2643,6 +2649,7 @@ versions:
   cornellcac/pulsar-pipeline:
     latest: 1
   cpplab/bidsmreye:
+    0.3.0: 1
     dev: 1
   cpplab/bidspm:
     3.0.0: 1
@@ -3224,8 +3231,10 @@ versions:
     5.7.21: 2
   ncbi/blast:
     2.12.0: 1
-  netreconlab/hipaa-postgres:
+  netreconlab/hipaa-mongo:
     latest: 1
+  netreconlab/hipaa-postgres:
+    latest: 2
   netreconlab/parse-hipaa:
     latest: 1
   netreconlab/parse-hipaa-dashboard:
@@ -3452,7 +3461,7 @@ versions:
     '11.1-devel ': 1
     11.1.1-cudnn8-devel-ubuntu20.04: 1
     11.1.1-cudnn8-runtime-ubuntu18.04: 2
-    11.1.1-cudnn8-runtime-ubuntu20.04: 1
+    11.1.1-cudnn8-runtime-ubuntu20.04: 2
     11.1.1-devel-ubuntu20.04: 3
     11.2.0-devel-ubuntu16.04: 1
     11.2.1-cudnn8-devel-ubuntu18.04: 1
@@ -3951,7 +3960,7 @@ versions:
     latest: 1
   rocker/r-ubuntu:
     '20.04': 2
-    '22.04': 1
+    '22.04': 2
   rocker/r-ver:
     3.5.3: 2
     3.6.0: 1
@@ -4131,7 +4140,7 @@ versions:
     2.7.0-gpu-jupyter: 1
     2.8.0-gpu-jupyter: 1
     2.9.1-gpu-jupyter: 2
-    latest-gpu: 8
+    latest-gpu: 9
     latest-gpu-jupyter: 1
     latest-gpu-py3: 6
     latest-gpu-py3-jupyter: 1
@@ -4191,8 +4200,8 @@ versions:
     '14.04': 23
     '16.04': 186
     '17.04': 6
-    '18.04': 288
-    '18.04 ': 7
+    '18.04': 289
+    '18.04 ': 9
     '19.04': 19
     '19.10': 4
     '20.04': 330
@@ -4200,7 +4209,7 @@ versions:
     '20.10': 3
     '21.04': 5
     '21.10': 3
-    '22.04': 30
+    '22.04': 31
     UBUNTU_VERSION: 1
     artful: 7
     bionic: 183

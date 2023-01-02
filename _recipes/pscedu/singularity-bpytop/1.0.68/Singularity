@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: continuumio/miniconda3
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-bpytop
+    COPYRIGHT Copyright © 2021-2022 Pittsburgh Supercomputing Center. All Rights Reserved.
+    VERSION 1.0.68
+
+%post
+    apt update
+    conda install -c conda-forge bpytop
