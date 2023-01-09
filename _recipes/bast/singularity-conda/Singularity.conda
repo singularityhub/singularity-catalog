@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: continuumio/miniconda3:4.10.3-alpine
+From: continuumio/miniconda3:22.11.1-alpine
 
 # Reads:
 #   environment.yml
@@ -18,6 +18,8 @@ From: continuumio/miniconda3:4.10.3-alpine
   # https://github.com/ContinuumIO/docker-images/issues/151
   mkdir /opt/conda/pkgs
   touch /opt/conda/pkgs/urls.txt
+  # git may be needed to pip install from a github repo
+  apk add git
 
 %environment
   export LC_ALL=C

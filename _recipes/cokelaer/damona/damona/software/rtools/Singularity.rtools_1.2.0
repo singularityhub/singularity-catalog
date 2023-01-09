@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: r-base:4.2.2
+
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    apt-get update -y 
+    apt-get install -y curl openssl
+    # for bioconductor
+    R -e 'install.packages("BiocManager")'
+    #R -e 'BiocManager::install(c("DESeq2"))' && R -e 'BiocManager::install(c("GenomicFeatures"))'
+    R -e 'BiocManager::install(c("GenomicFeatures"))'
+
+    # standard packages
+    #R -e "install.packages('ashr',  repos='https://cloud.r-project.org/')"
+    #R -e "install.packages('ggplot2',  repos='https://cloud.r-project.org/')"
+    #R -e "install.packages('readr',  repos='https://cloud.r-project.org/')"
+
+
+
+
+%environment
+    # 
+
+%runscript
+    Rscript ${1+"$@"}
+ 

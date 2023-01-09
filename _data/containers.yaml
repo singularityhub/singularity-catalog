@@ -1,7 +1,7 @@
 bases:
-- count: 1383
+- count: 1388
   name: ubuntu
-- count: 311
+- count: 312
   name: nvidia/cuda
 - count: 277
   name: debian
@@ -9,9 +9,9 @@ bases:
   name: centos
 - count: 146
   name: alpine
-- count: 142
+- count: 144
   name: continuumio/miniconda3
-- count: 131
+- count: 136
   name: aibasel/downward
 - count: 122
   name: python
@@ -19,13 +19,13 @@ bases:
   name: ghcr.io/mkandes/naked-singularity
 - count: 95
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 89
+- count: 90
   name: tensorflow/tensorflow
 - count: 57
   name: nfcore/base
 - count: 53
   name: mkandes/naked-singularity
-- count: 49
+- count: 51
   name: cokelaer/damona/conda
 - count: 43
   name: neurodebian
@@ -70,19 +70,19 @@ bases:
 - count: 15
   name: jtchilders/singularity_image_recipes
 - count: 14
+  name: nipreps/fmriprep
+- count: 14
   name: rocker/tidyverse
 - count: 14
   name: continuumio/miniconda
 - count: 13
-  name: nipreps/fmriprep
+  name: r-base
 - count: 13
   name: nvcr.io/nvidia/nvhpc
 - count: 12
   name: pawsey/openfoam
 - count: 12
   name: khanlab/heudiconv
-- count: 12
-  name: r-base
 - count: 12
   name: nitishnarula/secure/ubuntu-focal
 - count: 11
@@ -106,6 +106,8 @@ bases:
 - count: 9
   name: dcgc-bfx/dcgc-jupyter-rstudio
 - count: 9
+  name: sequana.img
+- count: 9
   name: 'GodloveD/busybox   '
 - count: 9
   name: golang
@@ -124,8 +126,6 @@ bases:
 - count: 8
   name: ewels/multiqc
 - count: 8
-  name: sequana.img
-- count: 8
   name: slaclab/relion
 - count: 8
   name: drneavin/SingularityBaseImages
@@ -135,6 +135,10 @@ bases:
   name: bids/rshrf
 - count: 8
   name: kaitj/mrtpipelines
+- count: 8
+  name: ufscar/ubuntu_ompi
+- count: 8
+  name: continuumio/anaconda3
 - count: 8
   name: arezaii/pf_singularity
 - count: 7
@@ -149,8 +153,6 @@ bases:
   name: jekriske/r-base
 - count: 7
   name: rocker/geospatial
-- count: 7
-  name: continuumio/anaconda3
 - count: 7
   name: continuumio/miniconda2
 - count: 7
@@ -180,8 +182,6 @@ bases:
 - count: 6
   name: bids/hcppipelines
 - count: 6
-  name: ufscar/ubuntu_ompi
-- count: 6
   name: vitchyr/railrl-torch4cuda9
 - count: 6
   name: openresty/openresty
@@ -208,7 +208,11 @@ bases:
 - count: 5
   name: sternacht/hpcc_openblas
 - count: 5
+  name: archlinux
+- count: 5
   name: node
+- count: 5
+  name: finalduty/archlinux
 - count: 5
   name: conda/miniconda3-centos7
 - count: 5
@@ -246,8 +250,6 @@ bases:
 - count: 4
   name: registry.gitlab.com/rode0day/fuzzer-testing/aflpp_runner
 - count: 4
-  name: archlinux
-- count: 4
   name: mongo
 - count: 4
   name: quay.io/wtsicgp/dockstore-cgpwgs
@@ -269,8 +271,6 @@ bases:
   name: rockylinux/rockylinux
 - count: 4
   name: rocker/r-ubuntu
-- count: 4
-  name: finalduty/archlinux
 - count: 4
   name: anair17/railrl_hand_v2
 - count: 4
@@ -380,6 +380,8 @@ bases:
 - count: 3
   name: archlinux/base
 - count: 3
+  name: ufscar/ubuntu_mpich
+- count: 3
   name: intel/oneapi-basekit
 - count: 3
   name: nextgenusfs/funannotate
@@ -395,6 +397,8 @@ bases:
   name: powerPlant/open-mpi-srf
 - count: 2
   name: jcsda/public/jedi-gnu-openmpi-dev
+- count: 2
+  name: quay.io/ohpc/ohpc-gnu9
 - count: 2
   name: centos-7.7.1908-cuda-11.0.sif
 - count: 2
@@ -598,6 +602,10 @@ bases:
 - count: 2
   name: fooliu/macs2
 - count: 2
+  name: ufscar/hpc/arch_spark
+- count: 2
+  name: ufscar/hpc/cuda_pytorch
+- count: 2
   name: maplesond/portcullis
 - count: 2
   name: cibiobcg/pacbam
@@ -623,8 +631,6 @@ bases:
   name: library/debian@sha256
 - count: 2
   name: xsede/centos-nix-base
-- count: 2
-  name: ufscar/ubuntu_mpich
 - count: 2
   name: vitchyr/railrl_v11_cuda10-1_mj2-0-2-2_torch0-3-1_gym0-10-5_py3-5-2
 - count: 2
@@ -739,6 +745,8 @@ bases:
   name: netreconlab/parse-hipaa-dashboard
 - count: 1
   name: netreconlab/parse-hipaa
+- count: 1
+  name: clamav/clamav
 - count: 1
   name: netreconlab/hipaa-mongo
 - count: 1
@@ -1093,10 +1101,6 @@ bases:
   name: rocker/r-devel
 - count: 1
   name: gcr.io/kaggle-gpu-images/python
-- count: 1
-  name: ufscar/hpc/arch_spark
-- count: 1
-  name: ufscar/hpc/cuda_pytorch
 - count: 1
   name: scrin/dev-spconv
 - count: 1
@@ -1502,15 +1506,15 @@ bases:
 - count: 1
   name: gitlab-registry.cern.ch/sft/docker/centos7
 bootstraps:
-- count: 4427
+- count: 4452
   name: docker
 - count: 352
   name: debootstrap
 - count: 309
   name: shub
-- count: 294
+- count: 298
   name: library
-- count: 108
+- count: 109
   name: localimage
 - count: 103
   name: yum
@@ -1736,6 +1740,8 @@ orgs:
 - count: 1
   name: bgruening
 - count: 1
+  name: quay.io/ohpc
+- count: 1
   name: vibpsb
 - count: 1
   name: funkey
@@ -1769,6 +1775,8 @@ orgs:
   name: libatomsquip
 - count: 1
   name: sarah145
+- count: 1
+  name: clamav
 - count: 1
   name: yonoia
 - count: 1
@@ -2248,8 +2256,8 @@ orgs:
 - count: 1
   name: gitlab-registry.cern.ch
 tags:
-  latest: 424
-  other: 4163
+  latest: 429
+  other: 4182
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -2281,12 +2289,12 @@ versions:
   adriansevcenco/alienpy.dock:
     latest: 1
   aibasel/downward:
-    '19.06': 28
-    '19.12': 30
-    '20.06': 41
+    '19.06': 29
+    '19.12': 31
+    '20.06': 43
     '21.12': 13
-    '22.06': 17
-    '22.12': 2
+    '22.06': 16
+    '22.12': 4
   airl_lab/default/airl_env:
     base_ci: 1
   alan0415/singularity_tf_rdma:
@@ -2592,6 +2600,8 @@ versions:
     latest: 9
   charade/xlibbox@sha256:
     04b1aca63f51cd18972b44380a7fcf2da0115c9e21e80fb9d375f39f229f686d: 1
+  clamav/clamav:
+    latest_base: 1
   clottaz/fastqpuri:
     1.0.8: 2
   codeastersolver/codeaster-mpi:
@@ -2602,7 +2612,7 @@ versions:
     r_4.0.2: 2
   cokelaer/damona/conda:
     4.7.12: 29
-    4.9.2: 20
+    4.9.2: 22
   cokelaer/damona/sequana:
     0.9.1: 1
   combinelab/salmon:
@@ -2635,10 +2645,10 @@ versions:
   continuumio/miniconda2:
     4.7.12: 5
   continuumio/miniconda3:
+    22.11.1-alpine: 1
     4.10.3: 5
-    4.10.3-alpine: 1
     4.5.12: 1
-    4.6.14: 4
+    4.6.14: 5
     4.7.10: 2
     4.7.12: 8
     4.8.2: 11
@@ -2794,7 +2804,7 @@ versions:
     '36': 2
     latest: 2
   finalduty/archlinux:
-    daily: 4
+    daily: 5
   fredjaya/rec-bench/base:
     latest: 1
   funkey/gunpowder:
@@ -3288,6 +3298,7 @@ versions:
     22.0.1: 1
     22.0.2: 1
     22.1.0: 1
+    22.1.1: 1
   nipreps/mriqc:
     22.0.1: 1
     22.0.2: 1
@@ -3443,7 +3454,7 @@ versions:
     10.1-devel-ubuntu16.04: 1
     10.1-devel-ubuntu18.04: 2
     10.1-runtime-centos7: 1
-    10.2-base-ubuntu18.04: 4
+    10.2-base-ubuntu18.04: 5
     10.2-cudnn7-devel-centos7: 1
     10.2-cudnn7-devel-ubuntu16.04: 3
     10.2-cudnn7-devel-ubuntu18.04: 5
@@ -3870,6 +3881,7 @@ versions:
     3.6.3: 1
     4.0.0: 1
     4.0.4: 1
+    4.2.2: 1
   railrl_v9p5_cuda10-1_mj1-50-1-59_torch1-1-0_gym0-10-5_py3-5-2_local:
     latest: 2
   raj76/singularity:
@@ -4140,7 +4152,7 @@ versions:
     2.7.0-gpu-jupyter: 1
     2.8.0-gpu-jupyter: 1
     2.9.1-gpu-jupyter: 2
-    latest-gpu: 9
+    latest-gpu: 10
     latest-gpu-jupyter: 1
     latest-gpu-py3: 6
     latest-gpu-py3-jupyter: 1
@@ -4198,9 +4210,9 @@ versions:
   ubuntu:
     $VERSION: 1
     '14.04': 23
-    '16.04': 186
+    '16.04': 187
     '17.04': 6
-    '18.04': 289
+    '18.04': 290
     '18.04 ': 9
     '19.04': 19
     '19.10': 4
@@ -4210,6 +4222,7 @@ versions:
     '21.04': 5
     '21.10': 3
     '22.04': 31
+    '22.10': 1
     UBUNTU_VERSION: 1
     artful: 7
     bionic: 183
@@ -4222,7 +4235,7 @@ versions:
     cosmic: 2
     disco: 3
     eoan-20200410: 2
-    focal: 38
+    focal: 39
     focal-20200729: 1
     focal-20200925: 3
     focal-20210827: 1
@@ -4234,7 +4247,7 @@ versions:
     sha256.cb37e547a14249943c5a3ee5786502f8db41384deb83fa6d2b62f3c587b82b17: 7
     trusty: 5
     trusty-20170119: 1
-    xenial: 48
+    xenial: 49
     'xenial  ': 1
     xenial-20180525: 1
     xenial-20190610: 1
@@ -4245,13 +4258,13 @@ versions:
   ufoym/deepo:
     all-py36-cpu: 2
   ufscar/hpc/arch_spark:
-    latest: 1
-  ufscar/hpc/cuda_pytorch:
-    latest: 1
-  ufscar/ubuntu_mpich:
     latest: 2
+  ufscar/hpc/cuda_pytorch:
+    latest: 2
+  ufscar/ubuntu_mpich:
+    latest: 3
   ufscar/ubuntu_ompi:
-    latest: 6
+    latest: 8
   uhrigs/arriba:
     1.2.0: 1
     2.0.0: 1
