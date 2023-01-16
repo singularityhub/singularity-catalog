@@ -20,7 +20,7 @@ From: r-base:4.0.0
 
 	To run Rscripts, use: 
 		singularity run -H $(pwd) hybphaser.sif [script_name]
-	To run the bash script, use: 
+	To run the bash scripts, use: 
 		singularity exec hybphaser.sif [script_name]
 
 	The list of scripts:
@@ -41,7 +41,7 @@ From: r-base:4.0.0
 	export DEBIAN_FRONTEND=noninteractive
 
 	# install dependencies
-	apt update && apt install -y \
+	apt update && apt install -y --no-install-recommends \
 		autoconf \
 		automake \
 		build-essential \
@@ -55,17 +55,10 @@ From: r-base:4.0.0
 		zlib1g-dev
 
 	## R packages
-	### remotes
-	R -e 'install.packages("remotes")'
-	
-	### ape
-	R -e 'require(remotes); install.packages("ape", version = "5.4")'
-
-	### seqinR
-	R -e 'require(remotes); install.packages("seqinr", version = "4.2")'
-
-	### stringR
-	R -e 'require(remotes); install.packages("stringr", version = "1.4")'
+	R -e 'install.packages("remotes", repos = "https://cloud.r-project.org/")'
+	R -e 'require(remotes); install_version("ape", version = "5.4", repos = "https://cloud.r-project.org/")'
+	R -e 'require(remotes); install_version("seqinr", version = "4.2-8", repos = "https://cloud.r-project.org/")'
+	R -e 'require(remotes); install_version("stringr", version = "1.4.0", repos = "https://cloud.r-project.org/")'
 
 	## BBMap scripts
 	URL=https://sourceforge.net/projects/bbmap/files/latest/download
@@ -101,10 +94,8 @@ From: r-base:4.0.0
 	make install
 	cd .. && rm -r samtools-"$SAM_VER"
 
-
 	# clean-up
 	apt autoremove -y && apt clean all
-
 
 	# install HybPhaser scripts
 	#git clone https://github.com/LarsNauheimer/HybPhaser.git

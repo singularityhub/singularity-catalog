@@ -15,4 +15,3 @@ From: continuumio/anaconda3
     /opt/conda/bin/conda env create -f environment.yml
 
 %runscript
-    conda activate simpol
