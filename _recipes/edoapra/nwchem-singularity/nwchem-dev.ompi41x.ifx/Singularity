@@ -51,7 +51,7 @@ echo MPI_IMPL is $MPI_IMPL
 echo BRANCH is $BRANCH
 pwd \
 && apt-get -y update \
-&& apt-get -y install -y tzdata git moreutils  wget curl rsync  \
+&& apt-get -y install -y tzdata git moreutils  wget curl rsync  sudo \
 && pwd \
 && echo '@@ ls -lart ' \
 && ls -lart  \
@@ -65,7 +65,7 @@ pwd \
  librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers \
 && apt-get clean \
 && echo TTTTT \
-&&  ./nwchem/travis/build_env.sh \
+&&  ./nwchem/travis/build_env.sh || true \
 && echo TTTTT \
 && echo "PATH" $PATH \
 && echo "LD_LIBRARY_PATH" $LD_LIBRARY_PATH \
