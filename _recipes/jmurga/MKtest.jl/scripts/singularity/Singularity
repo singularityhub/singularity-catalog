@@ -6,41 +6,34 @@ From: julia:latest
 	export LANG=C.UTF-8
 
 	export PATH=$/usr/local/julia/bin:$PATH
-	export PATH=$/ABCreg/src/:$PATH
-	export PATH=$/root/mambaforge/bin:$PATH
+	export PATH=$/mktest/ABCreg/src/:$PATH
+	# export PATH=$/root/mambaforge/bin:$PATH
 
-    export JULIA_DEPOT_PATH=:/opt/.julia
-	export LD_LIBRARY_PATH=$/root/mambaforge/lib:$LD_LIBRARY_PATH
+	export JULIA_DEPOT_PATH=:/opt/.julia
+	# export LD_LIBRARY_PATH=$/root/mambaforge/lib:$LD_LIBRARY_PATH
 
 %post
 	
-    export JULIA_DEPOT_PATH=/opt/.julia
-    
+	export JULIA_DEPOT_PATH=/opt/.julia
+	
 	apt-get update && apt-get install -y --no-install-recommends apt-utils
 	apt-get update\
-    && apt-get install -y libglib2.0-0 libxext6 wget bzip2 ca-certificates curl git vim make build-essential libgsl-dev libz-dev gzip parallel && \
-    apt-get clean  && \
-    rm -rf /var/lib/apt/lists/*
+	&& apt-get install -y libglib2.0-0 libxext6 wget bzip2 ca-certificates curl git vim make build-essential libgsl-dev libz-dev gzip parallel && \
+	apt-get clean  && \
+	rm -rf /var/lib/apt/lists/*
 
-	mkdir -p /analysis
+	mkdir -p /mktest
 
-	curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
-	bash Mambaforge-$(uname)-$(uname -m).sh -b
-
-	mamba update -n base -c defaults conda
-	mamba init bash
-
-	mamba install -c conda-forge jupyter -y
-
-	wget https://raw.githubusercontent.com/jmurga/MKtest.jl/master/scripts/precompile_mktest.jl
-	wget https://raw.githubusercontent.com/jmurga/MKtest.jl/master/scripts/abcmk_cli.jl
+	wget https://raw.githubusercontent.com/jmurga/MKtest.jl/master/scripts/precompile_mktest.jl -O /mktest/precompile_mktest.jl
+	wget https://raw.githubusercontent.com/jmurga/MKtest.jl/master/scripts/abcmk_cli.jl -O /mktest/abcmk_cli.jl
 	
-	julia -e 'using Pkg;Pkg.add(["IJulia","CSV","DataFrames","PackageCompiler","Fire"])'
+	julia -e 'using Pkg;Pkg.add(["CondaPkg","Fire","JLD2", "DataFrames", "CSV","PackageCompiler"])'
 	julia -e 'using Pkg;Pkg.add(PackageSpec(path="https://github.com/jmurga/MKtest.jl"))'
-	julia -e 'using PackageCompiler;PackageCompiler.create_sysimage(:MKtest, sysimage_path="/analysis/mktest.so", precompile_execution_file="/analysis/precompile_mktest.jl")'
+	julia -e 'using CondaPkg;CondaPkg.add("grapes-static", channel = "genomedk");CondaPkg.add("bedtools", channel = "bioconda")'
+	# julia -e 'using PackageCompiler;PackageCompiler.create_sysimage(:MKtest, sysimage_path="/mktest/mktest.so", precompile_execution_file="/mktest/precompile_mktest.jl")'
 
-	git clone https://github.com/molpopgen/ABCreg.git /analysis/ABCreg
-	make -C /analysis/ABCreg/src
+	git clone https://github.com/molpopgen/ABCreg.git /mktest/ABCreg
+	make -C /mktest/ABCreg/src
 
 %runscript
-	exec julia "$@"
+	exec julia /mktest/abcmk_cli.jl "$@"

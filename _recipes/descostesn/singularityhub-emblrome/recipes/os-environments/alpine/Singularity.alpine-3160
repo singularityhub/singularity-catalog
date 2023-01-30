@@ -1,0 +1,16 @@
+BootStrap: docker
+From: alpine:3.16.0
+
+%help
+
+    This singularity installs alpine with a minimal setup for scripting. Tools can be added on demand.
+
+%post
+    # ~~~~~~ General setup ~~~~~~ #
+    apk update && apk add wget gzip bash tcl
+
+%environment
+    export PATH="${PATH}:/bin/sh"
+
+%labels
+  Author Descostes

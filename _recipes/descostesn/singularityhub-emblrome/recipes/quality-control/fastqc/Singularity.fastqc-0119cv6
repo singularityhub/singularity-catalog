@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: biocontainers/fastqc:v0.11.9_cv6
+
+%runscript
+    echo "Running container biocontainers/fastqc:v0.11.9_cv6, FastQC v0.11.9"
+    exec /bin/bash "$@"
+
+%post
+    mkdir /cluster /work /tsd /projects
+
+%labels
+    Author Nicolas Descostes
+

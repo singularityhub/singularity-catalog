@@ -4,7 +4,7 @@ IncludeCmd: yes
 
 %labels
   MAINTAINER cschu (cschu1981@gmail.com)
-  VERSION v.2.9.7
+  VERSION v.2.8
 
 %environment
 export LC_ALL=C
@@ -31,10 +31,9 @@ export PATH=$PATH:/opt/software/miniconda3/bin:/opt/software/mOTUs
   /opt/software/miniconda3/bin/conda install -y -c bioconda 'samtools>=1.13' bwa minimap2 bwa-mem2
   git clone https://github.com/cschu/gff_quantifier.git
   cd gff_quantifier
-  git checkout main
+  git checkout bb39652d88233bcf969d65abccb342d9f5f087d1
   /opt/software/miniconda3/bin/python setup.py bdist_wheel
   /opt/software/miniconda3/bin/pip install --force-reinstall dist/*whl
-  # /opt/software/miniconda3/bin/pip install -e .
   cd ..
   rm -rf gff_quantifier/
 

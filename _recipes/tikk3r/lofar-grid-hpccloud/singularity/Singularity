@@ -28,41 +28,34 @@ From: fedora:34
 	# Leave at latest, release versions crash for some reason.
 	export CASAREST_VERSION=latest
 	export CFITSIO_VERSION=7.3.47
-    #export DPPP_VERSION=c719014a
-    export DPPP_VERSION=v5.3
+    export DPPP_VERSION=5dab4c43
 	export DYSCO_VERSION=2e7f331
-    #export EVERYBEAM_VERSION=78e4dc4b
-    export EVERYBEAM_VERSION=2d15b2a
+    export EVERYBEAM_VERSION=e1c96866
     export FFTW_VERSION=3.5.8
 	export HDF5_VERSION=1.10.5
     export IDG_VERSION=master
 	export LAPACK_VERSION=3.8.0
 	export LOSOTO3_VERSION=latest
-    #export LSMTOOL_VERSION=v1.4.9
     export LSMTOOL_VERSION=master
 	export OPENBLAS_VERSION=3.8.0
 	export PYBDSF_VERSION=master
 	export PYTHON_CASACORE_VERSION=v3.5.0
     export RMEXTRACT_VERSION=f161b0a
 	export SUPERLU_VERSION=5.2.1
-	#export WSCLEAN_VERSION=master
+	export WSCLEAN_VERSION=master
 	#export WSCLEAN_VERSION=77e65019
-	export WSCLEAN_VERSION=42c8201e
+	#export WSCLEAN_VERSION=42c8201e
+	#export WSCLEAN_VERSION=v3.2
 	export WCSLIB_VERSION=6.4
 	export HDF5_USE_FILE_LOCKING=FALSE
     export OMPI_ALLOW_RUN_AS_ROOT=1
     export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
 
-    #export HAS_CUDA=true
-    #export HAS_MKL=true
-    #export MARCH='cascadelake'
-    #export MTUNE='cascadelake'
-    #export NOAVX512=false
-    export HAS_CUDA=false
-    export HAS_MKL=false
-    export MARCH='x86-64'
-    export MTUNE='generic'
-    export NOAVX512=true
+    export HAS_CUDA=true
+    export HAS_MKL=true
+    export MARCH='cascadelake'
+    export MTUNE='cascadelake'
+    export NOAVX512=false
     export CPPSTD=c++17
 
     if [ $NOAVX512 = true ]; then
@@ -98,8 +91,6 @@ From: fedora:34
     export CC=`which gcc`
 	export CXX=`which g++`
     
-    #dnf -y install hdf5
-	#dnf -y install hdf5-devel
     dnf -y install python
 	dnf -y install python-pip python3-tkinter
     dnf -y install libsigc++20-devel gtkmm30-devel
@@ -204,7 +195,6 @@ From: fedora:34
     #
     wget https://raw.githubusercontent.com/tikk3r/lofar-grid-hpccloud/fedora-py3/requirements3.txt -O $INSTALLDIR/requirements3.txt
     pip --version
-    #pip install --upgrade setuptools
     pip install xmlrunner
     pip --no-cache-dir install virtualenv
 
@@ -218,18 +208,6 @@ From: fedora:34
     pip install lofar-h5plot
     pip install legacystamps
     pip install Kittens
-
-    #
-    # Install Montage
-    #
-    #mkdir -p /opt/montage
-    #cd /opt/montage
-    #wget https://github.com/Caltech-IPAC/Montage/archive/v6.0.tar.gz -O Montage_v6.0.tar.gz
-    #tar xf Montage_v6.0.tar.gz
-    #cd Montage-6.0
-    #make -j $J
-    #rm -rf /opt/montage/Montage_v6.0.tar.gz
-    
 
     #
     # Install difmap
@@ -266,15 +244,11 @@ From: fedora:34
 	#
 	# Install CASAcore
 	#
-	# Casacore 2.4.1 did not seem to deal well with AVX512 instructions, so disable them if they are available
 	mkdir -p ${INSTALLDIR}/casacore/build
 	mkdir -p ${INSTALLDIR}/casacore/data
 	cd $INSTALLDIR/casacore
     git clone https://github.com/casacore/casacore.git src
 	cd ${INSTALLDIR}/casacore/src && git checkout tags/${CASACORE_VERSION} && echo export CASACORE_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
-    # Backport patch UVFITS for LOFAR. This is fixed in recent versions > May 26 2020
-    #wget https://patch-diff.githubusercontent.com/raw/casacore/casacore/pull/1033.patch -O $INSTALLDIR/casacore/1033.patch
-    #cd $INSTALLDIR/casacore/src && patch --fuzz 3 -p1 < $INSTALLDIR/casacore/1033.patch
 	cd ${INSTALLDIR}/casacore/data && wget --retry-connrefused ftp://anonymous@ftp.astron.nl/outgoing/Measures/WSRT_Measures.ztar
 	cd ${INSTALLDIR}/casacore/data && tar xf WSRT_Measures.ztar && rm WSRT_Measures.ztar
 	cd ${INSTALLDIR}/casacore/build && cmake3 -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/casacore/ -DDATA_DIR=${INSTALLDIR}/casacore/data -DBUILD_PYTHON=False -DUSE_OPENMP=True -DUSE_FFTW3=TRUE -DUSE_HDF5=True -DBUILD_PYTHON3=True -DBUILD_DYSCO=OFF ../src/ 
@@ -288,15 +262,6 @@ From: fedora:34
 	# Install Python-CASAcore
 	#
 	pip install --no-deps --no-binary python-casacore "python-casacore==3.5.0"
-	#mkdir ${INSTALLDIR}/python-casacore
-        #cd ${INSTALLDIR}/python-casacore && git clone https://github.com/casacore/python-casacore
-	#cd ${INSTALLDIR}/python-casacore/python-casacore && git checkout tags/${PYTHON_CASACORE_VERSION} && echo export PYTHON_CASACORE_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
-	#cd ${INSTALLDIR}/python-casacore/python-casacore
-        #python setup.py build_ext -I${INSTALLDIR}/casacore/include/:/usr/include/python${PYTHON_VERSION} -L${INSTALLDIR}/casacore/lib/:/usr/lib64/
-        #cd $INSTALLDIR/python-casacore/python-casacore
-        #python setup.py install #--prefix=${INSTALLDIR}/python-casacore/
-        #cd $INSTALLDIR
-        #rm -rf $INSTALLDIR/python-casacore/python-casacore
     
 	#
 	# Install Dysco
@@ -374,7 +339,7 @@ From: fedora:34
     #
     # Install DPPP
     #
-    # Temporarily get rid of MKL. Throws an error about needing a not-OpenMP version of OpenBLAS and MKL's multithreaded stuff uses OpenMP from what I can tell.
+    # Temporarily get rid of MKL. Throws an error about needing a not-OpenMP version of OpenBLAS and MKL multithreaded stuff uses OpenMP from what I can tell.
     if [ $HAS_MKL = true ]; then
         export LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | tr ":" "\n" | grep -v "/opt/intel" | tr "\n" ":")
         export CPATH=$(echo $CPATH | tr ":" "\n" | grep -v "/opt/intel" | tr "\n" ":")
@@ -388,20 +353,20 @@ From: fedora:34
     echo export DPPP_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
     cd $INSTALLDIR/DPPP/build
     # Link to libopenblasp.so (note the p) and not libopenblas.so so we get the multi-threaded version.
-    #cmake3 -DCMAKE_CXX_FLAGS="-D_GLIB_USE_CXX_ABI=1 -DBOOST_NO_CXX11_SCOPED_ENUMS" -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLDIR/DPPP -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include -DAOFLAGGER_INCLUDE_DIR=$INSTALLDIR/aoflagger/include -DAOFLAGGER_LIB=$INSTALLDIR/aoflagger/lib/libaoflagger.so -DBLAS_openblas_LIBRARY=/usr/lib64/libopenblasp.so ../src
     if [ $MARCH = 'x86-64' ] && [ $MTUNE = 'generic' ]; then
 	cmake3 -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLDIR/DPPP -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include -DAOFLAGGER_INCLUDE_DIR=$INSTALLDIR/aoflagger/include -DAOFLAGGER_LIB=$INSTALLDIR/aoflagger/lib/libaoflagger.so -DBLAS_openblas_LIBRARY=/usr/lib64/libopenblasp.so -DPORTABLE=True ../src
     else
 	cmake3 -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLDIR/DPPP -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include -DAOFLAGGER_INCLUDE_DIR=$INSTALLDIR/aoflagger/include -DAOFLAGGER_LIB=$INSTALLDIR/aoflagger/lib/libaoflagger.so -DBLAS_openblas_LIBRARY=/usr/lib64/libopenblasp.so -DTARGET_CPU=${MARCH} ../src
     fi
-    # Boost 1.75 requires c++14, so override this during make
-    #make CFLAGS="-fPIC -std=${CPPSTD}" CXX_FLAGS="-fPIC -std=${CPPSTD}" -s -j $J && make install
     make -s -j $J && make install
     cd $INSTALLDIR
     rm -rf $INSTALLDIR/DPPP/build
     rm -rf $INSTALLDIR/DPPP/src
     mkdir $INSTALLDIR/DPPP/usermodules
     wget https://raw.githubusercontent.com/jurjen93/lofar_helpers/master/dp3_helpers/polconv.py -O $INSTALLDIR/DPPP/usermodules/polconv.py
+    wget https://raw.githubusercontent.com/jurjen93/lofar_helpers/master/dp3_helpers/polconv.patch -O $INSTALLDIR/polconv.patch
+    patch $INSTALLDIR/DPPP/usermodules/polconv.py < $INSTALLDIR/polconv.patch
+    rm $INSTALLDIR/polconv.patch
 
     if [ $HAS_MKL = true ]; then
         export LD_LIBRARY_PATH=/opt/intel/mkl/lib/intel64:$LD_LIBRARY_PATH
@@ -429,8 +394,6 @@ From: fedora:34
 	cd $INSTALLDIR/losoto/build
     git clone https://github.com/revoltek/losoto.git src
     cd src
-    #python setup.py build
-    #python setup.py install
 	pip install --no-deps .
     cd $INSTALLDIR
 	rm -rf $INSTALLDIR/losoto
@@ -475,7 +438,7 @@ From: fedora:34
     #
     mkdir -p $INSTALLDIR/ds9/bin
     cd $INSTALLDIR/ds9
-    wget https://ds9.si.edu/download/fedora33/ds9.fedora33.8.3.tar.gz 
+    wget http://ds9.si.edu/download/fedora33/ds9.fedora33.8.4.1.tar.gz
     tar xf ds9*.tar.gz -C $INSTALLDIR/ds9/bin
     rm ds9*.tar.gz
 
@@ -658,6 +621,8 @@ From: fedora:34
 	echo export OMP_MAX_THREADS=\$NCPU >> $INSTALLDIR/init.sh
     echo export HAS_CUDA=$HAS_CUDA >> $INSTALLDIR/init.sh
     echo export HAS_MKL=$HAS_MKL >> $INSTALLDIR/init.sh
+
+    echo export EVERYBEAM_DATADIR=\$INSTALLDIR/EveryBeam/share/everybeam >> $INSTALLDIR/init.sh
 
     echo source \$INSTALLDIR/pyenv-py3/bin/activate >> $INSTALLDIR/init.sh
 

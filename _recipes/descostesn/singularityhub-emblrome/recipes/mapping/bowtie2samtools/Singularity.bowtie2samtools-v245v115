@@ -1,0 +1,103 @@
+BootStrap: docker
+From: ubuntu:focal
+Stage: compile
+
+%post
+  export DEBIAN_FRONTEND=noninteractive 
+  export DEBCONF_NONINTERACTIVE_SEEN=true
+  export LC_ALL=C
+
+  echo "tzdata tzdata/Areas select Europe" > preseed.txt
+  echo "tzdata tzdata/Zones/Europe select Berlin" >> preseed.txt
+  debconf-set-selections preseed.txt
+  apt-get update
+  apt-get install -y build-essential cmake wget unzip zlib1g-dev autoconf automake make gcc perl zlib1g-dev libbz2-dev liblzma-dev libcurl4-gnutls-dev libssl-dev libncurses5-dev hwloc
+
+  # Intel Threading Building Blocks 2019 U8
+  mkdir -p /install_src /install/bin
+
+  # Intel Threading Building Blocks 2019 U8
+  cd /install_src
+  wget https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.1.1.tar.gz
+  tar xf v2021.1.1.tar.gz
+  cd oneTBB-2021.1.1
+  cmake -D TBB_STRICT:BOOL=false \
+   -Wno-error=deprecated \
+   -DCMAKE_INSTALL_PREFIX:PATH=/install \
+   . && \
+  cmake --build . -j 16 && \
+  ctest && \
+  cmake --install .
+  find . -name '*so' | xargs -I{} cp {} /usr/local/lib/  # Copy release libs to sys dir
+  find . -name '*so.2' | xargs -I{} cp {} /usr/local/lib/
+  cp -R include/* /usr/local/include/
+  ldconfig
+
+%appinstall bowtie2
+   cd /install_src
+   wget -O bowtie.zip https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.4.5/bowtie2-2.4.5-source.zip/download
+   unzip -o bowtie.zip
+   cd bowtie2-2.4.5
+   make -j 8
+   find . -maxdepth 1 -executable -type f -exec cp {} /install/bin/ \;
+
+%apphelp bowtie2
+   Bowtie 2.4.5
+
+%appinstall samtools
+   cd /install_src
+   wget https://github.com/samtools/htslib/releases/download/1.12/htslib-1.12.tar.bz2
+   tar xf htslib-1.12.tar.bz2
+   cd htslib-1.12
+   autoheader && autoconf && autoreconf --install
+   ./configure --prefix=/install
+   make -j 16
+   make install
+   cd ..
+   wget https://github.com/samtools/samtools/releases/download/1.15/samtools-1.15.tar.bz2
+   tar xf samtools-1.15.tar.bz2 
+   cd samtools-1.15
+   ./configure --prefix=/install
+   make -j 8
+   make install
+
+
+Bootstrap: docker
+From: ubuntu:focal
+Stage: release
+
+%environment
+  export LC_ALL=C
+  export PATH="${PATH}:/usr/bin/bin"
+
+%post
+  apt-get update
+  apt-get install -y python3 perl zlib1g-dev libbz2-dev liblzma-dev libcurl4-gnutls-dev libssl-dev libncurses5-dev
+  echo "/usr/local/lib" >> /etc/ld.so.conf.d/usr_local_lib.conf
+  ldconfig
+
+%files from compile
+  /install/bin /usr/
+  /install/include /usr/
+  /install/lib /usr/
+  /install/share /usr/
+
+%apphelp bowtie2
+  Bowtie 2.4.5
+
+%apprun bowtie2
+  exec bowtie2
+
+%apphelp samtools
+  Samtools 1.15
+  https://github.com/samtools/htslib/
+  https://github.com/samtools/samtools
+
+%apprun samtools
+  exec samtools
+
+%labels
+  Author "Tomi Häkkinen"
+  Contributors "Francesco Tabaro"
+  Version 1.1
+

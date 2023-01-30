@@ -1,60 +1,93 @@
 Bootstrap: docker
-From: biocorecrg/debian-perlbrew-pyenv3-java:buster
+From: ubuntu:20.04
 
 %runscript
-	echo "Interproscan Image for ORSON pipeline"
-
+        echo "Interproscan Image for ORSON pipeline"
 %post
-	# ###############################################################################
-	# Configure build
-	
-	# Which release of IPRscan to install?	
-	IPSCAN_VERSION=5.59-91.0
+        # ###############################################################################
+        # Configure build
 
-	# Will be used to update interposcan.propeties file and replace "cpu 1" by
-	# "cpu $CPU_FOR_IPRSCAN_USE"
-	# Beware when increasing cpu value, see https://interproscan-docs.readthedocs.io/en/latest/ImprovingPerformance.html#review-your-cpu-and-memory-command-options
-	CPU_FOR_IPRSCAN_USE=8
+        # Which release of IPRscan to install?  
+		INTERPROSCAN_VERSION=5.59-91.0
 
-	# Will be used toi update JRE RAM requirements in interproscan properties file
-	RAM_FOR_IPRSCAN_USE=12g
-	
-	# ###############################################################################
-	# Start building container
-	IPR_TAR=interproscan-${IPSCAN_VERSION}-64-bit.tar
-	IPR_TBALL=${IPR_TAR}.gz
-	IPR_URL_BASE=ftp://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/${IPSCAN_VERSION}
+        # Conda path 
+		PATH=/opt/conda/bin:$PATH
 
-	cd /usr/local
+        # Will be used to update interposcan.propeties file and replace "cpu 1" by
+        # "cpu $CPU_FOR_IPRSCAN_USE"
+        # Beware when increasing cpu value, see https://interproscan-docs.readthedocs.io/en/latest/ImprovingPerformance.html#review-your-cpu-and-memory-command-options
+        CPU_FOR_IPRSCAN_USE=8
 
-	curl --fail --silent --show-error --location --remote-name $IPR_URL_BASE/$IPR_TBALL
-	curl --fail --silent --show-error --location --remote-name $IPR_URL_BASE/${IPR_TBALL}.md5
-	md5sum -c ${IPR_TBALL}.md5
-	gunzip ${IPR_TBALL}
-	tar -xf ${IPR_TAR}
+        # Will be used toi update JRE RAM requirements in interproscan properties file
+        RAM_FOR_IPRSCAN_USE=4g
 
-	# Cleanup and configuration
-	rm -f ${IPR_TAR}*
-	mv interproscan-${IPSCAN_VERSION} interproscan
-	cd interproscan
-	chmod -R a+rx bin
+        # ###############################################################################
 
-	sed -i "s/=--cpu 1/=--cpu ${CPU_FOR_IPRSCAN_USE}/g" interproscan.properties
-	sed -i "s/=-c 1/=-c ${CPU_FOR_IPRSCAN_USE}/g" interproscan.properties
-	sed -i "s/=-cpu 1/=-cpu ${CPU_FOR_IPRSCAN_USE}/g" interproscan.properties
-	sed -i "s/-Xmx2048m/-Xmx${RAM_FOR_IPRSCAN_USE}/g" interproscan.properties
+        # Install dependencies
+        ## From apt
+        apt-get -qq update && apt-get -qq upgrade -y
+        apt-get -qq install -y wget tar locales
+        apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 
-	# Not used by ORSON
-	cd data
-	rm -rf gene3d panther phobius pirsf pirsr sfld tmhmm
+        localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 
-	# See https://interproscan-docs.readthedocs.io/en/latest/HowToDownload.html#index-hmm-models
-	cd /usr/local/interproscan
-	python3 initial_setup.py
+        ## From conda
+        wget -q https://repo.anaconda.com/miniconda/Miniconda3-py37_4.12.0-Linux-x86_64.sh
+        chmod +x Miniconda3-py37_4.12.0-Linux-x86_64.sh
+        ./Miniconda3-py37_4.12.0-Linux-x86_64.sh -b -s -p /opt/conda
+        rm Miniconda3-py37_4.12.0-Linux-x86_64.sh
+
+        conda update -q -y conda
+        conda install -q -c conda-forge -y mamba
+        mamba install -q -y -c conda-forge -c bioconda -c defaults\
+          conda-forge::perl \
+          conda-forge::openjdk=11.0.9.1 \
+          bioconda::perl-findbin \
+          bioconda::perl-getopt-long \
+          bioconda::perl \
+          conda-forge::libgomp \
+          bioconda::pftools
+
+        conda clean -a -y -q
+
+        cd /opt/
+
+        wget -q ftp://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/${INTERPROSCAN_VERSION}/interproscan-${INTERPROSCAN_VERSION}-64-bit.tar.gz
+        tar -xzf interproscan-${INTERPROSCAN_VERSION}-64-bit.tar.gz
+        mv interproscan-${INTERPROSCAN_VERSION} interproscan
+
+        rm -rf interproscan-${INTERPROSCAN_VERSION}-64-bit.tar.gz
+
+        # PFTOOLS: use newer version to fix broken --affinity option
+        sed -i 's|binary.prosite.psscan.pl.path=${bin.directory}/prosite|binary.prosite.psscan.pl.path=/opt/conda/bin|' /opt/interproscan/interproscan.properties
+        sed -i 's|binary.prosite.pfscan.path=${bin.directory}/prosite|binary.prosite.pfscan.path=/opt/conda/bin|' /opt/interproscan/interproscan.properties
+        sed -i 's|binary.prosite.pfsearch.path=${bin.directory}/prosite|binary.prosite.pfsearch.path=/opt/conda/bin|' /opt/interproscan/interproscan.properties
+        sed -i 's|binary.prosite.pfscanv3.path=${bin.directory}/prosite|binary.prosite.pfscanv3.path=/opt/conda/bin|' /opt/interproscan/interproscan.properties
+        sed -i 's|binary.prosite.pfsearchv3.path=${bin.directory}/prosite|binary.prosite.pfsearchv3.path=/opt/conda/bin|' /opt/interproscan/interproscan.properties
+        echo "binary.pfscanv3.path=/opt/conda/bin/pfscanV3" >> /opt/interproscan/interproscan.properties
+        echo "binary.pfsearchv3.path=/opt/conda/bin/pfsearchV3" >> /opt/interproscan/interproscan.properties
+
+        sed -i "s/=--cpu 1/=--cpu ${CPU_FOR_IPRSCAN_USE}/g" /opt/interproscan/interproscan.properties
+        sed -i "s/=-c 1/=-c ${CPU_FOR_IPRSCAN_USE}/g" /opt/interproscan/interproscan.properties
+        sed -i "s/=-cpu 1/=-cpu ${CPU_FOR_IPRSCAN_USE}/g" /opt/interproscan/interproscan.properties
+        sed -i "s/-Xmx2048m/-Xmx${RAM_FOR_IPRSCAN_USE}/g" /opt/interproscan/interproscan.properties
+
+        # Not used by ORSON
+        cd /opt/interproscan/data
+        rm -rf gene3d panther phobius pirsf pirsr sfld tmhmm
+
+        cd /opt/interproscan/bin/
+        for i in $(grep -r "/usr/bin/perl" * | cut -d ":" -f 1); do sed -i "s|/usr/bin/perl|/opt/conda/bin/perl|" $i; done
+
+        ## Installation
+        cd /opt/interproscan
+        df -h
+        ls -la
+        python3 setup.py interproscan.properties
 
 %environment
-	PATH="/usr/local/interproscan:${PATH}"
-
+        export PATH=/opt/interproscan/:/opt/conda/bin:$PATH
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/:/opt/conda/lib
 %labels
     Maintainer SeBiMER, IFREMER
     Version 2.0

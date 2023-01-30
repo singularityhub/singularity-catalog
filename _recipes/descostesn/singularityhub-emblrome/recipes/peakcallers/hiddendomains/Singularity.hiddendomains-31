@@ -1,0 +1,59 @@
+BootStrap: docker
+From: ubuntu:xenial
+
+%help
+    This singularity install hiddenDomains v3.1
+
+%post
+
+    # ~~~~~~ General setup and folder creation ~~~~~~ #
+    
+    apt-get update && apt-get install -y wget bzip2
+    
+    export LC_ALL=en_US.UTF-8
+    export LC_COLLATE=C
+    export LC_CTYPE=C
+    export LC_MEASUREMENT=C
+    export LC_MESSAGES=C
+    export LC_MONETARY=C
+    export LC_PAPER=C
+    export LC_TIME=C
+    export LANG=C.UTF-8
+    
+    # ~~~~~ MINICONDA 3.4.0.5 ~~~~~ #
+    wget https://repo.anaconda.com/miniconda/Miniconda3-4.6.14-Linux-x86_64.sh && \
+    bash Miniconda3-4.6.14-Linux-x86_64.sh -b -p /conda && \
+    rm -f Miniconda3-4.6.14-Linux-x86_64.sh
+    export PATH="/conda/bin:${PATH}"
+    
+    # ~~~~~ perl 5.32.1 ~~~~~~~#
+    conda install -c conda-forge perl=5.32.1
+    
+    # ~~~~ R v 4.1.2 ~~~~~~ #
+    conda install -c conda-forge r-base=4.1.2
+    
+    # ~~~ r-depmixs4 v1.5_0 ~~~~#
+    conda install -c conda-forge r-depmixs4=1.5_0
+    
+    #~~~~ r-hiddenmarkov v1.8_13 ~~~#
+    conda install -c conda-forge r-hiddenmarkov=1.8_13
+    
+    # ~~~~~ hiddendomains v3.1 ~~~~~ #
+    conda install -y -c bioconda hiddendomains=3.1
+    
+%environment
+    export PATH="${PATH}:/conda/bin"
+    export LC_ALL=en_US.UTF-8
+    export LC_COLLATE=C
+    export LC_CTYPE=C
+    export LC_MEASUREMENT=C
+    export LC_MESSAGES=C
+    export LC_MONETARY=C
+    export LC_PAPER=C
+    export LC_TIME=C
+    export LANG=C.UTF-8
+    
+
+%labels
+    Author Nicolas Descostes
+    Version v0.0.5

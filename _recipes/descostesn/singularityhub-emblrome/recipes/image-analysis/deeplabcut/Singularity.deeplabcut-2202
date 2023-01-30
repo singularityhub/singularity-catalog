@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: deeplabcut/deeplabcut:latest-core
+
+%help
+  A Singularity image from the deeplabcut:latest-core Docker. It comes with ResNet weights embedded. Deeplabcut 2.2.0.2
+
+%labels
+  AUTHOR Francesco Tabaro
+  VERSION 0.1
+  DEEPLABCUT_VERSION 2.2.0.2
+
+%post
+  apt-get update && apt-get install -y curl
+
+  cd /usr/local/lib/python3.8/dist-packages/deeplabcut/pose_estimation_tensorflow/models/pretrained/
+  
+  # Adapted from download.sh
+  for i in resnet_v1_50_2016_08_28.tar.gz resnet_v1_101_2016_08_28.tar.gz resnet_v1_152_2016_08_28.tar.gz; do 
+    curl -O http://download.tensorflow.org/models/$i
+    FN=$(tar xzvf $i)
+    chmod 666 $FN
+    rm $i
+  done
+
+%runscript
+  exec /usr/bin/python3 "$@"
+
+  

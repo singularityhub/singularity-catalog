@@ -1,0 +1,53 @@
+# nectarchain.sif - A singularity image for nectarchain
+#
+# Built from mambaforge, with special conda environment containing nectarchain
+#
+# Jean-Philippe Lenain <jlenain@in2p3.fr>
+# Time-stamp: "2023-01-13 16:42:06 jlenain"
+#
+# Typically, build this image with:
+# `sudo singularity build nectarchain.sif Singularity`
+#
+# Then, typically run an instance of this image with:
+# `singularity shell nectarchain.sif`
+
+Bootstrap: docker
+From: condaforge/mambaforge
+
+# From https://github.com/hpcng/singularity/issues/5075#issuecomment-594391772
+%environment
+    action="${0##*/}"
+    if [ "$action" = "shell" ]; then
+        if [ "${SINGULARITY_SHELL:-}" = "/bin/bash" ]; then
+            set -- --noprofile --init-file /.singularity_bash
+        elif test -z "${SINGULARITY_SHELL:-}"; then
+            export SINGULARITY_SHELL=/bin/bash
+            set -- --noprofile --init-file /.singularity_bash
+        fi
+    fi
+
+%post
+    ORIG=$PWD
+    . /opt/conda/etc/profile.d/conda.sh
+    . /opt/conda/etc/profile.d/mamba.sh
+    mamba update --quiet --name base conda mamba
+    mkdir -p /opt/cta
+    cd /opt/cta
+    git clone https://github.com/cta-observatory/nectarchain.git
+    mamba env create --quiet --file nectarchain/environment.yml --prefix /opt/conda/envs/nectarchain
+    mamba activate nectarchain
+    cd nectarchain
+    pip install -e .
+    mamba clean --quiet -y --all
+    echo "## Activate nectarchain environment" >> /.singularity_bash
+    echo "source /opt/conda/etc/profile.d/conda.sh" >> /.singularity_bash
+    echo "source /opt/conda/etc/profile.d/mamba.sh" >> /.singularity_bash
+    echo "mamba activate nectarchain" >> /.singularity_bash
+
+%runscript
+    echo "This is a mambaforge container with a nectarchain environment"
+    exec /bin/bash --noprofile --init-file /.singularity_bash "$@"
+
+%startscript
+    echo "This is a mambaforge container with a nectarchain environment"
+    exec /bin/bash --noprofile --init-file /.singularity_bash "$@"

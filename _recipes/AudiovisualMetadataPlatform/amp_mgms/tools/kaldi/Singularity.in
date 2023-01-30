@@ -45,6 +45,7 @@ export LC_ALL=en_US
         bzip2 unzip wget sox libtool \
         git subversion python2.7 python3 zlib1g-dev \
         ca-certificates gfortran patch ffmpeg vim
+    rm -rf /var/lib/apt/lists/*
     ln -s /usr/bin/python3 /usr/bin/python
     git clone --depth 1 https://github.com/kaldi-asr/kaldi.git /opt/kaldi #EOL
     
@@ -66,7 +67,7 @@ export LC_ALL=en_US
     rm -rf /opt/kaldi/.git    
 
     # PUA dependencies
-    apt-get install -qq -y  python libatlas-base-dev software-properties-common curl gawk zip  \
+    apt-get install -qq -y  python2 libatlas-base-dev software-properties-common curl gawk zip  \
         libperl4-corelibs-perl libjson-perl  python-pip libsox-dev nano rsync cmake irstlm
 
     # setup python

@@ -1,31 +1,31 @@
+# Base image from docker
 BootStrap: docker
-From: ubuntu:20.04
+FROM python:3.9-slim
 
 %labels
-    Maintainer MLCommons MLCube Working Group
+    Maintainer Vladimir Zaigrajew
 
 %post
+    # Update software
     apt-get update
-    apt-get install -y --no-install-recommends \
-        software-properties-common \
-        python3-dev\
-        curl
-    rm -rf /var/lib/apt/lists/*
-    ln -s /usr/bin/python3 /usr/local/bin/python
 
+    # Install requirements.txt
     pip install --no-cache-dir -r /requirements.txt
 
+    # Make run.sh executable
     chmod +x /workspace/run.sh
 
+# Copy necessary files
 %files
     requirements.txt /requirements.txt
     run.sh /workspace/run.sh
-    train_jax.py /workspace/train_jax.py
-    train_pytorch.py /workspace/train_pytorch.py
-    train_tensorflow.py /workspace/train_tensorflow.py
+    mnist_jax.py /workspace/mnist_jax.py
+    mnist_pytorch.py /workspace/mnist_pytorch.py
+    mnist_tensorflow.py /workspace/mnist_tensorflow.py
 
     mlcube.yaml /mlcube/mlcube.yaml
     workspace/train.yaml /mlcube/workspace/train.yaml
 
+# Run run.sh
 %runscript
     /bin/bash /workspace/run.sh "$@"

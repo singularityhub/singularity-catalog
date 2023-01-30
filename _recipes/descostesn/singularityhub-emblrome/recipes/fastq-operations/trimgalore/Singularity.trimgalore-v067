@@ -1,0 +1,45 @@
+BootStrap: docker
+From: ubuntu:bionic
+
+
+%help
+
+    This singularity installs trim-galore v 0.6.7.
+
+%post
+    # ~~~~~~ General setup and folder creation ~~~~~~ #
+    
+    apt-get update && apt-get install -y wget
+    
+    export LC_ALL=C
+    export LC_CTYPE=C 
+    export LC_COLLATE=C 
+    export LC_TIME=C
+    export LC_MESSAGES=C
+    export LC_MONETARY=C
+    export LC_PAPER=C 
+    export LC_MEASUREMENT=C
+    
+    # ~~~~~ MINICONDA ~~~~~ #
+    wget https://repo.continuum.io/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
+    bash Miniconda3-4.7.12.1-Linux-x86_64.sh -b -p /conda && \
+    rm -f Miniconda3-4.7.12.1-Linux-x86_64.sh
+    export PATH="/conda/bin:${PATH}"
+    
+    # ~~~~~ TRIM GALORE ~~~~~ #
+    conda install -y -c bioconda trim-galore=0.6.7
+    
+%environment
+    export PATH="${PATH}:/conda/bin"
+    export LC_ALL=C
+    export LC_CTYPE=C 
+    export LC_COLLATE=C 
+    export LC_TIME=C
+    export LC_MESSAGES=C
+    export LC_MONETARY=C
+    export LC_PAPER=C 
+    export LC_MEASUREMENT=C
+
+%labels
+    Author Nicolas Descostes
+    Version v0.0.1

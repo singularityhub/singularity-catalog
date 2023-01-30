@@ -1,0 +1,49 @@
+BootStrap: docker
+From: ubuntu:22.10
+
+
+%help
+
+    This singularity installs spikchip. See repository https://github.com/eblancoga/spikChIP
+
+%post
+    # ~~~~~~ General setup and folder creation ~~~~~~ #
+    
+    apt update && DEBIAN_FRONTEND=noninteractive apt install -y gcc git libz-dev make r-base curl samtools software-properties-common gawk bash
+    
+    export LC_ALL=C
+    export LC_CTYPE=C 
+    export LC_COLLATE=C 
+    export LC_TIME=C
+    export LC_MESSAGES=C
+    export LC_MONETARY=C
+    export LC_PAPER=C 
+    export LC_MEASUREMENT=C
+    
+    # ~~~~~ seqcode ~~~~~ #
+    curl -L https://github.com/eblancoga/seqcode/archive/master.tar.gz -o seqcode.tar.gz && tar -xvzf seqcode.tar.gz && rm seqcode.tar.gz && cd seqcode-main/ && make all && cd ..
+    
+    # ~~~~~ samtools ~~~~~ #
+    add-apt-repository universe && apt update && apt install -y samtools
+    
+    # ~~~~~ affy and MASS ~~~~~ #
+    R --slave -e 'install.packages(c("BiocManager", "MASS"), repos="https://cloud.r-project.org/")' && R --slave -e 'BiocManager::install(c("affy"))'
+    
+    # ~~~~~ spikchip ~~~~~ #
+    curl -L https://github.com/eblancoga/spikChIP/archive/master.tar.gz -o spikchip.tar.gz && tar -xvzf spikchip.tar.gz && rm spikchip.tar.gz && cd spikChIP-master/ && rm -r examples && cd ..
+    
+%environment
+    export PATH="${PATH}:/spikChIP-master:/seqcode-main/bin"
+    export LC_ALL=C
+    export LC_CTYPE=C 
+    export LC_COLLATE=C 
+    export LC_TIME=C
+    export LC_MESSAGES=C
+    export LC_MONETARY=C
+    export LC_PAPER=C 
+    export LC_MEASUREMENT=C
+
+%labels
+    Author Nicolas Descostes
+    Version v0.0.1
+

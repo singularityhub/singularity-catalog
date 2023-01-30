@@ -1,0 +1,27 @@
+BootStrap: docker
+From: ubuntu:bionic
+
+%help
+    This singularity install parallel-fastq-dump v0.6.3.
+
+%post
+
+    # ~~~~~~ General setup and folder creation ~~~~~~ #
+    
+    apt-get update && apt-get install -y wget bzip2
+    
+    # ~~~~~ MINICONDA 3.4.0.5 ~~~~~ #
+    wget https://repo.anaconda.com/miniconda/Miniconda3-4.0.5-Linux-x86_64.sh && \
+    bash Miniconda3-4.0.5-Linux-x86_64.sh -b -p /conda && \
+    rm -f Miniconda3-4.0.5-Linux-x86_64.sh
+    export PATH="/conda/bin:${PATH}"
+       
+    # ~~~~~ parallel-fastq-dump 0.6.3 ~~~~~ #
+    conda install -y -c bioconda parallel-fastq-dump=0.6.3
+    
+%environment
+    export PATH="${PATH}:/conda/bin"
+
+%labels
+    Author Nicolas Descostes
+    Version v0.0.2

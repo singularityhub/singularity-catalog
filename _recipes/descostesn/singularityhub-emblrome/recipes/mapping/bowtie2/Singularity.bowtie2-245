@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: quay.io/biocontainers/bowtie2:2.4.5--py36hfca12d5_2
+
+%runscript
+    echo "Running container quay.io/biocontainers/bowtie2:2.4.5--py36hfca12d5_2, Bowtie v2.4.5"
+    exec /bin/bash "$@"
+
+%post
+    mkdir /cluster /work /tsd /projects
+
+%labels
+    Author Nicolas Descostes
+

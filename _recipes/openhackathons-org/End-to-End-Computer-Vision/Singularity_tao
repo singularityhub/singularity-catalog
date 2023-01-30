@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/tao/tao-toolkit-tf:v3.22.05-tf1.15.5-py3
+
+%environment
+    export XDG_RUNTIME_DIR=
+    export PATH="$PATH:/usr/local/bin"
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
+
+%post
+    # Install jupyterlab and packages
+    pip3 install jupyterlab \
+    ipywidgets \
+    matplotlib \
+    opencv-python-headless==4.5.4.60 \
+    fiftyone \
+    gdown
+    
+%runscript
+    "$@"
+
+%labels
+    Author Massimiliano, Tosin
+    

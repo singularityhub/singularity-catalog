@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: biocontainers/bowtie2:v2.4.1_cv1
+
+%runscript
+    echo "Running container biocontainers/bowtie2:v2.4.1_cv1, Bowtie v2.4.1"
+    exec /bin/bash "$@"
+
+%post
+    mkdir /cluster /work /tsd /projects
+
+%labels
+    Author Nicolas Descostes
+

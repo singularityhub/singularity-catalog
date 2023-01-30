@@ -27,8 +27,8 @@ From: repositories.sif
  
     git -C repositories/latent-diffusion pull
 
-    sed -i".org" -e "s/os.rename(tmpdir, target_dir)/shutil.move(tmpdir, target_dir)/" modules/ui_extensions.py
+    #sed -i".org" -e "s/os.rename(tmpdir, target_dir)/shutil.move(tmpdir, target_dir)/" modules/ui_extensions.py
  
     pip install -r repositories/CodeFormer/requirements.txt --prefer-binary
-    pip install -r /opt/stable-diffusion-webui/requirements.txt  --prefer-binary
+    pip install -r /opt/stable-diffusion-webui/requirements_versions.txt  --prefer-binary
 

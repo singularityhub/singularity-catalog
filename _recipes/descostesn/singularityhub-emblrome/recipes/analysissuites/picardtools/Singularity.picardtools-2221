@@ -1,0 +1,49 @@
+BootStrap: docker
+From: ubuntu:bionic
+
+%help
+
+	This singularity installs picard tools v 2.22.1
+
+%post
+    # ~~~~~~ General setup and folder creation ~~~~~~ #
+    
+    apt-get update && apt-get install -y wget libreadline-dev
+        
+    export LC_ALL=C
+    export LC_CTYPE=C 
+    export LC_COLLATE=C 
+    export LC_TIME=C
+    export LC_MESSAGES=C
+    export LC_MONETARY=C
+    export LC_PAPER=C 
+    export LC_MEASUREMENT=C
+	
+    # ~~~~~ MINICONDA ~~~~~ #
+    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /conda && \
+    rm -f Miniconda3-latest-Linux-x86_64.sh
+    export PATH="/conda/bin:${PATH}"
+    
+    # ~~~~ R v 4.1.2 ~~~~~~ #
+    conda install -c conda-forge r-base=4.1.2
+    
+    # ~~~~~ PICARD TOOLS ~~~~~ #
+	conda install -y -c bioconda picard=2.22.1
+	
+	
+%environment
+    export PATH="${PATH}:/conda/bin"
+	export LC_ALL=C
+    export LC_CTYPE=C 
+    export LC_COLLATE=C 
+    export LC_TIME=C
+    export LC_MESSAGES=C
+    export LC_MONETARY=C
+    export LC_PAPER=C 
+    export LC_MEASUREMENT=C
+
+%labels
+	Author Nicolas Descostes
+	Version v0.0.1
+

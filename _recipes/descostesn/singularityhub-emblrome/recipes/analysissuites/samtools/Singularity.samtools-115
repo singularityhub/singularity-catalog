@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: staphb/samtools:1.15
+
+%runscript
+    echo "Running container staphb/samtools:1.15, samtools v1.15"
+    exec /bin/bash "$@"
+
+%post
+    mkdir /cluster /work /tsd /projects
+
+%labels
+    Author Nicolas Descostes

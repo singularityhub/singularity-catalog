@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: dceoy/macs2:latest
+
+%runscript
+    echo "Running container dceoy/macs2, macs2 v2.2.7.1"
+    exec /bin/bash "$@"
+
+%post
+    mkdir /cluster /work /tsd /projects
+
+%labels
+    Author Nicolas Descostes

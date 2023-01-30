@@ -3,7 +3,7 @@ From: centos:7
 Stage: build
 
 %post
-http_proxy=http://user:nopass@proxy.sandia.gov:80/ && \
+# insert http_proxy=http://<url>/ && \
 yum update -y && yum install -y gcc make && \
 yum install -y mariadb-libs \
 mysql-devel \
@@ -25,19 +25,19 @@ From: centos:7
 Stage: runner
 
 %files from build
-/source/jobmon/bin/ /jobmon/
-/source/LDMSparsers/src/parse_slurm/parse_slurm /jobmon/bin
-/source/LDMSparsers/src/vinsert/vinsert.pl /jobmon/bin
-/source/LDMSparsers/src/parse_meminfo/parse_meminfo.pl /jobmon/bin
-/source/LDMSparsers/src/parse_opa2/parse_opa2.pl /jobmon/bin
-/source/LDMSparsers/src/parse_lustre_client/parse_lustre_client.pl /jobmon/bin
-/source/LDMSparsers/src/parse_procnfs/parse_procnfs.pl /jobmon/bin
-/source/LDMSparsers/src/parse_procnetdev/parse_procnetdev.pl /jobmon/bin
-/source/LDMSparsers/src/parse_procstat_72/parse_procstat_72.pl /jobmon/bin
-/source/LDMSparsers/src/parse_gw_sysclassib/parse_gw_sysclassib.pl /jobmon/bin
-/source/LDMSparsers/src/parse_loadavg/parse_loadavg.pl /jobmon/bin
-/source/LDMSparsers/src/parse_lnet_stats/parse_lnet_stats.pl /jobmon/bin
-/source/LDMSparsers/src/parse_procnet/parse_procnet.pl /jobmon/bin
+/source/jobmon/bin/ /jobmon/bin
+/source/LDMSparsers/src/parse_slurm/parse_slurm /jobmon/bin/
+/source/LDMSparsers/src/vinsert/vinsert.pl /jobmon/bin/
+/source/LDMSparsers/src/parse_meminfo/parse_meminfo.pl /jobmon/bin/
+/source/LDMSparsers/src/parse_opa2/parse_opa2.pl /jobmon/bin/
+/source/LDMSparsers/src/parse_lustre_client/parse_lustre_client.pl /jobmon/bin/
+/source/LDMSparsers/src/parse_procnfs/parse_procnfs.pl /jobmon/bin/
+/source/LDMSparsers/src/parse_procnetdev/parse_procnetdev.pl /jobmon/bin/
+/source/LDMSparsers/src/parse_procstat_72/parse_procstat_72.pl /jobmon/bin/
+/source/LDMSparsers/src/parse_gw_sysclassib/parse_gw_sysclassib.pl /jobmon/bin/
+/source/LDMSparsers/src/parse_loadavg/parse_loadavg.pl /jobmon/bin/
+/source/LDMSparsers/src/parse_lnet_stats/parse_lnet_stats.pl /jobmon/bin/
+/source/LDMSparsers/src/parse_procnet/parse_procnet.pl /jobmon/bin/
 /source/jobmon/util/cron /etc/cron.d/ingest_cron
 %post
 yum update -y && \

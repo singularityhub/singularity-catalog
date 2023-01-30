@@ -1,0 +1,57 @@
+Bootstrap: library
+From: debian:bullseye
+
+%help
+    Debian 11 (Bullseye)
+        * MinIO Object Storage Server
+
+%environment
+    export PATH=${PATH}:/software
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+
+    apt-get update
+    apt-get upgrade -y
+
+    apt-get install -y ca-certificates wget pwgen
+
+    apt-get clean
+
+    mkdir /data
+    mkdir /software
+
+    cd /tmp
+
+    wget -P /software https://dl.min.io/server/minio/release/linux-amd64/minio
+    wget -P /software https://dl.min.io/client/mc/release/linux-amd64/mc
+    chmod +x /software/minio
+    chmod +x /software/mc
+
+%runscript
+    if [ "$#" -ne 2 ]; then
+        AK=$(cat /proc/sys/kernel/random/uuid)
+        SK=$(pwgen -y 64 1)
+    else
+        AK=$1
+        SK=$2
+    fi
+
+    export MINIO_ROOT_USER=${AK}
+    export MINIO_ROOT_PASSWORD=${SK}
+        
+    minio server /data
+
+%startscript
+    if [ "$#" -ne 2 ]; then
+        AK="minio"
+        SK="dingleberry"
+    else
+        AK=$1
+        SK=$2
+    fi
+
+    export MINIO_ROOT_USER=${AK}
+    export MINIO_ROOT_PASSWORD=${SK}
+        
+    minio server /data

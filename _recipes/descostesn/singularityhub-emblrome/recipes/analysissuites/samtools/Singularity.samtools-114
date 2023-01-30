@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: bschiffthaler/samtools:1.14
+
+%runscript
+    echo "Running container bschiffthaler/samtools:1.14, samtools v1.14"
+    exec /bin/bash "$@"
+
+%post
+    mkdir /cluster /work /tsd /projects
+
+%labels
+    Author Nicolas Descostes

@@ -1,0 +1,39 @@
+Bootstrap: library
+From: debian:bullseye
+
+%help
+    See the README.md file in /doc
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/app
+    mkdir -p ${SINGULARITY_ROOTFS}/proj
+
+%environment
+    export LC_ALL=C.UTF-8
+
+%files
+    wsgi.py /app
+    app.py /app
+    gunicorn_config.py /proj
+    nginx.conf /proj
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    export TZ="America/Los_Angeles"
+
+    apt-get update
+    apt-get upgrade -y
+
+    # Various standard packaged software
+    apt-get install -y ca-certificates nginx gunicorn python3-flask python3-requests less
+
+    # Clean the apt files
+    apt-get clean
+    rm -r /var/lib/apt/lists/*
+
+    mv /proj/nginx.conf /etc/nginx
+
+%startscript
+    nginx
+    cd /app
+    /usr/bin/gunicorn --config /proj/gunicorn_config.py wsgi:app

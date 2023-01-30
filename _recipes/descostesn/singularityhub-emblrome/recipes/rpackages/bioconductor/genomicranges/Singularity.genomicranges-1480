@@ -1,0 +1,49 @@
+BootStrap: docker
+From: ubuntu:bionic
+
+%help
+
+    This singularity installs R v 4.1.1 and required packages
+
+%post
+    # ~~~~~~ General setup and folder creation ~~~~~~ #
+    
+    apt-get update && apt-get install -y wget build-essential libxml2
+    
+    export LC_ALL=C
+    export LC_CTYPE=C 
+    export LC_COLLATE=C 
+    export LC_TIME=C
+    export LC_MESSAGES=C
+    export LC_MONETARY=C
+    export LC_PAPER=C 
+    export LC_MEASUREMENT=C
+    
+    # ~~~~~ MINICONDA ~~~~~ #
+    wget https://repo.continuum.io/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh && \
+    bash Miniconda3-4.7.12.1-Linux-x86_64.sh -b -p /conda && \
+    rm -f Miniconda3-4.7.12.1-Linux-x86_64.sh
+    export PATH="/conda/bin:${PATH}"
+    
+    # ~~~~~ R v 4.1.1 ~~~~~ #
+    conda install -c conda-forge r-base=4.1.1
+    
+    # ~~~~~ R packages ~~~~~ #
+    R --slave -e 'install.packages("BiocManager", repos="https://cloud.r-project.org/")'
+    R --slave -e 'BiocManager::install("GenomicRanges")'
+    
+%environment
+    export PATH="${PATH}:/conda/bin"
+    export LC_ALL=C
+    export LC_CTYPE=C 
+    export LC_COLLATE=C 
+    export LC_TIME=C
+    export LC_MESSAGES=C
+    export LC_MONETARY=C
+    export LC_PAPER=C 
+    export LC_MEASUREMENT=C
+
+%labels
+    Author Nicolas Descostes
+    Version v0.0.1
+

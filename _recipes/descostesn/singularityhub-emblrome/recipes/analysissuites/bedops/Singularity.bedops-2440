@@ -1,0 +1,20 @@
+BootStrap: docker
+From: ubuntu:bionic
+
+%help
+    This singularity install bedops v2.4.40
+
+%post
+
+    # ~~~~~~ General setup and folder creation ~~~~~~ #
+    
+    apt-get update && apt-get install -y wget bzip2
+    
+    # ~~~~~ bedops 2.4.40 ~~~~~ #
+    wget https://github.com/bedops/bedops/releases/download/v2.4.40/bedops_linux_x86_64-v2.4.40.tar.bz2
+    tar jxvf bedops_linux_x86_64-v2.4.40.tar.bz2
+    cp bin/* /usr/local/bin
+    
+%labels
+    Author Nicolas Descostes
+    Version v0.0.1

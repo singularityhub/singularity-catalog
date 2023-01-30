@@ -1,0 +1,53 @@
+BootStrap: docker
+From: ubuntu:20.04
+
+%runscript
+ vglrun chimerax 
+
+%post
+    echo "*********************************************************"
+    echo "Setup and display environment"
+    echo "*********************************************************"
+    export LC_ALL=en_AU.UTF-8
+    export LANGUAGE=en_AU.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
+    echo $LC_ALL
+    echo $LANGUAGE
+    echo $DEBIAN_FRONTEND
+
+    echo "*********************************************************
+    echo "Installation Begins"
+    echo "******************************************
+    apt update -y
+
+    apt install -y wget 
+      libglu1-mesa-dev \
+      qt5-default \
+      libgl1-mesa-glx \
+      cmake \
+      pkg-config \
+      mesa-utils libglu1-mesa-dev \
+      freeglut3-dev mesa-common-dev \
+      libglew-dev libglfw3-dev libglm-dev \
+      libao-dev libmpg123-dev \
+      openssh-client \
+      git \
+      libxinerama-dev \
+      libxcursor-dev \
+      libxi-dev \
+      unzip \
+      libegl1-mesa \
+
+    cd /tmp
+    wget https://git.embl.de/ysun/band-artifacts/-/raw/main/ucsf-chimerax_1.3ubuntu20.04_amd64.deb  
+
+    DEBIAN_FRONTEND=noninteractive apt install -y /tmp/ucsf-chimerax_1.3ubuntu20.04_amd64.deb
+
+    rm /tmp/ucsf-chimerax_1.3ubuntu20.04_amd64.deb
+
+    wget https://sourceforge.net/projects/virtualgl/files/3.0/virtualgl_3.0_amd64.deb/download -O virtualgl_3.0_amd64.deb
+    dpkg -i virtualgl*_amd64.deb
+    vglserver_config -config +s +f -t
+    apt update
+    apt -y upgrade  
+
