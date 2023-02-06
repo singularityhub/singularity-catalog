@@ -1,9 +1,9 @@
 bases:
-- count: 1413
+- count: 1414
   name: ubuntu
 - count: 313
   name: nvidia/cuda
-- count: 280
+- count: 285
   name: debian
 - count: 211
   name: centos
@@ -31,12 +31,12 @@ bases:
   name: neurodebian
 - count: 41
   name: fedora
-- count: 38
+- count: 39
   name: conda/miniconda3
+- count: 34
+  name: nvcr.io/nvidia/pytorch
 - count: 33
   name: provarepro/mlperf_inference
-- count: 33
-  name: nvcr.io/nvidia/pytorch
 - count: 31
   name: godloved/secure/ubuntu-bionic
 - count: 28
@@ -70,13 +70,13 @@ bases:
 - count: 15
   name: jtchilders/singularity_image_recipes
 - count: 14
+  name: nvcr.io/nvidia/nvhpc
+- count: 14
   name: nipreps/fmriprep
 - count: 14
   name: rocker/tidyverse
 - count: 14
   name: continuumio/miniconda
-- count: 13
-  name: nvcr.io/nvidia/nvhpc
 - count: 13
   name: r-base
 - count: 12
@@ -154,6 +154,8 @@ bases:
 - count: 7
   name: google/deepvariant
 - count: 7
+  name: mambaorg/micromamba
+- count: 7
   name: thomasrobinson/centos7-netcdff
 - count: 7
   name: rocker/geospatial
@@ -169,8 +171,6 @@ bases:
   name: bids/mrtrix3_connectome
 - count: 6
   name: nipreps/mriqc
-- count: 6
-  name: mambaorg/micromamba
 - count: 6
   name: nvcr.io/nvidia/deepstream
 - count: 6
@@ -633,6 +633,8 @@ bases:
   name: bids/ndmg
 - count: 2
   name: halfpipe/halfpipe
+- count: 2
+  name: hub.opensciencegrid.org/opensciencegrid/htcondor-file-transfer-ep
 - count: 2
   name: mbhall88/Singularity_recipes
 - count: 2
@@ -1128,6 +1130,8 @@ bases:
 - count: 1
   name: clamav/clamav
 - count: 1
+  name: netreconlab/ca-server
+- count: 1
   name: netreconlab/hipaa-mongo
 - count: 1
   name: netreconlab/parse-hipaa-dashboard
@@ -1504,8 +1508,6 @@ bases:
 - count: 1
   name: khanlab/neuroglia-core-minc
 - count: 1
-  name: hub.opensciencegrid.org/opensciencegrid/htcondor-file-transfer-ep
-- count: 1
   name: benchmark.sif
 - count: 1
   name: thurbridi.sif
@@ -1524,7 +1526,7 @@ bases:
 - count: 1
   name: anapsix/alpine-java
 bootstraps:
-- count: 4495
+- count: 4507
   name: docker
 - count: 353
   name: debootstrap
@@ -1587,6 +1589,8 @@ orgs:
   name: library
 - count: 6
   name: khanlab
+- count: 5
+  name: netreconlab
 - count: 4
   name: darachm
 - count: 4
@@ -1597,8 +1601,6 @@ orgs:
   name: larbys
 - count: 4
   name: iarcbioinfo
-- count: 4
-  name: netreconlab
 - count: 4
   name: jcsda
 - count: 4
@@ -1888,8 +1890,6 @@ orgs:
 - count: 1
   name: bdgenomics
 - count: 1
-  name: mambaorg
-- count: 1
   name: lipinskiboris
 - count: 1
   name: adriansevcenco
@@ -2170,6 +2170,8 @@ orgs:
 - count: 1
   name: osrf
 - count: 1
+  name: mambaorg
+- count: 1
   name: singularityhub
 - count: 1
   name: thomasrobinson
@@ -2280,8 +2282,8 @@ orgs:
 - count: 1
   name: jtduda
 tags:
-  latest: 431
-  other: 4226
+  latest: 432
+  other: 4235
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -2678,7 +2680,6 @@ versions:
   continuumio/miniconda2:
     4.7.12: 5
   continuumio/miniconda3:
-    22.11.1-alpine: 1
     4.10.3: 5
     4.5.12: 1
     4.6.14: 5
@@ -2745,15 +2746,16 @@ versions:
     '9.13': 2
     9.3-slim: 5
     bullseye: 4
-    bullseye-slim: 2
+    bullseye-slim: 5
     buster: 91
     buster-20200908-slim: 3
     buster-20201012: 1
-    buster-slim: 27
+    buster-slim: 28
     jessie: 8
     jessie-slim: 9
     latest: 32
     sid: 1
+    sid-slim: 1
     stable: 1
     stretch: 48
     stretch-slim: 8
@@ -3007,7 +3009,7 @@ versions:
   https:
     //software.broadinstitute.org/gatk/download/: 1
   hub.opensciencegrid.org/opensciencegrid/htcondor-file-transfer-ep:
-    1.0.0-docker: 1
+    1.0.0-docker: 2
   i386/debian:
     unstable: 2
   i386/ubuntu:
@@ -3201,6 +3203,7 @@ versions:
     latest: 1
   mambaorg/micromamba:
     0.17.0: 4
+    1.2.0: 1
     latest: 2
   maplesond/portcullis:
     test: 2
@@ -3278,6 +3281,8 @@ versions:
     5.7.21: 2
   ncbi/blast:
     2.12.0: 1
+  netreconlab/ca-server:
+    latest: 1
   netreconlab/hipaa-mongo:
     latest: 1
   netreconlab/hipaa-postgres:
@@ -3423,7 +3428,7 @@ versions:
     21.3-devel-cuda_multi-ubuntu20.04: 2
     21.5-devel-cuda_multi-ubuntu20.04: 2
     22.3-devel-cuda_multi-ubuntu20.04: 6
-    22.7-devel-cuda_multi-ubuntu20.04: 1
+    22.7-devel-cuda_multi-ubuntu20.04: 2
   nvcr.io/nvidia/pytorch:
     19.03-py3: 1
     19.04-py3: 1
@@ -3442,7 +3447,7 @@ versions:
     22.01-py3: 1
     22.02-py3: 1
     22.03-py3: 2
-    22.04-py3: 2
+    22.04-py3: 3
     22.05-py3: 1
     22.08-py3: 1
   nvcr.io/nvidia/tao/tao-toolkit-tf:
@@ -4267,13 +4272,13 @@ versions:
     '18.04 ': 9
     '19.04': 19
     '19.10': 4
-    '20.04': 337
+    '20.04': 338
     '20.04  ': 1
     '20.10': 3
-    '21.04': 5
+    '21.04': 3
     '21.10': 3
-    '22.04': 32
-    '22.10': 2
+    '22.04': 31
+    '22.10': 3
     UBUNTU_VERSION: 1
     artful: 7
     bionic: 192
@@ -4286,7 +4291,7 @@ versions:
     cosmic: 2
     disco: 3
     eoan-20200410: 2
-    focal: 42
+    focal: 44
     focal-20200729: 1
     focal-20200925: 3
     focal-20210827: 1

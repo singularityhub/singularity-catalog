@@ -1,0 +1,64 @@
+Bootstrap: docker
+From: debian:buster-slim
+
+%runscript
+	exec "$@"
+
+%environment
+export LC_ALL=C
+export PATH=$PATH:/usr/local/bin/E2P2-master
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
+
+
+%labels
+	Maintainer Sebastien Carrere
+	Version v3.1
+
+%post
+	apt update
+	#ps pour report nextflow
+	#apt install -y procps bzip2 ncbi-blast+ 
+	apt install -y procps wget  gzip bzip2 libfindbin-libs-perl
+	
+	cd /usr/local/bin/
+	#JAVA
+	cd /usr/local/bin/E2P2-master/source
+	tar xfz java.tar.gz
+	rm java.tar.gz
+	
+	#E2P2
+	apt install -y python2
+	cd /usr/bin
+	ln -s python2 python
+	cd /usr/local/bin/E2P2-master/source
+	tar xfz priam.tar.gz
+	rm priam.tar.gz
+	cd priam
+	wget https://ftp.dpb.carnegiescience.edu/rpsd/release_2015-02-27/profiles.tar.gz
+	tar xfz profiles.tar.gz
+	rm -f profiles.tar.gz
+	
+	#BLAST
+	cd /usr/local/bin/E2P2-master/source/blast/
+	
+	# blast+ binaries
+	wget -O ncbi-blast-2.2.30+-x64-linux.tar.gz ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.2.30/ncbi-blast-2.2.30+-x64-linux.tar.gz
+    tar xvf ncbi-blast-2.2.30+-x64-linux.tar.gz
+    rm -f ncbi-blast-2.2.30+-x64-linux.tar.gz
+    
+	wget https://ftp.dpb.carnegiescience.edu/rpsd/release_2015-02-27/blastdb.tar.gz
+	tar xfz blastdb.tar.gz
+	rm blastdb.tar.gz
+	mv blastdb db
+	
+	cd /usr/local/bin/E2P2-master/
+	ln -f -s run*.py E2P2.py
+	echo '#!/bin/bash\n\n/usr/local/bin/E2P2-master/E2P2.py $@'  >> /usr/bin/E2P2 && chmod +x /usr/bin/E2P2
+
+	apt clean
+	apt purge
+	
+%files
+
+	#on peut copier aussi des donnees de test ou des banques de reference
+	./sources/E2P2v3.1 /usr/local/bin/E2P2-master

@@ -1,0 +1,97 @@
+# Copyright 2020 [LIPM]
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+# http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+#    limitations under the License.
+
+Bootstrap: docker
+From: debian:sid-slim
+
+%files
+
+source/E2P2v4-20221206.tar /opt/
+
+%runscript
+	exec /usr/local/bin/E2P2 "$@"
+
+%help
+
+Usage: singularity exec $CONTAINER run_pipeline.py
+
+This is an E2P2 container built upon
+ - E2P2 20221206 master version https://github.com/carnegie/E2P2
+ - Priam (last java version) (included in E2P2 tarball)
+ - ncbi-blast-2.12.0+
+ - python 3
+
+
+%labels
+    Maintainer Ludovic.Cottret@inrae.fr & Sebastien.Carrere@inrae.fr
+    E2P2 : https://github.com/carnegie/E2P2
+    
+%post
+
+	apt update && \
+    apt install -y \
+		procps wget \
+        openjdk-8-jre   \
+        python3         \
+        git
+   
+
+	mkdir -p /opt
+	cd /opt
+
+    # E2P2 pipeline
+    mkdir -p /usr/local/bin
+    tar xf E2P2v4-20221206.tar && rm E2P2v4-20221206.tar
+    echo '#!/bin/bash\n\npython3 /opt/E2P2/pipeline/run_pipeline.py -b /opt/ncbi-blast-2.12.0+/bin/blastp -bb /opt/ncbi-blast-2.12.0+/bin/ -j java -ps /opt/PRIAM/PRIAM_search.jar -r /opt/data/E2P2/blastdb/rpsd-4.2.fasta -pp /opt/data/E2P2/profiles $@'  >> /usr/local/bin/E2P2 && chmod +x /usr/local/bin/E2P2
+	
+    # blast+ binaries
+	wget -O /opt/ncbi-blast-2.12.0+-x64-linux.tar.gz ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.12.0/ncbi-blast-2.12.0+-x64-linux.tar.gz
+    tar xvf ncbi-blast-2.12.0+-x64-linux.tar.gz 
+    rm -f /opt/ncbi-blast-2.12.0+-x64-linux.tar.gz
+
+    # E2P2 data
+    mkdir -p /opt/data/E2P2
+    cd /opt/data/E2P2
+    wget https://ftp.dpb.carnegiescience.edu/rpsd/release_2019-03-07/blastdb.tar.gz
+    wget https://ftp.dpb.carnegiescience.edu/rpsd/release_2019-03-07/profiles.tar.gz
+    wget https://ftp.dpb.carnegiescience.edu/rpsd/release_2019-03-07/maps.tar.gz
+    wget https://ftp.dpb.carnegiescience.edu/rpsd/release_2019-03-07/weights.tar.gz
+    
+    tar zxvf blastdb.tar.gz
+    tar zxvf profiles.tar.gz
+    tar zxvf maps.tar.gz
+    tar zxvf weights.tar.gz
+
+    rm -f *.tar.gz
+
+    rm -rf /opt/E2P2/data/*
+
+    mv maps weights /opt/E2P2/data
+    
+    # PRIAM program
+    mkdir -p /opt/PRIAM
+    cd /opt/PRIAM
+    mv /opt/E2P2/PRIAM_search.jar .
+    
+    mkdir /opt/run
+
+    chmod -R 755 /opt/run
+    apt clean && apt autoremove && apt purge 
+
+
+%environment
+export LC_ALL=C
+export HOME=/opt/run
+export PATH=/opt/E2P2/pipeline:$PATH
+cd $HOME
+

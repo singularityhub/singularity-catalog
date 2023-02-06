@@ -19,10 +19,14 @@ From: ubuntu:22.04
   apt-get install -y uuid-runtime wget mc xclip vim gawk ncdu squashfs-tools squashfuse \
           git git-lfs aria2 meld qemu-utils p7zip-full p7zip-rar jmol povray \
           units putty jq sqlitebrowser gv screen dos2unix vmtouch parallel pbzip2 elinks lynx \
-          mosquitto-clients inkscape bat exa duf silversearcher-ag
+          mosquitto-clients inkscape bat exa duf silversearcher-ag gnumeric binutils edfbrowser
+
+  strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
 
   cd /
   wget https://github.com/bootandy/dust/releases/download/v0.8.3/du-dust_0.8.3_amd64.deb  && apt install -y ./du-dust_0.8.3_amd64.deb && rm du-dust_0.8.3_amd64.deb
+
+  wget https://dystroy.org/broot/download/x86_64-linux/broot -O /usr/local/bin/broot && chmod a+rx /usr/local/bin/broot   
 
 %runscript
   export XDG_RUNTIME_DIR=/tmp/.${USER}_$(uuidgen)

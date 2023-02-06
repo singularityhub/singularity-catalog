@@ -1,11 +1,12 @@
 Bootstrap: docker
-From: ubuntu:21.04
+From: debian:bullseye-slim
 
 %post
     export DEBIAN_FRONTEND=noninteractive
     apt-get update -y
     apt-get install -y texlive texlive-fonts-extra
     apt-get install -y pandoc
+    apt-get clean
 
 %environment
     export LC_ALL=C

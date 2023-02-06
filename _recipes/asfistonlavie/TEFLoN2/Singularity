@@ -5,7 +5,7 @@ From: ubuntu:20.04
 	https://github.com/asfistonlavie/TEFLoN2
 	Includes
 		BWA  0.7.17
-		RepeatMaskee 4.1.3
+		RepeatMasker 4.1.3
 		Ptyhon 3.8
 		Samtools 1.16.1
 		Snakemake  7.14.0

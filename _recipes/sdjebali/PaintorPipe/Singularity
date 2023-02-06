@@ -31,7 +31,7 @@ From: ubuntu:20.04
     bash install.sh
     ln -s /usr/local/src/PAINTOR/PAINTOR /usr/local/bin/PAINTOR
     printf "#!/usr/bin/env python3\n\n" > header
-    cat header /usr/local/src/PAINTOR/CANVIS/CANVIS.py > /usr/local/bin/CANVIS.py
+    cat header /usr/local/src/PAINTOR/CANVIS/CANVIS.py | sed 's/.as_matrix()/.values/g' | sed 's/np.bool/bool/g' | sed 's/scale=/scale_x=/g' > /usr/local/bin/CANVIS.py
     chmod 775 /usr/local/bin/CANVIS.py
     cat header /usr/local/src/PAINTOR/PAINTOR_Utilities/CalcLD_1KG_VCF.py > /usr/local/bin/CalcLD_1KG_VCF.py
     chmod 775 /usr/local/bin/CalcLD_1KG_VCF.py

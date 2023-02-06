@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: continuumio/miniconda3:22.11.1-alpine
+From: mambaorg/micromamba:1.2.0
 
 # Reads:
 #   environment.yml
@@ -15,26 +15,35 @@ From: continuumio/miniconda3:22.11.1-alpine
 #    opens Python shell inside the conda environment defined by environment.yml
 
 %post
-  # https://github.com/ContinuumIO/docker-images/issues/151
-  mkdir /opt/conda/pkgs
-  touch /opt/conda/pkgs/urls.txt
   # git may be needed to pip install from a github repo
-  apk add git
+  apt-get update
+  apt-get install -y --no-install-recommends git
+  apt-get clean
+  # default sh on ubuntu is dash
+  ln -sf /bin/bash /bin/sh
 
 %environment
   export LC_ALL=C
 
 %runscript
-  eval "$(conda shell.bash hook)"
+  eval "$(micromamba shell hook --shell=bash)"
+
+  export CONDA_PKGS_DIRS=./environment/pkgs
+
+  recreate_environment=false
   if [ ! -d "environment" ]; then
-    conda env create --prefix environment --file environment.yml
+    recreate_environment=true
   else
     if [ "environment.yml" -nt "environment" ]; then
       echo "environment.yml is newer than environment: updating environment"
-      conda env update --prefix environment --file environment.yml --prune
+      recreate_environment=true
     fi
   fi
 
-  conda activate ./environment
+  if "$recreate_environment"; then
+    micromamba -y env create --prefix ./environment --file environment.yml
+  fi
+
+  micromamba activate ./environment
 
   $@
