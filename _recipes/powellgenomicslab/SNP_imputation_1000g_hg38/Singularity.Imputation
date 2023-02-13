@@ -76,6 +76,8 @@ From: drneavin/SingularityBaseImages:r363_python368
 	/opt/conda/envs/py36/bin/pip install CrossMap
 	/opt/conda/envs/py36/bin/pip install cget
 
+    R --slave -e 'install.packages("caret", repos = "http://cran.us.r-project.org")'
+
 	
 	yes | conda install -c bioconda csvtk
 
@@ -138,8 +140,8 @@ From: drneavin/SingularityBaseImages:r363_python368
     cd /opt
         mkdir plink2
         cd plink2
-			wget https://s3.amazonaws.com/plink2-assets/plink2_linux_x86_64_20211011.zip
-            unzip plink2_linux_x86_64_20211011.zip
+			wget https://s3.amazonaws.com/plink2-assets/alpha3/plink2_linux_x86_64_20221024.zip
+            unzip plink2_linux_x86_64_20221024.zip
 
     cd /opt
         git clone https://github.com/broadinstitute/picard.git
@@ -179,5 +181,5 @@ From: drneavin/SingularityBaseImages:r363_python368
 %labels
 	Author = Drew Neavin
 	Image_name = Powell Lab SNP Imputation 1000G hg38
-	Image_version = 0.0.2
+	Image_version = 0.0.4
 

@@ -1,0 +1,43 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:latest-gpu-py3-jupyter
+%help
+This container is made by Shahinur Alam (sajonbuet@gmail.com)
+
+%setup
+
+
+%files
+	
+%labels
+    Maintainer Shahinur
+    Version 1.0
+
+%environment
+
+
+%post
+	#pip install numpy pandas sklearn webcolors plotly matplotlib statsmodels factorial pynrrd pillow
+	#pip install torch
+	#pip install scikit-image medpy Tables tensorflow_addons nilearn SimpleITK h5py glob3 nibabel tifffile scipy opencv-python
+	#pip uninstall -y tensorflow tensorflow-addons tensorflow-estimator tensorflow-gpu tensorboard tensorboard-plugin-wit
+	pip install --upgrade keras
+	#pip install --upgrade tensorflow	
+	#pip install tensorflow-addons==0.11.2
+	#pip install tensorflow-estimator==2.3.0
+	#pip install tensorflow-gpu==2.3.0
+	#pip install tensorboard==2.3.0
+	#pip install tensorboard-plugin-wit==1.7.0
+
+
+
+		
+
+%runscript
+echo "Arguments received: $*"
+port=$1
+root_dir=$2
+port=`echo $port| sed 's/ *$//g'`
+root_dir=`echo $root_dir| sed 's/ *$//g'`
+echo $port
+jupyter notebook --no-browser --port $port --notebook-dir $root_dir --ip 0.0.0.0
+

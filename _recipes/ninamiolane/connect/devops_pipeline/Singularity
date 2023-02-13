@@ -1,0 +1,24 @@
+Bootstrap: localimage
+From: ../../simgs/sommet_base.simg
+
+%environment
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
+    export LD_LIBRARY_PATH
+    CUDA_HOME=/usr/local/cuda
+    export CUDA_HOME
+    LC_ALL=C
+    export LC_ALL
+
+%post
+    apt-get update
+    pip3 install --upgrade luigi \
+                           numpy>=1.12.0 \
+                           pandas \
+                           scikit-learn \
+                           torch \
+                           torchvision \
+                           jinja2 \
+                           joblib
+
+%runscript
+    exec /usr/bin/python3 -u pipeline.py

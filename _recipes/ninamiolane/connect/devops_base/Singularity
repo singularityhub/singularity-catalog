@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: nvidia/cuda:9.0-devel-ubuntu16.04
+
+%environment
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
+    export LD_LIBRARY_PATH
+    CUDA_HOME=/usr/local/cuda
+    export CUDA_HOME
+    LC_ALL=C
+    export LC_ALL
+
+%post
+    apt update
+    apt -y install git
+    apt -y install curl \
+                   python3-matplotlib \
+                   python3-pip \
+                   vim \
+                   wget

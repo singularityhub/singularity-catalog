@@ -1,0 +1,107 @@
+BootStrap: docker
+From: nvcr.io/nvidia/cuda:11.0-devel-ubuntu20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng
+
+%post
+    cd /
+    rm -f /bin/sh && ln -s /bin/bash /bin/sh
+    rm -f /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
+    /bin/bash
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/cuda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin:$PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/cuda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin:$PATH
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        libfftw3-dev \
+        locales \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+# Installing vglrun and TurboVNC
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        mesa-utils \
+        pyqt5-dev \
+        python3-pip \
+        python3-pyqt5 \
+        python3-tk \
+        ubuntu-desktop \
+        vim
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/turbovnc_2.2.5_amd64.deb && dpkg -i turbovnc_2.2.5_amd64.deb && rm turbovnc_2.2.5_amd64.deb
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/virtualgl_2.6.4_amd64.deb && dpkg -i virtualgl_2.6.4_amd64.deb && rm virtualgl_2.6.4_amd64.deb
+    apt update
+    apt -y upgrade
+
+# Anaconda
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp http://repo.anaconda.com/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh
+    bash /var/tmp/Miniconda3-py38_4.8.3-Linux-x86_64.sh -b -p /usr/local/anaconda
+    /usr/local/anaconda/bin/conda init
+    ln -s /usr/local/anaconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+    . /usr/local/anaconda/etc/profile.d/conda.sh
+    conda activate base
+    conda install -y python=3.9
+    /usr/local/anaconda/bin/conda clean -afy
+    rm -rf /var/tmp/Miniconda3-py38_4.8.3-Linux-x86_64.sh
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/anaconda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/anaconda/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/anaconda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/anaconda/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/anaconda/bin:$PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/anaconda/lib:$CXX_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/anaconda/lib:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/anaconda/lib64:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/anaconda/lib64:$LIBRARY_PATH
+    export PATH=/usr/local/anaconda/bin:$PATH
+
+%post
+    cd /
+    python -m pip install libertem[torch]==0.6.0 cupy

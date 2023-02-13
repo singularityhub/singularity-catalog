@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%post
+	TZ=America/Chicago
+	apt-get update && \
+		ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
+		apt-get install -y libqt5gui5 pymol && \
+		apt-get install -y python3-pip &&\
+		apt-get install -y mafft &&\
+		apt-get install -y imagemagick &&\
+		apt-get install -y ffmpeg &&\
+		pip install pandas && \
+		pip install biopython && \
+		cd /usr/src
+%environment
+	export TZ=America/Chicago

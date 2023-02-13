@@ -83,29 +83,129 @@ From: nvcr.io/nvidia/cuda:11.0.3-devel-ubuntu20.04
     apt update
     apt -y upgrade
 
+# GNU compiler
 %post
     apt-get update -y
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        libfftw3-dev \
-        libhdf5-dev \
+        g++-8 \
+        gcc-8 \
+        gfortran-8
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    update-alternatives --install /usr/bin/g++ g++ $(which g++-8) 30
+    update-alternatives --install /usr/bin/gcc gcc $(which gcc-8) 30
+    update-alternatives --install /usr/bin/gcov gcov $(which gcov-8) 30
+    update-alternatives --install /usr/bin/gfortran gfortran $(which gfortran-8) 30
+
+# HDF5 version 1.12.0
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bzip2 \
+        file \
+        make \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-1.12/hdf5-1.12.0/src/hdf5-1.12.0.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/hdf5-1.12.0.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/hdf5-1.12.0 &&   ./configure --prefix=/usr/local/hdf5 --enable-cxx --enable-fortran
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/hdf5-1.12.0 /var/tmp/hdf5-1.12.0.tar.bz2
+%environment
+    export CPATH=/usr/local/hdf5/include:$CPATH
+    export HDF5_DIR=/usr/local/hdf5
+    export LD_LIBRARY_PATH=/usr/local/hdf5/lib:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/hdf5/lib:$LIBRARY_PATH
+    export PATH=/usr/local/hdf5/bin:$PATH
+%post
+    export CPATH=/usr/local/hdf5/include:$CPATH
+    export HDF5_DIR=/usr/local/hdf5
+    export LD_LIBRARY_PATH=/usr/local/hdf5/lib:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/hdf5/lib:$LIBRARY_PATH
+    export PATH=/usr/local/hdf5/bin:$PATH
+
+# OpenMPI version 4.0.5
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bzip2 \
+        file \
+        hwloc \
+        libnuma-dev \
+        make \
+        openssh-client \
+        perl \
+        tar \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.open-mpi.org/software/ompi/v4.0/downloads/openmpi-4.0.5.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/openmpi-4.0.5.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/openmpi-4.0.5 &&  CC=gcc CXX=g++ F77=gfortran F90=gfortran FC=gfortran ./configure --prefix=/usr/local/openmpi --disable-getpwuid --enable-orterun-prefix-by-default --with-cuda --without-verbs
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/openmpi-4.0.5 /var/tmp/openmpi-4.0.5.tar.bz2
+%environment
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+
+# FFTW version 3.3.10
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        file \
+        make \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp ftp://ftp.fftw.org/pub/fftw/fftw-3.3.10.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/fftw-3.3.10.tar.gz -C /var/tmp -z
+    cd /var/tmp/fftw-3.3.10 &&  CC=gcc CXX=g++ F77=gfortran F90=gfortran FC=gfortran ./configure --prefix=/usr/local/fftw --enable-mpi --enable-openmp --enable-shared --enable-sse2 --enable-threads
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/fftw-3.3.10 /var/tmp/fftw-3.3.10.tar.gz
+%environment
+    export LD_LIBRARY_PATH=/usr/local/fftw/lib:$LD_LIBRARY_PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/fftw/lib:$LD_LIBRARY_PATH
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        cmake \
+        default-jdk \
         libjpeg-dev \
-        libopenmpi-dev \
         libsqlite3-dev \
-        libtiff-dev \
+        libtiff5-dev \
         make \
         openjdk-8-jdk \
+        python3-opencv \
         python3-tk
     rm -rf /var/lib/apt/lists/*
 
-%environment
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/hdf5/serial
 %post
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/hdf5/serial
+    cd /
+    python3 -m pip install scons numpy
+    git clone -b v3.22.01-Eris https://github.com/I2PC/xmipp.git xmipp-bundle
+    cd xmipp-bundle
+    ./xmipp config noAsk
+    ./xmipp
 
 %post
     cd /
     python3 -m pip install --user scipion-installer
     python3 -m scipioninstaller /usr/local/scipion -j 4
+    scipion3 installp -p scipion-em-motioncorr -p scipion-pyworkflow -p scipion-em -p scipion-app
 
 %environment
     export CXX_INCLUDE_PATH=/usr/local/scipion/lib:$CXX_INCLUDE_PATH

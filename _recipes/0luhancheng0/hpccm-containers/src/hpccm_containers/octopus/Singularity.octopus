@@ -56,7 +56,7 @@ From: ubuntu:20.04
     cd /
     mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.open-mpi.org/software/ompi/v4.0/downloads/openmpi-4.0.5.tar.bz2
     mkdir -p /var/tmp && tar -x -f /var/tmp/openmpi-4.0.5.tar.bz2 -C /var/tmp -j
-    cd /var/tmp/openmpi-4.0.5 &&   ./configure --prefix=/usr/local/openmpi --disable-getpwuid --enable-orterun-prefix-by-default --with-cuda --with-verbs
+    cd /var/tmp/openmpi-4.0.5 &&   ./configure --prefix=/usr/local/openmpi --disable-getpwuid --enable-orterun-prefix-by-default --without-cuda --without-verbs
     make -j$(nproc)
     make -j$(nproc) install
     rm -rf /var/tmp/openmpi-4.0.5 /var/tmp/openmpi-4.0.5.tar.bz2
@@ -70,3 +70,23 @@ From: ubuntu:20.04
 %post
     cd /
     locale-gen en_AU.UTF-8
+
+# https://gitlab.com/libxc/libxc/-/archive/5.2.2/libxc-5.2.2.tar.gz
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://gitlab.com/libxc/libxc/-/archive/5.2.2/libxc-5.2.2.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/libxc-5.2.2.tar.gz -C /var/tmp -z
+    cd /var/tmp/libxc-5.2.2 &&   ./configure --prefix=/usr/local/libxc
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/libxc-5.2.2 /var/tmp/libxc-5.2.2.tar.gz
+
+# http://octopus-code.org/down.php?file=11.4/octopus-11.4.tar.gz
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp http://octopus-code.org/down.php?file=11.4/octopus-11.4.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/octopus-11.4.tar.gz -C /var/tmp -z
+    cd /var/tmp/octopus-11.4 &&   ./configure --prefix=/usr/local/octopus --with-libxc-prefix=/usr/local/libxc
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/octopus-11.4 /var/tmp/octopus-11.4.tar.gz

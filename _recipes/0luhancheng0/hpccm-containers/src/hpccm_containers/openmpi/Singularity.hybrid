@@ -153,7 +153,7 @@ From: nvcr.io/nvidia/cuda:11.0-devel-ubuntu20.04
     cd /
     mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.open-mpi.org/software/ompi/v3.1/downloads/openmpi-3.1.6.tar.bz2
     mkdir -p /var/tmp && tar -x -f /var/tmp/openmpi-3.1.6.tar.bz2 -C /var/tmp -j
-    cd /var/tmp/openmpi-3.1.6 &&   ./configure --prefix=/usr/local/openmpi --disable-getpwuid --enable-orterun-prefix-by-default --with-ucx=/usr/local/ucx --with-verbs --without-cuda
+    cd /var/tmp/openmpi-3.1.6 &&   ./configure --prefix=/usr/local/openmpi --disable-getpwuid --enable-orterun-prefix-by-default --with-cuda --with-ucx=/usr/local/ucx --without-verbs
     make -j$(nproc)
     make -j$(nproc) install
     echo "/usr/local/openmpi/lib" >> /etc/ld.so.conf.d/hpccm.conf && ldconfig
@@ -162,3 +162,21 @@ From: nvcr.io/nvidia/cuda:11.0-devel-ubuntu20.04
     export PATH=/usr/local/openmpi/bin:$PATH
 %post
     export PATH=/usr/local/openmpi/bin:$PATH
+
+%post
+    cd /
+    mkdir -p /usr/local/app && cd /usr/local/app
+    mkdir -p /usr/local/app/src /usr/local/app/bin
+    cd /usr/local/app/src
+    wget https://people.sc.fsu.edu/~jburkardt/c_src/hello_mpi/hello_mpi.c
+    wget https://people.sc.fsu.edu/~jburkardt/c_src/communicator_mpi/communicator_mpi.c
+    wget https://gist.githubusercontent.com/huzhifeng/d1cda3f0474261eda72b36ca83f24e21/raw/f2074c30030e01cd8e87ddffe0433df18161c61d/hybrid.c
+    cd /usr/local/app
+    mpicc -fopenmp src/hello_mpi.c -o bin/hello_mpi
+    mpicc -fopenmp src/communicator_mpi.c -o bin/communicator_mpi
+    mpicc -fopenmp src/hybrid.c -o bin/hybrid
+
+%environment
+    export PATH=/usr/local/app/bin/:$PATH
+%post
+    export PATH=/usr/local/app/bin/:$PATH

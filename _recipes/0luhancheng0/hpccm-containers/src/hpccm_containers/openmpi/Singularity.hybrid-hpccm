@@ -1,0 +1,298 @@
+# NOTE: this definition file depends on features only available in
+# Singularity 3.2 and later.
+BootStrap: docker
+From: nvcr.io/nvidia/cuda:11.0-devel-ubuntu20.04
+Stage: devel
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+# Python
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3
+    rm -rf /var/lib/apt/lists/*
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/cuda/include:$C_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/include:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64/:$LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin/:$PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/cuda/include:$C_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/include:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64/:$LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin/:$PATH
+
+# GNU compiler
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++-10 \
+        gcc-10 \
+        gfortran-10
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    update-alternatives --install /usr/bin/g++ g++ $(which g++-10) 30
+    update-alternatives --install /usr/bin/gcc gcc $(which gcc-10) 30
+    update-alternatives --install /usr/bin/gcov gcov $(which gcov-10) 30
+    update-alternatives --install /usr/bin/gfortran gfortran $(which gfortran-10) 30
+
+# GDRCOPY version 1.3
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        make \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://github.com/NVIDIA/gdrcopy/archive/v1.3.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/v1.3.tar.gz -C /var/tmp -z
+    cd /var/tmp/gdrcopy-1.3
+    mkdir -p /usr/local/gdrcopy/include /usr/local/gdrcopy/lib64
+    make CC=gcc CXX=g++ F77=gfortran F90=gfortran FC=gfortran PREFIX=/usr/local/gdrcopy lib lib_install
+    echo "/usr/local/gdrcopy/lib64" >> /etc/ld.so.conf.d/hpccm.conf && ldconfig
+    rm -rf /var/tmp/gdrcopy-1.3 /var/tmp/v1.3.tar.gz
+%environment
+    export CPATH=/usr/local/gdrcopy/include:$CPATH
+    export LIBRARY_PATH=/usr/local/gdrcopy/lib64:$LIBRARY_PATH
+%post
+    export CPATH=/usr/local/gdrcopy/include:$CPATH
+    export LIBRARY_PATH=/usr/local/gdrcopy/lib64:$LIBRARY_PATH
+
+# KNEM version 1.1.3
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        git
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && cd /var/tmp && git clone --depth=1 --branch knem-1.1.3 https://gitlab.inria.fr/knem/knem.git knem && cd -
+    mkdir -p /usr/local/knem
+    cd /var/tmp/knem
+    mkdir -p /usr/local/knem/include
+    cp common/*.h /usr/local/knem/include
+    echo "/usr/local/knem/lib" >> /etc/ld.so.conf.d/hpccm.conf && ldconfig
+    rm -rf /var/tmp/knem
+%environment
+    export CPATH=/usr/local/knem/include:$CPATH
+%post
+    export CPATH=/usr/local/knem/include:$CPATH
+
+# UCX version 1.12.1
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        binutils-dev \
+        file \
+        libnuma-dev \
+        make \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://github.com/openucx/ucx/releases/download/v1.12.1/ucx-1.12.1.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/ucx-1.12.1.tar.gz -C /var/tmp -z
+    cd /var/tmp/ucx-1.12.1 &&  CC=gcc CXX=g++ F77=gfortran F90=gfortran FC=gfortran ./configure --prefix=/usr/local/ucx --disable-assertions --disable-debug --disable-doxygen-doc --disable-logging --disable-params-check --enable-optimizations --with-cuda=/usr/local/cuda --with-knem
+    make -j$(nproc)
+    make -j$(nproc) install
+    echo "/usr/local/ucx/lib" >> /etc/ld.so.conf.d/hpccm.conf && ldconfig
+    rm -rf /var/tmp/ucx-1.12.1 /var/tmp/ucx-1.12.1.tar.gz
+%environment
+    export CPATH=/usr/local/ucx/include:$CPATH
+    export LIBRARY_PATH=/usr/local/ucx/lib:$LIBRARY_PATH
+    export PATH=/usr/local/ucx/bin:$PATH
+%post
+    export CPATH=/usr/local/ucx/include:$CPATH
+    export LIBRARY_PATH=/usr/local/ucx/lib:$LIBRARY_PATH
+    export PATH=/usr/local/ucx/bin:$PATH
+
+# OpenMPI version 3.1.6
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bzip2 \
+        file \
+        hwloc \
+        libnuma-dev \
+        make \
+        openssh-client \
+        perl \
+        tar \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.open-mpi.org/software/ompi/v3.1/downloads/openmpi-3.1.6.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/openmpi-3.1.6.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/openmpi-3.1.6 &&  CC=gcc CXX=g++ F77=gfortran F90=gfortran FC=gfortran ./configure --prefix=/usr/local/openmpi --disable-getpwuid --enable-orterun-prefix-by-default --with-cuda --with-ucx --without-verbs
+    make -j$(nproc)
+    make -j$(nproc) install
+    echo "/usr/local/openmpi/lib" >> /etc/ld.so.conf.d/hpccm.conf && ldconfig
+    rm -rf /var/tmp/openmpi-3.1.6 /var/tmp/openmpi-3.1.6.tar.bz2
+%environment
+    export PATH=/usr/local/openmpi/bin:$PATH
+%post
+    export PATH=/usr/local/openmpi/bin:$PATH
+
+%post
+    cd /
+    mkdir -p /usr/local/app && cd /usr/local/app
+    mkdir -p /usr/local/app/src /usr/local/app/bin
+    cd /usr/local/app/src
+    wget https://people.sc.fsu.edu/~jburkardt/c_src/hello_mpi/hello_mpi.c
+    wget https://people.sc.fsu.edu/~jburkardt/c_src/communicator_mpi/communicator_mpi.c
+    wget https://gist.githubusercontent.com/huzhifeng/d1cda3f0474261eda72b36ca83f24e21/raw/f2074c30030e01cd8e87ddffe0433df18161c61d/hybrid.c
+    cd /usr/local/app
+    mpicc -fopenmp src/hello_mpi.c -o bin/hello_mpi
+    mpicc -fopenmp src/communicator_mpi.c -o bin/communicator_mpi
+    mpicc -fopenmp src/hybrid.c -o bin/hybrid
+
+BootStrap: docker
+From: nvcr.io/nvidia/cuda:11.0-runtime-ubuntu20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+# Python
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3
+    rm -rf /var/lib/apt/lists/*
+
+# GNU compiler runtime
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        libgfortran4 \
+        libgomp1
+    rm -rf /var/lib/apt/lists/*
+
+# GDRCOPY
+%files from devel
+    /usr/local/gdrcopy /usr/local/gdrcopy
+%post
+    cd /
+    echo "/usr/local/gdrcopy/lib64" >> /etc/ld.so.conf.d/hpccm.conf && ldconfig
+%environment
+    export CPATH=/usr/local/gdrcopy/include:$CPATH
+    export LIBRARY_PATH=/usr/local/gdrcopy/lib64:$LIBRARY_PATH
+%post
+    export CPATH=/usr/local/gdrcopy/include:$CPATH
+    export LIBRARY_PATH=/usr/local/gdrcopy/lib64:$LIBRARY_PATH
+
+# KNEM
+%files from devel
+    /usr/local/knem /usr/local/knem
+%post
+    cd /
+    echo "/usr/local/knem/lib" >> /etc/ld.so.conf.d/hpccm.conf && ldconfig
+%environment
+    export CPATH=/usr/local/knem/include:$CPATH
+%post
+    export CPATH=/usr/local/knem/include:$CPATH
+
+# UCX
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        libbinutils
+    rm -rf /var/lib/apt/lists/*
+%files from devel
+    /usr/local/ucx /usr/local/ucx
+%post
+    cd /
+    echo "/usr/local/ucx/lib" >> /etc/ld.so.conf.d/hpccm.conf && ldconfig
+%environment
+    export CPATH=/usr/local/ucx/include:$CPATH
+    export LIBRARY_PATH=/usr/local/ucx/lib:$LIBRARY_PATH
+    export PATH=/usr/local/ucx/bin:$PATH
+%post
+    export CPATH=/usr/local/ucx/include:$CPATH
+    export LIBRARY_PATH=/usr/local/ucx/lib:$LIBRARY_PATH
+    export PATH=/usr/local/ucx/bin:$PATH
+
+# OpenMPI
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        hwloc \
+        openssh-client
+    rm -rf /var/lib/apt/lists/*
+%files from devel
+    /usr/local/openmpi /usr/local/openmpi
+%post
+    cd /
+    echo "/usr/local/openmpi/lib" >> /etc/ld.so.conf.d/hpccm.conf && ldconfig
+%environment
+    export PATH=/usr/local/openmpi/bin:$PATH
+%post
+    export PATH=/usr/local/openmpi/bin:$PATH
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%post
+    cd /
+    rm -f /bin/sh && ln -s /bin/bash /bin/sh
+    rm -f /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
+    /bin/bash
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        locales \
+        mesa-utils \
+        software-properties-common \
+        ubuntu-desktop \
+        vim \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+%post
+    cd /
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/turbovnc_2.2.5_amd64.deb && dpkg -i turbovnc_2.2.5_amd64.deb && rm turbovnc_2.2.5_amd64.deb
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/virtualgl_2.6.4_amd64.deb && dpkg -i virtualgl_2.6.4_amd64.deb && rm virtualgl_2.6.4_amd64.deb
+    apt update
+    apt -y upgrade
+
+%files from devel
+    /usr/local/app/bin /usr/local/app/bin
+
+%environment
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin/:$PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin/:$PATH
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng

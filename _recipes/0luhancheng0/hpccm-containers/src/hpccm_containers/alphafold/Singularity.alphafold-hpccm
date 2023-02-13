@@ -1,0 +1,189 @@
+# NOTE: this definition file depends on features only available in
+# Singularity 3.2 and later.
+BootStrap: docker
+From: nvcr.io/nvidia/cuda:11.0-devel-ubuntu20.04
+Stage: devel
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        software-properties-common \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%environment
+    export CXX_INCLUDE_PATH=/usr/local/cuda/include:$C_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/include:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64/:$LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin/:$PATH
+%post
+    export CXX_INCLUDE_PATH=/usr/local/cuda/include:$C_INCLUDE_PATH
+    export C_INCLUDE_PATH=/usr/local/cuda/include:$C_INCLUDE_PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/cuda/lib64/:$LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin/:$PATH
+
+# Anaconda
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp http://repo.anaconda.com/miniconda/Miniconda3-py38_4.8.3-Linux-x86_64.sh
+    bash /var/tmp/Miniconda3-py38_4.8.3-Linux-x86_64.sh -b -p /usr/local/anaconda
+    /usr/local/anaconda/bin/conda init
+    ln -s /usr/local/anaconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+    . /usr/local/anaconda/etc/profile.d/conda.sh
+    conda activate base
+    conda config --add channels bioconda --add channels conda-forge
+    conda install -y cudatoolkit==11.0.3 cudnn==8.2.1.32 hhsuite==3.3.0 hmmer==3.3.2 kalign2==2.04 openmm==7.5.1 pdbfixer==1.7 python=3.8
+    /usr/local/anaconda/bin/conda clean -afy
+    rm -rf /var/tmp/Miniconda3-py38_4.8.3-Linux-x86_64.sh
+
+%post
+    cd /
+    /usr/local/anaconda/bin/conda activate base
+
+%post
+    cd /
+    mkdir -p /opt/alphafold
+    git clone -b v2.1.2 https://github.com/deepmind/alphafold.git /opt/alphafold
+
+%environment
+    export ALPHAFOLD_PATH=/opt/alphafold
+%post
+    export ALPHAFOLD_PATH=/opt/alphafold
+
+%post
+    cd /
+    wget -q -P /opt/alphafold/alphafold/common/ https://git.scicore.unibas.ch/schwede/openstructure/-/raw/7102c63615b64735c4941278d92b554ec94415f8/modules/mol/alg/src/stereo_chemical_props.txt
+
+# pip
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python-pip \
+        python-setuptools \
+        python-wheel
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    /usr/loca/anaconda/bin/pip3 --no-cache-dir install absl-py==0.13.0 biopython==1.79 chex==0.0.7 dm-haiku==0.0.4 dm-tree==0.1.6 immutabledict==2.0.0 ml-collections==0.1.0 numpy==1.19.5 scipy==1.7.0 tensorflow==2.5.0 pandas==1.3.4 tensorflow-cpu==2.5.0
+
+# pip
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python-pip \
+        python-setuptools \
+        python-wheel
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    /usr/loca/anaconda/bin/pip3 --no-cache-dir install --upgrade "pip < 21.0"
+    /usr/loca/anaconda/bin/pip3 --no-cache-dir install jax jaxlib==0.1.69+cuda111 -f https://storage.googleapis.com/jax-releases/jax_releases.html
+
+# pip
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python-pip \
+        python-setuptools \
+        python-wheel
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    /usr/loca/anaconda/bin/pip3 --no-cache-dir install -r /opt/alphafold/requirements.txt
+
+%post
+    cd /
+    cd /usr/local/anaconda/lib/python3.8/site-packages/ && patch -p0 < /opt/alphafold/docker/openmm.patch
+
+%post
+    cd /
+    cd /opt/alphafold
+    wget https://raw.githubusercontent.com/0luhancheng0/hpccm-containers/main/src/hpccm_containers/alphafold/run_alphafold.sh && chmod a+x run_alphafold.sh
+
+BootStrap: docker
+From: nvcr.io/nvidia/cuda:11.0-runtime-ubuntu20.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%environment
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+%post
+    export LANGUAGE=en_AU.UTF-8
+    export LC_ALL=en_AU.UTF-8
+
+%post
+    cd /
+    rm -f /bin/sh && ln -s /bin/bash /bin/sh
+    rm -f /usr/bin/sh && ln -s /usr/bin/bash /usr/bin/sh
+    /bin/bash
+
+# Anaconda
+%files from devel
+    /usr/local/anaconda /usr/local/anaconda
+%post
+    cd /
+    /usr/local/anaconda/bin/conda init
+    ln -s /usr/local/anaconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        locales \
+        mesa-utils \
+        software-properties-common \
+        ubuntu-desktop \
+        vim \
+        wget \
+        zlib1g-dev
+    rm -rf /var/lib/apt/lists/*
+
+%post
+    cd /
+    locale-gen en_AU.UTF-8
+
+%post
+    cd /
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/turbovnc_2.2.5_amd64.deb && dpkg -i turbovnc_2.2.5_amd64.deb && rm turbovnc_2.2.5_amd64.deb
+    wget https://swift.rc.nectar.org.au/v1/AUTH_810/CVL-Singularity-External-Files/virtualgl_2.6.4_amd64.deb && dpkg -i virtualgl_2.6.4_amd64.deb && rm virtualgl_2.6.4_amd64.deb
+    apt update
+    apt -y upgrade
+
+%environment
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin/:$PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+    export PATH=/usr/local/cuda/bin/:$PATH
+
+%environment
+    export ALPHAFOLD_PATH=/opt/alphafold
+%post
+    export ALPHAFOLD_PATH=/opt/alphafold
+
+%files from devel
+    /opt/alphafold /opt/alphafold
+
+%runscript
+    source /usr/local/anaconda/etc/profile.d/conda.sh
+    cd /opt/alphafold
+    exec /opt/alphafold/run_alphafold.sh $@
+
+%labels
+    email luhan.cheng@monash.edu
+    maintainer Luhan Cheng

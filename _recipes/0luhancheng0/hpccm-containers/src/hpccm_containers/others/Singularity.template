@@ -69,30 +69,25 @@ From: nvcr.io/nvidia/cuda:11.0-devel-ubuntu20.04
     apt update
     apt -y upgrade
 
-# NVIDIA HPC SDK version 20.9
+# NVIDIA HPC SDK version 22.2
 %post
     apt-get update -y
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        debianutils \
-        g++ \
-        gcc \
-        gfortran \
-        libatomic1 \
-        libnuma1 \
-        openssh-client \
-        wget
+        ca-certificates
     rm -rf /var/lib/apt/lists/*
 %post
-    cd /
-    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc_2020_209_Linux_x86_64_cuda_multi.tar.gz
-    mkdir -p /var/tmp && tar -x -f /var/tmp/nvhpc_2020_209_Linux_x86_64_cuda_multi.tar.gz -C /var/tmp -z
-    cd /var/tmp/nvhpc_2020_209_Linux_x86_64_cuda_multi && NVHPC_ACCEPT_EULA=accept NVHPC_DEFAULT_CUDA=True NVHPC_INSTALL_DIR=/opt/nvidia/hpc_sdk NVHPC_SILENT=true ./install
-    rm -rf /var/tmp/nvhpc_2020_209_Linux_x86_64_cuda_multi /var/tmp/nvhpc_2020_209_Linux_x86_64_cuda_multi.tar.gz
+    echo "deb [trusted=yes] https://developer.download.nvidia.com/hpc-sdk/ubuntu/amd64 /" >> /etc/apt/sources.list.d/hpccm.list
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        nvhpc-22-2-cuda-multi
+    rm -rf /var/lib/apt/lists/*
 %environment
-    export LD_LIBRARY_PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nvshmem/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nccl/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/math_libs/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/mpi/lib:$LD_LIBRARY_PATH
-    export MANPATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/man:$MANPATH
-    export PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nvshmem/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nccl/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/profilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/mpi/bin:$PATH
+    export CPATH=/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/nvshmem/include:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/nccl/include:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/compilers/extras/qd/include/qd:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/math_libs/include:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/mpi/include:$CPATH
+    export LD_LIBRARY_PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/nvshmem/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/nccl/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/math_libs/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/compilers/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/cuda/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/mpi/lib:$LD_LIBRARY_PATH
+    export MANPATH=/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/compilers/man:$MANPATH
+    export PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/nvshmem/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/nccl/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/profilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/compilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/cuda/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/mpi/bin:$PATH
 %post
-    export LD_LIBRARY_PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nvshmem/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nccl/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/math_libs/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/mpi/lib:$LD_LIBRARY_PATH
-    export MANPATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/man:$MANPATH
-    export PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nvshmem/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/nccl/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/profilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/comm_libs/mpi/bin:$PATH
+    export CPATH=/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/nvshmem/include:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/nccl/include:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/compilers/extras/qd/include/qd:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/math_libs/include:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/mpi/include:$CPATH
+    export LD_LIBRARY_PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/nvshmem/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/nccl/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/math_libs/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/compilers/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/cuda/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/mpi/lib:$LD_LIBRARY_PATH
+    export MANPATH=/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/compilers/man:$MANPATH
+    export PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/nvshmem/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/nccl/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/profilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/compilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/cuda/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/22.2/comm_libs/mpi/bin:$PATH
