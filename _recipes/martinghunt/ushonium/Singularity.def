@@ -2,14 +2,14 @@ BootStrap: library
 From: ubuntu:20.04
 
 %environment
-export PATH=/bioinf-tools:/ushonium/Scripts:/bioinf-tools/usher/build:$PATH
+export PATH=/bioinf-tools:/bioinf-tools/usher/build:$PATH
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 export LANG=C.UTF-8
 
 
 %setup
     mkdir $SINGULARITY_ROOTFS/ushonium
-    rsync -a .ci/install_dependencies.sh data requirements.txt Scripts Tests $SINGULARITY_ROOTFS/ushonium
+    rsync -a .ci/install_dependencies.sh MANIFEST.in ushonium LICENSE requirements.txt setup.py tests $SINGULARITY_ROOTFS/ushonium/
 
 
 %post
@@ -20,5 +20,9 @@ export LANG=C.UTF-8
     /ushonium/install_dependencies.sh /bioinf-tools
     cd /ushonium
     python3 -m pip install -r requirements.txt
-    pytest Tests/test_make_jsonl.py
+    python3 -m pip install pytest
+    pytest
+    python3 -m pip install .
 
+%runscript
+    ushonium "$@"

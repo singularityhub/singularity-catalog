@@ -1,4 +1,4 @@
-Bootstrap: docker
+Bootstrap: library
 From: ubuntu:20.04
 %help
 	Container for TEFLoN2
@@ -65,7 +65,8 @@ _EOF_
         libxml2-dev \
         libcurl4-openssl-dev \
         libssl-dev \
-        curl
+        curl \
+        gawk
 
 	##samtools 1.16.1
     cd /usr/bin
@@ -85,15 +86,12 @@ _EOF_
     wget http://www.repeatmasker.org/rmblast-2.11.0+-x64-linux.tar.gz
     tar zxvf rmblast-2.11.0+-x64-linux.tar.gz
 
-    ## Download TRF
-	cd /usr/bin/
-    git clone https://github.com/Benson-Genomics-Lab/TRF.git
-    cd TRF
-    mkdir build
-    cd build
-    ../configure
-    make
-    chmod +x /usr/bin/TRF
+
+    # Download TRF
+    wget https://github.com/Benson-Genomics-Lab/TRF/releases/download/v4.09.1/trf409.linux64
+    # To copy binary elsewhere
+    chmod +x trf409.linux64 
+
 
 
     ##Download and install RepeatMasker
@@ -102,7 +100,7 @@ _EOF_
     tar -zxvf RepeatMasker-4.1.3-p1.tar.gz
     rm RepeatMasker-4.1.3-p1.tar.gz
     cd /usr/local/bin/RepeatMasker
-    perl ./configure --trf_prgm=/usr/bin/TRF/trf4.10.0.linux64.exe --rmblast_dir=/usr/bin/rmblast-2.11.0/bin
+    perl ./configure --trf_prgm=/usr/bin/trf409.linux64  --rmblast_dir=/usr/bin/rmblast-2.11.0/bin
 
 
 %environment

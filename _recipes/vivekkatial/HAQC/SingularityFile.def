@@ -115,7 +115,7 @@ From: python:3.9.2
   # python qaoa_vrp/run_initial_methods.py -f $instance -m 5 -p 15 -E 1.0 -T True
 
 ####################################################
-# APP TO BUILD EXPERIMENTS
+# APP TO RUN VQE MAXCUT
 ####################################################
 %apphelp run_vqe_maxcut
   This is the help running MAXCUT instances on VQE
@@ -126,6 +126,19 @@ From: python:3.9.2
 %apprun run_vqe_maxcut
   # Run experiment
   python maxcut_vqe.py -T True
+
+####################################################
+# APP TO RUN QAOA INSTANCE SIZE PARAMETER CONC
+####################################################
+%apphelp run_qaoa_maxcut_params_conc
+  This is the help running MAXCUT instances on QAOA to investigate parameter concentration
+
+%applabels run_qaoa_maxcut_params_conc
+  APP_NAME QAOA_MAXCUT_PARAM_CONC
+
+%apprun run_qaoa_maxcut_params_conc
+  # Run experiment
+  python maxcut_qaoa.py -T True
 
 ####################################################
 # APP TO BUILD EXPERIMENTS

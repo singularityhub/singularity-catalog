@@ -1,0 +1,168 @@
+BootStrap: library
+From: ubuntu:22.04
+
+%apprun python
+  exec python "${@}"
+
+%apprun python3
+  exec python3 "${@}"
+
+%apprun conda
+  exec conda "${@}"
+
+%apprun conda-env
+  exec conda-env "${@}"
+
+%apprun pip
+  exec pip "${@}"
+
+%apprun pip3
+  exec pip3 "${@}"
+
+%apprun R
+  exec R "${@}"
+
+%apprun Rscript
+  exec Rscript "${@}"
+
+%apprun julia
+  exec julia "${@}"
+
+%apprun code-server
+  exec code-server "${@}"
+
+
+# Install dependencies
+%post
+  apt-get update -y && \
+  apt-get install -y --no-install-recommends \
+    build-essential \
+    zsh \
+    wget \
+    curl
+
+
+# Install Python
+%post
+  # XXX: To avoid interactive dialogue
+  DEBIAN_FRONTEND=noninteractive && \
+  ln -snf /usr/share/zoneinfo/UTC /etc/localtime && echo UTC > /etc/timezone && \
+  apt-get update && \
+  apt-get install -y --no-install-recommends \
+    python3.10 \
+    python3-pip \
+    libpython3.10-dev \
+    sqlite3 && \
+  ln -s /usr/bin/python3 /usr/bin/python && \
+  rm -rf /var/lib/apt/lists/*
+
+
+# Install R
+%post
+  R_VERSION=4.2.2 && \
+  # XXX: To avoid interactive dialogue
+  DEBIAN_FRONTEND=noninteractive && \
+  ln -snf /usr/share/zoneinfo/UTC /etc/localtime && echo UTC > /etc/timezone && \
+  apt-get update && \
+  apt-get install -y --no-install-recommends \
+    locales \
+    gnupg \
+    ca-certificates \
+    lsb-release \
+    software-properties-common && \
+  # Configure default locale
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
+  locale-gen en_US.utf8 && \
+  /usr/sbin/update-locale LANG=en_US.UTF-8 && \
+  LC_ALL=en_US.UTF-8 && \
+  LANG=en_US.UTF-8 && \
+  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9 && \
+  add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" && \
+  apt update --allow-insecure-repositories && \
+  apt-get install -y --no-install-recommends \
+    r-base=${R_VERSION}* \
+    r-base-core=${R_VERSION}* \
+    r-base-dev=${R_VERSION}* \
+    r-recommended=${R_VERSION}* \
+    r-base-html=${R_VERSION}* \
+    r-doc-html=${R_VERSION}* \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
+    libcairo2-dev \
+    libxt-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    ghostscript && \
+  # Add a default CRAN mirror
+  echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl')" >> /usr/lib/R/etc/Rprofile.site && \
+  R -e 'install.packages("devtools", dependencies = TRUE)' && \
+  R -e 'devtools::install_version("tidyverse", version = "1.3.2")' && \
+  R -e 'install.packages("here")' && \
+  R -e 'install.packages("docopt")' && \
+  apt update --allow-insecure-repositories && \
+  apt -y install ghostscript && \
+  rm -rf /var/lib/apt/lists/*
+
+
+# Install Julia
+%post
+  JULIA_VERSION=1.8.5 && \
+  JULIA_VERSION_SHORT=$(echo "${JULIA_VERSION}" | cut -d. -f 1,2) && \
+  cd /tmp && \
+  apt-get update -y && \
+  apt-get install -y --no-install-recommends \
+    fonts-dejavu \
+    gfortran && \
+  wget \
+    --no-verbose \
+    --no-check-certificate \
+    "https://julialang-s3.julialang.org/bin/linux/x64/${JULIA_VERSION_SHORT}/julia-${JULIA_VERSION}-linux-x86_64.tar.gz" && \
+  mkdir "/opt/julia-${JULIA_VERSION}" && \
+  tar xzf julia-${JULIA_VERSION}-linux-x86_64.tar.gz -C /opt/julia-${JULIA_VERSION} --strip-components=1 && \
+  ln -s /opt/julia-*/bin/julia /usr/local/bin/julia && \
+  apt-get clean && \
+  rm -rf \
+    julia-${JULIA_VERSION}-linux-x86_64.tar.gz \
+    /var/lib/apt/lists/*
+
+
+# Install VSCODE-Server
+%post
+  CODER_VERSION=4.9.1 && \
+  cd /tmp && \
+  apt-get update && \
+  apt-get install -y \
+    git \
+    jq \
+    libatomic1 \
+    nano \
+    net-tools \
+    netcat && \
+  # NOTE: Install code-server and extension's dependencies
+  wget \
+    --no-verbose \
+    --no-check-certificate \
+    "https://github.com/coder/code-server/releases/download/v${CODER_VERSION}/code-server_${CODER_VERSION}_amd64.deb" && \
+  dpkg -i code-server_${CODER_VERSION}_amd64.deb && \
+  wget \
+    --no-verbose \
+    --no-check-certificate \
+    "https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb" -O packages-microsoft-prod.deb && \
+  dpkg -i packages-microsoft-prod.deb && \
+  # XXX: To avoid interactive dialogue
+  DEBIAN_FRONTEND=noninteractive && \
+  ln -snf /usr/share/zoneinfo/UTC /etc/localtime && echo UTC > /etc/timezone && \
+  apt-get update && \
+  apt-get install -y dotnet-runtime-6.0 && \
+  # NOTE: Clean up
+  apt-get clean && \
+  rm -rf \
+    /config/* \
+    /tmp/*.deb \
+    /var/lib/apt/lists/* \
+    /var/tmp/*

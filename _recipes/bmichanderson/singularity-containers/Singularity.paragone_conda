@@ -1,0 +1,55 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using the program ParaGone
+# This container is built to emulate a conda environment install
+
+
+Bootstrap: docker
+From: continuumio/miniconda3
+
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM ParaGone
+	VERSION latest
+
+
+%help
+	This container is for running the program ParaGone to deal with paralogs
+	You can execute it with:
+		singularity exec paragone_conda.sif paragone {args}
+	Or run it with:
+		singularity run paragone_conda.sif {args}
+
+
+%post
+	# set frontend for package installation
+	export DEBIAN_FRONTEND=noninteractive
+
+	# set up channels
+	conda config --add channels bioconda
+	conda config --add channels conda-forge
+
+	# create an environment
+	export MY_ENV="paragone_env"
+	conda create -n $MY_ENV
+	
+	# install ParaGone with conda
+	. /opt/conda/etc/profile.d/conda.sh
+	conda activate $MY_ENV
+	conda install \
+	-c chrisjackson-pellicle \
+	paragone
+	
+	conda clean -ay
+
+	# ensure the new environment is accessible
+	echo "export PATH=/opt/conda/envs/$MY_ENV/bin:$PATH" >> $SINGULARITY_ENVIRONMENT
+
+
+%environment
+	# Set up environmental variables within the container
+
+
+%runscript
+	# This will be executed when the container is run
+	paragone "$@"
