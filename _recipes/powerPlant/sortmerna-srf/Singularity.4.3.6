@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: ubuntu:jammy
+
+%labels
+Maintainer marty.hickman@plantandfood.co.nz
+Version 4.3.6
+
+%post
+  ## Download build prerequisites
+  apt-get update
+  apt-get -y install wget
+
+  cd /opt
+  wget https://github.com/biocore/sortmerna/releases/download/v4.3.6/sortmerna-4.3.6-Linux.sh
+  mkdir sortmerna-4.3.6-Linux
+  bash sortmerna-4.3.6-Linux.sh --skip-license --prefix=sortmerna-4.3.6-Linux
+
+## Cleanup
+  rm -rf /opt/sortmerna-4.3.6-Linux.sh
+  apt-get -y remove wget
+  apt-get -y autoremove
+  apt-get -y clean all
+
+%runscript
+  exec /opt/sortmerna-4.3.6-Linux/bin/sortmerna "$@"

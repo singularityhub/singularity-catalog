@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: ensemblorg/ensembl-vep:release_93
+
+%labels 
+Maintainer sueruen@informatik.uni-tuebingen.de
+Version V93
+
+%files
+# get copy_data to the image
+copy_data.sh /opt/vep
+
+%post
+cd /opt/vep
+# installing API version 93 in the container
+perl src/ensembl-vep/INSTALL.pl --VERSION 93 -a a 
+chmod +x copy_data.sh
+
+%runscript
+exec /bin/bash /opt/vep/copy_data.sh "$@"
