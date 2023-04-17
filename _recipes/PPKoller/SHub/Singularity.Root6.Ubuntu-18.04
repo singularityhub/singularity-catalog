@@ -1,0 +1,28 @@
+Bootstrap:docker  
+From:ubuntu:18.04
+
+%labels
+MAINTAINER Patrick Koller
+CONTACT patrick_koller@gmx.ch
+
+%post  
+echo "This section happens once after bootstrap to build the image."
+apt-get -y update
+apt-get -y install htop vim wget git python-numpy
+apt-get -y install dpkg-dev cmake g++ gcc binutils libx11-dev libxpm-dev libxft-dev libxext-dev python libssl-dev
+
+mkdir /Software
+
+cd /Software/
+wget https://root.cern/download/root_v6.22.02.Linux-ubuntu18-x86_64-gcc7.5.tar.gz
+tar -xf root_v6.22.02.Linux-ubuntu18-x86_64-gcc7.5.tar.gz
+mv root root_v6.22.02
+rm root_v6.22.02.Linux-ubuntu18-x86_64-gcc7.5.tar.gz
+
+%environment
+echo "Linking LD_LIBRARY_PATH ..." 
+export LD_LIBRARY_PATH="/Software/root_v6.22.02/lib:$LD_LIBRARY_PATH"
+
+%runscript
+echo "This gets run when you run the image!" 
+

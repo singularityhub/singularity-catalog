@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: alpine:3.16.0
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    apk update
+    apk upgrade
+    apk add curl gcc wget git python3
+    apk add musl-dev
+    curl –proto ‘=https’ –tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+
+    source "$HOME/.cargo/env"
+
+
+    git clone https://github.com/rrwick/Polypolish.git
+    cd Polypolish
+    cargo build --release
+
+    cp /Polypolish/target/release/polypolish /usr/local/bin
+    cp /Polypolish/scripts/*py /usr/local/bin/
+
+    rustup self uninstall -y
+    apk del wget git curl
+    rm -f /var/cache/apk/*
+    rm -rf /Polypolish
+
+%runscript
+    exec polypolish "$@"
+

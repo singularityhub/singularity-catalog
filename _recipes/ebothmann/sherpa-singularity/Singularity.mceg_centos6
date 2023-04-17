@@ -1,0 +1,85 @@
+Bootstrap: shub
+From: ebothmann/sherpa-singularity:rivet_centos6
+
+
+%help
+A Singularity file to define an image that includes all usual dependencies for
+Sherpa, i.e. FastJet, HepMC2, LHAPDF, Rivet, OpenLoops and BlackHat. It is not
+to be used but only serves as a base image for all the Sherpa images.
+
+
+%labels
+    Maintainer Enrico Bothmann
+    Version v0.1
+
+
+%files
+    hostlibs.txt
+    install_OpenLoops
+    install_LHAPDF
+    enable_OpenMPI
+
+
+%environment
+    source /enable_OpenMPI
+
+
+%post
+    echo Installing yum dependencies ...
+    yum -y install openmpi-1.10-devel
+
+    # set up build environment
+    source /opt/rh/devtoolset-6/enable
+    source /opt/rh/python27/enable
+    source /enable_OpenMPI
+
+    # needed for running on cluster
+    mkdir -p /opt/torque
+    mkdir -p /etc/libibverbs.d
+    mkdir -p /tmp_local
+
+    # needed for host lib linking
+    mkdir -p /hostlibs/lib64
+    mkdir -p /hostlibs/usr/lib64
+    while read p; do
+        [[ -f "$p" ]] || ln -fs /hostlibs"$p" "$p"
+    done </hostlibs.txt
+
+    mkdir -p /scratch
+    cd /scratch
+    chmod +x /install_LHAPDF
+    /install_LHAPDF
+    rm /install_LHAPDF
+
+    openloops_version=2.1.1
+    mkdir -p /opt
+    cd /opt
+    chmod +x /install_OpenLoops
+    /install_OpenLoops "$openloops_version"
+    rm /install_OpenLoops
+
+    echo Installing OpenLoops process libraries
+    cd "OpenLoops-$openloops_version"
+    ./openloops libinstall \
+        ppll ppllj pplljj pplljjj ppll_ew ppllj_ew pplljj_ew \
+        ppvv ppvv_ew ppvvj ppvvj_ew \
+        pphll pphll2 pphllj pphllj2 \
+        ppjj_ew
+
+    echo Installing prebuilt BlackHat binaries
+    cd /
+    wget https://www.theorie.physik.uni-goettingen.de/~bothmann/blackhat-r3095_centos6_binary.tar.gz -O- | tar xz
+
+    # on CentOS 6 we need a newer autoconf (the Sherpa build system requires
+    # 2.64 or later)
+    cd /scratch
+    wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz -O- | tar xz
+    cd autoconf-2.69
+    ./configure
+    make -j4
+    make install
+
+    cd /
+    rm -rf /scratch
+    ldconfig
+    yum clean all

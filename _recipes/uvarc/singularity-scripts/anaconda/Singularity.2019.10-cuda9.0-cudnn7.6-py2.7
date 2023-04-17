@@ -1,0 +1,78 @@
+BootStrap: docker
+From: nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
+
+%post
+    apt-get -y update --fix-missing
+
+    apt-get install -y --no-install-recommends \
+        libfreetype6-dev \
+        libhdf5-serial-dev \
+        libpng12-dev \
+        libzmq3-dev \
+        pkg-config \
+        software-properties-common \
+        unzip
+
+    apt-get -y install --allow-downgrades --no-install-recommends \
+        dbus \
+        wget \
+        git \
+        mercurial \
+        subversion \
+        vim \
+        nano \
+        cmake \
+        libglib2.0-0 \
+        libxext6 \
+        libsm6 \
+        libxrender1 \
+        libboost-all-dev
+
+    apt-get clean
+
+    rm /etc/machine-id
+    dbus-uuidgen --ensure=/etc/machine-id
+
+    # install Anaconda
+    wget --quiet https://repo.continuum.io/archive/Anaconda2-2019.10-Linux-x86_64.sh -O ~/anaconda.sh
+    /bin/bash ~/anaconda.sh -b -p /opt/conda
+    rm ~/anaconda.sh
+    export PATH=/opt/conda/bin:$PATH
+
+    conda update anaconda
+
+    conda install \
+        pandas \
+        pyqt \
+        msgpack-python \
+        spyder \
+        qtconsole \
+        qtpy
+
+    conda clean --all
+
+%runscript
+    exec python $@
+
+
+%help
+Applications and libraries provided by this container:
+    * Anaconda 2019.10, Python 2.7
+    * CUDA 9.0
+    * CuDNN 7.6.4.38
+
+
+%environment
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# This sets global environment variables for anything run within the container
+    export CUDA_HOME="/usr/local/cuda"
+    export CPATH="$CUDA_HOME/include:$CPATH"
+    export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$CUDA_HOME/extras/CUPTI/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:$LD_LIBRARY_PATH
+    export PATH=$CUDA_HOME/bin:/opt/conda/bin:$PATH
+    unset CONDA_DEFAULT_ENV
+    export ANACONDA_HOME=/opt/conda
+    export PIP_DISABLE_PIP_VERSION_CHECK=1
+    export LC_ALL=C
+    
+%labels
+AUTHOR rs7wz@virginia.edu

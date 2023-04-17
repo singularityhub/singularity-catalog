@@ -1,0 +1,27 @@
+BootStrap: docker
+From: r-base:3.6.0
+
+
+%post
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# this will install all necessary packages and prepare the container
+    apt-get -y update --fix-missing
+    wget https://cran.r-project.org/src/contrib/RColorBrewer_1.1-2.tar.gz
+    R CMD INSTALL RColorBrewer_1.1-2.tar.gz
+
+
+
+%runscript
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# this text code will run whenever the container
+# is called as an executable or with `singularity run`
+exec Rscript $@
+
+%help
+This container provides R 3.6.0.
+
+%environment
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# This sets global environment variables for anything run within the container
+
+    

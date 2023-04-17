@@ -1,0 +1,35 @@
+BootStrap: debootstrap
+OSVersion: stretch
+MirrorURL:  http://ftp.fr.debian.org/debian/
+Include: curl
+
+%environment
+	BLAST_PROGRAM=blastp
+	BLASTDB=/blastdb
+	export BLAST_PROGRAM BLASTDB
+
+%post
+	
+	BLAST_VERSION=2.7.1
+
+	cd /usr/local; curl --fail --silent --show-error --location --remote-name ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/${BLAST_VERSION}/ncbi-blast-${BLAST_VERSION}+-x64-linux.tar.gz
+	cd /usr/local; tar zxf ncbi-blast-${BLAST_VERSION}+-x64-linux.tar.gz; rm ncbi-blast-${BLAST_VERSION}+-x64-linux.tar.gz
+	cd /usr/local/bin; ln -s /usr/local/ncbi-blast-${BLAST_VERSION}+/bin/* .
+
+%labels
+	Maintainer Biocorecrg
+	Version 0.1.0
+
+%runscript
+	echo "Blast application!"
+	exec $BLAST_PROGRAM "$@"
+	
+	
+%appenv index
+    BLAST_PROGRAM=makeblastdb
+    export BLAST_PROGRAM
+	
+%apprun index
+	echo "Indexing!"
+	exec $BLAST_PROGRAM "$@"
+

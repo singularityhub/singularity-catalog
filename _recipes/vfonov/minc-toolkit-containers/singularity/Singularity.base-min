@@ -1,0 +1,56 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+# install basic system packages without X11 components
+%post
+    apt-get -y update
+    apt-get install -y gnupg
+    echo "deb http://cran.rstudio.com/bin/linux/ubuntu bionic-cran35/" > /etc/apt/sources.list.d/cran.list 
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9 
+    sed -i 's/$/ universe/' /etc/apt/sources.list 
+    apt-get -y update 
+    apt-get install -y \
+         bc \
+         wget \
+         gnupg2 \
+         libjpeg8 \
+         imagemagick \
+         perl \
+         r-base r-base-dev \
+         ed libxml2-dev libcurl4-openssl-dev libssl-dev \
+         python-pip python3-pip python-dev python3-dev libzmq3-dev \
+         cython python-cffi python-numpy python-scipy python-matplotlib \
+         cython3 python3-cffi python3-numpy python3-scipy python3-matplotlib \
+         locales automake git lsof 
+
+    # update locales
+    locale-gen en_US.UTF-8 en_US en_CA.UTF-8 en_CA
+    dpkg-reconfigure locales
+
+    apt-get autoclean
+    rm -rf /var/lib/apt/lists/*
+
+    # Update R packages 
+    Rscript -e 'update.packages(repos="https://cloud.r-project.org",ask=F)'
+
+    # Install additional R packages
+    Rscript -e 'install.packages(c("lme4","tidyverse","batchtools","Rcpp","rjson","jsonlite","tidyr","shiny","visNetwork","DT","testthat"),repos="https://cloud.r-project.org",ask=F)'
+    Rscript -e 'install.packages(c("rgl", "plotrix", "lmerTest", "qvalue", "testthat", "igraph"),repos="https://cloud.r-project.org",ask=F)'
+    Rscript -e 'install.packages(c("gridBase","data.tree"),repos="https://cloud.r-project.org",ask=F)'
+
+    # scoop
+    wget https://github.com/vfonov/scoop/archive/master.tar.gz && \
+    pip install master.tar.gz --no-cache-dir && \
+    pip3 install master.tar.gz --no-cache-dir && \
+    rm -rf master.tar.gz     
+
+
+%labels
+    Maintainer Vladimir S. Fonov
+    AUTHOR vladimir.fonov@gmail.com
+    Version 1.1
+
+%help
+    Base image for minc-toolkit, based on Ubuntu 18.04 without X11 libraries. Contains only standard and 3rd party packages. 
+

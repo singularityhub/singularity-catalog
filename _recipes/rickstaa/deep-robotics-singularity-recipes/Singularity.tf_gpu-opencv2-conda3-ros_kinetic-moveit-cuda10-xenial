@@ -1,0 +1,216 @@
+# Ros kinetic panda_auto_grasp singularity container recipe
+Bootstrap: docker
+From: nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
+
+%help
+    A HPC Singularity container containing the following packages:
+        - ros_kinetic
+        - moveit
+        - tensorflow_gpu
+        - opencv2
+        - miniconda3
+        - CUDA 10
+        - CUDNN 7
+
+    Container aliases:
+        - rsource:  Source the ROS kinetic setup file
+        - rossu:    Source a setup.bash file in ./devel/setup.bash
+        - atf:      Activate the tf-gpu conda enviroment
+        - dtf:      Deactivate the tf-gpu conda enviroment
+        - dconda:   Deactivate conda enviroment
+
+    For more information see https://github.com/rickstaa/deep-robotics-singularity-recipes.
+
+%labels
+    Maintainer: Rick Staa
+    Github: https://github.com/rickstaa
+    Version: v0.1.2
+    Type: Public
+
+%environment
+    ## Set ROS distro var ##
+    ROS_DISTRO=kinetic
+
+    ## Cuda samples env var ##
+    export NVCUDASAMPLES_ROOT=/opt/NVIDIA_CUDA-10.0_Samples
+
+%post
+    ## Install system package dependencies ##
+    apt update --fix-missing
+    apt install -q -y\
+        wget \
+        vim \
+        git \
+        bash-completion \
+        ssh \
+		tar \
+		libevent-dev \
+        libncurses-dev \
+		nautilus \
+        gedit \
+        x11-xserver-utils \
+        ssh \
+        software-properties-common \
+        curl \
+        bzip2 \
+        iputils-ping \
+        ca-certificates \
+        figlet \
+        dirmngr \
+        gnupg2 \
+        lsb-release \
+        unzip \
+        cmake \
+        pkg-config
+    apt clean
+    rm -rf /var/lib/apt/lists/*
+
+    ## Install opencl dependencies
+    apt update
+    apt install -q -y\
+        libglu1-mesa-dev \
+        libglm-dev \
+        libglew1.5-dev \
+        freeglut3 \
+        freeglut3-dev \
+        binutils-gold \
+        mesa-common-dev \
+        mesa-utils
+
+    ## Fix system python dependencies
+    apt update --fix-missing
+    apt install -q -y\
+        build-essential \
+        python3 \
+        python-dev \
+        python3-dev \
+        python-tk \
+        python3-tk \
+        python-opengl \
+        libsm6 \
+        libxext6 \
+        libglib2.0-0 \
+        libxrender1 \
+        libgtk2.0-dev
+
+    ## Install pip (`apt-get install python-pip` causes trouble w/ networkx).
+    curl -O https://bootstrap.pypa.io/get-pip.py && \
+	    python get-pip.py && \
+        rm get-pip.py
+    curl -O https://bootstrap.pypa.io/get-pip.py && \
+	    python3 get-pip.py && \
+        rm get-pip.py
+
+    ## Install virtual env package ##
+    python -m pip install virtualenv
+    python2 -m pip install virtualenv
+
+    ## Add container resources to the container ##
+    bash -c "cd / \
+        && git clone https://github.com/rickstaa/deep-robotics-singularity-recipes.git \
+        && cp /deep-robotics-singularity-recipes/resources/.singularity_bashrc /.singularity_bashrc \
+        && cp /deep-robotics-singularity-recipes/resources/.conda_init /.conda_init \
+        && cp /deep-robotics-singularity-recipes/resources/welcome_msgs/tf_gpu-opencv2-conda3-ros_kinetic-moveit-cuda10-xenial.txt /.welcome_msg \
+        && cp /deep-robotics-singularity-recipes/resources/bash_aliases/.singularity_bash_aliases /.singularity_bash_aliases \
+        && rm -rf /deep-robotics-singularity-recipes \
+        && git clone https://github.com/rickstaa/.ros_conda_wrapper \
+        && cp /.ros_conda_wrapper/ros_conda_wrapper_rc /.conda_wrapper \
+        && rm -rf /.ros_conda_wrapper"
+
+    ## Install miniconda3 ##
+    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /miniconda.sh
+    /bin/bash /miniconda.sh -b -p /opt/conda
+    rm /miniconda.sh
+    . /opt/conda/etc/profile.d/conda.sh
+    conda clean -y --all
+    conda install -q -y python=3
+    conda update -y conda
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+    chmod -R a+w /opt/conda # Make the conda install folder is available to all singularity users
+
+    ## Create tf-gpu enviroment ##
+    conda create -q -y -n tf-gpu python=3.7
+    conda activate tf-gpu
+
+    ## Install python packages ##
+    conda install -y tensorflow-gpu
+    #conda install -y jupyter
+    conda update --all
+
+    ## Install opencv ##
+    pip uninstall opencv-python -y
+    conda install -y -c conda-forge opencv
+
+    ## Install pip in environment (`apt-get install python-pip` causes trouble w/ networkx).
+    curl -O https://bootstrap.pypa.io/get-pip.py && \
+	    python3 get-pip.py && \
+        rm get-pip.py
+
+    ## Install autograsp additional packages ##
+    pip install empy \
+        rospkg \
+        catkin_pkg \
+        pyyaml
+
+    ## Install additional ROS package system dependencies ##
+    apt install -q -y python3-empy \
+        python3-yaml
+
+    ## setup ROS keys and sources.list ##
+    echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list
+    apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+
+    ## Install ROS kinetic desktop full ##
+    apt update
+    apt install -q -y ros-kinetic-desktop-full
+
+    # bootstrap rosdep
+    rosdep init
+
+    ## Install MoveIt and ros building packages
+    rosdep update
+    apt update
+    apt dist-upgrade -y
+    apt install -q -y ros-kinetic-catkin python-catkin-tools
+    apt install -q -y ros-kinetic-moveit
+    apt install -q -y \
+       ros-kinetic-moveit-ros-move-group \
+       ros-kinetic-controller-manager* \
+       ros-kinetic-moveit* \
+       ros-kinetic-effort-controllers \
+       ros-kinetic-joint-trajectory-controller \
+       ros-kinetic-gazebo-ros* \
+       ros-kinetic-rviz* \
+       ros-kinetic-joint-state-controller* \
+       libboost-filesystem-dev \
+       libjsoncpp-dev \
+       python-vcstools \
+       python-wstool \
+       python-rosinstall \
+       python-rosinstall-generator
+
+    # Download cuda10.0 samples and set cmake variables
+    bash -c "cd /opt \
+        && git clone https://github.com/NVIDIA/cuda-samples \
+        && mv cuda-samples NVIDIA_CUDA-10.0_Samples \
+        && cd NVIDIA_CUDA-10.0_Samples \
+        && mv Samples samples \
+        && mv Common common \
+        && mkdir inc \
+        && mv common/* inc \
+        && mv inc common/inc \
+        && git checkout v10.0"
+    export NVCUDASAMPLES_ROOT=/opt/NVIDIA_CUDA-10.0_Samples
+
+    ## Upgrade packages and remove unused packages ##
+    apt upgrade -y -q
+    apt autoremove -y -q
+    apt autoclean -y -q
+    rm -rf /var/lib/apt/lists/*
+
+%runscript
+	## Execute the .singularity_bashrc file ##
+	OCI_CMD='/bin/bash'
+	OCI_ARGS='-rcfile /.singularity_bashrc'
+	SINGULARITY_OCI_RUN="${OCI_CMD} ${OCI_ARGS}"
+	exec $SINGULARITY_OCI_RUN

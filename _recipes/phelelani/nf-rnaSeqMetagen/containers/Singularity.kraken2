@@ -1,0 +1,46 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%labels
+Maintainer Phelelani.Mpangase@wits.ac.za
+
+%post
+## Updates and essentials
+apt-get update
+apt-get install -y build-essential
+apt-get install -y wget git curl lftp
+
+## Install Jellyfish
+cd /opt \
+    && wget http://www.cbcb.umd.edu/software/jellyfish/jellyfish-1.1.11.tar.gz \
+    && tar -vxf jellyfish-1.1.11.tar.gz \
+    && cd jellyfish-1.1.11 \
+    && ./configure \
+    && make \
+    && make install \
+    && rm /opt/jellyfish-1.1.11.tar.gz
+
+## Install Kraken 
+cd /opt \
+    && git clone https://github.com/DerrickWood/kraken2.git \
+    && cd kraken2 \
+    && ./install_kraken2.sh bin
+
+### Install Krona
+cd /opt \
+    && wget https://github.com/marbl/Krona/releases/download/v2.7/KronaTools-2.7.tar \
+    && tar -vxf KronaTools-2.7.tar \
+    && cd KronaTools-2.7 \
+    && ./install.pl \
+    && rm /opt/KronaTools-2.7.tar
+
+## Instal NCBI BLAST+
+cd /opt \
+    && wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.7.1/ncbi-blast-2.7.1+-x64-linux.tar.gz \
+    && tar -vxf ncbi-blast-2.7.1+-x64-linux.tar.gz \
+    && rm /opt/ncbi-blast-2.7.1+-x64-linux.tar.gz
+
+%environment
+export PATH=/opt/kraken2/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+export PATH=/opt/ncbi-blast-2.7.1+/bin:$PATH

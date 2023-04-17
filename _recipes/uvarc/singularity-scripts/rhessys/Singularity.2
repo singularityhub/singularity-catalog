@@ -1,0 +1,229 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%setup
+    #cp conda_requirements.txt $SINGULARITY_ROOTFS/opt/
+    #cp pip_requirements.txt $SINGULARITY_ROOTFS/opt/
+    #cp .ecohydro.cfg $SINGULARITY_ROOTFS/opt/
+
+%post
+    apt-get -y update
+    apt -y install vim nano wget software-properties-common
+
+    # ecohydro.cfg
+    cat >$SINGULARITY_ROOTFS/opt/.ecohydro.cfg <<EOF
+[GDAL/OGR]
+GDAL_BASE = /opt/conda/bin
+PATH_OF_OGR2OGR = /opt/conda/bin/ogr2ogr
+PATH_OF_GDAL_RASTERIZE = /opt/conda/bin/gdal_rasterize
+PATH_OF_GDAL_WARP = /opt/conda/bin/gdalwarp
+PATH_OF_GDAL_TRANSLATE = /opt/conda/bin/gdal_translate
+
+[SCRIPT]
+ETC = /opt/conda/rhessysworkflows/etc
+
+[GRASS]
+GISBASE = /usr/lib/grass74
+MODULE_PATH = $HOME/.grass7/addons
+MODULE_ETC = /opt/conda/rhessysworkflows/etc/r.soils.texture
+
+[RHESSYS]
+PATH_OF_GIT = /usr/bin/git
+PATH_OF_MAKE = /usr/bin/make
+PATH_OF_FFMPEG = /usr/bin/ffmpeg
+EOF
+
+    # Install Ubuntu package for RHESSysWorkflows
+    apt -y install build-essential git subversion p7zip-full libxml2-dev libxslt-dev libbsd-dev ffmpeg vlc
+
+    # Install Ubuntu package for IRkernel
+    apt -y install libssl-dev libcurl4-openssl-dev
+
+    # Install Anaconda2
+    wget --quiet https://repo.continuum.io/archive/Anaconda2-4.4.0-Linux-x86_64.sh -O ~/anaconda.sh && \
+    /bin/bash ~/anaconda.sh -b -p /opt/conda && \
+    rm ~/anaconda.sh
+    export PATH=/opt/conda/bin:$PATH
+    pip install --upgrade pip
+
+    # Install R
+    echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | tee -a /etc/apt/sources.list
+    gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9
+    gpg -a --export E084DAB9 | apt-key add
+    apt-get update
+    apt-get -y install r-base r-base-dev
+
+    # Configure default locale, see https://github.com/rocker-org/rocker/issues/19
+    apt-get clean && apt-get update && apt-get install -y locales
+    locale-gen en_US.UTF-8
+
+    # Install required R packages
+    R --slave -e 'install.packages("XML")'
+    R --slave -e 'install.packages("rgrass7")'
+
+    # Install required R packages for IRkernel https://github.com/IRkernel/IRkernel
+    R --slave -e 'install.packages("openssl")'
+    R --slave -e 'install.packages("curl")'
+    R --slave -e 'install.packages("httr")'
+    R --slave -e 'install.packages("devtools")'
+    R --slave -e 'devtools::install_github("IRkernel/IRkernel")'
+    R --slave -e 'IRkernel::installspec()'
+
+    # Install GRASS 7.4
+    add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+    apt-get update
+    apt-get -y install grass grass-dev
+
+    #Add Conda channels
+    conda config --add channels conda-forge
+    conda config --add channels landlab
+
+    #install cybergis==0.1.0
+    conda install pynacl
+    git clone https://github.com/cybergis/jupyterlib
+    cd jupyterlib && python setup.py install
+
+    #Install Python Packages
+    conda install --yes\
+        amqp==2.2.2\
+        appdirs==1.4.3\
+        basemap==1.1.0\
+        billiard==3.5.0.2\
+        boost>=1.65.1\
+        boost-cpp>=1.65.1\
+        celery==4.1.0\
+        click-plugins==1.0.3\
+        cligj==0.4.0\
+        cyordereddict==1.0.0\
+        descartes==1.1.0\
+        fiona==1.7.0\
+        freexl==1.0.5\
+        freezegun==0.3.9\
+        future==0.16.0\
+        gdal==2.2.4\
+        geojson==2.3.0\
+        geopandas==0.3.0\
+        geos==3.6.2\
+        geotiff==1.4.2\
+        gettext==0.19.7\
+        giflib==5.1.4\
+        graphviz==2.38.0\
+        h5netcdf==0.5.0\
+        hdf4==4.2.13\
+        isodate==0.6.0\
+        json-c==0.12.1\
+        kealib==1.4.9\
+        kombu==4.1.0\
+        krb5==1.14.2\
+        libdap4==3.18.3\
+        libgdal==2.2.4\
+        libiconv==1.15\
+        libkml==1.3.0\
+        libnetcdf==4.6.1\
+        libpq==9.6.3\
+        libspatialindex==1.8.5\
+        libspatialite==4.3.0a\
+        mock==2.0.0\
+        munch==2.2.0\
+        netcdf4==1.3.1\
+        openjpeg==2.3.0\
+        pbr==3.1.1\
+        poppler==0.61.1\
+        poppler-data==0.4.8\
+        proj4==4.9.3\
+        pymysql==0.7.11\
+        pyproj==1.9.5.1\
+        pysal==1.14.3\
+        pyshp==1.2.12\
+        rtree==0.8.3\
+        simplejson==3.11.1\
+        ulmo==0.8.4\
+        vine==1.1.4\
+        xarray==0.10.0\
+        xerces-c==3.2.0\
+        xorg-libxau==1.0.8\
+        xorg-libxdmcp==1.1.2\
+        bsddb==1.0\
+        db==5.3.28\
+        libgfortran==3.0.0\
+        util-linux==2.21\
+        landlab==1.2.0\
+        geoalchemy-odm2==0.7.4\
+        odm2api==0.7.1\
+        psycopg2==2.6.2\
+        shapely==1.5.16\
+        suds-jurko==0.6\
+        ipython=5.5.0\
+        ipython_genutils=0.2.0\
+        args==0.1.0\
+        bleach\
+        clint==0.5.1\
+        configobj==5.0.6\
+        configparser==3.5.0\
+        contextlib2==0.5.5\
+        entrypoints==0.2.3\
+        httplib2==0.10.3\
+        ipywidgets==7.0.5\
+        jsonschema==2.6.0\
+        mistune==0.8.3\
+        monotonic==1.4\
+        nbconvert==5.3.1\
+        nbformat==4.4.0\
+        notebook==5.2.2\
+        oauthlib==2.0.6\
+        oset==0.1.3\
+        owslib==0.15.0\
+        pandocfilters==1.4.2\
+        paramiko==2.4.0\
+        poster==0.8.1\
+        pyasn1==0.4.2\
+        requests-oauthlib==0.8.0\
+        requests-toolbelt==0.8.0\
+        terminado==0.8.1\
+        testpath==0.3.1\
+        tqdm==4.19.5\
+        tzlocal==1.5.1\
+        widgetsnbextension==3.0.8\
+        wxPython==3.0.0
+        # bleach conflict with ulmo version
+
+    conda clean --all
+
+    pip install \
+        backports-abc==0.5\
+        backports.functools_lru_cache==1.4\
+        backports.shutil-get-terminal-size==1.0.0\
+        backports.ssl-match-hostname==3.5.0.1\
+        backports.tempfile==1.0\
+        backports.weakref==1.0.post1\
+        ecohydrolib==1.29\
+        geoalchemy==0.7.2\
+        hs-restclient==1.2.10\
+        ipython-genutils==0.2.0\
+        jupyter-client\
+        jupyter-core\
+        prompt-toolkit==1.0.15\
+        retry==0.9.2\
+        rhessysworkflows==1.34\
+        sciunit2==0.3.post6.dev49650668\
+        tables==3.4.2\
+        utcdatetime==0.0.6\
+        zipfile2==0.0.12\
+        bcrypt==3.1.4\
+        humanfriendly==4.4.1\
+        pynacl==1.2.1\
+        wget==3.2\
+        rhessysworkflows==1.34
+    #No matching distribution found for geoalchemy==0.7.3
+
+%environment
+    export PATH=/opt/conda/bin:$PATH
+    export GISBASE=/usr/lib/grass74
+    export PYTHONPATH=${PYTHON-PATH}:$GISBASE/etc/python/
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$GISBASE/lib
+    export GIS_LOCK=$$
+    export GISRC=$HOME/.grass7/rc
+    export ECOHYDROLIB_CFG=/opt/.ecohydro.cfg
+
+%runscript
+    exec python $@

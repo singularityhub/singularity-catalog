@@ -1,0 +1,64 @@
+Bootstrap: docker
+From: tensorflow/tensorflow
+
+%labels
+AUTHOR zhiqi@inria.fr
+
+%setup
+mkdir -p ${SINGULARITY_ROOTFS}/opt/
+
+%environment
+export PYTHONPATH=/opt/
+
+%post
+# post-setup script
+echo "Installing all container dependencies!"
+apt-get -y update
+apt install -y libgl1-mesa-glx
+
+apt-get -y install python3.6
+apt-get -y install python-pip
+apt-get -y install ffmpeg
+echo "verifiying pip install"
+
+# load environment variables
+. /environment
+
+# use bash as default shell
+echo 'SHELL=/bin/bash' >> /environment
+chmod +x /environment
+
+# default mount paths
+mkdir -p /scratch /data /usr/bin
+pip3 install --upgrade pip
+pip3 install tensorflow==2.0.0
+pip3 install keras==2.3.0 jupyter notebook matplotlib
+pip3 install h5py numpy scipy opencv-python-headless moviepy ffmpeg-python
+pip3 install audioread==2.1.8 
+pip3 install h5py  
+pip3 install librosa==0.7.0 
+pip3 install lws==1.2.6 
+pip3 install Markdown==3.1.1
+pip3 install matplotlib
+pip3 install numba
+pip3 install numpy
+pip3 install opencv-python-headless
+pip3 install pesq
+pip3 install pystoi==0.2.2
+pip3 install scikit-learn
+pip3 install scikit-image
+pip3 install scipy
+pip3 install sounddevice==0.3.13
+pip3 install SoundFile==0.10.2
+pip3 install tensorboard==1.13.1
+pip3 install tensorboardX==2.0
+pip3 install tensorflow
+pip3 install tqdm
+pip3 install umap-learn
+pip3 install Unidecode
+pip3 install visdom
+pip3 install webrtcvad
+pip3 install youtube-dl
+pip3 install torch==1.1.0
+
+%runscript

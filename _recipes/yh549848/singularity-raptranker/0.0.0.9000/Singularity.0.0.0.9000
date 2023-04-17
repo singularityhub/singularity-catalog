@@ -1,0 +1,73 @@
+BootStrap: docker
+From: centos:centos7.5.1804
+
+%apprun RaptRanker
+  exec RaptRanker "${@}"
+
+%environment
+  export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64:$LD_LIBRARY_PATH
+  export PATH=/usr/local/bin:$PATH
+
+%post
+  yum update -y && \
+  yum groupinstall "Development Tools" -y && \
+  yum install -y wget \
+                 which
+
+%post
+  GCC_VER=5.5.0 && \
+  cd /usr/local/src && \
+  wget https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VER}/gcc-${GCC_VER}.tar.gz && \
+  tar xzf gcc-${GCC_VER}.tar.gz && \
+  cd gcc-${GCC_VER} && \
+  ./contrib/download_prerequisites && \
+  mkdir build && \
+  cd build/ && \
+  ../configure \
+    --enable-shared \
+    --enable-threads=posix \
+    --enable-__cxa_atexit \
+    --enable-clocale=gnu \
+    --disable-multilib \
+    --enable-languages=all && \
+  make && \
+  make install && \
+  cd ../.. && rm -rf gcc-${GCC_VER}
+
+%post
+  export LD_LIBRARY_PATH=/usr/local/lib64 && \
+  export PATH=/usr/local/bin:$PATH && \
+  CMAKE_VER=3.14.2 && \
+  CMAKE_VER_SHORT=$(echo ${CMAKE_VER} | cut -d. -f1,2) && \
+  cd /usr/local/src && \
+  wget https://cmake.org/files/v${CMAKE_VER_SHORT}/cmake-${CMAKE_VER}.tar.gz && \
+  tar xvf cmake-${CMAKE_VER}.tar.gz && \
+  cd cmake-${CMAKE_VER} && \
+  ./bootstrap && \
+  make && \
+  make install && \
+  cd .. && rm -rf cmake-${CMAKE_VER}
+
+%post
+  export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64 && \
+  export PATH=/usr/local/bin:$PATH && \
+  BOOST_VER=1.71.0 && \
+  cd /usr/local/src && \
+  wget https://dl.bintray.com/boostorg/release/${BOOST_VER}/source/boost_${BOOST_VER//./_}_rc2.tar.gz && \
+  tar xvf boost_${BOOST_VER//./_}_rc2.tar.gz && \
+  cd boost_${BOOST_VER//./_} && \
+  ./bootstrap.sh --prefix=/usr/local/ && \
+  ./b2 install && \
+  cd .. && rm -rf boost_${BOOST_VER//./_}
+
+%post
+  export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64 && \
+  export PATH=/usr/local/bin:$PATH && \
+  cd /usr/local/src && \
+  git clone https://github.com/hmdlab/RaptRanker.git && \
+  cd RaptRanker && \
+  mkdir build && \
+  cd build && cmake .. && \
+  make && \
+  cd .. && mv bin/RaptRanker /usr/local/bin && \
+  cd .. && rm -rf RaptRanker

@@ -1,0 +1,60 @@
+Bootstrap: shub
+From: ebothmann/sherpa-singularity:mceg_centos6
+
+
+%help
+A Singularity file to define an image for running the Sherpa mcatnlo-qed branch
+including support for FastJet, HepMC2, LHAPDF, Rivet, OpenLoops and BlackHat.
+
+
+%labels
+    Maintainer Enrico Bothmann
+    Version v0.1
+
+
+%runscript
+    Sherpa "$@"
+
+
+%files
+    enable_OpenMPI
+
+
+%post
+    echo Installing yum dependencies ...
+    yum install -y texinfo libtool
+
+    # set up build environment
+    source /opt/rh/devtoolset-6/enable
+    source /opt/rh/python27/enable
+    source /enable_OpenMPI
+    export PATH="/usr/local/bin:$PATH"  # such that the custom autoconf is found first
+
+    echo Installing Sherpa
+    mkdir /scratch
+    cd /scratch
+    git clone --branch tmp-cherrypick-ewvirt-into-master https://gitlab.com/sherpa-team/sherpa.git
+    cd sherpa
+    git fetch
+    git checkout 6f621904cd4b448b306b66919bf8b038a15ee44c
+    autoreconf -i
+    ./configure \
+        --prefix=/usr/local \
+        --enable-blackhat=/opt/blackhat-r3095 \
+        --enable-gzip \
+        --enable-hepmc2=/usr/local \
+        --enable-lhapdf=/usr/local \
+        --enable-mpi \
+        --enable-openloops=/opt/OpenLoops-2.0.0 \
+        --enable-rivet=/usr/local \
+        --with-sqlite3=install \
+        --with-libzip=install \
+        CXXFLAGS="-O3 --std=c++11"
+    make -j
+    make install
+
+    cd /
+    rm -rf /scratch
+    ldconfig
+    yum erase -y texinfo perl-Text-Unidecode perl-libintl
+    yum clean all

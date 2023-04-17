@@ -1,0 +1,49 @@
+BootStrap: docker
+From: jupyter/pyspark-notebook:dc9744740e12
+IncludeCmd: yes
+
+%post
+    # for pdf conversion via nbconvert
+    apt-get install -y --no-install-recommends \
+        texlive-xetex texlive-fonts-recommended texlive-generic-recommended
+    rm -rf /var/lib/apt/lists/*
+
+    /opt/conda/bin/pip install --no-cache-dir \
+        ipykernel \
+        nltk \
+        pyarrow \
+        tensorflow==1.15 \
+        tensorboard==1.15 \
+        tensorframes \
+        tensorflowonspark \
+        jieba \
+        sparkdl \
+        requests \
+        h5py \
+        keras==2.1.5 \
+        six \
+        graphframes \
+        requests_oauthlib \
+        folium \
+        shap
+
+    # graphframes patch
+    cd /tmp
+    git clone https://github.com/rsdmse/graphframes-jars.git
+    cd /usr/local/spark/jars
+    mv /tmp/graphframes-jars/*.jar .
+    wget http://dl.bintray.com/spark-packages/maven/graphframes/graphframes/0.6.0-spark2.3-s_2.11/graphframes-0.6.0-spark2.3-s_2.11.jar
+    rm -rf /tmp/graphframes-jars
+
+%help
+This container provides Python 3.7 bindings for DS 5559:
+    * PySpark 2.4.4
+    * Hadoop 2.7
+    * Tensorflow 1.15
+    * Keras 2.1
+
+%environment
+    export LC_ALL=C
+
+%labels
+AUTHOR rs7wz@virginia.edu

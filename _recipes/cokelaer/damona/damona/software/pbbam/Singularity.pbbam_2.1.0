@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: alpine:3.17
+
+
+%post
+  export  VERSION=2.3.0
+
+
+  apk update && apk upgrade && apk add  make bzip2 g++ wget cmake meson boost boost-dev git ncurses-dev bash
+
+  # install samtools
+  export  SAMTOOLS_VERSION=1.15
+  wget https://github.com/samtools/samtools/releases/download/$SAMTOOLS_VERSION/samtools-$SAMTOOLS_VERSION.tar.bz2 \
+    && tar xjf samtools-$SAMTOOLS_VERSION.tar.bz2 \
+    && cd samtools-$SAMTOOLS_VERSION \
+    && ./configure && make && make install && cd -
+  # install htslib
+  #cd samtools-${SAMTOOLS_VERSION}/htslib-${SAMTOOLS_VERSION} && make && make install && cd -
+  rm -rf samtools-${SAMTOOLS_VERSION}
+  rm -f /samtools-${SAMTOOLS_VERSION}.tar.bz2
+
+  wget https://github.com/PacificBiosciences/pbbam/archive/refs/tags/v${VERSION}.tar.gz \
+    && tar xvfz v${VERSION}.tar.gz \
+    && cd pbbam-${VERSION} \
+    && meson setup builddir  \
+    && cd builddir \
+    && meson compile 
+
+
+  export PATH=${PATH}:/pbbam-2.3.0/builddir/tools
+
+%environment
+  export PATH=${PATH}:/pbbam-2.3.0/builddir/tools
+  export LC_ALL=C.UTF-8
+
+

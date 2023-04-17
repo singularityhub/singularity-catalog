@@ -1,0 +1,34 @@
+#albacore in singularity
+
+Bootstrap: docker
+From: ubuntu:16.04
+
+%runscript
+    read_fast5_basecaller.py "$@"
+
+%post
+    apt-get update
+    apt-get -y install wget
+    apt-get -y install sudo
+
+    apt-get update
+    apt-get -y install python3.5
+
+    apt-get -y install python3-setuptools
+    easy_install3 pip
+
+    mkdir -p /albacore/
+    cd /albacore/
+    wget https://mirror.oxfordnanoportal.com/software/analysis/ont_albacore-2.3.3-cp35-cp35m-manylinux1_x86_64.whl
+          
+
+    pip3 install ont_albacore-*.whl\
+    
+    mkdir /groups
+    mkdir /clustertmp
+    mkdir /scratch
+    mkdir /scratch-ii2
+
+%test
+    read_fast5_basecaller.py -h
+    

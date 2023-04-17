@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: metabat/metabat:latest
+
+%post
+	apt-get update && apt-get install -y build-essential \
+	openjdk-8-jre-headless \
+	wget \
+	samtools
+	
+	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+	bash ./Miniconda3-latest-Linux-x86_64.sh -p /miniconda -b  && \
+	rm Miniconda3-latest-Linux-x86_64.sh
+
+%environment
+	PATH="/miniconda/bin:$PATH"
+
+%post
+	conda config --add channels defaults && \
+	conda config --add channels bioconda && \
+	conda config --add channels conda-forge && \
+	conda install sambamba
+	
+	wget https://sourceforge.net/projects/bbmap/files/BBMap_36.49.tar.gz && \
+	tar -xzf BBMap_36.49.tar.gz && \
+	rm BBMap_36.49.tar.gz
+	
+%environment
+	PATH="${PATH}:/bbmap"\
+ 	LC_ALL=C
+
+

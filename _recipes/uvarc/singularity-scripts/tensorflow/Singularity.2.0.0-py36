@@ -1,0 +1,66 @@
+BootStrap: docker
+From: tensorflow/tensorflow:2.0.0-gpu-py3-jupyter
+
+%post
+    apt-get -y update
+
+    # install missing cuda and cudnn packages
+    CUDA_VERSION=10.0.130
+    CUDA_MAJVERSION=`echo $CUDA_VERSION | cut -d '.' -f1`
+    CUDA_MINVERSION=`echo $CUDA_VERSION | cut -d '.' -f2`
+    CUDNN_VERSION=7.6.2.24
+
+    apt-get -y install \
+        libcudnn7-dev=${CUDNN_VERSION}-1+cuda${CUDA_MAJVERSION}.${CUDA_MINVERSION}
+
+    # install other tools and dependencies
+    apt-get -y install --allow-downgrades --no-install-recommends \
+        wget \
+        git \
+        mercurial \
+        subversion \
+        vim \
+        nano \
+        libxext6 \
+        libsm6 \
+        libssl-dev \
+        libxrender1 \
+        libboost-all-dev
+
+    pip install --upgrade \
+        pip \
+        setuptools \
+        future \
+        pydot
+
+    # install packages
+    pip install \
+        keras-vis==0.4 \
+        tflearn==0.3.2 \
+        pandas==0.25 \
+        scikit-learn==0.22.1 \
+        opencv-python==4.1.2.30
+
+%runscript
+    exec python $@
+
+%help
+This container provides the Python 3.6 bindings for:
+    * Tensorflow 2.0.0 with Keras implementation
+    * Keras Visualization Toolkit 0.4
+    * tflearn 0.3.2
+    * scikit-learn 0.22.1
+    * Pandas 0.25.0
+    * OpenCV 4.1.2.30
+    * CUDA 10.0.130
+    * CuDNN 7.6.2.24
+
+%environment
+    export CUDA_HOME="/usr/local/cuda"
+    export CPATH="$CUDA_HOME/include:$CPATH"
+    export LD_LIBRARY_PATH="/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+    export PATH="/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
+    export LC_ALL=C
+
+%labels
+AUTHOR rs7wz@virginia.edu

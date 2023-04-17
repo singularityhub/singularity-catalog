@@ -1,0 +1,54 @@
+Bootstrap: docker
+From: alpine:3.17
+
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    apk update
+    apk add unzip
+
+    apk add ca-certificates
+    update-ca-certificates
+    apk add --update --no-cache ncurses --force-non-repository
+
+    apk add --no-cache wget g++ make zlib-dev bzip2 bzip2-dev patch
+
+    # get archive in the build/ directory
+    export BWA_VERSION=0.7.17
+    wget https://github.com/lh3/bwa/releases/download/v${BWA_VERSION}/bwa-${BWA_VERSION}.tar.bz2; 
+
+    tar xjvf bwa-${BWA_VERSION}.tar.bz2
+    cd /bwa-${BWA_VERSION} 
+
+    cat > Makefile.patch << EOL
+--- Makefile.orig	2021-05-18 11:19:23.819963543 +0200
++++ Makefile	2021-05-18 11:19:45.080303226 +0200
+@@ -1,6 +1,6 @@
+ CC=			gcc
+ #CC=			clang --analyze
+-CFLAGS=		-g -Wall -Wno-unused-function -O2
++CFLAGS=		-g -Wall -Wno-unused-function -O2 -fcommon
+ WRAP_MALLOC=-DUSE_MALLOC_WRAPPERS
+ AR=			ar
+ DFLAGS=		-DHAVE_PTHREAD $(WRAP_MALLOC)
+EOL
+
+    patch -u Makefile -i Makefile.patch
+
+    make
+    cp bwa /usr/local/bin
+
+    rm -rf /bwa-${BWA_VERSION}
+    apk del make  g++
+
+
+%environment
+    export LANG=C.UTF-8
+    export PATH=/opt/igv:$PATH
+
+%runscript
+    exec /usr/bin/samtools "$@"
+

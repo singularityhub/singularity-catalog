@@ -1,0 +1,299 @@
+#
+# In this Singularity recipe, all patterns
+#      @LMOD_PREFIX@
+#      @LMOD_ETC_PREFIX@               (typical: /etc)
+#      @LMOD_CONFIG_PREFIX@
+#      @LMOD_SYSTEM_DEFAULT_MODULES@   (typical: StdEnv)
+#      @LMOD_STANDARD_MODULE@          (typical: StdEnv)
+# should be substituted by the final installation location of Lmod.
+#
+# After this Singularity recipe has run, the container image contains the following
+# files related to Lmod:
+#
+#
+# LUA
+#
+#     @LMOD_PREFIX@/lmod/lua/lua5.4.$(uname -m)
+#     @LMOD_PREFIX@/lmod/lua/luac5.4.$(uname -m)
+#
+#     These are the Lua interpreter for Lmod. They are ELF binaries for the
+#     appropriate architecture, are fully statically linked, and even include
+#     *within themselves* precompiled Lua code for Lmod's dependencies.
+#     These binaries also do not hardcode locations within any filesystem.
+#     As a result, these binaries are freestanding and can be copied freely.
+#
+#     An important limitation, acceptable for the purposes of Lmod, is that
+#     because these are statically-linked musl-libc binaries compiled in
+#     PLAT=posix mode, the dlopen() functionality is disabled and any extensions
+#     must be written in pure Lua or rely on the statically-linked packages.
+#     This is not expected to be a problem for Lmod because it is not
+#     a high-performance program; It's invoked very infrequently and invokes
+#     simple file/string/integer manipulation logic.
+#
+#     The binaries intentionally don't have a common name, such as `lua` or
+#     `lua5.4`, to prevent them from being found and used by common Lua code
+#     should the folder accidentally be added to the PATH. All Lmod scripts
+#     hardcode the path to these binaries within their shebang line.
+#
+# LMOD INITIALIZATION SCRIPTS (z-20)
+#
+#     @LMOD_ETC_PREFIX@/profile.d/z-20-lmod.sh              (for sh,bash,ash,dash,zsh)
+#     @LMOD_ETC_PREFIX@/profile.d/z-20-lmod.csh             (for csh,tcsh)
+#     @LMOD_ETC_PREFIX@/fish/conf.d/z-20-lmod.fish          (for fish)
+#
+#     These files are symlinks into Lmod's installation prefix. They initialize
+#     a few basic variables, most notably MODULEPATH and LMOD_ROOT, and the
+#     shell functions `module` and `ml`.
+#
+# LMOD DEFAULT SETTING SCRIPTS (z-25)
+#
+#     @LMOD_ETC_PREFIX@/profile.d/z-25-lmod.sh              (for sh,bash,ash,dash,zsh)
+#     @LMOD_ETC_PREFIX@/profile.d/z-25-lmod.csh             (for csh,tcsh)
+#     @LMOD_ETC_PREFIX@/fish/conf.d/z-25-lmod.fish          (for fish)
+#
+#     These files set the paths to various configuration files, namely the
+#     environment variables
+#       - LMOD_PACKAGE_PATH (which points to the directory of SitePackage.lua)
+#       - LMOD_RC           (which points to lmodrc.lua)
+#       - LMOD_ADMIN_FILE   (which points to admin.list)
+#     It also sets important defaults, such as
+#       - LMOD_AVAIL_STYLE  (the printout style of `module avail`)
+#             The value of this variable is by default "system", but "grouped"
+#             is far more user-relevant and elegant. Angle brackets surround
+#             the default value.
+#       - LMOD_SYSTEM_DEFAULT_MODULES (the default modules to be loaded)
+#             This is usually "StdEnv", but we set it to "Mila". It will
+#             generally not change, but we allow overriding by the user.
+#
+# LMOD REFRESH SCRIPTS (z-30)
+#
+#     @LMOD_ETC_PREFIX@/profile.d/z-30-lmod.sh              (for sh,bash,ash,dash,zsh)
+#     @LMOD_ETC_PREFIX@/profile.d/z-30-lmod.csh             (for csh,tcsh)
+#     @LMOD_ETC_PREFIX@/fish/conf.d/z-30-lmod.fish          (for fish)
+#
+#     These files either perform an initial load/restore of all modules, or a
+#     refresh if required (on some shells, functions cannot be exported, so
+#     they must be refreshed when a subshell is created).
+#
+# LMOD HOME DIR SCRIPTS (z-35)
+#
+#     @LMOD_ETC_PREFIX@/profile.d/z-35-lmod.sh              (for sh,bash,ash,dash,zsh)
+#     @LMOD_ETC_PREFIX@/profile.d/z-35-lmod.csh             (for csh,tcsh)
+#     @LMOD_ETC_PREFIX@/fish/conf.d/z-35-lmod.fish          (for fish)
+#
+#     These files add ~/.modulefiles to MODULEPATH if and only if it exists.
+#     This allows users to put their modules in a hidden subdirectory of
+#     their home folder and forget about it. They may also share that folder
+#     with others.
+#
+# LMOD CONFIGURATION FILES
+#
+
+
+
+
+Bootstrap: localimage
+From: Lmod-lua.sif
+Stage: build
+
+
+%post
+pushd /opt
+UNAMEM=$(uname -m)
+LMOD_CONFIG_PREFIX="@LMOD_CONFIG_PREFIX@"
+LMOD_PREFIX="@LMOD_PREFIX@"
+LMOD_ROOT="${LMOD_PREFIX}/lmod"
+LUA_ROOT="${LMOD_ROOT}/lua"
+
+
+#
+# Install Lua to its final location.
+#
+mkdir -p "${LUA_ROOT}"
+cp -a  /usr/bin/lua                 "${LUA_ROOT}/lua${LUA_MVER}.${UNAMEM}"
+cp -a  /usr/bin/luac                "${LUA_ROOT}/luac${LUA_MVER}.${UNAMEM}"
+
+
+#
+# Prepare and install Lmod to its final location.
+#
+# The environment variables LD_LIBRARY_PATH and LD_PRELOAD are unset because
+# the installation script records these, strangely enough, and within a
+# Singularity %post section these variables contain "magic" directories proper
+# to Singularity itself.
+#
+pushd Lmod
+env -u LD_LIBRARY_PATH -u LD_PRELOAD \
+./configure --prefix="${LMOD_PREFIX}" \
+            --with-lua="${LUA_ROOT}/lua${LUA_MVER}.${UNAMEM}" \
+            --with-luac="${LUA_ROOT}/luac${LUA_MVER}.${UNAMEM}" \
+            --with-tcl=no \
+            --without-module-root-path \
+            --with-ModulePathInit="${LMOD_CONFIG_PREFIX}/modulespath.${UNAMEM}" \
+            --with-shortTime=3600 \
+            --with-availExtensions=yes \
+            --with-caseIndependentSorting=yes \
+            --with-colorize=yes \
+            --with-useDotFiles=yes
+make install &> /dev/null
+popd
+
+
+
+
+#
+# Final container, without dev crap.
+#
+Bootstrap: localimage
+From: Lmod-alpine.sif
+Stage: final
+
+
+%files from build
+@LMOD_PREFIX@/.    @LMOD_PREFIX@/.
+
+%files
+config/.           @LMOD_CONFIG_PREFIX@/.
+
+
+%environment
+#
+# Defeat Singularity's imposition of the --norc flag when Bash is invoked.
+#
+# Instead impose the -l (--login) flag, which forces a read of
+# /etc/profile, which does exist and sources the scripts we
+# need it to.
+#
+# Inspired from https://github.com/hpcng/singularity/issues/5541#issuecomment-683905623
+#
+case "${0##*/}" in
+shell)
+    if [ "${SINGULARITY_SHELL:-}" = "/bin/bash" ]; then
+        set -- -l
+    elif test -z "${SINGULARITY_SHELL:-}"; then
+        export SINGULARITY_SHELL=/bin/bash
+        set -- -l
+    fi
+    ;;
+esac
+
+
+%post
+#
+# Symlinks don't copy properly from stage to stage using %files.
+# Instead materialize them here in %post at the last minute.
+#
+YEAR=$(date +"%Y")
+UNAMEM=$(uname -m)
+LMOD_PREFIX="@LMOD_PREFIX@"
+LMOD_ETC_PREFIX="@LMOD_ETC_PREFIX@"
+LMOD_CONFIG_PREFIX="@LMOD_CONFIG_PREFIX@"
+
+
+mkdir -p "${LMOD_ETC_PREFIX}/profile.d"
+mkdir -p "${LMOD_ETC_PREFIX}/fish/conf.d"
+
+
+ln -sf "${LMOD_PREFIX}/lmod/lmod/init/profile"      "${LMOD_ETC_PREFIX}/profile.d/z-20-lmod.sh"
+ln -sf "${LMOD_PREFIX}/lmod/lmod/init/cshrc"        "${LMOD_ETC_PREFIX}/profile.d/z-20-lmod.csh"
+ln -sf "${LMOD_PREFIX}/lmod/lmod/init/profile.fish" "${LMOD_ETC_PREFIX}/fish/conf.d/z-20-lmod.fish"
+
+
+cat <<-"EOF" > "${LMOD_ETC_PREFIX}/profile.d/z-25-lmod.sh"
+	export  LMOD_PACKAGE_PATH="@LMOD_CONFIG_PREFIX@"
+	export  LMOD_RC="$LMOD_PACKAGE_PATH/lmodrc.lua"
+	export  LMOD_ADMIN_FILE="$LMOD_PACKAGE_PATH/admin.list"
+	export  LMOD_AVAIL_STYLE=${LMOD_AVAIL_STYLE:-"system:<grouped>"}
+	export  LMOD_SYSTEM_DEFAULT_MODULES=${LMOD_SYSTEM_DEFAULT_MODULES:-"@LMOD_SYSTEM_DEFAULT_MODULES@"}
+EOF
+cat <<-"EOF" > "${LMOD_ETC_PREFIX}/profile.d/z-25-lmod.csh"
+	setenv  LMOD_PACKAGE_PATH  "@LMOD_CONFIG_PREFIX@"
+	setenv  LMOD_RC            "$LMOD_PACKAGE_PATH/lmodrc.lua"
+	setenv  LMOD_ADMIN_FILE    "$LMOD_PACKAGE_PATH/admin.list"
+	if ( ! $?LMOD_AVAIL_STYLE ) then
+	    setenv  LMOD_AVAIL_STYLE   "system:<grouped>"
+	endif
+	if ( ! $?LMOD_SYSTEM_DEFAULT_MODULES ) then
+	    setenv  LMOD_SYSTEM_DEFAULT_MODULES   "@LMOD_SYSTEM_DEFAULT_MODULES@"
+	endif
+EOF
+cat <<-"EOF" > "${LMOD_ETC_PREFIX}/fish/conf.d/z-25-lmod.fish"
+	set -gx LMOD_PACKAGE_PATH  "@LMOD_CONFIG_PREFIX@"
+	set -gx LMOD_RC            "$LMOD_PACKAGE_PATH/lmodrc.lua"
+	set -gx LMOD_ADMIN_FILE    "$LMOD_PACKAGE_PATH/admin.list"
+	if test -z "$LMOD_AVAIL_STYLE"
+	    set -gx LMOD_AVAIL_STYLE   "system:<grouped>"
+	end
+	if test -z "$LMOD_SYSTEM_DEFAULT_MODULES"
+	    set -gx LMOD_SYSTEM_DEFAULT_MODULES   "@LMOD_SYSTEM_DEFAULT_MODULES@"
+	end
+EOF
+
+
+cat <<-"EOF" > "${LMOD_ETC_PREFIX}/profile.d/z-30-lmod.sh"
+	if [[ -z "$__Init_Default_Modules" ]]; then
+	    export __Init_Default_Modules=1
+	    
+	    #
+	    # Carry out module restore operation.
+	    #
+	    # Per https://lmod.readthedocs.io/en/latest/070_standard_modules.html, the flag
+	    # --no_redirect is recommended because scp craps out when text is printed on
+	    # stdout in /etc/profile.
+	    #
+	    # The Compute Canada folks recommend switching here on interactive shells.
+	    # If shell flags $- have an "i" (interactive) in them, noisily restore.
+	    #
+	    if [[ $- == *i* ]]; then
+	        module    --initial_load --no_redirect restore
+	    else
+	        module -q --initial_load --no_redirect restore
+	    fi
+	else
+	    module refresh
+	fi
+EOF
+cat <<-"EOF" > "${LMOD_ETC_PREFIX}/profile.d/z-30-lmod.csh"
+	if ( ! $?__Init_Default_Modules )  then
+	    setenv __Init_Default_Modules 1
+	    module -q --initial_load --no_redirect restore
+	else
+	    module refresh
+	endif
+EOF
+cat <<-"EOF" > "${LMOD_ETC_PREFIX}/fish/conf.d/z-30-lmod.fish"
+	if test -z "$?__Init_Default_Modules"
+	    set -gx __Init_Default_Modules 1
+	    module -q --initial_load --no_redirect restore
+	else
+	    module refresh
+	end
+EOF
+
+
+cat <<-"EOF" > "${LMOD_ETC_PREFIX}/profile.d/z-35-lmod.sh"
+	if [[ -d "$HOME/.modulefiles/" ]]; then
+	    module -q use --priority 100 "$HOME/.modulefiles/"
+	fi
+EOF
+cat <<-"EOF" > "${LMOD_ETC_PREFIX}/profile.d/z-35-lmod.csh"
+	if ( -d "$HOME/.modulefiles/" ) then
+	    module -q use --priority 100 "$HOME/.modulefiles/"
+	endif
+EOF
+cat <<-"EOF" > "${LMOD_ETC_PREFIX}/fish/conf.d/z-35-lmod.fish"
+	if test -d "$HOME/.modulefiles/"
+	    module -q use --priority 100 "$HOME/.modulefiles/"
+	end
+EOF
+
+
+mkdir -p          "@LMOD_CONFIG_PREFIX@/modulefiles/Core"
+mkdir -p          "@LMOD_CONFIG_PREFIX@/modulefiles/Core.${UNAMEM}/@LMOD_STANDARD_MODULE@"
+ln -s ${YEAR}.lua "@LMOD_CONFIG_PREFIX@/modulefiles/Core.${UNAMEM}/@LMOD_STANDARD_MODULE@/default"
+cat <<"EOF" >     "@LMOD_CONFIG_PREFIX@/modulefiles/Core.${UNAMEM}/@LMOD_STANDARD_MODULE@/${YEAR}.lua"
+add_property("lmod","sticky")
+EOF
+echo -n ""                                             >  "@LMOD_CONFIG_PREFIX@/modulespath.${UNAMEM}"
+echo "@LMOD_CONFIG_PREFIX@/modulefiles/Core.${UNAMEM}" >> "@LMOD_CONFIG_PREFIX@/modulespath.${UNAMEM}"
+echo "@LMOD_CONFIG_PREFIX@/modulefiles/Core"           >> "@LMOD_CONFIG_PREFIX@/modulespath.${UNAMEM}"

@@ -1,0 +1,73 @@
+# The following header has been based on instructions in
+# https://singularity.lbl.gov/build-docker-module
+Bootstrap: docker
+From: centos:6
+
+%help
+A Singularity file to define an image that includes FastJet, HepMC2,
+YODA and Rivet. This serves as a base image for both the Sherpa
+images and the Plotting image in this repo, since they both depend on
+Rivet.
+
+
+%labels
+    Maintainer Enrico Bothmann
+    Version v0.1
+
+
+%environment
+    source /opt/rh/devtoolset-6/enable
+    source /opt/rh/python27/enable
+    . /usr/local/rivetenv.sh
+
+
+%runscript
+    rivet "$@"
+
+
+%files
+    rivet-bootstrap
+    install_Rivet
+    HepMCReader.cc
+    install_HepMCReader
+
+
+%post
+    echo Installing yum dependencies ...
+    yum -y install \
+        centos-release-scl \
+        git \
+        gsl-devel \
+        openssl-devel \
+        python-devel \
+        wget \
+        which \
+        zlib-devel
+    # SCL installs need to be done separately from installing
+    # centos-release-scl to work properly
+    yum -y install devtoolset-6 python27  
+    source /opt/rh/devtoolset-6/enable  # needed downstream for OpenLoops
+    source /opt/rh/python27/enable  # at least needed for YODA
+
+    echo Bootstrapping Rivet, FastJet, YODA and HepMC
+    mkdir -p /scratch/rivet
+    cd /scratch/rivet
+    mv /rivet-bootstrap .
+    chmod +x /install_Rivet
+    /install_Rivet
+
+    echo Installing HepMCReader
+    mkdir -p /scratch/hepmcreader
+    cd /scratch/hepmcreader
+    mv /HepMCReader.cc .
+    chmod +x /install_HepMCReader
+    /install_HepMCReader
+
+    cd /
+    rm -rf /scratch
+    rm install_Rivet
+    rm install_HepMCReader
+
+    echo Clean up
+    ldconfig
+    yum clean all

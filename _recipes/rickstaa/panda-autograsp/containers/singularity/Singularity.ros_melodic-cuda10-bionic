@@ -1,0 +1,207 @@
+## Ros melodic container for the panda-autograsp package
+# NOTE: This container is for Nvidia graphics card. A amd version
+# Will be released as soon singularity support is added.
+
+Bootstrap: docker
+From: nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
+
+%help
+    A HPC Singularity container containing the following packages:
+        - ROS melodic
+        - moveit
+        - tensorflow_gpu
+        - opencv2
+        - miniconda3
+        - CUDA 10
+        - CUDNN 7
+
+    Container aliases:
+        - rsource:  Source the ROS melodic setup file
+        - rossu:    Source a setup.bash file in ./devel/setup.bash
+        - agrasp:   Activate the autograsp conda enviroment
+        - dgrasp:   Deactivate autograsp conda enviroment
+        - dconda:   Deactivate conda enviroment
+        - pbuild:   Panda autograsp build build command.
+
+    For more information see https://rickstaa.github.io/panda-autograsp/.
+%labels
+    Maintainer: Rick Staa
+    Github: https://github.com/rickstaa
+    Version: v0.0.5
+    Type: Private
+
+%environment
+    # Set language options
+    LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+    # Set ROS distro var
+    export ROS_DISTRO=melodic
+
+    # Cuda samples env var
+    export NVCUDASAMPLES_ROOT=/opt/NVIDIA_CUDA-10.0_Samples
+
+    # Libfreenect2 conf env var
+    export LIBFREENECT2_INSTALL_PREFIX=/opt/freenect2/
+
+    # Freenect2 lib env var
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/freenect2/lib
+%post
+
+    # Set TZDATA region
+    echo 'Etc/UTC' > /etc/timezone
+    ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime
+
+    # Install system package dependencies
+    apt update --fix-missing
+
+    #  Install additional system packages
+    apt install -q -y \
+        vim \
+        git \
+        bash-completion \
+        htop \
+        wget \
+        lsb-release \
+        doxygen
+
+    # Add container resources to the container
+    bash -c "cd / \
+        && git clone https://github.com/rickstaa/deep_robotics_singularity_recipes.git \
+        && cp ./deep_robotics_singularity_recipes/resources/.singularity_bashrc /.singularity_bashrc \
+        && cp ./deep_robotics_singularity_recipes/resources/.conda_init /.conda_init \
+        && cp ./deep_robotics_singularity_recipes/resources/welcome_msgs/panda_autograsp-ros_melodic-cuda10-bionic.txt /.welcome_msg \
+        && cp ./deep_robotics_singularity_recipes/resources/bash_aliases/.singularity_bash_aliases /.singularity_bash_aliases \
+        && cp ./deep_robotics_singularity_recipes/resources/bash_aliases/panda_autograsp_aliases.txt /container_aliases.txt \
+        && sed -e \"s/#_CONTAINER_ALIASES/\$(</container_aliases.txt sed -e 's/[\&/]/\\\&/g' -e 's/$/\\\n/' | tr -d '\n')/g\" -i .singularity_bash_aliases \
+        && rm /container_aliases.txt \
+        && rm -rf /deep_robotics_singularity_recipes \
+        && git clone https://github.com/rickstaa/.ros_conda_wrapper.git \
+        && cp ./.ros_conda_wrapper/ros_conda_wrapper_rc \.ros_conda_wrapper_rc \
+        && rm -rf /.ros_conda_wrapper"
+
+    # setup ROS keys and sources.list
+    echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list
+    apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+
+    # Install ROS melodic desktop full
+    apt update
+    apt install -q -y ros-melodic-desktop-full
+
+    # Initiate and update rosdep repository
+    apt install python-rosdep
+    rosdep init
+    rosdep update
+
+    # Install ROS dependencies for building packages
+    apt install -y -q \
+        cmake \
+        pkg-config \
+        python-rosinstall \
+        python-rosinstall-generator \
+        python-wstool build-essential \
+        ros-melodic-catkin \
+        python-catkin-tools
+
+    # Install moveit
+    sudo apt-get install -y -q \
+        ros-melodic-moveit
+
+    # Download cuda10.0 samples and set cmake variables
+    bash -c "cd /opt \
+        && git clone https://github.com/NVIDIA/cuda-samples \
+        && mv cuda-samples NVIDIA_CUDA-10.0_Samples \
+        && cd NVIDIA_CUDA-10.0_Samples \
+        && mv Samples samples \
+        && mv Common common \
+        && mkdir inc \
+        && mv common/* inc \
+        && mv inc common/inc \
+        && git checkout v10.0"
+    export NVCUDASAMPLES_ROOT=/opt/NVIDIA_CUDA-10.0_Samples
+
+    # Install kinect2.0 Library
+    apt update
+    apt install -q -y \
+        libusb-1.0-0-dev \
+        libturbojpeg0-dev \
+        libglfw3-dev \
+        libopenni2-dev \
+        openni2-utils
+    bash -c "cd /opt \
+                && git clone https://github.com/OpenKinect/libfreenect2.git \
+                && cd libfreenect2 \
+                && mkdir -p build \
+                && cd build \
+                && cmake .. -DCMAKE_INSTALL_PREFIX=/opt/freenect2 \
+                && make \
+                && make install \
+                && mkdir -p /etc/udev/rules.d/ \
+                && cp ../platform/linux/udev/90-kinect2.rules /etc/udev/rules.d/ \
+                && make install-openni2"
+
+    # Install libfranka from source
+    apt update
+    apt install -q -y \
+        libpoco-dev \
+        libeigen3-dev
+    bash -c "cd / \
+        && apt remove -y \"*libfranka*\" \
+        && git clone --recursive https://github.com/frankaemika/libfranka.git \
+        && cd libfranka \
+        && mkdir build \
+        && cd build \
+        && cmake -DCMAKE_BUILD_TYPE=Release .. \
+        && cmake --build ."
+
+    # Install additional panda_autograsp system dependencies
+    apt install -q -y \
+       ros-melodic-controller-manager* \
+       ros-melodic-effort-controllers \
+       ros-melodic-joint-trajectory-controller \
+       ros-melodic-joint-state-controller*
+
+    ## Install pip (`apt-get install python-pip` causes trouble w/ networkx).
+    curl -O https://bootstrap.pypa.io/get-pip.py && \
+	    python get-pip.py && \
+        rm get-pip.py
+    curl -O https://bootstrap.pypa.io/get-pip.py && \
+	    python3 get-pip.py && \
+        rm get-pip.py
+
+    # Install miniconda3
+    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /miniconda.sh
+    /bin/bash /miniconda.sh -b -p /opt/conda
+    rm /miniconda.sh
+    . /opt/conda/etc/profile.d/conda.sh
+    conda clean -y --all
+    conda install -q -y python=2.7
+    conda update -y conda
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+    chmod -R a+w /opt/conda # Make env available to all singularity users
+
+    # Add conda enviroment activation command to .singularity_bashrc
+    echo "" >> /.singularity_bashrc
+    echo "## Activate autograsp enviroment" >> /.singularity_bashrc
+    echo "conda activate autograsp" >> /.singularity_bashrc
+
+    # Create autograsp enviroment
+    conda create -q -y -n autograsp python=2.7
+    conda activate autograsp
+
+    # Install python packages
+    conda install -y tensorflow-gpu
+    conda update --all
+
+    # Upgrade packages and remove unused packages
+    apt upgrade -y -q
+    apt autoremove -y -q
+    apt clean -y -q
+    apt autoclean -y -q
+    rm -rf /var/lib/apt/lists/*
+
+%runscript
+	# Execute the .singularity_bashrc file
+	OCI_CMD='/bin/bash'
+	OCI_ARGS='-rcfile /.singularity_bashrc'
+	SINGULARITY_OCI_RUN="${OCI_CMD} ${OCI_ARGS}"
+	exec $SINGULARITY_OCI_RUN

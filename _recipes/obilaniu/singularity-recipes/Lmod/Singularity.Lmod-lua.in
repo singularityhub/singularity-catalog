@@ -1,0 +1,126 @@
+Bootstrap: localimage
+From: Lmod-dev.sif
+Stage: lua-clean
+
+
+%post
+pushd /opt
+
+
+#
+# Compile "clean" Lua & Luac. Prefix defaults to /usr/local/, which is fine and
+# out of the way.
+#
+pushd lua
+make MYCFLAGS="-ULUA_COMPAT_5_3" PLAT=posix
+make install
+make clean
+popd
+
+
+
+
+#
+# Use the "clean" Luac to compile .lua files to stripped bytecode.
+#
+mkdir -p bytecode/{posix,term}
+pushd lpeg && luac -s -o /opt/bytecode/re re.lua && popd
+pushd luaposix/lib/posix
+for f in *.lua; do
+    luac -s -o /opt/bytecode/posix/"${f%.lua}" "$f"
+done
+popd
+pushd Lmod/pkgs/term/term
+for f in *.lua; do
+    luac -s -o /opt/bytecode/term/"${f%.lua}" "$f"
+done
+popd
+
+
+
+
+Bootstrap: localimage
+From: Lmod-dev.sif
+Stage: lua-dirty
+
+
+%files
+lua-*.patch /opt/
+%files from lua-clean
+/opt/bytecode
+
+
+%post
+pushd /opt
+
+
+#
+# Link the compiled Lua bytecode into an ELF object file via linker magic.
+#
+# The output is an object file lbytecode.o with the following symbols
+# for every filename:
+#
+#     _binary_FILENAME_start
+#     _binary_FILENAME_end
+#     _binary_FILENAME_size
+#
+# Symbols that are not legal within a C identifier, such as "/" and ".", are
+# replaced with "_".
+#
+pushd bytecode
+find * -type f | xargs ld -r -o /opt/lua/src/lbytecode.o -b binary
+objcopy --rename-section .data=.rodata,alloc,load,readonly,data,contents /opt/lua/src/lbytecode.o
+popd
+
+
+#
+# Copy LuaFilesystem, LPeg, LuaPosix and Lmod C source code into Lua source tree.
+#
+cp    luafilesystem/src/lfs.[ch]  lua/src
+cp    lpeg/*.[ch]                 lua/src
+cp -R luaposix/ext                lua/src/luaposix
+cp    Lmod/pkgs/term/core.c       lua/src
+
+
+#
+# Patch Lua for a "dirty" build and execute it. It will include:
+#   - statically-linked LuaFilesystem C code
+#   - statically-linked LPeg C code
+#   - statically-linked LuaPosix C code
+#   - statically-linked Lmod term C code
+#   - statically-linked Lua {re,posix,term} bytecode
+# The build is performed:
+#   - For generic POSIX systems, thus disabling dlopen() and readline() (PLAT=posix)
+#   - Without backwards compatibility support for Lua 5.3 (-ULUA_COMPAT_5_3)
+#   - Without typical Lua/C search paths (-DLUA_PATH_DEFAULT='./?.lua;./?/init.lua',
+#                                         -DLUA_CPATH_DEFAULT='./?.so')
+#   - With small-size flags (-Os -fomit-frame-pointer)
+#   - With base x86-64 instruction set, but tuned to AMD Zen 2 (-march=x86-64 -mtune=znver2)
+#   - With LTO enabled, for a small speed gain and size drop (-flto)
+#   - Fully statically linked (-static-libgcc -static -no-pie)
+# And lastly, we strip the final "/usr/bin/lua" executable.
+#
+pushd lua
+if [ -f /opt/lua-${LUA_VER}.patch ]; then
+    patch -p1 < /opt/lua-${LUA_VER}.patch
+    rm /opt/lua-*.patch
+fi
+make MYCFLAGS='-I. -ULUA_COMPAT_5_3 -DLUA_PATH_DEFAULT="\"./?.lua;./?/init.lua\"" -DLUA_CPATH_DEFAULT="\"./?.so\"" -no-pie -Os -flto -fomit-frame-pointer @LMOD_CFLAGS@' \
+     MYLDFLAGS='-static-libgcc -static -no-pie' \
+     PLAT=posix
+make INSTALL_TOP=/usr install
+make clean
+popd
+strip /usr/bin/lua
+strip /usr/bin/luac
+
+
+
+Bootstrap: localimage
+From: Lmod-dev.sif
+Stage: lua-final
+
+
+%files from lua-dirty
+/usr/bin/lua
+/usr/bin/luac

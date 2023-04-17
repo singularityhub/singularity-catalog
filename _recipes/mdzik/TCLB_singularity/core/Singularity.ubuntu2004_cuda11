@@ -1,0 +1,40 @@
+BootStrap: library
+From: ubuntu:20.04
+
+#debug
+#BootStrap: localimage
+#From: ./test.sif
+
+%post
+    apt-get -y update
+    apt-get -y install wget git software-properties-common 
+    add-apt-repository universe
+    add-apt-repository multiverse
+    add-apt-repository restricted
+    
+    apt-get -y update
+    apt-get -y install openmpi-bin libopenmpi-dev python-numpy python-dev r-base-dev r-recommended libhdf5-openmpi-dev cmake
+
+
+    
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+    mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
+    apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
+    add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
+    apt-get -y update
+    apt-get -y install cuda-minimal-build-11-0 cuda-command-line-tools-11-0
+
+ 
+%environment
+    export LC_ALL=C
+    export PATH=/TCLB:/usr/local/cuda-10.0/bin:$PATH
+    export R_LIBS_USER=/opt/r_libs  
+    export LDFLAGS="-L/usr/lib/x86_64-linux-gnu/hdf5/openmpi/  $LDFLAGS" 
+    export CPPFLAGS="-I /usr/include/hdf5/openmpi $CPPFLAGS"
+    export TSD=/opt/TCLB_STABLE
+
+%runscript
+    echo "Plain environment for TCLB/CUDA run and build"
+
+%labels
+    Author llaniewski , mdzik , and others TCLB.IO

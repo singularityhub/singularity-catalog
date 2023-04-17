@@ -1,0 +1,50 @@
+Bootstrap: shub
+From: ebothmann/sherpa-singularity:mceg
+
+
+%help
+A Singularity file to define an image for running Sherpa master@2dc43a3d
+(called "Asterix" here to aid the memory when having many such images laying
+around) including support for FastJet, HepMC2, LHAPDF, Rivet, OpenLoops and
+BlackHat.
+
+
+%labels
+    Maintainer Enrico Bothmann
+    Version v0.1
+
+
+%runscript
+    Sherpa "$@"
+
+
+%post
+    echo Installing yum dependencies ...
+    yum install -y texinfo
+
+    echo Installing Sherpa
+    mkdir /scratch
+    cd /scratch
+    git clone https://gitlab.com/sherpa-team/sherpa.git
+    cd sherpa
+    git reset --hard 2dc43a3d31fcc821744ed8832bc692acd78dc848
+    autoreconf -i
+    ./configure \
+        --prefix=/usr/local \
+        --enable-analysis \
+        --enable-blackhat=/opt/blackhat-r3095 \
+        --enable-fastjet=/usr/local \
+        --enable-hepmc2=/usr/local \
+        --enable-lhapdf=/usr/local \
+        --enable-openloops=/opt/OpenLoops-1.3.1 \
+        --enable-rivet=/usr/local \
+        --with-libzip=install \
+        CXXFLAGS="-O3"
+    make -j4
+    make install
+
+    cd /
+    rm -rf /scratch
+    ldconfig
+    yum erase -y texinfo perl-Text-Unidecode perl-libintl
+    yum clean all

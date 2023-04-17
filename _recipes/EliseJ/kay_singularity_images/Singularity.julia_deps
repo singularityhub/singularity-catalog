@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%post
+    apt-get update -y
+    
+    apt-get install -y --no-install-recommends \
+        file \
+        hwloc \
+        openssh-client \
+        wget \
+        build-essential libatomic1 python gfortran perl wget m4 cmake pkg-config curl
+    apt-get install -y --no-install-recommends gcc bzip2 make git vim 
+    
+    apt-get install -y libibverbs*
+    rm -rf /var/lib/apt/lists/*
+     
+    curl -O https://bootstrap.pypa.io/get-pip.py && \
+    python get-pip.py && \
+    rm get-pip.py
+%post
+   # Install Open MPI
+   mkdir /tmp/openmpi && \
+   cd /tmp/openmpi && \
+   wget --no-check-certificate https://www.open-mpi.org/software/ompi/v4.0/downloads/openmpi-4.0.0.tar.gz && \
+   tar zxf openmpi-4.0.0.tar.gz && \
+   cd openmpi-4.0.0 && \
+   ./configure --enable-orterun-prefix-by-default --prefix=/tmp/openmpi/build && \
+   make all install && \
+   ldconfig
+%environment
+   export PATH=/tmp/openmpi-4.0.0/build/bin:${PATH}
+   export LD_LIBRARY_PATH=/tmp/openmpi-4.0.0/build/lib:${LD_LIBRARY_PATH}
+   export LIBRARY_PATH=/tmp/openmpi-4.0.0/build/lib:${LIBRARY_PATH}
+   export CPATH=/tmp/openmpi-4.0.0/build/include:${CPATH}
+   export C_INCLUDE_PATH=/tmp/openmpi-4.0.0/build/include:${C_INCLUDE_PATH}
+ 
+   

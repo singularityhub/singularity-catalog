@@ -1,0 +1,79 @@
+BootStrap: docker
+From: ubuntu:22.04
+
+%labels
+MAINTAINER Christoph Blessing <chris24.blessing@gmail.com>
+
+%post
+    apt update
+    DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt install -y tzdata
+    apt install -y software-properties-common
+    add-apt-repository universe
+
+
+
+    apt update && apt install -y \
+        build-essential \
+        git \
+        wget \
+        vim \
+        curl \
+        zip \
+        zlib1g-dev \
+        unzip \
+        pkg-config \
+        libblas-dev \
+        liblapack-dev \
+        python3-tk \
+        python3-wheel \
+        graphviz \
+        libhdf5-dev \
+        python3.10 \
+        python3.10-dev \
+        python3.10-distutils \
+        python3-testresources \
+        swig
+    apt-get clean
+
+    ln -s /usr/bin/python3.10 /usr/local/bin/python
+    ln -s /usr/bin/python3.10 /usr/local/bin/python3
+
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    python3.10 get-pip.py
+    rm get-pip.py
+    python3.10 -m pip --no-cache-dir install --upgrade pip
+
+    python3.10 -m pip --no-cache-dir install \
+        blackcellmagic\
+        pytest \
+        pytest-cov \
+        numpy \
+        matplotlib \
+        scipy \
+        pandas \
+        jupyter \
+        scikit-learn \
+        scikit-image \
+        seaborn \
+        graphviz \
+        gpustat \
+        h5py \
+        gitpython \
+        Pillow==8.0.1 \
+        jupyterlab \
+        datajoint==0.12.7
+    
+    python3.10 -m pip --no-cache-dir  install \
+        torch==1.11.0+cu113 \
+        torchvision==0.12.0+cu113 \
+        torchaudio==0.11.0+cu113 \
+        -f https://download.pytorch.org/whl/cu113/torch_stable.html
+
+%environment
+    export SHELL=/bin/sh
+
+%runscript
+    exec /bin/sh -c "$@"
+
+%startscript
+    jupyter lab

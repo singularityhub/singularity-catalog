@@ -1,0 +1,19 @@
+#slamdunk in singularity
+
+Bootstrap: docker
+From: tobneu/slamdunk
+
+%runscript
+    slamdunk "$@"
+
+%post
+  
+    mkdir /groups
+    mkdir /scratch
+    mkdir /scratch-ii2
+
+%test
+    slamdunk -h
+    
+
+

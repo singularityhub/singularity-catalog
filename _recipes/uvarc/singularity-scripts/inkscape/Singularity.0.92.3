@@ -1,0 +1,36 @@
+BootStrap: docker
+From: ubuntu:xenial
+IncludeCmd: yes
+
+%post
+    apt-get update
+    apt-get -y upgrade
+    apt-get -y install \
+        software-properties-common \
+        libcanberra-gtk-module \
+        packagekit-gtk3-module \
+        python-dbus \
+        python3-dbus
+
+    add-apt-repository ppa:inkscape.dev/stable
+    apt-get update
+
+    # Inkscape
+    apt-get -y install inkscape
+
+    # Pandoc
+    apt-get -y install pandoc
+
+%runscript
+    exec inkscape
+
+%help
+This container provides the following applications:
+    * Inkscape 0.92.3
+    * Pandoc 1.16.0.2
+
+%environment
+    export LC_ALL=en_US.UTF-8
+
+%labels
+    AUTHOR khs3z@virginia.edu

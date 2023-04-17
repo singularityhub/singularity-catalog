@@ -1,0 +1,44 @@
+#graphmap in singularity
+
+Bootstrap: docker
+From: ubuntu:16.04
+
+%runscript
+    samtools "$@"
+
+%post
+    apt-get update
+    apt-get --assume-yes install wget tar
+    apt-get --assume-yes install sudo
+
+    apt-get update
+    apt-get -y install build-essential
+    apt-get -y install zlib1g
+    apt-get -y install cmake
+    apt-get -y install libncurses-dev libbz2-dev liblzma-dev
+    apt-get update
+
+    apt-get -y install git-core   
+    apt-get -y install zlib1g-dev     
+    
+    mkdir -p /Software
+    cd /Software/
+
+    wget https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2
+    tar -xvf samtools-1.9.tar.bz2
+    cd samtools-1.9   
+    ./configure --prefix=/Software/samtools
+    make
+    make install  
+      
+    mkdir /groups
+    mkdir /scratch
+    mkdir /scratch-ii2
+    mkdir /clustertmp
+
+%environment
+    PATH="PATH=/Software/samtools/bin:${PATH}"
+    export $PATH
+
+
+%test

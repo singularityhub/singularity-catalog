@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%labels
+Maintainer Phelelani.Mpangase@wits.ac.za
+    
+%post
+## Updates and essentials
+apt-get update
+apt-get install -y build-essential
+apt-get install -y software-properties-common
+apt-get update
+
+## Other essentials
+apt-get install -y curl libz-dev libbz2-dev liblzma-dev
+
+## Python3
+add-apt-repository -y ppa:deadsnakes/ppa
+apt-get update
+apt-get install -y python3.6 python3.6-dev
+
+ln -sf /usr/bin/python3.6 /usr/bin/python
+ln -sf /usr/bin/python3.6 /usr/bin/python3
+
+## Install SETUP TOOLS and PIP
+cd /opt \
+    && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
+    && python3.6 get-pip.py
+
+## Install HTSeq using PIP
+pip install HTSeq
+
+%environment
+export PYTHONPATH=/usr/local/lib/python3.6/dist-packages

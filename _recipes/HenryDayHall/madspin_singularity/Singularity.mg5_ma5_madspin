@@ -1,0 +1,24 @@
+Bootstrap: shub
+From: oliviermattelaer/singularity-recipe:mg5_ma5_py8
+
+%runscript
+    /usr/mg5amcnlo/bin/mg5_aMC
+
+
+%post
+    # 2HDM_NLO
+    cd /usr/mg5amcnlo/models
+    wget https://feynrules.irmp.ucl.ac.be/raw-attachment/wiki/2HDM/2HDM_NLO.tar.gz
+    tar -xvf 2HDM_NLO.tar.gz
+    rm 2HDM_NLO.tar.gz
+
+    # vi
+    # not working .....
+    #cd /usr
+    #apt-get -y install vim
+    #echo "set text_editor vi;" > cmd.txt
+    #./mg5amcnlo/bin/mg5 cmd.txt
+    
+    # for madspin
+    chmod 777 /usr/mg5amcnlo/input/mg5_configuration.txt
+

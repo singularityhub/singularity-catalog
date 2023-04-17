@@ -1,0 +1,74 @@
+Bootstrap: localimage
+From: Lmod-alpine.sif
+Stage: download
+
+
+%files
+lpeg-*.patch /opt
+
+
+%post
+pushd /opt
+apk add --no-cache git patch
+
+
+#
+# Set version numbers.
+#
+export LUA_VER=5.4.2
+export LUA_MVER=$(echo -n "${LUA_VER}" | awk -F. '{print $1 "." $2}')
+export LFS_VER=1.8.0
+export LPEG_VER=1.0.2
+export LMOD_VER=8.4.23
+echo "export LUA_VER=\"${LUA_VER}\""   >> /opt/env.sh
+echo "export LUA_MVER=\"${LUA_MVER}\"" >> /opt/env.sh
+echo "export LFS_VER=\"${LFS_VER}\""   >> /opt/env.sh
+echo "export LPEG_VER=\"${LPEG_VER}\"" >> /opt/env.sh
+echo "export LMOD_VER=\"${LMOD_VER}\"" >> /opt/env.sh
+
+
+#
+# Download source code.
+#
+wget https://www.lua.org/ftp/lua-${LUA_VER}.tar.gz
+wget http://www.inf.puc-rio.br/~roberto/lpeg/lpeg-${LPEG_VER}.tar.gz
+wget https://github.com/keplerproject/luafilesystem/archive/v${LFS_VER//./_}.tar.gz
+tar -xf lua-${LUA_VER}.tar.gz    && mv lua-${LUA_VER}                lua
+tar -xf lpeg-${LPEG_VER}.tar.gz  && mv lpeg-${LPEG_VER}              lpeg
+tar -xf v${LFS_VER//./_}.tar.gz  && mv luafilesystem-${LFS_VER//./_} luafilesystem
+git clone https://github.com/luaposix/luaposix.git                   luaposix
+git clone https://github.com/TACC/Lmod.git                           Lmod
+pushd Lmod && git checkout ${LMOD_VER} && popd
+
+
+#
+# Patch LPeg because of the incredibly irritating warnings about switch case
+# fall-through it yields when compiled under modern GCCs.
+#
+if [ -f lpeg-${LPEG_VER}.patch ]; then
+  pushd lpeg && patch -p1 < /opt/lpeg-${LPEG_VER}.patch && popd
+  rm lpeg-${LPEG_VER}.patch
+fi
+
+
+#
+# "Patch" LuaPosix by generating its version.lua from its .in file, applying
+# the required substitutions.
+#
+sed -e 's/@package@/luaposix/' \
+    -e 's/@version@/v35.0/' \
+    luaposix/lib/posix/version.lua.in > luaposix/lib/posix/version.lua
+
+
+Bootstrap: localimage
+From: Lmod-alpine.sif
+Stage: final
+
+
+%files from download
+/opt /
+
+
+%post
+cat /opt/env.sh >> $SINGULARITY_ENVIRONMENT
+rm  /opt/env.sh

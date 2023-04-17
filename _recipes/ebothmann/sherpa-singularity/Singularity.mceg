@@ -1,0 +1,45 @@
+Bootstrap: shub
+From: ebothmann/sherpa-singularity:rivet
+
+
+%help
+A Singularity file to define an image that includes all usual dependencies for
+Sherpa, i.e. FastJet, HepMC2, LHAPDF, Rivet, OpenLoops and BlackHat. It is not
+to be used but only serves as a base image for all the Sherpa images.
+
+
+%labels
+    Maintainer Enrico Bothmann
+    Version v0.1
+
+
+%files
+    install_OpenLoops
+    install_LHAPDF
+
+
+%post
+    mkdir -p /scratch
+    cd /scratch
+    chmod +x /install_LHAPDF
+    /install_LHAPDF
+    rm /install_LHAPDF
+
+    openloops_version=2.0.0
+    mkdir -p /opt
+    cd /opt
+    chmod +x /install_OpenLoops
+    /install_OpenLoops "$openloops_version"
+    rm /install_OpenLoops
+
+    echo Installing OpenLoops Drell-Yan process libraries
+    cd "OpenLoops-$openloops_version"
+    ./openloops libinstall ppll ppllj pplljj pplljjj ppvv ppvv_ew ppvvj ppvvj_ew ppll_ew ppllj_ew pplljj_ew pphll pphll2 pphllj pphllj2
+
+    echo Installing prebuilt BlackHat binaries
+    cd /
+    wget https://www.theorie.physik.uni-goettingen.de/~bothmann/blackhat-r3095_binary.tar.gz -O- | tar xz
+
+    cd /
+    rm -rf /scratch
+    ldconfig

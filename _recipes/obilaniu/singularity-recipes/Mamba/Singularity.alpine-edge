@@ -1,0 +1,14 @@
+Bootstrap: library
+From: alpine:latest
+Stage: init
+
+
+%post
+	# First, upgrade to Alpine Edge with the instructions recommended in:
+	#    https://wiki.alpinelinux.org/wiki/Include:Upgrading_to_Edge
+	sed -i -e 's/v[[:digit:]]\..*\//edge\//g' /etc/apk/repositories
+	apk upgrade --update-cache --available
+	
+	
+	# Clean the APK cache.
+	rm -rf /var/cache/apk/*

@@ -1,0 +1,65 @@
+Bootstrap: docker
+From: centos:6
+
+%files
+    hostlibs.txt
+    enable_OpenMPI
+
+%environment 
+    source /opt/rh/devtoolset-6/enable
+    source /enable_OpenMPI
+
+%runscript
+    Sherpa "$@"
+
+%post
+    echo Installing yum dependencies ...
+    yum -y install \
+        gsl-devel \
+        openssl-devel \
+        python-devel \
+        wget \
+        which \
+        zlib-devel \
+        centos-release-scl \
+        devtoolset-6 \
+        devtoolset-6-build \
+        openmpi-1.10-devel \
+        git
+    ldconfig
+    yum clean all
+
+    # set up build environment
+    source /opt/rh/devtoolset-6/enable
+    source /enable_OpenMPI
+
+    #mkdir -p /opt/rh  # so far needed for building, hopefully unnecessary when building internally
+    #mkdir -p /opt/centos  # same?
+
+    # needed for running on cluster
+    mkdir -p /opt/torque
+    mkdir -p /etc/libibverbs.d
+    mkdir -p /tmp_local
+
+    echo Seting up host library linking
+    mkdir -p /hostlibs/lib64
+    mkdir -p /hostlibs/usr/lib64
+    while read p; do
+        [[ -f "$p" ]] || ln -fs /hostlibs"$p" "$p"
+    done </hostlibs.txt
+
+    echo Installing Sherpa
+    mkdir /scratch
+    cd /scratch
+    wget https://sherpa.hepforge.org/downloads/?f=SHERPA-MC-2.2.6.tar.gz -O- | tar xz
+    cd SHERPA-MC-2.2.6
+    ./configure \
+        --prefix=/usr/local \
+        --with-sqlite3=install \
+        --enable-mpi
+    make -j && make install
+    exit 0
+
+    cd /
+    rm -rf /scratch
+    ldconfig

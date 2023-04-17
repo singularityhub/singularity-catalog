@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: alpine:3.17
+
+
+%post
+  export  VERSION=6.4.0
+
+
+  apk update && apk upgrade && apk add  bzip2 wget   bash
+
+  cd /usr/local/bin
+  wget https://github.com/PacificBiosciences/ccs/releases/download/v${VERSION}/ccs.tar.gz \
+    && tar xvfz ccs.tar.gz \
+    && rm -f ccs.tar.gz
+
+%environment
+  export LC_ALL=C.UTF-8
+
+

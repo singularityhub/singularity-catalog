@@ -1,0 +1,148 @@
+BootStrap: docker
+From: tensorflow/tensorflow:1.12.3-gpu-py3
+
+%post
+    apt-get -y update --fix-missing
+
+    # install missing cuda and cudnn packages
+    CUDA_VERSION=9.0.176
+    CUDA_MAJVERSION=`echo $CUDA_VERSION | cut -d '.' -f1`
+    CUDA_MINVERSION=`echo $CUDA_VERSION | cut -d '.' -f2`
+    CUDNN_VERSION=7.2.1.38
+
+    apt-get -y install \
+        libcudnn7-dev=${CUDNN_VERSION}-1+cuda${CUDA_MAJVERSION}.${CUDA_MINVERSION}
+
+    # install other tools and dependencies
+    apt-get -y install --allow-downgrades --no-install-recommends \
+        dbus \
+        wget \
+        git \
+        mercurial \
+        subversion \
+        vim \
+        nano \
+        libglib2.0-0 \
+        libssl-dev \
+        libxext6 \
+        libsm6 \
+        libxrender1 \
+        libboost-all-dev
+
+    apt-get clean
+    rm -rf /var/lib/apt/lists/*
+
+    rm /etc/machine-id
+    dbus-uuidgen --ensure=/etc/machine-id
+ 
+    # required for LightGBM
+    mkdir -p /etc/OpenCL/vendors && \
+    echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd
+
+    # install cmake (xgboost requires >=3.12, but apt-get installs 3.5)
+    wget https://github.com/Kitware/CMake/releases/download/v3.16.3/cmake-3.16.3.tar.gz
+    tar zxf cmake-3.16.3.tar.gz
+    cd cmake-3.16.3
+    ./bootstrap
+    make
+    make install
+    cd ..
+    rm cmake-3.16.3.tar.gz
+    
+    # install Anaconda
+    wget --quiet https://repo.continuum.io/archive/Anaconda3-5.2.0-Linux-x86_64.sh -O ~/anaconda.sh
+    /bin/bash ~/anaconda.sh -b -p /opt/conda
+    rm ~/anaconda.sh
+
+    export CUDA_HOME="/usr/local/cuda"
+    export CPATH="$CUDA_HOME/include:$CPATH"
+    export LD_LIBRARY_PATH="$CUDA_HOME/lib64:$CUDA_HOME/extras/CUPTI/lib64:$LD_LIBRARY_PATH"
+    export PATH="$CUDA_HOME/bin:/opt/conda/bin:$PATH"
+    export BOOST_ROOT=/usr/local/boost
+
+    # upgrade python
+    conda install python=3.6
+
+    conda install -c pytorch \
+        pytorch=1.0 cudatoolkit=${CUDA_MAJVERSION}.${CUDA_MINVERSION} torchvision 
+
+    conda install -c conda-forge\
+        pandas \
+        scikit-learn \
+        opencv
+
+    conda clean --index-cache --tarballs --packages --yes
+
+    pip install --upgrade \
+        pip \
+        setuptools \
+        future \
+        pydot
+
+    # install packages
+    pip install \
+        keras-vis==0.4 \
+        tflearn==0.3.2 \
+
+    # install xgboost
+    cd /opt
+    git clone --recursive https://github.com/dmlc/xgboost
+    cd xgboost
+    mkdir build
+    cd build
+    cmake .. -DUSE_CUDA=ON
+    make -j4 
+
+    cd ../python-package
+    python setup.py install
+
+    # install lightgbm
+    cd /opt
+    git clone --recursive https://github.com/Microsoft/LightGBM
+    cd LightGBM
+    mkdir build
+    cd build
+    cmake -DUSE_GPU=1 -DOpenCL_LIBRARY=$CUDA_HOME/lib64/libOpenCL.so -DOpenCL_INCLUDE_DIR=$CUDA_HOME/include/ ..
+    make -j4
+
+    cd ../python-package
+    python setup.py install --gpu --precompile
+
+%runscript
+    exec python $@
+
+%help
+This container is backed by Anaconda version 5.2.0 and provides the Python 3.6 bindings for:
+    * Tensorflow 1.12.3 with Keras implementation
+    * Keras Visualization Toolkit
+    * PyTorch 1.0
+    * XGBoost
+    * LightGBM
+    * OpenCV
+    * CUDA 9.0
+    * CuDNN 7.2.1.38
+
+
+%environment
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# This sets global environment variables for anything run within the container
+    export CUDA_HOME="/usr/local/cuda"
+    export CPATH="$CUDA_HOME/include:$CPATH"
+    export LD_LIBRARY_PATH="$CUDA_HOME/lib64:$CUDA_HOME/extras/CUPTI/lib64:$LD_LIBRARY_PATH"
+    export PATH="$CUDA_HOME/bin:$PATH"
+
+    export PATH="/opt/conda/bin:$PATH"
+    unset CONDA_DEFAULT_ENV
+    export ANACONDA_HOME=/opt/conda
+    
+    XGBOOSTROOT=/opt/xgboost
+    export CPATH="$XGBOOSTROOT/include:$CPATH"
+    export LD_LIBRARY_PATH="$XGBOOSTROOT/lib:$LD_LIBRARY_PATH"
+    export PATH="$XGBOOSTROOT:$PATH"
+    export PYTHONPATH=$XGBOOSTROOT/python-package:$PYTHONPATH
+
+    LIGHTGBMROOT=/opt/LightGBM
+    export CPATH="$LIGHTGBMROOT/include:$CPATH"
+    export LD_LIBRARY_PATH="$LIGHTGBMROOT:$LD_LIBRARY_PATH"
+    export PATH="$LIGHTGBMROOT:$PATH"
+    export PYTHONPATH=$LIGHTGBMROOT/python-package:$PYTHONPATH

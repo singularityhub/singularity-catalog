@@ -1,0 +1,56 @@
+BootStrap: docker
+From: pytorch/pytorch:1.4-cuda10.1-cudnn7-devel
+
+%post
+    # openslide and OpenCV dependencies
+    apt-get update && apt-get -y --no-install-recommends --fix-missing install \
+        openslide-tools python3-openslide \
+        libsm6 libxext6 libxrender-dev
+    apt-get clean
+
+    # pytorch dependency (sox) and other packages
+    /opt/conda/bin/conda install -c conda-forge \
+        sox \
+        scipy matplotlib pandas==1.0.1 \
+        ipykernel ipywidgets
+
+    # official pytorch addon packages
+    /opt/conda/bin/conda install -c pytorch -c gpytorch \
+        torchaudio==0.4.0 torchtext==0.4.0 botorch==0.2.2 ignite==0.3.0
+
+    /opt/conda/bin/conda clean --all
+
+    /opt/conda/bin/python -m pip install \
+        pytorch-lightning==0.7.5 \
+        scikit-learn==0.22.1 scikit-image==0.16.2 openslide-python==1.1.1 opencv-python==4.2.0.34
+
+%runscript
+    exec python $@
+
+%help
+This container is backed by Anaconda version 2019.10 and provides the Python 3.7 bindings for:
+    * PyTorch 1.4.0 
+    * TorchVision 0.5.0
+    * TorchText 0.4.0
+    * Torchaudio 0.4.0
+    * BoTorch 0.2.2
+    * Ignite 0.3.0
+    * PyTorch Lightning 0.7.5
+    * OpenSlide 3.4.1
+    * OpenCV 4.2.0.34
+    * Scikit-learn 0.22.1
+    * Scikit-image 0.16.2
+    * Pandas 1.0.1
+    * CUDA 10.1.243
+    * CuDNN 7.6.5.32
+
+%environment
+    export CUDA_HOME="/usr/local/cuda-10.1"
+    export CPATH="$CUDA_HOME/include:$CPATH"
+    export LD_LIBRARY_PATH="$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
+    export PATH="$CUDA_HOME/bin:/opt/conda/bin:$PATH"
+    export ANACONDA_HOME=/opt/conda
+    export LC_ALL=C
+
+%labels
+    AUTHOR rs7wz@virginia.edu

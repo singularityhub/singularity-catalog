@@ -1,0 +1,174 @@
+# 
+# MPI Bandwidth
+# Contents:
+#  CentOS 7
+#   GNU compilers (upstream)
+#   Mellanox OFED
+#   OpenMPI version 4.0.0
+# 
+
+BootStrap: docker
+From: nvidia/cuda:10.0-devel-centos7
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+# GNU compiler
+%post
+    yum install -y \
+        devtoolset-8-gcc devtoolset-8-gcc-c++ \
+        git
+    
+    rm -rf /var/cache/yum/*
+
+# Mellanox OFED version 3.4-1.0.0.0
+%post
+    yum install -y \
+        ca-certificates \
+        gnupg \
+        wget
+    rm -rf /var/cache/yum/*
+%post
+    rpm --import https://www.mellanox.com/downloads/ofed/RPM-GPG-KEY-Mellanox
+    yum install -y yum-utils
+    yum-config-manager --add-repo https://linux.mellanox.com/public/repo/mlnx_ofed/3.4-1.0.0.0/rhel7.2/mellanox_mlnx_ofed.repo
+    yum install -y \
+        libibmad \
+        libibmad-devel \
+        libibumad \
+        libibumad-devel \
+        libibverbs \
+        libibverbs-devel \
+        libibverbs-utils \
+        libmlx4 \
+        libmlx4-devel \
+        libmlx5 \
+        libmlx5-devel \
+        librdmacm \
+        librdmacm-devel
+    rm -rf /var/cache/yum/*
+
+# OpenMPI version 3.0.0
+%post
+    yum install -y \
+        bzip2 \
+        file \
+        hwloc \
+        make \
+        numactl-devel \
+        openssh-clients \
+        perl \
+        tar \
+        wget
+    rm -rf /var/cache/yum/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.open-mpi.org/software/ompi/v3.0/downloads/openmpi-3.0.0.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/openmpi-3.0.0.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/openmpi-3.0.0 &&   ./configure --prefix=/usr/local/openmpi --with-cuda --with-slurm --without-verbs
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/openmpi-3.0.0 /var/tmp/openmpi-3.0.0.tar.bz2
+    
+%post
+    yum install -y \
+        make cmake \
+        wget \
+        which
+    rm -rf /var/cache/yum/*
+%post
+    cd /
+    yum install -y libibverbs*
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://github.com/NVIDIA/nccl/archive/v2.7.6-1.tar.gz
+    mkdir -p /var/tmp && tar -x -f /var/tmp/v2.7.6-1.tar.gz -C /var/tmp -z
+    cd /var/tmp/nccl-2.7.6-1
+    PREFIX=/usr/local/nccl make -j$(nproc) install
+    rm -rf  /var/tmp/v2.7.6-1.tar.gz
+    
+%post
+    cd /
+    CONDAVER=3
+    VERSION=4.6.14
+    BASE_DIR=/miniconda$CONDAVER
+    PREFIX_PATH=$BASE_DIR/$VERSION
+    DOWNLOAD_PATH=$BASE_DIR/DOWNLOADS
+
+    # make install area
+    mkdir -p $PREFIX_PATH
+    mkdir -p $DOWNLOAD_PATH
+
+    MINICONDA_INSTALL_FILE=Miniconda$CONDAVER-$VERSION-Linux-x86_64.sh
+
+    echo Downloading miniconda installer
+    wget https://repo.continuum.io/miniconda/$MINICONDA_INSTALL_FILE -P $DOWNLOAD_PATH
+      
+    chmod +x $DOWNLOAD_PATH/Miniconda$CONDAVER-$VERSION-Linux-x86_64.sh
+
+    echo Installing Miniconda
+    $DOWNLOAD_PATH/Miniconda$CONDAVER-$VERSION-Linux-x86_64.sh -b -p $PREFIX_PATH -u
+
+    # add conda to environment
+    export PATH=$PREFIX_PATH/bin:$PATH
+    curl -O https://bootstrap.pypa.io/get-pip.py && \
+    python get-pip.py && \
+    rm get-pip.py
+    pip install tensorflow-gpu==2.2
+    conda install -y  pandas h5py matplotlib scikit-learn scikit-image
+    cd /
+   
+    
+%environment
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+%post
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/usr/local/openmpi/bin:$PATH
+    export CPATH=/usr/local/nccl/include:$CPATH
+    export LD_LIBRARY_PATH=/usr/local/nccl/lib:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/usr/local/nccl/lib:$LIBRARY_PATH
+    export PATH=/usr/local/nccl/bin:$PATH
+    
+    pip --no-cache-dir --disable-pip-version-check install mpi4py
+%post
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export LC_ALL=C
+    export HOROVOD_GPU_ALLREDUCE=MPI
+    export HOROVOD_GPU_ALLGATHER=MPI
+    export HOROVOD_GPU_BROADCAST=MPI
+    #export HOROVOD_NCCL_HOME=/usr/local/nccl/ 
+    #export HOROVOD_NCCL_INCLUDE=/usr/local/nccl/include
+    #export HOROVOD_NCCL_LIB=/usr/local/nccl/lib
+    ldconfig /usr/local/cuda-10.0/lib64/stubs
+    # install Horovod, add other HOROVOD_* environment variables as necessary
+    #HOROVOD_GPU_ALLREDUCE=NCCL HOROVOD_WITH_TENSORFLOW=1 HOROVOD_NCCL_HOME=/usr/local/nccl/ HOROVOD_NCCL_LINK=SHARED pip install --no-cache-dir horovod
+    HOROVOD_GPU_ALLREDUCE=MPI HOROVOD_WITH_TENSORFLOW=1  pip install --no-cache-dir horovod
+    ldconfig
+    
+%environment
+    export CUDA_DEVICE_ORDER=PCI_BUS_ID
+
+    # Add cupti to the path for profiling:
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
+
+    source scl_source enable devtoolset-4
+    
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+    export LC_ALL=C
+    export HOROVOD_GPU_ALLREDUCE=MPI
+    export HOROVOD_GPU_ALLGATHER=MPI
+    export HOROVOD_GPU_BROADCAST=MPI
+    #export HOROVOD_NCCL_HOME=/usr/local/nccl/
+    #export HOROVOD_NCCL_INCLUDE=/usr/local/nccl/include
+    #export HOROVOD_NCCL_LIB=/usr/local/nccl/lib
+    
+    export PYTHON_VERSION=3.6
+    export TENSORFLOW_VERSION=2.2.0
+    export PYTORCH_VERSION=1.5.1
+ 
+    export PATH=/usr/local/cuda/bin:$PATH
+    
+    export CUDA_HOME=/usr/local/cuda
+    export LIBRARY_PATH=/usr/local/nccl/lib:$LIBRARY_PATH
+    export PATH=/usr/local/nccl/bin:$PATH
+ 
+
+

@@ -1,0 +1,82 @@
+BootStrap: docker
+From: tensorflow/tensorflow:2.1.0-gpu-py3-jupyter
+
+%post
+    apt-get -y update
+
+    # install missing cuda and cudnn packages
+    CUDA_VERSION=10.1.243
+    CUDA_MAJVERSION=`echo $CUDA_VERSION | cut -d '.' -f1`
+    CUDA_MINVERSION=`echo $CUDA_VERSION | cut -d '.' -f2`
+    CUDNN_VERSION=7.6.4.38
+
+    apt-get -y install \
+        cuda-command-line-tools-${CUDA_MAJVERSION}-${CUDA_MINVERSION} \
+        libcudnn7-dev=${CUDNN_VERSION}-1+cuda${CUDA_MAJVERSION}.${CUDA_MINVERSION}
+
+    # install other tools and dependencies
+    apt-get -y install --allow-downgrades --no-install-recommends \
+        wget \
+        git \
+        mercurial \
+        subversion \
+        vim \
+        nano \
+        libxext6 \
+        libsm6 \
+        libssl-dev \
+        libxrender1 \
+        libboost-all-dev
+
+    # upgrade Python to 3.7
+    apt-get -y install python3.7
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 2
+    update-alternatives --set python3 /usr/bin/python3.7
+
+    python3 -m pip install --upgrade \
+        pip \
+        setuptools \
+        future
+
+    # install packages
+    python3 -m pip install \
+        matplotlib numpy scipy tensorflow-gpu==2.1.0 tensorflow-estimator==2.1.0 tensorboard protobuf \
+        google-auth h5py ipykernel ipywidgets \
+        pydot \
+        keras-vis==0.4 \
+        tflearn==0.3.2 \
+        pandas==1.0.0 \
+        scikit-learn==0.22.1 \
+        opencv-python==4.2.0.32
+
+
+%runscript
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# this text code will run whenever the container
+# is called as an executable or with `singularity run`
+exec python $@
+
+%help
+This container provides the Python 3.7.5 bindings for:
+    * Tensorflow 2.1.0 with Keras implementation
+    * Keras Visualization Toolkit 0.4
+    # tflearn 0.3.2
+    * scikit-learn 0.22.1
+    * Pandas 1.0.0
+    * OpenCV 4.2.0.32
+    * CUDA 10.1.243
+    * CuDNN 7.6.4.38
+
+
+%environment
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# This sets global environment variables for anything run within the container
+    export CUDA_HOME="/usr/local/cuda"
+    export CPATH="$CUDA_HOME/include:$CPATH"
+    export LD_LIBRARY_PATH="/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+    export PATH="/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
+    export LC_ALL=C
+
+%labels
+AUTHOR rs7wz@virginia.edu

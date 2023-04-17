@@ -1,0 +1,89 @@
+Bootstrap: docker
+From: python:3.11-slim
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    apt update -y && apt upgrade && apt install -y git build-essential zlib1g-dev wget && \
+        apt install -y autoconf automake  pkg-config libtool-bin yaggo curl
+
+
+    # ===================== MUMMER
+    wget https://github.com/mummer4/mummer/archive/refs/tags/v4.0.0rc1.tar.gz
+    tar xvfz v4.0.0rc1.tar.gz
+    cd mummer-4.0.0rc1
+    autoreconf -fi
+    ./configure --prefix=/usr/local/ LDFLAGS=-static
+    make
+    make install
+    cd ..
+ 
+
+    # ==================== BWA
+    apt install -y  libbz2-dev  liblzma-dev
+    export BWA_VERSION=0.7.17
+    wget https://github.com/lh3/bwa/releases/download/v${BWA_VERSION}/bwa-${BWA_VERSION}.tar.bz2;
+    tar xjvf bwa-${BWA_VERSION}.tar.bz2
+    cd /bwa-${BWA_VERSION} 
+
+    cat > Makefile.patch << EOL
+--- Makefile.orig	2021-05-18 11:19:23.819963543 +0200
++++ Makefile	2021-05-18 11:19:45.080303226 +0200
+@@ -1,6 +1,6 @@
+ CC=			gcc
+ #CC=			clang --analyze
+-CFLAGS=		-g -Wall -Wno-unused-function -O2
++CFLAGS=		-g -Wall -Wno-unused-function -O2 -fcommon
+ WRAP_MALLOC=-DUSE_MALLOC_WRAPPERS
+ AR=			ar
+ DFLAGS=		-DHAVE_PTHREAD $(WRAP_MALLOC)
+EOL
+
+patch -u Makefile -i Makefile.patch
+
+make
+cp bwa /usr/local/bin
+rm -rf /bwa-${BWA_VERSION}
+cd ..
+
+
+# ======================================= SPADES recommendation from circlator is v3.7.1
+# install SPAdes
+SPADES_VERSION=3.15.5 # OK
+
+apt-get install -y cmake
+
+#curl -sSL https://github.com/ablab/spades/archive/refs/tags/v$SPADES_VERSION.tar.gz | tar zx \
+    #   && cd spades-$SPADES_VERSION/assembler && PREFIX=/usr/local/ ./spades_compile.sh && cd - \
+    #   || PREFIX=/usr/local/ ./spades_compile.sh && cd -   # spades need to run two times to be correctly compiled
+
+
+    SPADES_VERSION=3.15.5
+    curl -sSL https://github.com/ablab/spades/releases/download/v${SPADES_VERSION}/SPAdes-${SPADES_VERSION}-Linux.tar.gz | tar zx \
+        && cd SPAdes-${SPADES_VERSION}-Linux && cp bin/* /usr/local/bin && cp -r share/spades /usr/local/share/
+
+
+    # ========================================= prodigal
+    PRODIGAL_VERSION=2.6.3
+    curl -sSL https://github.com/hyattpd/Prodigal/archive/refs/tags/v$PRODIGAL_VERSION.tar.gz | tar zx \
+         && cd Prodigal-$PRODIGAL_VERSION && make install && cd -
+
+    apt-get install -y libncurses5-dev
+    SAMTOOLS_VERSION=1.15
+    curl -sSL https://github.com/samtools/samtools/releases/download/$SAMTOOLS_VERSION/samtools-$SAMTOOLS_VERSION.tar.bz2 | tar -xjf - \
+         && cd samtools-$SAMTOOLS_VERSION \
+         && ./configure && make && make install && cd -
+
+
+    # ============================== CIRCLATOR
+    git clone https://github.com/sequana/circlator.git
+    cd circlator
+    python setup.py install
+
+    apt-get autoremove -y
+    apt-get clean -y
+
+
+

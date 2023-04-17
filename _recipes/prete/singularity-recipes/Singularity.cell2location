@@ -1,0 +1,18 @@
+BootStrap: docker
+From: prete/cell2location:devel
+
+%help
+    cell2location: High-throughput spatial mapping of cell types.
+
+%labels
+    Maintainer Vitalii Kleshchevnikov <vitalii.kleshchevnikov@sanger.ac.uk>
+    Version v0.1
+
+%environment
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    
+%runscript
+     echo "Starting cell2location notebooks..."
+     echo "Open browser at http://${HOSTNAME}:8888/lab"
+     exec /bin/bash -c "jupyter lab --notebook-dir=/notebooks --NotebookApp.token='cell2loc' --ip=0.0.0.0 --port=8888 --no-browser --allow-root"

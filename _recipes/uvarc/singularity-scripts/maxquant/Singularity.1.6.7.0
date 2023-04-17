@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: mono:6.0
+
+%files
+    MaxQuant_1.6.7.0.zip /opt
+
+%post
+    apt-get update && apt-get install -y --no-install-recommends \
+        unzip \
+        --reinstall libgtk2.0-0
+      
+    # install MaxQuant
+    cd /opt
+    unzip MaxQuant_1.6.7.0.zip
+
+%runscript
+    exec mono /opt/MaxQuant/MaxQuant.exe $@
+
+%environment
+    PATH=/opt/MaxQuant/bin:$PATH
+
+%help
+This container provides the following applications:
+    * Mono 6.0
+    * MaxQuant 1.6.7.0

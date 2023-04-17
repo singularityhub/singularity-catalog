@@ -1,0 +1,56 @@
+Bootstrap: shub
+From: ebothmann/sherpa-singularity:rivet
+
+
+%help
+A Singularity file to define an image that includes support for the
+rivet-mkhtml tool by including a texlive installation.  In addition,
+the Compare plotting tool and its dependency ROOT v5.34.36 are
+installed in order to plot results from the internal analysis module
+of Sherpa.
+
+
+%labels
+    Maintainer Enrico Bothmann
+    Version v0.1
+
+
+%runscript
+    rivet-mkhtml "$@"
+
+
+%environment
+    . /opt/root/bin/thisroot.sh
+
+
+%files
+    Compare-1.9_patch
+    Compare-logo.gif
+    install_Compare
+
+
+%post
+    echo Installing yum dependencies ...
+    # install rivet-mkhtml run-time dependencies
+    yum -y install \
+        ghostscript \
+        ImageMagick \
+        texlive \
+        texlive-latex
+
+    echo Installing ROOT
+    mkdir /scratch
+    cd /scratch
+    wget https://root.cern.ch/download/root_v5.34.36.Linux-centos7-x86_64-gcc4.8.tar.gz -O- | tar xz
+    mv root /opt
+
+    echo Installing Compare
+    cd /scratch
+    chmod +x /install_Compare
+    /install_Compare
+
+    echo Clean up
+    cd /
+    rm -rf /scratch
+    ldconfig
+    yum clean all

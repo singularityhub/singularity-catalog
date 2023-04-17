@@ -1,5 +1,6 @@
 Bootstrap: docker
-From: r-base:4.2.2
+From: ubuntu:latest
+
 
 
 %labels
@@ -7,23 +8,24 @@ From: r-base:4.2.2
 
 %post
 
-    apt-get update -y 
-    apt-get install -y curl openssl
-    # for bioconductor
-    R -e 'install.packages("BiocManager")'
-    #R -e 'BiocManager::install(c("DESeq2"))' && R -e 'BiocManager::install(c("GenomicFeatures"))'
-    R -e 'BiocManager::install(c("GenomicFeatures"))'
+    apt-get update -y --fix-missing && \
+        apt-get install -y software-properties-common && \
+        add-apt-repository universe
 
-    # standard packages
-    #R -e "install.packages('ashr',  repos='https://cloud.r-project.org/')"
-    #R -e "install.packages('ggplot2',  repos='https://cloud.r-project.org/')"
-    #R -e "install.packages('readr',  repos='https://cloud.r-project.org/')"
+    # prevent prompt interaction
+    DEBIAN_FRONTEND="noninteractive" TZ="Europe" apt-get install -y tzdata
 
+    # other dependencies
+    apt-get install -y libxml2-dev libcurl4-openssl-dev libssl-dev && \
+        apt-get install -y r-base
 
+    Rscript -e "install.packages('BiocManager')"
+    Rscript -e "BiocManager::install(c('DESeq2', 'ashr', 'ggplot2'), site_repository='http://cran.us.r-project.org', ask=FALSE)"
 
+    apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 %environment
-    # 
+    export LC_ALL=C.UTF-8
 
 %runscript
     Rscript ${1+"$@"}

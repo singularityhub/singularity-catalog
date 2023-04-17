@@ -1,0 +1,51 @@
+#graphmap in singularity
+
+Bootstrap: docker
+From: ubuntu:16.04
+
+%runscript
+    mashmap "$@"
+
+%post
+    apt-get update
+    apt-get --assume-yes install wget
+    apt-get --assume-yes install 
+
+     apt-get update
+      
+     apt-get -y install software-properties-common build-essential zlib1g-dev git autoconf
+     add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main universe restricted multiverse"
+     apt-get update
+    
+     apt-get -y install gnuplot gnuplot-x11 gnuplot-doc 
+     apt-get update
+     apt-get -y install xfig transfig xfig-libs libgsl-dev
+           
+     cd /
+     git clone https://github.com/marbl/MashMap.git
+
+     mkdir -p /mashmap
+     
+     
+     cd MashMap
+     ./bootstrap.sh
+     ./configure --prefix=/mashmap/
+     make
+     
+     cd 
+     rm -rf /MashMap
+     
+     mkdir /groups
+     mkdir /scratch
+     mkdir /scratch-ii2
+     mkdir /clustertmp
+
+%environment
+    PATH="PATH=/mashmap/bin/:${PATH}"
+    export $PATH
+
+
+%test
+  PATH="PATH=/mashmap/bin/:${PATH}"
+  export $PATH
+  #mashmap -h

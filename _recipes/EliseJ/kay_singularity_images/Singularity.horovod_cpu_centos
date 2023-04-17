@@ -1,0 +1,104 @@
+Bootstrap: docker
+From: centos
+
+%post
+    # install development tools
+   yum update -y
+   yum install -y gcc gcc-c++ wget bzip2 which cmake make libfabric git curl vim 
+   TENSORFLOW_VERSION=2.1.0
+   PYTORCH_VERSION=1.5.1
+   TORCHVISION_VERSION=0.6.1
+   MXNET_VERSION=1.6.0
+   #####
+   #  miniconda install
+   #####
+   
+   # change this if you want different versions
+   CONDAVER=3
+   VERSION=4.6.14
+   BASE_DIR=/miniconda$CONDAVER
+   PREFIX_PATH=$BASE_DIR/$VERSION
+   DOWNLOAD_PATH=$BASE_DIR/DOWNLOADS
+
+   # make install area
+   mkdir -p $PREFIX_PATH
+   mkdir -p $DOWNLOAD_PATH
+
+   MINICONDA_INSTALL_FILE=Miniconda$CONDAVER-$VERSION-Linux-x86_64.sh
+
+   echo Downloading miniconda installer
+   wget https://repo.continuum.io/miniconda/$MINICONDA_INSTALL_FILE -P $DOWNLOAD_PATH
+      
+   chmod +x $DOWNLOAD_PATH/Miniconda$CONDAVER-$VERSION-Linux-x86_64.sh
+
+   echo Installing Miniconda
+   $DOWNLOAD_PATH/Miniconda$CONDAVER-$VERSION-Linux-x86_64.sh -b -p $PREFIX_PATH -u
+
+   # add conda to envir
+   export PATH=$PREFIX_PATH/bin:$PATH
+   echo moving into $PREFIX_PATH
+   cd $PREFIX_PATH
+
+   echo CONDA BINARY: $(which conda)
+   echo CONDA VERSION: $(conda --version)
+   
+   echo Setting intel channel to the primary
+   conda config --add channels intel
+
+   echo install tensorflow dependencies and other things
+   conda install -y tensorflow==$TENSORFLOW_VERSION -c intel
+
+   echo install keras
+   conda install -y keras pandas h5py matplotlib scikit-learn scikit-image
+   pip install tensorboardX
+ 
+   echo which gcc: $(/bin/which gcc)
+   echo which g++: $(/bin/which g++)
+   echo gcc version
+   gcc --version
+
+   yum install -y libibverbs*
+  
+   curl -O https://bootstrap.pypa.io/get-pip.py && \
+   python get-pip.py && \
+   rm get-pip.py
+
+   # Install Open MPI
+   mkdir /tmp/openmpi && \
+   cd /tmp/openmpi && \
+   wget https://www.open-mpi.org/software/ompi/v4.0/downloads/openmpi-4.0.0.tar.gz && \
+   tar zxf openmpi-4.0.0.tar.gz && \
+   cd openmpi-4.0.0 && \
+   ./configure --enable-orterun-prefix-by-default --prefix=/tmp/openmpi/build && \
+   make all install && \
+   ldconfig
+   
+   
+   export PATH=/tmp/openmpi-4.0.0/build/bin:${PATH}
+   export LD_LIBRARY_PATH=/tmp/openmpi-4.0.0/build/lib:${LD_LIBRARY_PATH}
+   export LIBRARY_PATH=/tmp/openmpi-4.0.0/build/lib:${LIBRARY_PATH}
+   export CPATH=/tmp/openmpi-4.0.0/build/include:${CPATH}
+   export C_INCLUDE_PATH=/tmp/openmpi-4.0.0/build/include:${C_INCLUDE_PATH}
+   
+   echo which mpicc
+   
+   
+   conda install -y pytorch==1.5.1 torchvision==0.6.1 cpuonly -c pytorch
+   
+   HOROVOD_WITH_PYTORCH=1 HOROVOD_WITHOUT_MXNET=1 HOROVOD_WITH_TENSORFLOW=1  pip install --no-cache-dir horovod==0.19
+   
+   # Install OpenSSH for MPI to communicate between containers
+   yum install -y openssh-client openssh-server && mkdir -p /var/run/sshd
+
+   # Allow OpenSSH to talk to containers without asking for confirmation
+   cat /etc/ssh/ssh_config | grep -v StrictHostKeyChecking > /etc/ssh/ssh_config.new && \
+   echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config.new && \
+   mv /etc/ssh/ssh_config.new /etc/ssh/ssh_config
+
+%environment
+   export PATH=/miniconda3/4.6.14/bin:$PATH
+   export PATH=/tmp/openmpi-4.0.0/build/bin:$PATH
+   export LD_LIBRARY_PATH=/tmp/openmpi-4.0.0/build/lib:$LD_LIBRARY_PATH
+   export LIBRARY_PATH=/tmp/openmpi-4.0.0/build/lib:$LIBRARY_PATH
+   export CPATH=/tmp/openmpi-4.0.0/build/include:$CPATH
+   export C_INCLUDE_PATH=/tmp/openmpi-4.0.0/build/include:$C_INCLUDE_PATH

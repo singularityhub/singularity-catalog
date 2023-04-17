@@ -1,0 +1,60 @@
+Bootstrap: docker
+From: ubuntu:latest
+
+%files
+path_to_a_file_or_directory path_inside_container
+
+%post
+
+apt-get update && apt-get install -y --no-install-recommends \
+  build-essential \
+  python3 \
+  python3-dev \
+  git \
+  ca-certificates \
+  python3-distutils \
+  curl && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
+
+# install pip
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python3 get-pip.py && rm get-pip.py
+
+# install pytorch etc.
+pip install numpy tqdm h5py ujson scipy scikit-learn termcolor lmdb facenet_pytorch pandas
+pip install torch torchvision sacred wandb==0.9.6 backpack-for-pytorch
+
+mkdir /results
+mkdir /workdir
+# /code is created when we move files under %files
+chmod -R 777 /code
+chmod -R 777 /results
+chmod -R 777 /workdir
+# needed for wandb to run!
+chmod -R 777 /home
+
+# ======================================================================================
+# ======================================================================================
+# ======================================================================================
+
+%runscript
+
+echo "RUNNING EXPERIMENT"
+
+# ======================================================================================
+
+if [ $# -eq 0 ]; then
+  echo "No arguments supplied"
+else
+  # copy code to workdir (which is mounted)
+  cp -r /code/* /workdir
+  cd /workdir
+  wandb on
+  # parse all argumetns with $@
+  exec $@
+  # clear workdir. Not meant to be accessed upon run completion
+  rm /workdir/*
+fi
+
+# ======================================================================================

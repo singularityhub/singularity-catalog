@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: node:14.3.0
+
+%post
+    VERSION=0.0.10
+
+    apt-get update && apt-get install -y --no-install-recommends \
+        libasound2 \
+        libgtk-3-0 \
+        libnotify4 \
+        libnss3 \
+        libxss1 \
+        libxtst6 \
+        xdg-utils \
+        libatspi2.0-0 \
+        libappindicator3-1 \
+        libsecret-1-0
+
+    cd /opt
+    wget https://github.com/DocNow/hydrator/releases/download/v${VERSION}/hydrator_${VERSION}_amd64.deb
+    dpkg -i *.deb
+    rm *.deb
+    rm -rf /var/lib/apt/lists/*
+
+%runscript
+    /opt/Hydrator/hydrator $@
+
+%help
+Hydrator 0.0.10 with Node 14.3.0 on Alpine 3.11
+
+%environment
+    export PATH=/opt/Hydrator:$PATH
+    export LC_ALL=C
+
+%labels
+AUTHOR rs7wz@virginia.edu

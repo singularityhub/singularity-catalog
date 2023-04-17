@@ -1,0 +1,7 @@
+bootstrap: docker
+from: pytorch/pytorch:1.3-cuda10.1-cudnn7-devel
+
+%post
+  . /opt/conda/etc/profile.d/conda.sh
+  conda activate base
+  pip install pandas

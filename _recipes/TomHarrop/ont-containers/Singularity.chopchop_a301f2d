@@ -1,0 +1,43 @@
+Bootstrap: docker
+From: python:2.7.16-buster
+
+%help
+
+    Python 2.7.16 with chopchop a301f2d
+    
+%labels
+
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "chopchop a301f2d"
+
+%runscript
+
+    exec /usr/local/bin/python /chopchop/chopchop.py "$@"
+
+%post
+    # python dependencies
+    /usr/local/bin/pip install \
+        argparse \
+        biopython \
+        keras \
+        mysqlclient \
+        np-utils \
+        numpy \
+        pandas \
+        scikit-learn==0.18.0 \
+        scipy
+
+    # ucsc's gff3ToGenePred
+    wget \
+        -O /usr/local/bin/gff3ToGenePred \
+    http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/gff3ToGenePred
+    chmod 755 /usr/local/bin/gff3ToGenePred
+
+    # chopchop
+    git clone \
+        https://bitbucket.org/valenlab/chopchop.git
+    cd chopchop || exit 1
+    git checkout a301f2d
+
+%environment
+    export PATH="${PATH}:/chopchop:/chopchop/bowtie:/chopchop/svm_light"

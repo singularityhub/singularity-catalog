@@ -1,0 +1,49 @@
+Bootstrap: docker
+From: bitnami/minideb:stretch
+Stage: generator
+
+# sudo singularity build data-container Singularity
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/data
+
+%files
+  ./data/* /data/
+
+%post
+export PATH=/opt/conda/bin:${PATH}
+export LANG=C.UTF-8
+/bin/bash -c "install_packages wget git ca-certificates && \
+    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
+    rm Miniconda3-latest-Linux-x86_64.sh"
+
+pip install cdb==0.0.1
+cdb generate /data --out /entrypoint.go
+
+Bootstrap: docker
+From: golang:1.13-alpine3.10
+Stage: builder
+
+%files from generator
+    /entrypoint.go /entrypoint.go
+    /data /data
+
+%post
+apk add git && \
+    go get github.com/vsoch/containerdb && \
+    GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /entrypoint -i /entrypoint.go
+
+Bootstrap: scratch
+Stage: final
+
+%labels
+MAINTAINER @vsoch
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/bin
+
+%files from builder
+    /entrypoint /entrypoint
+    /entrypoint /bin/sh
+    /data /data

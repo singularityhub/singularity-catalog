@@ -1,0 +1,41 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%post
+    export LC_ALL=C
+
+    apt-get update && apt-get install -y --no-install-recommends \
+        automake libtool pkg-config \
+        ca-certificates openssl git \
+        build-essential cmake libncurses-dev libbz2-dev  \
+        protobuf-compiler libprotoc-dev libprotobuf-dev libjansson-dev \
+        jq bc rs curl unzip redland-utils \
+        librdf-dev bison flex gawk lzma-dev liblzma-dev liblz4-dev \
+        libffi-dev libcairo-dev \
+        python3-dev python3-pip python3-setuptools
+
+# vg
+    cd /opt
+    git clone --recursive https://github.com/vgteam/vg.git
+    cd vg
+    . ./source_me.sh && make
+
+# Aeron
+    pip3 install wheel snakemake
+    cd /opt
+    git clone https://github.com/SchulzLab/Aeron.git 
+
+%runscript
+exec $@
+
+%help
+This container provides Python 3.6 for:
+* Aeron 0.02 - Alignment, quantification and fusion prediction from long RNA reads 
+* vg 1.23.0 - Variation graphs provide a succinct encoding of the sequences of many genomes
+
+%environment
+    export PATH="/opt/Aeron/AeronSCripts:/opt/Aeron/Binaries:/opt/vg/bin:$PATH"
+    export LC_ALL=C
+
+%labels
+AUTHOR rs7wz@virginia.edu

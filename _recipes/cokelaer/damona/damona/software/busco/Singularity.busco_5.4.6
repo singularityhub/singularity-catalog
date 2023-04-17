@@ -1,0 +1,58 @@
+Bootstrap: docker
+From: python:3.10-slim
+%post
+  BUSCO_VERSION=5.4.6
+  SAMTOOLS_VERSION=1.14
+  BBMAP_VERSION=39.00
+  PRODIGAL_VERSION=2.6.3
+  AUGUSTUS_VERSION=3.5.0
+  
+  apt update && apt install -yq --no-install-recommends default-jre ncbi-blast+ hmmer make curl bzip2 g++ libncurses-dev zlib1g-dev\
+    libbz2-dev liblzma-dev libcurl4-openssl-dev
+
+  # install python package
+  pip install --upgrade pip
+  pip install matplotlib pandas biopython
+
+  # install samtools
+  curl -sSL https://github.com/samtools/samtools/releases/download/$SAMTOOLS_VERSION/samtools-$SAMTOOLS_VERSION.tar.bz2 | tar -xjf - \
+    && cd samtools-$SAMTOOLS_VERSION \
+    && ./configure && make && make install && cd -
+  # install htslib
+  cd samtools-${SAMTOOLS_VERSION}/htslib-${SAMTOOLS_VERSION} && make && make install && cd -
+  rm -rf samtools-${SAMTOOLS_VERSION}
+
+  ## install augustus
+  apt install -yq --no-install-recommends libgsl-dev libboost-all-dev libsuitesparse-dev liblpsolve55-dev \
+    libsqlite3-dev libmysql++-dev libbamtools-dev
+  curl -sSL https://github.com/Gaius-Augustus/Augustus/archive/refs/tags/v$AUGUSTUS_VERSION.tar.gz | tar zx \
+    && mv Augustus-$AUGUSTUS_VERSION augustus && cd augustus && make augustus && make && make install && cd -
+  mv augustus/config augustusconf && rm -rf augustus/* && mv augustusconf augustus/config
+  ## install prodigal
+  curl -sSL https://github.com/hyattpd/Prodigal/archive/refs/tags/v$PRODIGAL_VERSION.tar.gz | tar zx \
+    && cd Prodigal-$PRODIGAL_VERSION && make install && cd -
+  rm -rf Prodigal-$PRODIGAL_VERSION
+  ## install metaeuk
+  curl -sSL https://mmseqs.com/metaeuk/metaeuk-linux-avx2.tar.gz | tar zx && ln -s /metaeuk/bin/metaeuk /usr/local/bin/
+  ## install BBTools
+  curl -sSL https://sourceforge.net/projects/bbmap/files/BBMap_$BBMAP_VERSION.tar.gz | tar zx \
+    && ln -s /bbmap/*.sh /usr/local/bin/
+  ## install SEPP for python3.10
+  apt install -yq --no-install-recommends git
+  git clone https://github.com/smirarab/sepp.git && cd sepp && git reset --hard 66cf22cfb9ca22ed9e9074984018d099617b3c6a \
+    && python setup.py config && python setup.py install && cd -
+  rm -rf sepp
+
+  pip install https://gitlab.com/ezlab/busco/-/archive/$BUSCO_VERSION/busco-$BUSCO_VERSION.tar.gz
+  apt install -yq --no-install-recommends r-base
+  R --vanilla -e 'install.packages("ggplot2", repos="http://cran.wu.ac.at/")'
+
+  apt purge -yq git curl g++ libncurses-dev zlib1g-dev libbz2-dev liblzma-dev libcurl4-openssl-dev bzip2 \
+    libgsl-dev libboost-all-dev libsuitesparse-dev liblpsolve55-dev \
+    libsqlite3-dev libmysql++-dev libbamtools-dev git
+  apt autoremove -yq
+  
+%environment
+  export AUGUSTUS_CONFIG_PATH="/augustus/config"
+  export LC_ALL=C.UTF-8
+

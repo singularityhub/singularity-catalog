@@ -1,0 +1,84 @@
+BootStrap: library
+From: uvarc/default/anaconda:2019.10-cuda10.0-cudnn7.6-py3.6
+
+%post
+    export CUDA_HOME="/usr/local/cuda"
+    export PATH="/opt/conda/bin:$PATH"
+
+    apt update -y
+    apt-get install -y --no-install-recommends \
+        libprotobuf-dev \
+        protobuf-compiler
+
+    # install pytorch
+    conda install -c pytorch \
+        pytorch=1.3.1 \
+        torchvision \
+        cudatoolkit=10.0
+
+    conda install -c conda-forge \
+        opencv \
+        protobuf \
+        scikit-learn \
+        biopython \
+        seaborn \
+        tqdm \
+        dask \
+        joblib \
+        pytables \
+        fastparquet \
+        pyarrow \
+        boto3 \
+        botocore \
+        awscli 
+
+    conda install -c bioconda toil
+
+    conda clean --all
+
+    pip install --upgrade \
+        pip \
+        future
+
+    pip install \
+        dask[dataframe] \
+        torchnet \
+        freesasa 
+
+    git clone https://github.com/facebookresearch/SparseConvNet.git
+    cd SparseConvNet/
+    sed -i 's/assert/pass #/g' setup.py
+    sed -i 's/torch.cuda.is_available()/True/g' setup.py
+    rm -rf build/ dist/ sparseconvnet.egg-info sparseconvnet_SCN*.so
+    export TORCH_CUDA_ARCH_LIST="3.5;3.7;5.0;5.2;5.3;6.0;6.1;6.2;7.0;7.2;7.5" 
+    python setup.py develop
+    
+    mkdir /projects
+
+%runscript
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# this text code will run whenever the container
+# is called as an executable or with `singularity run`
+exec python $@
+
+%help
+This container is backed by Anaconda version 2019.10 and provides the Python 3.6 bindings for:
+    * PyTorch 1.3.1
+    * Caffe2
+    * OpenCV
+    * CUDA 10.0
+    * CuDNN 7.6.5.32
+
+
+%environment
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# This sets global environment variables for anything run within the container
+    export CUDA_HOME="/usr/local/cuda-10.0"
+    export CPATH="$CUDA_HOME/include:$CPATH"
+    export LD_LIBRARY_PATH="$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
+    export PATH="$CUDA_HOME/bin:$PATH"
+
+    export PATH="/opt/conda/bin:$PATH"
+    unset CONDA_DEFAULT_ENV
+    export ANACONDA_HOME=/opt/conda
+    export LC_ALL=C

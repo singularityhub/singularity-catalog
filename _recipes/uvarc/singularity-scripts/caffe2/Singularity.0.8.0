@@ -1,0 +1,57 @@
+Bootstrap: library
+From: uvarc/default/anaconda:2019.10-cuda9.0-cudnn7.6-py3.6
+
+%post
+    apt-get -y update
+    apt-get install -y --no-install-recommends \
+        libgoogle-glog-dev \
+        libgtest-dev \
+        libiomp-dev \
+        libleveldb-dev \
+        liblmdb-dev \
+        libopenmpi-dev \
+        libsnappy-dev \
+        libprotobuf-dev \
+        openmpi-bin \
+        openmpi-doc \
+        protobuf-compiler \
+        libgflags-dev
+
+    apt-get clean
+
+    /opt/conda/bin/conda install -c conda-forge \
+        protobuf \
+        typing \
+        hypothesis \
+        pydot \
+        opencv \
+        cudatoolkit=9.0
+
+    /opt/conda/bin/conda install -c pytorch \
+        pytorch=1.0 \
+        torchvision
+
+    /opt/conda/bin/conda clean --all
+
+%runscript
+    exec python $@
+
+%help
+This container is backed by Anaconda version 2019.10 and provides the Python 3.7 bindings for:
+    * PyTorch 1.0
+    * Caffe2 0.8
+    * OpenCV
+    * CUDA 9.0
+    * CuDNN 7.6
+
+%environment
+    export CUDA_HOME="/usr/local/cuda"
+    export CPATH="$CUDA_HOME/include:$CPATH"
+    export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$CUDA_HOME/extras/CUPTI/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs:$LD_LIBRARY_PATH
+    export PATH=$CUDA_HOME/bin:/opt/conda/bin:$PATH
+    unset CONDA_DEFAULT_ENV
+    export ANACONDA_HOME=/opt/conda
+    export LC_ALL=C
+
+%labels
+    AUTHOR rs7wz@virginia.edu

@@ -1,0 +1,65 @@
+Bootstrap: docker
+From: wangyinz/tacc-containers:tacc-ubuntu18-mvapich2.3.1psm2 
+
+%environment
+
+    # use bash as default shell
+    SHELL=/bin/bash
+
+    PATH=/usr/local/gromacs/bin:${PATH}    
+    PYTHONPATH="/builds/sample_restraint/build/src/pythonmodule:\
+/usr/local/lib/python3.6/dist-packages/:/builds/gmxapi/build:${PYTHONPATH}"
+
+    export PATH PYTHONPATH
+    export gmxapi_DIR=/usr/local/gromacs/share/cmake/gmxapi
+
+
+%labels
+
+   AUTHOR jmh5sf@virginia.edu
+
+
+%post
+
+    apt-get update && apt-get -y install git cmake libfftw3-dev python3-dev python3-pip 
+
+    # Install python dependencies
+    pip3 install setuptools networkx mpi4py numpy
+
+    mkdir /builds
+    cd /builds
+
+    # gromacs
+    git clone https://github.com/gromacs/gromacs.git
+    cd gromacs
+    git checkout release-2019
+    mkdir build
+    cd build
+    cmake ../ -DGMX_MPI=OFF -DGMX_OPENMP=ON -DGMXAPI=ON -DGMX_GPU=OFF
+    make -j8; make install
+    cd /builds
+
+    # gmxapi
+    git clone https://github.com/kassonlab/gmxapi.git
+    cd gmxapi
+    git checkout release-0_0_7
+    gmxapi_DIR=/usr/local/gromacs/share/cmake/gmxapi GROMACS_DIR=/usr/local/gromacs/share/cmake/gromacs pip3 install . 
+
+    cd /builds/
+
+    # Get BRER plugin
+    git clone https://github.com/jmhays/sample_restraint.git
+    cd sample_restraint
+    git fetch origin pull/1/head:pr-1
+    git checkout pr-1
+    mkdir build; cd build;
+    cmake ../ -Dgmxapi_DIR=/usr/local/gromacs/share/cmake/gmxapi -DGROMACS_DIR=/usr/local/gromacs/share/cmake/gromacs -DGMXPLUGIN_INSTALL_PATH=/usr/local/lib/python3.6/dist-packages
+    make -j8; make install
+    cd /builds
+
+    # BRER run scripts
+    git clone https://github.com/jmhays/run_brer.git
+    cd run_brer
+    git fetch origin pull/2/head:pr-2
+    git checkout pr-2
+    pip3 install .

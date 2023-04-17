@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: alpine:3.17
+
+%labels
+  Author Sequana Team
+
+%post
+  MINIMAP2_VERSION=2.24
+
+  apk update && apk upgrade && apk add bash libc6-compat curl
+
+  curl -L https://github.com/lh3/minimap2/releases/download/v${MINIMAP2_VERSION}/minimap2-${MINIMAP2_VERSION}_x64-linux.tar.bz2 | tar -jxf - minimap2-${MINIMAP2_VERSION}_x64-linux/minimap2 \
+    && mv ./minimap2-${MINIMAP2_VERSION}_x64-linux/minimap2 /usr/local/bin
+
+  apk del curl
+
+%runscript
+  exec minimap2 "$@"
+

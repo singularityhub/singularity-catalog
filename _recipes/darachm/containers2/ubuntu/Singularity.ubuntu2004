@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+MAINTAINER darachm
+DATE 201221
+
+%help
+
+    This is a base for debugging Singularity builds.
+    
+%post
+
+    apt-get -y update
+    apt-get -y upgrade
+    apt-get autoremove -qq
+    apt-get clean
+
+%test
+
+    # ?

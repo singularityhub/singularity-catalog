@@ -1,0 +1,75 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%post
+    chmod 777 /root
+    apt-get -y update
+    apt-get -y upgrade
+    apt-get -y install zip unzip
+    apt-get -y install wget
+    apt-get -y install gzip
+    apt-get -y install xvfb
+    apt-get -y install default-jdk
+    apt-get -y install python
+    apt-get -y install python-pip
+    apt-get -y install git 
+    apt-get -y install libstdc++6
+    apt-get -y install libssl1.0.0
+    python -m pip install --upgrade pip 
+    python -m pip install PyCap
+    python -m pip install ipython
+    apt-get -y install vim
+    apt-get -y install tar
+    apt-get -y install ghostscript
+    mkdir -p /tmp/matlab_mcr
+    cd /tmp/matlab_mcr/
+    wget https://ssd.mathworks.com/supportfiles/downloads/R2018b/deployment_files/R2018b/installers/glnxa64/MCR_R2018b_glnxa64_installer.zip
+    unzip MCR_R2018b_glnxa64_installer.zip
+    ./install -agreeToLicense yes -mode silent 
+    cd ../
+    rm -rf /tmp/matlab_mcr
+    mkdir -p /tmp/fsl/
+    cd /tmp/fsl
+    wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py 
+    python fslinstaller.py -d /usr/local/fsl
+    cd ../
+    rm -rf /tmp/fsl/ 
+    apt install zlib1g-dev
+    version=3.14
+    build=5
+    mkdir -p /tmp/cmake
+    cd /tmp/cmake
+    wget https://cmake.org/files/v$version/cmake-$version.$build.tar.gz
+    tar -xzvf cmake-$version.$build.tar.gz
+    cd cmake-$version.$build/
+    ./bootstrap
+    make
+    make install
+    mkdir -p /tmp/code
+    cd /tmp/code
+    mkdir -p /bin/ants
+    git clone https://github.com/stnava/ANTs.git
+    cd /bin/ants
+    cmake /tmp/code/ANTs
+    make
+    cd /bin/ants/ANTS-build
+    make install
+    rm -rf /tmp/code
+    mkdir -p /INPUTS
+    mkdir -p /OUTPUTS
+    mkdir -p /extra
+
+%environment
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH/usr/local/MATLAB/MATLAB_Runtime/v95/runtime/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/bin/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/sys/os/glnxa64:/usr/local/MATLAB/MATLAB_Runtime/v95/extern/bin/glnxa64
+
+    FSLDIR=/usr/local/fsl
+    . ${FSLDIR}/etc/fslconf/fsl.sh
+    PATH=${FSLDIR}/bin:${PATH}
+    export FSLDIR PATH
+
+    export ANTSPATH=/opt/ANTs/bin/
+    export PATH=${ANTSPATH}:$PATH
+
+%runscript
+    exec sh run_antsreg.sh
+ 

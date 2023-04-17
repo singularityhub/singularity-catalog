@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%runscript
+
+     cd /data
+     exec /usr/local/bin/expfactory --run --experiments "$@"
+
+%post
+
+     mkdir /data
+     apt-get update
+     apt-get -y install python   
+     apt-get -y install wget 
+     apt-get -y install git
+     wget https://bootstrap.pypa.io/get-pip.py
+     python get-pip.py
+     pip install expfactory
+

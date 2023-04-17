@@ -1,0 +1,27 @@
+Bootstrap: localimage
+From: alpine-edge.sif
+Stage: bareuser
+
+
+%post
+	# Install bare minimum required for convenient future work:
+	#   - sudo (to fake commands as "dev")
+	#   - bash (to use pushd/popd and other handy bashisms)
+	# sudo must be installed before /etc/sudoers is modified, otherwise
+	# root ends up not being registered as a sudoer!
+	apk add sudo bash
+	sed -i -e 's|/bin/ash|/bin/bash|g' /etc/passwd
+	ln -sf /bin/bash /bin/sh
+	rm -rf /root/.ash_history
+	
+	
+	# Begin creating setup for building packages as recommended in
+	#    https://wiki.alpinelinux.org/wiki/Include:Setup_your_system_and_account_for_building_packages
+	adduser -D dev                                                 # Create dummy user "dev"
+	passwd -ud dev                                                 # Set empty password for him
+	addgroup dev abuild                                            # Add him to abuild group
+	echo 'dev ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers              # Add him to sudoers
+	
+	
+	# Clean the APK cache.
+	rm -rf /var/cache/apk/*

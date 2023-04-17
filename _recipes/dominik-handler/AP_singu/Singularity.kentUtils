@@ -1,0 +1,48 @@
+#ngmlr in singularity
+
+Bootstrap: docker
+From: ubuntu:16.04
+
+%runscript
+
+   "$@"
+
+%post
+    apt-get update
+    apt-get --assume-yes install build-essential zlib1g libpng-dev cmake git-core wget zlib1g-dev uuid-dev
+
+    apt-get clean && apt-get update && apt-get install -y \
+       locales \
+       language-pack-fi  \
+       language-pack-en && \
+       export LANGUAGE=en_US.UTF-8 && \
+       export LANG=en_US.UTF-8 && \
+       export LC_ALL=en_US.UTF-8 && \
+       locale-gen en_US.UTF-8 && \
+       dpkg-reconfigure --frontend noninteractive locales
+
+    
+    apt-get update
+    apt-get --assume-yes install mysql-client libssl-dev openssl libmysqlclient-dev  
+    
+    mkdir -p /Software
+    cd /Software
+    #git clone git://github.com/ENCODE-DCC/kentUtils.git
+    wget http://hgdownload.soe.ucsc.edu/admin/exe/userApps.v358.src.tgz
+    tar zxvf userApps.v358.src.tgz 
+    mv userApps kentUtils
+
+    cd kentUtils
+    make
+    
+    mkdir /groups
+    mkdir /clustertmp
+    mkdir /scratch
+    mkdir /scratch-ii2
+
+%environment
+  export  PATH="/Software/kentUtils/bin:$PATH"
+  export HOME="/Software/kentUtils/"
+
+%test
+    

@@ -1,0 +1,62 @@
+Bootstrap: docker
+From: ubuntu:20.04
+#Bootstrap: localimage
+#From: /home/zed/.singularity/darachm-containers-ubuntu2004.simg 
+
+%labels
+
+    MAINTAINER darachm
+
+    NOTES Tensorflow2 compiled
+
+%help
+
+    This is to make an ubuntu 20.04 container with a compiled Tensorflow2
+    installed in it for python3. This is necessary for systems with some older 
+    processors, specifically my R710, something something about AVX instructions.
+
+    Intention is that this is the base for a jupyter+pandas+etc build, since 
+    this takes a long time to compile.
+
+%environment
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%post
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+    # Got the below from somewhere else, opening up the sources list
+    sed -i 's/main/main restricted universe/g' /etc/apt/sources.list
+
+    export DEBIAN_FRONTEND="noninteractive"
+
+    apt -y update 
+    apt install -y git python3-dev python3-pip golang
+    python3 -m pip install -U pip numpy wheel
+    python3 -m pip install -U pip wheel
+    python3 -m pip install numpy==1.19.4 six==1.15.0
+    python3 -m pip install -U keras_preprocessing --no-deps
+
+    # symlinking so that bazel's env call can find it
+    ln -s /usr/bin/python3 /usr/local/bin/python
+
+    # Bazelisk
+    go get github.com/bazelbuild/bazelisk
+
+    # symlinking so can be found as bazel
+    ln -s ~/go/bin/bazelisk /usr/local/bin/bazel
+
+    git clone https://github.com/tensorflow/tensorflow.git
+    cd tensorflow
+    git checkout v2.4.0-rc4 
+
+    bazel build //tensorflow/tools/pip_package:build_pip_package \
+         --python_path="/usr/bin/python3" --config=v2
+    ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+
+    python3 -m pip install /tmp/tensorflow_pkg/tensorflow-2.4.0rc4-*whl
+
+%test
+    python3 -c "import tensorflow as tf; print(tf.__version__)"
+

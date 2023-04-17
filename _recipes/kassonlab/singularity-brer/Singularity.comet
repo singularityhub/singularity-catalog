@@ -1,0 +1,179 @@
+# Wzm-Wzt simulations
+# Contents:
+#     Ubuntu 18.04 (default)
+#     CUDA version 10.1 (default)
+#     GNU compilers (upstream)
+#     OFED (upstream)
+#     OpenMPI version 2.1.5 (default)
+#     Gromacs 2019
+#     gmxapi v0.0.7.4
+#     sample_restraint corr-struct
+#     run_brer master
+
+BootStrap: docker
+From: nvidia/cuda:9.2-devel-ubuntu16.04
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+# Python
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python \
+        python-dev \
+        python3 \
+        python3-dev
+    rm -rf /var/lib/apt/lists/*
+
+# GNU compiler
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends software-properties-common
+    apt-add-repository ppa:ubuntu-toolchain-r/test -y
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        g++-6 \
+        gcc-6
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    update-alternatives --install /usr/bin/gcc gcc $(which gcc-6) 30
+    update-alternatives --install /usr/bin/g++ g++ $(which g++-6) 30
+    update-alternatives --install /usr/bin/gcov gcov $(which gcov-6) 30
+
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        cmake \
+        git
+    rm -rf /var/lib/apt/lists/*
+
+# OFED
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        dapl2-utils \
+        ibutils \
+        ibverbs-utils \
+        infiniband-diags \
+        libdapl-dev \
+        libibcm-dev \
+        libibmad-dev \
+        libibmad5 \
+        libibverbs-dev \
+        libibverbs1 \
+        libmlx4-1 \
+        libmlx4-dev \
+        libmlx5-1 \
+        libmlx5-dev \
+        librdmacm-dev \
+        librdmacm1 \
+        opensm \
+        rdmacm-utils
+    rm -rf /var/lib/apt/lists/*
+
+# OpenMPI version 1.8.4
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        bzip2 \
+        file \
+        hwloc \
+        libnuma-dev \
+        make \
+        openssh-client \
+        perl \
+        tar \
+        wget
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.open-mpi.org/software/ompi/v1.8/downloads/openmpi-1.8.4.tar.bz2
+    mkdir -p /var/tmp && tar -x -f /var/tmp/openmpi-1.8.4.tar.bz2 -C /var/tmp -j
+    cd /var/tmp/openmpi-1.8.4 &&  CC=gcc CXX=g++ ./configure --prefix=/opt/openmpi --enable-mpi-cxx --with-cuda --with-verbs
+    make -j$(nproc)
+    make -j$(nproc) install
+    rm -rf /var/tmp/openmpi-1.8.4.tar.bz2 /var/tmp/openmpi-1.8.4
+%environment
+    export LD_LIBRARY_PATH=/opt/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/opt/openmpi/bin:$PATH
+%post
+    export LD_LIBRARY_PATH=/opt/openmpi/lib:$LD_LIBRARY_PATH
+    export PATH=/opt/openmpi/bin:$PATH
+
+# pip
+%post
+    apt-get update -y
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3-pip \
+        python3-setuptools \
+        python3-wheel
+    rm -rf /var/lib/apt/lists/*
+%post
+    cd /
+    pip3 install setuptools wheel cmake cython numpy mpi4py networkx
+
+%environment
+    export PATH=$PATH:/usr/local/gromacs/bin
+    export PYTHONPATH=$PYTHONPATH:/usr/lib/python3.5/site-packages:/usr/local/lib/python3.5/dist-packages:/builds/gmxapi/build:/builds/sample_restraint/build/src/pythonmodule
+%post
+    export PATH=$PATH:/usr/local/gromacs/bin
+    export PYTHONPATH=$PYTHONPATH:/usr/lib/python3.5/site-packages:/usr/local/lib/python3.5/dist-packages:/builds/gmxapi/build:/builds/sample_restraint/build/src/pythonmodule
+
+# GROMACS 2019
+
+%post
+    cd /
+    mkdir -p /builds/gromacs && cd /builds/gromacs && git clone --depth=1 --branch release-2019 https://github.com/gromacs/gromacs src && cd -
+    mkdir -p /builds/gromacs/build && cd /builds/gromacs/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DGMX_BUILD_OWN_FFTW=ON -DGMX_GPU=ON -DGMX_MPI=OFF -DGMX_OPENMP=ON -DGMXAPI=ON -DMPIEXEC_PREFLAGS=--allow-run-as-root /builds/gromacs/src
+    cmake --build /builds/gromacs/build --target all -- -j$(nproc)
+    cmake --build /builds/gromacs/build --target install -- -j$(nproc)
+    cmake --build /builds/gromacs/build --target check -- -j$(nproc)
+
+# gmxapi 0.0.7.4
+
+%post
+    cd /
+    mkdir -p /builds/gmxapi && cd /builds/gmxapi && git clone  https://github.com/kassonlab/gmxapi src && cd - && cd /builds/gmxapi/src && git checkout 4151f10871ad5fdcf5cb2f09b1febb632c560b4e && cd -
+    mkdir -p /builds/gmxapi/build && cd /builds/gmxapi/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DPYTHON_EXECUTABLE=`which python3` -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.5m.so /builds/gmxapi/src
+    cmake --build /builds/gmxapi/build --target all -- -j$(nproc)
+    cmake --build /builds/gmxapi/build --target install -- -j$(nproc)
+
+# sample_restraint
+
+%post
+    cd /
+    mkdir -p /builds/sample_restraint && cd /builds/sample_restraint && git clone --depth=1 --branch corr-struct https://github.com/jmhays/sample_restraint src && cd -
+    mkdir -p /builds/sample_restraint/build && cd /builds/sample_restraint/build && cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DPYTHON_EXECUTABLE=`which python3` -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.6m.so /builds/sample_restraint/src
+    cmake --build /builds/sample_restraint/build --target all -- -j$(nproc)
+    cmake --build /builds/sample_restraint/build --target install -- -j$(nproc)
+
+# run_brer master
+
+%post
+    cd /
+    mkdir -p /builds/ && cd /builds/ && git clone --depth=1 --branch master https://github.com/jmhays/run_brer run_brer && cd -
+    pip3 install /builds/run_brer/
+
+%labels
+    wzm_wzt devel
+
+# Make the TACC directories
+
+%post
+    cd /
+    mkdir -p /scratch /work /home1 /gpfs /corral-repl /corral-tacc /data
+
+# Make the comet directories
+
+%post
+    cd /
+    mkdir -p /oasis /projects /scratch
+
+%post
+    cd /
+    mkdir -p /scratch
+    cd /scratch
+
+

@@ -1,0 +1,196 @@
+Bootstrap: localimage
+From: lto-deps.sif
+Stage: build
+
+
+%post
+	# Install the SDK, using the LTOed packages in /home/dev/packages, and some
+	# common build tools:
+	apk add alpine-sdk git autoconf automake groff libtool grep file
+	
+	
+	# Install readily-available, statically-linked dependencies:
+	apk add zlib-dev zlib-static                   # Static /lib/libz.a
+	apk add nghttp2-dev nghttp2-static             # Static /usr/lib/libnghttp2.a
+	apk add openssl-dev openssl-libs-static        # Static /usr/lib/libcrypto.a and /usr/lib/libssl.a
+	apk add bzip2-dev bzip2-static                 # Static /usr/lib/libbz2.a
+	apk add lz4-dev lz4-static                     # Static /usr/lib/liblz4.a
+	apk add zstd-dev zstd-static                   # Static /usr/lib/libzstd.a
+	apk add xz-dev                                 # Static /usr/lib/liblzma.a
+	apk add lzo-dev                                # Static /usr/lib/liblzo.a
+	apk add expat-dev expat-static                 # Static /usr/lib/libexpat.a
+	apk add libssh2-dev libssh2-static             # Static /usr/lib/libssh2.a
+	apk add acl-dev acl-static                     # Static /lib/libacl.a         # A requirement of libarchive
+	apk add libarchive-dev libarchive-static       # Static /usr/lib/libarchive.a
+	apk add e2fsprogs-dev e2fsprogs-static         # Static /usr/lib/libcom_err.a
+	apk add curl-dev curl-static                   # Static /usr/lib/libcurl.a
+	apk add nlohmann-json                          # Header-only nlohmann-json
+	
+	
+	# Install more packages:
+	apk add cmake zip nano strace gdb              \
+	        autoconf automake groff libtool perl   \
+	        python3 python3-dev                    \
+	        py3-setuptools py3-setuptools_scm      \
+	        py3-pybind11 py3-pybind11-dev          \
+	        bsd-compat-headers linux-headers       # Missing /usr/include/sys/cdefs.h     and
+	                                               #         /usr/include/linux/limits.h
+	
+	
+	# Install unavailable or inadequate dependencies from source:
+	#   - cli11
+	#   - yaml-cpp
+	#   - reproc++
+	#   - libsolv
+	
+	pushd /opt
+	export CFLAGS="-Os -flto -fomit-frame-pointer"
+	export CXXFLAGS="${CFLAGS}"
+	export CPPFLAGS="${CFLAGS}"
+	export CC="gcc ${CFLAGS}"
+	export CXX="g++ ${CXXFLAGS}"
+	
+	
+	# CLI11 is a header-only library
+	git clone 'https://github.com/CLIUtils/CLI11.git' CLI11
+	pushd CLI11
+	git checkout v1.9.1
+	cp -R include/CLI/ /usr/include/
+	popd
+	rm -R CLI11
+	
+	# yaml-cpp is available only in dynamically-linked form from apk. Compile it ourselves.
+	git clone 'https://github.com/jbeder/yaml-cpp.git' yaml-cpp
+	pushd yaml-cpp
+	git checkout yaml-cpp-0.6.3
+	mkdir build
+	cd build
+	cmake -DCMAKE_INSTALL_PREFIX=/usr \
+	      -DCMAKE_BUILD_TYPE="MinSizeRel" \
+	      -DCMAKE_INSTALL_LIBDIR=lib \
+	      -DYAML_BUILD_SHARED_LIBS=OFF \
+	      -DYAML_CPP_BUILD_TESTS=OFF \
+	      ..
+	make -j8
+	make install
+	popd
+	rm -R yaml-cpp
+	
+	# reproc++ is a library for launching subprocesses.
+	git clone 'https://github.com/DaanDeMeyer/reproc.git' reproc
+	pushd reproc
+	git checkout v14.2.2
+	mkdir build
+	cd build
+	cmake -DCMAKE_INSTALL_PREFIX=/usr \
+	      -DCMAKE_BUILD_TYPE="MinSizeRel" \
+	      -DCMAKE_INSTALL_LIBDIR=lib \
+	      -DBUILD_SHARED_LIBS=OFF \
+	      -DREPROC++=ON \
+	      ..
+	make all
+	make install
+	popd
+	rm -R reproc
+	
+	# libsolv
+	git clone 'https://github.com/openSUSE/libsolv.git' libsolv
+	pushd libsolv
+	git checkout 0.7.17
+	mkdir build
+	cd build
+	cmake -DCMAKE_INSTALL_PREFIX=/usr \
+	      -DCMAKE_BUILD_TYPE="MinSizeRel" \
+	      -DCMAKE_INSTALL_LIBDIR=lib \
+	      -DENABLE_STATIC=ON \
+	      -DDISABLE_SHARED=ON \
+	      -DENABLE_ZLIB_COMPRESSION=ON \
+	      -DENABLE_LZMA_COMPRESSION=ON \
+	      -DENABLE_ZSTD_COMPRESSION=ON \
+	      -DENABLE_BZIP2_COMPRESSION=ON \
+	      -DENABLE_CONDA=ON \
+	      -DMULTI_SEMANTICS=ON \
+	      ..
+	make -j8
+	make install
+	popd
+	rm -R libsolv
+	
+	
+	#######################
+	##     MICROMAMBA    ##
+	#######################
+	git clone 'https://github.com/mamba-org/mamba.git' Mamba
+	pushd Mamba
+	
+	#
+	# Apply patch series.
+	# Deletes a number of static libraries from the link line.
+	# Also adds a few extra link flags for a fully static LTO build.
+	#
+	patch -p1 <<-'EOF'
+		diff --git a/src/micromamba/CMakeLists.txt b/src/micromamba/CMakeLists.txt
+		index f0e5496..f83c5e7 100644
+		--- a/src/micromamba/CMakeLists.txt
+		+++ b/src/micromamba/CMakeLists.txt
+		@@ -18,18 +18,11 @@ if (STATIC_DEPENDENCIES AND UNIX)
+		         libcurl.a
+		         libssh2.a
+		 
+		-        libgssapi_krb5.a
+		-        libkrb5.a
+		-        libk5crypto.a
+		-        libkrb5support.a
+		-        libcom_err.a
+		-
+		         libssl.a
+		         libcrypto.a
+		 
+		         libarchive.a
+		 
+		-        libiconv.a
+		         libbz2.a
+		         liblz4.a
+		         libzstd.a
+		@@ -66,8 +59,9 @@ if (STATIC_DEPENDENCIES AND UNIX)
+		         set (MAMBA_FORCE_DYNAMIC_LIBS resolv)
+		         target_link_options(micromamba PRIVATE -static-libstdc++)
+		     elseif (UNIX)
+		-        set(MAMBA_FORCE_DYNAMIC_LIBS rt dl resolv)
+		-        target_link_options(micromamba PRIVATE -static-libstdc++ -static-libgcc)
+		+        set(MAMBA_FORCE_DYNAMIC_LIBS)
+		+        target_link_options(micromamba PRIVATE -Os -static -static-libstdc++ -static-libgcc -flto)
+		+        set_target_properties(micromamba PROPERTIES LINK_SEARCH_END_STATIC ON)
+		     endif()
+		 
+		     target_link_libraries(micromamba PRIVATE ${FINAL_LIBS} ${MAMBA_FORCE_DYNAMIC_LIBS})
+	EOF
+	
+	#
+	# Perform actual build of micromamba.
+	#
+	mkdir build
+	cd build
+	cmake -DCMAKE_INSTALL_PREFIX=/usr \
+	      -DCMAKE_BUILD_TYPE="MinSizeRel" \
+	      -DCMAKE_INSTALL_LIBDIR=lib \
+	      -DCMAKE_CXX_FLAGS="-DMAMBA_USE_STD_FS=1" \
+	      -DBUILD_EXE=ON \
+	      -DBUILD_BINDINGS=OFF \
+	      -DBUILD_STATIC=ON \
+	      -DBUILD_SHARED=OFF \
+	      -DSTATIC_DEPENDENCIES=ON \
+	      ..
+	make -j8 && make install && strip /usr/bin/micromamba
+	popd
+	rm -R Mamba
+
+
+
+Bootstrap: localimage
+From: alpine-edge.sif
+Stage: final
+
+
+%files from build
+/usr/bin/micromamba

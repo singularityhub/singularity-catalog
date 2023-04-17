@@ -1,0 +1,72 @@
+Bootstrap: localimage
+From: alpine-lto.sif
+Stage: ltodeps
+
+
+%files
+aports.patch /opt/
+
+
+%post
+	# As a zeroth-priority item, Singularity mounts / as nosuid, and this causes problems.
+	# Remount with options allowing suid.
+	mount -o remount,suid /
+	
+	
+	# Install the SDK, using the LTOed packages in /home/dev/packages, and some
+	# common build tools:
+	apk add alpine-sdk git autoconf automake groff libtool grep file
+	
+	
+	# For a speedup and extra compression, the base image does not have a Git branch
+	# checked out. We check one out now, and patch the tree for our needs.
+	pushd /home/dev/aports
+	sudo -u dev git checkout master
+	patch -p1 < /opt/aports.patch
+	popd
+	
+	
+	# Compile with LTO a number of packages, in topological order of dependencies:
+	function ltoify () {
+		pushd "/home/dev/aports/$1" &> /dev/null
+		apk update                  &> /dev/null
+		sudo -u dev abuild -r
+		popd                        &> /dev/null
+	}
+	ltoify main/rhash
+	ltoify main/libarchive
+	ltoify main/libssh2
+	ltoify main/libffi
+	ltoify main/libuv
+	ltoify main/libcap-ng
+	ltoify main/libunistring
+	ltoify main/libxml2
+	ltoify main/gettext
+	ltoify main/gdbm
+	ltoify main/sqlite
+	ltoify main/tcl
+	ltoify main/util-linux
+	ltoify main/e2fsprogs
+	ltoify main/python3
+	ltoify main/py3-ordered-set
+	ltoify main/py3-appdirs
+	ltoify main/py3-six
+	ltoify main/py3-parsing
+	ltoify main/py3-packaging
+	ltoify main/py3-setuptools
+	ltoify community/py3-pybind11
+	ltoify community/nlohmann-json
+
+
+Bootstrap: localimage
+From: alpine-lto.sif
+Stage: depsready
+
+
+%files from ltodeps
+/home/dev/packages/* /home/dev/packages
+
+
+%post
+	# Chown dev's home back. Apparently Singularity's %files copy doesn't preserve ownership?
+	chown -R dev:dev /home/dev/packages/

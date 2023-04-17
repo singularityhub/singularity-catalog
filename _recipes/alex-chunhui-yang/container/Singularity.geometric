@@ -1,0 +1,43 @@
+Bootstrap: docker
+From: ribin7bok/pytorch_geometric
+
+%environment 
+  SHELL=/bin/bash
+  export SHELL
+  export HDF5_USE_FILE_LOCKING='FALSE'
+  export PATH=/usr/local/cuda/bin:$PATH
+  export CPATH=/usr/local/cuda/include:$CPATH
+  
+%setup
+# runs on host
+# the path to the image is $SINGULARITY_ROOTFS
+
+%post
+# post-setup script
+
+# load environment variables
+. /environment
+
+# use bash as default shell
+echo 'SHELL=/bin/bash' >> /environment
+
+# make environment file executable
+chmod +x /environment
+
+# default mount paths
+mkdir /scratch
+
+# fix this issue: https://github.com/singularityware/singularity/issues/1182#issuecomment-381796545
+touch /usr/bin/nvidia-smi
+
+apt-get update && apt-get -y install locales
+locale-gen en_US.UTF-8
+apt-get -y --force-yes install vim wget bzip2 git
+
+%runscript
+# executes with the singularity run command
+# delete this section to use existing docker ENTRYPOINT command
+echo "Welcome to Singularity"
+
+%test
+# test that script is a success

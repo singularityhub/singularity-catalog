@@ -1,0 +1,36 @@
+BootStrap: docker
+From: nvidia/cuda:10.0-cudnn7-runtime-centos7
+# -----------------------------------------------------------------------------------
+# This is a port of the Dockerfile maintained at https://github.com/uber/horovod
+
+
+%post
+# -----------------------------------------------------------------------------------
+# 
+    # yum basics
+    yum update -y
+    yum install -y gcc gcc-c++ bzip2 which cmake make libfabric git curl 
+    yum install -y wget vim
+    yum install -y openssh-clients zip
+    
+    # Install Open MPI
+    mkdir /tmp/openmpi && \
+    cd /tmp/openmpi && \
+    wget https://www.open-mpi.org/software/ompi/v4.0/downloads/openmpi-4.0.0.tar.gz && \
+    tar zxf openmpi-4.0.0.tar.gz && \
+    cd openmpi-4.0.0 && \
+    ./configure --enable-orterun-prefix-by-default --disable-getpwuid --prefix=/tmp/openmpi/build --with-cuda=/usr/local/cuda/ --with-verbs && \
+    make -j 4 all && \
+    make install && \
+    ldconfig && \
+    cd 
+    
+%environment
+# -----------------------------------------------------------------------------------
+    
+    export PATH=$PATH:/tmp/openmpi-4.0.0/build/bin:$PATH
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/tmp/openmpi-4.0.0/build/lib:$LD_LIBRARY_PATH
+    export LIBRARY_PATH=/tmp/openmpi-4.0.0/build/lib:$LIBRARY_PATH
+    export CPATH=/tmp/openmpi-4.0.0/build/include:$CPATH
+    export C_INCLUDE_PATH=/tmp/openmpi-4.0.0/build/include:$C_INCLUDE_PATH
+    export CUDA_HOME=/usr/local/cuda

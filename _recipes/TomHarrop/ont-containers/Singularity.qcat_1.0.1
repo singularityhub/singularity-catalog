@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: python:3.7.3-alpine3.9
+
+%help
+    qcat 1.0.1
+
+%labels
+    MAINTAINER "Tom Harrop"
+    VERSION "qcat 1.0.1"
+
+
+%post
+    apk add -u \
+        bash \
+        build-base \
+        perl
+
+    pip3 install qcat==1.0.1
+
+%runscript
+    exec /usr/local/bin/qcat "$@"

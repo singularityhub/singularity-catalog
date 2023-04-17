@@ -1,5 +1,4 @@
 BootStrap: docker
-#From: ubuntu:20.04
 From: alpine:3.8
 
 %labels
@@ -10,7 +9,7 @@ From: alpine:3.8
 %post
 
     apk update
-    apk add  graphviz
+    apk add graphviz bash
 
 
 %environment

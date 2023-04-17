@@ -1,0 +1,46 @@
+#OligoMiner in singularity
+
+Bootstrap: docker
+From: ubuntu:16.04
+
+%runscript
+    cd /OligoMiner
+    python "$@"
+
+%post
+    apt-get update
+    apt-get -y install wget sudo 
+
+    apt-get update
+    apt-get -y install python python-setuptools git-core bzip2
+
+    
+    #update to version 1.19.0
+    wget https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh && \
+    bash Miniconda2-latest-Linux-x86_64.sh -b -p /Software/anaconda && \
+    rm Miniconda2-latest-Linux-x86_64.sh
+    PATH="/Software/anaconda/bin:$PATH"
+    
+    conda config --add channels r
+    conda config --add channels defaults
+    conda config --add channels conda-forge
+    conda config --add channels bioconda    
+    conda install numpy 
+    conda install scipy biopython scikit-learn bowtie2 jellyfish
+
+    cd /
+    git clone https://github.com/brianbeliveau/OligoMiner
+  
+    mkdir /groups
+    mkdir /scratch
+    mkdir /scratch-ii2
+
+%environment
+    PATH="PATH=/Software/anaconda/bin:${PATH}"
+    export $PATH
+
+%test
+
+    
+
+

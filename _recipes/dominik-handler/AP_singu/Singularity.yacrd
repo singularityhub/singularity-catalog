@@ -1,0 +1,24 @@
+#bedtools in singularity
+
+Bootstrap: docker
+From: conda/miniconda3
+
+%labels
+  maintainer Dominik Handler <Dominik Handler@imba.oeaw.ac.at>
+  yacrd from GIT 2019-07-01  
+
+%runscript
+    yacrd "$@"
+
+%post
+  conda config --add channels defaults
+  conda config --add channels conda-forge
+  conda config --add channels bioconda
+
+  conda install yacrd
+
+%environment
+
+
+%test
+    

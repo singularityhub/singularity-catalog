@@ -1,0 +1,98 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%post
+    SERVER_VERSION=5.6.1
+    VERSION_SUFFIX=ice36-b225
+    INSIGHT_VERSION=5.5.10
+    OMERO_ROOT=/opt/omero
+
+    # install tzdata
+    ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+    apt-get update && apt-get install -y --no-install-recommends tzdata
+    dpkg-reconfigure --frontend noninteractive tzdata
+
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        gcc \
+        db5.3-util \
+        libssl-dev \
+        libbz2-dev \
+        libmcpp-dev \
+        libdb++-dev \
+        libdb-dev \
+        nginx \
+        libtiff5-dev \
+        libjpeg8-dev \
+        zlib1g-dev \
+        libfreetype6-dev \
+        liblcms2-dev \
+        libwebp-dev \
+        tcl8.6-dev \
+        tk8.6-dev \
+        unzip \
+        default-jdk
+
+    # install other tools and dependencies
+    apt-get install -y --allow-downgrades --no-install-recommends \
+        dbus \
+        wget \
+        git \
+        mercurial \
+        subversion \
+        vim \
+        nano
+
+    #dbus-uuidgen --ensure=/etc/machine-id
+
+    # install miniconda 
+    wget --no-check-certificate https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/conda.sh && \
+    /bin/bash ~/conda.sh -b -p /opt/conda && \
+    rm ~/conda.sh
+
+    export PATH=/opt/conda/bin:$PATH
+
+    # install Ice 3.6.5
+    conda install -c ome -c conda-forge zeroc-ice36-python omero-py ipykernel numpy pillow opencv
+
+    # install OMERO.insight
+    mkdir -p $OMERO_ROOT
+    cd $OMERO_ROOT
+    wget https://github.com/ome/omero-insight/releases/download/v${INSIGHT_VERSION}/OMERO.insight-${INSIGHT_VERSION}.zip --no-check-certificate -O ./omero-insight.zip
+    unzip omero-insight.zip
+    mv OMERO.insight-${INSIGHT_VERSION} OMERO.insight
+
+    # install OMERO Python bindings
+    cd $OMERO_ROOT
+    wget https://github.com/ome/openmicroscopy/releases/download/v${SERVER_VERSION}/OMERO.server-${SERVER_VERSION}-${VERSION_SUFFIX}.zip --no-check-certificate -O ./omeropy.zip
+    unzip omeropy.zip
+    mv OMERO.server-${SERVER_VERSION}-${VERSION_SUFFIX} OMERO.server
+
+    # clean up to reduce disk space required during installation
+    conda clean --index-cache --tarballs --packages --yes
+    rm omeropy.zip
+    rm omero-insight.zip
+
+%runscript
+    exec python $@
+
+%help
+This container provides the Python 3.7 bindings for:
+    * OMERO-server 5.6.1 (CLI and Python bindings)
+    * OMERO-insight 5.5.10
+
+%environment
+    export ANACONDA_HOME=/opt/conda
+    export PATH="$ANACONDA_HOME/bin:$PATH"
+    unset CONDA_DEFAULT_ENV
+
+    OMERO_ROOT=/opt/omero
+    # needed for omero import
+    export OMERODIR=$OMERO_ROOT/OMERO.server
+
+    export PATH="$OMERODIR/bin:$OMERO_ROOT/OMERO.insight:$PATH"
+    export PYTHONPATH=$OMERODIR/lib/python:$PYTHONPATH
+    export LC_ALL=C
+
+%labels
+AUTHOR khs3z@virginia.edu, rs7wz@virginia.edu

@@ -1,0 +1,66 @@
+Bootstrap: localimage
+From: alpine-bareuser.sif
+Stage: initdev
+
+
+%post
+	# As a zeroth-priority item, Singularity mounts / as nosuid, and this causes problems.
+	# Remount with options allowing suid.
+	mount -o remount,suid /
+	
+	
+	# Install bare minimum required to initialize dev's home directory and
+	# relevant other files.
+	apk add git abuild
+	
+	
+	# Continue creating setup for building packages as recommended in
+	#    https://wiki.alpinelinux.org/wiki/Include:Setup_your_system_and_account_for_building_packages
+	sudo -u dev git config --global user.name  Dev                 # Set his name to Dev
+	sudo -u dev git config --global user.email dev@dev.dev         # Set his email to a dummy email
+	sudo -u dev abuild-keygen -ain                                 # Generate abuild key for signing
+	sudo -u dev mkdir -p /home/dev/packages/testing/$(uname -m)    # Create target packages repository test/,
+	sudo -u dev mkdir -p /home/dev/packages/main/$(uname -m)       # ... main/,
+	sudo -u dev mkdir -p /home/dev/packages/community/$(uname -m)  # and community/.
+	sudo -u dev apk index -o /home/dev/packages/testing/$(uname -m)/APKINDEX.tar.gz
+	sudo -u dev apk index -o /home/dev/packages/main/$(uname -m)/APKINDEX.tar.gz
+	sudo -u dev apk index -o /home/dev/packages/community/$(uname -m)/APKINDEX.tar.gz
+	sudo -u dev abuild-sign -k /home/dev/.abuild/*.rsa /home/dev/packages/testing/$(uname -m)/APKINDEX.tar.gz
+	sudo -u dev abuild-sign -k /home/dev/.abuild/*.rsa /home/dev/packages/main/$(uname -m)/APKINDEX.tar.gz
+	sudo -u dev abuild-sign -k /home/dev/.abuild/*.rsa /home/dev/packages/community/$(uname -m)/APKINDEX.tar.gz
+	sudo -u dev git clone  --no-checkout          \
+	    'https://git.alpinelinux.org/aports.git'  \
+	    /home/dev/aports                                           # Clone Alpine aports Git repository.
+	
+	
+	# Edit system configuration files related to abuild and apk.
+	sed -i -e 's/export JOBS=2/export JOBS=8/g' \
+	       -e 's/export CFLAGS="-Os -fomit-frame-pointer"/export CFLAGS="-Os -flto -fomit-frame-pointer"/g' \
+	          /etc/abuild.conf
+	cat - /etc/apk/repositories <<-'EOF' > /etc/apk/repositories.new
+		/home/dev/packages/testing/
+		/home/dev/packages/main/
+		/home/dev/packages/community/
+	EOF
+	mv /etc/apk/repositories.new /etc/apk/repositories
+
+
+
+Bootstrap: localimage
+From: alpine-bareuser.sif
+Stage: basedev
+
+
+%files from initdev
+/etc/abuild.conf
+/etc/apk/repositories
+/etc/apk/keys/dev*.rsa.pub /etc/apk/keys/
+/home/dev/.abuild
+/home/dev/.gitconfig
+/home/dev/aports
+/home/dev/packages
+
+
+%post
+	# Chown dev's home back. Apparently Singularity's %files copy doesn't preserve ownership?
+	chown -R dev:dev /home/dev/

@@ -1,0 +1,99 @@
+Bootstrap: docker
+From: nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
+Stage: build
+
+#%files
+#/etc/apt/sources.list.d/cuda.list /etc/apt/sources.list.d/
+#/etc/apt/sources.list.d/nvidia-ml.list /etc/apt/sources.list.d/
+#/etc/apt/trusted.gpg /etc/apt/trusted.gpg.d/cuda.gpg
+
+%post
+# Cuda support
+# Ensure the cuda libraries are compatible with the custom Tensorflow wheels.
+# TODO(b/120050292): Use templating to keep in sync or COPY installed binaries from it.
+CUDA_VERSION=10.0.130
+CUDA_PKG_VERSION=10-0=$CUDA_VERSION-1
+PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
+
+# The stub is useful to us both for built-time linking and run-time linking, on CPU-only systems.
+# When intended to be used with actual GPUs, make sure to (besides providing access to the host
+# CUDA user libraries, either manually or through the use of nvidia-docker) exclude them. One
+# convenient way to do so is to obscure its contents by a bind mount:
+#   docker run .... -v /non-existing-directory:/usr/local/cuda/lib64/stubs:ro ...
+LD_LIBRARY_PATH="/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib64/stubs"
+NVIDIA_VISIBLE_DEVICES=all
+NVIDIA_DRIVER_CAPABILITIES=compute,utility
+NVIDIA_REQUIRE_CUDA="cuda>=10.0"
+
+apt-get update && apt-get install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
+    cuda-cupti-$CUDA_PKG_VERSION \
+    cuda-cudart-$CUDA_PKG_VERSION \
+    cuda-cudart-dev-$CUDA_PKG_VERSION \
+    cuda-libraries-$CUDA_PKG_VERSION \
+    cuda-libraries-dev-$CUDA_PKG_VERSION \
+    cuda-nvml-dev-$CUDA_PKG_VERSION \
+    cuda-minimal-build-$CUDA_PKG_VERSION \
+    cuda-command-line-tools-$CUDA_PKG_VERSION \
+    libcudnn7=7.5.0.56-1+cuda10.0 \
+    libcudnn7-dev=7.5.0.56-1+cuda10.0 \
+    libnccl2=2.4.2-1+cuda10.0 \
+    libnccl-dev=2.4.2-1+cuda10.0 && \
+ln -s /usr/local/cuda-10.0 /usr/local/cuda && \
+ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1
+apt-get autoremove -y
+echo "Stage build done"
+
+Bootstrap: docker
+From: gcr.io/kaggle-images/python-tensorflow-whl:2.1.0-rc0-py36
+Stage: build2
+
+#%files
+#/tmp/tensorflow_gpu/*.whl /tmp/tensorflow_gpu/
+
+%post
+# Reinstall packages with a separate version for GPU support.
+# enter full path of pip and conda
+/opt/conda/bin/pip uninstall -y tensorflow && \
+/opt/conda/bin/pip install /tmp/tensorflow_gpu/tensorflow*.whl && \
+rm -rf /tmp/tensorflow_gpu && \
+/opt/conda/bin/conda remove --force -y pytorch torchvision torchaudio cpuonly && \
+/opt/conda/bin/conda install -y pytorch torchvision torchaudio cudatoolkit=10.0 -c pytorch && \
+/opt/conda/bin/pip uninstall -y mxnet && \
+/opt/conda/bin/pip install --no-deps mxnet-cu100
+# b/126259508 --no-deps prevents numpy from being downgraded.
+echo "Stage build2 done"
+
+Bootstrap: docker
+From: gcr.io/kaggle-images/python:staging
+Stage: final
+
+%post
+# Install GPU-only packages
+/opt/conda/bin/pip install \
+    pycuda \
+    cupy-cuda100 \
+    pynvrtc
+
+echo "Stage final done"
+
+%environment
+export CUDA_VERSION=10.0.130
+export CUDA_PKG_VERSION=10-0=$CUDA_VERSION-1
+export PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
+export LD_LIBRARY_PATH="/usr/local/nvidia/lib64:/usr/local/cuda/lib64:/usr/local/cuda/lib64/stubs"
+export NVIDIA_VISIBLE_DEVICES=all
+export NVIDIA_DRIVER_CAPABILITIES=compute,utility
+export NVIDIA_REQUIRE_CUDA="cuda>=10.0"
+
+%runscript
+exec /bin/bash "$@"
+
+%startscript
+exec /bin/bash "$@"
+
+%help
+
+%labels
+AUTHOR rs7wz@virginia.edu
+com.nvidia.volumes.needed="nvidia_driver"
+com.nvidia.cuda.version="${CUDA_VERSION}"

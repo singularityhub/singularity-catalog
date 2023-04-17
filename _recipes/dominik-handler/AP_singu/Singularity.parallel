@@ -1,0 +1,44 @@
+Bootstrap: docker
+From: conda/miniconda3
+
+%labels
+  maintainer Dominik Handler <Dominik Handler@imba.oeaw.ac.at  
+  gnu-parallel v0.6.4 
+
+%post
+    # apt-get update
+    # apt-get -y install wget
+
+    # apt-get clean && apt-get update && apt-get install -y \
+    #    locales \
+    #    language-pack-fi  \
+    #    language-pack-en && \
+    #    export LANGUAGE=en_US.UTF-8 && \
+    #    export LANG=en_US.UTF-8 && \
+    #    export LC_ALL=en_US.UTF-8 && \
+    #    locale-gen en_US.UTF-8 && \
+    #    dpkg-reconfigure --frontend noninteractive locales
+
+
+    # apt-get update
+    # apt-get install bzip2
+    # apt-get -y install python3.6 python3-dev python3-pip python3-setuptools
+     
+    # #update to version 1.19.0
+    # wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    # bash Miniconda3-latest-Linux-x86_64.sh -b -p /Software/anaconda3 && \
+    # rm Miniconda3-latest-Linux-x86_64.sh
+    # PATH="/Software/anaconda3/bin:$PATH"
+    
+  conda config --add channels defaults
+  conda config --add channels conda-forge
+  conda config --add channels bioconda
+
+  conda install parallel
+
+%environment
+    # PATH="PATH=/Software/anaconda3/bin:${PATH}"
+    # export $PATH
+
+%runscript
+  parallel $@

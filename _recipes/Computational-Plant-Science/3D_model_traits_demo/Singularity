@@ -24,19 +24,31 @@ From: ubuntu:18.04
   
   apt-get install -y tzdata 
   
- apt install -y \
+  apt install -y \
     build-essential \
     python3-setuptools \
-    python3-pip \
-    python3-tk \
-    python3-numexpr \
-    python3-pil.imagetk \
-    python3-sklearn \
-    python3-sklearn-lib \
-    tzdata \
+    cmake-gui \
+    xorg-dev \
+    libglu1-mesa-dev \ 
+    mesa-utils \
+    libboost-all-dev \
     libgl1-mesa-glx \
     libsm6 \
-    libxext6 
+    libxext6 \
+    libcairo2 \
+    python3-pip \
+    python3 \
+    python3-tk \
+    python3-pil.imagetk \
+    python-cairo \
+    freeglut3-dev \
+    freeglut3 \
+    libopengl0 -y \
+    mesa-common-dev \
+    software-properties-common \
+    nano
+    
+    
     
   python3 -m pip install dask 
   python3 -m pip install dask distributed --upgrade
@@ -49,31 +61,47 @@ From: ubuntu:18.04
   
   #pip3 install numpy --upgrade --ignore-installed
     
-  pip3 install  cmake \
+  pip3 install  numpy \
+                Pillow \
                 rdp \
-                pandas \
                 scipy \
-                scikit-image \
+                scikit-image==0.19.3 \
+                scikit-learn \
+                scikit-build \
                 matplotlib \
-                networkx \
+                mahotas \
+                numexpr \
                 plyfile \
+                psutil \
+                cairosvg \
+                certifi \
+                pandas \
+                pytest \
+                coverage \
+                coveralls \
+                open3d \
                 opencv-python \
                 openpyxl \
-                ptvpy \
-                imagesize \
-                progressbar \
-                moviepy \
-                mayavi \
-                PyQt5 \
-                dask \
-                imagesize \
-                progressbar \
-                numpy --upgrade --ignore-installed
-  
+                click \
+                PyYAML \
+                imutils 
   
   mkdir /lscratch /db /work /scratch
   
   chmod -R a+rwx /opt/code/
+  
+  
+  pip3 install --upgrade numpy
+
+  apt-key adv --keyserver keys.openpgp.org --recv-key 612DEFB798507F25
+
+  add-apt-repository 'deb [ arch=amd64 ] https://downloads.skewed.de/apt focal main'
+
+  apt update 
+
+  apt install python3-graph-tool -y
+
+  chmod +x /opt/3D_model_traits_demo/shim.sh 
   
 %environment
   #----------------------------------------------------------

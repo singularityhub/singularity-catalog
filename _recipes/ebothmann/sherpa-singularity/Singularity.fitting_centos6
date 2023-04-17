@@ -1,0 +1,29 @@
+Bootstrap: shub
+From: ebothmann/sherpa-singularity:plotting_centos6
+
+
+%help
+A Singularity file
+
+
+%labels
+    Maintainer Enrico Bothmann
+    Version v0.1
+
+
+%environment
+    source /opt/rh/devtoolset-6/enable
+    source /opt/rh/python27/enable
+    . /usr/local/rivetenv.sh
+
+
+%runscript
+    python
+
+
+%post
+    echo Installing python dependencies ...
+    source /opt/rh/devtoolset-6/enable
+    source /opt/rh/python27/enable
+    python -m pip install -U pip
+    pip install numpy matplotlib scipy

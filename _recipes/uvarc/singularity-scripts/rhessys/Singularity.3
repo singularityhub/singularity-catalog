@@ -1,0 +1,96 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%setup
+    #cp .ecohydro.cfg $SINGULARITY_ROOTFS/opt/
+
+%post
+    apt-get -y update
+    apt -y install vim nano wget software-properties-common apt-transport-https
+
+    cat >$SINGULARITY_ROOTFS/opt/.ecohydro.cfg <<EOF
+[GDAL/OGR]
+GDAL_BASE = /opt/conda/bin
+PATH_OF_OGR2OGR = /opt/conda/bin/ogr2ogr
+PATH_OF_GDAL_RASTERIZE = /opt/conda/bin/gdal_rasterize
+PATH_OF_GDAL_WARP = /opt/conda/bin/gdalwarp
+PATH_OF_GDAL_TRANSLATE = /opt/conda/bin/gdal_translate
+
+[SCRIPT]
+ETC = /opt/conda/rhessysworkflows/etc
+
+[GRASS]
+GISBASE = /usr/lib/grass74
+MODULE_PATH = $HOME/.grass7/addons
+MODULE_ETC = /opt/conda/rhessysworkflows/etc/r.soils.texture
+
+[RHESSYS]
+PATH_OF_GIT = /usr/bin/git
+PATH_OF_MAKE = /usr/bin/make
+PATH_OF_FFMPEG = /usr/bin/ffmpeg
+EOF
+
+    # Install Ubuntu package for RHESSysWorkflows
+    apt -y install build-essential git subversion p7zip-full libxml2-dev libxslt-dev libbsd-dev ffmpeg vlc
+
+    # Install Ubuntu package for IRkernel
+    apt -y install libssl-dev libcurl4-openssl-dev
+
+    # Install Anaconda2
+    wget --quiet https://repo.continuum.io/archive/Anaconda2-4.4.0-Linux-x86_64.sh -O ~/anaconda.sh && \
+    /bin/bash ~/anaconda.sh -b -p /opt/conda && \
+    rm ~/anaconda.sh
+    export PATH=/opt/conda/bin:$PATH
+    pip install --upgrade pip
+
+    # Install R
+    add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu xenial-cran35/'
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get -y install r-base r-base-dev
+
+    # Configure default locale, see https://github.com/rocker-org/rocker/issues/19
+    apt-get clean && apt-get update && apt-get install -y locales
+    locale-gen en_US.UTF-8
+
+    # Install required R packages
+    R --slave -e 'install.packages("XML")'
+    R --slave -e 'install.packages("rgrass7")'
+
+    # Install required R packages for IRkernel https://github.com/IRkernel/IRkernel
+    R --slave -e 'install.packages("openssl")'
+    R --slave -e 'install.packages("curl")'
+    R --slave -e 'install.packages("httr")'
+    R --slave -e 'install.packages("devtools")'
+    R --slave -e 'devtools::install_github("IRkernel/IRkernel")'
+    R --slave -e 'IRkernel::installspec()'
+
+    # Install GRASS 7.4
+    add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+    apt-get update
+    apt-get -y install grass grass-dev
+
+    #Add Conda channels
+    conda config --add channels conda-forge
+    conda config --add channels landlab
+
+    #install cybergis==0.1.0
+    conda install pynacl
+    git clone https://github.com/cybergis/jupyterlib
+    cd jupyterlib && python setup.py install
+
+    #install rhessysworkflows
+    pip install rhessysworkflows
+    pip install ecohydrolib
+
+%environment
+    export PATH=/opt/conda/bin:$PATH
+    export GISBASE=/usr/lib/grass74
+    export PYTHONPATH=${PYTHON-PATH}:$GISBASE/etc/python/
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$GISBASE/lib
+    export GIS_LOCK=$$
+    export GISRC=$HOME/.grass7/rc
+    export ECOHYDROLIB_CFG=/opt/.ecohydro.cfg
+
+%runscript
+    exec python $@

@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%post
+    apt-get update && apt-get install -y fortune cowsay lolcat
+
+%environment
+    export PATH=/usr/games:$PATH
+    export LC_ALL=C
+
+%runscript
+    fortune|cowsay|lolcat
+
+%labels
+    Author Ruoshi Sun

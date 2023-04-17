@@ -1,0 +1,32 @@
+BootStrap: library
+From: ubuntu:16.04
+
+#debug
+#BootStrap: localimage
+#From: ./test.sif
+
+%post
+    apt-get -y update
+    apt-get -y install wget git software-properties-common openmpi-bin libopenmpi-dev python-numpy python-dev r-base-dev r-recommended libhdf5-openmpi-dev
+    
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-ubuntu1604.pin
+    mv cuda-ubuntu1604.pin /etc/apt/preferences.d/cuda-repository-pin-600
+    apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
+    add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/ /"
+    apt-get -y update
+    apt-get -y install cuda-minimal-build-10-0 cuda-command-line-tools-10-0
+
+ 
+%environment
+    export LC_ALL=C
+    export PATH=/TCLB:/usr/local/cuda-10.0/bin:$PATH
+    export R_LIBS_USER=/opt/r_libs  
+    export LDFLAGS="-L/usr/lib/x86_64-linux-gnu/hdf5/openmpi/  $LDFLAGS" 
+    export CPPFLAGS="-I /usr/include/hdf5/openmpi $CPPFLAGS"
+    export TSD=/opt/TCLB_STABLE
+
+%runscript
+    echo "Plain environment for TCLB/CUDA run and build"
+
+%labels
+    Author llaniewski , mdzik , and others TCLB.IO

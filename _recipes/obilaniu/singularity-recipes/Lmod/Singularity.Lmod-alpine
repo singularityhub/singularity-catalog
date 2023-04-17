@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: alpine:3.13.1
+
+
+%post
+apk add -U --no-cache bash zsh tcsh fish less procps grep nano
+sed -i -e 's|/bin/ash|/bin/bash|g' /etc/passwd
+ln -sf /bin/bash /bin/sh
+rm -rf /root/.ash_history

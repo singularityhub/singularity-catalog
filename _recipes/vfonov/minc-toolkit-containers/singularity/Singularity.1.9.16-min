@@ -1,0 +1,59 @@
+#Bootstrap: localimage
+#From: /home/vfonov/src/minc-toolkit-containers/singularity/minc-toolkit-base-min.simg
+Bootstrap: shub
+From: vfonov/minc-toolkit-containers:base-min
+
+
+# install minc packages
+%post
+    # install minc-toolkit 1.9.16
+    wget http://packages.bic.mni.mcgill.ca/minc-toolkit/Debian/minc-toolkit-1.9.16-20180117-Ubuntu_18.04-x86_64.deb
+    dpkg -i minc-toolkit-1.9.16-20180117-Ubuntu_18.04-x86_64.deb
+    rm -f minc-toolkit-1.9.16-20180117-Ubuntu_18.04-x86_64.deb 
+    
+    apt-get autoclean 
+    rm -rf /var/lib/apt/lists/*
+    
+    
+    # install minc-stuffs (automatically installs Pyminc)
+    git clone --recursive https://github.com/Mouse-Imaging-Centre/minc-stuffs.git && \
+    . /opt/minc/1.9.16/minc-toolkit-config.sh && \
+    cd minc-stuffs && \
+    ./autogen.sh && \
+    ./configure --with-minc2 --with-build-path=/opt/minc/1.9.16 && \
+    make && make install && \
+    python3 setup.py install && \
+    cd .. && rm -rf minc-stuffs
+    
+    # install RMINC
+    . /opt/minc/1.9.16/minc-toolkit-config.sh && \
+    wget https://github.com/Mouse-Imaging-Centre/RMINC/releases/download/v1.5.1.0/RMINC_1.5.1.0.tar.gz && \
+    R CMD INSTALL RMINC_1.5.1.0.tar.gz --configure-args='--with-build-path=/opt/minc/1.9.16' && \
+    rm -f RMINC_1.5.1.0.tar.gz
+
+    # install Pydpiper
+    PYDPIPER_VERSION=2.0.11
+    wget https://github.com/Mouse-Imaging-Centre/pydpiper/archive/v${PYDPIPER_VERSION}.tar.gz && \
+    tar zxf v${PYDPIPER_VERSION}.tar.gz && \
+    cd pydpiper-${PYDPIPER_VERSION} && \
+    python3 setup.py install && \
+    cd .. && rm -rf v${PYDPIPER_VERSION}.tar.gz
+
+    # install pyezminc, minc2-simple
+    . /opt/minc/1.9.16/minc-toolkit-config.sh && \
+    wget https://github.com/BIC-MNI/pyezminc/archive/release-1.2.01.tar.gz && \
+    pip2 install release-1.2.01.tar.gz --no-cache-dir && \
+    pip3 install release-1.2.01.tar.gz --no-cache-dir && \
+    wget https://github.com/vfonov/minc2-simple/archive/v0.tar.gz && \
+    tar zxf v0.tar.gz && \
+    python2 minc2-simple-0/python/setup.py install && \
+    python3 minc2-simple-0/python/setup.py install && \
+    rm -rf v0.tar.gz release-1.2.01.tar.gz minc2-simple-0 
+    
+    echo ". /opt/minc/1.9.16/minc-toolkit-config.sh" >> $SINGULARITY_ENVIRONMENT
+    
+
+%labels
+    Maintainer Vladimir S. Fonov
+    AUTHOR vladimir.fonov@gmail.com
+    Version 1.9.16

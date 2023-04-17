@@ -1,0 +1,139 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%post
+    TZ=Europe/Paris
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    apt update
+    apt -y install build-essential wget rsync locate git curl autotools-dev autoconf libtool make g++ gfortran libfftw3-dev pgplot5 python3-pip csh swig python-tk pkg-config x11-apps gedit ghostscript libpng-dev libx11-dev libglib2.0-dev mpich openmpi-bin
+    pip3 install numpy==1.21 matplotlib astropy astroplan scipy tinydb lmfit pyfits
+    ln -s /usr/bin/python3.8 /usr/bin/python
+
+    export HOME=/home/root
+    export PSRHOME=/home/root/pulsar
+
+    mkdir -p $PSRHOME
+    echo 'export PSRHOME=$HOME/pulsar' >> ~/.bashrc
+    echo 'export PATH=${PATH}:$PSRHOME/bin' >> ~/.bashrc
+    echo 'export PGPLOT_DIR=/usr/lib/pgplot5' >> ~/.bashrc
+    echo 'export PGPLOT_FONT=$PGPLOT_DIR/grfont.dat' >> ~/.bashrc
+    echo 'export TEMPO2=$PSRHOME/tempo2' >> ~/.bashrc
+    echo 'export PATH=$TEMPO2/bin:$PATH' >> ~/.bashrc
+    echo 'export PSRCAT_FILE=$PSRHOME/psrcat/psrcat.db' >> ~/.bashrc
+    echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME/lib' >> ~/.bashrc
+    echo 'export C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME/include' >> ~/.bashrc
+    echo 'export PSRCHIVE_CONFIG=$HOME/.psrchive.cfg' >> ~/.bashrc
+    echo 'PYTHONPATH=$HOME/.local/lib/python3.8/site-packages:/$PYTHONPATH' >> ~/.bashrc
+
+    cd $HOME/pulsar && \
+        wget http://ftp.debian.org/debian/pool/main/c/cfitsio/libcfitsio9_3.490-3_amd64.deb && \
+        wget http://ftp.br.debian.org/debian/pool/main/c/cfitsio/libcfitsio-dev_3.490-3_amd64.deb && \
+        dpkg -i libcfitsio9_3.490-3_amd64.deb && \
+        dpkg -i libcfitsio-dev_3.490-3_amd64.deb
+
+    apt-get install -y csh swig
+    export TZ=Europe/Paris
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    apt-get update
+    apt-get install -y python-tk
+    apt-get install -y pkg-config
+
+%environment
+    export HOME=/home/root
+    export PSRHOME=/home/root/pulsar
+    export PRESTO=$PSRHOME/presto
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH":$PSRHOME/lib:$PRESTO/lib
+    export PATH="$PATH":$PRESTO/bin
+    export PYTHONPATH="$PYTHONPATH":$PRESTO/lib/python
+
+%post
+    cd $PSRHOME && \
+        git clone git://git.code.sf.net/p/psrchive/code psrchive
+
+    cd $PSRHOME/psrchive && \
+        ./bootstrap
+    cd $PSRHOME/psrchive && \
+        ./configure --prefix=$PSRHOME || true && \
+        cd packages && make
+    cd $PSRHOME/psrchive && \
+        ./packages/fftw.csh
+    cd $PSRHOME/psrchive && \
+        ./packages/cfitsio.csh && \
+        ./configure --prefix=$PSRHOME || true
+    cd $PSRHOME/psrchive && \
+        ./packages/tempo2.csh&& \
+        ./configure --prefix=$PSRHOME || true
+    cd $PSRHOME/psrchive && \
+        ./packages/psrcat.csh && \
+        ./configure --prefix=$PSRHOME --enable-shared --with-x --with-psrcat=psrcat
+    cd $PSRHOME/psrchive && \
+        ./configure --prefix=$PSRHOME --enable-shared --with-x && \
+        make -j 6 && \
+        make install
+
+    echo 'export TEMPO=$PSRHOME/tempo' >> ~/.bashrc
+    cd $PSRHOME && \
+        git clone https://github.com/nanograv/tempo && \
+        cd tempo && \
+        ./prepare && \
+        ./configure && \
+        make && \
+        make install
+
+    echo '/home/root/pulsar/lib/python3.8/site-packages' > /usr/local/lib/python3.8/dist-packages/mymodule.pth
+
+    apt-get install -y x11-apps gedit
+    apt-get install -y ghostscript
+
+    apt-get install -y libpng-dev libx11-dev libglib2.0-dev mpich openmpi-bin
+
+    cd $PSRHOME && \
+        git clone https://github.com/scottransom/presto presto && \
+        cd $PSRHOME/presto/ && \
+        echo 'export PRESTO=$PSRHOME/presto' >> ~/.bashrc && \
+        echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME/lib:$PRESTO/lib' >> ~/.bashrc && \
+        echo 'export PATH=${PATH}:$PRESTO/bin' >> ~/.bashrc && \
+        echo 'export PYTHONPATH=${PYTHONPATH}:$PRESTO/lib/python' >> ~/.bashrc
+
+    su root && \
+        . /home/root/.bashrc && \
+        cd $PRESTO/src && \
+        make makewisdom && \
+        make clean && \
+        make prep && \
+        make
+
+    cd $PRESTO && \
+        pip3 install ./
+
+%post
+    cd $PRESTO
+    pip3 install ./
+
+%post
+    pip3 install nenupy
+    cd $PSRHOME/src
+    git clone https://github.com/telegraphic/PyGSM
+    cd PyGSM
+    wget -O gsm2016_components.h5 https://zenodo.org/record/3479985/files/gsm2016_components.h5?download=1
+    wget -O gsm_components.h5 https://zenodo.org/record/3479985/files/gsm_components.h5?download=1
+    python3 setup.py install
+
+%post
+    pip3 install python-casacore
+    cd $PSRHOME/src
+    git clone https://github.com/2baOrNot2ba/AntPat.git
+    cd $PSRHOME/src/AntPat/
+    python3 setup.py install
+
+%post
+    cd $PSRHOME/src
+    git clone https://github.com/2baOrNot2ba/dreamBeam.git
+    cd $PSRHOME/src/dreamBeam
+    python3 setup.py install
+
+
+%files
+    tempo_config/observatories.dat /home/root/pulsar/tempo2/observatory/observatories.dat
+    tempo_config/obsys.dat /home/root/pulsar/tempo/obsys.dat
+    tempo_config/psrchive.cfg /home/root/.psrchive.cfg

@@ -1,0 +1,53 @@
+#graphmap in singularity
+
+Bootstrap: docker
+From: ubuntu:16.04
+%runscript
+    mummerpath=/mummer-4.0.0beta2/
+    export PATH=:$mummerpath:$PATH
+    exec "$@"
+
+%post
+    apt-get update
+    apt-get --assume-yes install wget
+    apt-get --assume-yes install sudo
+
+    sudo apt-get update
+    sudo apt-get -y install build-essential
+    sudo apt-get -y install zlib1g
+    sudo apt-get -y install cmake
+    sudo apt-get update
+
+    sudo apt-get -y install git-core   
+    sudo apt-get -y install zlib1g-dev     
+    
+    sudo apt-get -y install software-properties-common
+    sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main universe restricted multiverse"
+    sudo apt-get update
+    
+    sudo apt-get -y install gnuplot gnuplot-x11 gnuplot-doc 
+    sudo apt-get -y install xfig transfig xfig-libs
+           
+    cd /
+    wget https://github.com/mummer4/mummer/releases/download/v4.0.0beta2/mummer-4.0.0beta2.tar.gz
+    tar -zxvf mummer-4.0.0beta2.tar.gz
+    cd /mummer-4.0.0beta2/
+    ./configure LDFLAGS=-static
+    make
+    sudo make install
+    sudo ldconfig
+    
+    mummerpath=/mummer-4.0.0beta2/
+    export PATH=:$mummerpath:$PATH
+    nucmer -h
+    delta-filter -h
+    
+    sudo mkdir /groups
+    sudo mkdir /scratch
+    sudo mkdir /scratch-ii2
+    sudo mkdir /clustertmp
+
+%test
+    #mummerpath=/mummer-4.0.0beta2/
+    #export PATH=:$mummerpath:$PATH
+    #mummer -h

@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%post
+    apt-get update && apt-get -y --no-install-recommends install \
+        build-essential wget \
+        python-dev g++ libx11-dev mesa-common-dev libglu1-mesa-dev python-opengl python-numpy python-glade2 \
+        python-epydoc doxygen
+
+    cd /opt && \
+    wget http://www.p4vasp.at/files/p4vasp-0.3.30.tgz && \
+    tar zxf p4vasp-0.3.30.tgz && \
+    cd p4vasp-0.3.30 && \
+    make config && make install
+
+%runscript
+    /usr/bin/p4v $@
+
+%help
+p4vasp 0.3.30
+Python 2.7.17
+
+%environment
+    export LC_ALL=C
+
+%labels
+AUTHOR rs7wz@virginia.edu

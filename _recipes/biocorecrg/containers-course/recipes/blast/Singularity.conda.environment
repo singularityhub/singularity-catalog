@@ -1,0 +1,19 @@
+BootStrap: docker
+From: continuumio/miniconda:4.5.4
+
+%environment
+	PATH=/opt/conda/envs/blast-conda/bin:$PATH
+	export PATH
+
+%post
+	PATH=/opt/conda/bin:$PATH
+	export PATH
+	conda env create -f /environment.yml && conda clean -a
+
+%files
+	environment.yml
+
+%labels
+	Maintainer Biocorecrg
+	Version 0.1.0
+

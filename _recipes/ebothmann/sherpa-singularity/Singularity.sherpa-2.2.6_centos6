@@ -1,0 +1,51 @@
+Bootstrap: shub
+From: ebothmann/sherpa-singularity:mceg_centos6
+
+
+%help
+A Singularity file to define an image for running Sherpa 2.2.6
+including support for FastJet, HepMC2, LHAPDF, Rivet, OpenLoops and
+BlackHat.
+
+
+%labels
+    Maintainer Enrico Bothmann
+    Version v0.1
+
+
+%runscript
+    Sherpa "$@"
+
+
+%files
+    enable_OpenMPI
+
+
+%post
+    # set up build environment
+    source /opt/rh/devtoolset-6/enable
+    source /opt/rh/python27/enable
+    source /enable_OpenMPI
+
+    echo Installing Sherpa
+    mkdir /scratch
+    cd /scratch
+    wget https://sherpa.hepforge.org/downloads/?f=SHERPA-MC-2.2.6.tar.gz -O- | tar xz
+    cd SHERPA-MC-2.2.6
+    ./configure \
+        --prefix=/usr/local \
+        --enable-analysis \
+        --enable-blackhat=/opt/blackhat-r3095 \
+        --enable-fastjet=/usr/local \
+        --enable-hepmc2=/usr/local \
+        --enable-lhapdf=/usr/local \
+        --enable-mpi \
+        --enable-openloops=/opt/OpenLoops-2.0.0 \
+        --enable-rivet=/usr/local \
+        --with-sqlite3=install \
+        CXXFLAGS="-O3 --std=c++11"
+    make -j && make install
+
+    cd /
+    rm -rf /scratch
+    ldconfig

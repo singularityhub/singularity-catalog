@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: alpine:3.17
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    apk update
+    apk upgrade
+    apk add wget bash
+
+    wget https://github.com/shenwei356/seqkit/releases/download/v2.4.0/seqkit_linux_386.tar.gz
+    tar xvfz *.tar.gz
+    cp seqkit /usr/local/bin/
+
+    apk del wget 
+
+
+%environment
+    export PATH=$PATH:/usr/local/go/bin
+
+%runscript
+    exec seqkit "$@"
+

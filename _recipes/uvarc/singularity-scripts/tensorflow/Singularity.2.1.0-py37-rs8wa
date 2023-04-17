@@ -1,0 +1,42 @@
+Bootstrap: library
+From: uvarc/default/tensorflow:2.1.0-py37
+
+%post
+    export CUDA_HOME="/usr/local/cuda"
+    export CPATH="$CUDA_HOME/include:$CPATH"
+    export PATH="/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
+
+    apt-get -y update
+
+    # Python headers, openslide, Java for bioformats
+    apt-get -y --fix-missing install \
+        python3.7-dev \
+        openslide-tools python3-openslide \
+        default-jdk
+
+    apt-get clean
+
+    export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+    export LD_LIBRARY_PATH=/usr/lib/jvm/java-11-openjdk-amd64/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
+    # additional packages for user
+    pip install \
+        Django==2.2 openslides openslide-python \
+        tensorflow-probability \
+        python-bioformats seaborn sklearn beautifulsoup4 \
+        mkl cython
+
+    pip install "dm-sonnet>=2.0.0b0" --pre
+
+%runscript
+    exec python $@
+
+%environment
+    export CUDA_HOME="/usr/local/cuda"
+    export CPATH="$CUDA_HOME/include:$CPATH"
+    export LD_LIBRARY_PATH="/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+    export PATH="/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
+    export LC_ALL=C
+
+%labels
+AUTHOR rs7wz@virginia.edu

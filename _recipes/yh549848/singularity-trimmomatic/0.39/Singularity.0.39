@@ -1,0 +1,11 @@
+BootStrap: docker
+From: continuumio/miniconda3:4.7.12
+
+%apprun trimmomatic
+  exec trimmomatic "${@}"
+
+%post
+  . /opt/conda/bin/activate && \
+  conda install -q -y \
+    -c bioconda trimmomatic=0.39 && \
+  conda clean -a -q -f -y

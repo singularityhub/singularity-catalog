@@ -1,0 +1,84 @@
+BootStrap: docker
+From: continuumio/anaconda:4.4.0
+IncludeCmd: yes
+
+%post
+    # Prerequisites
+    apt-get update
+    apt-get -y install build-essential libreadline-dev libncurses5-dev libncursesw5-dev zlib1g-dev
+
+    # R
+    export PATH=/opt/conda/bin:$PATH
+    conda install -c conda-forge r=3.4.1
+    pip install numpy==1.5.0
+    pip install rpy2==2.6.0
+    # conda clean up
+    conda clean --index-cache --tarballs --packages --yes
+
+    # Samtools
+    # conda install samtools==0.1.7 -c bioconda
+    samtoolsver=0.1.7
+    samtoolsdir=/opt/samtools
+    mkdir -p ${samtoolsdir}
+    samtoolstarfile=${samtoolsver}.tar.gz
+    cd ${samtoolsdir}
+    wget https://github.com/samtools/samtools/archive/${samtoolstarfile}
+    tar xzf ${samtoolstarfile}
+    mv samtools-${samtoolsver} ${samtoolsver}
+    cd ${samtoolsver}
+    make
+    rm *.o
+    rm misc/*.o
+    mkdir bin
+    bins="samtools \
+         misc/wgsim \
+         misc/md5sum-lite \
+         misc/md5fa \
+         misc/maq2sam-short \
+         misc/maq2sam-long"
+    for b in $bins; do
+        mv $b bin
+    done 
+    find . -name "*.pl" -exec mv {} bin \;
+    find . -name "*.py" -exec mv {} bin \;
+    mkdir include
+    find . -name "*.h" -exec mv {} include \;
+    mkdir lib
+    mv libbam.a lib
+    cd ..
+    rm ${samtoolstarfile}
+    
+    # Danpos
+    danposver=2.2.2
+    danposdir=/opt/danpos
+    mkdir -p ${danposdir}
+    danpostarfile=danpos-${danposver}.tgz
+    cd ${danposdir}
+    wget http://lilab.research.bcm.edu/dldcc-web/lilab/kaifuc/danpos/release/${danpostarfile}
+    tar xzf ${danpostarfile}
+    mv danpos-${danposver} ${danposver}
+    chmod +x ${danposver}/*.py
+    rm ${danpostarfile}
+    
+%runscript
+    exec python $@
+
+%help
+This container provides the following applications:
+    * Danpos 2.2.2
+    * SAMTools 0.1.7
+    * Anaconda 4.4.0 (Python 2.7)
+    * R 3.4.1
+
+%environment
+    export DANPOS_HOME=/opt/danpos/2.2.2
+    export SAMTOOLS_HOME=/opt/samtools/0.1.7
+    export LD_LIBRARY_PATH=${SAMTOOLS}/lib:$LD_LIBRARY_PATH
+    export PATH="/opt/conda/bin:${DANPOS_HOME}:${SAMTOOLS_HOME}/bin:/usr/local/bin:/usr/bin:/bin:" 
+    export PYTHONPATH=${DANPOS_HOME}
+    unset CONDA_DEFAULT_ENV
+    export ANACONDA_HOME=/opt/conda
+    export LC_ALL=C
+
+%labels
+    AUTHOR khs3z@virginia.edu, rs7wz@virginia.edu

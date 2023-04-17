@@ -1,0 +1,25 @@
+BootStrap: docker
+From: ubuntu:18.04
+
+%post
+    export irods_version=4.2.8
+
+    apt-get update
+    apt-get install -y sudo wget lsb-release python-requests gnupg2 wget libssl1.0.0
+
+    wget -qO - https://packages.irods.org/irods-signing-key.asc | sudo apt-key add - && \
+    echo "deb [arch=amd64] https://packages.irods.org/apt/ $(lsb_release -c | awk  '{print $2}') main" | tee /etc/apt/sources.list.d/renci-irods.list && \
+    apt-get update
+
+    wget -O /tmp/irods-icommands.deb https://packages.irods.org/apt/pool/$(lsb_release -c | awk  '{print $2}')/main/i/irods-icommands/irods-icommands_${irods_version}_amd64.deb
+
+    apt-get install -y /tmp/irods-icommands.deb
+
+    rm -rf /tmp/irods*
+
+%runscript
+  exec "${@}"
+
+
+%test
+  exec ihelp

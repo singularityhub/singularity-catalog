@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: alpine:3.15
+
+%labels
+    MAINTAINER thomas cokelaer
+    Author thomas cokelaer
+    Version v2.6
+
+%files
+    shustring-2.6.tar.gz
+
+%post
+
+    apk update\
+        && apk upgrade\
+        && apk add  make bash curl zlib-dev g++
+
+    tar xvfz shustring-2.6.tar.gz
+
+    mkdir /build
+    mv Shustring_2.6  /build
+    cd /build/Shustring_2.6
+    make
+    cp shustring /usr/bin
+    rm -rf /var/lib/apt/list/*
+
+%runscript
+    exec shustring "$@"
+
+

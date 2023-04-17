@@ -1,0 +1,52 @@
+BootStrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch/
+Include: yum
+
+
+%post
+    yum -y install \
+        epel-release \
+        wget \
+        nano
+     
+    yum -y install \
+        perl-REST-Client \
+        perl-AnyEvent \
+        perl-IPC-System-Simple \
+        perl-Spreadsheet-ParseExcel \
+        perl-Spreadsheet-WriteExcel \
+        perl-Math-Round \
+        perl-Crypt-RC4 \
+        perl-Carp-Always \
+        perl-Class-Accessor \
+        perl-Log-Log4perl \
+        perl-Getopt-Long-Descriptive \
+        perl-AnyEvent-HTTP \
+        perl-DateTime-Format-ISO8601 \
+        perl-PDL \
+        perl-SOAP-Lite \
+        perl-Moose \
+        perl-Data-UUID \
+        perl-JSON-Any \
+        perl-Spreadsheet-XLSX \
+        perl-JSON-XS
+
+
+    wget https://github.com/PATRIC3/PATRIC-distribution/releases/download/1.026/patric-cli-1.026-1.el7.x86_64.rpm
+    yum localinstall -y  patric-cli-1.026-1.el7.x86_64.rpm
+    
+%runscript
+    exec p3-login $@
+
+
+%help
+This container provides the PATRIC Command line interface tools: 
+    * PATRIC 1.026
+
+%environment
+    export LANG=C
+    export LC_ALL=C
+
+%labels
+    AUTHOR khs3z@virginia.edu

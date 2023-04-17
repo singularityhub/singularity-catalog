@@ -1,0 +1,20 @@
+BootStrap: docker
+From: ubuntu:bionic
+IncludeCmd: yes
+	
+%post
+	apt-get upgrade
+	apt-get -y update
+	apt-get -y install software-properties-common
+	add-apt-repository ppa:sumo/stable
+	apt-get -y update
+	apt-get -y install sumo sumo-tools sumo-doc
+
+	apt-get autoremove -y
+	apt-get clean
+
+%help
+Simulation of Urban MObility 1.3.1
+
+%labels
+	Author rs7wz@virginia.edu

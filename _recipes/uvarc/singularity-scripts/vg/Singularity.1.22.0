@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: quay.io/vgteam/vg:v1.22.0
+
+%post
+    export LC_ALL=C
+
+    apt-get update && apt-get install -y --no-install-recommends \
+        gcc git \
+
+    cd /opt
+    git clone https://github.com/SchulzLab/Aeron.git
+
+    apt-get update && apt-get install -y --no-install-recommends \
+        python3-dev python3-pip python3-setuptools
+
+# Aeron
+    pip3 install wheel 
+    pip3 install snakemake
+
+%runscript
+exec $@
+
+%help
+This container provides Python 3.6 for:
+* vg 1.22.0 - Variation graphs provide a succinct encoding of the sequences of many genomes
+* Aeron 0.02 - Alignment, quantification and fusion prediction from long RNA reads 
+
+%environment
+    export PATH="/opt/Aeron/AeronSCripts:/opt/Aeron/Binaries:/vg/bin:$PATH"
+    export LC_ALL=C
+
+%labels
+AUTHOR rs7wz@virginia.edu

@@ -1,0 +1,81 @@
+Bootstrap: oras
+From: ghcr.io/mkandes/naked-singularity:ubuntu-18.04
+
+%labels
+
+    APPLICATION_NAME xcrysden
+    APPLICATION_VERSION 1.6.2
+    APPLICATION_URL http://www.xcrysden.org
+
+    IMAGE_URI oras://ghcr.io/mkandes/naked-singularity:xcrysden-1.6.2-ubuntu-18.04
+    IMAGE_MD5 bc7f668c908dcbd07c20e2ad557e4946
+    IMAGE_SHA256 fc168a194483d141f48016e247fb82bb7616fc3b0f0e5006e21648523788834c
+
+    AUTHOR_NAME Marty Kandes
+    AUTHOR_EMAIL mkandes@sdsc.edu
+
+    LAST_UPDATED 20220506
+
+%setup
+
+%environment
+ 
+    # Set path to XCrySDen
+    export PATH="/opt/xcrysden-1.6.2:${PATH}"
+
+%post -c /bin/bash
+
+    # Set operating system mirror URL
+    export MIRRORURL='http://us.archive.ubuntu.com/ubuntu'
+
+    # Set operating system version
+    export OSVERSION='bionic'
+
+    # Set system locale
+    export LC_ALL=C
+
+    # Set debian frontend interface
+    export DEBIAN_FRONTEND='noninteractive'
+
+    # Upgrade all software packages to their latest versions
+    apt-get -y update && apt-get -y upgrade
+
+    # Install XCrySDen dependencies
+    apt-get -y install xorg
+    apt-get -y install xorg-dev
+    apt-get -y install xorg-docs
+    apt-get -y install xorg-docs-core
+    apt-get -y install tcl
+    apt-get -y install tcl-dev
+    apt-get -y install tcl-doc
+    apt-get -y install tk
+    apt-get -y install tk-dev
+    apt-get -y install tk-doc 
+    apt-get -y install libtogl-dev
+    apt-get -y install bwidget
+    apt-get -y install libfftw3-dev
+    apt-get -y install freeglut3-dev
+
+    cd /opt
+
+    # Download, build, and install XCrySDen
+    wget http://www.xcrysden.org/download/xcrysden-1.6.2.tar.gz
+    tar -xf xcrysden-1.6.2.tar.gz
+    cd xcrysden-1.6.2
+    cp system/Make.sys-shared Make.sys
+    make all
+    cd ../
+    rm xcrysden-1.6.2.tar.gz
+
+    # Cleanup
+    apt-get -y autoremove --purge
+    apt-get -y clean
+
+    # Update database for mlocate
+    updatedb
+
+%files
+
+%runscript
+
+%test

@@ -1,0 +1,146 @@
+BootStrap: docker
+From: ubuntu:18.04
+
+%setup
+  install -Dv \
+    rstudio_auth.sh \
+    ${SINGULARITY_ROOTFS}/usr/lib/rstudio-server/bin/rstudio_auth
+  install -Dv \
+    ldap_auth.py \
+    ${SINGULARITY_ROOTFS}/usr/lib/rstudio-server/bin/ldap_auth
+%labels
+  RVersion 3.6.1
+  RStudioVersion 1.1.463
+
+%post
+  # Software versions
+  export R_VERSION=3.6.1
+  export RSTUDIO_VERSION=1.1.463
+
+  # Get dependencies
+  apt-get update
+  apt-get install -y --no-install-recommends \
+    locales \
+    gnupg
+
+  # Configure default locale
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  locale-gen en_US.utf8
+  /usr/sbin/update-locale LANG=en_US.UTF-8
+  export LC_ALL=en_US.UTF-8
+  export LANG=en_US.UTF-8
+
+  # Install R
+  # And supporting geospatial packages
+  echo "deb http://cran.rstudio.com/bin/linux/ubuntu bionic-cran35/" | tee -a /etc/apt/sources.list
+  gpg --keyserver keyserver.ubuntu.com --recv-key  E298A3A825C0D65DFD57CBB651716619E084DAB9
+  gpg -a --export  E298A3A825C0D65DFD57CBB651716619E084DAB9 | apt-key add
+  apt-get update
+  apt-get install -y --no-install-recommends \
+    r-base=${R_VERSION}* \
+    r-base-dev=${R_VERSION}* \
+    r-recommended=${R_VERSION}* \
+    git \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
+    libcairo2-dev \
+    lbzip2 \
+    libfftw3-dev \
+    libgdal-dev \
+    libgeos-dev \
+    libgsl0-dev \
+    libgl1-mesa-dev \
+    libglu1-mesa-dev \
+    libhdf4-alt-dev \
+    libhdf5-dev \
+    libjq-dev \
+    liblwgeom-dev \
+    libpq-dev \
+    libproj-dev \
+    libprotobuf-dev \
+    libnetcdf-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    libudunits2-dev \
+    netcdf-bin \
+    postgis \
+    protobuf-compiler \
+    sqlite3 \
+    tk-dev \
+    unixodbc-dev \
+
+
+  # Install some R packages
+    R --slave -e 'install.packages("RColorBrewer")' 
+    R --slave -e 'install.packages("RandomFields")'
+    R --slave -e 'install.packages("RNetCDF")' 
+    R --slave -e 'install.packages("classInt")' 
+    R --slave -e 'install.packages("deldir")' 
+    R --slave -e 'install.packages("gstat")' 
+    R --slave -e 'install.packages("hdf5r")' 
+    R --slave -e 'install.packages("lidR")' 
+    R --slave -e 'install.packages("lwgeom")' 
+    R --slave -e 'install.packages("mapdata")' 
+    R --slave -e 'install.packages("maptools")' 
+    R --slave -e 'install.packages("mapview")' 
+    R --slave -e 'install.packages("ncdf4")' 
+    R --slave -e 'install.packages("proj4")' 
+    R --slave -e 'install.packages("raster")' 
+    R --slave -e 'install.packages("rgdal")' 
+    R --slave -e 'install.packages("rgeos")' 
+    R --slave -e 'install.packages("rlas")' 
+    R --slave -e 'install.packages("sf")' 
+    R --slave -e 'install.packages("sp")' 
+    R --slave -e 'install.packages("spacetime")' 
+    R --slave -e 'install.packages("spatstat")' 
+    R --slave -e 'install.packages("spatialreg")' 
+    R --slave -e 'install.packages("spdep")' 
+    R --slave -e 'install.packages("geoR")' 
+    R --slave -e 'install.packages("geosphere")' 
+
+    ## from bioconductor
+    R --slave -e 'install.packages("BiocManager")'
+    R --slave -e "BiocManager::install('rhdf5')"
+
+  # Add a default CRAN mirror
+  echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl')" >> /usr/lib/R/etc/Rprofile.site
+
+  # Add a directory for host R libraries
+  mkdir -p /library
+  echo "R_LIBS_SITE=/library:\${R_LIBS_SITE}" >> /usr/lib/R/etc/Renviron.site
+
+  # Install RStudio Server
+  apt-get update
+  apt-get install -y --no-install-recommends \
+    ca-certificates \
+    wget \
+    gdebi-core
+  wget \
+    --no-verbose \
+    -O rstudio-server.deb \
+    "https://download2.rstudio.org/rstudio-server-${RSTUDIO_VERSION}-amd64.deb"
+  gdebi -n rstudio-server.deb
+  rm -f rstudio-server.deb
+
+  # Add support for LDAP authentication
+  wget \
+    --no-verbose \
+    -O get-pip.py \
+    "https://bootstrap.pypa.io/get-pip.py"
+  python3 get-pip.py
+  rm -f get-pip.py
+  pip3 install ldap3
+
+  # Clean up
+  rm -rf /var/lib/apt/lists/*
+
+
+%environment
+  export PATH=/usr/lib/rstudio-server/bin:${PATH}
+
+%apprun rserver
+  exec rserver "${@}"
+
+%runscript
+  exec rserver "${@}"

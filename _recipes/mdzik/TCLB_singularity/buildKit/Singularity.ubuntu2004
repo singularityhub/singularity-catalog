@@ -1,0 +1,38 @@
+BootStrap: library
+From:  mdzik/TCLB_singularity:ubuntu2004_cuda11
+#BootStrap: localimage
+#From: tclb_ubuntu1604_cuda10.sif
+
+
+%post
+    apt-get -y update
+    apt-get -y install cmake
+    cd /opt && git clone https://github.com/mdzik/TCLB_singularity
+    mkdir /opt/r_libs
+    R_LIBS_USER=/opt/r_libs /opt/TCLB_singularity/install.sh rdep
+    R_LIBS_USER=/opt/r_libs /opt/TCLB_singularity/install.sh rinside
+    cd /tmp && git clone https://github.com/ornladios/ADIOS2.git ADIOS2 
+    mkdir /tmp/build && cd /tmp/build && cmake -DCMAKE_INSTALL_PREFIX=/opt/ADIOS2 -DADIOS2_BUILD_TESTING=Off -DADIOS2_BUILD_EXAMPLES=Off /tmp/ADIOS2 && make 
+    
+
+
+#%appinstall cpu  
+#    R_LIBS_USER=/opt/r_libs CONFIGURE_FLAGS="--disable-cuda " TSD=/opt/TCLB_cpu bash  /opt/TCLB_singularity/buildTCLB.sh
+
+#%appinstall gpu  
+#    R_LIBS_USER=/opt/r_libs CONFIGURE_FLAGS="--enable-cuda --with-cuda-arch=sm_30"  TSD=/opt/TCLB_gpu bash /opt/TCLB_singularity/buildTCLB.sh
+
+%environment
+    export LC_ALL=C
+    export PATH=/TCLB:/usr/local/cuda-10.0/bin:$PATH
+    export R_LIBS_USER=/opt/r_libs  
+    export LDFLAGS="-L/usr/lib/x86_64-linux-gnu/hdf5/openmpi/  $LDFLAGS" 
+    export CPPFLAGS="-I /usr/include/hdf5/openmpi $CPPFLAGS"
+    export TSD=/opt/TCLB_STABLE
+    export ADIOS_PATH=/opt/ADIOS
+
+%runscript
+    echo "Plain environment for TCLB/CUDA run and build"
+
+%labels
+    Author llaniewski , mdzik , and others TCLB.IO

@@ -1,0 +1,84 @@
+Bootstrap: localimage
+From: alpine-user.sif
+Stage: selflto
+
+
+%files
+aports.patch /opt/
+
+
+%post
+	# As a zeroth-priority item, Singularity mounts / as nosuid, and this causes problems.
+	# Remount with options allowing suid.
+	mount -o remount,suid /
+	
+	
+	# Install the SDK only, non-LTOed.
+	apk add alpine-sdk
+	
+	
+	# For a speedup and extra compression, the base image does not have a Git branch
+	# checked out. We check one out now, and patch the tree for our needs.
+	pushd /home/dev/aports
+	sudo -u dev git checkout master
+	patch -p1 < /opt/aports.patch
+	popd
+	
+	
+	# Compile with LTO the Alpine SDK's constituent packages, in topological
+	# order of dependencies:
+	function ltoify () {
+		pushd "/home/dev/aports/$1" &> /dev/null
+		apk update                  &> /dev/null
+		sudo -u dev abuild -r
+		popd                        &> /dev/null
+	}
+	ltoify main/linux-headers
+	apk add linux-headers=3.10.108-r0     # Force install this set of headers.
+	# ltoify main/libc-dev                  # NEVER rebuild libc/musl with LTO!
+	# ltoify main/musl                      # NEVER rebuild libc/musl with LTO!
+	ltoify main/zlib
+	ltoify main/bzip2
+	ltoify main/lzip
+	ltoify main/xz
+	ltoify main/lzo
+	ltoify main/diffutils
+	ltoify main/lz4
+	ltoify main/chrpath
+	ltoify main/ncurses
+	ltoify main/readline
+	ltoify main/libedit
+	ltoify main/attr
+	ltoify main/acl
+	ltoify main/perl
+	ltoify main/perl-encode
+	ltoify main/zstd
+	ltoify main/gzip
+	ltoify main/brotli
+	ltoify main/expat
+	ltoify main/openssl
+	ltoify main/pcre2
+	ltoify main/libev
+	ltoify main/c-ares
+	ltoify main/cunit
+	ltoify main/nghttp2
+	ltoify main/curl                  # Patched.
+
+
+Bootstrap: localimage
+From: alpine-user.sif
+Stage: ltoready
+
+
+%files from selflto
+/home/dev/packages/* /home/dev/packages/
+
+
+%post
+	# Chown dev's home back. Apparently Singularity's %files copy doesn't preserve ownership?
+	chown -R dev:dev /home/dev/packages/
+	
+	# Force install the kernel headers we want everyone to use by specificially preinstalling that
+	# version we just compiled. Then, clean the APK cache.
+	apk add linux-headers=3.10.108-r0
+	rm -rf /var/cache/apk/*

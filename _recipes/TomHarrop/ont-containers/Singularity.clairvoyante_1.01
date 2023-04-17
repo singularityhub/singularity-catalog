@@ -1,0 +1,49 @@
+Bootstrap: shub
+From: opensciencegrid/osgvo-tensorflow-gpu:latest
+
+%help
+    Clairvoyante 1.01
+    https://github.com/aquaskyline/Clairvoyante/releases
+    
+%labels
+    MAINTAINER "Tom Harrop (twharrop@gmail.com) "
+    VERSION "Clairvoyante 1.01"
+
+%runscript
+    exec /usr/bin/python2 /clairvoyante/clairvoyante.py "$@"
+
+%post
+    # dependencies
+    /usr/local/bin/pip2 install --upgrade \
+        blosc \
+        intervaltree==2.1.0
+
+    /usr/local/bin/pip3 install --upgrade \
+        blosc \
+        intervaltree==2.1.0
+
+    # pypy
+    apt-get update
+    apt-get install -y \
+        pypy \
+        pypy-dev
+
+    wget https://bootstrap.pypa.io/get-pip.py && \
+        pypy get-pip.py &&\
+        rm get-pip.py
+    pypy -m pip install intervaltree 
+
+    # install clairvoyante
+    mkdir clairvoyante
+    wget -O "clairvoyante.tar.gz" \
+        --no-check-certificate \
+        https://github.com/aquaskyline/Clairvoyante/archive/v1.01.tar.gz
+    tar -zxf clairvoyante.tar.gz \
+        -C clairvoyante \
+        --strip-components 1
+
+    cd clairvoyante || exit 1
+    curl http://www.bio8.cs.hku.hk/trainedModels.tbz | tar -jxf -
+
+%environment
+    export PATH="${PATH}:/clairvoyante/clairvoyante:/clairvoyante/dataPrepScripts"

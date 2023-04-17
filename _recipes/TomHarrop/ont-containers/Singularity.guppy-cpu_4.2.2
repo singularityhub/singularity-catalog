@@ -1,0 +1,55 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+    Guppy 4.2.2 CPU version
+
+%labels
+    MAINTAINER "Tom Harrop"
+    VERSION "Guppy 4.2.2"
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    
+    # set up apt
+    apt-get clean
+    rm -r /var/lib/apt/lists/*
+    apt-get  update
+    apt-get upgrade -y --fix-missing
+
+
+    (
+        . /etc/os-release
+        cat << _EOF_ > mirror.txt
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME} main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-updates main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-backports main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-security main restricted universe multiverse
+
+_EOF_
+        mv /etc/apt/sources.list /etc/apt/sources.list.bak
+        cat mirror.txt /etc/apt/sources.list.bak > /etc/apt/sources.list
+    )
+
+    # deps
+    apt-get update
+    apt-get install -y \
+        apt-transport-https \
+        lsb-release \
+        software-properties-common \
+        wget 
+
+    # install guppy from ONT repo
+    export PLATFORM=$(lsb_release -cs) 
+    wget -O- https://mirror.oxfordnanoportal.com/apt/ont-repo.pub \
+        | apt-key add - 
+    echo \
+        "deb http://mirror.oxfordnanoportal.com/apt ${PLATFORM}-stable non-free" \
+        | tee /etc/apt/sources.list.d/nanoporetech.sources.list 
+    apt-get update
+
+    apt-get install -y \
+        ont-guppy-cpu=4.2.2-1~bionic
+
+%runscript
+    exec /usr/bin/guppy_basecaller "$@"

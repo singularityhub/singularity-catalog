@@ -1,0 +1,55 @@
+Bootstrap:docker  
+From:ubuntu:18.04
+
+%labels
+MAINTAINER Patrick Koller
+CONTACT patrick_koller@gmx.ch
+
+%post  
+echo "This section happens once after bootstrap to build the image."
+apt-get -y update
+apt-get -y install htop vim wget git python-numpy
+apt-get -y install dpkg-dev cmake g++ gcc binutils libx11-dev libxpm-dev libxft-dev libxext-dev python libssl-dev
+
+mkdir /Software
+
+cd /Software/
+wget https://root.cern/download/root_v6.22.02.Linux-ubuntu18-x86_64-gcc7.5.tar.gz
+tar -xf root_v6.22.02.Linux-ubuntu18-x86_64-gcc7.5.tar.gz
+mv root root_v6.22.02
+rm root_v6.22.02.Linux-ubuntu18-x86_64-gcc7.5.tar.gz
+
+cd /Software/
+wget https://downloads.apache.org//xerces/c/3/sources/xerces-c-3.2.3.tar.gz
+tar -xf xerces-c-3.2.3.tar.gz
+rm xerces-c-3.2.3.tar.gz
+cd xerces-c-3.2.3/
+./configure
+make -j 8
+make install -j 8
+
+cd /Software/
+wget http://geant4-data.web.cern.ch/geant4-data/releases/geant4.10.06.p02.tar.gz
+tar -xf geant4.10.06.p02.tar.gz
+rm geant4.10.06.p02.tar.gz
+mkdir geant4.10.06.p02-build
+mkdir geant4.10.06.p02-install
+cd geant4.10.06.p02-build/
+cmake -DCMAKE_INSTALL_PREFIX=/Software/geant4.10.06.p02-install -DGEANT4_BUILD_MULTITHREADED=ON -DGEANT4_USE_GDML=ON -DGEANT4_INSTALL_DATA=ON ../geant4.10.06.p02
+make -j 8
+make install -j 8
+
+cd /Software/
+rm -r geant4.10.06.p02
+rm -r geant4.10.06.p02-build
+
+%environment
+echo "Linking LD_LIBRARY_PATH ..." 
+export LD_LIBRARY_PATH="/Software/root_v6.22.02/lib:/Software/geant4.10.06.p02-install/lib:$LD_LIBRARY_PATH"
+
+echo "Linking G4DATA paths ..." 
+export G4ENSDFSTATEDATA="/Software/geant4.10.06.p02-install/share/Geant4-10.6.2/data/G4ENSDFSTATE2.2"
+
+%runscript
+echo "This gets run when you run the image!" 
+

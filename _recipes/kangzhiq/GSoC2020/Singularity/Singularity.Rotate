@@ -1,0 +1,46 @@
+Bootstrap: docker
+From: nvidia/cuda:10.0-devel
+
+%setup
+mkdir ${SINGULARITY_ROOTFS}/workspace
+
+%files
+%labels
+    Pytorch environment
+    Build with:
+    sudo singularity build --writable dtorch.img dtorch.txt
+    singularity exec --nv dtorch.img python
+
+
+%post
+mkdir /project /scratch
+
+#Now install everythin
+apt-get update && apt-get -y install wget
+
+DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3 \
+        python3-tk \
+        python3-pip \
+        python3-dev
+rm -rf /var/lib/apt/lists/*
+pip3 install pipenv
+pip3 install torch==1.7.1+cu101 torchvision==0.8.2+cu101 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
+
+pip3 install dominate
+pip3 install dill
+pip3 install scikit-image
+pip3 install numpy
+pip3 install scipy
+pip3 install matplotlib
+pip3 install opencv-python
+pip3 install face-alignment
+pip3 install tensorboard
+pip3 install neural_renderer_pytorch
+cd /workspace
+
+%environment
+export PATH=/miniconda/bin:${PATH}
+
+
+%runscript

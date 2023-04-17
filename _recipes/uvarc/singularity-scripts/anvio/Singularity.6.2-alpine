@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: frolvlad/alpine-glibc
+
+%post
+    apk add --no-cache --virtual .build-dependencies bash
+    wget -O conda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash conda.sh -b -p /opt/conda && \
+    rm conda.sh
+    export PATH=/opt/conda/bin:$PATH
+
+    conda create -y -n anvio python=3.6
+    source activate anvio
+    conda install -y -c conda-forge -c bioconda anvio==6.2 anvio-minimal==6.2=py_1
+    source deactivate
+    conda clean --all
+
+%runscript
+    source activate anvio
+    python $@
+
+%help
+This container is backed by Miniconda and provides the Python 3.6 bindings for:
+    * Anvi'o 6.2
+
+%environment
+    export PATH=/opt/conda/bin:$PATH
+    export LC_ALL=C
+
+%labels
+AUTHOR rs7wz@virginia.edu

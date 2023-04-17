@@ -1,0 +1,76 @@
+Bootstrap: docker
+
+From: gcc:4.9
+
+%runscript
+
+    exec /opt/miniconda3/bin/jupyter notebook --no-browser --port "$@" --ip=0.0.0.0
+
+%environment
+
+    LD_LIBRARY_PATH=/usr/local/lib
+    export LD_LIBRARY_PATH
+
+    TEMPO2=/usr/local/share/tempo2
+    export TEMPO2
+
+    PATH=/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    export PATH
+
+    XDG_RUNTIME_DIR=
+    export XDG_RUNTIME_DIR
+
+%labels
+
+    AUTHOR vallis@vallis.org
+
+%post
+
+    apt-get -y update && \
+    apt-get -y install liblapack3 less gawk vim && \
+    apt-get clean
+    
+    wget -q https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-3.1.0.tar.gz && \
+    tar zxvf calceph-3.1.0.tar.gz && \
+    cd calceph-3.1.0 && \
+    ./configure --prefix=/usr/local && \
+    make && \
+    make install && \
+    cd .. && \
+    rm -rf calceph-3.1.0 calceph-3.1.0.tar.gz
+
+    git clone https://bitbucket.org/psrsoft/tempo2 && \
+    cd tempo2 && \
+    ./bootstrap && \
+    ./configure --prefix=/usr/local --with-calceph=/usr/local && \
+    make && \
+    make install && \
+    mkdir -p /usr/local/share/tempo2 && \
+    cp -Rp T2runtime/* /usr/local/share/tempo2/. && \
+    cd .. && \
+    rm -rf tempo2
+
+    wget -q https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3 && \
+    rm Miniconda3-latest-Linux-x86_64.sh && \
+    export PATH="/opt/miniconda3/bin:${PATH}" && \
+    conda install -y numpy cython scipy matplotlib ipython jupyter notebook h5py mpi4py numexpr statsmodels astropy ephem && \
+    pip install healpy corner line_profiler jplephem libstempo && \
+    conda install -y -c menpo suitesparse && \
+    export CPATH=/opt/miniconda3/include/suitesparse && \
+    pip install scikit-sparse && \
+    pip install jupyter_contrib_nbextensions && \
+    jupyter contrib nbextension install --user && \
+    conda clean -a -y
+
+    git clone https://github.com/dfm/acor && \
+    cd acor && \
+    python setup.py install && \
+    cd .. && \
+    rm -rf acor
+
+    git clone https://github.com/jellis18/PTMCMCSampler && \
+    cd PTMCMCSampler && \
+    python setup.py install && \
+    cd .. && \
+    rm -rf PTMCMCSampler

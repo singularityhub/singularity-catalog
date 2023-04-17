@@ -1,0 +1,24 @@
+BootStrap: docker
+From: nvidia/cuda:10.0-cudnn7-runtime-centos7
+
+## OpenMPI version 3.0.0
+%post
+    yum update -y
+    
+    yum install -y  \
+        file \
+        hwloc  gcc\
+        openssh-client \
+        wget bzip2
+    yum install -y libibverbs*
+    rm -rf /var/lib/apt/lists/*
+%post
+    mkdir -p /tmp && wget -q --no-check-certificate -P /tmp https://www.open-mpi.org/software/ompi/v3.0/downloads/openmpi-3.0.0.tar.bz2
+    tar -x -f /tmp/openmpi-3.0.0.tar.bz2 -C /tmp -j
+    cd /tmp/openmpi-3.0.0 && ./configure --prefix=/usr/local/openmpi --disable-getpwuid --enable-orterun-prefix-by-default --with-cuda --with-verbs
+    make -j4
+    make -j4 install
+    rm -rf /tmp/openmpi-3.0.0.tar.bz2 /tmp/openmpi-3.0.0
+%environment
+    export PATH=/usr/local/openmpi/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH

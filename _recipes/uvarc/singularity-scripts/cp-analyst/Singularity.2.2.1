@@ -1,0 +1,71 @@
+BootStrap: docker
+From: ubuntu:xenial
+IncludeCmd: yes
+
+%post
+    apt-get update
+    apt-get -y upgrade
+    apt-get -y install     \
+        build-essential    \
+        cython             \
+        git                \
+        wget               \
+        libmysqlclient-dev \
+        libhdf5-dev        \
+        libxml2-dev        \
+        libxslt1-dev       \
+        libpng-dev         \
+        openjdk-8-jdk      \
+        python-dev         \
+        python-pip         \
+        python-matplotlib  \
+        python-sqlite      \
+        python-mysqldb     \
+        python-wxgtk3.0    \
+        libcanberra-gtk-module \
+        packagekit-gtk3-module
+
+    # CellProfiler-Analyst
+    VERSION=2.2.1
+    TARBALL=${VERSION}.tar.gz
+    cd /opt
+    wget https://github.com/CellProfiler/CellProfiler-Analyst/archive/${TARBALL}
+    tar xzvf ${TARBALL}
+    unset JAVA_TOOL_OPTIONS
+    cd CellProfiler-Analyst-${VERSION}
+
+    pip install \
+        mock==2.0.0 \
+        zmq==0.0.0 \
+        h5py==2.8.0 \
+        scipy==1.1.0 \
+        pandas==0.23.3 \
+        seaborn==0.9.0 \
+        scikit-learn==0.19.2 \
+        numpy==1.14.0
+
+    pip install \
+	javabridge==1.0.14 \
+        bioformats==0.1.15 \
+        verlib==0.1
+
+    sed -i '1 i\#!/usr/bin/env python2' CellProfiler-Analyst.py 
+    chmod +x CellProfiler-Analyst.py
+    rm /opt/${TARBALL}
+
+%runscript
+    exec CellProfiler-Analyst.py
+
+%help
+This container provides the following applications:
+    * CellProfiler Analyst 2.2.1
+    * Python 2.7
+    * Java JDK 8
+
+%environment
+    export PATH=/opt/CellProfiler-Analyst-2.2.1:$PATH
+    export JAVA_TOOL_OPTIONS="-Xss1280k $JAVA_TOOL_OPTIONS"
+    export LC_ALL=C
+
+%labels
+    AUTHOR khs3z@virginia.edu, rs7wz@virginia.edu

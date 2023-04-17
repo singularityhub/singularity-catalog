@@ -1,0 +1,13 @@
+Bootstrap: docker
+	From: ubuntu:xenial
+
+%labels
+	MAINTAINER aminnayebi
+
+%post
+	echo "It starts updating apt-get and installing essentials"
+	apt-get update && apt-get -y install wget build-essential
+
+%runscript
+	echo "This is running!"
+

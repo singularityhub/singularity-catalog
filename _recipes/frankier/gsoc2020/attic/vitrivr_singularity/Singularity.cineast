@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: openjdk:14-buster
+
+%post
+    export JAVA_HOME=/usr/local/openjdk-14
+    export PATH=$JAVA_HOME/bin:$PATH
+    apt-get update && \
+      apt-get install -y maven
+    git clone https://github.com/frankier/cineast.git \
+      --recursive \
+      --branch gsoc2020 \
+      --single-branch \
+      /opt/cineast
+    cd /opt/cineast && \
+      ./gradlew :cineast-core:generateProto && \
+      ./gradlew getExternalFiles && \
+      ./gradlew cineast-runtime:fatJar
+
+%environment
+    export JAVA_HOME=/usr/local/openjdk-14
+    export PATH=$JAVA_HOME/bin:$PATH
+    export CINEAST="/opt/cineast"
+    export CINEAST_JAR=$CINEAST/cineast-runtime/build/libs/cineast-runtime-*-full.jar
+
+%runscript
+    cd $CINEAST && exec java -Djava.awt.headless=true -jar $CINEAST_JAR $@

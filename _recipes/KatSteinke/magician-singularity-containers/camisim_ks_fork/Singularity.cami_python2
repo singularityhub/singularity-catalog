@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%post 
+	apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y git \
+	python2.7 \
+	python-dev\
+	libffi-dev\
+	build-essential\
+	samtools \
+	libxml-simple-perl \
+	libncurses5 \
+	lib32z1 \
+	curl
+	curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+	python2 get-pip.py
+	pip2 install  numpy==1.13.0 matplotlib==2.0.2
+	pip2 install biopython==1.69.0
+	pip2 install biom-format==2.1.6
+	git clone https://github.com/KatSteinke/CAMISIM.git
+
+%environment
+	PATH="${PATH}:/CAMISIM"
+

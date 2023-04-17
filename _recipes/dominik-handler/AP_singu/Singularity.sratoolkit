@@ -1,0 +1,41 @@
+#sraToolkit in singularity
+
+Bootstrap: docker
+From: ubuntu:16.04
+
+%labels
+  maintainer Dominik Handler <Dominik Handler@imba.oeaw.ac.at  
+  sraToolkit v2.10.0   
+
+
+%runscript
+    "$@"
+
+%post
+
+  apt-get update
+  apt-get -y install locales
+  locale-gen en_US.UTF-8
+
+  export LANG=en_US.UTF-8  
+  export LANGUAGE=en_US:en  
+  export LC_ALL=en_US.UTF-8  
+
+
+    apt-get update
+    apt-get --assume-yes install wget tar bzip2 libxml-libxml-perl
+
+    cd /
+    wget http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.10.0/sratoolkit.2.10.0-ubuntu64.tar.gz
+    tar xzf sratoolkit.2.10.0-ubuntu64.tar.gz
+    rm -rf sratoolkit.2.10.0-ubuntu64.tar.gz
+
+%environment
+    export LANG=en_US.UTF-8  
+    export LANGUAGE=en_US:en  
+    export LC_ALL=en_US.UTF-8  
+
+    export PATH=/sratoolkit.2.10.0-ubuntu64/bin:$PATH
+
+%test
+    

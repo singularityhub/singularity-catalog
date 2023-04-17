@@ -1,0 +1,88 @@
+Bootstrap: docker
+From: centos:7.7.1908
+
+%post
+    yum -y install \
+        gcc \
+        git \
+        hdf5-devel \
+        java-8-openjdk \
+        libcanberra-gtk2 \
+        libxml2-devel \
+        libxslt-devel \
+        mysql \
+        PackageKit-gtk3-module
+
+    rm -rf /var/cache/yum
+
+    # miniconda2
+    cd /opt && \
+    curl -o conda.sh https://repo.anaconda.com/miniconda/Miniconda2-4.7.12.1-Linux-x86_64.sh && \
+    /bin/bash conda.sh -b -p /opt/conda && \
+    rm conda.sh
+    export PATH=/opt/conda/bin:$PATH
+
+    conda install -y -c anaconda -c goodman -c bioconda -c cyclus -c conda-forge -c daf \
+        appdirs \
+        boto3 \
+        centrosome \
+        cython \
+        h5py \
+        inflect \
+        ipywidgets \
+        java-jdk \
+        javabridge \
+        joblib \
+        libtiff \
+        libxml2 \
+        libxslt \
+        lxml \
+        packaging \
+        pillow \
+        prokaryote \
+        python-bioformats \
+        pyzmq \
+        mahotas \
+        matplotlib \
+        mysqlclient \
+        numpy \
+        raven \
+        requests \
+        scikit-image \
+        scikit-learn \
+        scipy \
+        sphinx \
+        tifffile \
+        wxpython=3.0.2.0
+
+    conda clean --all
+
+    pip install --no-cache-dir cellh5
+    
+    # CellProfiler
+    VERSION=3.1.9
+    TARBALL=v${VERSION}.tar.gz
+    cd /opt
+    curl -LO https://github.com/CellProfiler/CellProfiler/archive/${TARBALL}
+    tar xf ${TARBALL}
+    cd CellProfiler-${VERSION}
+
+    pip install --no-cache-dir --editable .
+    rm /opt/${TARBALL}
+
+%runscript
+    exec cellprofiler
+
+%help
+This container provides the following applications:
+    * CellProfiler 3.1.9
+    * Python 2.7
+    * Java JDK 8
+
+%environment
+    export PATH=/opt/CellProfiler-3.1.8:/opt/conda/bin:$PATH
+    export JAVA_TOOL_OPTIONS="-Xss1280k $JAVA_TOOL_OPTIONS"
+    export LC_ALL=C
+
+%labels
+    AUTHOR khs3z@virginia.edu, rs7wz@virginia.edu

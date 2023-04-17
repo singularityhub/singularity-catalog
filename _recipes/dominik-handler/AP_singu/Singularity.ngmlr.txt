@@ -1,0 +1,37 @@
+#ngmlr in singularity
+
+Bootstrap: docker
+From: ubuntu:16.04
+
+%runscript
+    /ngmlr/bin/ngmlr-*/ngmlr "$@"
+
+%post
+    apt-get update
+    apt-get --assume-yes install wget
+    apt-get --assume-yes install sudo
+
+    sudo apt-get update
+    sudo apt-get --assume-yes install build-essential
+    sudo apt-get --assume-yes install zlib1g
+    sudo apt-get --assume-yes install cmake
+    sudo apt-get update
+    sudo apt-get --assume-yes install git-core   
+    sudo apt-get --assume-yes install zlib1g-dev     
+    
+    cd /
+    git clone https://github.com/philres/ngmlr.git
+    cd ngmlr/
+    mkdir -p build
+    cd build/
+    cmake ..
+    make
+
+    cd ../bin/ngmlr-*/
+
+    
+    sudo mkdir /groups
+    sudo mkdir /clustertmp
+
+%test
+    /ngmlr/bin/ngmlr-*/ngmlr -h

@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: cmssw/cms:rhel7
+Stage: devel
+
+%files
+
+%post
+    cd /root
+
+Bootstrap: docker
+From: cmssw/cms:rhel7
+Stage: final
+
+%files
+    keep_privileges.c   /root
+    vpn-server-start.sh /etc/cms-vpn/vpn-server-start.sh
+    vpn-common.sh       /etc/cms-vpn/vpn-common.sh
+    ocserv-genkey       /usr/bin/
+    slirp4netns         /usr/bin/
+    etc                 /etc/ocserv
+
+%post
+    cd /root
+    gcc -Wall -fPIC -shared -o /usr/lib/keep_privileges.so keep_privileges.c
+    rm /root/keep_privileges.*
+
+    echo sslverify=false >> /etc/yum.conf
+    echo skip_missing_names_on_install=false >> /etc/yum.conf
+    yum install -y ocserv nc tcpdump
+    mkdir -p /etc/pki/ocserv
+    mkdir -p /srv
+

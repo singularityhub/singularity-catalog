@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: rocker/verse:4.0.3
+
+%help
+    Container for MinIONQC.R
+    https://github.com/roblanf/minion_qc
+
+%labels
+    MAINTAINER "Tom Harrop"
+    VERSION "MinIONQC.R 1.4.2"
+
+%post
+    # install package deps
+    Rscript -e "options(Ncpus=8); \
+        install.packages(c(\
+            'futile.logger', \
+            'optparse', \
+            'plyr', \
+            'reshape2', \
+            'viridis'), \
+            type='source', ask=FALSE)"
+
+    # install minionqc.R
+    wget -O /usr/local/bin/MinIONQC.R \
+        --no-check-certificate \
+        https://github.com/roblanf/minion_qc/releases/download/1.4.2/MinIONQC.R
+    chmod 755 /usr/local/bin/MinIONQC.R
+
+%runscript
+    exec /usr/local/bin/Rscript /usr/local/bin/MinIONQC.R "$@"

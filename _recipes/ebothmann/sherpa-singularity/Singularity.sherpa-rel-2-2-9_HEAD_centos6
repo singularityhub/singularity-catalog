@@ -1,0 +1,58 @@
+Bootstrap: shub
+From: ebothmann/sherpa-singularity:mceg_centos6
+
+
+%help
+A Singularity file to define an image for running Sherpa rel-2-2-9
+including support for FastJet, HepMC2, LHAPDF, Rivet, OpenLoops and
+BlackHat.
+
+
+%labels
+    Maintainer Enrico Bothmann
+    Version v0.1
+
+
+%runscript
+    Sherpa "$@"
+
+
+%files
+    enable_OpenMPI
+
+
+%post
+    echo Installing yum dependencies ...
+    yum install -y texinfo libtool
+
+    # set up build environment
+    source /opt/rh/devtoolset-6/enable
+    source /opt/rh/python27/enable
+    source /enable_OpenMPI
+
+    echo Installing Sherpa
+    mkdir /scratch
+    git clone --branch rel-2-2-9 https://gitlab.com/sherpa-team/sherpa.git
+    cd sherpa
+    autoreconf -i
+    ./configure \
+        --prefix=/usr/local \
+        --enable-analysis \
+        --enable-blackhat=/opt/blackhat-r3095 \
+        --enable-fastjet=/usr/local \
+        --enable-hepmc2=/usr/local \
+        --enable-lhapdf=/usr/local \
+        --enable-mpi \
+        --enable-openloops=/opt/OpenLoops-2.0.0 \
+        --enable-rivet=/usr/local \
+        --enable-gzip \
+        --with-sqlite3=install \
+        CXXFLAGS="-O3 --std=c++11"
+    make -j
+    make install
+
+    cd /
+    rm -rf /scratch
+    ldconfig
+    yum erase -y texinfo perl-Text-Unidecode perl-libintl
+    yum clean all
