@@ -1,0 +1,51 @@
+Bootstrap: docker
+From: ubuntu:19.10
+
+%help
+    SAMBLASTER 0.1.24
+    https://github.com/GregoryFaust/samblaster
+
+%labels
+    VERSION "SAMBLASTER 0.1.24"
+
+%post
+    # faster apt downloads
+    export DEBIAN_FRONTEND=noninteractive
+    export LC_ALL=C
+    (
+        . /etc/os-release
+        cat << _EOF_ > mirror.txt
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME} main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-updates main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-backports main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-security main restricted universe multiverse
+
+_EOF_
+        mv /etc/apt/sources.list /etc/apt/sources.list.bak
+        cat mirror.txt /etc/apt/sources.list.bak > /etc/apt/sources.list
+    )
+
+    # apt dependencies
+    apt-get update
+    apt-get install -y \
+        build-essential \
+        wget
+
+    # install samblaster
+    wget \
+        -O "samblaster.tar.gz" \
+        https://github.com/GregoryFaust/samblaster/releases/download/v.0.1.24/samblaster-v.0.1.24.tar.gz
+    mkdir /samblaster
+    tar -zxf samblaster.tar.gz \
+        -C /samblaster \
+        --strip-components 1
+    rm samblaster.tar.gz
+    (
+    cd /samblaster || exit 1
+    make
+    mv samblaster /usr/local/bin/
+    )
+    rm -r /samblaster
+
+%runscript
+    exec /usr/local/bin/samblaster "$@"

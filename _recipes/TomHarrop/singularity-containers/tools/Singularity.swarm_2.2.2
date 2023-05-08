@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+    Swarm 2.2.2
+    https://github.com/torognes/swarm
+
+%labels
+
+    MAINTAINER "Tom Harrop"
+    VERSION "Swarm 2.2.2"
+
+%post
+
+    # dependencies
+    apt-get update
+    apt-get install -y \
+        build-essential \
+        wget
+
+    # install swarm
+    wget -O "swarm.tar.gz" \
+        --no-check-certificate \
+        https://github.com/torognes/swarm/archive/v2.2.2.tar.gz
+    mkdir swarm
+    tar -zxf swarm.tar.gz \
+        -C swarm \
+        --strip-components 1
+    cd swarm/src || exit 1
+    make
+    cd .. || exit 1
+    mv bin/swarm /usr/local/bin/
+    cd .. || exit 1
+    rm -rf swarm swarm.tar.gz
+
+%runscript
+
+    exec /usr/local/bin/swarm "$@"

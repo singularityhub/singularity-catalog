@@ -1,0 +1,19 @@
+Bootstrap: docker
+
+From: ubuntu:latest
+
+%labels
+    Topic Bioinformatics
+    admixture 1.3.0
+
+%post
+    apt-get update --fix-missing && apt-get install -y wget
+    cd /opt
+    wget http://software.genetics.ucla.edu/admixture/binaries/admixture_linux-1.3.0.tar.gz
+    tar -zxvf admixture_linux-1.3.0.tar.gz
+    cd admixture_linux-1.3.0/
+    chmod -R 777 /opt/admixture_linux-1.3.0
+
+%runscript
+    exec /opt/admixture_linux-1.3.0/admixture "$@"
+

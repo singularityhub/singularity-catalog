@@ -1,0 +1,16 @@
+Bootstrap: docker
+
+From: debian:latest
+
+%labels
+    Topic Bioinformatics
+    IGV 2.4.18
+
+%post
+    apt-get update --fix-missing && apt-get install -y wget openjdk-8-jre unzip
+    wget http://data.broadinstitute.org/igv/projects/downloads/2.4/IGV_2.4.18.zip
+    unzip IGV_2.4.18.zip
+
+%runscript
+    exec /IGV_2.4.18/igv.sh
+

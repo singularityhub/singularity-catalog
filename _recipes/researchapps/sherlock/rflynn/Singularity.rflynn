@@ -1,0 +1,89 @@
+From: continuumio/miniconda
+Bootstrap:docker
+
+%runscript
+
+    if [ $# -eq 0 ]; then
+        echo "\nThe following software is installed in this image:"
+        ls /usr/local/bin
+        echo "Example usage: rflynn.img [command] [args] [options]"  
+    else
+        exec "$@"
+    fi
+
+%environment
+export FASTICLIP_PATH=/usr/local/bin
+STARHOME=/opt/FAST-iCLIP/dependecies/STAR-STAR_2.4.2a/bin/Linux_x86_64
+PATH=$FASTICLIP_PATH:$STARHOME:$PATH
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+%post
+
+apt-get update && apt-get install -y build-essential git wget libtbb-dev \
+                                     libncurses5-dev \
+                                     libreadline6 libreadline6-dev \
+                                     zlib1g-dev \
+                                     gcc g++ pkg-config wget vim-common \
+                                     unzip
+
+# Install Icount
+conda install -c bioconda pybedtools
+conda install -y cython
+cd /opt && git clone https://github.com/tomazc/iCount
+cd iCount
+pip install -r requirements-rtd.txt
+python setup.py install
+
+
+# RACAS
+cd /opt && git clone https://github.com/BIMSBbioinfo/RCAS
+
+# Install bowtie2
+cd /opt && wget https://github.com/BenLangmead/bowtie2/archive/v2.3.1.tar.gz
+tar -xzvf v2.3.1.tar.gz %% cd bowtie2-2.3.1
+make
+make install
+ 
+# Install FastX Toolkit
+cd /opt && wget http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2
+tar -vxjf fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2
+mv bin/* /usr/local/bin/
+ldconfig
+
+# iCLIP Pro
+pip install pysam
+cd /opt && wget http://www.biolab.si/iCLIPro/dist/iCLIPro-0.1.1.tar.gz
+tar -xzvf iCLIPro-0.1.1.tar.gz && cd iCLIPro-0.1.1
+python setup.py install
+
+# Dependencies for Fast Clip
+conda install -y matplotlib=1.5
+pip install matplotlib-venn
+conda install -y pandas=0.18.1
+
+# Install Fast Clip
+cd /opt && git clone https://github.com/ChangLab/FAST-iCLIP
+cd FAST-iCLIP/dependecies
+
+# Bedtools
+unzip bedtools.bin.zip
+mv bedtools.bin/* /usr/local/bin
+
+# Samtools
+tar -xzvf samtools.0.1.18.tar.gz
+cd samtools-0.1.18
+make
+make razip
+mv misc/* /usr/local/bin
+
+# Install STAR
+cd /opt/FAST-iCLIP/dependecies && tar -xzvf STAR_2.4.2a.tar.gz  
+PATH=$PATH:/opt/FAST-iCLIP/dependecies/STAR-STAR_2.4.2a/bin/Linux_x86_64
+ldconfig
+
+cd /opt/FAST-iCLIP
+./configure
+python setup.py install --prefix=/usr/local
+
+export FASTICLIP_PATH=/opt/fclip/bin
+export PATH=$FASTICLIP_PATH:$PATH

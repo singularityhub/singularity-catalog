@@ -1,0 +1,23 @@
+Bootstrap: localimage
+From: base.simg
+
+%help
+echo "Usage: singularity run bcl2fastq.simg [<bcl2fastq args>]"
+
+%runscript
+/usr/local/bin/bcl2fastq $@
+
+%post
+apt update
+apt install -y software-properties-common python-software-properties 
+add-apt-repository universe
+apt update
+apt-get -y install alien
+
+wget https://support.illumina.com/content/dam/illumina-support/documents/downloads/software/bcl2fastq/bcl2fastq2-v2-20-0-linux-x86-64.zip
+
+# creates bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
+rm -f bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
+unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
+
+alien -i bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm

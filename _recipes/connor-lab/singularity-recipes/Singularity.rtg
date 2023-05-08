@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: openjdk:8
+
+%post
+    apt-get update
+    apt-get -y upgrade
+
+    cd /usr/local/bin
+    wget https://github.com/RealTimeGenomics/rtg-core/releases/download/3.10.1/rtg-core-non-commercial-3.10.1-nojre.zip
+    unzip rtg-core-non-commercial-3.10.1-nojre.zip
+    echo "RTG_TALKBACK=false\nRTG_USAGE=false" > rtg-core-non-commercial-3.10.1/rtg.cfg
+    ln -s /usr/local/bin/rtg-core-non-commercial-3.10.1/rtg /usr/local/bin
+
+%runscript
+    exec rtg "$@"
+
+%labels
+    Maintainer m-bull
+    Version rtg-core-non-commercial-3.10.1

@@ -1,0 +1,35 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  OpenJDK_Version 7.211.2.6.17
+
+%apprun java
+  exec java "${@}"
+  
+%apprun javac
+  exec javac "${@}"
+  
+%apprun jar
+  exec jar "${@}"
+  
+%apprun jdeps
+  exec jdeps "${@}"
+  
+%apprun javap
+  exec javap "${@}"
+  
+%apprun jrunscript
+  exec jrunscript "${@}"
+  
+%runscript
+  exec java "${@}"
+
+%post
+  # Install OpenJDK 7
+  echo "http://mirror.leaseweb.com/alpine/latest-stable/community" >> /etc/apk/repositories
+  apk update && apk add openjdk7
+
+  # Clean up
+  rm -rf /var/cache/apk/*

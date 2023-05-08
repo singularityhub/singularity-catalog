@@ -8,7 +8,7 @@ From: python:3.11-slim
     export CANU_VERSION=2.1.1
 
     apt update -y && apt upgrade -y && apt install -y git build-essential zlib1g-dev wget && \
-        apt install -y autoconf automake  pkg-config libtool-bin yaggo perl 
+        apt install -y autoconf automake  pkg-config libtool-bin yaggo perl default-jre 
 
     wget https://github.com/marbl/canu/releases/download/v${CANU_VERSION}/canu-${CANU_VERSION}.Linux-amd64.tar.xz && \
         tar -xvf canu-${CANU_VERSION}.Linux-amd64.tar.xz  &&

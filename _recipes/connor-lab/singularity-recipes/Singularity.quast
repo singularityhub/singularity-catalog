@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: alpine:3.8
+
+
+%post
+    apk update
+    apk upgrade
+    apk add bash bzip2-dev g++ gcc gcompat libc-dev make ncurses-dev xz-dev zlib-dev musl-dev 
+    apk add curl freetype-dev git libpng-dev perl python3 python3-dev py3-pip 
+   
+    pip3 install matplotlib
+    pip3 install git+https://github.com/ablab/quast
+
+%labels
+    Maintainer m-bull
+    Version quast-git-latest

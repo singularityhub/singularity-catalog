@@ -1,0 +1,27 @@
+Bootstrap: shub
+From: TomHarrop/align-utils:samtools_1.10
+
+%help
+    Container for BBMap 38.86
+    https://jgi.doe.gov/data-and-tools/bbtools/
+
+%labels
+    MAINTAINER "Tom Harrop"
+    VERSION "BBMap 38.86"
+
+%post
+    apt-get update
+    apt-get install -y \
+        default-jre-headless \
+        gawk \
+        pigz
+     
+    wget -O "bbmap.tar.gz" \
+        "https://sourceforge.net/projects/bbmap/files/BBMap_38.86.tar.gz/download"
+    mkdir bbmap-install
+    tar -zxf bbmap.tar.gz \
+        -C bbmap-install \
+        --strip-components 1
+    cp -r bbmap-install/resources/* /
+    cp -r bbmap-install/* /usr/local/bin/
+    rm -rf bbmap.tar.gz bbmap-install

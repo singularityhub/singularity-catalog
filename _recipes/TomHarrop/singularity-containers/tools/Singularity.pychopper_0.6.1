@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: python:3.7.3-stretch
+
+%help
+    Python 3.7.3 with pychopper 0.6.1
+    
+%labels
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "pychopper 0.6.1"
+
+%runscript
+    exec /usr/local/bin/cdna_classifier.py "$@"
+
+%post
+    /usr/local/bin/pip3 install \
+        git+https://github.com/nanoporetech/pychopper.git@v0.6.1

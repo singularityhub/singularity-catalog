@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%post
+    apt-get update -y
+    apt-get install -y --no-install-recommends git make cmake gcc g++ zlib1g-dev
+    mkdir -p /usr/local/src
+    cd /usr/local/src
+
+    git config --global http.sslVerify false
+    git clone --recursive https://github.com/lczech/gappa.git
+
+    cd gappa
+    make
+    cp bin/gappa /usr/local/bin
+
+%runscript
+    exec /usr/local/bin/gappa "$@"

@@ -1,0 +1,46 @@
+Bootstrap: docker
+From: debian:jessie-slim
+
+#Includes cfsan-snp-pipeline smalt picard varscan tabix bcftools bowtie2 bwa gatk libdeflate samtools
+
+%environment
+    export LC_ALL=C
+
+%post
+    apt update \
+    && apt install -y --no-install-recommends  \
+    build-essential ca-certificates sudo tcsh \
+    git make automake autoconf wget gzip unzip sed \
+    zlib1g-dev curl libbz2-dev locales libncurses5-dev liblzma-dev libcurl4-openssl-dev software-properties-common apt-transport-https \
+    libcurl4-openssl-dev libssl-dev zlib1g-dev fonts-texgyre \
+    gcc g++ gfortran libblas-dev liblapack-dev dos2unix \
+    && rm -rf /var/lib/apt/lists/*
+
+    # Not my favorite workaround, but to get cfsan snp to work with samtools, we have to change which libncurses library is used. Problem is anaconda doesn't have the right version of samtools.
+    sudo ln -s /lib/x86_64-linux-gnu/libncursesw.so.5  /lib/x86_64-linux-gnu/libncursesw.so.6
+
+    #Installing Anaconda 2 and Conda 4.5.11
+    wget -c https://repo.continuum.io/archive/Anaconda2-5.3.0-Linux-x86_64.sh
+    sh Anaconda2-5.3.0-Linux-x86_64.sh -bfp /usr/local
+
+    # add bioconda channels
+    conda config --add channels conda-forge
+    conda config --add channels bioconda
+    conda config --add channels anaconda
+    conda config --add channels etetoolkit
+ 
+    # install bulk of bioinformatic tools required by enterobase (ETOKI), "flye" only works with python 2.7
+    conda create -n ETOKI_env python=3.7 ete3 numba numpy pandas raxml fasttree rapidnj bbmap mmseqs2 blast minimap2 last trf psutil flye six pip scipy openjdk
+   
+    . /usr/local/bin/activate ETOKI_env
+    
+    echo 'export PATH=/usr/local/envs/ETOKI_env/bin:$PATH' >> $SINGULARITY_ENVIRONMENT
+    echo 'export alias python=/usr/local/envs/ETOKI_env/bin/python' >> $SINGULARITY_ENVIRONMENT
+    
+    # download peppa
+    cd /usr/local
+    git clone https://github.com/zheminzhou/PEPPA.git
+    echo 'export PATH=/usr/local/PEPPA/:$PATH' >> $SINGULARITY_ENVIRONMENT
+
+
+%test

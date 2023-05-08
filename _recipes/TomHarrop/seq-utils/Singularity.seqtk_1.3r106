@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: alpine:3.10.3
+
+%help
+    Seqtk 1.3 (r106)
+    
+%labels
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "Seqtk 1.3 (r106)"
+
+%post
+    # dependencies
+    apk add --update \
+        bash \
+        build-base \
+        zlib-dev
+
+    # download seqtk
+    wget \
+        -O  seqtk.tar.gz \
+        --no-check-certificate \
+        https://github.com/lh3/seqtk/archive/v1.3.tar.gz
+    mkdir seqtk
+    tar -zxf seqtk.tar.gz \
+        -C seqtk \
+        --strip-components 1
+    
+    # build & install
+    cd seqtk || exit 1
+    make
+    make install
+
+    # tidy up
+    cd .. || exit 1
+    rm -rf seqtk seqtk.tar.gz
+
+%runscript
+    exec /usr/local/bin/seqtk "$@"

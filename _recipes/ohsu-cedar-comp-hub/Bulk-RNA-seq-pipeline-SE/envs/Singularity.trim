@@ -1,0 +1,18 @@
+Bootstrap: docker
+
+From: docker://continuumio/miniconda3:4.4.10
+
+%files
+    trim.yaml
+
+%environment
+    PATH="/opt/conda/envs/$(head -1 trim.yaml | cut -d' ' -f2)/bin:$PATH"
+
+%post
+    export PATH="/opt/conda/bin:$PATH"
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc
+    echo "source activate $(head -1 trim.yaml | cut -d' ' -f2)" > ~/.bashrc
+    /opt/conda/bin/conda env create -f trim.yaml
+
+%runscript
+    exec /bin/bash

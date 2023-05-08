@@ -1,0 +1,9 @@
+Bootstrap:docker
+From: vanessa/scif
+
+%files
+    cowsay.scif
+
+%post
+    apt-get update
+    /opt/conda/bin/scif install /cowsay.scif

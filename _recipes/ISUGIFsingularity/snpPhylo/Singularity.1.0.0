@@ -1,0 +1,61 @@
+Bootstrap:shub
+From:ResearchIT/spack-singularity:openmpi
+
+%labels
+MAINTAINER severin@iastate.edu
+
+$help
+echo "This container contains a runscript for snpPhylo"
+
+%environment
+SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+source /etc/profile.d/modules.sh
+source $SPACK_ROOT/share/spack/setup-env.sh
+export PATH=$SPACK_ROOT/isugif/snpPhylo/bin:$SPACK_ROOT/isugif/snpPhylo/wrappers:$PATH
+for d in /opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/*/bin; do export PATH="$PATH:$d"; done
+
+%post
+export SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+
+yum -y install git python \
+gcc gcc-c++ gcc-gfortran curl \
+gnupg2 sed patch \
+unzip gzip bzip2 \
+findutils make vim \
+environment-modules
+
+yum clean all
+
+
+if [ ! -d "$SPACK_ROOT" ]; then
+  git clone https://github.com/spack/spack.git $SPACK_ROOT
+  spack compiler find $(which gcc)
+  spack compiler find $(which g++)
+  spack compiler find $(which gfortran)
+
+  #because i'm buildiing as root
+  export FORCE_UNSAFE_CONFIGURE=1
+
+  source $SPACK_ROOT/share/spack/setup-env.sh
+  spack install vcftools
+  spack install snphylo
+fi
+
+
+# export BUSCODIR=$SPACK_ROOT/opt/spack/linux-centos7-x86_64/gcc-4.8.5/busco-3.0.1-cafwtkz5ryvlwnup3xzntotjwlrqsiui
+# cp $BUSCODIR/config/config.ini.default $BUSCODIR/config/config.ini
+
+cd $SPACK_ROOT
+mkdir isugif
+cd isugif
+git clone https://github.com/ISUGIFsingularity/snpPhylo.git
+cd snpPhylo
+chmod 755 bin/*
+
+%runscript
+echo "This container contains a runscript for snpPhylo"
+exec runSNPphylo.sh "$@"

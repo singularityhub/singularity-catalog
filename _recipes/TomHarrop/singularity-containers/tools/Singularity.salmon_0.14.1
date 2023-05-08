@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: combinelab/salmon:0.14.1
+
+%help
+
+    Salmon 0.14.1
+    https://github.com/COMBINE-lab/salmon/releases
+
+%labels
+
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "salmon 0.14.1"
+
+%runscript
+
+    exec /usr/local/bin/salmon "$@"

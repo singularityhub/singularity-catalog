@@ -1,0 +1,23 @@
+Bootstrap: library
+From: centos:7.6
+
+%post
+	yum -y update
+	yum -y groups install "X Window System"
+	yum -y install control-center
+	yum -y install liberation-mono-fonts
+	yum -y install nautilus
+	yum -y install gnome-terminal
+	yum -y install gnome-shell
+	yum -y install gnome-themes-standard
+	yum -y install gnome-session
+	yum -y install gnome-classic-session
+	yum -y install gnome-session-xsession
+	yum -y install gnome-session-wayland-session
+	yum -y install gnome-session-custom-session
+
+%environment
+	export LC_ALL=C
+
+%runscript
+	echo "exec gnome-session" >> ~/.xinitrc && startx

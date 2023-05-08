@@ -1,10 +1,10 @@
 bootstrap: docker
-from: nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04
+from: nvidia/cuda:11.7.0-cudnn8-devel-ubuntu20.04
 
 %environment
     # setup PATH to point to julia and blender
-    export PATH=$PATH:"/usr/local/blender"
-    export PATH=$PATH:"/usr/local/julia-1.7.2/bin"
+    # export PATH=$PATH:"/usr/local/blender"
+    export PATH=$PATH:"/usr/local/julia-1.8.5/bin"
 
 %runscript
     exec bash "$@"
@@ -12,17 +12,20 @@ from: nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04
 %post
     export DEBIAN_FRONTEND=noninteractive
     export TZ=Etc/UTC
+    rm /etc/apt/sources.list.d/cuda.list
+    # rm /etc/apt/sources.list.d/nvidia-ml.list
     apt-get update
     apt-get install -y software-properties-common
-    apt-get install -y  build-essential \
-                        git \
-                        wget \
-                        ffmpeg \
-                        cmake \
-                        python3.9-dev \
-                        python3-pip \
-                        libopencv-dev \
-                        libturbojpeg0-dev
+    apt-get install -y build-essential \
+                       wget \
+                       git \
+                       ffmpeg \
+                       cmake \
+                       python3.9-dev \
+                       python3-pip \
+                       libopencv-dev \
+                       libturbojpeg0-dev \
+                       blender
     apt-get clean
 
     python3.9 -m pip install --upgrade pip
@@ -32,17 +35,17 @@ from: nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04
     mkdir /build-ctx && cd /build-ctx
 
     # Setup blender
-    wget "https://yale.box.com/shared/static/nn6n5iyo5m4tzl5u9yoy2dvv1ohk22xj.xz" \
-        -O blender.tar.gz
-    tar -xf blender.tar.gz
-    mv blender-2.* "/usr/local/blender"
-    chmod +x "/usr/local/blender/blender"
+    # wget "https://yale.box.com/shared/static/nn6n5iyo5m4tzl5u9yoy2dvv1ohk22xj.xz" \
+    #     -O blender.tar.gz
+    # tar -xf blender.tar.gz
+    # mv blender-2.* "/usr/local/blender"
+    # chmod +x "/usr/local/blender/blender"
 
     # Set up Julia
-    JURL="https://julialang-s3.julialang.org/bin/linux/x64/1.7/julia-1.7.2-linux-x86_64.tar.gz"
+    JURL="https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.5-linux-x86_64.tar.gz"
     wget "$JURL" -O "julia.tar.gz"
     tar -xzf "julia.tar.gz" -C "/usr/local/"
-    chmod +x /usr/local/julia-1.7.2/bin/*
+    chmod +x /usr/local/julia-1.8.5/bin/*
 
     # clean up
     rm -rf /build-ctx

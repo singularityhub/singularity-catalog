@@ -1,0 +1,84 @@
+Bootstrap:shub
+From:ISUGIFsingularity/GATK:1.0.2
+
+%labels
+MAINTAINER severin@iastate.edu
+APPLICATION GATKrunScripts
+
+%help
+This container contains all the necessary programs to run GATK
+See https://github.com/ISUGIFsingularity/genomeModules.git for more inforation
+
+%environment
+source /etc/profile.d/modules.sh
+SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+source /etc/profile.d/modules.sh
+source $SPACK_ROOT/share/spack/setup-env.sh
+#for d in /opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/*/bin; do export PATH="$PATH:$d"; done
+
+module load bedtools2
+module load bowtie2
+module load bwa
+module load gatk
+module load bedtools2
+module load samtools
+module load picard
+module load jdk
+export _JAVA_OPTIONS="-Xmx100G"
+module load parallel
+module load bioawk
+module load perl
+module load python
+module load vcftools
+module load py-biopython
+
+%post
+
+export SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+
+yum -y install bc paste wget
+yum clean all
+
+export FORCE_UNSAFE_CONFIGURE=1
+source $SPACK_ROOT/share/spack/setup-env.sh
+
+#version 4.0.4.0 isn't working with spack install gatk@4.0.4.0
+mkdir -p $SPACK_ROOT/mirror/gatk
+pushd $SPACK_ROOT/mirror/gatk
+https://github.com/broadinstitute/gatk/releases/download/4.0.7.0/gatk-4.0.7.0.zip
+popd
+
+spack install gatk
+
+
+
+#install github st package to calculate standard deviation.
+
+cd $SPACK_ROOT
+cpan -i ExtUtils::MakeMaker
+git clone https://github.com/nferraz/st.git
+cd st
+source /etc/profile.d/modules.sh
+module load perl
+perl Makefile.PL
+make
+make test
+sudo make install
+
+
+#bzip.org is down, fetching repo from fossies.org into mirror
+mkdir -p $SPACK_ROOT/mirror/bzip2
+spack mirror add local $SPACK_ROOT/mirror
+pushd $SPACK_ROOT/mirror/bzip2
+wget https://fossies.org/linux/misc/bzip2-1.0.6.tar.gz
+popd
+
+#version 4.0.4.0 isn't working with spack install gatk@4.0.4.0
+mkdir -p $SPACK_ROOT/mirror/gatk
+pushd $SPACK_ROOT/mirror/gatk
+wget https://github.com/broadinstitute/gatk/releases/download/4.0.7.0/gatk-4.0.7.0.zip
+popd

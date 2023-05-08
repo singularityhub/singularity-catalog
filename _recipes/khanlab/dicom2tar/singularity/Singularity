@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: ubuntu:xenial
+
+#ver:0.1.1
+
+#------------------------------------
+%setup
+#------------------------------------
+
+
+#------------------------------------
+%post
+#------------------------------------
+
+export DEBIAN_FRONTEND=noninteractive
+apt-get update && apt-get install -y --no-install-recommends apt-utils \
+    sudo \
+    git \
+    wget \
+    curl \
+    zip \
+    unzip \
+    python2.7 \
+    python-pip
+    
+sudo pip install --upgrade pip setuptools
+sudo pip install dicom2tar
+
+%runscript 
+exec dicom2tar "$@"
+

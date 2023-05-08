@@ -1,0 +1,36 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://archive.ubuntu.com/ubuntu/
+Include: build-essential language-pack-en wget zlib1g-dev python2.7
+
+%help
+
+    Container for stacks 2.0Beta9
+    http://catchenlab.life.illinois.edu/stacks
+
+%labels
+
+    MAINTAINER "Tom Harrop"
+    VERSION "stacks 2.0Beta9"
+
+%post
+    # set up python
+    update-alternatives \
+        --install /usr/bin/python \
+        python \
+        /usr/bin/python2.7 \
+        1
+
+    # install stacks
+    wget -O "stacks.tar.gz" \
+        http://catchenlab.life.illinois.edu/stacks/source/stacks-2.0Beta9.tar.gz
+    mkdir stacks-install
+    tar -zxf stacks.tar.gz \
+        -C stacks-install \
+        --strip-components 1
+    cd stacks-install || exit 1
+    ./configure \
+    && make \
+    && make install
+    cd .. || exit 1
+    rm -rf stacks-install stacks.tar.gz

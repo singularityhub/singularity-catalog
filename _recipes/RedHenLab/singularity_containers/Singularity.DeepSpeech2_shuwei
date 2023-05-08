@@ -1,0 +1,14 @@
+Bootstrap:docker 
+From:paddlepaddle/deep_speech:latest-gpu
+
+%labels
+        MAINTAINER Shuwei Xu
+
+%environment
+        unset HOME
+        export HOME="/mnt/rds/redhen/gallina/Singularity/DeepSpeech2/DeepSpeech"
+        export GST_ID3_TAG_ENCODING=GB2312
+
+%post
+
+

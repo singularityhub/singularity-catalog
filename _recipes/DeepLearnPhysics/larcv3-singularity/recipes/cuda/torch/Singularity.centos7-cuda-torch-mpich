@@ -1,0 +1,90 @@
+Bootstrap: shub
+From: DeepLearnPhysics/larcv3-singularity:centos7-cuda-core-mpich
+
+%help
+Centos7 with cuda9.0 cudnn7
+ML/DL packages  : tensorflow keras sc-learn nccl
+Sci.  packages  : numpy pandas sc-image matplotlib opencv-python ROOT
+Basic python    : ipython jupyter yaml pygments six zmq wheel h5py tqdm mpi4py horovod
+Development kit : g++/gcc cython nvcc libqt4-dev python-dev
+Utility kit     : git wget emacs vim openssh-client mpich
+
+To start your container simply try
+singularity exec THIS_CONTAINER.simg bash
+
+To use GPUs, try
+singularity exec --nv THIS_CONTAINER.simg bash
+
+%labels
+Maintainer coreyjadams
+Version centos7-cuda-torch-mpich-py36
+
+#------------
+# Global installation
+#------------
+%environment
+
+
+    # for MPICH:
+    export PATH=/usr/local/mpich/install/bin/:${PATH}
+    export LD_LIBRARY_PATH=/usr/local/mpich/install/lib/:${LD_LIBRARY_PATH}
+
+    # This line is necessary to run on Cooley:
+    export NCCL_P2P_DISABLE=1
+
+%post
+
+    scl enable devtoolset-4 bash
+    scl enable rh-python36 bash
+
+    # This is a dependency for building horovod from source
+    yum install -y eigen3-devel
+
+
+    # Using the app area to store software:
+    mkdir /app
+    cd /app
+
+    scl enable devtoolset-4 bash
+    # Install the necessary hash functions:
+    git clone https://github.com/sparsehash/sparsehash.git
+    cd sparsehash
+    ./configure
+    make -j install
+    cd -
+
+    pip3 --no-cache-dir --disable-pip-version-check install torch
+    pip3 --no-cache-dir --disable-pip-version-check install torchvision
+
+    # This is for tensorboardX
+    pip3 --disable-pip-version-check --no-cache-dir install tensorboardX
+
+
+    # This is a mild hack, but it allows me to install the cuda-built versions
+    # of SparseConvNet and Horovod without having cuda available at build time.
+
+    # I made the container without these, built the wheel files, uploaded to github,
+    # and then added the prebuilt binaries to this recipe for installation.
+
+    # Definitely a bootstrap method, and not easily maintained since the build is by hand.
+
+    # Download the prebuilt binary:
+    wget https://github.com/DeepLearnPhysics/larcv3-singularity/raw/master/wheels/cuda/pytorch/scn_cuda10-0.2.12182018-cp36-cp36m-linux_x86_64.whl
+    pip3 --no-cache-dir --disable-pip-version-check install scn_cuda10-0.2.12182018-cp36-cp36m-linux_x86_64.whl
+    rm scn_cuda10-0.2.12182018-cp36-cp36m-linux_x86_64.whl
+
+
+    # Install all of the horovod dependencies:
+    pip3 --disable-pip-version-check --no-cache-dir install cffi pycparser cloudpickle
+
+
+    # Download prebuilt libraries for horovod:
+    wget https://github.com/DeepLearnPhysics/larcv3-singularity/raw/master/wheels/cuda/pytorch/horovod-0.16.2-cp36-cp36m-linux_x86_64.whl
+
+
+    pip3 install horovod-0.16.2-cp36-cp36m-linux_x86_64.whl
+    rm horovod-0.16.2-cp36-cp36m-linux_x86_64.whl
+
+
+    # Done!
+    

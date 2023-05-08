@@ -1,0 +1,10 @@
+Bootstrap: localimage
+From: ../../../sh_container
+
+%post
+    /opt/conda/bin/pip install jupyter
+
+%runscript
+    SH_LOGIN_JUPYTER=$(tr -cd 0-9 </dev/urandom | head -c 4)
+    SH_LOGIN_CMD="jupyter notebook --port ${SH_LOGIN_JUPYTER} --ip 127.0.0.1 --no-browser &"
+    /opt/conda/bin/sh_login start "$@" --port ${SH_LOGIN_JUPYTER} --cmd "SH_LOGIN_CMD"

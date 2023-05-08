@@ -1,0 +1,42 @@
+Bootstrap: library
+From:  shahzebmsiddiqui/default/easybuild:centos-7
+
+%post
+
+# install EasyBuild using pip
+pip install -U pip
+pip install wheel
+pip install -U setuptools
+pip install 'vsc-install<0.11.4' 'vsc-base<2.9.0'
+pip install easybuild
+
+
+# change to 'easybuild' user
+su - easybuild << 'EOF'
+set -ve
+eb CMake-3.9.6.eb --robot
+mkdir -p /app/lmodcache
+$LMOD_DIR/update_lmod_system_cache_files -d /app/lmodcache -t /app/lmodcache/timestamp /app/modules/all
+EOF
+
+# cleanup, everything in /scratch is assumed to be temporary
+rm -rf /scratch/*
+
+%runscript
+eval "$@"
+
+%environment
+# make sure that 'module' and 'ml' commands are defined
+source /etc/profile
+# increase threshold time for Lmod to write cache in $HOME (which we don't want to do)
+export LMOD_SHORT_TIME=86400
+# purge any modules that may be loaded outside container
+module --force purge
+# avoid picking up modules from outside of container
+module unuse $MODULEPATH
+# pick up modules installed in /app
+module use /app/modules/all
+# load module(s) corresponding to installed software
+module load CMake/3.9.6
+
+%labels

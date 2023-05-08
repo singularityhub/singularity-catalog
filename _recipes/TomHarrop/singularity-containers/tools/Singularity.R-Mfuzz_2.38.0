@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: rocker/verse:3.4.4
+
+%help
+
+    Container for Mfuzz 2.38.0 in R 3.4.4 with data.table and DESeq2
+
+%labels
+
+    MAINTAINER "Tom Harrop"
+    VERSION "R 3.4.4 with Mfuzz 2.38.0 and DESeq2 1.18.1"
+
+%post
+
+    # install depenedencies
+    apt-get update
+    apt-get install -y \
+        tk-dev tcl-dev
+
+    # install packages from bioconductor
+    Rscript -e "options(Ncpus=8); \
+        source('https://bioconductor.org/biocLite.R') ; \
+        biocLite(c('data.table', 'DESeq2', 'Mfuzz'), \
+            type='source', ask=FALSE)"
+
+%runscript
+
+    exec /usr/local/bin/R "$@"

@@ -1,0 +1,25 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  DeepTools_Version 3.1.2
+
+%apprun deeptools
+  exec deeptools "${@}"
+  
+%runscript
+  exec deeptools "${@}"
+
+%post
+  # Get dependencies
+  echo "http://mirror.leaseweb.com/alpine/v3.8/community" >> /etc/apk/repositories
+  apk update
+  apk add python3 python3-dev gfortran make g++ openblas-dev openblas freetype freetype-dev libpng-dev libpng bzip2-dev libbz2 xz-dev xz-libs
+  
+  # Install DeepTools
+  pip3 --no-cache-dir install deepTools==3.1.2
+
+  # Clean up
+  apk del python3-dev g++ gcc make openblas-dev libpng-dev bzip2-dev xz-dev freetype-dev
+  rm -rf /var/cache/apk/*

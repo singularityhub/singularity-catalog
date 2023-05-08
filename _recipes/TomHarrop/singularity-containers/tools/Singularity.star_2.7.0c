@@ -1,0 +1,34 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://archive.ubuntu.com/ubuntu/
+Include: build-essential wget zlib1g-dev
+
+%help
+
+    Container for STAR 2.7.0c
+    https://github.com/alexdobin/STAR/releases
+
+%labels
+
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "STAR 2.7.0c"
+
+%runscript
+
+    exec /usr/local/bin/STAR "$@"
+
+%post
+
+    # install STAR
+    wget -O "star.tar.gz" \
+        --no-check-certificate \
+        https://github.com/alexdobin/STAR/archive/2.7.0c.tar.gz
+    mkdir star
+    tar -zxf star.tar.gz \
+        -C star \
+        --strip-components 1
+    cd star/source || exit 1
+    make
+    cp STAR /usr/local/bin
+    cd ../../ || exit 1
+    rm -rf star.tar.gz star

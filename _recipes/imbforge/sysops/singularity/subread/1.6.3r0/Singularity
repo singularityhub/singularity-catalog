@@ -1,0 +1,48 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  Subread_Version 1.6.3
+
+%apprun exactSNP
+  exec exactSNP "${@}"
+  
+%apprun featureCounts
+  exec featureCounts "${@}"
+  
+%apprun subindel
+  exec subindel "${@}"
+  
+%apprun subjunc
+  exec subjunc "${@}"
+  
+%apprun sublong
+  exec sublong "${@}"
+  
+%apprun subread-align
+  exec subread-align "${@}"
+  
+%apprun subread-buildindex
+  exec subread-buildindex "${@}"
+
+%runscript
+  exec echo "Available apps: exactSNP, featureCounts, subindel, subjunc, sublong, subread-align, subread-buildindex"
+
+%post
+  # Get dependencies
+  apk update
+  apk add make gcc g++ zlib zlib-dev
+  
+  # Install Subread
+  cd /tmp
+  wget https://netcologne.dl.sourceforge.net/project/subread/subread-1.6.3/subread-1.6.3-source.tar.gz
+  tar zxf subread-1.6.3-source.tar.gz
+  cd subread-*/src
+  make -j$(nproc) -f Makefile.Linux
+  cp -r ../bin/* /usr/local/bin/
+
+  # Clean up
+  apk del make gcc g++ zlib-dev
+  rm -rf /var/cache/apk/*
+  rm -rf /tmp/*

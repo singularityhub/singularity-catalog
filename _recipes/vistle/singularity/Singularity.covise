@@ -1,0 +1,34 @@
+BootStrap: localimage
+From: covise-deps.sif
+
+%labels
+    MAINTAINER "Martin Aumüller" <aumueller@hlrs.de>
+
+%runscript
+    $COVISEDIR/bin/covise "$@"
+
+%post
+    . /etc/buildenv.sh
+
+    mkdir -p /build && cd /build \
+       && git clone --recursive git://github.com/hlrs-vis/covise.git \
+       && cd covise \
+       && export ARCHSUFFIX=rhel7opt \
+       && export COVISEDIR=/build/covise \
+       && export COVISEDESTDIR=/build/covise \
+       && mkdir -p build.covise \
+       && cd build.covise \
+       && cmake -GNinja .. -DCOVISE_BUILD_RENDERER=OFF -DCOVISE_USE_VISIONARAY=OFF -DCMAKE_INSTALL_PREFIX=$PREFIX -DCMAKE_BUILD_TYPE=${BUILDTYPE} \
+       && cmake --build . --target install
+
+    echo "export ARCHSUFFIX=${ARCHSUFFIX}" >> /etc/env.sh
+    echo "export COVISEDIR=${PREFIX}" >> /etc/env.sh
+    echo "export LD_LIBRARY_PATH=\$COVISEDIR/\$ARCHSUFFIX/lib:\$LD_LIBRARY_PATH" >> /etc/env.sh
+
+    echo "export COVISEDIR=${COVISEDIR}" >> /etc/buildenv.sh
+    echo "export COVISEDESTDIR=${COVISEDESTDIR}" >> /etc/buildenv.sh
+
+    . /etc/cleanup.sh
+
+%environment
+    . /etc/env.sh

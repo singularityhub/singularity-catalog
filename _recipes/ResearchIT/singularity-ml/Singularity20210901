@@ -1,0 +1,38 @@
+Bootstrap:docker
+From:containers.las.iastate.edu/ml-gpu-base:latest
+
+%environment
+export KERAS_BACKEND=tensorflow
+export CUDADIR=/usr/local/cuda-11.0
+export PATH=/usr/local/cuda/bin:$PATH:/opt/python38/bin
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64
+export MAGMA_HOME=/opt/magma
+
+%post
+dnf install -y git
+export TORCH_CUDA_ARCH_LIST="6.1+PTX 7.0+PTX 7.5+PTX 8.0+PTX"
+export KERAS_BACKEND=tensorflow
+export CUDADIR=/usr/local/cuda-11.0
+export PATH=/usr/local/cuda/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64
+export MAGMA_HOME=/opt/magma
+export FORCE_CUDA=1
+
+python3 -m pip install --upgrade scipy pip setuptools
+python3 -m pip install opencv-python
+python3 -m pip install git+https://github.com/rusty1s/pytorch_scatter@2.0.8
+python3 -m pip install git+https://github.com/rusty1s/pytorch_sparse@0.6.11
+python3 -m pip install git+https://github.com/rusty1s/pytorch_cluster@1.5.9
+python3 -m pip install git+https://github.com/rusty1s/pytorch_spline_conv@1.2.1
+python3 -m pip install git+https://github.com/rusty1s/pytorch_geometric@1.7.2
+python3 -m pip install ogb
+python3 -m pip install dgl-cu110 -f https://data.dgl.ai/wheels/repo.html
+
+#cleanup
+cd /
+yum clean all
+rm -rf /var/cache/dnf/*
+rm -rf /build
+
+%runscript
+exec $@

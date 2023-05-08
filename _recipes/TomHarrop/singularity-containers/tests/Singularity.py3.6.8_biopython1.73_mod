@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: ubuntu:18.10
+
+%help
+    Container for testing biopython index_db()
+    https://github.com/tomharrop/racon-chunks
+
+    Python 3.6.8 with biopython 1.73
+
+%labels
+    MAINTAINER "Tom Harrop"
+
+%runscript
+    exec /usr/bin/python3 "$@"
+
+%post
+    # dependencies
+    apt-get update
+    apt-get install -y \
+        python3-pip
+
+    # python + biopython
+    /usr/bin/pip3 install --upgrade pip
+    /usr/local/bin/pip3 install \
+        biopython==1.73
+    update-alternatives \
+        --install /usr/bin/python \
+        python \
+        /usr/bin/python3 \
+        1
+
+    # Modify Bio/File.py to get an earlier error message
+    bio_file='/usr/local/lib/python3.6/dist-packages/Bio/File.py'
+    line1='# con.execute("CREATE TABLE offset_data (key TEXT PRIMARY KEY, "'
+    line2='#             "offset INTEGER);")'
+
+    sed -i "/${line1}/s/#\s//g" "${bio_file}"
+    sed -i "/${line2}/s/#\s//g" "${bio_file}" 

@@ -1,0 +1,31 @@
+Bootstrap: shub
+From: team113sanger/t113-singularity:r-3.6.0.base-1.0.1
+IncludeCmd: no
+
+%help
+	Team 113 Singularity image for subclonal reconstruction 
+
+%labels
+        Maintainer Team113 Wellcome Sanger Institute
+        Version v1.0.0
+        R_Version 3.6.0
+
+%environment
+        export LC_ALL=en_US.UTF-8
+        export LANG=en_US.UTF-8
+
+%post
+	# Install library dependencies
+	yum install -y mesa-libGL mesa-libGL-devel mesa-libGLU mesa-libGLU-devel
+	yum groupinstall -y X11
+
+
+	# Install R packages
+	Rscript -e "BiocManager::install(\"IRanges\")"
+	Rscript -e "BiocManager::install(\"limma\")"
+	Rscript -e "library(devtools); install_github(\"genome/bmm\"); install_github(\"genome/sciClone\")"
+  
+	# Clean up
+	yum clean all && rm -rf /var/cache/yum
+	#rm -rf /tmp/${R_VERSION}
+	#rm -rf /tmp/install-tl*

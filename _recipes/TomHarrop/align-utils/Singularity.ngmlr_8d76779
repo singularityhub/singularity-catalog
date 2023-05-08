@@ -1,0 +1,56 @@
+Bootstrap: docker
+From: ubuntu:19.10
+
+%help
+    NGMLR 8d76779
+    https://github.com/philres/ngmlr
+
+%labels
+    MAINTAINER "Tom Harrop"
+    VERSION "NGMLR 8d76779"
+
+%post
+    # faster apt downloads, will it break?
+    export DEBIAN_FRONTEND=noninteractive
+    (
+        . /etc/os-release
+        cat << _EOF_ > mirror.txt
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME} main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-updates main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-backports main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-security main restricted universe multiverse
+
+_EOF_
+        mv /etc/apt/sources.list /etc/apt/sources.list.bak
+        cat mirror.txt /etc/apt/sources.list.bak > /etc/apt/sources.list
+    )
+
+    # deps
+    apt-get update
+    apt-get install -y \
+        build-essential \
+        cmake \
+        git \
+        wget \
+        zlib1g-dev
+
+    # download 
+    git clone https://github.com/philres/ngmlr.git
+    cd ngmlr || exit 1
+    git checkout \
+        --recurse-submodules --force \
+        8d76779
+
+    # build
+    mkdir -p build
+    cd build || exit 1
+    cmake ..
+    make
+    make install
+
+    # tidy up
+    cd ../../ || exit 1
+    rm -fr ngmlr
+
+%runscript
+    exec /usr/local/bin/ngmlr "$@"

@@ -1,0 +1,72 @@
+Bootstrap: docker
+From: ubuntu:19.10
+
+%help
+    Container for merqury 45fd3cc
+    https://github.com/marbl/merqury
+
+%labels
+    MAINTAINER "Tom Harrop"
+    VERSION "merqury 45fd3cc"
+
+%environment
+    export LC_ALL=C
+    export PATH="${PATH}:/meryl/Linux-amd64/bin:/IGV_2.8.0:/merqury"
+    export MERQURY="/merqury"
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    export LC_ALL=C
+    export PATH="${PATH}:/meryl/Linux-amd64/bin:/IGV_2.8.0:/merqury"
+    export MERQURY="/merqury"
+
+    # set up apt
+    apt-get clean
+    rm -r /var/lib/apt/lists/*
+    apt-get  update
+    apt-get upgrade -y --fix-missing
+    (
+        . /etc/os-release
+        cat << _EOF_ > mirror.txt
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME} main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-updates main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-backports main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-security main restricted universe multiverse
+
+_EOF_
+        mv /etc/apt/sources.list /etc/apt/sources.list.bak
+        cat mirror.txt /etc/apt/sources.list.bak > /etc/apt/sources.list
+    )
+
+    # dependencies
+    apt-get update
+    apt-get install -y \
+        bedtools \
+        build-essential \
+        default-jre \
+        git \
+        r-cran-ggplot2 \
+        r-cran-scales \
+        samtools \
+        wget
+
+    # install meryl
+    git clone https://github.com/marbl/meryl.git /meryl
+    cd /meryl || exit 1
+    git checkout -f v1.0
+    git submodule update --init --recursive
+    cd /meryl/src || exit 1
+    make
+
+    # install igvtools
+    wget -O /IGV.zip \
+        --no-check-certificate \
+        https://data.broadinstitute.org/igv/projects/downloads/2.8/IGV_2.8.0.zip
+    unzip /IGV.zip
+    rm /IGV.zip
+
+    # install merqury
+    git clone https://github.com/marbl/merqury.git /merqury
+    cd /merqury || exit 1
+    git checkout -f 45fd3cc
+    git submodule update --init --recursive

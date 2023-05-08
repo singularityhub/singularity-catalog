@@ -1,0 +1,36 @@
+Bootstrap: shub
+From: khanlab/neuroglia-core:v1.0.0
+
+
+
+#########
+%setup
+#########
+mkdir $SINGULARITY_ROOTFS/src
+cp -Rv . $SINGULARITY_ROOTFS/src
+
+#########
+%post
+#########
+
+cd /src
+
+# checkout specific git release 
+#SINGULARITY_TAG=${SINGULARITY_BUILDDEF#Singularity.}
+#if [ ! "$SINGULARITY_TAG" = "Singularity" ]
+#then
+#  git checkout $SINGULARITY_TAG
+#fi
+
+#MCR
+./install_scripts/05.install_MCR.sh /opt v93 R2017b
+
+
+#########
+%environment
+
+export MCRROOT=/opt/mcr/v93
+export PATH=/src/mcr/v93/mp2rage_correction:/src/bin:$PATH
+
+%runscript
+exec /src/mp2rage_correction $@

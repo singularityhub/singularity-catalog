@@ -1,0 +1,33 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  MEME_Version 5.0.2
+
+%apprun meme
+  exec meme "${@}"
+  
+%runscript
+  exec meme "${@}"
+
+%post
+  # Get dependencies
+  echo "http://mirror.leaseweb.com/alpine/v3.8/community" >> /etc/apk/repositories
+  apk update
+  apk add make gcc g++ wget libxml2 libxml2-dev zlib-dev zlib libxslt libxslt-dev ghostscript file perl perl-dev perl-utils perl-file-which perl-html-parser perl-html-tree perl-json perl-xml-simple perl-xml-parser perl-html-template
+  PERL_MM_USE_DEFAULT=1 cpan Math::CDF Log::Log4perl XML::Compile::SOAP11 XML::Compile::WSDL11 XML::Compile::Transport::SOAPHTTP
+  
+  # Install MEME Suite
+  cd /tmp
+  wget http://meme-suite.org/meme-software/5.0.2/meme-5.0.2.tar.gz
+  tar zxf meme-5.0.2.tar.gz
+  cd meme-5.0.2
+  ./configure --prefix=/usr/local --with-url=http://meme-suite.org/ --enable-build-libxml2 --enable-build-libxslt
+  make -j$(nproc) install
+  
+  # Clean up
+  apk del make gcc g++ libxml2-dev perl-dev libxslt-dev perl-utils wget zlib-dev
+  rm -rf /var/cache/apk/*
+  rm -rf /root/.cpan
+  rm -rf /tmp/*

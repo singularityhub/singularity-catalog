@@ -1,0 +1,57 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%help
+    gffread 0.12.3
+    
+%labels
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "gffread 0.12.3"
+
+%environment
+    export LC_ALL=C
+    export PATH="${PATH}:/gffread"
+
+%post
+    # faster apt downloads
+    export DEBIAN_FRONTEND=noninteractive
+    export LC_ALL=C
+    
+    # set up apt
+    apt-get clean
+    rm -r /var/lib/apt/lists/*
+    apt-get update
+    apt-get upgrade -y --fix-missing
+    (
+        . /etc/os-release
+        cat << _EOF_ > mirror.txt
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME} main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-updates main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-backports main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-security main restricted universe multiverse
+
+_EOF_
+        mv /etc/apt/sources.list /etc/apt/sources.list.bak
+        cat mirror.txt /etc/apt/sources.list.bak > /etc/apt/sources.list
+    )
+
+    # install dependencies
+    apt-get update
+    apt-get install -y \
+        git \
+        build-essential \
+        wget \
+        zlib1g-dev
+
+    # install gffread
+    git clone https://github.com/gpertea/gffread /gffread
+    (
+    cd /gffread
+    git checkout -f v0.12.3
+    git submodule update --init --recursive
+    make release
+    )
+
+%runscript
+    exec /gffread/gffread "$@"
+

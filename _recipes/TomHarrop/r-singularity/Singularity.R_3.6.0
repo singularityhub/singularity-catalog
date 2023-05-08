@@ -1,0 +1,51 @@
+Bootstrap: docker
+From: rocker/verse:3.6.0
+
+%help
+
+    Container for plotting with R data.table and ggplot2
+
+%labels
+
+    MAINTAINER "Tom Harrop"
+    VERSION "R 3.6.0"
+
+%post
+
+    # install depenedencies
+    apt-get update
+    apt-get install -y \
+        libbz2-dev \
+        liblzma-dev \
+        libpcre++-dev 
+
+    # install packages from bioconductor
+    Rscript -e "options(Ncpus=8); \
+        install.packages('BiocManager') ; \
+        BiocManager::install(c(\
+            'Cairo', \
+            'cowplot', \
+            'data.table', \
+            'extrafont', \
+            'ggimage', \
+            'ggtree', \
+            'hexbin', \
+            'UpSetR', \
+            'sysfonts', \
+            'VennDiagram'), \
+            type='source', ask=FALSE)"
+
+    # install lato
+    wget -O "lato.zip" \
+        http://www.latofonts.com/download/Lato2OFL.zip
+    unzip lato.zip
+    mv Lato2OFL /usr/share/fonts/truetype/
+    rm lato.zip
+    fc-cache -f -v
+    Rscript -e "library('extrafont') ; \
+        font_import(prompt=FALSE) ; \
+        loadfonts()"
+
+%runscript
+
+    exec /usr/local/bin/R "$@"

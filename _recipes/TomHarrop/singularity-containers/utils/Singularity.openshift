@@ -1,0 +1,59 @@
+Bootstrap: library
+From: centos:7.6
+
+%post
+    # build variables
+    export PATH="${PATH}:/usr/local/go/bin"
+    export GOPATH="${HOME}/go" # not needed at runtime
+
+    # dependencies
+    yum install -y \
+        device-mapper-persistent-data \
+        gcc-c++ \
+        git \
+        gzip \
+        lvm2 \
+        tar \
+        wget \
+        yum-utils 
+
+    # install go
+    wget -O golang.tar.gz \
+        https://dl.google.com/go/go1.12.6.linux-amd64.tar.gz
+    tar -C /usr/local -xzf golang.tar.gz
+
+    # install docker
+    yum-config-manager \
+        --add-repo \
+        https://download.docker.com/linux/centos/docker-ce.repo
+    yum install -y \
+        docker-ce \
+        docker-ce-cli \
+        containerd.io
+
+    exit 0
+
+    # openshift 3.11
+    wget -O openshift.tar.gz \
+        https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
+    mkdir openshift
+    tar -zxf openshift.tar.gz \
+        -C openshift \
+        --strip-components 1
+    rm -r openshift.tar.gz
+
+    # openshift server
+    wget -O openshift_server.tar.gz \
+        https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-server-v3.11.0-0cbc58b-linux-64bit.tar.gz
+    mkdir openshift
+    tar -zxf openshift_server.tar.gz \
+        -C openshift_server \
+        --strip-components 1
+    rm -r openshift_server.tar.gz
+
+%startscript
+    systemctl start docker
+
+
+%environment
+    export PATH="${PATH}:/usr/local/go/bin"

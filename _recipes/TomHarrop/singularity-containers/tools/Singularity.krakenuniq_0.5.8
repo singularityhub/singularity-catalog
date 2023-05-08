@@ -1,0 +1,49 @@
+Bootstrap: docker
+From: ubuntu:19.04
+
+%help
+
+    krakenuniq 0.5.8
+    https://github.com/fbreitwieser/krakenuniq
+
+%labels
+
+    MAINTAINER "Tom Harrop"
+    VERSION "krakenuniq 0.5.8"
+
+%post
+
+    # dependencies
+    apt update
+    apt install -y \
+        build-essential \
+        cpanminus \
+        curl \
+        git \
+        jellyfish1 \
+        language-pack-en \
+        ncbi-blast+ \
+        wget \
+        zlib1g-dev 
+
+    # intall perl modules
+    cpanm --force ExtUtils::Helpers
+    cpanm LWP::Simple || cat /.cpanm/work/*/build.log
+
+    # install krakenuniq
+    wget -O krakenuniq.tar.gz \
+        --no-check-certificate \
+        https://github.com/fbreitwieser/krakenuniq/archive/v0.5.8.tar.gz
+
+    mkdir krakenuniq
+    tar -zxf krakenuniq.tar.gz \
+        -C krakenuniq \
+        --strip-components 1
+    cd krakenuniq || exit 1
+    ./install_krakenuniq.sh /usr/local/bin
+    cd .. || exit 1
+    rm -rf krakenuniq krakenuniq.tar.gz
+
+%runscript
+
+    exec /usr/local/bin/krakenuniq "$@"

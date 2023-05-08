@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%environment
+    export PATH="/usr/local/miniconda3/bin:$PATH"
+
+%post
+    apt-get update && apt-get -y upgrade
+    
+    # Install basic packages
+    apt-get -y install vim wget bzip2 parallel git \
+    libopenmpi-dev libsm6 libxrender-dev build-essential python-dev python-setuptools
+    
+    # Install miniconda
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /usr/local/miniconda3
+    rm Miniconda3-latest-Linux-x86_64.sh
+
+    # Install tensorflow
+    /usr/local/miniconda3/bin/conda install -y -c conda-forge tensorflow
+    
+    # Install tensorboardX
+    /usr/local/miniconda3/bin/pip install tensorboardX
+    
+    # Install PyTorch 
+    /usr/local/miniconda3/bin/conda install -y pytorch-cpu torchvision-cpu -c pytorch
+
+    # Install PyTorch text and spacy
+    /usr/local/miniconda3/bin/pip install torchtext
+    /usr/local/miniconda3/bin/pip install spacy
+    /usr/local/miniconda3/bin/python -m spacy download en
+
+    # Install seaborn pyarrow tqdm pandas psutil opencv-python
+    /usr/local/miniconda3/bin/conda install -y -c conda-forge matplotlib
+    /usr/local/miniconda3/bin/conda install -y seaborn
+    /usr/local/miniconda3/bin/pip install pyarrow
+    /usr/local/miniconda3/bin/conda install -y tqdm
+    /usr/local/miniconda3/bin/conda install -y pandas
+    /usr/local/miniconda3/bin/conda install -y -c anaconda psutil

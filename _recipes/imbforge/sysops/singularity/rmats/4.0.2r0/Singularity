@@ -1,0 +1,45 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  rMATS_Version 4.0.2
+
+%apprun rmats.py
+  exec rmats.py "${@}"
+
+%runscript
+  exec rmats.py "${@}"
+
+%post
+  # Get dependencies
+  echo "http://mirror.leaseweb.com/alpine/v3.8/community" >> /etc/apk/repositories
+  apk update
+  apk add python2 python2-dev py2-pip make gcc g++ ncurses-dev ncurses-libs zlib-dev zlib bzip2-dev libbz2 xz-dev xz-libs curl-dev libcurl libgomp libstdc++ libgcc openblas openblas-dev
+  pip --no-cache-dir install numpy scipy pysam
+
+  # Install SAMtools
+  cd /tmp
+  wget -O - https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2 | tar xjf -
+  cd samtools-*
+  make -j$(nproc) install
+
+  # Install STAR
+  cd /tmp
+  wget -O -  https://github.com/alexdobin/STAR/archive/2.6.1d.tar.gz | tar zxf -
+  cd STAR-*/source
+  sed -i '14i #include "sys/types.h"' SharedMemory.h
+  make -j$(nproc) STAR STARlong
+  cp STAR STARlong /usr/local/bin/
+
+  # Install rMATS
+  cd /tmp
+  wget -O - https://netcologne.dl.sourceforge.net/project/rnaseq-mats/MATS/rMATS.4.0.2.tgz | tar zxf -
+  cp -rf rMATS*/rMATS-turbo-Linux-UCS4/* /usr/local/bin/
+  chmod +x /usr/local/bin/rmats.py
+
+  # Clean up
+  apk del python2-dev py2-pip make gcc g++ ncurses-dev zlib-dev bzip2-dev xz-dev curl-dev openblas-dev
+  rm -rf /root/.cache
+  rm -rf /var/cache/apk/*
+  rm -rf /tmp/*

@@ -1,0 +1,11 @@
+Bootstrap:docker
+From: conda/miniconda3:latest
+
+%labels
+AUTHOR Johan Viklund
+MAINTAINER johan.viklund@nbis.se
+
+%post
+conda config --add channels conda-forge
+conda config --add channels bioconda
+conda install bwa=0.7.12 samtools=1.5

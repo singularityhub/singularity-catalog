@@ -1,0 +1,77 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%runscript
+
+
+%post
+
+    export DEBIAN_FRONTEND=noninteractive
+
+    # install apt packages
+    apt-get update \
+        && apt-get upgrade -y \
+        && apt-get install -y \
+        bcftools \
+        bedtools \
+        build-essential \
+        cufflinks \
+        default-jdk \
+        git \
+        language-pack-en \
+        libcurl4-openssl-dev \
+        libssl-dev \
+        libxml2-dev \
+        python3 \
+        python3-pip \
+        rna-star \
+        samtools \
+        software-properties-common \
+        wget
+
+    # install python3 packages
+    pip3 install \
+        cutadapt \
+        HTSeq \
+        psutil \
+        snakemake
+
+    # install R & packages
+    add-apt-repository ppa:marutter/c2d4u
+    add-apt-repository ppa:marutter/rrutter
+    apt-get update
+    apt-get install -y \
+        r-base-core r-base-dev
+
+    Rscript -e "source('https://bioconductor.org/biocLite.R') ; \
+        biocLite(c('RCurl'), type='source', ask=FALSE)"
+    Rscript -e "source('https://bioconductor.org/biocLite.R') ; \
+        biocLite(c( \
+            'cowplot', \
+            'data.table', \
+            'devtools', \
+            'DESeq2', \
+            'fgsea', \
+            'GenomicRanges', \
+            'ggtree', \
+            'Mfuzz', \
+            'png', \
+            'rtracklayer', \
+            'tidyverse', \
+            'valr'), \
+            type='source', ask=FALSE)"
+    Rscript -e "devtools::install_github('TomHarrop/oryzr', ref = 'e9d099b')"
+
+    # install wgsim
+    git clone https://github.com/lh3/wgsim.git
+    cd wgsim
+    gcc -g -O2 -Wall -o wgsim wgsim.c -lz -lm
+    cp wgsim /usr/local/bin
+    cd ..
+    rm -rf wgsim
+
+    # install bbmap
+    wget "https://sourceforge.net/projects/bbmap/files/BBMap_38.00.tar.gz"
+    tar -zxf BBMap_38.00.tar.gz
+    mv bbmap/* /usr/local/bin/
+    rm -rf bbmap

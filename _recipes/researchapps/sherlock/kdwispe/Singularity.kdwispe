@@ -1,0 +1,69 @@
+Bootstrap: docker
+From: continuumio/anaconda
+
+%runscript
+
+   exec /opt/conda/bin/python "$@"
+
+%post
+
+   # Make sherlock base directories to mount
+   mkdir -p /scratch
+   mkdir -p /scratch-local
+   mkdir -p /share/PI
+
+   # Install git, etc.
+   apt-get update && apt-get install -y git vim autoconf libtool \
+                                        autotools-dev \
+                                        automake \
+                                        build-essential \
+                                        fortran-compiler
+
+   # Install BLAS and LAPACK and libxc
+   apt-get install -y liblapack-dev 
+
+   # Install LibXC
+   apt-get install -y libxc-dev
+   wget http://www.tddft.org/programs/octopus/down.php?file=libxc/libxc-3.0.0.tar.gz
+   mv down.php?file=libxc%2Flibxc-3.0.0.tar.gz libxc-3.0.0.tar.gz
+   tar -xzvf libxc-3.0.0.tar.gz && cd libxc-3.0.0 && ./configure && make && make install
+
+   # X virtual frame buffer for tests that require display
+   apt-get install -y xvfb
+
+   # Throw in an MPI library
+   apt-get install -y openmpi-bin libc6-dev gcc libfftw3-3
+
+   # Scalapack
+   apt-get install -y libscalapack-mpi-dev libscalapack-openmpi1
+
+   # Blacs
+   apt-get install -y libblacs-openmpi1
+
+   # Python dependencies
+   /opt/conda/bin/conda install -y numpy scipy matplotlib
+
+   # ASE: https://wiki.fysik.dtu.dk/ase/install.html
+   /opt/conda/bin/pip install ase --upgrade 
+
+   # GPAW: https://wiki.fysik.dtu.dk/gpaw/install.html
+   apt-get install -y liblapack-dev 
+   /opt/conda/bin/pip install --upgrade gpaw   
+
+   cd / && git clone https://github.com/keldLundgaard/ase-anharmonics
+
+   echo "" >> /environment
+   echo "export PATH=/opt/conda/bin:$PATH" >> /environment
+   echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/etsf/lib"
+
+
+%test
+
+   echo "RUNNING TESTS for anharmonic"
+
+   cd ase-anharmonics/tests
+   /opt/conda/bin/python /ase-anharmonics/tests/anharmonic_rotation.py	   
+   /opt/conda/bin/python /ase-anharmonics/tests/anharmonic_vib_and_trans.py	
+   /opt/conda/bin/python /ase-anharmonics/tests/anharmonic_translation.py  
+   /opt/conda/bin/python /ase-anharmonics/tests/anharmonic_vibration.py	
+

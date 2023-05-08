@@ -1,0 +1,74 @@
+Bootstrap: docker
+From: alpine:3.9
+
+%help
+
+    samtools 1.9
+    bcflib 1.9
+    htslib 1.9
+    http://www.htslib.org/
+
+%labels
+
+    VERSION "samtools 1.9"
+
+%runscript
+    exec /usr/local/bin/samtools "$@"
+
+%post
+
+    # install dependencies
+    apk add --update \
+        bash \
+        build-base \
+        bzip2-dev \
+        gcc \
+        git \
+        ncurses-dev \
+        wget \
+        xz-dev \
+        zlib-dev
+
+    # download releases
+    mkdir htslib
+    wget \
+        -O "htslib.tar.bz2" \
+        --no-check-certificate \
+        https://github.com/samtools/htslib/releases/download/1.9/htslib-1.9.tar.bz2
+    tar -jxf htslib.tar.bz2 \
+        -C htslib \
+        --strip-components 1
+    cd htslib || exit 1
+    make
+    make install
+    cd .. || exit 1
+    rm -rf htslib.tar.bz2 htslib
+
+    mkdir samtools
+    wget \
+        -O "samtools.tar.bz2" \
+        --no-check-certificate \
+        https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2
+    tar -jxf samtools.tar.bz2 \
+        -C samtools \
+        --strip-components 1
+    cd samtools || exit 1
+    make
+    make install
+    cd .. || exit 1
+    rm -rf samtools.tar.bz2 samtools
+
+    mkdir bcftools
+    wget \
+        -O "bcftools.tar.bz2" \
+        --no-check-certificate \
+        https://github.com/samtools/bcftools/releases/download/1.9/bcftools-1.9.tar.bz2
+    tar -jxf bcftools.tar.bz2 \
+        -C bcftools \
+        --strip-components 1
+    cd bcftools || exit 1
+    make
+    make install
+    cd .. || exit 1
+    rm -rf bcftools.tar.bz2 bcftools
+

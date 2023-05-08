@@ -1,0 +1,27 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  FastQC_Version 0.11.8
+
+%apprun fastqc
+  exec fastqc "${@}"
+
+%runscript
+  exec fastqc "${@}"
+
+%post
+  # Install OpenJRE 8 (headless)
+  echo "http://mirror.leaseweb.com/alpine/v3.8/community" >> /etc/apk/repositories
+  apk update
+  apk add openjdk8-jre-base perl
+
+  # Install FastQC
+  mkdir /opt
+  wget -O - https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip | unzip -qod /opt/ -
+  ln -s /opt/FastQC/fastqc /usr/local/bin/fastqc
+  chmod +x /usr/local/bin/fastqc
+
+  # Clean up
+  rm -rf /var/cache/apk/*

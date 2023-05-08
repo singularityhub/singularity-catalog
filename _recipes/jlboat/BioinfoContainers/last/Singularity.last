@@ -1,0 +1,21 @@
+Bootstrap: docker
+
+From: debian:latest
+
+%labels
+    Topic Bioinformatics
+    last ??
+
+%post
+    apt-get update --fix-missing && apt-get install -y mercurial python python-pip build-essential zlib1g-dev && rm -rf /var/lib/apt/lists/*
+    hg clone http://last.cbrc.jp/last/
+    cd last
+    make
+    make install
+    apt-get remove -y mercurial build-essential
+    apt autoremove -y
+    pip install pillow Image
+
+%runscript
+    exec "$@"
+

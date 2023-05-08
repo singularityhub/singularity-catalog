@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: ubuntu:12.04
+
+%help
+    Container for BayeScan 2.1
+
+%labels
+    VERSION "bayescan 2.1"
+
+%runscript
+    exec /usr/local/bin/bayescan_2.1 "$@"
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    export LC_ALL=C
+
+    apt-get update
+    apt-get install -y \
+        build-essential \
+        wget \
+        unzip
+
+    # bayescan
+    wget http://cmpg.unibe.ch/software/BayeScan/files/BayeScan2.1.zip
+    unzip BayeScan2.1.zip
+    cd BayeScan2.1/source || exit 1
+    make
+    cp bayescan_2.1 /usr/local/bin/
+    cd ../.. || exit 1
+    rm -rf BayeScan2.1
+

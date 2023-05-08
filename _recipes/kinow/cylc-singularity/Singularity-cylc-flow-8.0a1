@@ -1,0 +1,28 @@
+BootStrap: docker
+FROM: python:3.7.6-alpine3.11
+
+%help
+    This container runs Cylc Flow 8.0a1.
+
+%labels
+    Maintainer Bruno P. Kinoshita
+    Version 0.1
+    Cylc_Version 8.0a1
+    Python_Version 3.7.6
+
+%post
+    apk update && \
+        apk add --no-cache \
+        bash \
+        libzmq \
+        zeromq-dev && \
+        apk add --no-cache --virtual build-dependencies \
+        gcc \
+        git \
+        g++ \
+        python3-dev && \
+        pip install --no-cache-dir "cylc-flow[all]==8.0a1" && \
+        apk del build-dependencies
+
+%runscript
+    exec /usr/local/bin/cylc "$@"

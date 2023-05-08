@@ -1,0 +1,51 @@
+Bootstrap:docker-archive
+From: mlgpu-base.tar
+
+%environment
+export KERAS_BACKEND=tensorflow
+export CUDADIR=/usr/local/cuda-11.7
+export CUDA_HOME=$CUDADIR
+export PATH=/usr/local/cuda/bin:$PATH:/opt/python310/bin
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64
+export MAGMA_HOME=/opt/magma
+source /opt/rh/gcc-toolset-11/enable
+
+%post
+source /opt/rh/gcc-toolset-11/enable
+dnf install -y git nsight-compute-2022.2.1 xeyes libxkbcommon libxkbcommon-x11 ninja-build
+export TORCH_CUDA_ARCH_LIST="6.1+PTX 7.0+PTX 7.5+PTX 8.0+PTX"
+export KERAS_BACKEND=tensorflow
+export CUDADIR=/usr/local/cuda-11.7
+export CUDA_HOME=$CUDADIR
+export PATH=/usr/local/cuda/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64
+export FORCE_CUDA=1
+python3 -m pip install --upgrade scipy pip setuptools
+python3 -m pip install opencv-python
+python3 -m pip install git+https://github.com/rusty1s/pytorch_scatter@2.0.9
+python3 -m pip install git+https://github.com/rusty1s/pytorch_sparse@0.6.13
+python3 -m pip install git+https://github.com/rusty1s/pytorch_cluster@1.6.0
+python3 -m pip install git+https://github.com/rusty1s/pytorch_spline_conv@1.2.1
+python3 -m pip install git+https://github.com/pyg-team/pytorch_geometric@2.0.4
+python3 -m pip install ogb
+#python3 -m pip install dgl-cu116 -f https://data.dgl.ai/wheels/repo.html
+#dgl source build
+mkdir /build
+cd  /build
+git clone --recurse-submodules https://github.com/dmlc/dgl.git
+cd dgl
+mkdir build
+cd build
+cmake -DUSE_CUDA=ON ..
+make -j4
+cd ../python
+python3 setup.py install
+
+#cleanup
+cd /
+yum clean all
+rm -rf /var/cache/dnf/*
+rm -rf /build
+
+%runscript
+exec $@

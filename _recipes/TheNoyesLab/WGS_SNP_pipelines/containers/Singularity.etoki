@@ -1,0 +1,137 @@
+Bootstrap: docker
+From: debian:jessie-slim
+
+#Includes cfsan-snp-pipeline smalt picard varscan tabix bcftools bowtie2 bwa gatk libdeflate samtools
+
+%environment
+    export LC_ALL=C
+
+%post
+    apt update \
+    && apt install -y --no-install-recommends \
+    build-essential ca-certificates sudo tcsh\
+    git make automake autoconf wget gzip unzip sed\
+    zlib1g-dev curl libbz2-dev locales libncurses5-dev liblzma-dev libcurl4-openssl-dev software-properties-common apt-transport-https\
+    python3-pip python3-docopt python3-pytest python-dev python3-dev\
+    libcurl4-openssl-dev libssl-dev zlib1g-dev fonts-texgyre \
+    gcc g++ gfortran libblas-dev liblapack-dev dos2unix\
+    && rm -rf /var/lib/apt/lists/*
+
+    # Not my favorite workaround, but to get cfsan snp to work with samtools, we have to change which libncurses library is used. Problem is anaconda doesn't have the right version of samtools.
+    sudo ln -s /lib/x86_64-linux-gnu/libncursesw.so.5  /lib/x86_64-linux-gnu/libncursesw.so.6
+
+    #Installing Anaconda 2 and Conda 4.5.11
+    wget -c https://repo.continuum.io/archive/Anaconda2-5.3.0-Linux-x86_64.sh
+    sh Anaconda2-5.3.0-Linux-x86_64.sh -bfp /usr/local
+
+    # add bioconda channels
+    conda config --add channels conda-forge
+    conda config --add channels bioconda
+    conda config --add channels anaconda
+    conda config --add channels etetoolkit
+ 
+
+    # install bulk of bioinformatic tools required by enterobase (ETOKI), "flye" only works with python 2.7
+    conda create -n ETOKI_env python=2.7 ete3 numba numpy pandas scikit-learn bwa bowtie2 kraken2 raxml fasttree rapidnj bbmap mmseqs2 blast spades megahit pilon minimap2 last trf diamond psutil flye six pyqt lxml pip
+    
+    pip install ete3
+    pip install numpy
+    
+    
+    . /usr/local/bin/activate ETOKI_env
+    
+    #Still experimenting with how to change $PATH location. 
+    echo 'export PATH=$PATH:/usr/local/envs/ETOKI_env/bin/' >> $SINGULARITY_ENVIRONMENT
+
+    
+
+    cd /usr/local
+    git clone https://github.com/zheminzhou/PEPPA.git
+    echo 'export PATH=$PATH:/usr/local/PEPPA' >> $SINGULARITY_ENVIRONMENT
+    chmod 755 /usr/local/PEPPA/*
+    
+    # Download EToKi github repository
+    cd /usr/local/
+    git clone https://github.com/zheminzhou/EToKi.git
+    chmod +x /usr/local/EToKi/EToKi.py
+    echo 'export PATH=$PATH:/usr/local/EToKi/' >> $SINGULARITY_ENVIRONMENT
+    
+    # Install pilercr
+    wget https://www.drive5.com/pilercr/pilercr1.06.tar.gz
+    tar -xzvf pilercr1.06.tar.gz
+    cd pilercr1.06/
+    make
+    #echo 'export PATH=$PATH:/usr/local/pilercr1.06/' >> $SINGULARITY_ENVIRONMENT
+    cd ../
+    #ln -s /usr/local/pilercr1.06/pilercr /usr/local/EToKi/externals/
+
+
+    # Install raxml
+    mkdir install_raxml
+    cd install_raxml
+    wget https://github.com/amkozlov/raxml-ng/releases/download/0.9.0/raxml-ng_v0.9.0_linux_x86_64.zip
+    unzip raxml-ng_v0.9.0_linux_x86_64.zip
+    #ln -s /usr/local/install_raxml/raxml-ng /usr/local/EToKi/externals/
+    cd ../
+    
+    
+    
+    ## Download github repository with Usearch and GATK executables
+    git clone https://github.com/EnriqueDoster/sing_biotools.git
+    mv /usr/local/sing_biotools/bin/GenomeAnalysisTK.jar /usr/local/bin/GenomeAnalysisTK.jar
+    #ln -s /usr/local/sing_biotools/bin/GenomeAnalysisTK.jar /usr/local/EToKi/externals/gatk-package-4.1.0.0-local.jar
+    
+    
+    
+    # Install samtools
+    wget https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2
+    tar xvjf samtools-1.9.tar.bz2
+    cd samtools-1.9
+    autoheader
+    autoconf -Wno-syntax
+    ./configure --prefix /usr/local/bin/samtools
+    make
+    make install
+    echo 'export PATH=$PATH:/usr/local/bin/samtools/bin/' >> $SINGULARITY_ENVIRONMENT
+    
+    
+    ## Add all tools to EToKi external location
+    
+
+
+    
+    # Make sure all the tools have the right permissions to use the tools
+    chmod -R 777 /usr/local/
+
+    # Can't add the kraken database currently because the singularity hub server has a time limit for container building
+    #cd /usr/local/
+    #wget -q ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz 
+    #tar -xvzf minikraken_8GB_202003.tgz
+
+
+    # Etoki installation
+    python /usr/local/EToKi/EToKi.py configure --usearch /usr/local/sing_biotools/bin/usearch11.0.667_i86linux32
+    python /usr/local/EToKi/EToKi.py configure --path bbduk=/usr/local/envs/ETOKI_env/bin/bbduk.sh
+    python /usr/local/EToKi/EToKi.py configure --path bbmerge=/usr/local/envs/ETOKI_env/bin/bbmerge.sh 
+    python /usr/local/EToKi/EToKi.py configure --path blastn=/usr/local/envs/ETOKI_env/bin/blastn
+    python /usr/local/EToKi/EToKi.py configure --path bowtie2=/usr/local/envs/ETOKI_env/bin/bowtie2
+    python /usr/local/EToKi/EToKi.py configure --path bowtie2build=/usr/local/envs/ETOKI_env/bin/bowtie2-build 
+    python /usr/local/EToKi/EToKi.py configure --path bwa=/usr/local/envs/ETOKI_env/bin/bwa 
+    python /usr/local/EToKi/EToKi.py configure --path diamond=/usr/local/envs/ETOKI_env/bin/diamond 
+    python /usr/local/EToKi/EToKi.py configure --path gatk=/usr/local/bin/GenomeAnalysisTK.jar
+    python /usr/local/EToKi/EToKi.py configure --path kraken2=/usr/local/envs/ETOKI_env/bin/kraken2 
+    python /usr/local/EToKi/EToKi.py configure --path lastal=/usr/local/envs/ETOKI_env/bin/lastal 
+    python /usr/local/EToKi/EToKi.py configure --path lastdb=/usr/local/envs/ETOKI_env/bin/lastdb 
+    python /usr/local/EToKi/EToKi.py configure --path makeblastdb=/usr/local/envs/ETOKI_env/bin/makeblastdb 
+    python /usr/local/EToKi/EToKi.py configure --path megahit=/usr/local/envs/ETOKI_env/bin/megahit 
+    python /usr/local/EToKi/EToKi.py configure --path mmseqs=/usr/local/envs/ETOKI_env/bin/mmseqs 
+    python /usr/local/EToKi/EToKi.py configure --path raxml_ng=/usr/local/install_raxml/raxml-ng 
+    python /usr/local/EToKi/EToKi.py configure --path repair=/usr/local/envs/ETOKI_env/bin/repair.sh 
+    python /usr/local/EToKi/EToKi.py configure --path spades=/usr/local/envs/ETOKI_env/bin/spades.py
+    python /usr/local/EToKi/EToKi.py configure --path flye=/usr/local/envs/ETOKI_env/bin/flye
+    python /usr/local/EToKi/EToKi.py configure --path samtools=/usr/local/bin/samtools/bin/samtools
+    python /usr/local/EToKi/EToKi.py configure --path pilon=/usr/local/envs/ETOKI_env/share/pilon-1.23-2/pilon-1.23.jar
+    #python /usr/local/EToKi/EToKi.py configure --link_krakenDB /usr/local/minikraken_8GB_20200312
+    
+
+%test

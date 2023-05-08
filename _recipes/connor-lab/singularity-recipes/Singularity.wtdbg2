@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: centos:latest
+
+%post
+    yum -y update
+    yum -y install gcc git make zlib-devel 
+    
+
+    cd /usr/local/bin
+    git clone https://github.com/ruanjue/wtdbg2.git wtdbg2-latest
+    cd wtdbg2-latest && make
+    find /usr/local/bin/wtdbg2-latest -maxdepth 1 -type f -executable -exec ln -s {} /usr/local/bin/ \;
+
+%labels
+    Maintainer m-bull
+    Version wtdbg2-latest

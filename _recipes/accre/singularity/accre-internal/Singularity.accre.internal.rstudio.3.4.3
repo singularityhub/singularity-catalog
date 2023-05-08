@@ -1,0 +1,36 @@
+Bootstrap: localimage
+From: accre.internal.base.simg
+
+%labels
+  Maintainer Eric Appelt
+  RStudio_Version 1.2.1335
+
+%help
+  RStudio container for use with ACCRE OnDemand Visualization Portal.
+  Derived from https://github.com/nickjer/singularity-rstudio
+
+%apprun rserver
+  exec rserver "${@}"
+
+%runscript
+  exec rserver "${@}"
+
+%environment
+  export PATH=/usr/lib/rstudio-server/bin:${PATH}
+  source /etc/profile.d/lmod.sh
+  ml GCC/6.4.0-2.28 OpenMPI/2.1.1 R/3.4.3
+
+%setup
+  install -Dv \
+    rstudio_auth.sh \
+    ${SINGULARITY_ROOTFS}/usr/lib/rstudio-server/bin/rstudio_auth
+
+%post
+  # Software versions
+  export RSTUDIO_VERSION=1.2.1335
+
+  # Install RStudio Server
+  yum -y install which
+  wget https://download2.rstudio.org/server/centos6/x86_64/rstudio-server-rhel-${RSTUDIO_VERSION}-x86_64.rpm
+  yum -y install rstudio-server-rhel-${RSTUDIO_VERSION}-x86_64.rpm
+  rm -f rstudio-server-rhel-${RSTUDIO_VERSION}-x86_64.rpm

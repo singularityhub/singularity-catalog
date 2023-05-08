@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: ubuntu:14.04
+
+%runscript
+
+   exec /anaconda2/bin/python "$@"
+
+
+%post
+
+   mkdir -p /scratch
+   mkdir -p /share/PI
+   mkdir -p /scratch-local
+
+   apt-get update && apt-get install -y build-essential gcc cmake git vim wget
+
+   wget https://repo.continuum.io/archive/Anaconda2-4.3.0-Linux-x86_64.sh
+   bash Anaconda2-4.3.0-Linux-x86_64.sh -b -p /anaconda2
+   rm Anaconda2-4.3.0-Linux-x86_64.sh
+   /anaconda2/bin/conda install numpy scipy 
+
+   # Make sure they are on the path when we run the image, the below gives support for
+   # singularity versions 2.2 and development version
+   echo "" >> /environment
+   echo "" >> /.singularity/env/03-libs.sh
+   echo "export PATH=/anaconda2/bin:$PATH" >> /.singularity/env/03-libs.sh
+   echo "export PATH=/anaconda2/bin:$PATH" >> /environment

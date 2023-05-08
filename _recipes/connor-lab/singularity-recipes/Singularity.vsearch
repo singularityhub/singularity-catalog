@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: debian:latest
+
+%post
+    apt-get update
+    apt-get -y upgrade
+    apt-get -y install curl
+    #apt-get -y install bash curl g++ gcc libbz2-dev liblzma-dev zlib1g-dev
+    #apt-get -y install perl python
+
+    cd /usr/local/bin
+    curl -fsSL "https://github.com/torognes/vsearch/releases/download/v2.13.6/vsearch-2.13.6-linux-x86_64.tar.gz" | tar xz
+    ln -s vsearch-2.13.6-linux-x86_64/bin/vsearch .
+
+%labels
+    Maintainer m-bull
+    Version vsearch-2.13.6-linux-x86_64

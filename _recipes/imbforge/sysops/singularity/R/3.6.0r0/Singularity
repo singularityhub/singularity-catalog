@@ -1,0 +1,25 @@
+BootStrap: docker
+From: alpine:edge
+
+%labels
+  Maintainer Christian Dietrich
+  R_Version 3.6.0
+
+%apprun R
+  exec R "${@}"
+  
+%apprun Rscript
+  exec Rscript "${@}"
+
+%runscript
+  exec R "${@}"
+
+%post
+  # Get dependencies
+  apk update
+
+  # Install R
+  apk add R R-dev
+
+  # Clean up
+  rm -rf /var/cache/apk/*

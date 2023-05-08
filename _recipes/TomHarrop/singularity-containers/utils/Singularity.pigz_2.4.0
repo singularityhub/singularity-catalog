@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: alpine:3.9
+
+%help
+
+    Container for pigz 2.4.0
+
+%labels
+
+    VERSION "pigz 2.4.0"
+
+
+%post
+
+    apk add --update bash pigz
+
+%runscript
+    exec /usr/bin/pigz "$@"
+
+    

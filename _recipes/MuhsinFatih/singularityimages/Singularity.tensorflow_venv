@@ -1,0 +1,10 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:latest-gpu-py3
+
+%labels
+    Maintainer Muhsin Fatih Yorulmaz
+
+%post
+	apt update
+	apt install -y python3-venv
+	python3 -m pip install --user virtualenv

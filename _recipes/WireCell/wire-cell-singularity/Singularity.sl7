@@ -1,0 +1,19 @@
+BootStrap: yum
+OSVersion: 7
+MirrorURL: http://ftp.scientificlinux.org/linux/scientific/%{OSVERSION}x/$basearch/os/
+#MirrorURL: https://mirror.bnl.gov/scientific/%{OSVERSION}x/$basearch/os/
+
+Include: yum
+
+
+%post
+yum -y install bash curl wget
+wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+rpm -ivh epel-release-latest-7.noarch.rpm
+yum repolist
+yum -y install tar hostname redhat-lsb-core lbzip2 zlib-devel which git make cmake bison pkgconfig python emacs jq vim time openssl-devel python-pip python-hashlib ipython numpy python-matplotlib readline glibc-devel bzip2
+yum clean all
+
+for n in ups src bin lib include opt share ; do mkdir -p /usr/local/$n ; done
+
+

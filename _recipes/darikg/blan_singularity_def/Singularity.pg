@@ -1,0 +1,35 @@
+BootStrap: docker
+From: python:3.7
+
+# https://sylabs.io/guides/3.3/user-guide/mpi.html
+
+%files
+	requirements.txt
+
+%post
+	cat requirements.txt
+    apt -y update
+    apt -y install --no-install-recommends \
+		xz-utils blender wget postgresql postgresql-contrib git libopenmpi-dev mpich
+	apt clean
+	
+
+	echo "Installing Blender"
+    mkdir -p /blan
+    wget -q https://mirror.clarkson.edu/blender/release/Blender2.82/blender-2.82a-linux64.tar.xz
+    tar -xf /blender-2.82a-linux64.tar.xz -C /blan
+    rm /blender-2.82a-linux64.tar.xz
+    chmod -R 777 /blan
+	
+	echo "Installing python libraries"
+    pip install --no-cache-dir -r requirements.txt # need to copy req file
+	#pip install --no-cache-dir \
+	#tensorflow==2.2.0rc0 ipython pandas toolz matplotlib imageio \
+	#click pyyaml tensorflow_datasets bokeh tables mpi4py
+
+%environment
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+	
+%labels
+    Author DarikGamble

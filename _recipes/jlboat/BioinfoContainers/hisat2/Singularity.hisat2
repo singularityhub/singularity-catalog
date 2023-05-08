@@ -1,0 +1,21 @@
+Bootstrap: docker
+
+From: debian:latest
+
+%labels
+    Topic Bioinformatics
+    Input FASTQ
+    Output BAM
+    hisat2 2.1.0
+
+%environment
+    PATH=$PATH:/hisat2-2.1.0
+
+%post
+    apt-get update --fix-missing && apt-get install -y wget unzip python
+    apt-get clean && apt-get purge
+    wget http://ccb.jhu.edu/software/hisat2/dl/hisat2-2.1.0-Linux_x86_64.zip
+    unzip hisat2-2.1.0-Linux_x86_64.zip
+
+%runscript
+    exec "$@"

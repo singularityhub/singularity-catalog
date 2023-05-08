@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: python:3.5.9-buster
+
+%help
+    syri 2aff3ba
+    https://github.com/schneebergerlab/syri
+
+%labels
+
+%runscript
+    exec /syri/syri/bin "$@"
+
+%environment
+    export LC_ALL=C
+    export PATH="${PATH}:/syri/syri/bin"
+
+%post
+
+    /usr/local/bin/pip3 install \
+        biopython==1.76 \
+        Cython \
+        matplotlib \
+        numpy \
+        pandas==0.23.4 \
+        psutil \
+        pysam \
+        python-igraph \
+        scipy
+
+    git clone \
+        https://github.com/schneebergerlab/syri.git \
+        /syri
+    (
+    cd /syri || exit 1
+    git checkout -f 2aff3ba
+    git submodule update --init --recursive
+    /usr/local/bin/python3 setup.py install
+    chmod 755 syri/bin/syri syri/bin/chroder syri/bin/plotsr
+    )

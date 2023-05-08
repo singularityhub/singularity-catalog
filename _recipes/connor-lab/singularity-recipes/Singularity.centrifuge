@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: debian:latest
+
+%post
+    apt-get update
+    apt-get -y upgrade
+    apt-get -y install git make
+    apt-get -y install bash curl g++ gcc libbz2-dev liblzma-dev zlib1g-dev
+    apt-get -y install perl python
+
+    cd /usr/local/bin
+    curl -fsSL "https://github.com/infphilo/centrifuge/archive/v1.0.4-beta.tar.gz" | tar xz
+    cd /usr/local/bin/centrifuge-1.0.4-beta
+    make -j 4
+    make install
+
+%labels
+    Maintainer m-bull
+    Version centrifuge-1.0.4-beta

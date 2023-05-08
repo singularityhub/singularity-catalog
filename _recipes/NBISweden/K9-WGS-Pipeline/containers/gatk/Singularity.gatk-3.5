@@ -1,0 +1,16 @@
+bootstrap: docker
+from:broadinstitute/gatk3:3.5-0
+
+%labels
+AUTHOR Johan Viklund
+MAINTAINER johan.viklund@nbis.se
+
+%post
+apt-get install pkg-config
+
+curl -LO https://github.com/vcftools/vcftools/releases/download/v0.1.15/vcftools-0.1.15.tar.gz
+tar xzf vcftools-0.1.15.tar.gz
+cd vcftools-0.1.15
+./configure
+make
+make install

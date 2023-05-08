@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: poldracklab/fmriprep:1.5.0
+%post
+
+# Prepare environment
+apt-get update && \
+apt-get install -y --no-install-recommends \
+bc \
+tar \
+dpkg \
+wget \
+unzip \
+gcc \
+libstdc++6
+
+mkdir /opt/msm && \
+curl -sSL https://github.com/ecr05/MSM_HOCR_macOSX/releases/download/1.0/msm_ubuntu > /opt/msm/msm && \
+chmod 777 /opt/msm/msm
+
+PATH=/opt/msm:$PATH
+
+apt-get update && apt-get install -y --no-install-recommends apt-utils
+%environment
+export PATH=/opt/msm:$PATH
+%runscript
+exec /bin/bash "$@"
+%startscript

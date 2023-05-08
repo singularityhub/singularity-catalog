@@ -1,0 +1,20 @@
+BootStrap: docker
+From: geoedf/framework-gdal
+%post
+    . /.singularity.d/env/10-docker*.sh
+
+%files
+    . /investmodel
+
+%post
+    cd /
+    . /opt/conda/etc/profile.d/conda.sh
+    conda activate geoedf
+    pip3 install natcap.invest
+    cd /investmodel
+    pip3 install .
+
+%post
+    cd /
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
+    echo "conda activate geoedf" >> $SINGULARITY_ENVIRONMENT

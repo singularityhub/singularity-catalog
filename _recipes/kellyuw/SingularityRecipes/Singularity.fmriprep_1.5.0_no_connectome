@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: poldracklab/fmriprep:1.5.0
+%post
+
+# Prepare environment
+apt-get update && \
+apt-get install -y \
+bc \
+tar \
+dpkg \
+wget \
+unzip \
+gcc \
+libstdc++6 \
+curl \
+python3-pip \
+python3-setuptools \
+fsl-mni152-templates=5.0.7-2
+
+mkdir /opt/msm && \
+curl -sSL https://github.com/ecr05/MSM_HOCR_macOSX/releases/download/1.0/msm_ubuntu > /opt/msm/msm && \
+chmod 777 /opt/msm/msm
+
+PATH=/opt/msm:$PATH
+
+# Get ciftify
+apt-get update && \
+apt-get install -y git-annex && \
+/usr/local/miniconda/bin/pip install ciftify datalad
+
+%environment
+export PATH=/opt/msm:$PATH
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

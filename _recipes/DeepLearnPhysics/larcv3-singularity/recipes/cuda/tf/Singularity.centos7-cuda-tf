@@ -1,0 +1,38 @@
+Bootstrap: shub
+From: DeepLearnPhysics/larcv3-singularity:centos7-cuda-core
+
+%help
+Centos7 with cuda9.0 cudnn7
+ML/DL packages  : torchnightly sc-learn
+Sci.  packages  : numpy pandas sc-image matplotlib opencv-python
+Basic python    : ipython jupyter yaml pygments six zmq wheel h5py tqdm 
+Development kit : g++/gcc cython nvcc libqt4-dev python-dev
+Utility kit     : git wget emacs vim openssh-client
+
+To start your container simply try
+singularity exec THIS_CONTAINER.simg bash
+
+To use GPUs, try
+singularity exec --nv THIS_CONTAINER.simg bash
+
+%labels
+Maintainer coreyjadams
+Version centos7-cuda-tf
+
+#------------
+# Global installation
+#------------
+%environment
+    
+
+%post
+    
+    scl enable rh-python36 bash
+    
+    # tensorflow    
+    pip3 --no-cache-dir --disable-pip-version-check install --upgrade tensorflow-gpu==1.14.0
+    pip3 --no-cache-dir --disable-pip-version-check install tensorboard
+
+    # keras
+    pip3 --no-cache-dir --disable-pip-version-check install keras
+

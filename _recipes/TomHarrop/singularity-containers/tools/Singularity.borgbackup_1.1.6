@@ -1,0 +1,54 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+    borgbackup 1.1.6
+
+%labels
+
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "borgbackup 1.1.6"
+
+%post
+
+    # install dependencies
+    apt-get update
+    apt-get install -y \
+        build-essential \
+        fuse \
+        libacl1 \
+        libacl1-dev \
+        libfuse-dev \
+        libssl-dev \
+        openssl \
+        pkg-config \
+        python-virtualenv \
+        python3 \
+        python3-dev \
+        python3-pip \
+        python3-virtualenv \
+        wget 
+
+    # download borg
+    wget -O "borg.tar.gz" \
+        --no-check-certificate \
+        https://github.com/borgbackup/borg/releases/download/1.1.6/borgbackup-1.1.6.tar.gz
+    mkdir borg
+    tar -zxf borg.tar.gz \
+        -C borg \
+        --strip-components 1
+
+    # install
+    cd borg || exit 1
+    pip3 install -r requirements.d/development.txt
+    pip3 install -r requirements.d/docs.txt
+    pip3 install -r requirements.d/fuse.txt
+    pip3 install .
+
+    cd .. || exit 1
+    rm -rf borg borg.tar.gz
+
+%runscript
+
+    exec /usr/local/bin/borg "$@"

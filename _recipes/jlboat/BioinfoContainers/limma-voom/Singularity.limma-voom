@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: rocker/verse:3.5.1
+
+%labels
+    Topic Bioinformatics
+    Language R
+
+%post
+    R -e "install.packages('BiocManager', repos='http://cran.us.r-project.org');"
+    R -e "BiocManager::install(c('limma','edgeR','Glimma','tximport','ComplexHeatmap','alpine','alpineData','GenomicAlignments','rtracklayer','ensembldb','GenomicRanges'))"
+    R -e "install.packages(c('ggplot2','readr','tidyr','RColorBrewer','DT','knitr','rmarkdown'), repos='https://cloud.r-project.org/')"
+
+%runscript
+    exec Rscript "$@" 
+

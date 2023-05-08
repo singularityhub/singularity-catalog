@@ -1,0 +1,44 @@
+Bootstrap: docker
+From: debian:bookworm-slim
+
+%post
+  PROKKA_VERSION=1.14.6
+  BEDTOOLS_VERSION=2.30.0
+  BARRNAP_VERSION=0.9
+  PRODIGAL_VERSION=2.6.3
+
+  # additional tools needed
+  apt update && apt install -yq --no-install-recommends ncbi-blast+ curl hmmer make cmake gcc g++ cpanminus \
+    libdatetime-perl libxml-simple-perl libdigest-md5-perl default-jre bioperl perl parallel libssl-dev libidn12 \
+    && apt autoclean && rm -rf /var/lib/apt/lists/*
+  cpanm --notest Bio::SearchIO::hmmer3
+
+  # little hack for libidn
+  ln -sf /usr/lib/x86_64-linux-gnu/libidn.so.12 /usr/lib/x86_64-linux-gnu/libidn.so.11
+
+  # install aragorn
+  curl -sSLO http://www.ansikte.se/ARAGORN/Downloads/aragorn1.2.41.c \
+    && gcc -O3 -ffast-math -finline-functions -o aragorn aragorn1.2.41.c \
+    && mv aragorn /usr/local/bin
+
+  # install prodigal
+  curl -sSL "https://github.com/hyattpd/Prodigal/archive/refs/tags/v${PRODIGAL_VERSION}.tar.gz" | tar zx \
+      && cd "Prodigal-${PRODIGAL_VERSION}" && make install && cd -
+  rm -rf "Prodigal-${PRODIGAL_VERSION}"
+
+  # install barrnap
+  curl -sSL "https://github.com/arq5x/bedtools2/releases/download/v${BEDTOOLS_VERSION}/bedtools.static.binary" -o bedtools \
+      && chmod 755 bedtools && mv bedtools /usr/local/bin
+  curl -sSL "https://github.com/tseemann/barrnap/archive/refs/tags/${BARRNAP_VERSION}.tar.gz" | tar zx \
+      && mv "barrnap-${BARRNAP_VERSION}" barrnap && cd barrnap && cd -
+
+  # install prokka
+  curl -sSL "https://ftp.ncbi.nih.gov/toolbox/ncbi_tools/converters/by_program/tbl2asn/linux64.tbl2asn.gz" | gunzip > tbl2asn \
+      && chmod 755 tbl2asn && mv tbl2asn /usr/local/bin/
+  curl -sSL "https://github.com/tseemann/prokka/archive/refs/tags/v${PROKKA_VERSION}.tar.gz" | tar zx && mv prokka-$PROKKA_VERSION prokka
+  /prokka/bin/prokka --setupdb
+
+  apt purge -y curl make cmake gcc g++
+
+%environment
+  export PATH=$PATH:/prokka/bin:/prokka/binaries/common:/prokka/binaries/linux:/barrnap/bin

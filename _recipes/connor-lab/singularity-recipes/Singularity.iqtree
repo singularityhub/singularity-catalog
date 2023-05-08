@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: alpine:latest
+
+%post
+    apk update
+    apk upgrade
+    apk add curl gzip
+    
+    cd /usr/local/bin
+    curl -fsSL "https://github.com/Cibiv/IQ-TREE/releases/download/v1.6.12/iqtree-1.6.12-Linux.tar.gz" | tar xz
+    ln -s /usr/local/bin/iqtree-1.6.12-Linux/bin/iqtree .   
+
+%runscript
+    exec iqtree "$@"
+
+
+%labels
+    Maintainer m-bull
+    Version iqtree-1.6.12-Linux64

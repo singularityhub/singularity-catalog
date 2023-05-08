@@ -1,0 +1,17 @@
+Bootstrap: docker
+
+From: continuumio/miniconda3
+
+%files
+    fastqscreen.yaml
+
+%environment
+    PATH=/opt/conda/envs/$(head -1 fastqscreen.yaml | cut -d' ' -f2)/bin:$PATH
+
+%post
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc
+    echo "source activate $(head -1 fastqscreen.yaml | cut -d' ' -f2)" > ~/.bashrc
+    /opt/conda/bin/conda env create -f fastqscreen.yaml
+
+%runscript
+    exec /bin/bash

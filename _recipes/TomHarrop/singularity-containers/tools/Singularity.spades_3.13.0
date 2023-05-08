@@ -1,0 +1,42 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+    Spades 3.13.0
+    http://cab.spbu.ru/software/spades/
+
+%labels
+
+    MAINTAINER "Tom Harrop"
+    VERSION "Spades 3.13.0"
+
+%post
+
+    # dependencies
+    apt-get update
+    apt-get install -y \
+        build-essential \
+        cmake \
+        language-pack-en \
+        libbz2-dev \
+        python \
+        wget \
+        zlib1g-dev
+        
+    # install Spades
+    wget -O "spades.tar.gz" \
+        --no-check-certificate \
+        http://cab.spbu.ru/files/release3.13.0/SPAdes-3.13.0.tar.gz
+    mkdir spades
+    tar -zxf spades.tar.gz \
+        -C spades \
+        --strip-components 1
+    cd spades || exit 1
+    PREFIX=/usr/local ./spades_compile.sh
+    cd .. || exit 1
+    rm -rf spades spades.tar.gz
+
+%runscript
+
+    exec /usr/local/bin/spades.py "$@"

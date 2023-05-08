@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: python:3.7.3-stretch
+
+%help
+
+    Python 3.7.3 with Biopython 1.73
+    
+%labels
+
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "Biopython 1.73"
+
+%runscript
+
+    exec /usr/local/bin/python "$@"
+
+%post
+    /usr/local/bin/pip3 install \
+        biopython==1.73 \
+        intermine==1.11.0

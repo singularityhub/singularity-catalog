@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: alpine:3.10.1
+IncludeCmd: no
+
+%help
+Singularity image for fqtools version 2.2 (https://github.com/alastair-droop/fqtools).
+
+%environment
+  export LC_ALL=en_US.UTF-8
+	export LANG=en_US.UTF-8
+
+%apprun Rscript
+  exec fqtools "$@"
+
+%runscript
+	exec fqtools "$@"
+
+%post
+	apk add git make autoconf gcc g++ libffi-dev zlib-dev bzip2-dev xz-dev curl-dev openssl-dev
+	cd /usr/local
+	git clone https://github.com/alastair-droop/fqtools
+	cd fqtools/
+	git clone https://github.com/samtools/htslib
+	cd htslib
+	autoheader
+	autoconf
+	./configure
+	make
+	make install
+	cd ..
+	make
+	ln -s /usr/local/fqtools/bin/fqtools /usr/local/bin/fqtools

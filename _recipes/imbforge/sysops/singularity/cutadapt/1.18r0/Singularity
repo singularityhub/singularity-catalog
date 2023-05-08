@@ -1,0 +1,24 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  Cutadapt_Version 1.18
+
+%apprun cutadapt
+  exec cutadapt "${@}"
+
+%runscript
+  exec cutadapt "${@}"
+
+%post
+  # Get dependencies
+  apk update
+  apk add python3 python3-dev gcc g++
+
+  # Install Cutadapt
+  pip3 --no-cache-dir install cutadapt==1.18
+
+  # Clean up
+  apk del python3-dev g++ gcc
+  rm -rf /var/cache/apk/*

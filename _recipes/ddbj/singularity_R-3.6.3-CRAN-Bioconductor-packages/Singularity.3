@@ -1,0 +1,23 @@
+BootStrap: localimage
+From: ./ubuntu-20.04-R-3.6.3-2.simg
+
+
+%files
+    # copying files from the host system to the container.
+
+
+%labels
+    Maintainer Yoshihiro Okuda
+    Version    v1.0
+
+
+%runscript
+
+%environment
+
+
+%post
+    cd /usr/local/src
+    R CMD javareconf
+    echo 'install.packages(available.packages(repos = "https://cran.ism.ac.jp")[,1], dependencies = TRUE, repo = "https://cran.ism.ac.jp/")' > cran_install.R
+    xvfb-run R BATCH --no-save < cran_install.R

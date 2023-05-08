@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: alpine:3.9
+
+%help
+    Container for vcftools 0.1.16
+
+%labels
+    VERSION "vcftools 0.1.16"
+
+%post
+    # packages
+    apk add --update \
+        bash \
+        build-base \
+        gcc \
+        git \
+        perl \
+        wget \
+        zlib-dev
+
+    # download vcftools
+    mkdir vcftools
+    wget \
+        -O "vcftools.tar.gz" \
+        --no-check-certificate \
+        https://github.com/vcftools/vcftools/releases/download/v0.1.16/vcftools-0.1.16.tar.gz
+    tar -zxf vcftools.tar.gz \
+        -C vcftools \
+        --strip-components 2
+
+    cd vcftools || exit 1
+    ./configure
+    make 
+    make install
+    cd .. || exit 1
+    rm -rf vcftools vcftools.tar.gz
+
+%runscript
+    exec /usr/local/bin/vcftools "$@"

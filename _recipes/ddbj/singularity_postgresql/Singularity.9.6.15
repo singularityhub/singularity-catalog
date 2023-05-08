@@ -1,0 +1,39 @@
+BootStrap: docker
+From: ubuntu:18.04
+
+%labels
+    Maintainer Yoshihiro Okuda
+        Version    v1.0
+
+%environment
+    export PATH=/usr/local/pgsql/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/pgsql/lib:$LD_LIBRARY_PATH
+    export LC_ALL="en_GB.UTF-8"
+    export LC_CTYPE="en_GB.UTF-8"
+    export LANG="en_GB.UTF-8"
+
+%post
+    echo "Hello from inside the container"
+    sed -i.bak -e "s%http://archive.ubuntu.com/ubuntu/%http://ftp.jaist.ac.jp/pub/Linux/ubuntu/%g" /etc/apt/sources.list
+    sed -i.bak -e "s%http://security.ubuntu.com/ubuntu/%http://ftp.jaist.ac.jp/pub/Linux/ubuntu/%g" /etc/apt/sources.list
+    apt-get -y update
+    apt-get -y upgrade
+
+    apt-get -y install vim wget less
+
+    # install MySQL
+    apt-get -y install make gcc libreadline-dev zlib1g-dev libperl-dev python-all-dev gettext libssl-dev libxml2-dev libxslt1-dev
+    useradd user1
+    chown user1 /usr/local/src
+    cd /usr/local/src
+    su -c 'wget https://ftp.postgresql.org/pub/source/v9.6.15/postgresql-9.6.15.tar.gz' user1
+    su -c 'tar xzvf postgresql-9.6.15.tar.gz' user1
+    cd postgresql-9.6.15
+    su -c './configure --with-openssl --with-libxml --with-libxslt --with-perl --with-python --prefix=/usr/local/pgsql' user1
+    su -c 'make world' user1
+    su -c 'make check' user1
+    make install-world
+
+    rm -r /usr/local/src/*
+    chown root /usr/local/src
+    userdel user1

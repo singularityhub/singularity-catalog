@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: python:2.7.17-buster
+
+%help
+    transIndel 7098bd6
+    https://github.com/cauyrd/transIndel
+
+%labels
+    MAINTAINER "Tom Harrop"
+    VERSION "transIndel 7098bd6"
+
+%post
+    # install samtools
+    apt-get update
+    apt-get install -y samtools
+
+    # install python2 dependencies
+    /usr/local/bin/pip install \
+        pysam==0.15.3 \
+        numpy==1.16.5
+    /usr/local/bin/pip install \
+        HTSeq==0.11.2
+
+    # install transindel
+    git clone git://github.com/cauyrd/transIndel.git
+    cd transIndel || exit 1
+    git checkout -f 7098bd6
+
+    # change to python 2.17.7
+    sed -i 's/#!\/usr\/bin\/python/#!\/usr\/local\/bin\/python/' \
+        *.py
+    chmod 755 *.py
+
+%environment
+    export PATH="${PATH}:/transIndel"
+
+%runscript
+    exec /transIndel/transIndel_build_DNA.py "$@"
+    

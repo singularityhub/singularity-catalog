@@ -1,0 +1,27 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  MACS_Version 2.1.2.1
+
+%apprun macs2
+  exec macs2 "${@}"
+  
+%runscript
+  exec macs2 "${@}"
+  
+%post
+  # Get dependencies
+  apk update
+  apk add python2 python2-dev py2-pip make gcc g++ 
+  pip --no-cache-dir install numpy
+
+  # Install MACS
+  pip --no-cache-dir install MACS2==2.1.2.1
+
+  # Clean up
+  apk del python2-dev py2-pip make gcc g++
+  rm -rf /root/.cache
+  rm -rf /var/cache/apk/*
+  rm -rf /tmp/*

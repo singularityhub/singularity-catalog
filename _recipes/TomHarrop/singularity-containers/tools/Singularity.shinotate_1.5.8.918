@@ -1,0 +1,61 @@
+Bootstrap: docker
+From: rocker/shiny:latest
+
+%help
+
+    Shiny-server for shinotate 
+
+%labels
+
+    MAINTAINER "Tom Harrop twharrop@gmail.com"
+    VERSION "Shiny Server v1.5.8.918"
+
+%post
+    # install apt packages
+    apt-get update \
+        && apt-get install -y \
+        git \
+        libssl-dev \
+        libxml2-dev
+
+    # install packages from bioconductor
+    Rscript -e "install.packages('BiocManager')"
+    ###DISABLE BEFORE PUSH###
+    Rscript -e "options(Ncpus=8); \
+            BiocManager::install(c( \
+            'Biostrings', \
+            'Cairo', \
+            'dbplyr', \
+            'DESeq2', \
+            'devtools', \
+            'doFuture', \
+            'dplyr', \
+            'DT', \
+            'ggplot2', \
+            'MonetDBLite', \
+            'pacman', \
+            'plotly', \
+            'purrr', \
+            'R.utils', \
+            'RColorBrewer', \
+            'RSQLite', \
+            'shinydashboard', \
+            'shinyWidgets', \
+            'sqldf', \
+            'tidyverse' \
+            ), \
+        type='source', ask=FALSE)"
+
+    # set shiny permissions
+    mkdir -p /var/log/shiny-server
+    chown shiny.shiny /var/log/shiny-server
+
+    # install shinotate
+    git clone https://github.com/IdoBar/shiny-server.git
+    cd shiny-server || exit 1
+    cp -r shinotate /srv/shiny-server/
+    cd .. || exit 1
+    rm -rf shiny-server
+
+%runscript
+    exec shiny-server 2>&1

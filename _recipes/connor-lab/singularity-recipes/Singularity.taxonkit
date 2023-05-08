@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: alpine:3.8
+
+%post
+    apk update
+    apk upgrade
+    apk add bash bzip2-dev curl git ncurses-dev xz-dev zlib-dev
+    apk add python3
+
+    curl -fsSL ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz | tar -xz names.dmp nodes.dmp
+   
+    mkdir -p /opt/taxonkit
+
+    mv *.dmp /opt/taxonkit  
+
+    curl -fsSL 'https://github.com/shenwei356/taxonkit/releases/download/v0.3.0/taxonkit_linux_amd64.tar.gz' | tar -xz -C /usr/local/bin/
+
+    git clone https://github.com/connor-lab/centrifuge-summary
+    cd centrifuge-summary
+    mv centrifuge-summary /usr/local/bin/
+
+%environment
+    export TAXONKIT_DB=/opt/taxonkit
+
+%labels
+    Maintainer m-bull
+    Version taxonkit-0.3.0

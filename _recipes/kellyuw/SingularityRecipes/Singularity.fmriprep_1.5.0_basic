@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: poldracklab/fmriprep:1.5.0
+%post
+
+# Prepare environment
+apt-get update && \
+apt-get install -y \
+bc \
+tar \
+dpkg \
+wget \
+unzip \
+gcc \
+libstdc++6
+
+mkdir /opt/msm && \
+curl -sSL https://github.com/ecr05/MSM_HOCR_macOSX/releases/download/1.0/msm_ubuntu > /opt/msm/msm && \
+chmod 777 /opt/msm/msm
+
+PATH=/opt/msm:$PATH
+
+apt-get update && apt-get install -y apt-utils
+
+# neuro debian install of connectome-workbench and getting the fsl mni templates
+# note that fmriprep is getting templates from template flow but they don't match in dimensions
+apt-get update && \
+apt-get install -y fsl-mni152-templates=5.0.7-2
+    
+%environment
+export PATH=/opt/msm:$PATH
+%runscript
+exec /bin/bash "$@"
+%startscript
+exec /bin/bash "$@"

@@ -1,0 +1,34 @@
+BootStrap: localimage
+From: ./ubuntu-20.04-R-install-base.simg
+
+
+%files
+    # copying files from the host system to the container.
+
+
+%labels
+    Maintainer Yoshihiro Okuda
+    Version    v1.0
+
+
+%runscript
+
+
+%post
+    apt-get -y install libxt-dev gobjc gobjc++ tcl8.6-dev tk8.6-dev libcurl4-openssl-dev texinfo bison byacc gawk libc++-dev libcairo2-dev libpango1.0-dev lprng install-info texlive-fonts-extra libpcre3-dev libtiff5-dev default-jdk default-jdk-headless
+    export LC_CTYPE=C
+    cd /usr/local/src
+    wget https://cran.r-project.org/src/base/R-3/R-3.6.3.tar.gz
+    tar xzvf R-3.6.3.tar.gz
+    cd R-3.6.3
+    ./configure \
+        --prefix=/usr/local \
+        --x-includes=/usr/include/X11 \
+        --x-libraries=/usr/lib/X11 \
+        --enable-R-shlib \
+        --enable-prebuilt-html
+    make -j 4
+    make check
+    make install
+
+    rm -r /usr/local/src/*

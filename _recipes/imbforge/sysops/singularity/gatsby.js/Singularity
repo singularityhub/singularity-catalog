@@ -1,0 +1,58 @@
+BootStrap: library
+From: ubuntu:18.04
+
+%apprun gatsby
+  exec gatsby "${@}"  
+
+%apprun gridsome
+  exec gridsome "${@}"  
+
+%apprun node
+  exec node "${@}"  
+
+%apprun npm
+  exec npm "${@}"  
+
+%apprun nvm
+  exec nvm "${@}"  
+
+%apprun git
+  exec git "${@}"  
+
+%runscript
+  exec echo "Available apps: gatsby-cli, node, npm, nvm, git"
+
+%post
+  apt update
+  apt -y upgrade
+
+  # Install nvm (Node Version Manager) and needed dependencies.
+  # nvm is used to manage Node.js and all its associated versions.
+  apt -y install sudo curl
+#  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
+#  export NVM_DIR="$HOME/.nvm"
+#  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+#  nvm install 10
+#  nvm use 10
+  curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+  apt -y install nodejs
+
+  # Install git
+  apt -y install git
+  git config --global user.name "Sergi Sayols"
+  git config --global user.email "sergisayolspuig@gmail.com"
+
+  # Install gatsby-cli and required plugins
+  npm install -g gatsby-cli
+  npm install gh-pages --save-dev
+  npm install --save gatsby-transformer-csv gatsby-source-filesystem gatsby-plugin-google-analytics
+
+  # Also, install Gridsome (Gatsby competitor that works on Vue.js instead of React)
+  npm install -g @gridsome/cli
+  npm install --save gridsome-plugin-pug @gridsome/transformer-csv node-fetch webpack-node-externals apexcharts vue vue-apexcharts vuetify pug
+  npm install
+
+  # Clean up
+  apt-get -y autoremove && apt-get -y autoclean
+

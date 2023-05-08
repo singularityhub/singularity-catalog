@@ -1,0 +1,46 @@
+Bootstrap: localimage
+From: base.simg
+
+%help
+echo "Usage: singularity run "
+
+
+%runscript
+# squelch perl complaining about locale settings it doesn't understand
+LANG=C
+LANGUAGE=$LANG
+LC_ALL=$LANG
+export LANG LANGUAGE LC_ALL
+
+/STAR-Fusion-v1.2.0/STAR-Fusion $@
+
+
+%post
+# install STAR
+wget https://github.com/alexdobin/STAR/archive/2.5.4a.tar.gz
+tar zxf 2.5.4a.tar.gz
+cp STAR-2.5.4a/bin/Linux_x86_64_static/STAR /usr/bin
+
+# install samtools
+apt install -y liblzma-dev libz-dev libbz2-dev
+wget https://github.com/samtools/samtools/releases/download/1.7/samtools-1.7.tar.bz2
+tar jxf samtools-1.7.tar.bz2
+(
+  cd samtools-1.7
+  ./configure --without-curses
+  make
+  make install
+)
+
+# squelch perl complaining about locale settings it doesn't understand
+LANG=C
+LANGUAGE=$LANG
+LC_ALL=$LANG
+export LANG LANGUAGE LC_ALL
+
+apt install -y libdb-dev
+cpan install inc::latest
+cpan install URI::Escape Set::IntervalTree DB_File Carp::Assert JSON::XS PerlIO::gzip
+
+wget https://github.com/STAR-Fusion/STAR-Fusion/releases/download/STAR-Fusion-v1.2.0/STAR-Fusion-v1.2.0.FULL.tar.gz -O STAR-Fusion-v1.2.0.FULL.tar.gz
+tar zxf STAR-Fusion-v1.2.0.FULL.tar.gz

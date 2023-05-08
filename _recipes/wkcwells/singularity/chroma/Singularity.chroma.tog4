@@ -1,0 +1,86 @@
+Bootstrap: docker
+From: nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
+
+%labels
+    AUTHOR ako.jamil@yale.edu
+
+%environment
+    export PATH=/usr/local/cuda/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+
+%post
+    #Install packages
+    apt-get -y update
+    apt-get -y install software-properties-common
+    add-apt-repository ppa:saiarcot895/myppa
+    apt-get -y update
+    apt-get -y install apt-fast
+    apt-fast -y install python-pygame python-matplotlib python-virtualenv build-essential xorg-dev python-dev libglu1-mesa-dev  freeglut3-dev uuid-dev liblapack-dev mercurial git subversion libatlas-base-dev libbz2-dev
+    apt-fast -y install wget curl cmake libboost-all-dev libsdl1.2-dev  libatlas-base-dev libxerces-c-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev
+    apt-fast -y install libx11-dev libxpm-dev libxft-dev libxext-dev libgsl-dev libpng-dev libjpeg-dev gcc g++
+
+    echo "[ui]\ntls = False" > $HOME/.hgrc
+
+    export APP_DIR=/app/
+    mkdir $APP_DIR
+    chmod a+rwx $APP_DIR
+    cd $APP_DIR
+    touch .aksetup-defaults.py
+    echo "BOOST_INC_DIR = ['/usr/include/boost']" >> .aksetup-defaults.py
+    echo "BOOST_LIB_DIR = ['/usr/lib/x86_64-linux-gnu']" >> .aksetup-defaults.py
+    echo "BOOST_PYTHON_LIBNAME = ['boost_python-py27']" >> .aksetup-defaults.py
+
+    #Setup virtualenv
+    virtualenv --system-site-packages $APP_DIR/chroma_env
+    cd $APP_DIR/chroma_env/bin/
+    export PATH=/usr/local/cuda/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+    . $APP_DIR/chroma_env/bin/activate
+    mkdir $VIRTUAL_ENV/src/
+    cd $VIRTUAL_ENV/src/
+
+    #Install ROOT
+    wget https://root.cern.ch/download/root_v5.34.38.source.tar.gz
+    tar -xvf root_v5.34.38.source.tar.gz
+    mv root $VIRTUAL_ENV/src/root-5.34.38
+    cd $VIRTUAL_ENV/src/root-5.34.38
+    ./configure --enable-builtin-freetype --disable-fftw3 --with-x11-libdir=/usr/lib/x86_64-linux-gnu --with-xpm-libdir=/usr/lib/x86_64-linux-gnu --with-xft-libdir=/usr/lib/x86_64-linux-gnu --with-xext-libdir=/usr/lib/x86_64-linux-gnu --with-gsl-libdir=/usr/lib/x86_64-linux-gnu --disable-asimage
+    make -j8
+    echo "source $VIRTUAL_ENV/src/root-5.34.38/bin/thisroot.sh" >> $VIRTUAL_ENV/bin/activate
+
+    #Install GEANT4 - Note: we are no longer installing cmake - the base build should have it
+    cd $VIRTUAL_ENV/src/
+    wget http://geant4-data.web.cern.ch/geant4-data/releases/source/geant4.10.05.tar.gz
+    tar xvf geant4.10.05.tar.gz
+    mkdir geant4.10.05-build
+    cd geant4.10.05-build
+    cmake -DCMAKE_INSTALL_PREFIX=$VIRTUAL_ENV  -DGEANT4_INSTALL_DATA=ON -DGEANT4_USE_QT=OFF -DGEANT4_USE_RAYTRACER_X11=OFF -DGEANT4_USE_SYSTEM_EXPAT=OFF  -DGEANT4_USE_OPENGL_X11=ON  ../geant4.10.05
+    make -j8 install
+    echo "source $VIRTUAL_ENV/bin/geant4.sh" >> $VIRTUAL_ENV/bin/activate
+
+    ## Install chroma custom g4py
+    #cd $VIRTUAL_ENV/src/
+    #hg clone https://bitbucket.org/seibert/g4py#geant4.9.5.p01
+    #cd g4py
+    #./configure linuxx8664gcc --prefix=$VIRTUAL_ENV --with-g4-incdir=$VIRTUAL_ENV/include/Geant4 --with-g4-libdir=$VIRTUAL_ENV/lib --libdir=$VIRTUAL_ENV/lib/python2.7/site-packages/ --with-clhep-libdir=$VIRTUAL_ENV/lib --with-clhep-lib=G4clhep --with-python-libdir=$VIRTUAL_ENV/lib --with-boost-libdir=/usr/lib/x86_64-linux-gnu
+    #make -j8 install
+
+    ## Install KW custom chroma g4py
+    ## May need this??
+    ## -DCMAKE_PREFIX_PATH=/Users/kwells/Development/physics/chroma_env
+    cd $VIRTUAL_ENV/src/
+    rm -rf g4py*        # Temporary
+    hg clone git clone https://github.com/wkcwells/g4py.git
+    mkdir g4py-build
+    cd g4py-build
+    cmake -DGEANT4_INSTALL=/app/chroma_env ../g4py
+    make -j8 install
+
+    ## Install stock g4py
+    #cd $VIRTUAL_ENV/src/
+    #cd geant4.10.05/environments
+    #mkdir g4py-build
+    #cd g4py-build
+    #export GEANT4_INSTALL=/app/chroma_env
+    #cmake ../g4py
+    #make -j8 install

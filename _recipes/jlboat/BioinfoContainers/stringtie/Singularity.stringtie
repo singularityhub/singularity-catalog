@@ -1,0 +1,21 @@
+Bootstrap: docker
+
+From: debian:latest
+
+%labels
+    Topic Bioinformatics
+    Input FASTQ
+    Output GTF
+    stringtie latest
+
+%help
+    singularity run stringtie.simg -h
+
+%post
+    apt-get update --fix-missing && apt-get install -y git make g++ libz-dev
+    git clone https://github.com/gpertea/stringtie
+    cd stringtie
+    make release
+
+%runscript
+    exec /stringtie/stringtie "$@"

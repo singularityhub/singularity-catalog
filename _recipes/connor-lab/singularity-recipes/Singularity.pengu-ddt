@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: debian:latest
+
+%post
+    apt-get -y update && apt-get -y upgrade
+    apt-get install -y git make python3-pip procps
+
+    pip3 install git+https://github.com/connor-lab/pengu-ddt
+
+%runscript
+    exec pengu-ddt "$@"
+
+%labels
+    Maintainer m-bull
+    Version pengu-ddt-0.1

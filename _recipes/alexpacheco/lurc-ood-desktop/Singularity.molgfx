@@ -1,0 +1,34 @@
+BootStrap: docker
+From: alexpacheco/centos7:molgfx
+
+%labels
+   MAINTAINER alp514@lehigh.edu
+
+%help
+  This container provides Avogadro2, Blender, Gabedit and Ovito
+
+%apprun vncserver
+  exec vncserver "${@}"
+
+%apprun vncpasswd
+  exec vncpasswd "${@}"
+
+%apprun websockify
+  exec /opt/websockify/run "${@}"
+
+%apprun avogadro
+  exec avogadro2 
+
+%apprun blender
+  exec blender 
+
+%apprun gabedit
+  exec gabedit 
+
+%apprun ovito
+  exec ovito 
+
+%environment
+  export PATH=/opt/TurboVNC/bin:/opt/ovito/bin:${PATH}
+
+

@@ -1,0 +1,59 @@
+Bootstrap:docker
+From:centos:6
+
+%post
+	#(
+	#yum groupinstall -y "Development Tools"
+	#yum install -y gmp-devel wget
+	#exit 0
+	#)
+	# Comment
+
+	yum -y upgrade
+	yum install -y compat-gcc-34 compat-gcc-34-c++ wget perl gmp-devel
+	ln -s /usr/bin/gcc34 /usr/bin/gcc
+	ln -s /usr/bin/g++34 /usr/bin/g++
+
+	cd /opt
+	wget http://www.doc.ic.ac.uk/ipc/download/hydra-quiet.tar.gz
+	tar zxf hydra-quiet.tar.gz
+	cd hydra/src/
+	export MALLOC_CHECK_="0"
+	./configure
+	make
+	#export PATH=$PATH:/opt/hydra/src/build/*
+	chmod -w build/hydra*
+	# INSTEAD OF THIS - /usr/local/bin ???
+	ln -s /opt/hydra/src/build/ /opt/hydra/bin
+	echo 'export PATH=$PATH:/opt/hydra/bin/' >> $SINGULARITY_ENVIRONMENT	
+	cd /opt
+	rm hydra-quiet.tar.gz
+
+	#cd /opt
+	wget https://downloads.haskell.org/~ghc/6.6/ghc-6.6-x86_64-unknown-linux.tar.bz2
+	wget https://downloads.haskell.org/~cabal/Cabal-1.1.6/cabal-1.1.6.tar.gz
+	wget http://www.doc.ic.ac.uk/ipc/download/ipclib.0.99.tar.gz
+	tar zxf cabal-1.1.6.tar.gz
+	tar jxf ghc-6.6-x86_64-unknown-linux.tar.bz2
+	cd ghc*/
+	./configure
+	make install
+	cd /lib64
+	ln -s libgmp.so.10 libgmp.so.3
+	ln -s libreadline.so.6 libreadline.so.5
+	cd /opt
+	cd cabal*/
+	make
+	make install
+	cd ..
+	tar zxf ipclib.0.99.tar.gz
+	cd ipclib
+	ghc --make Setup.hs
+	./Setup configure
+	./Setup build
+	./Setup install
+
+
+	# %runscript
+	# echo "Hello World!"
+	#/usr/local/bin/ipc

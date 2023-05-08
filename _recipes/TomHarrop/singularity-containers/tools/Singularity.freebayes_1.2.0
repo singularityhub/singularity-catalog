@@ -1,0 +1,42 @@
+Bootstrap: shub
+From: TomHarrop/singularity-containers:vcflib_1.0.0-rc2
+
+%help
+    Container for freebayes 1.2.0 with modified freebayes-parallel 
+    that can be run from outside the scripts directory
+
+%labels
+    VERSION "freebayes 1.2.0"
+
+%post
+    # packages
+    apt update
+    apt install -y \
+        libtabixpp-dev \
+        parallel \
+        python
+
+    # download freebayes
+    git clone \
+        https://github.com/ekg/freebayes.git
+    cd freebayes || exit 1
+    git checkout tags/v1.2.0
+    git submodule update --init --recursive
+    make
+
+    # fix the scripts
+    sed \
+        's/..\/vcflib\/scripts\/vcffirstheader/vcffirstheader/g' \
+        scripts/freebayes-parallel \
+        | sed \
+        's/..\/vcflib\/bin\/vcfstreamsort/vcfstreamsort/g' \
+        > scripts/freebayes-parallel.new
+    rm scripts/freebayes-parallel
+    mv scripts/freebayes-parallel.new scripts/freebayes-parallel
+    chmod 755 scripts/freebayes-parallel
+
+%environment
+    export PATH="${PATH}:/freebayes/bin:/freebayes/scripts"
+
+%runscript
+    exec /freebayes/bin/freebayes "$@"

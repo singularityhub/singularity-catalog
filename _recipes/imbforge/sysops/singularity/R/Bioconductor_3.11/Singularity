@@ -1,0 +1,20 @@
+BootStrap: docker
+From: bioconductor_docker:RELEASE_3_11
+Namespace: bioconductor
+
+%labels
+  Maintainer Sergi Sayols
+  R_Version 4.0
+  Bioconductor_Version 3.11
+
+%apprun R
+  exec R "${@}"
+  
+%apprun Rscript
+  exec Rscript "${@}"
+
+%runscript
+  exec echo 'create an alias R="singularity run --app R --workdir $PROJECT_DIR --bind $PROJECT_DIR/lib/R/4.0:/usr/local/lib/R/host-site-library /fsimb/common/singularity_tools/R/Bioconductor_3.11/R.simg"'
+
+%post
+  echo "Bioconductor 3.11 image built succesfully"

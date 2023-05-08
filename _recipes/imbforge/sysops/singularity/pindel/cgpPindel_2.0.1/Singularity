@@ -1,0 +1,35 @@
+BootStrap: docker
+From: pcawg-sanger-cgp-workflow:2.1.0
+Registry: quay.io
+Namespace: pancancer
+
+%labels
+  Maintainer Sergi Sayols
+  Pindel_Version 2.1.0
+
+%apprun pindel
+  exec pindel "${@}"
+  
+%apprun pindel.pl
+  exec pindel.pl "${@}"
+  
+%apprun pindel_2_combined_vcf.pl
+  exec pindel_2_combined_vcf.pl "${@}"
+  
+%apprun pindel_germ_bed.pl
+  exec pindel_germ_bed.pl "${@}"
+  
+%apprun pindel_input_gen.pl
+  exec pindel_input_gen.pl "${@}"
+  
+%apprun pindel_merge_vcf_bam.pl
+  exec pindel_merge_vcf_bam.pl "${@}"
+  
+%apprun pindel_np_from_vcf.pl
+  exec pindel_np_from_vcf.pl "${@}"
+  
+%runscript
+  exec echo "Try running with --app pindel, or run with --shell and check available binaries at $(dirname $(which pindel))"
+
+%post
+  echo "Installation of cgpPindel 2.1.0 finished!"

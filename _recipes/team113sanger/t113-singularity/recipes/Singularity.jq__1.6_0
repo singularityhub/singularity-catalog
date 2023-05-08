@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: centos:centos7
+IncludeCmd: no
+
+%help
+Help message
+
+%labels
+        Maintainer Team113 Wellcome Sanger Institute
+        Version v1.0.0
+
+%environment
+        export LC_ALL=en_US.UTF-8
+        export LANG=en_US.UTF-8
+
+%apprun jq
+        exec jq "$@"
+
+%runscript
+        exec jq "$@"
+
+%post
+        yum install -y epel-release
+        yum install -y jq

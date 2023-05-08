@@ -1,0 +1,11 @@
+bootstrap: docker
+from: conda/miniconda3:latest
+
+%labels
+AUTHOR Johan Viklund
+MAINTAINER johan.viklund@nbis.se
+
+%post
+conda config --add channels conda-forge
+conda config --add channels bioconda
+conda install picard=1.97

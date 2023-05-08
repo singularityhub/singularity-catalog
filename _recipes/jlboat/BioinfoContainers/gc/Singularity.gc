@@ -1,0 +1,25 @@
+Bootstrap: docker
+
+From: ubuntu:latest
+
+%labels
+    Topic Bioinformatics
+    Input VCF
+
+%help
+    singularity run gc.simg -h
+
+%environment
+    export PYTHONPATH=/opt:$PYTHONPATH
+
+%post
+    apt-get update --fix-missing && apt-get install -y git python python-pip python-tk
+    pip install numpy scipy pandas matplotlib pyvcf pathlib 
+    pip install -U scikit-learn
+    cd /opt
+    git clone https://github.com/freemao/schnablelab.git
+    chmod -R 777 schnablelab
+
+%runscript
+    exec "$@"
+

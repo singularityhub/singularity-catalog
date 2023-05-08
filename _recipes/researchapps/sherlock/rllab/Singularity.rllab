@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: ubuntu:14.04
+
+# sudo singularity build rllab.simg Singularity.rllab
+
+%runscript
+   exec /usr/bin/python "$@"
+
+%post
+
+   # Python 2.7
+   apt-get update && apt-get install -y build-essential gcc cmake git vim wget python python-dev
+   
+   # rllab Packages
+   apt-get install -y python-pip python-dev swig cmake build-essential zlib1g-dev
+   apt-get build-dep -y python-pygame
+   apt-get build-dep -y python-scipy

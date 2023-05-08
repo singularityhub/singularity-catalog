@@ -1,0 +1,27 @@
+BootStrap: localimage
+From: ./ubuntu-20.04-R-3.6.3-CRAN-Bioconductor-packages.simg
+
+
+%files
+    # copying files from the host system to the container.
+
+
+%labels
+    Maintainer Yoshihiro Okuda
+    Version    v1.0
+
+
+%runscript
+
+%environment
+
+
+%post
+    apt-get -y install libgtkmm-2.4-dev libsbml5-dev cwltool python3-sklearn
+    cd /usr/local/src
+    echo 'library(BiocManager)' > update.R
+    echo 'pkgs <- BiocManager::available(include_installed = FALSE)' >> update.R
+    echo 'BiocManager::install(pkgs, update = TRUE, ask = FALSE)' >> update.R
+    echo 'BiocManager::install()' >> update.R
+    xvfb-run R BATCH --no-save < update.R
+

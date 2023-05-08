@@ -1,0 +1,49 @@
+Bootstrap: debootstrap
+OSVersion: bionic
+MirrorURL: http://archive.ubuntu.com/ubuntu/
+Include: build-essential language-pack-en software-properties-common wget
+
+%help
+
+    Container for mummer 4.0.0beta2
+    https://github.com/mummer4/mummer/releases
+
+%labels
+
+    MAINTAINER "Tom Harrop"
+    VERSION "mummer 4.0.0beta2"
+
+%runscript
+
+    exec mummer "$@"
+
+%post
+
+    # add apt repos
+    add-apt-repository \
+        "deb http://archive.ubuntu.com/ubuntu bionic main universe restricted multiverse"
+    add-apt-repository \
+        "deb http://archive.canonical.com/ubuntu bionic partner"
+    apt update
+
+    # install apt packages
+    apt install -y \
+        fig2dev \
+        gnuplot \
+        xfig
+
+    # build mummer
+    wget -O "mummer.tar.gz" \
+        --no-check-certificate \
+        https://github.com/mummer4/mummer/releases/download/v4.0.0beta2/mummer-4.0.0beta2.tar.gz
+    mkdir mummer-install
+    tar -zxf mummer.tar.gz \
+        -C mummer-install \
+        --strip-components 1
+    cd mummer-install || exit 1
+    ./configure && make && make install
+    cd .. || exit 1
+    rm -rf mummer.tar.gz mummer-install
+
+    # rebuild libraries
+    ldconfig

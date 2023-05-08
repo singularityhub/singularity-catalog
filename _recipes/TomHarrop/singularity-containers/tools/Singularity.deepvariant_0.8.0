@@ -1,0 +1,9 @@
+Bootstrap: docker
+Registry: gcr.io
+From: deepvariant-docker/deepvariant:0.8.0
+
+%environment
+    export PATH="${PATH}:/opt/deepvariant/bin"
+
+%runscript
+    exec /usr/bin/python2.7 /opt/deepvariant/bin/run_deepvariant.py "$@"

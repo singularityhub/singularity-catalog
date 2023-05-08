@@ -1,0 +1,28 @@
+Bootstrap: docker
+
+From: debian:latest
+
+%labels
+    Topic Bioinformatics
+    snpeff conda-latest
+
+%help
+    singularity run --app snpEff snpeff.simg 
+    singularity run --app snpSift snpeff.simg 
+
+%post
+    apt-get update --fix-missing && apt-get install -y openjdk-8-jre wget unzip
+    wget http://sourceforge.net/projects/snpeff/files/snpEff_latest_core.zip
+    unzip snpEff_latest_core.zip
+    
+%apprun snpEff
+    exec java -jar /snpEff/snpEff.jar "$@"
+
+%apphelp snpEff
+    singularity run --app snpEff snpeff.simg
+
+%apprun snpSift
+    exec java -jar /snpEff/SnpSift.jar "$@"
+
+%apphelp snpSift
+    singularity run --app snpSift snpeff.simg 

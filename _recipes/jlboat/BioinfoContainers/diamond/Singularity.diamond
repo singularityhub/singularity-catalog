@@ -1,0 +1,17 @@
+Bootstrap: docker
+
+From: debian:latest
+
+%labels
+    Topic Bioinformatics
+    Input FASTA
+    diamond v0.9.22
+
+%post
+    apt-get update --fix-missing && apt-get install -y wget
+    wget https://github.com/bbuchfink/diamond/releases/download/v0.9.22/diamond-linux64.tar.gz
+    tar xzf diamond-linux64.tar.gz
+    cp diamond /usr/local/bin
+
+%runscript
+    exec "$@"

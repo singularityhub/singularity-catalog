@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%environment
+    unset LC_ALL
+    LANG=C
+    export LANG
+
+%post
+    apt-get -y update
+    apt-get -y install build-essential git cmake libboost-all-dev
+    mkdir -p /usr/local/src
+    cd /usr/local/src
+    git clone --recursive https://github.com/ibest/HTStream.git
+    mkdir -p HTStream/build
+    cd HTStream/build
+    cmake -DCMAKE_BUILD_TYPE=Release ..
+    make all
+    make install
+

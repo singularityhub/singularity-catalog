@@ -1,0 +1,23 @@
+Bootstrap: docker
+
+From: ubuntu:latest
+
+%labels
+    Topic Bioinformatics
+    FastME 2.1.6.1
+
+%post
+    apt-get update --fix-missing && apt-get install -y wget build-essential automake
+    cd /opt/
+    wget https://gite.lirmm.fr/atgc/FastME/raw/master/tarball/fastme-2.1.6.1.tar.gz
+    tar -xvzf fastme-2.1.6.1.tar.gz
+    rm fastme-2.1.6.1.tar.gz
+    cd fastme-2.1.6.1
+    ./configure
+    make
+    make install
+    chmod -R 777 /opt/*
+
+%runscript
+    exec "$@"
+

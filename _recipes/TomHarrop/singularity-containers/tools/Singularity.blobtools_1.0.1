@@ -1,0 +1,60 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+    BlobTools 1.0.1
+    https://github.com/DRL/blobtools/releases
+
+%labels
+
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "BlobTools 1.0.1"
+
+%post
+
+    # install dependencies
+    apt-get update
+    apt-get install -y \
+        autoconf \
+        automake \
+        build-essential \
+        libbz2-dev \
+        libcurl4-gnutls-dev \
+        liblzma-dev \
+        libncurses5-dev \
+        libssl-dev \
+        python \
+        python-pip \
+        wget \
+        zlib1g-dev
+
+    # downgrade pip for compatibility
+    pip install pip==9.0.3
+
+    # download blobtools
+    wget -O "blobtools.tar.gz" \
+        --no-check-certificate \
+        https://github.com/DRL/blobtools/archive/v1.0.1.tar.gz 
+    mkdir blobtools
+    tar -zxf blobtools.tar.gz \
+        -C blobtools \
+        --strip-components 1
+    rm -rf blobtools.tar.gz
+
+    # install blobtools
+    cd blobtools || exit 1
+    (
+    export PATH="/usr/local/bin:${PATH}"
+    ./install
+    )  
+    ln -s /blobtools/blobtools /usr/local/bin
+
+%environment
+
+    export PATH="${PATH}:/blobtools/samtools/bin"
+
+%runscript
+
+    exec /usr/local/bin/blobtools "$@"
+

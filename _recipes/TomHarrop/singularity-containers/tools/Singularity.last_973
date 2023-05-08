@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: alpine:3.9
+
+%help
+    Container for LAST 973
+
+%labels
+    VERSION "LAST 973"
+
+%post
+    # packages
+    apk add --update \
+        bash \
+        build-base \
+        gcc \
+        parallel \
+        python \
+        wget \
+        zlib-dev
+
+    # download last
+    wget http://last.cbrc.jp/last-973.zip
+    unzip last-973.zip
+    cd last-973 || exit 1
+    make
+    make install
+    cd .. || exit 1
+    rm -rf last-973.zip last-973
+
+%runscript
+    exec /usr/local/bin/lastal "$@"
+

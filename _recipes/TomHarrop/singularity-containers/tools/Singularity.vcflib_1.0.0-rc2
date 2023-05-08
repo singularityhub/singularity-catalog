@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: ubuntu:18.10
+
+%help
+    Container for vcflib 1.0.0-rc2
+
+%labels
+    VERSION "vcflib 1.0.0-rc2"
+
+%post
+    # packages
+    apt update
+    apt install -y \
+        build-essential \
+        git \
+        libbz2-dev \
+        liblzma-dev \
+        wget \
+        zlib1g-dev
+
+    # download vcflib
+    git clone \
+        https://github.com/vcflib/vcflib.git
+    cd vcflib || exit 1
+    git checkout tags/v1.0.0-rc2
+    git submodule update --init --recursive
+    make openmp
+
+%environment
+    export PATH="${PATH}:/vcflib/bin"

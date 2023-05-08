@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: alpine:3.8
+
+
+%post
+    apk update
+    apk upgrade
+    apk add bash curl gcc gcompat
+   
+    curl -fSSL 'https://github.com/marbl/Mash/releases/download/v2.1/mash-Linux64-v2.1.tar' | tar -x -C /usr/local/bin
+    find /usr/local/bin/mash-Linux* -name 'mash' -exec ln -s {} /usr/local/bin \;
+
+%labels
+    Maintainer m-bull
+    Version mash-2.1

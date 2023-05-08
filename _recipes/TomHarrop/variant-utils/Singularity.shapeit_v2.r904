@@ -1,0 +1,40 @@
+Bootstrap: docker
+From: ubuntu:19.10
+
+%help
+    Container for shapeit v2.r904
+
+%labels
+    VERSION "shapeit v2.r904"
+
+%environment
+    export PATH="${PATH}:/shapeit/bin"
+
+%post
+    # faster apt downloads
+    export DEBIAN_FRONTEND=noninteractive
+    (
+        . /etc/os-release
+        cat << _EOF_ > mirror.txt
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME} main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-updates main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-backports main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-security main restricted universe multiverse
+
+_EOF_
+        mv /etc/apt/sources.list /etc/apt/sources.list.bak
+        cat mirror.txt /etc/apt/sources.list.bak > /etc/apt/sources.list
+    )
+
+    apt-get update
+    apt-get install -y \
+        wget
+
+    wget \
+        -O /shapeit.tar.gz \
+        https://mathgen.stats.ox.ac.uk/genetics_software/shapeit/shapeit.v2.r904.glibcv2.12.linux.tar.gz
+    mkdir /shapeit
+    tar -zxf /shapeit.tar.gz \
+        -C /shapeit \
+        --strip-components 1        
+    rm /shapeit.tar.gz

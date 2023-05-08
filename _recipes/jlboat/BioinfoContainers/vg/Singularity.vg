@@ -1,0 +1,18 @@
+Bootstrap: docker
+
+From: debian:latest
+
+%labels
+    Topic Bioinformatics
+    vg v1.15.0
+
+%post
+    apt-get update --fix-missing && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
+    wget https://github.com/vgteam/vg/releases/download/v1.15.0/vg
+    mv vg /usr/bin/
+    apt-get remove -y wget
+    chmod 777 /usr/bin/vg
+
+%runscript
+    exec vg "$@"
+

@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: continuumio/miniconda3:latest
+
+
+%post
+    apt-get update && apt-get -y upgrade
+    apt-get install -y procps
+    /opt/conda/bin/conda install -c bioconda perl-bioperl
+    /opt/conda/bin/conda install -c conda-forge -c bioconda prokka
+
+%labels
+    Maintainer m-bull
+    Version prokka-latest

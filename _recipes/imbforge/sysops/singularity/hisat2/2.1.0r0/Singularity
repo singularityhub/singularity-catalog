@@ -1,0 +1,36 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  HISAT2_Version 2.1.0
+
+%apprun hisat2
+  exec hisat2 "${@}"
+  
+%apprun hisat2-build
+  exec hisat2-build "${@}"
+  
+%apprun hisat2-inspect
+  exec hisat2-inspect "${@}"
+  
+%runscript
+  exec hisat2 "${@}"
+  
+%post
+  # Get dependencies
+  apk update
+  apk add make gcc g++ zlib zlib-dev perl python libstdc++ libgcc
+
+  # Install HISAT2
+  cd /tmp
+  wget http://ccb.jhu.edu/software/hisat2/dl/hisat2-2.1.0-source.zip
+  unzip hisat2-2.1.0-source.zip
+  cd hisat2-*
+  make -j$(nproc)
+  cp hisat2 hisat2-* /usr/local/bin/
+
+  # Clean up
+  apk del make gcc g++ zlib-dev
+  rm -rf /var/cache/apk/*
+  rm -rf /tmp/*

@@ -1,0 +1,45 @@
+Bootstrap: localimage
+From: ubu1804base.simg
+
+%runscript
+
+exec echo "The runscript is the containers default runtime command!"
+
+% fixme: wget this below in production
+%files
+root_v6.14.02.Linux-ubuntu18-x86_64-gcc7.3.tar.gz /usr/local/src
+
+%post
+
+echo "Post"
+
+
+mkdir -p /usr/local/
+cd /usr/local/
+mkdir -p src bin lib include opt share
+cd /usr/local/src
+
+echo "Building jsonnet"
+wget https://github.com/google/jsonnet/archive/v0.11.2.tar.gz
+tar -xf v0.11.2.tar.gz
+cd jsonnet-0.11.2/
+make jsonnet libjsonnet.so libjsonnet++.so
+cp jsonnet /usr/local/bin/
+cp libjsonnet.so /usr/local/lib/
+cp libjsonnet++.so /usr/local/lib/
+cp include/libjsonnet.h /usr/local/include/
+cp include/libjsonnet++.h /usr/local/include/
+python3 setup.py install
+cd ..
+rm -rf v0.11.2.tar.gz jsonnet-0.11.2/
+
+cd /usr/local/src
+echo "Getting binary ROOTSYS"
+## fixme: for testing we use a pre-downloaded copy added above
+## wget https://root.cern.ch/download/root_v6.14.02.Linux-ubuntu18-x86_64-gcc7.3.tar.gz
+tar -xf root_v6.14.02.Linux-ubuntu18-x86_64-gcc7.3.tar.gz
+cd root
+tar -cf - * | tar -C /usr/local -xf -
+cd /usr/local/src
+rm -rf root root_v6.14.02.Linux-ubuntu18-x86_64-gcc7.3.tar.gz
+

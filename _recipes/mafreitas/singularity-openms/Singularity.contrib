@@ -1,0 +1,28 @@
+BootStrap: shub
+From: mafreitas/singularity-openms:dependencies
+
+%environment
+LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH
+
+%post
+# build java
+echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
+add-apt-repository -y ppa:webupd8team/java
+apt-get -y update
+apt-get install -y oracle-java8-installer
+apt-get clean
+apt-get purge
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# build contrib
+cd $HOME
+git clone https://github.com/OpenMS/contrib.git
+rm -rf contrib/.git/
+mkdir contrib-build
+cd $HOME/contrib-build
+
+cmake -DBUILD_TYPE=SEQAN ../contrib && rm -rf archives src
+cmake -DBUILD_TYPE=WILDMAGIC ../contrib && rm -rf archives src
+cmake -DBUILD_TYPE=EIGEN ../contrib && rm -rf archives src
+cmake -DBUILD_TYPE=COINOR ../contrib && rm -rf archives src
+cmake -DBUILD_TYPE=SQLITE ../contrib && rm -rf archives src

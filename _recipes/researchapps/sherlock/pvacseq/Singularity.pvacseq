@@ -1,0 +1,11 @@
+Bootstrap: docker
+From: vanessa/sherlock:pvacseq
+
+# sudo singularity build pvacseq Singularity.pvacseq
+
+%environment
+    PATH=/opt/conda/bin:$PATH
+    export PATH
+    
+%runscript
+    exec scif "$@"

@@ -1,0 +1,45 @@
+BootStrap: localimage
+From: covise.sif
+
+%labels
+    MAINTAINER "Martin Aumüller" <aumueller@hlrs.de>
+
+%post
+    . /etc/buildenv.sh
+
+    # Vistle proper
+    mkdir -p /build && cd /build \
+        && git clone --recursive git://github.com/vistle/vistle.git \
+        && cd /build/vistle \
+        && mkdir build.vistle \
+        && cd build.vistle \
+        && cmake -GNinja -DVISTLE_CPU_ARCH=corei7 -DCMAKE_INSTALL_PREFIX=$PREFIX -DICET_USE_OPENGL=OFF -DENABLE_INSTALLER=FALSE -DCMAKE_BUILD_TYPE=${BUILDTYPE} -DVISTLE_MULTI_PROCESS=ON .. \
+        && cmake --build . --target install
+
+    . /etc/cleanup.sh
+    rm -rf /build
+
+%environment
+    . /etc/env.sh
+%runscript
+    /usr/bin/vistle "$@"
+
+%appenv vistle
+    . /etc/env.sh
+%apprun vistle
+    exec /usr/bin/vistle "$@"
+
+%appenv hub
+    . /etc/env.sh
+%apprun hub
+    exec /usr/bin/vistle "$@"
+
+%appenv gui
+    . /etc/env.sh
+%apprun gui
+    exec /usr/bin/vistle_gui "$@"
+
+%appenv vistle_gui
+    . /etc/env.sh
+%apprun vistle_gui
+    exec /usr/bin/vistle_gui "$@"

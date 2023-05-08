@@ -1,0 +1,22 @@
+Bootstrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch/
+Include: yum
+
+%help
+Singularity container for nanopolish
+
+%labels
+	Maintainer Alexis Lucattini
+	Version v1.0
+
+%post
+	cd /
+	yum group install "Development Tools" -y
+	yum install git wget tar zlib-devel -y
+	git clone --recursive https://github.com/jts/nanopolish.git
+	cd /nanopolish
+	make all
+
+%runscript
+	exec ./nanopolish "$@"

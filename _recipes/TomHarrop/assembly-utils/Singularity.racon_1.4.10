@@ -1,0 +1,76 @@
+Bootstrap: docker
+From: ubuntu:19.04
+
+%help
+    Racon v1.4.10
+    https://github.com/isovic/racon
+
+%labels
+    MAINTAINER "Tom Harrop"
+    VERSION "Racon v1.4.10"
+
+%environment
+    export PATH="${PATH}:/racon/build/bin"
+    export LC_ALL=C
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    export LC_ALL=C
+
+    # faster apt downloads
+    (
+        . /etc/os-release
+        cat << _EOF_ > mirror.txt
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME} main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-updates main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-backports main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-security main restricted universe multiverse
+
+_EOF_
+        mv /etc/apt/sources.list /etc/apt/sources.list.bak
+        cat mirror.txt /etc/apt/sources.list.bak > /etc/apt/sources.list
+    )
+
+    # dependencies
+    apt-get update
+    apt-get install -y \
+        apt-transport-https \
+        build-essential \
+        cmake \
+        git \
+        lsb-release \
+        nvidia-modprobe \
+        python \
+        software-properties-common \
+        wget
+
+    # nvidia libraries
+    add-apt-repository -y ppa:graphics-drivers/ppa
+    apt-get update
+    apt-get upgrade -y
+    apt-get install -y \
+        nvidia-cuda-toolkit 
+
+    # download master
+    git clone \
+        https://github.com/lbcb-sci/racon.git \
+        /racon
+    cd /racon || exit 1
+    git checkout 1.4.10
+    git submodule update --init --recursive || true     # have to allow fail
+
+    # build with cuda support
+    # for older versions of CUDA
+    # -DCMAKE_C_COMPILER=/usr/bin/gcc-6 \
+    mkdir build && cd build || exit 1
+    cmake \
+        -DCMAKE_BUILD_TYPE=Release \
+        -Dracon_build_tests=ON \
+        -Dracon_build_wrapper=ON \
+        -D CUDA_TOOLKIT_ROOT_DIR=/usr/lib/cuda \
+        -Dracon_enable_cuda=ON \
+        ..
+    make
+
+%runscript
+    exec /racon/build/bin/racon "$@"

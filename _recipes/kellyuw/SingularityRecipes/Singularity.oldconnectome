@@ -1,0 +1,44 @@
+#
+# Automagically prepared for ReproNim/containers distribution.
+# See http://github.com/ReproNim/containers for more info
+#
+Bootstrap: docker
+From: poldracklab/fmriprep:1.5.0
+
+%post
+
+# Create commonly present root directories to avoid need in overlays not supported
+# on older systems
+mkdir -p /ihome /data /data2 /zfs /isi /dartfs /dartfs-hpc
+
+apt-get update && \
+    apt-get install -y --no-install-recommends \
+        bc \
+        ca-certificates \
+        curl \
+        dpkg \
+        gcc \
+        gcc-5 \
+        git \
+        libncurses5-dev \
+        libstdc++6 \
+        python3.5 \
+        python3-dev \
+        python3-pip \
+        python3-setuptools \
+        python3-venv \
+        tar \
+        unzip \
+        wget
+
+apt-get update && \
+    curl -sSL http://neuro.debian.net/lists/trusty.us-ca.full >> /etc/apt/sources.list.d/neurodebian.sources.list && \
+    apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9 && \
+    apt-get update && \
+    apt-get install -y connectome-workbench=1.2.3-1~nd14.04+1
+
+
+%environment
+export LANG="C.UTF-8"
+export LC_ALL="C.UTF-8"
+

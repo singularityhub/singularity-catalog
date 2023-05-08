@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: continuumio/miniconda3:latest
+
+
+%post
+    apt-get update && apt-get -y upgrade
+    apt-get install -y procps
+    /opt/conda/bin/conda install -c bioconda shovill
+
+%labels
+    Maintainer m-bull
+    Version shovill-conda-latest

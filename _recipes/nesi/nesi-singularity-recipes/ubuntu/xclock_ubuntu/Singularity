@@ -1,0 +1,12 @@
+Bootstrap: library
+From: ubuntu:18.04
+
+%post
+	apt-get -y update
+	apt-get -y install x11-apps
+
+%environment
+	export LC_ALL=C
+
+%runscript
+	xclock && sleep 30

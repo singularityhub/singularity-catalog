@@ -1,0 +1,32 @@
+#
+# Automagically prepared for ReproNim/containers distribution.
+# See http://github.com/ReproNim/containers for more info
+#
+Bootstrap: docker
+From: poldracklab/fmriprep:1.5.0
+
+%post
+
+# Create commonly present root directories to avoid need in overlays not supported
+# on older systems
+mkdir -p /ihome /data /data2 /zfs /isi /dartfs /dartfs-hpc
+
+apt-get update && \
+apt-get install -y \
+bc \
+tar \
+dpkg \
+wget \
+unzip \
+gcc \
+libstdc++6
+
+#Connectome-workbench
+apt-get install -y libftgl2 libllvm8 libmng2 libmysqlclient20 libosmesa6 libqt4-dbus
+  libqt4-declarative libqt4-network libqt4-opengl libqt4-script libqt4-sql
+  libqt4-sql-mysql libqt4-xml libqt4-xmlpatterns libqtcore4 libqtdbus4 libqtgui4
+  mysql-common qdbus qt-at-spi qtchooser qtcore4-l10n connectome-workbench=1.2.3+git41-gc4c6c90-2 
+
+%environment
+export LANG="C.UTF-8"
+export LC_ALL="C.UTF-8"

@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: glotzerlab/software:cuda8
+
+%labels
+	MAINTAINER csadorf
+
+%post
+	ln -s /usr/bin/python3 /usr/bin/python
+	apt-get update && apt-get install -y \
+		python3-scipy \
+		python3-matplotlib
+	export LC_ALL=C
+	pip3 install scikit-learn tensorflow keras
+
+%environment
+	export LC_ALL=C

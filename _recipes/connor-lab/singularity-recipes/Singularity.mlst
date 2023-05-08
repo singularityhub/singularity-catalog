@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: centos:latest
+
+
+%post
+    yum -y update
+
+    yum install -y git make
+    yum install -y bzip2 bzip2-devel gcc ncurses-devel perl-App-cpanminus unzip xz-devel zlib-devel
+
+    cpanm Moo List::MoreUtils JSON Time::Piece
+
+    curl -fsSL 'https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.7.1/ncbi-blast-2.7.1+-x64-linux.tar.gz' | tar -xz -C /usr/local/bin
+    find /usr/local/bin/ncbi-blast*/bin -maxdepth 1 -executable -type f -exec ln -s {} /usr/local/bin \;
+
+    git clone https://github.com/tseemann/mlst.git /usr/local/bin/mlst-latest
+    ln -s /usr/local/bin/mlst-latest/bin/* /usr/local/bin
+
+%labels
+    Maintainer m-bull
+    Version mlst-latest 

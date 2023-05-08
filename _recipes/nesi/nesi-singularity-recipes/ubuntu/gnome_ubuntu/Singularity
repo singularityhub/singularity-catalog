@@ -1,0 +1,16 @@
+Bootstrap: library
+From: ubuntu:18.04
+
+%post
+	apt-get -y update
+	apt-get -y install dbus-x11
+	apt-get -y install libcanberra-gtk3-module
+	apt-get -y install nautilus
+	apt-get -y install gnome-session-bin
+	apt-get -y install ubuntu-session
+
+%environment
+	export LC_ALL=C
+
+%runscript
+	gnome-session --session=ubuntu

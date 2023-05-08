@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%environment
+    unset LC_ALL
+    LANG=C
+    export LANG
+
+%post
+    apt-get -y update
+    apt-get -y install build-essential wget curl
+    mkdir -p /usr/local/src
+    wget -P /usr/local/src -nc https://github.com/marbl/Krona/releases/download/v2.7/KronaTools-2.7.tar
+    tar -C /usr/local/src -xf /usr/local/src/KronaTools-2.7.tar
+    cd /usr/local/src/KronaTools-2.7
+    ./install.pl --prefix /usr/local
+
+%runscript
+    /usr/local/bin/ktImportText "$@"

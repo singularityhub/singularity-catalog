@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: ubuntu:18.10
+
+%help
+    Flye 2.5
+    https://github.com/fenderglass/Flye
+
+%labels
+    MAINTAINER "Tom Harrop"
+    VERSION "Flye 2.5"
+
+%post
+    # deps
+    apt-get clean
+    apt-get update
+    apt-get install -y \
+        build-essential \
+        language-pack-en \
+        python \
+        wget \
+        zlib1g-dev
+
+    # install flye
+    mkdir Flye
+    wget -O "Flye.tar.gz" \
+        --no-check-certificate \
+        https://github.com/fenderglass/Flye/archive/2.5.tar.gz
+    tar -zxf Flye.tar.gz \
+        -C Flye \
+        --strip-components 1
+
+    cd Flye || exit 1
+    python setup.py install
+    cd .. || exit 1
+    rm -r Flye.tar.gz Flye
+
+%runscript
+    exec /usr/local/bin/flye "$@"

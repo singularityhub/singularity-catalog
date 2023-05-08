@@ -1,0 +1,21 @@
+Bootstrap: docker
+
+From: ubuntu:latest
+
+%labels
+    Topic Programming
+    Rust
+
+%help
+    singularity run rust.simg -h
+
+%environment
+    PATH=$PATH:~/.cargo/bin
+
+%post
+    apt-get update --fix-missing && apt-get install -y curl
+    curl https://sh.rustup.rs -sSf | sh
+
+%runscript
+    exec "$@"
+

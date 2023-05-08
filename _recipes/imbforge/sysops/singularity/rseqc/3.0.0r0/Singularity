@@ -1,0 +1,106 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  RSeQC_Version 3.0.0
+
+%apprun bam2fq.py
+  exec bam2fq.py "${@}"
+  
+%apprun bam2wig.py
+  exec bam2wig.py "${@}"
+
+%apprun bam_stat.py
+  exec bam_stat.py "${@}"
+      
+%apprun clipping_profile.py
+  exec clipping_profile.py "${@}"  
+  
+%apprun deletion_profile.py
+  exec deletion_profile.py "${@}"
+  
+%apprun divide_bam.py
+  exec divide_bam.py "${@}"
+  
+%apprun FPKM_count.py
+  exec FPKM_count.py "${@}"
+
+%apprun geneBody_coverage.py
+  exec geneBody_coverage.py "${@}"
+      
+%apprun geneBody_coverage2.py
+  exec geneBody_coverage2.py "${@}"  
+  
+%apprun infer_experiment.py
+  exec infer_experiment.py "${@}"  
+  
+%apprun inner_distance.py
+  exec inner_distance.py "${@}"
+      
+%apprun insertion_profile.py
+  exec insertion_profile.py "${@}"  
+  
+%apprun junction_annotation.py
+  exec junction_annotation.py "${@}"
+
+%apprun junction_saturation.py
+  exec junction_saturation.py "${@}"  
+
+%apprun mismatch_profile.py
+  exec mismatch_profile.py "${@}"  
+
+%apprun normalize_bigwig.py
+  exec normalize_bigwig.py "${@}"  
+
+%apprun overlay_bigwig.py
+  exec overlay_bigwig.py "${@}"  
+
+%apprun read_distribution.py
+  exec read_distribution.py "${@}"  
+
+%apprun read_duplication.py
+  exec read_duplication.py "${@}"  
+
+%apprun read_GC.py
+  exec read_GC.py "${@}"  
+
+%apprun read_hexamer.py
+  exec read_hexamer.py "${@}"  
+
+%apprun read_NVC.py
+  exec read_NVC.py "${@}"  
+
+%apprun read_quality.py
+  exec read_quality.py "${@}"  
+
+%apprun RNA_fragment_size.py
+  exec RNA_fragment_size.py "${@}"    
+
+%apprun RPKM_saturation.py
+  exec RPKM_saturation.py "${@}"    
+  
+%apprun spilt_bam.py
+  exec spilt_bam.py "${@}"    
+  
+%apprun split_paired_bam.py
+  exec split_paired_bam.py "${@}"    
+  
+%apprun tin.py
+  exec tin.py "${@}"    
+  
+%runscript
+  exec echo "Available apps: bam2fq.py, bam2wig.py, bam_stat.py, clipping_profile.py, deletion_profile.py, divide_bam.py, FPKM_count.py, geneBody_coverage.py, geneBody_coverage2.py, infer_experiment.py, inner_distance.py, insertion_profile.py, junction_annotation.py, junction_saturation.py, mismatch_profile.py, normalize_bigwig.py, overlay_bigwig.py, read_distribution.py, read_duplication.py, read_GC.py, read_hexamer.py, read_NVC.py, read_quality.py, RNA_fragment_size.py, RPKM_saturation.py, spilt_bam.py, split_paired_bam.py, tin.py"
+
+%post
+  # Get dependencies
+  apk update
+  apk add python3 make gcc g++ python3-dev zlib-dev zlib bzip2-dev libbz2 xz-dev xz-libs curl-dev libcurl
+
+  # Install RSeQC
+  pip3 --no-cache-dir install RSeQC==3.0.0
+
+  # Clean up
+  apk del make gcc g++ python3-dev zlib-dev bzip2-dev xz-dev curl-dev
+  rm -rf /root/.cache
+  rm -rf /var/cache/apk/*

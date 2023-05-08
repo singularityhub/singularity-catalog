@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: continuumio/miniconda3
+
+# sudo singularity build sh_notebook Singularity
+
+%labels
+    MAINTAINER vsochat@stanford.edu
+
+%environment
+    DEBIAN_FRONTEND=noninteractive
+    LC_ALL=C.UTF-8
+    LANG=C.UTF-8
+
+%post
+    apt-get update
+    apt-get -y install apt-utils cmake wget unzip libffi-dev libssl-dev \
+                       vim nginx nginx-extras uuid-runtime
+
+    DEBIAN_FRONTEND=noninteractive
+    LC_ALL=C.UTF-8
+    LANG=C.UTF-8
+
+    PATH=/opt/conda/bin:$PATH
+    /opt/conda/bin/pip install --upgrade pip && \
+    /opt/conda/bin/pip install jupyter
+
+    # Clean up
+    apt-get autoremove -y && \
+    apt-get clean
+
+%environment
+    export DEBIAN_FRONTEND=noninteractive
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    export PATH=/opt/conda/bin:$PATH
+
+%runscript
+    SH_LOGIN_JUPYTER=$(tr -cd 0-9 </dev/urandom | head -c 4)
+    exec /opt/conda/bin/jupyter notebook --port $SH_LOGIN_JUPYTER --no-browser "$@"

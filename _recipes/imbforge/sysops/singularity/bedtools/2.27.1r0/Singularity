@@ -1,0 +1,30 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  bedtools_Version 2.27.1
+
+%apprun bedtools
+  exec bedtools "${@}"
+  
+%runscript
+  exec bedtools "${@}"
+
+%post
+  # Get dependencies
+  apk update
+  apk add make gcc g++ python libstdc++ libgcc zlib-dev zlib
+  
+  # Install bedtools
+  cd /tmp
+  wget https://github.com/arq5x/bedtools2/releases/download/v2.27.1/bedtools-2.27.1.tar.gz
+  tar zxf bedtools-2.27.1.tar.gz
+  cd bedtools2
+  sed -i 's$/bin/bash$/bin/sh$g' Makefile
+  make -j$(nproc) install
+  
+  # Clean up
+  apk del make gcc g++ python zlib-dev
+  rm -rf /var/cache/apk/*
+  rm -rf /tmp/*

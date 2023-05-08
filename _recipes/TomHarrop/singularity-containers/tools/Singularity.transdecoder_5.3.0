@@ -1,0 +1,43 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+    TransDecoder 5.3.0
+    https://github.com/TransDecoder/TransDecoder/wiki
+
+%labels
+
+    MAINTAINER "Tom Harrop"
+    VERSION "TransDecoder 5.3.0"
+
+%post
+
+    # install dependencies
+    apt-get update
+    apt-get install -y \
+        hmmer \
+        language-pack-en \
+        libany-uri-escape-perl \
+        make \
+        ncbi-blast+ \
+        perl \
+        wget
+
+    # install TD
+    wget -O "transdecoder.tar.gz" \
+        --no-check-certificate \
+        https://github.com/TransDecoder/TransDecoder/archive/TransDecoder-v5.3.0.tar.gz
+    mkdir transdecoder
+    tar -zxf transdecoder.tar.gz \
+        -C transdecoder \
+        --strip-components 1
+    rm -f transdecoder.tar.gz
+
+%environment
+
+    export PATH="${PATH}:/transdecoder"
+
+%runscript
+
+    exec /transdecoder/TransDecoder.LongOrfs "$@"

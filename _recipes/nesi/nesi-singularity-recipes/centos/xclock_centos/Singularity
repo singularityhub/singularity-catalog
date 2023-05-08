@@ -1,0 +1,12 @@
+Bootstrap: library
+From: centos:7.6
+
+%post
+	yum -y update
+	yum -y install xorg-x11-apps
+
+%environment
+	export LC_ALL=C
+
+%runscript
+	xclock

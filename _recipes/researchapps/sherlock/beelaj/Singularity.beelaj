@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: ubuntu:14.04
+
+%runscript
+
+   export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+   exec /usr/bin/gcc "$@"
+
+
+%post
+
+   mkdir -p /scratch
+   mkdir -p /share/PI
+   mkdir -p /scratch-local
+
+   apt-get update && apt-get install -y build-essential gcc cmake git vim
+   apt-get install -y libstdc++6 libtiff5 libtiff5-dev
+
+   # Make sure they are on the path when we run the image
+   echo "export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH" >> /.singularity/env/03-libs.sh
+   echo "export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH" >> /environment
+   echo "export MYLIBS=/software/libs" >> /environment
+   echo "export MYLIBS=/software/libs" >> /.singularity/env/03-libs.sh

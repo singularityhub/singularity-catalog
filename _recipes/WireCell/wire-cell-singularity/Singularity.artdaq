@@ -1,0 +1,32 @@
+## Scientific Linux 7 for artdaq
+
+BootStrap: yum
+OSVersion: 7
+#MirrorURL: http://ftp.scientificlinux.org/linux/scientific/%{OSVERSION}x/$basearch/os/
+MirrorURL: https://mirror.bnl.gov/scientific/%{OSVERSION}x/$basearch/os/
+
+Include: yum
+
+%post
+yum -y install bash curl wget gcc gcc-c++
+wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+rpm -ivh epel-release-latest-7.noarch.rpm
+yum repolist
+yum -y install tar hostname redhat-lsb-core lbzip2 zlib-devel which git make cmake bison pkgconfig python emacs jq vim time openssl-devel python-pip python-hashlib ipython numpy python-matplotlib readline glibc-devel bzip2 python-devel jq libuuid libuuid-devel ccache distcc valgrind graphviz 
+yum -y install http://ftp.scientificlinux.org/linux/scientific/7x/contexts/fermilab/x86_64/yum-conf-context-fermilab-1.0-6.el7.noarch.rpm
+sleep 2
+yum -y upgrade
+yum -y install fermilab-util_kx509 voms voms-clients-cpp globus-gss-assist globus-xio-gsi-driver globus-gsi-proxy-core globus-ftp-control uberftp yum-plugin-priorities myproxy-voms
+rpm -Uvh https://repo.opensciencegrid.org/osg/3.4/osg-3.4-el7-release-latest.rpm
+yum -y install osg-ca-certs vo-client
+yum -y install subversion asciidoc bzip2-devel fontconfig-devel freetype-devel gdbm-devel glew-devel ncurses-devel openldap-devel readline-devel autoconf automake libtool swig texinfo tcl-devel tk-devel xz-devel xmlto libcurl-devel libjpeg-turbo-devel libpng-devel libX11-devel libXext-devel libXft-devel libXi-devel libXrender-devel libXt-devel libXpm-devel libXmu-devel mesa-libGL-devel mesa-libGLU-devel perl-DBD-SQLite perl-ExtUtils-MakeMaker libgcc.i686 glibc-devel.i686 libstdc++.i686 libffi-devel
+yum -y install libxml2-devel unzip perl-ExtUtils-Embed
+yum -y install ruby ruby-irb java-11-openjdk xterm tcsh
+yum clean all
+pip install --upgrade pip
+pip install virtualenv
+
+
+for n in ups src bin lib include opt share ; do mkdir -p /usr/local/$n ; done
+
+

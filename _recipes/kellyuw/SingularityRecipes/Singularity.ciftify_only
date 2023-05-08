@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: jupyter/scipy-notebook
+%post
+
+su -  root # USER root
+
+# Get connectome-workbench
+apt-get update && \
+apt-get install -y curl gnupg gnupg1 gnupg2 python3-pip
+
+# Set up Bioconda
+conda config --add channels bioconda && \
+conda config --add channels conda-forge && \
+conda install -c bioconda/label/cf201901 connectome-workbench
+
+# Get ciftify
+apt-get update && \
+apt-get install -y git-annex && \
+pip install ciftify datalad
+
+%runscript
+exec /bin/bash jupyter lab "$@"
+%startscript
+exec /bin/bash jupyter lab "$@"

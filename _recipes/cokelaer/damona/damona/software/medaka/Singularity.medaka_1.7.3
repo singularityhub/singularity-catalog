@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
+
+
+%post
+  # Version recommended by nanoporetech
+  SAMTOOLS_VERSION=1.14
+  MINIMAP2_VERSION=2.17
+  MEDAKA_VERSION=1.7.3
+
+  # Install system package needed by medaka
+  apt update \
+  && DEBIAN_FRONTEND=noninteractive apt install -yq --no-install-recommends tzdata \
+  && apt install -yq --no-install-recommends \
+    bzip2 g++ gcc zlib1g-dev libbz2-dev liblzma-dev libffi-dev libncurses5-dev libncursesw5-dev \
+    ca-certificates libcurl4-gnutls-dev libssl-dev curl make cmake python3-all-dev python3-pip python3-setuptools \
+  && update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \
+  && apt-clean && rm -rf /var/lib/apt/lists/*
+
+    # install samtools
+  curl -L https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 | tar -jxf - \
+    && cd samtools-${SAMTOOLS_VERSION} \
+    && ./configure && make all all-htslib && make install
+
+  # install minimap2
+  curl -L https://github.com/lh3/minimap2/releases/download/v${MINIMAP2_VERSION}/minimap2-${MINIMAP2_VERSION}_x64-linux.tar.bz2 | tar -jxf - minimap2-${MINIMAP2_VERSION}_x64-linux/minimap2 \
+    && mv ./minimap2-${MINIMAP2_VERSION}_x64-linux/minimap2 /usr/local/bin
+
+  # install bcftools
+  curl -L https://github.com/samtools/bcftools/releases/download/${SAMTOOLS_VERSION}/bcftools-${SAMTOOLS_VERSION}.tar.bz2 | tar -jxf - \
+    && cd bcftools-${SAMTOOLS_VERSION} && ./configure --with-htslib=/samtools-${SAMTOOLS_VERSION}/htslib-${SAMTOOLS_VERSION} && make && make install && cd -
+
+  # install medaka
+  pip install --upgrade pip
+  pip install medaka==${MEDAKA_VERSION}
+
+  rm -rf samtools-${SAMTOOLS_VERSION}
+  rm -rf minimap2-${MINIMAP2_VERSION}_x64-linux
+  apt purge -yq make cmake curl g++ gcc

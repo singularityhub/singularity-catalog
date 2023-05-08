@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: rocker/r-base
+
+%runscript
+
+   exec /usr/bin/R "$@"
+
+
+%post
+
+   mkdir -p /scratch
+   mkdir -p /share/PI
+   mkdir -p /scratch-local
+
+   apt-get update && apt-get install -y build-essential git vim wget \
+                                        libcurl4-gnutls-dev \
+                                        libssl-dev \
+                                        libxml2-dev \ 
+                                        libcairo2-dev 
+
+   wget https://github.com/jgm/pandoc/releases/download/1.19.2/pandoc-1.19.2-1-amd64.deb
+   dpkg -i pandoc-1.19.2-1-amd64.deb
+
+   echo 'install.packages(c("ggplot2", "plyr", "reshape2"), repos="http://cran.us.r-project.org", dependencies=TRUE)' > /tmp/packages.R \
+    && /usr/bin/Rscript /tmp/packages.R

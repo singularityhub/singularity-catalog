@@ -1,0 +1,64 @@
+Bootstrap:docker
+From:nvidia/cuda:11.0-cudnn8-devel-centos8
+
+%environment
+export KERAS_BACKEND=tensorflow
+export PATH=/usr/local/cuda/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64
+
+%post
+# General Python packages
+CUDA_VERSION=11-0
+NVML_VERSION=7
+PYTHON3_PACKAGES="setuptools>=41.0.0 tensorflow-gpu numpy<1.19.0,>=1.16.0 keras pillow scikit-learn pandas pandas_ml matplotlib>=3.0.0 mxnet mlxtend tensorboard jupyter jupyterlab"
+yum install -y epel-release dnf-plugins-core
+curl https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-8.repo -o /etc/yum.repos.d/vbatts-bazel-epel-8.repo
+yum clean all && yum makecache
+dnf config-manager -y --set-enabled PowerTools
+yum install -y @"Development Tools"
+yum install -y libgomp cmake3 vim
+yum install -y http://developer.download.nvidia.com/compute/machine-learning/repos/rhel8/x86_64/nvidia-machine-learning-repo-rhel8-1.0.0-1.x86_64.rpm 
+# misc cuda stuff
+dnf install -y libcublas-devel-$CUDA_VERSION libcublas-$CUDA_VERSION 
+yum install -y libcufft-$CUDA_VERSION libcufft-devel-$CUDA_VERSION libcurand-$CUDA_VERSION libcurand-devel-$CUDA_VERSION libcusolver-$CUDA_VERSION libcusolver-devel-$CUDA_VERSION libcusparse-$CUDA_VERSION libcusparse-devel-$CUDA_VERSION
+yum install -y libnvinfer$NVML_VERSION libnvinfer-plugin$NVML_VERSION libnvparsers$NVML_VERSION libnvonnxparsers$NVML_VERSION libnvinfer-plugin-devel libnvinfer-devel python3-libnvinfer python3-libnvinfer-devel 
+yum install -y git gcc gcc-c++ sudo curl openblas lapack python38 wget python38-devel openssl-devel curl-devel libxml2 libxml2-devel bazel 
+# Install all the python bits
+wget https://bootstrap.pypa.io/get-pip.py
+python3 get-pip.py
+python3 -m pip install $PYTHON3_PACKAGES
+# install R
+## Turn off nodoc as that ruins R apparently
+# sed -i 's/tsflags=nodocs//g' /etc/yum.conf
+# or use --setopt=tsflags= to do it per invocation
+dnf config-manager --set-enabled PowerTools
+yum install -y --setopt=tsflags= R-core
+yum install -y R-core-devel R-devel R-Rcpp R-Rcpp-devel
+# R packages
+R --no-save <<EOL
+install.packages("pkgbuild", repos="https://mirror.las.iastate.edu/CRAN/")
+install.packages("devtools", repos="https://mirror.las.iastate.edu/CRAN/")
+#options(devtools.install.args = c("--no-multiarch", "--no-test-load", "--no-html","--nodoc"))
+#install.packages("tidyselect", repos="https://mirror.las.iastate.edu/CRAN/")
+library(devtools)
+devtools::install_github("rstudio/tensorflow")
+library(tensorflow)
+try(devtools::install_github("rstudio/keras"))
+library(keras)
+EOL
+# Pytorch stuff
+python3 -m pip install torch torchvision
+#hacky library BS to support cuda 11 while providing "10.1" libs
+ln -s /usr/local/cuda/lib64/libcudart.so.11.0 /usr/local/cuda/lib64/libcudart.so.10.1
+ln -s /usr/local/cuda/lib64/libcublas.so.11 /usr/local/cuda/lib64/libcublas.so.10
+ln -s /usr/local/cuda/lib64/libcusparse.so.11 /usr/local/cuda/lib64/libcusparse.so.10
+ln -s /usr/lib64/libcudnn.so.8 /usr/lib64/libcudnn.so.7
+ln -s /usr/lib64/libcudnn_adv_infer.so.8 /usr/lib64/libcudnn_adv_infer.so.7
+ln -s /usr/lib64/libcudnn_adv_train.so.8 /usr/lib64/libcudnn_adv_train.so.7
+ln -s /usr/lib64/libcudnn_cnn_infer.so.8 /usr/lib64/libcudnn_cnn_infer.so.7
+ln -s /usr/lib64/libcudnn_cnn_train.so.8 /usr/lib64/libcudnn_cnn_train.so.7
+ln -s /usr/lib64/libcudnn_ops_infer.so.8 /usr/lib64/libcudnn_ops_infer.so.7
+ln -s /usr/lib64/libcudnn_ops_train.so.8 /usr/lib64/libcudnn_ops_train.so.7
+
+%runscript
+exec $@

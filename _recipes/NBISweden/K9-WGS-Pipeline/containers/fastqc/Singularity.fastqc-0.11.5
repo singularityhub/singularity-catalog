@@ -1,0 +1,24 @@
+bootstrap: docker
+from: openjdk:8
+
+# This is copied from https://github.com/SciLifeLab/CAW
+%labels
+AUTHOR Johan Viklund
+MAINTAINER johan.viklund@gmail.com
+
+%environment
+FASTQC_VERSION=0.11.5
+
+# Install libraries
+%post
+apt-get update
+apt-get install -y --no-install-recommends wget
+rm -rf /var/lib/apt/lists/*
+
+# Install FastQC
+export FASTQC_VERSION=0.11.5
+wget --quiet -O fastqc_v${FASTQC_VERSION}.zip http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQC_VERSION}.zip
+unzip fastqc_v${FASTQC_VERSION}.zip -d /opt/
+chmod 755 /opt/FastQC/fastqc
+ln -s /opt/FastQC/fastqc /usr/local/bin/fastqc
+rm fastqc_v${FASTQC_VERSION}.zip

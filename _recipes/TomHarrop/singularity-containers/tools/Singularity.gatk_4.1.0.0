@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: broadinstitute/gatk:4.1.0.0
+
+%help
+    GATK 4.1.0.0
+
+%labels
+    VERSION "GATK 4.1.0.0"
+
+%runscript
+    exec /gatk/gatk "$@"
+
+%environment
+    export PATH="${PATH}:/gatk:/gatk/scripts"

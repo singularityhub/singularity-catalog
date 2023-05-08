@@ -1,0 +1,37 @@
+Bootstrap: docker
+From: ubuntu:14.04
+
+%runscript
+
+    exec /usr/local/anaconda2/bin/python "$@"
+
+
+% post
+
+    sudo apt-get update && apt-get install -y \
+    build-essential \
+    libz-dev \
+    wget \
+    git \
+    vim
+
+    mkdir /data
+
+    # Install SuperBuild
+    wget https://github.com/orfeotoolbox/OTB && cd OTB && make && sudo make install
+    curl http://globalmonitoring.sdstate.edu/projects/weldglobal/hdftiletogeo.php
+    ls
+
+    # Install anaconda 3
+    wget https://repo.continuum.io/archive/Anaconda2-4.3.0-Linux-x86_64.sh
+    bash Anaconda2-4.3.0-Linux-x86_64.sh -b -p /usr/local/anaconda2
+    export PATH=/usr/local/anaconda2/bin:$PATH
+    /usr/local/anaconda2/bin/conda install -y scipy pandas numpy cython
+
+    # Make some default locations for Stanford clusters
+    mkdir -p /share/PI
+    mkdir -p /scratch
+    mkdir -p /local-scratch
+
+    echo "" >> /environment
+    echo "export PATH=/usr/local/anaconda2/bin:$PATH" >> /environment

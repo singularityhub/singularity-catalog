@@ -88,6 +88,26 @@ From: ubuntu:20.04
 %environment
         export PATH=/opt/interproscan/:/opt/conda/bin:$PATH
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/:/opt/conda/lib
+%test
+
+        export PATH=/opt/interproscan/:/opt/conda/bin:$PATH
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/:/opt/conda/lib
+
+
+        # Check dependencies
+
+        /opt/interproscan/bin/blast/ncbi-blast-2.10.1+/rpsblast -version
+        /opt/interproscan/bin/blast/ncbi-blast-2.10.1+/rpsbproc -version
+        /opt/interproscan/bin/hmmer/hmmer2/2.3.2/hmmsearch -h
+        /opt/interproscan/bin/hmmer/hmmer3/3.1b1/hmmpress -h
+        /opt/interproscan/bin/hmmer/hmmer3/3.3/hmmscan -h
+        /opt/interproscan/bin/mobidb/2.0/mobidb_lite.py -h
+        /opt/interproscan/bin/ncoils/2.2.1/ncoils -h
+        /opt/interproscan/bin/prints/fingerPRINTScan 2>&1 | grep 3.596
+        /opt/interproscan/bin/prosite/pfscan -h 2>&1 | grep "pfscan 2.3 revision 4"
+        /opt/interproscan/bin/superfamily/1.75/hmmscan.pl 2>&1 | grep "<hmm database>"
+
+
 %labels
     Maintainer SeBiMER, IFREMER
     Version 2.0

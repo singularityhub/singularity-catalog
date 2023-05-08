@@ -1,0 +1,32 @@
+Bootstrap: localimage
+From: ../../simgs/base.simg
+
+%environment
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
+    export LD_LIBRARY_PATH
+    CUDA_HOME=/usr/local/cuda
+    export CUDA_HOME
+    LC_ALL=C
+    export LC_ALL
+
+%post
+    pip3 install pip==9.0.1
+    apt-get install curl
+    curl http://neuro.debian.net/lists/xenial.de-m.full | tee /etc/apt/sources.list.d/neurodebian.sources.list
+    apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
+    apt-get update
+    apt-get -y install ants
+    pip3 install --upgrade setuptools
+    pip3 install awscli \
+                 luigi \
+                 nibabel \
+                 numpy==1.13.3\
+                 scikit-learn \
+                 scikit-image \
+                 nilearn \
+                 jinja2 \
+                 joblib
+
+
+%runscript
+    exec /usr/bin/python3 -u processing_fmri.py

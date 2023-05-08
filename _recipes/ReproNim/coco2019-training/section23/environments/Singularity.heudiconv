@@ -1,0 +1,32 @@
+Bootstrap:docker
+From:neurodebian:latest
+
+%post
+    echo "Configuring the environment"
+    apt-get -y update
+
+    # setup the container sources themselves
+    apt-get -y install eatmydata
+    # proper locale setup for UTF8
+    eatmydata apt-get -y install locales
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen
+
+    # bare essentials to pull everything else in
+    eatmydata apt-get -y install --no-install-recommends python3-pip python3-setuptools python3-wheel wget
+
+    # non-python and a few other bits to avoid having to build everything
+    eatmydata apt-get -y install --no-install-recommends dcm2niix python3-numpy python3-six python3-traits python3-scipy pigz
+
+    # little dance to avoid having to install the entire git stack
+    # fancified dcmstack version needed
+    wget https://github.com/mvdoc/dcmstack/archive/bf/importsys.zip
+    pip3 install --system importsys.zip
+    rm -f importsys.zip
+
+    wget https://github.com/nipy/heudiconv/archive/master.zip
+    pip3 install --system master.zip
+    rm -f master.zip
+
+    # clean up
+    apt-get clean

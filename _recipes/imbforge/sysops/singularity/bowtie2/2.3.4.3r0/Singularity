@@ -1,0 +1,37 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  Bowtie2_Version 3.4
+
+%apprun bowtie2
+  exec bowtie2 "${@}"
+  
+%apprun bowtie2-build
+  exec bowtie2-build "${@}"
+
+%apprun bowtie2-inspect  
+  exec bowtie2-inspect "${@}"
+  
+%runscript
+  exec bowtie2 "${@}"
+
+%post
+  # Get dependencies
+  echo "@testing http://mirror.leaseweb.com/alpine/edge/testing" >> /etc/apk/repositories
+  apk update
+  apk add make g++ zlib-dev zlib perl python libtbb@testing libtbb-dev@testing
+
+  # Install Bowtie2
+  cd /tmp
+  wget https://github.com/BenLangmead/bowtie2/archive/v2.3.4.3.tar.gz
+  tar zxf v2.3.4.3.tar.gz
+  cd bowtie2-*
+  make -j$(nproc) 
+  make install
+
+  # Clean up
+  apk del make g++ libtbb-dev zlib-dev
+  rm -rf /var/cache/apk/*
+  rm -rf /tmp/*

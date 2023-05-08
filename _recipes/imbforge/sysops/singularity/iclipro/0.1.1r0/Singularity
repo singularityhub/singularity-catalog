@@ -1,0 +1,30 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  iCLIPro_Version 0.1.1
+
+%apprun iCLIPro
+  exec iCLIPro "${@}"
+
+%runscript
+  exec iCLIPro "${@}"
+
+%post
+  # Get dependencies
+  apk update
+  apk add python2 python2-dev py2-pip make gcc g++ zlib-dev zlib bzip2-dev libbz2 xz-dev xz-libs curl-dev libcurl freetype freetype-dev libpng libpng-dev libstdc++
+  pip --no-cache-dir install pysam matplotlib
+  
+  # Install iCLIPro
+  cd /tmp
+  wget -O - http://www.biolab.si/iCLIPro/dist/iCLIPro-0.1.1.tar.gz | tar zxf -
+  cd iCLIPro-*
+  python setup.py install
+
+  # Clean up
+  apk del python2-dev py2-pip make gcc g++ zlib-dev bzip2-dev xz-dev curl-dev freetype-dev libpng-dev
+  rm -rf /root/.cache
+  rm -rf /var/cache/apk/*
+  rm -rf /tmp/*

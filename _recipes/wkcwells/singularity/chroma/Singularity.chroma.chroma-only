@@ -1,0 +1,52 @@
+Bootstrap: docker
+From: kwells/chroma
+
+%labels
+    AUTHOR ako.jamil@yale.edu
+    AUTHOR kevin.wells@stanford.edu
+
+%files
+    /home/ubuntu/Development/activate-kw /app/chroma_env/bin
+
+%environment
+    export PATH=/usr/local/cuda/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+    export CUDA_INC_DIR=/usr/local/cuda/include
+
+%post
+    echo "Shell is: "$SHELL
+
+    export APP_DIR=/app/
+    alias source="."    # This is because sh does not have source
+    source $APP_DIR/chroma_env/bin/activate-kw
+
+    ## Install KW custom chroma g4py
+    ## May need this??
+    ## -DCMAKE_PREFIX_PATH=/Users/kwells/Development/physics/chroma_env
+    cd $VIRTUAL_ENV/src/
+    git clone -b g4.10.05-rebase --single-branch https://github.com/wkcwells/g4py.git
+    mkdir g4py-build
+    cd g4py-build
+    cmake -DGEANT4_INSTALL=$VIRTUAL_ENV -DCMAKE_INSTALL_PREFIX=$VIRTUAL_ENV/lib/python/site-packages ../g4py
+    make -j8 install
+
+    pip install mercurial
+
+    #Install Chroma
+    pip install -U numpy==1.8.2
+    pip install -U matplotlib==2.2.3
+    pip install h5py
+    pip download pyublas
+    pip install pyzmq
+    tar xvf PyUblas-2017.1.tar.gz
+    cd PyUblas-2017.1/
+    echo "def use_setuptools(): pass" > distribute_setup.py
+    python setup.py install
+    ln -s $VIRTUAL_ENV/lib $VIRTUAL_ENV/local/lib
+
+    #Install KW custom chroma
+    #pip install -e hg+http://bitbucket.org/kwells/chroma#egg=Chroma
+    hg clone https://kcwells@bitbucket.org/kcwells/chroma
+    cd chroma/
+    hg update wip-KW
+    python setup.py develop

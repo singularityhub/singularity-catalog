@@ -1,0 +1,25 @@
+Bootstrap: docker
+
+From: debian:latest
+
+%help
+    # Run as below for beagle help
+    singularity run beagle.simg 
+
+%labels
+    Topic Bioinformatics
+    Input BCL
+    Output FASTQ
+    beagle 5.0
+
+%post
+    apt-get update --fix-missing && apt-get install -y wget openjdk-8-jre && rm -rf /var/lib/apt/lists/*
+    cd /opt
+    wget https://faculty.washington.edu/browning/beagle/beagle.28Sep18.793.jar
+    apt-get remove -y wget
+    apt autoremove -y
+    chmod 777 /opt
+
+%runscript
+    exec java -jar /opt/beagle.28Sep18.793.jar "$@"
+

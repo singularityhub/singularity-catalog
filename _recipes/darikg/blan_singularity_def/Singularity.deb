@@ -1,0 +1,72 @@
+BootStrap: docker
+From: debian:latest
+
+# lastfail
+#dpkg-query: no packages found matching libglew-dev
+# ./blender/build_files/build_environment/install_deps.sh: line 1100: 10#Provides: value too great for base (error token is "10#Provides")
+##pkg-query: package 'libtheora-dev' is not installed
+#dpkg-query: package 'libvorbis-dev' is not installed
+#dpkg-query: package 'libogg-dev' is not installed
+#dpkg-query: package 'libx264-dev' is not installed
+#dpkg-query: package 'libopenjp2-7-dev' is not installed
+
+
+%post
+    apt -y update
+    apt -y install --no-install-recommends \
+		xz-utils wget git openmpi-bin mpi mpich build-essential cmake autoconf automake libtool yasm nasm tcl gawk libjpeg-dev \
+		libtheora-dev libvorbis-dev libogg-dev libx264-dev libopenjp2-7-dev libpng-dev libpng-def libtiff-dev
+	apt clean
+	
+	echo "Installing conda"
+	wget -q --no-check-certificate https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+	bash Miniconda3-latest-Linux-x86_64.sh -b -p /conda
+	rm Miniconda3-latest-Linux-x86_64.sh
+	chmod -R 777 /conda
+				
+	echo "Installing python libraries"
+	/conda/bin/conda create -y -n blan1 python=3.7
+	. /conda/etc/profile.d/conda.sh
+	conda init
+	conda activate blan1
+	conda install -y python=3.7
+	pip install --no-cache-dir tensorflow==2.2.0rc0 tensorflow_datasets pytest tables
+	conda install -y ipython pandas toolz matplotlib imageio click pyyaml bokeh mpi4py
+	# conda clean --all -f -y
+	
+	echo ". /conda/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
+	echo "conda activate blan1" >> $SINGULARITY_ENVIRONMENT
+
+	echo "Installing Blender"    
+	apt -y update
+    apt -y install --no-install-recommends git
+	
+	# Blender git host uses self signed certificates or something i dont understand thi
+	export TERM=xterm
+	git config --global http.sslVerify false
+	mkdir /blender-git
+	cd /blender-git
+	git clone https://git.blender.org/blender.git
+	cd blender
+	git submodule update --init --recursive
+	git submodule foreach git checkout master
+	git submodule foreach git pull --rebase origin master
+
+	cd /blender-git
+	./blender/build_files/build_environment/install_deps.sh --no-confirm --no-sudo --skip-python --skip-numpy
+
+	cd /blender-git/blender
+	export PYTHON_SITE_PACKAGES=/conda/envs/blan1/lib/python3.7/site-packages
+	
+	mkdir /bpy
+	#export PYTHON_ROOT_DIR=/bpy
+	make bpy
+	chmod -R 777 /blender-git
+
+
+%environment
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+	
+%labels
+    Author DarikGamble

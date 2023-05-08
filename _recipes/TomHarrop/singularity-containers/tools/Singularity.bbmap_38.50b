@@ -1,0 +1,25 @@
+Bootstrap: shub
+From: TomHarrop/singularity-containers:samtools_1.9
+
+%help
+    Container for BBMap 38.50b
+    https://jgi.doe.gov/data-and-tools/bbtools/
+
+%labels
+    MAINTAINER "Tom Harrop"
+    VERSION "BBMap 38.50b"
+
+%post
+    apk add --update \
+        gawk \
+        openjdk8
+
+    wget -O "bbmap.tar.gz" \
+        "https://sourceforge.net/projects/bbmap/files/BBMap_38.50b.tar.gz"
+    mkdir bbmap-install
+    tar -zxf bbmap.tar.gz \
+        -C bbmap-install \
+        --strip-components 1
+    cp -r bbmap-install/resources/* /
+    cp -r bbmap-install/* /usr/local/bin/
+    rm -rf bbmap.tar.gz bbmap-install

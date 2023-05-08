@@ -1,0 +1,33 @@
+Bootstrap: shub
+From: TomHarrop/singularity-containers:kraken_2.0.8beta
+
+%help
+
+    bracken 2.2
+    https://github.com/jenniferlu717/Bracken
+
+%labels
+
+    MAINTAINER "Tom Harrop"
+    VERSION "bracken 2.2"
+
+%post
+    # install bracken
+    wget -O bracken.tar.gz \
+        --no-check-certificate \
+        https://github.com/jenniferlu717/Bracken/archive/v2.2.tar.gz
+    mkdir bracken
+    tar -zxf bracken.tar.gz \
+        -C bracken \
+        --strip-components 1
+    cd bracken/src || exit 1
+    make
+    cd ../.. || exit 1
+    rm bracken.tar.gz
+
+%environment
+    export PATH="${PATH}:/bracken:/bracken/src"
+
+%runscript
+
+    exec /bracken/bracken "$@"

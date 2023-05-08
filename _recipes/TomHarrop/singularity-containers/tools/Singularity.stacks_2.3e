@@ -1,0 +1,46 @@
+Bootstrap: docker
+From: ubuntu:19.04
+
+%help
+
+    Container for stacks 2.3e
+    http://catchenlab.life.illinois.edu/stacks
+
+%labels
+
+    MAINTAINER "Tom Harrop"
+    VERSION "stacks 2.3e"
+
+%post
+    apt update
+    apt install -y \
+        build-essential \
+        language-pack-en \
+        python3 \
+        samtools \
+        wget \
+        zlib1g-dev 
+
+    # set up python
+    update-alternatives \
+        --install /usr/bin/python \
+        python \
+        /usr/bin/python3 \
+        1
+
+    # install stacks
+    wget -O "stacks.tar.gz" \
+        http://catchenlab.life.illinois.edu/stacks/source/stacks-2.3e.tar.gz
+    mkdir stacks-install
+    tar -zxf stacks.tar.gz \
+        -C stacks-install \
+        --strip-components 1
+    cd stacks-install || exit 1
+    ./configure \
+    && make \
+    && make install
+    cd .. || exit 1
+    rm -rf stacks-install stacks.tar.gz
+
+%environment
+    export LC_COLLATE=C

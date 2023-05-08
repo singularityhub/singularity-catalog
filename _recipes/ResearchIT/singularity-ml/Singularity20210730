@@ -1,0 +1,198 @@
+Bootstrap:docker
+From:nvcr.io/nvidia/cuda:11.0.3-cudnn8-devel-centos8
+
+%environment
+export KERAS_BACKEND=tensorflow
+export CUDADIR=/usr/local/cuda-11.0
+export PATH=/usr/local/cuda/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64
+export MAGMA_HOME=/opt/magma
+#export CPATH=/opt/python38/include
+
+%files
+nv-tensorrt-repo-rhel7-cuda11.0-trt7.2.3.4-ga-20210226-1-1.x86_64.rpm
+
+%post
+CUDA_VERSION=11-0
+CUDADIR=/usr/local/cuda
+TENSORRT_VERSION=7
+TENSOR_MINOR=2.3
+# Python package list
+#old numpy restrictions <1.19.0,>=1.16.0
+PYTORCH_NEEDS="cffi typing_extensions future six requests dataclasses pillow-simd pyyaml"
+PYTHON3_PACKAGES="setuptools>=41.0.0 keras pillow scikit-learn pandas pandas_ml matplotlib>=3.0.0 mxnet mlxtend tensorboard jupyter jupyterlab numba librosa soundfile cupy-cuda110"
+yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm dnf-plugins-core yum-utils
+curl https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-8.repo -o /etc/yum.repos.d/vbatts-bazel-epel-8.repo
+yum clean all && yum makecache
+yum install -y gcc gcc-c++ gcc-gfortran autoconf automake binutils gdb glibc-devel libtool make pkgconf pkgconf-m4 pkgconf-pkg-config cmake
+yum install -y dnf-plugins-core
+dnf config-manager --set-enabled powertools
+yum install -y libgomp vim git libsndfile libsndfile-devel libvorbis libvorbis-devel flac-libs flac-devel libmad libmad-devel lame-libs lame-devel opus opus-devel sox sox-devel opencv* openblas openblas-devel libjpeg-turbo-devel libpng-devel libpng libjpeg-turbo ninja-build
+yum install -y http://developer.download.nvidia.com/compute/machine-learning/repos/rhel8/x86_64/nvidia-machine-learning-repo-rhel8-1.0.0-1.x86_64.rpm 
+# misc cuda stuff
+yum install -y libcublas-devel-$CUDA_VERSION libcublas-$CUDA_VERSION libcufft-$CUDA_VERSION libcufft-devel-$CUDA_VERSION libcurand-$CUDA_VERSION libcurand-devel-$CUDA_VERSION libcusolver-$CUDA_VERSION libcusolver-devel-$CUDA_VERSION libcusparse-$CUDA_VERSION libcusparse-devel-$CUDA_VERSION 
+yum install -y nv-tensorrt-repo-rhel7-cuda11.0-trt7.2.3.4-ga-20210226-1-1.x86_64.rpm
+yum search libnvinfer
+yum install -y libnvinfer$TENSORRT_VERSION libnvinfer-plugin$TENSORRT_VERSION libnvparsers$TENSORRT_VERSION libnvonnxparsers$TENSORRT_VERSION libnvinfer-plugin-devel-${TENSORRT_VERSION}.${TENSOR_MINOR}-1.cuda${CUDA_VERSION/-/.} libnvinfer-devel-${TENSORRT_VERSION}.${TENSOR_MINOR}-1.cuda${CUDA_VERSION/-/.} python3-libnvinfer-${TENSORRT_VERSION}.${TENSOR_MINOR}-1.cuda${CUDA_VERSION/-/.} python3-libnvinfer-devel-${TENSORRT_VERSION}.${TENSOR_MINOR}-1.cuda${CUDA_VERSION/-/.}
+yum install -y git sudo curl openblas lapack python3 python3-devel wget openssl-devel curl-devel libxml2 libxml2-devel libffi-devel bzip2-devel tk tk-devel tcl tcl-devel zlib-devel sqlite-devel xz-devel gdbm-devel expat-devel libuuid-devel readline-devel
+# Let's just bring our own python to the party
+#cd /
+#mkdir /python-build
+#cd python-build
+#curl -LO https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz
+#tar -xzf Python-3.9.6.tgz
+#cd Python-3.9.6
+#CFLAGS="-march=haswell -O3 -fPIC" LDFLAGS='-Wl,-rpath=/opt/python38/lib' CXXFLAGS=$CFLAGS ./configure --enable-optimizations --with-threads --with-pydebug --enable-shared --prefix=/opt/python38
+#make -j16
+#make install
+#alternatives --install /usr/bin/python3 python3 /opt/python38/bin/python3 1024
+#alternatives --set python3 /opt/python38/bin/python3
+alternatives --set python /usr/bin/python3
+
+mkdir /build
+cd /build
+
+# BEGIN MAGMA
+export PATH=$PATH:${CUDADIR}/bin
+mkdir magma
+cd magma
+curl -L http://icl.utk.edu/projectsfiles/magma/downloads/magma-2.6.1.tar.gz | tar -xz
+cd magma-2.6.1
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${CUDADIR}/lib64
+cp make.inc-examples/make.inc.openblas make.inc
+sed -i 's/GPU_TARGET =.*/GPU_TARGET = sm_61 sm_70 sm_75 sm_80/' make.inc
+export OPENBLASDIR=/usr
+export BACKEND=cuda 
+LIBRARY_PATH=/usr/local/cuda/lib64 make -j16
+make install prefix=/opt/magma
+export MAGMA_HOME=/opt/magma
+unset OPENBLASDIR
+unset BACKEND
+# END MAGMA
+cd /build
+
+# BEGIN PYTORCH
+# Pytorch stuff
+#python3 -m pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+# from source
+python3 -m pip install $PYTORCH_NEEDS "numpy>=1.19.5,<1.20.0" wheel
+git clone --recursive --branch v1.9.0 https://github.com/pytorch/pytorch
+cd pytorch
+git submodule sync
+git submodule update --init --recursive --jobs 0 
+python setup.py install
+# kineto
+cd /build
+git clone --recursive --branch v0.2.1 https://github.com/pytorch/kineto.git
+cd kineto
+git submodule sync --recursive
+git submodule update --init --force --recursive --depth 1
+mkdir build_static
+cd build_static
+cmake -DKINETO_LIBRARY_TYPE=static -DCMAKE_INSTALL_PREFIX=/usr ../libkineto/
+make -j16
+make install
+cd ..
+mkdir build_shared
+cd build_shared
+cmake -DKINETO_LIBRARY_TYPE=shared -DCMAKE_INSTALL_PREFIX=/usr ../libkineto/
+make -j16
+make install
+# torchvision
+cd /build
+git clone --recursive --branch v0.10.0 https://github.com/pytorch/vision.git torchvision
+cd torchvision
+python setup.py install
+cd /build
+# torchaudio
+git clone --recursive --branch v0.9.0 https://github.com/pytorch/audio.git torchaudio
+cd torchaudio
+python setup.py install
+cd /build
+# END PY TORCH
+
+# BEGIN TENSORFLOW
+# bazel for tensorflow
+cd /usr/bin
+curl -fL https://releases.bazel.build/3.7.2/release/bazel-3.7.2-linux-x86_64 -o bazel
+chmod +x bazel
+cd /build
+# Install all the python bits
+wget https://bootstrap.pypa.io/get-pip.py
+python3 get-pip.py
+#do tensorflow build here
+python3 -m pip install numpy wheel
+python3 -m pip install keras_preprocessing --no-deps
+git clone https://github.com/tensorflow/tensorflow.git
+cd tensorflow
+git checkout r2.5
+export BAZEL_SH=/usr/bin/bash
+export TF_NEED_TENSORRT=1
+export TF_TENSORRT_VERSION=$TENSORRT_VERSION
+export TF_TENSORRT_INSTALL_PATH=/usr
+export TF_NEED_CUDA=1
+export TF_CUDA_TOOLKIT_PATH=/usr/local/cuda-11.0/
+export TF_CUDA_COMPUTE_CAPABILITIES=6.1,7.0,7.5,8.0
+export TF_CUDA_VERSION=11.0
+export TF_NEED_JEMALLOC=1
+export TF_CUDNN_VERSION=8
+export TF_NCCL_VERSION=2
+export TF_NEED_GCP=0
+export TF_NEED_MPI=0
+export TF_NEED_HDFS=0
+export TF_NEED_OPENCL=0
+export TF_ENABLE_XLA=0
+export TF_NEED_VERBS=0
+export TF_CUDA_CLANG=0
+export TF_NEED_MKL=0
+export TF_DOWNLOAD_MKL=0
+export TF_NEED_AWS=0
+export TF_NEED_MPI=0
+export TF_NEED_GDR=0
+export TF_NEED_S3=0
+export TF_NEED_OPENCL_SYCL=0
+export TF_SET_ANDROID_WORKSPACE=0
+export TF_NEED_COMPUTECPP=0
+export TF_NEED_KAFKA=0
+export GCC_HOST_COMPILER_PATH=$(which gcc)
+export CC_OPT_FLAGS="-march=haswell -O3"
+
+./configure
+bazel build --config=cuda //tensorflow/tools/pip_package:build_pip_package
+./bazel-bin/tensorflow/tools/pip_package/build_pip_package ./output/tf/
+python3 -m pip install ./output/tf/*.whl
+cd /build
+#end tensorflow build
+
+python3 -m pip install $PYTHON3_PACKAGES
+# install R
+## Turn off nodoc as that ruins R apparently
+# sed -i 's/tsflags=nodocs//g' /etc/yum.conf
+# or use --setopt=tsflags= to do it per invocation
+#dnf config-manager --set-enabled PowerTools
+yum install -y --setopt=tsflags= R-core
+yum install -y R-core-devel R-devel R-Rcpp R-Rcpp-devel
+# R packages
+R --no-save <<EOL
+install.packages("pkgbuild", repos="https://mirror.las.iastate.edu/CRAN/")
+install.packages("devtools", repos="https://mirror.las.iastate.edu/CRAN/")
+#options(devtools.install.args = c("--no-multiarch", "--no-test-load", "--no-html","--nodoc"))
+#install.packages("tidyselect", repos="https://mirror.las.iastate.edu/CRAN/")
+library(devtools)
+devtools::install_github("rstudio/tensorflow")
+library(tensorflow)
+try(devtools::install_github("rstudio/keras"))
+library(keras)
+EOL
+# END TENSORFLOW
+
+#cleanup
+cd /
+yum remove -y nv-tensorrt-repo-rhel7-cuda11.1-trt7.2.3.4-ga-20210226
+yum clean all
+rm -rf /var/cache/dnf/*
+rm -f /nv-tensorrt-repo-rhel7-cuda11.0-trt7.2.3.4-ga-20210226-1-1.x86_64.rpm
+rm -rf /build
+
+%runscript
+exec $@

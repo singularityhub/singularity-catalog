@@ -1,0 +1,58 @@
+BootStrap: docker
+From: ubuntu:20.04
+
+%files
+	requirements.txt
+
+%post
+    apt -y update
+    apt -y install --no-install-recommends \
+		xz-utils blender wget git openmpi-bin mpi mpich \
+		build-essential subversion cmake \
+		libx11-dev libxxf86vm-dev libxcursor-dev libxi-dev \
+		libxrandr-dev libxinerama-dev libglew-dev
+	apt clean
+
+	echo "Installing conda"
+	wget -q --no-check-certificate https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+	bash Miniconda3-latest-Linux-x86_64.sh -b -p /conda
+	rm Miniconda3-latest-Linux-x86_64.sh
+	chmod -R 777 /conda
+	
+			
+	echo "Installing python libraries"
+	/conda/bin/conda create -y -n blan1 python=3.7
+	. /conda/etc/profile.d/conda.sh
+	conda init
+	conda activate blan1
+	conda install -y python=3.7
+	pip install --no-cache-dir tensorflow==2.2.0rc0 tensorflow_datasets pytest tables
+	conda install -y ipython pandas toolz matplotlib imageio click pyyaml bokeh mpi4py
+	# conda clean --all -f -y
+	
+	echo ". /conda/etc/profile.d/conda.sh" >> $SINGULARITY_ENVIRONMENT
+	echo "conda activate blan1" >> $SINGULARITY_ENVIRONMENT
+
+	echo "Installing Blender"
+	mkdir /bpy
+    mkdir /blender-git
+	cd /blender-git
+	git config --global http.sslVerify false
+	git clone https://git.blender.org/blender.git
+
+	mkdir /blender-git/lib
+	cd /blender-git/lib
+	svn checkout --trust-server-cert-failures=unknown-ca --non-interactive \
+		https://svn.blender.org/svnroot/bf-blender/trunk/lib/linux_centos7_x86_64
+
+	cd /blender-git/blender
+	make bpy
+	chmod -R 777 /blender-git
+
+
+%environment
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+	
+%labels
+    Author DarikGamble

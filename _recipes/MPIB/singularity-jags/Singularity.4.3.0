@@ -1,0 +1,51 @@
+Bootstrap: docker
+FROM: debian:stable-slim
+
+%help
+
+Contains JAGS version 4.3.0
+
+%post
+
+apt-get update
+
+# Packages needed inside the container.
+export CONTAINER_SOFTWARE="gcc g++ gfortran make libcurl3-gnutls libopenblas-base"
+## Set build variables.
+# Packages needed only for the build process.
+export BUILD_SOFTWARE="curl libblas-dev liblapack-dev"
+# Needed for downloading source.
+export JAGS_VERSION=4.3.0
+export JAGS_BASE_URI="https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Source/"
+export JAGS_FOLDER_NAME="JAGS-$JAGS_VERSION"
+export JAGS_PACKAGE_NAME="${JAGS_FOLDER_NAME}.tar.gz"
+# Set paths to facilitate the build process.
+export BUILDHOME="/tmp"
+
+# Install build and run requirements.
+apt-get update
+apt-get install $BUILD_SOFTWARE $CONTAINER_SOFTWARE -y
+
+# Get JAGS source package
+curl -L -o "$JAGS_PACKAGE_NAME" ${JAGS_BASE_URI}${JAGS_PACKAGE_NAME}"/download#"
+tar -xf "$JAGS_PACKAGE_NAME"
+
+# Build JAGS
+cd "$JAGS_FOLDER_NAME"
+./configure
+make
+make install
+
+# Removing installation overhead.
+
+cd
+rm -rf /tmp/*
+apt-get purge $BUILD_SOFTWARE -y
+apt-get autoclean -y
+apt-get autoremove -y
+rm -rf /var/lib/apt/lists/*
+
+%test
+
+# Can we call JAGS?
+echo exit | jags

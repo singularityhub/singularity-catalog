@@ -1,0 +1,21 @@
+BootStrap: docker
+From: alexpacheco/centos7:xfce
+
+%labels
+   MAINTAINER alp514@lehigh.edu
+
+%help
+  This container provides the XFCE Desktop Environment for CentOS 7
+
+%apprun vncserver
+  exec vncserver "${@}"
+
+%apprun vncpasswd
+  exec vncpasswd "${@}"
+
+%apprun websockify
+  exec /opt/websockify/run "${@}"
+
+%environment
+  export PATH=/opt/TurboVNC/bin:${PATH}
+

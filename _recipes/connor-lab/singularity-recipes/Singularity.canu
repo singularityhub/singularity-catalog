@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: alpine:3.8
+
+%post
+    apk update
+    apk upgrade
+    apk add git make
+    apk add bash curl openjdk8-jre-base perl zlib-dev
+    
+
+    cd /usr/local/bin
+    curl -fsSL 'https://github.com/marbl/canu/releases/download/v1.8/canu-1.8.Linux-amd64.tar.xz' | tar -xJ
+    find /usr/local/bin/canu-1.8 -maxdepth 3 -perm /u=x -type f -exec ln -s {} /usr/local/bin/ \;

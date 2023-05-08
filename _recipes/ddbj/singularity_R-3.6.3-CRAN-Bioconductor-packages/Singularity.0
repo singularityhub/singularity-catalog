@@ -1,0 +1,26 @@
+BootStrap: docker
+From: ubuntu:20.04
+
+
+%files
+    # copying files from the host system to the container.
+
+
+%labels
+    Maintainer Yoshihiro Okuda
+    Version    v1.0
+
+
+%runscript
+
+
+%post
+    echo "Hello from inside the container"
+    sed -i.bak -e "s%http://archive.ubuntu.com/ubuntu/%http://ftp.jaist.ac.jp/pub/Linux/ubuntu/%g" /etc/apt/sources.list
+    sed -i.bak -e "s%http://security.ubuntu.com/ubuntu/%http://ftp.jaist.ac.jp/pub/Linux/ubuntu/%g" /etc/apt/sources.list
+    apt-get -y update
+    apt-get -y upgrade
+        
+    apt-get -y install vim wget less
+    apt-get -y install r-base* r-bioc* r-cran* r-doc*
+    apt-get -y purge r-base* r-bioc* r-cran* r-doc*

@@ -1,0 +1,43 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+    kraken2 2.0.8-beta
+    https://github.com/DerrickWood/kraken2
+
+%labels
+
+    MAINTAINER "Tom Harrop"
+    VERSION "kraken2 2.0.8-beta"
+
+%post
+
+    # dependencies
+    apt-get update
+    apt-get install -y \
+        build-essential \
+        language-pack-en \
+        libgomp1 \
+        libopenmpi-dev \
+        ncbi-blast+ \
+        openmpi-bin \
+        rsync \
+        wget
+
+    # install kraken
+    wget -O kraken.tar.gz \
+        --no-check-certificate \
+        https://github.com/DerrickWood/kraken2/archive/v2.0.8-beta.tar.gz
+    mkdir kraken
+    tar -zxf kraken.tar.gz \
+        -C kraken \
+        --strip-components 1
+    cd kraken || exit 1
+    ./install_kraken2.sh /usr/local/bin
+    cd .. || exit 1
+    rm -rf kraken kraken.tar.gz
+
+%runscript
+
+    exec /usr/local/bin/kraken2 "$@"

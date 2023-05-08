@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: centos:latest
+
+
+%post
+    yum -y update
+
+    yum install -y git make
+    yum install -y bzip2 bzip2-devel gcc ncurses-devel perl-App-cpanminus unzip xz-devel zlib-devel
+
+    cpanm LWP::Simple Text::CSV Bio::Perl JSON File::Slurp List::MoreUtils
+
+    curl -fsSL 'https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.7.1/ncbi-blast-2.7.1+-x64-linux.tar.gz' | tar -xz -C /usr/local/bin
+    find /usr/local/bin/ncbi-blast*/bin -maxdepth 1 -executable -type f -exec ln -s {} /usr/local/bin \;
+
+    curl -fsSL 'ftp://emboss.open-bio.org/pub/EMBOSS/EMBOSS-6.6.0.tar.gz' | tar -xz -C /usr/local/bin
+    cd /usr/local/bin/EMBOSS-6.6.0 && ./configure --without-x && make install
+
+    git clone https://github.com/tseemann/abricate.git /usr/local/bin/abricate-latest
+    ln -s /usr/local/bin/abricate-latest/bin/* /usr/local/bin
+
+    abricate --setupdb
+ 

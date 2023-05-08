@@ -1,0 +1,34 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  Flexbar_Version 3.4
+
+%apprun flexbar
+  exec flexbar "${@}"
+
+%runscript
+  exec flexbar "${@}"
+
+%post
+  # Get dependencies
+  echo "@testing http://mirror.leaseweb.com/alpine/edge/testing" >> /etc/apk/repositories
+  apk update
+  apk add cmake gcc make musl-dev g++ zlib-dev zlib libbz2 bzip2-dev libbz2 libtbb@testing libtbb-dev@testing
+
+  # Install Flexbar
+  cd /tmp
+  wget -O - https://github.com/seqan/flexbar/archive/v3.4.0.tar.gz | tar zxf -
+  wget -O - https://github.com/seqan/seqan/releases/download/seqan-v2.4.0/seqan-library-2.4.0.tar.xz | tar xJf -
+  mv seqan-library-2.4.0/include flexbar-3.4.0
+  cd flexbar-3.4.0
+  sed -i '/set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")/d' src/CMakeLists.txt
+  cmake .
+  make -j$(nproc)
+  cp flexbar /usr/local/bin/
+
+  # Clean up
+  apk del cmake gcc make musl-dev g++ bzip2-dev zlib-dev libtbb-dev
+  rm -rf /var/cache/apk/*
+  rm -rf /tmp/*

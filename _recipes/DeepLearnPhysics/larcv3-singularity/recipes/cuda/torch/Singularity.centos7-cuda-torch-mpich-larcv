@@ -1,0 +1,42 @@
+Bootstrap: shub
+From: DeepLearnPhysics/larcv3-singularity:centos7-cuda-torch-mpich
+
+%help
+Centos7 with cuda9.0 cudnn7
+ML/DL packages  : torchnightly sc-learn
+Sci.  packages  : numpy pandas sc-image matplotlib opencv-python
+Basic python    : ipython jupyter yaml pygments six zmq wheel h5py tqdm 
+Development kit : g++/gcc cython nvcc libqt4-dev python-dev
+Utility kit     : git wget emacs vim openssh-client swig larcv
+
+To start your container simply try
+singularity exec THIS_CONTAINER.simg bash
+
+To use GPUs, try
+singularity exec --nv THIS_CONTAINER.simg bash
+
+%labels
+Maintainer coreyjadams
+Version centos7-cuda-torch
+
+#------------
+# Global installation
+#------------
+%environment
+
+%post
+    
+    
+    # Using the app area to store software:
+    cd /app
+
+    scl enable devtoolset-4 bash
+    scl enable rh-python36 bash
+
+    pip3 install ninja
+
+    #Install the latest larcv3:
+    git clone https://github.com/DeepLearnPhysics/larcv3.git
+    cd larcv3/
+    CC=$(which mpicc) CXX=$(which mpicxx) python setup.py install --cmake-executable cmake3
+    cd -

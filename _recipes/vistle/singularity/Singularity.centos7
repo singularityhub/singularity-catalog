@@ -1,0 +1,83 @@
+BootStrap: docker
+From: centos:7
+
+#BootStrap: yum
+#OSVersion: 7
+#MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch/
+#Include: yum
+
+%labels
+    MAINTAINER "Martin Aumüller" <aumueller@hlrs.de>
+
+%runscript
+    echo "Build dependencies for COVISE and OpenCOVER"
+
+
+%post
+    dt=8 # devtoolset-8
+    yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    #yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-10.0.130-1.x86_64.rpm
+    yum install -y centos-release-scl
+    yum update -y
+
+    #yum install -y xorg-x11-drv-nvidia
+
+    yum install -y git ninja-build make # gcc gcc-c++
+    yum install -y python36-devel python36-pip && ln -sf python36 /usr/bin/python3 && ln -sf pip36 /usr/bin/pip3
+    yum install -y qt5-qttools-devel qt5-qtlocation-devel qt5-qtdeclarative-devel qt5-qtbase-devel qt5-qtconfiguration-devel qt5-qtxmlpatterns-devel qt5-qtsvg-devel qt5-qtx11extras-devel qt5-qtscript-devel qt5-qtserialport-devel qt5-qtaccountsservice-devel qt5-qtconnectivity-devel qt5-qtsensors-devel qt5-qtmultimedia-devel qt5-qttools-static
+    yum install -y qt5-qtwebkit-devel
+    yum install -y zlib-devel libpng-devel libtiff-devel xerces-c-devel libicu-devel
+    yum install -y libvncserver-devel snappy-devel libjpeg-turbo-devel turbojpeg-devel glew-devel readline-devel libcurl-devel hidapi-devel libmicrohttpd-devel # tbb-devel 
+    yum install -y swig flex bison
+    yum install -y gdal-devel proj-devel cgnslib-devel hdf5-devel assimp-devel libgeotiff-devel Coin3-devel libxml2-devel
+    #yum install -y pcl-devel  
+    yum install -y libzip-devel libarchive-devel
+    yum install -y freetype-devel motif-devel
+    yum install -y file
+    yum install -y wget
+    yum install -y libva
+    yum install -y boost169-devel
+    yum install -y cmake3 && ln -sf cmake3 /usr/bin/cmake
+
+    yum install -y nasm
+    yum install -y patch
+    yum install -y libzstd-devel tinyxml2-devel
+    yum install -y botan-devel
+
+    yum install -y mpich-3.2-devel
+    echo "export MPIROOT=/usr/lib64/mpich-3.2" > /etc/mpi.sh
+    echo "export PATH=\$MPIROOT/bin:\$PATH" >> /etc/mpi.sh
+    echo "export LD_LIBRARY_PATH=\$MPIROOT/lib:\$LD_LIBRARY_PATH" >> /etc/mpi.sh
+
+
+    echo ". /etc/env.sh" >> /etc/buildenv.sh
+    #yum install -y gcc gcc-c++
+    yum install -y devtoolset-$dt-toolchain devtoolset-$dt-binutils devtoolset-$dt-libstdc++-devel devtoolset-$dt-gcc-c++ devtoolset-$dt-runtime devtoolset-$dt-gcc
+    [ "${BUILDTYPE}" != "Release" ] && yum install -y devtoolset-$dt-valgrind devtoolset-$dt-gdb strace
+    echo ". /opt/rh/devtoolset-$dt/enable" >> /etc/buildenv.sh
+
+    echo "unset PATH" > /etc/env.sh
+    echo "unset LD_LIBRARY_PATH" > /etc/env.sh
+    echo "unset XDG_CURRENT_DESKTOP" >> /etc/env.sh
+    echo "unset XDG_DATA_DIRS" >> /etc/env.sh
+    echo "unset XDG_RUNTIME_DIR" >> /etc/env.sh
+    echo "unset XDG_SEAT_PATH" >> /etc/env.sh
+    echo "unset XDG_SEAT" >> /etc/env.sh
+    echo "unset XDG_SESSION_CLASS" >> /etc/env.sh
+    echo "unset XDG_SESSION_DESKTOP" >> /etc/env.sh
+    echo "unset XDG_SESSION_ID" >> /etc/env.sh
+    echo "unset XDG_SESSION_PATH" >> /etc/env.sh
+    echo "unset XDG_SESSION_TYPE" >> /etc/env.sh
+    echo "unset XDG_VTNR" >> /etc/env.sh
+    echo ". /etc/mpi.sh" >> /etc/env.sh
+
+    echo "cd /" >> /etc/cleanup.sh
+    #echo "rm -rf /build" >> /etc/cleanup.sh
+    echo "yum clean all" >> /etc/cleanup.sh
+
+    # required for dbus
+    echo -n '0123456789ABCDEF0123456789ABCDEF' > /etc/machine-id
+
+
+%environment
+    source /etc/env.sh

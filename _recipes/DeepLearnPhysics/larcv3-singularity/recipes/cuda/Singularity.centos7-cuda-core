@@ -1,0 +1,70 @@
+Bootstrap: docker
+From: nvidia/cuda:10.1-cudnn7-devel-centos7
+
+%help
+Centos7 with cuda10.1 cudnn7, and basic development tools (python 3.6)
+ML/DL packages  : sc-learn
+Sci.  packages  : numpy pandas sc-image matplotlib opencv-python
+Basic python    : ipython jupyter yaml pygments six zmq wheel h5py tqdm 
+Development kit : g++/gcc cython nvcc python3-dev
+Utility kit     : git wget emacs vim openssh-client
+
+To start your container simply try
+singularity exec THIS_CONTAINER.simg bash
+
+To use GPUs, try
+singularity exec --nv THIS_CONTAINER.simg bash
+
+%labels
+Maintainer coreyjadams
+Version centos7-cuda-core
+
+#------------
+# Global installation
+#------------
+%environment
+    
+    # for system
+    export CUDA_DEVICE_ORDER=PCI_BUS_ID
+
+    # Add cupti to the path for profiling:
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
+
+    source scl_source enable devtoolset-4
+    source scl_source enable rh-python36
+
+
+%post
+    
+    # yum basics
+    yum update -y
+    yum groupinstall -y "Development Tools"
+    # Install gcc, python36,etc:
+    yum install -y centos-release-scl
+    yum install -y epel-release
+    yum install -y devtoolset-4
+
+    # Python36
+    yum install -y rh-python36-python-devel rh-python36-python-pip rh-python36-python-setuptools
+
+
+    # Common development tools:
+    yum install -y hdf5 hdf5-devel
+    yum install -y wget emacs vim cmake3
+    yum install -y emacs vim openssh-clients zip 
+
+    # pip basics
+    # Need to enable pip3 with scl
+    scl enable rh-python36 bash
+
+    pip3 --no-cache-dir --disable-pip-version-check install --upgrade setuptools 
+    pip3 --no-cache-dir --disable-pip-version-check install future
+    pip3 --no-cache-dir --disable-pip-version-check install 'matplotlib' 
+    pip3 --no-cache-dir --disable-pip-version-check install 'ipython'    
+    pip3 --no-cache-dir --disable-pip-version-check install 'ipykernel'  
+    pip3 --no-cache-dir --disable-pip-version-check install numpy wheel zmq six pygments pyyaml cython gputil psutil humanize h5py tqdm scipy seaborn tables
+    pip3 --no-cache-dir --disable-pip-version-check install pandas scikit-image scikit-learn scikit-build Pillow opencv-python
+    pip3 --no-cache-dir --disable-pip-version-check install jupyter notebook
+
+
+

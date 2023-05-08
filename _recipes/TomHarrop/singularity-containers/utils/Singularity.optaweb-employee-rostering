@@ -1,0 +1,102 @@
+Bootstrap: docker
+From: ubuntu:19.04
+
+%help
+    https://github.com/kiegroup/optaweb-employee-rostering.git
+
+    # add application user
+    cd /wildfly
+    bin/add-user.sh
+
+    # download and build?
+    apt install maven git openjdk-8-jre
+    git clone https://github.com/kiegroup/optaweb-employee-rostering.git
+    mvn clean install -DskipTests
+    # to skip past javadoc errors
+    mvn clean install -DskipTests -DargLine="--add-modules java.xml.ws.annotation"
+
+    singularity shell \
+        --writable-tmpfs \
+        -B test/data:/wildfly/standalone/data,test/log:/wildfly/standalone/log,test/tmp:/wildfly/standalone/tmp \
+        optaweb-employee-rostering.sif
+
+    singularity run \
+        --writable-tmpfs \
+        -B test/data:/wildfly/standalone/data,test/log:/wildfly/standalone/log,test/tmp:/wildfly/standalone/tmp \
+        optaweb-employee-rostering.sif
+
+
+/wildfly/bin/standalone.sh --server-config=standalone.xml
+
+%labels
+    MAINTAINER "Tom Harrop"
+
+%post
+    # dependencies
+    apt-get update
+    # xorg?
+    apt-get install -y \
+        git \
+        maven \
+        openjdk-8-jdk \
+        unzip \
+        wget
+
+    # select java 8 but ignore errors
+    export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
+    update-java-alternatives \
+        --set java-1.8.0-openjdk-amd64 \
+        || true
+
+    # install wildfly
+    wget \
+        -O wildfly.tar.gz \
+        --no-check-certificate \
+        https://download.jboss.org/wildfly/17.0.0.Final/wildfly-17.0.0.Final.tar.gz
+    mkdir wildfly
+    tar -zxf wildfly.tar.gz \
+        -C wildfly \
+        --strip-components 1
+    rm -r wildfly.tar.gz
+
+    # add user
+    cd /wildfly
+    bin/add-user.sh -a \
+        --group kie-server,admin \
+        --user planner \
+        --password Planner123_
+    bin/add-user.sh \
+        --group admin \
+        --user admin \
+        --password Admin123_
+
+    # download and build optaweb-employee-rostering
+    cd /
+    git clone https://github.com/kiegroup/optaweb-employee-rostering.git
+    cd optaweb-employee-rostering || exit 1
+    mvn clean install -DskipTests
+
+    # deploy war files (which one?) - webapp & gwtui?
+    cp \
+        ./employee-rostering-distribution/target/employee-rostering-distribution-7.24.0-SNAPSHOT/employee-rostering-distribution-7.24.0-SNAPSHOT/binaries/employee-rostering-webapp-7.24.0-SNAPSHOT.war \
+        /wildfly/standalone/deployments/   
+    # then go to http://127.0.0.1:8080/gwtui/gwtui.html
+
+%environment
+    export JAVA_OPTS="-Xms64m -Xmx32g -XX:MetaspaceSize=960M -XX:MaxMetaspaceSize=2560m -Djava.net.preferIPv4Stack=true"
+
+%runscript
+    exec \
+        /wildfly/bin/standalone.sh --server-config=standalone-full.xml \
+        -Dorg.kie.server.user=planner \
+        -Dorg.kie.server.pwd=Planner123_ \
+        -Dorg.kie.server.controller.user=planner \
+        -Dorg.kie.server.controller.pwd=Planner123_ \
+        -Dorg.kie.server.id=wildfly-kieserver \
+        -Dorg.kie.server.location=http://localhost:8080/kie-server/services/rest/server \
+        -Dorg.kie.server.controller=http://localhost:8080/business-central/rest/controller \
+        "$@"
+
+%startscript
+    cd /wildfly/bin &
+    nohup ./standalone.sh > /dev/null 2>&1 < /dev/null &

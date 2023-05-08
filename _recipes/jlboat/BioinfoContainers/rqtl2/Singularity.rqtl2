@@ -1,0 +1,23 @@
+Bootstrap: docker
+
+From: ubuntu:latest
+
+%labels
+    Topic Bioinformatics
+
+%post
+    apt-get update
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get install -y libopenblas-dev libssl-dev \
+        zlib1g-dev libblas-dev liblapack-dev \
+        libssh2-1-dev libgit2-dev libxml2-dev \
+        libcurl4-gnutls-dev r-base 
+#    curl https://download1.rstudio.org/desktop/bionic/amd64/rstudio-1.2.5033-amd64.deb \
+> /opt/rstudio-1.2.5033-amd64.deb
+#    apt install -y /opt/rstudio-1.2.5033-amd64.deb
+    R -e 'install.packages(c("RcppEigen","devtools","yaml", "jsonlite","data.table","RSQLite","qtl"), dependencies=TRUE, repos="http://cran.us.r-project.org")'
+    R -e "install.packages('qtl2', repos='https://rqtl.org/qtl2cran')"
+
+%runscript
+    exec "$@"
+

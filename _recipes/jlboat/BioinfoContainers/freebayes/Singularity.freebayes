@@ -1,0 +1,25 @@
+Bootstrap: docker
+
+From: ubuntu:latest
+
+%labels
+    Topic Bioinformatics
+    Input BAM
+    Output VCF
+    freebayes latest
+
+%help
+    singularity run freebayes.simg -h
+
+%post
+    apt-get update --fix-missing && apt-get install -y git g++ make zlib1g-dev libbz2-1.0 libbz2-dev liblzma-dev
+    cd /opt/
+    git clone --recursive git://github.com/ekg/freebayes.git
+    cd freebayes
+    make
+    make install
+    chmod -R 777 /opt/freebayes
+
+%runscript
+    exec freebayes "$@"
+

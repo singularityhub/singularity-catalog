@@ -1,0 +1,31 @@
+# Singularity for Azure-CLI
+Bootstrap: docker
+From: ubuntu:16.04
+
+%environment
+LC_ALL="C.UTF-8"
+LANG="C.UTF-8"
+export LC_ALL
+export LANG
+
+%post
+
+apt-get update && \
+apt-get install -y curl git python3-pip musl build-essential python3 jq gettext-base \
+                   python3-dev libffi-dev libssl-dev python3-pip\
+                   ca-certificates openssh-client rsync bash&& \
+
+echo "install shipyard" 
+git clone -b singularity3 --single-branch --depth 5 https://github.com/Azure/batch-shipyard.git /opt/batch-shipyard/
+cd /opt/batch-shipyard
+python3 -m pip install --no-cache-dir -r requirements.txt
+python3 -m pip install pykwalify
+python3 -m compileall -f /opt/batch-shipyard/shipyard.py /opt/batch-shipyard/convoy
+
+echo "install azure-cli"
+curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+
+
+%runscript
+exec "$@"

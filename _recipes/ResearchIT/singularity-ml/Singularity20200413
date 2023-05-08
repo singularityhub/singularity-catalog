@@ -1,0 +1,54 @@
+Bootstrap:docker
+From:nvidia/cuda:10.0-cudnn7-devel-centos7
+
+%environment
+export KERAS_BACKEND=tensorflow
+export PATH=/usr/local/cuda/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64
+
+%post
+# General Python packages
+CUDA_VERSION=10.0.130
+PYTHON3_PACKAGES="setuptools>=41.0.0 tensorflow-gpu numpy keras pillow scikit-learn pandas pandas_ml matplotlib>=3.0.0 mxnet mlxtend tensorboard jupyter jupyterlab"
+PYTHON2_PACKAGES="setuptools>=41.0.0 tensorflow-gpu numpy keras pillow scikit-learn pandas matplotlib mxnet tensorboard jupyter jupyterlab"
+yum install -y epel-release
+curl https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-7.repo -o /etc/yum.repos.d/vbatts-bazel-epel-7.repo
+yum clean all && yum makecache
+yum install -y @"Development Tools"
+yum install -y libgomp cmake3 vim cuda-${CUDA_VERSION}
+yum install -y https://developer.download.nvidia.com/compute/machine-learning/repos/rhel7/x86_64/nvidia-machine-learning-repo-rhel7-1.0.0-1.x86_64.rpm 
+nvml_vers=6.0.1
+yum install -y cuda-cublas-10-0 cuda-cublas-dev-10-0 cuda-cufft-10-1 cuda-cudart-10-1 cuda-curand-10-1 cuda-cusolver-10-1 cuda-cusparse-10-1 cuda-nvrtc-10-2 libnvinfer-devel-${nvml_vers} libnvparsers-devel-${nvml_vers} libnvonnxparsers-devel-${nvml_vers} libnvinfer-plugin-devel-${nvml_vers} libnvinfer6 libnvparsers6 libnvonnxparsers6 libnvinfer-plugin6 python-libnvinfer-${nvml_vers} python3-libnvinfer-${nvml_vers}
+yum install -y git gcc gcc-c++ sudo curl openblas lapack python36 wget python-devel python36-devel openssl-devel curl-devel libxml2 libxml2-devel bazel 
+# Install all the python bits
+wget https://bootstrap.pypa.io/get-pip.py
+python3 get-pip.py
+python2 get-pip.py
+python3 -m pip install $PYTHON3_PACKAGES
+python2 -m pip install $PYTHON2_PACKAGES
+# install R
+## Turn off nodoc as that ruins R apparently
+# sed -i 's/tsflags=nodocs//g' /etc/yum.conf
+# or use --setopt=tsflags= to do it per invocation
+yum install -y --setopt=tsflags= R-core
+yum install -y R-core-devel R-devel R-Rcpp R-Rcpp-devel
+# R packages
+R --no-save <<EOL
+install.packages("pkgbuild", repos="https://ftp.ussg.iu.edu/CRAN/")
+install.packages("devtools", repos="https://ftp.ussg.iu.edu/CRAN/")
+#options(devtools.install.args = c("--no-multiarch", "--no-test-load", "--no-html","--nodoc"))
+#install.packages("tidyselect", repos="https://mirror.las.iastate.edu/CRAN/")
+library(devtools)
+devtools::install_github("rstudio/tensorflow")
+library(tensorflow)
+try(devtools::install_github("rstudio/keras"))
+library(keras)
+EOL
+# Pytorch stuff
+python3 -m pip install https://download.pytorch.org/whl/cu100/torch-1.0.1.post2-cp36-cp36m-linux_x86_64.whl
+python3 -m pip install torchvision
+python2 -m pip install https://download.pytorch.org/whl/cu100/torch-1.0.1.post2-cp27-cp27mu-linux_x86_64.whl
+python2 -m pip install torchvision
+
+%runscript
+exec $@

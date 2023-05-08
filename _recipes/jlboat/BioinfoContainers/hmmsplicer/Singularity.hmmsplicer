@@ -1,0 +1,19 @@
+Bootstrap: docker
+
+From: debian:latest
+
+%labels
+    Topic Bioinformatics
+    hmmSplicer 0.9.5
+
+%environment
+    PATH=$PATH:/hmmSplicer-0.9.5/
+
+%post
+    apt-get update --fix-missing && apt-get install -y wget python
+    wget http://derisilab.ucsf.edu/software/HMMSplicer/hmmSplicer-0.9.5.tar.gz
+    tar -zxvf hmmSplicer-0.9.5.tar.gz
+    chmod -R 777 hmmSplicer-0.9.5/
+
+%runscript
+    exec "$@"

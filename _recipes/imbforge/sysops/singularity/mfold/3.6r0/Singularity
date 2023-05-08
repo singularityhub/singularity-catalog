@@ -1,0 +1,30 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  mfold_Version 3.6
+
+%apprun mfold
+  exec mfold "${@}"
+
+%runscript
+  exec mfold "${@}"
+
+%post
+  # Get dependencies
+  echo "http://mirror.leaseweb.com/alpine/v3.9/community" >> /etc/apk/repositories
+  apk update
+  apk add gcc g++ make gfortran texlive imagemagick bash libgfortran
+
+  # Install mfold
+  cd /tmp
+  wget -O - http://unafold.rna.albany.edu/download/mfold-3.6.tar.gz | tar xzf -
+  cd mfold-*
+  ./configure
+  make -j$(nproc) install
+
+  # Clean up
+  apk del gcc g++ make gfortran
+  rm -rf /var/cache/apk/*
+  rm -rf /tmp/*

@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+    HMMER 3.2.1
+    http://www.hmmer.org/
+
+%labels
+
+    MAINTAINER "Tom Harrop"
+    VERSION "HMMER 3.2.1"
+
+%post
+
+    # dependencies
+    apt-get update
+    apt-get install -y \
+        build-essential \
+        wget 
+
+    # install
+    wget -O "hmmer.tar.gz" \
+        --no-check-certificate \
+        "http://eddylab.org/software/hmmer/hmmer-3.2.1.tar.gz"
+    mkdir hmmer
+    tar -zxf hmmer.tar.gz \
+        -C hmmer \
+        --strip-components 1
+    cd hmmer || exit 1
+    ./configure
+    make
+    make install
+    cd .. || exit 1
+    rm -rf hmmer hmmer.tar.gz
+
+%runscript
+
+    exec /usr/local/bin/hmmsearch "$@"

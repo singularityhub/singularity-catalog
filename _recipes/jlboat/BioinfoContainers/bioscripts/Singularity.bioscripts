@@ -1,0 +1,174 @@
+Bootstrap: docker
+
+From: ubuntu:latest
+
+%labels
+    Topic Bioinformatics
+    Language Python
+
+%environment
+    export PATH="$PATH:/opt/miniconda/bin/:/opt/bioscripts/"
+
+%post
+    apt-get update --fix-missing && apt-get install -y wget git
+    wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
+    bash Miniconda2-latest-Linux-x86_64.sh -b -p /opt/miniconda
+    rm Miniconda2-latest-Linux-x86_64.sh
+    PATH="$PATH:/opt/miniconda/bin/"
+    cd /opt/
+    git clone https://github.com/uf-icbr-bioinformatics/bioscripts
+    conda update -y conda
+    conda install -y -c bioconda pysam biopython scipy sqlite
+    conda clean -y -all
+    mkdir -p /ufrc /orange /bio /rlts /scratch/local
+    
+####
+# bamToWig
+####
+
+%apprun bamToWig
+    exec /opt/miniconda/bin/python /opt/bioscripts/bamToWig.py "$@"
+
+%apphelp bamToWig
+    exec /opt/miniconda/bin/python /opt/bioscripts/bamToWig.py -h
+
+####
+# bisconv
+####
+
+%apprun bisconv
+exec /opt/miniconda/bin/python /opt/bioscripts/bisconv.py "$@"
+
+%apphelp bisconv
+exec /opt/miniconda/bin/python /opt/bioscripts/bisconv.py -h
+
+####
+# chromCoverage
+####
+
+%apprun chromCoverage
+exec /opt/miniconda/bin/python /opt/bioscripts/chromCoverage.py "$@"
+
+%apphelp chromCoverage
+exec /opt/miniconda/bin/python /opt/bioscripts/chromCoverage.py -h
+
+####
+# compareIntrons
+####
+
+%apprun compareIntrons
+exec /opt/miniconda/bin/python /opt/bioscripts/compareIntrons.py "$@"
+
+%apphelp compareIntrons
+exec /opt/miniconda/bin/python /opt/bioscripts/compareIntrons.py -h
+
+####
+# countseqs
+####
+
+%apprun countseqs
+exec /opt/miniconda/bin/python /opt/bioscripts/countseqs.py "$@"
+
+%apphelp countseqs
+exec /opt/miniconda/bin/python /opt/bioscripts/countseqs.py -h
+
+####
+# demux
+####
+/opt/miniconda/bin/
+%apprun demux
+exec /opt/miniconda/bin/python /opt/bioscripts/demux.py "$@"
+
+%apphelp demux
+exec /opt/miniconda/bin/python /opt/bioscripts/demux.py -h
+
+####
+# dmaptools
+####
+
+%apprun dmaptools
+exec /opt/miniconda/bin/python /opt/bioscripts/dmaptools.py "$@"
+
+%apphelp dmaptools
+exec /opt/miniconda/bin/python /opt/bioscripts/dmaptools.py -h
+
+####
+# genes
+####
+
+%apprun genes
+exec /opt/miniconda/bin/python /opt/bioscripts/genes.py "$@"
+
+%apphelp genes
+exec /opt/miniconda/bin/python /opt/bioscripts/genes.py -h
+
+####
+# mergeCols
+####
+
+%apprun mergeCols
+exec /opt/miniconda/bin/python /opt/bioscripts/mergeCols.py "$@"
+
+%apphelp mergeCols
+exec /opt/miniconda/bin/python /opt/bioscripts/mergeCols.py -h
+
+####
+# methreport
+####
+
+%apprun methreport
+exec /opt/miniconda/bin/python /opt/bioscripts/methreport.py "$@"
+
+%apphelp methreport
+exec /opt/miniconda/bin/python /opt/bioscripts/methreport.py -h
+
+####
+# methylfilter
+####
+
+%apprun methylfilter
+exec /opt/miniconda/bin/python /opt/bioscripts/methylfilter.py "$@"
+
+%apphelp methylfilter
+exec /opt/miniconda/bin/python /opt/bioscripts/methylfilter.py -h
+
+####
+# pileupToBED
+####
+
+%apprun pileupToBED
+exec /opt/miniconda/bin/python /opt/bioscripts/pileupToBED.py "$@"
+
+%apphelp pileupToBED
+exec /opt/miniconda/bin/python /opt/bioscripts/pileupToBED.py -h
+
+####
+# regionsCount
+####
+
+%apprun regionsCount
+exec /opt/miniconda/bin/python /opt/bioscripts/regionsCount.py "$@"
+
+%apphelp regionsCount
+exec /opt/miniconda/bin/python /opt/bioscripts/regionsCount.py -h
+
+####
+# removeN
+####
+
+%apprun removeN
+exec /opt/miniconda/bin/python /opt/bioscripts/removeN.py "$@"
+
+%apphelp removeN
+exec /opt/miniconda/bin/python /opt/bioscripts/removeN.py -h
+
+####
+# rnaseqtools
+####
+
+%apprun rnaseqtools
+exec /opt/miniconda/bin/python /opt/bioscripts/rnaseqtools.py "$@"
+
+%apphelp rnaseqtools
+exec /opt/miniconda/bin/python /opt/bioscripts/rnaseqtools.py -h
+

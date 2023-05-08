@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: alpine:3.8
+
+%post
+    apk update
+    apk upgrade
+    apk add git make
+    apk add bash curl g++ gcc bzip2-dev libc-dev ncurses-dev xz-dev zlib-dev
+    apk add perl
+
+    cd /usr/local/bin
+    curl -fsSL "https://github.com/DerrickWood/kraken2/archive/v2.0.7-beta.tar.gz" | tar xz
+    cd kraken2-2.0.7-beta
+    ./install_kraken2.sh /usr/local/bin
+
+%labels
+    Maintainer m-bull
+    Version kraken2-v2.0.7

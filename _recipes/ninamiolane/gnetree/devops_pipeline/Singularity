@@ -1,0 +1,24 @@
+Bootstrap: localimage
+From: ../simgs/base.simg
+
+%environment
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
+    export LD_LIBRARY_PATH
+    CUDA_HOME=/usr/local/cuda
+    export CUDA_HOME
+    QS_HOME=/scratch/quicksilver
+    export QS_HOME
+    PYTHONPATH=/scratch:$QS_HOME/code/library:$QS_HOME/3rd_party_software/pyca/build/python_module
+    PYTHONPATH=$PYTHONPATH:$QS_HOME/code/applications:$QS_HOME/code/vectormomentum/Code/Python
+    export PYTHONPATH
+    LC_ALL=C
+    export LC_ALL
+
+%post
+    pip install luigi \
+                pandas
+    cd /scratch/quicksilver
+    git pull origin master
+
+%runscript
+    exec /usr/bin/python -u pipeline.py --n-GPU=8

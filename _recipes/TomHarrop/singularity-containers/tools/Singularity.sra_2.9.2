@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+    NCBI SRA 2.9.2
+    https://github.com/ncbi/sra-tools
+
+%labels
+
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "SRA 2.9.2"
+
+%post
+
+    # install dependencies
+    apt-get update
+    apt-get install -y \
+        wget
+
+    # download SRA
+    wget -O "sra.tar.gz" \
+        --no-check-certificate \
+        https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.9.2/sratoolkit.2.9.2-ubuntu64.tar.gz
+    mkdir sra
+    tar -zxf sra.tar.gz \
+        -C sra \
+        --strip-components 1
+    rm sra.tar.gz
+
+%environment
+
+    export PATH="${PATH}:/sra/bin"
+
+%runscript
+
+    exec /sra/bin/fasterq-dump "$@"
+

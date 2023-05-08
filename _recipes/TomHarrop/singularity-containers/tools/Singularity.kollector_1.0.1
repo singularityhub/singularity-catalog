@@ -1,0 +1,103 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+    kollector 1.0.1
+    https://github.com/bcgsc/kollector
+    ABySS 2.1.0
+    biobloomtools 2.1.1
+    gmap/gsnap 2018-07-04
+
+%labels
+
+    MAINTAINER "Tom Harrop"
+    VERSION "kollector 1.0.1"
+
+%post
+
+    # dependencies
+    apt-get update
+    apt-get install -y \
+        automake \
+        bc \
+        bsdmainutils \
+        build-essential \
+        bwa \
+        gcc-6 \
+        g++-6 \
+        language-pack-en \
+        libboost-dev \
+        libgomp1 \
+        libopenmpi-dev \
+        libsdsl-dev \
+        libsparsehash-dev \
+        openmpi-bin \
+        samtools \
+        ssh \
+        time \
+        wget \
+        zlib1g-dev
+
+    # install abyss
+    wget -O abyss.tar.gz \
+        --no-check-certificate \
+        https://github.com/bcgsc/abyss/releases/download/2.1.0/abyss-2.1.0.tar.gz
+    mkdir abyss
+    tar -zxf abyss.tar.gz \
+        -C abyss \
+        --strip-components 1
+    cd abyss || exit 1
+    ./configure --with-mpi=/usr/lib/x86_64-linux-gnu/openmpi
+    make
+    make install
+    cd .. || exit 1
+    rm -rf abyss abyss.tar.gz
+
+    # install biobloom tools
+    wget \
+        -O bbt.tar.gz \
+        http://www.bcgsc.ca/platform/bioinfo/software/biobloomtools/releases/2.1.1/biobloomtools-2.1.1.tar.gz
+    mkdir bbt
+    tar -zxf bbt.tar.gz \
+        -C bbt \
+        --strip-components 1
+    cd bbt || exit 1
+    ./configure CXX=/usr/bin/g++-6 CC=/usr/bin/gcc-6
+    make
+    make install
+    cd .. || exit 1
+    rm -rf bbt bbt.tar.gz
+
+    # install gsnap
+    wget \
+        -O gsnap.tar.gz \
+        http://research-pub.gene.com/gmap/src/gmap-gsnap-2018-07-04.tar.gz
+    mkdir gsnap
+    tar -zxf gsnap.tar.gz \
+        -C gsnap \
+        --strip-components 1
+    cd gsnap || exit 1
+    ./configure
+    make
+    make install
+    cd .. || exit 1
+    rm -rf gsnap gsnap.tar.gz
+
+    # download the kollector release
+    wget -O kollector.tar.gz \
+        --no-check-certificate \
+        https://github.com/bcgsc/kollector/releases/download/1.0.1/kollector_1.0.1.tar.gz
+    mkdir kollector
+    tar -zxf kollector.tar.gz \
+        -C kollector \
+        --strip-components 1
+    rm kollector.tar.gz
+
+%environment
+
+    export PATH="${PATH}:/kollector/bin"
+
+%runscript
+
+    exec /kollector/bin/kollector.sh "$@"

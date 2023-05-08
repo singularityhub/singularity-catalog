@@ -1,0 +1,23 @@
+Bootstrap: shub
+From: ISU-HPC/centos7-base
+
+%help
+CentOS 7 with base perl and CPAN
+
+
+%labels
+    Maintainer Iowa State University High-Performance Computing Group
+    Version  v1.0
+
+
+%setup
+
+
+%files
+
+
+%post
+    # Install Perl prerequisites
+    yum install -y epel-release
+    yum install -y perl perl-CPAN perl-App-cpanminus perl-Archive-Tar perl-Want perl-TermReadKey
+

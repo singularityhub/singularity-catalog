@@ -1,0 +1,25 @@
+Bootstrap: docker
+
+From: ubuntu:latest
+
+%labels
+    Topic Bioinformatics
+    Input BCF
+    bcftools 1.9
+
+%post
+    apt-get update --fix-missing && apt-get install -y wget make zlib1g-dev gcc \
+        pkg-config autoconf libncurses5-dev libbz2-dev liblzma-dev libcurl4-gnutls-dev libssl-dev
+    cd /opt/
+    wget --quiet https://github.com/samtools/bcftools/releases/download/1.9/bcftools-1.9.tar.bz2
+    tar xvfj bcftools-1.9.tar.bz2
+    rm bcftools-1.9.tar.bz2
+    cd bcftools-1.9
+    ./configure
+    make
+    make install
+    chmod -R 777 /opt/*
+
+%runscript
+    exec bcftools "$@"
+

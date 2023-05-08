@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: ubuntu:18.10
+
+%help
+
+    Container for sambamba 0.6.9
+    http://bio-bwa.sourceforge.net/
+
+%labels
+
+    VERSION "sambamba 0.6.9"
+
+
+%post
+
+    # install dependencies via apt
+    apt update
+    apt install -y \
+        wget
+
+    # download static release from git
+    wget \
+        -O "sambamba.gz" \
+        --no-check-certificate \
+        https://github.com/biod/sambamba/releases/download/v0.6.9/sambamba-0.6.9-linux-static.gz
+    gunzip sambamba.gz
+    chmod 755 sambamba
+    mv sambamba /usr/local/bin/
+
+
+%runscript
+
+    exec /usr/local/bin/sambamba "$@"
+
+    

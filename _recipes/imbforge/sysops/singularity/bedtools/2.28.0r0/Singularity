@@ -1,0 +1,137 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  bedtools_Version 2.28.0
+
+%apprun bedtools
+  exec bedtools "${@}"
+
+%apprun annotateBed
+  exec bedtools annotate "${@}"
+
+%apprun bamToBed
+  exec bedtools bamtobed "${@}"
+
+%apprun bamToFastq
+  exec bedtools bamtofastq "${@}"
+
+%apprun bed12ToBed6
+  exec bedtools bed12tobed6 "${@}"
+
+%apprun bedToBam
+  exec bedtools bedtobam "${@}"
+
+%apprun bedToIgv
+  exec bedtools igv "${@}"
+
+%apprun bedpeToBam
+  exec bedtools bedpetobam "${@}"
+
+%apprun closestBed
+  exec bedtools closest "${@}"
+
+%apprun clusterBed
+  exec bedtools cluster "${@}"
+
+%apprun complementBed
+  exec bedtools complement "${@}"
+
+%apprun coverageBed
+  exec bedtools coverage "${@}"
+
+%apprun expandCols
+  exec bedtools expand "${@}"
+
+%apprun fastaFromBed
+  exec bedtools getfasta "${@}"
+
+%apprun flankBed
+  exec bedtools flank "${@}"
+
+%apprun genomeCoverageBed
+  exec bedtools genomecov "${@}"
+
+%apprun getOverlap
+  exec bedtools overlap "${@}"
+
+%apprun groupBy
+  exec bedtools groupby "${@}"
+
+%apprun intersectBed
+  exec bedtools intersect "${@}"
+
+%apprun linksBed
+  exec bedtools links "${@}"
+
+%apprun mapBed
+  exec bedtools map "${@}"
+
+%apprun maskFastaFromBed
+  exec bedtools maskfasta "${@}"
+
+%apprun mergeBed
+  exec bedtools merge "${@}"
+
+%apprun multiBamCov
+  exec bedtools multicov "${@}"
+
+%apprun multiIntersectBed
+  exec bedtools multiinter "${@}"
+
+%apprun nucBed
+  exec bedtools nuc "${@}"
+
+%apprun pairToBed
+  exec bedtools pairtobed "${@}"
+
+%apprun pairToPair
+  exec bedtools pairtopair "${@}"
+
+%apprun randomBed
+  exec bedtools random "${@}"
+
+%apprun shiftBed
+  exec bedtools shift "${@}"
+
+%apprun shuffleBed
+  exec bedtools shuffle "${@}"
+
+%apprun slopBed
+  exec bedtools slop "${@}"
+
+%apprun sortBed
+  exec bedtools sort "${@}"
+
+%apprun subtractBed
+  exec bedtools subtract "${@}"
+
+%apprun tagBam
+  exec bedtools tag "${@}"
+
+%apprun unionBedGraphs
+  exec bedtools unionbedg "${@}"
+
+%apprun windowBed
+  exec bedtools window "${@}"
+
+%apprun windowMaker
+  exec bedtools makewindows "${@}" 
+  
+%runscript
+  exec bedtools "${@}"
+
+%post
+  # Get dependencies
+  apk update && apk add make gcc g++ python libstdc++ libgcc zlib-dev zlib bzip2-dev libbz2 xz-dev xz-libs
+
+  # Install bedtools2
+  wget -q -O - https://github.com/arq5x/bedtools2/releases/download/v2.28.0/bedtools-2.28.0.tar.gz | tar -C /tmp -zxf -
+  cd /tmp/bedtools2
+  sed -i 's$/bin/bash$/bin/sh$g' Makefile
+  make -j$(nproc) install
+
+  # Clean up
+  apk del make gcc g++ python zlib-dev bzip2-dev xz-dev
+  rm -rf /var/cache/apk/*

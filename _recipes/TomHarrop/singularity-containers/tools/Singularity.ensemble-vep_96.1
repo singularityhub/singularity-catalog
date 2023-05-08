@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: ensemblorg/ensembl-vep:release_96.1
+
+%help
+
+    ensembl-vep 96.1
+    https://github.com/Ensembl/ensembl-vep#haplo
+    
+%labels
+
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "ensembl-vep 96.1"
+
+%runscript
+
+    exec /opt/vep/src/ensembl-vep/vep "$@"

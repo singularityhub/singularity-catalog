@@ -1,0 +1,48 @@
+# This builds for WCT dev
+
+Bootstrap: debootstrap
+OSVersion: xenial
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+
+%runscript
+
+exec echo "The runscript is the containers default runtime command!"
+
+
+
+%files
+wcls.sh /usr/local/src/wcls.sh
+
+## During testing we preseed all the UPS tarballs as it takes forever to download from FNAL.
+## For production script, users get to suffer so I don't have to distribute the tarball.
+#/srv/bviren/tmp/ups-products-ub.tar /tmp
+
+%post
+
+for n in ups src bin lib include opt share ; do mkdir -p /usr/local/$n ; done
+
+echo "Adding more Ubuntu"
+sed -i 's/$/ universe multiverse restricted/' /etc/apt/sources.list
+apt-get update
+apt-get upgrade
+apt-get -y install git wget curl make cmake bison lbzip2 zlib1g-dev lsb-release pkg-config python emacs jq vim libssl-dev time
+apt-get clean
+
+
+cd /usr/local/ups
+
+## use prepared tar ball to save some download time during testing, see above %files
+#tar -xf /tmp/ups-products-ub.tar 
+#rm -f /tmp/ups-products-ub.tar 
+## production script use:
+wget http://scisoft.fnal.gov/scisoft/bundles/tools/pullProducts
+chmod +x pullProducts
+# script is stupid and exits with error even with no error.  User much check if failed or not
+bash ./pullProducts `pwd` u16 larsoft-v06_82_00 s68-e15 prof || true
+rm *.tar.bz2
+
+cd /usr/local/src
+chmod +x wcls.sh
+#bash ./wcls.sh
+echo "Now do: 'sudo singularity shell --writable <image.simg>' and then run '/usr/local/src/wcls.sh'"

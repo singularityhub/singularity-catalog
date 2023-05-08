@@ -1,0 +1,63 @@
+Bootstrap: shub
+From: DeepLearnPhysics/larcv3-singularity:centos7-cuda-core-mpich
+
+
+%help
+Centos7 with cuda10.0 cudnn7
+ML/DL packages  : tensorflow keras sc-learn nccl
+Sci.  packages  : numpy pandas sc-image matplotlib opencv-python
+Basic python    : ipython jupyter yaml pygments six zmq wheel h5py tqdm mpi4py horovod
+Development kit : g++/gcc cython nvcc libqt4-dev python-dev
+Utility kit     : git wget emacs vim openssh-client mpich
+
+To start your container simply try
+singularity exec THIS_CONTAINER.simg bash
+
+To use GPUs, try
+singularity exec --nv THIS_CONTAINER.simg bash
+
+%labels
+Maintainer coreyjadams
+Version centos7-cuda-tf1.14.0-mpich3.2.1
+
+#------------
+# Global installation
+#------------
+%environment
+ 
+
+    # for MPICH:
+    export PATH=/usr/local/mpich/install/bin/:${PATH}
+    export LD_LIBRARY_PATH=/usr/local/mpich/install/lib/:${LD_LIBRARY_PATH}
+
+    # This line is necessary to run on Cooley:
+    export NCCL_P2P_DISABLE=1
+
+%post
+
+    scl enable devtoolset-4 bash
+    # This makes sure horovod gets installed properly
+    scl enable rh-python36 bash
+
+    
+    # tensorflow    
+    pip3 --no-cache-dir --disable-pip-version-check install --upgrade tensorflow-gpu==1.14.0
+    pip3 --no-cache-dir --disable-pip-version-check install tensorboard
+
+    # keras
+    pip3 --no-cache-dir --disable-pip-version-check install keras
+
+    # For linking horovod:
+    export PATH=$PATH:/usr/local/mpich//install/bin
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/mpich//install/lib
+
+    # Workaround to build horovod without needing cuda libraries available:
+    # temporary add stub drivers to ld.so.cache
+    ldconfig /usr/local/cuda/lib64/stubs
+
+    # install Horovod, add other HOROVOD_* environment variables as necessary
+    HOROVOD_GPU_ALLREDUCE=NCCL HOROVOD_WITH_TENSORFLOW=1 HOROVOD_NCCL_HOME=/nccl/build/ pip3 install --no-cache-dir horovod
+
+    # revert to standard libraries
+    ldconfig
+

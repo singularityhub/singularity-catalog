@@ -1,0 +1,14 @@
+Bootstrap: docker
+
+From: debian:latest
+
+%labels
+    Topic Bioinformatics
+    Input FASTA
+    ncbi-blast apt-get:latest
+
+%post
+    apt-get update --fix-missing && apt-get install -y ncbi-blast+
+
+%runscript
+    exec "$@"

@@ -1,0 +1,10 @@
+Bootstrap:docker
+From: vanessa/scif
+
+# sudo singularity build foobar.simg Singularity.foobar
+
+%files
+    foobar.scif
+
+%post
+    /opt/conda/bin/scif install /foobar.scif

@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%post
+    apt-get update -y
+    apt-get install -y --no-install-recommends \
+        autotools-dev libtool flex bison cmake automake autoconf git make gcc g++ zlib1g-dev
+
+    mkdir -p /usr/local/src
+    cd /usr/local/src
+
+    git config --global http.sslVerify false
+    git clone --recursive https://github.com/Pbdas/epa-ng.git
+    cd epa-ng
+    make
+    cp bin/epa-ng /usr/local/bin
+
+%runscript
+    exec /usr/local/bin/epa-ng "$@"

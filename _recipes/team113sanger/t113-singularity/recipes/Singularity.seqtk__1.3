@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: alpine:3.10.1
+IncludeCmd: no
+
+%help
+Singularity image for seqtk version 1.3 (https://github.com/lh3/seqtk).
+
+%environment
+  export LC_ALL=en_US.UTF-8
+	export LANG=en_US.UTF-8
+
+%apprun Rscript
+  exec seqtk "$@"
+
+%runscript
+	exec seqtk "$@"
+
+%post
+	apk add wget make gcc g++ zlib-dev 
+	cd /usr/local
+	wget https://github.com/lh3/seqtk/archive/v1.3.tar.gz
+  tar -xf v1.3.tar.gz
+	cd seqtk-1.3/
+	make
+	make install

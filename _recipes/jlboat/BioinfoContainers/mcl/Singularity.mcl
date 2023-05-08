@@ -1,0 +1,13 @@
+Bootstrap: docker
+
+From: debian:latest
+
+%labels
+    Topic Bioinformatics
+    mcl apt-get:latest
+
+%post
+    apt-get update --fix-missing && apt-get install -y mcl
+
+%runscript
+    exec "$@"

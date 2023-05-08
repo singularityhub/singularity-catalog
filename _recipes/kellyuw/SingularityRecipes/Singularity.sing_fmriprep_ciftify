@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: tigrlab/fmriprep_ciftify:1.1.8-2.1.1
+
+%post
+
+
+# bash prompt
+cat /etc/bash.bashrc | sed -E "s/PS1=(.*):(.*)/PS1=\1(fmriprep_ciftify):\2/" > /tmp/tmp.bashrc && \
+mv /tmp/tmp.bashrc /etc/bash.bashrc
+cat $HOME/.bashrc | sed -E "s/PS1=(.*):(.*)/PS1=\1(fmriprep_ciftify):\2/" > /tmp/tmp.bashrc && \
+mv /tmp/tmp.bashrc $HOME/.bashrc
+
+# configure PATH
+PATH=$PATH:/home/code/ciftify/ciftify/bidsapp
+
+# setup singularity compatible entry points to run the initialization script
+mkdir /scratch && mkdir /work && mkdir /apps && mkdir /apps2
+
+/usr/bin/env \
+| sed  '/^HOME/d' \
+| sed '/^HOSTNAME/d' \
+su - | sed  '/^/d' \ # | sed  '/^USER/d' \
+| sed '/^PWD/d' > /environment && \
+chmod 755 /environment
+
+chmod 755 /singularity
+
+%environment
+export PATH=$PATH:/home/code/ciftify/ciftify/bidsapp
+%runscript
+exec /singularity "$@"
+%startscript
+exec /singularity "$@"

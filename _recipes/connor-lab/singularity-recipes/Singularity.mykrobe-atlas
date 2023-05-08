@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: centos:latest
+
+%post
+    yum -y update
+    yum -y install epel-release
+    yum -y install gcc gcc-c++ git make wget zlib-devel 
+    yum -y install python34 python34-devel python34-pip
+
+    curl -fsSL 'https://repo.mongodb.org/yum/redhat/mongodb-org-3.0.repo' -o /etc/yum.repos.d/mongodb-org-3.0.repo
+
+    yum install -y mongodb-org
+    
+    cd /usr/local/bin
+    git clone --recursive -b geno_kmer_count https://github.com/phelimb/mccortex mccortex-geno_kmer_count
+    cd mccortex-geno_kmer_count && make clean && make
+    ln -s /usr/local/bin/mccortex-geno_kmer_count/bin/mccortex31 /usr/local/bin/
+
+    cd /usr/local/bin
+    git clone https://github.com/Mykrobe-tools/mykrobe-atlas-cli.git mykrobe-latest
+    cd mykrobe-latest
+    wget -O mykrobe-data.tar.gz http://s3.climb.ac.uk/mykrobe/mykrobe-data.tgz && tar -zxvf mykrobe-data.tar.gz && rm -fr src/mykrobe/data && mv mykrobe-data src/mykrobe/data
+    pip3.4 install .
+
+    curl -fsSL 'https://raw.githubusercontent.com/iqbal-lab/Mykrobe-predictor/master/scripts/json_to_tsv.py' -o /usr/local/bin/json_to_tsv.py
+    chmod +x /usr/local/bin/json_to_tsv.py
+
+    ln -s /usr/local/bin/mccortex31 /usr/bin/
+
+%labels
+    Maintainer m-bull
+    Version mykrobe-atlas-latest

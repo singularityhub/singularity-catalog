@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: continuumio/miniconda
+
+
+%labels
+MAINTAINER ynanyam@iastate.edu
+
+%post
+
+#install CDNA_cupcake
+apt update -y
+apt install -y gcc zlib1g-dev
+. /opt/conda/bin/activate base
+cd /opt
+git clone https://github.com/Magdoll/cDNA_Cupcake.git
+cd cDNA_Cupcake
+conda install -y setuptools numpy
+python setup.py build
+python setup.py install

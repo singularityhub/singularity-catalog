@@ -1,0 +1,30 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  fastp_Version 0.19.5
+
+%apprun fastp
+  exec fastp "${@}"
+
+%runscript
+  exec fastp "${@}"
+
+%post
+  # Get dependencies
+  apk update
+  apk add gcc g++ make zlib-dev zlib libstdc++ libgcc
+
+  # Install fastp
+  cd /tmp
+  wget https://github.com/OpenGene/fastp/archive/v0.19.5.tar.gz
+  tar xzf v0.19.5.tar.gz
+  cd fastp-*
+  make -j$(nproc)
+  make install
+
+  # Clean up
+  apk del gcc make g++ zlib-dev
+  rm -rf /var/cache/apk/*
+  rm -rf /tmp/*

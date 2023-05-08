@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: alpine:3.8
+
+%post
+    apk update
+    apk upgrade
+    apk add git make
+    apk add bash cmake curl gcc g++ bzip2-dev libc-dev ncurses-dev xz-dev zlib-dev
+
+    cd /usr/local/bin
+    git clone https://github.com/Illumina/interop.git
+    mkdir build && cd build
+    cmake ../interop
+    cmake --build .
+    make install
+
+    # Add this for interoperability between conda and singularity installs
+    exes=$(find /usr/local/bin/ -maxdepth 1 -mindepth 1 -perm /u+x)
+    for path in ${exes}; do
+      file=$(basename ${path})
+      ln -s ${path} /usr/local/bin/interop_${file}
+    done
+      
+      
+
+%labels
+    Maintainer m-bull
+    Version interop-v1.1.8 

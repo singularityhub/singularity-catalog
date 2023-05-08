@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: continuumio/miniconda
+
+%runscript
+if [ "$#" -eq 0 ]
+then
+  echo "You must supply a notebook to convert"
+  echo "See options for --to and usage: http://nbconvert.readthedocs.io/en/5.x/usage.html"
+  exit 1
+fi
+
+exec /opt/conda/bin/jupyter nbconvert "$@"
+
+
+%help
+To run the container:
+
+    singularity run --to pdf notebook.ipynb
+
+Issues: 
+
+    https://github.com/vsoch/singularity-nbconvert/issues
+
+%environment
+DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND
+
+%post
+
+DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND
+apt-get update && apt-get install -y pandoc
+/opt/conda/bin/conda install -y nbconvert
+apt-get install -y texlive texlive-xetex

@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: ubuntu:18.10
+
+%help
+
+    Container for BWA 0.7.17
+    http://bio-bwa.sourceforge.net/
+
+%labels
+
+    VERSION "BWA 0.7.17"
+
+
+%post
+
+    # install dependencies via apt
+    apt update
+    apt install -y \
+        bwa
+
+%runscript
+
+    exec /usr/bin/bwa "$@"
+
+    

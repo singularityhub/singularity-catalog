@@ -1,0 +1,26 @@
+Bootstrap: shub
+From: team113sanger/t113-singularity:r-3.6.0.base-1.0.0
+IncludeCmd: no
+
+%help
+Help message
+
+%labels
+        Maintainer Team113 Wellcome Sanger Institute
+        Version v1.0.0
+        R_Version 3.6.0
+
+%environment
+        export LC_ALL=en_US.UTF-8
+        export LANG=en_US.UTF-8
+
+%post
+
+	# Install R packages from bioconductor
+	Rscript -e "install.packages('BiocManager', repos='https://www.stats.bris.ac.uk/R/', dependencies=TRUE, clean = TRUE)"
+	Rscript -e "BiocManager::install('methylKit')"
+  
+	# Clean up
+	yum clean all && rm -rf /var/cache/yum
+	#rm -rf /tmp/${R_VERSION}
+	#rm -rf /tmp/install-tl*

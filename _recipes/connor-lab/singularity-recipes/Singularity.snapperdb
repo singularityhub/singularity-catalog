@@ -1,0 +1,57 @@
+Bootstrap: docker
+From: centos:latest
+
+%post
+    yum install -y epel-release
+    yum -y update
+    yum install -y git make
+    yum install -y bzip2 bzip2-devel gcc-c++ ncurses-devel java-1.8.0-openjdk-headless unzip xz-devel zlib-devel
+    yum install -y python-devel python2-pip
+
+ 
+    pip install cython
+    pip install argparse bintrees biopython psycopg2-binary paramiko PyVCF PyYAML hashids joblib
+
+    pip install git+https://github.com/m-bull/PHEnix.git
+    pip install git+https://github.com/m-bull/snapperdb.git
+   
+    # SAMtools
+    curl -fsSL 'https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2' | tar -xj -C /tmp/
+    cd /tmp/samtools-1.9 && ./configure && make && make install
+    rm -rf /tmp/samtools-1.9
+
+    # BCFtools
+    curl -fsSL 'https://github.com/samtools/bcftools/releases/download/1.9/bcftools-1.9.tar.bz2' | tar -xj -C /tmp/
+    cd /tmp/bcftools-1.9 && ./configure && make && make install
+    rm -rf /tmp/bcftools-1.9
+
+    # Minimap2
+    cd /tmp
+    git clone https://github.com/lh3/minimap2 /tmp/minimap2
+    cd /tmp/minimap2
+    make
+    mv /tmp/minimap2/minimap2 /usr/local/bin/
+    rm -rf /tmp/minimap2
+
+    # BWA
+    cd /tmp
+    git clone https://github.com/lh3/bwa /tmp/bwa
+    cd /tmp/bwa
+    make
+    mv /tmp/bwa/bwa /usr/local/bin/
+    rm -rf /tmp/bwa
+
+    # Picard
+    curl -fsSL 'http://github.com/broadinstitute/picard/releases/download/2.20.4/picard.jar' --output /usr/local/bin/picard.jar
+
+    # GATK
+    curl -fsSL 'https://software.broadinstitute.org/gatk/download/auth?package=GATK-archive&version=3.8-1-0-gf15c1c3ef' | tar -xj -C /usr/local/bin
+    find /usr/local/bin/GenomeAnalysisTK* -name "GenomeAnalysisTK.jar" -exec ln -s {} /usr/local/bin \;
+
+%environment
+    export PICARD_JAR=/usr/local/bin/picard.jar
+    export GATK_JAR=/usr/local/bin/GenomeAnalysisTK.jar
+
+%labels
+    Maintainer m-bull
+    Version snapperdb-m-bull-git-latest

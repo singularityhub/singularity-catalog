@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: alpine:3.9
+
+%help
+    Container for vt 0.57721
+
+%labels
+    VERSION "vt 0.57721"
+
+%post
+    # packages
+    apk add --update \
+        bash \
+        build-base \
+        bzip2-dev \
+        gcc \
+        git \
+        wget \
+        xz-dev \
+        zlib-dev
+
+    # download vt
+    mkdir vt
+    wget \
+        -O "vt.tar.gz" \
+        --no-check-certificate \
+        https://github.com/atks/vt/archive/0.57721.tar.gz
+    tar -zxf vt.tar.gz \
+        -C vt \
+        --strip-components 1
+    cd vt || exit 1
+    make
+    make test
+    cp vt /usr/local/bin
+    cd .. || exit 1
+    rm -rf vt vt.tar.gz
+
+%runscript
+    exec /usr/local/bin/vt "$@"

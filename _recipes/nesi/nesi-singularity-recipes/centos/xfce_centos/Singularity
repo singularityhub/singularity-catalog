@@ -1,0 +1,14 @@
+Bootstrap: library
+From: centos:7.6
+
+%post
+	yum -y update
+	yum -y install epel-release
+	yum -y groups install "X Window System"
+	yum -y groupinstall xfce
+
+%environment
+	export LC_ALL=C
+
+%runscript
+	startxfce4

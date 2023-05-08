@@ -1,0 +1,25 @@
+Bootstrap: shub
+From: TomHarrop/align-utils:minimap2_2.17r941
+
+# Bootstrap: localimage
+# From: /home/tom/Containers/align-utils/img/minimap2_2.17r941.sif
+
+%help
+    ragtag 1.0.1
+    https://github.com/malonge/RagTag
+    
+%labels
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "ragtag 1.0.1"
+
+%post
+    apt-get update
+    apt-get install -y \
+        git \
+        python3 \
+        python3-pip
+
+    pip3 install git+git://github.com/malonge/RagTag@v1.0.1
+
+%runscript
+    exec /usr/local/bin/ragtag.py "$@"

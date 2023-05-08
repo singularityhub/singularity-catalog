@@ -1,0 +1,49 @@
+Bootstrap: docker
+From: ubuntu:xenial
+
+# Lyveset singularity container
+
+%environment
+    export LC_ALL=C
+
+%post  
+    apt-get update && apt-get install -y\
+       git\
+       perl\
+       libfile-slurp-perl\
+       openjdk-9-jre\
+       bioperl\
+       wget\
+       libz-dev\
+       git\
+       libncurses5-dev\
+       libncursesw5-dev\
+       build-essential\
+       ncbi-blast+\
+       libsvn-perl\
+       subversion\
+       libsvn1\
+       automake1.11\
+       pip \
+       python3.6 \
+       python-dev \
+       python3-pip \
+       libpthread-stubs0-dev\
+       cpanminus\
+       mpich\
+       clang\
+       libargtable2-0 \
+       smalt && \
+       apt-get clean && apt-get autoclean && \
+       rm -rf /var/lib/apt/lists/*
+    
+    
+    pip install -I ete3
+    
+
+    
+    # Add env
+    #echo 'export PATH=/usr/local/lyve-SET/scripts:$PATH' >> $SINGULARITY_ENVIRONMENT
+
+    
+%test

@@ -1,0 +1,46 @@
+Bootstrap: shub
+From: TomHarrop/assembly-utils:quast_5.0.2
+
+%help
+    Assembly Genome Browser (AGB)
+    https://almiheenko.github.io/AGB
+
+%labels
+    MAINTAINER "Tom Harrop"
+    VERSION "AGB a41ac9e"
+
+%post
+    # faster apt downloads, will it break?
+    export DEBIAN_FRONTEND=noninteractive
+    (
+        . /etc/os-release
+        cat << _EOF_ > mirror.txt
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME} main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-updates main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-backports main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-security main restricted universe multiverse
+
+_EOF_
+        mv /etc/apt/sources.list /etc/apt/sources.list.bak
+        cat mirror.txt /etc/apt/sources.list.bak > /etc/apt/sources.list
+    )
+
+    apt-get update
+    apt-get install -y \
+        cython3 \
+        git \
+        python3-gfapy \
+        python3-networkx \
+        python3-pip
+
+    # python3 dependencies
+    /usr/bin/pip3 install \
+        git+git://github.com/networkx/networkx-metis@34398b7
+
+    # agb
+    /usr/bin/pip3 install \
+         git+git://github.com/almiheenko/AGB.git@a41ac9e
+
+%runscript
+    exec /usr/local/bin/agb.py "$@"
+

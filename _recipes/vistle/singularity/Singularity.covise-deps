@@ -1,0 +1,125 @@
+BootStrap: localimage
+From: centos7.sif
+
+%labels
+    MAINTAINER "Martin Aumüller" <aumueller@hlrs.de>
+
+%runscript
+    echo "Use this container a foundation for building COVISE"
+
+
+%files
+    osg-find-coin.diff /osg-find-coin.diff
+    embree-usr-symlink-v2.17.x.diff /embree-usr-symlink.diff
+
+%post
+    ISPCVER=1.14.1
+    VTKVER=9.0.1
+
+    . /etc/buildenv.sh
+
+    export PREFIX=/usr
+
+    mkdir -p /build && cd /build \
+        && git clone git://github.com/intel/tbb.git \
+        && cd tbb \
+        && git checkout origin/tbb_2019 \
+        && make -j $(getconf _NPROCESSORS_ONLN) \
+        && cp -R include/tbb /usr/include \
+        && cp -a build/linux_intel64_*_release/*.so* /usr/lib64 \
+        && cd / && rm -rf /build/tbb
+
+    mkdir -p /build && cd /build \
+        && git clone https://github.com/lz4/lz4.git \
+        && cd lz4 \
+        && make -j $(getconf _NPROCESSORS_ONLN) install PREFIX=$PREFIX LIBDIR=$PREFIX/lib64 \
+        && cd / && rm -rf /build/lz4
+
+    mkdir -p /build && cd /build \
+        && git clone https://github.com/Unidata/netcdf-c.git -b v4.6.3 \
+        && cd netcdf-c \
+        && ./configure --prefix=/usr --libdir=/usr/lib64 \
+        && make -j $(getconf _NPROCESSORS_ONLN) install \
+        && cd / && rm -rf /build/netcdf-c
+
+    mkdir -p /build && cd /build \
+        && git clone https://github.com/Unidata/netcdf-cxx4.git -b v4.3.1 \
+        && cd netcdf-cxx4 \
+        && ./configure --prefix=/usr --libdir=/usr/lib64 \
+        && make -j $(getconf _NPROCESSORS_ONLN) install \
+        && cd / && rm -rf /build/netcdf-cxx4
+
+    cd / \
+         && wget https://www.unidata.ucar.edu/downloads/netcdf/ftp/netcdf-cxx-4.2.tar.gz \
+         && tar -C /build -x -f netcdf-cxx-4.2.tar.gz \
+         && cd /build/netcdf-cxx-4.2 \
+         && ./configure --prefix=/usr --libdir=/usr/lib64 \
+         && make -j $(getconf _NPROCESSORS_ONLN) install \
+         && cd / && rm -rf /build/netcdf-cxx-4.2
+
+#    ver=1_68_0
+#    mkdir -p /build && cd /build \
+#        && wget https://dl.bintray.com/boostorg/release/1.68.0/source/boost_$ver.tar.gz \
+#        && tar xf boost_$ver.tar.gz \
+#        && cd boost_$ver \
+#        && ./bootstrap.sh --prefix=/usr --libdir=/usr/lib64 --without-libraries=python,mpi \
+#        && ./b2 cxxstd=11 threading=multi variant=release link=shared -j $(getconf _NPROCESSORS_ONLN) install \
+#        && cd / && rm -rf /build/boost_$ver /build/boost_$ver.tar.gz
+
+    ISPCTAR=ispc-v${ISPCVER}-linux.tar.gz
+    # install ispc - prerequisite for embree
+    cd / \
+        && wget https://github.com/ispc/ispc/releases/download/v${ISPCVER}/$ISPCTAR \
+        && tar -C /usr/bin -x -f $ISPCTAR --strip-components=2 ispc-v${ISPCVER}-linux/bin/ispc \
+        && rm -f $ISPCTAR
+
+    # Embree 3, compiled with GCC 4.8
+    mkdir -p /build && cd /build \
+        && git clone git://github.com/embree/embree.git \
+        && cd embree \
+        && git checkout origin/master \
+        && cat < /embree-usr-symlink.diff \
+        && patch -p1 -E < /embree-usr-symlink.diff \
+        && rm /embree-usr-symlink.diff \
+        && mkdir -p build \
+        && cd build && cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PREFIX -DEMBREE_TUTORIALS=OFF .. && cmake --build . --target install \
+        && cd / && rm -rf /build/embree
+
+    mkdir -p /build && cd /build \
+        && git clone --recursive git://git.ffmpeg.org/ffmpeg.git -b release/4.3 \
+        && cd ffmpeg && mkdir -p build && cd build \
+        && ../configure --enable-shared --prefix=$PREFIX --libdir=$PREFIX/lib64 \
+        && make -j $(getconf _NPROCESSORS_ONLN) install \
+        && cd / && rm -rf /build/ffmpeg
+
+    mkdir -p /build && cd /build \
+        && git clone --recursive https://github.com/vrpn/vrpn.git \
+        && cd vrpn && mkdir build && cd build \
+        && cmake -GNinja .. -DCMAKE_INSTALL_PREFIX=$PREFIX -DCMAKE_BUILD_TYPE=Release -DLIB_SUFFIX=64 \
+        && cmake --build . --target install \
+        && cd / && rm -rf /build/vrpn
+
+    mkdir -p /build && cd /build \
+       && git clone --recursive git://github.com/openscenegraph/osg.git -b OpenSceneGraph-3.6 \
+       && cd osg && mkdir -p build \
+       && git apply /osg-find-coin.diff \
+       && rm /osg-find-coin.diff \
+       && cd build \
+       && cmake .. -DCMAKE_INSTALL_PREFIX=$PREFIX -DLIB_POSTFIX=64 -G Ninja \
+       && cmake --build . --target install \
+       && cd / && rm -rf /build/osg
+
+    mkdir -p /build && cd /build \
+       && git clone --recursive https://github.com/Kitware/VTK.git -b v${VTKVER} \
+       && cd VTK && mkdir -p build \
+       && cd build \
+       && cmake .. -DCMAKE_INSTALL_PREFIX=$PREFIX -DBUILD_TESTING=BOOL:FALSE -G Ninja \
+       && cmake --build . --target install \
+       && cd / && rm -rf /build/VTK
+
+    . /etc/cleanup.sh
+
+    echo "export PREFIX=$PREFIX" >> /etc/buildenv.sh
+
+%environment
+    . /etc/buildenv.sh

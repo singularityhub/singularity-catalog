@@ -1,0 +1,19 @@
+Bootstrap: docker
+
+From: ubuntu:latest
+
+%labels
+    Topic Bioinformatics
+    Input FASTQ
+    Output FASTQ
+    fastp latest
+
+
+%post
+    apt-get update --fix-missing && apt-get install -y wget
+    wget --quiet http://opengene.org/fastp/fastp -O /opt/fastp
+    chmod 777 /opt/fastp
+
+%runscript
+    exec /opt/fastp "$@"
+

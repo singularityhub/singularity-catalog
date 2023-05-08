@@ -1,0 +1,106 @@
+Bootstrap: docker
+From: ubuntu:19.04
+
+%help
+    OptaPlanner 7.23.0
+
+    # add application user
+    cd /wildfly
+
+    bin/add-user.sh
+
+
+singularity run \
+    --writable-tmpfs \
+    -B test/data:/wildfly/standalone/data,test/log:/wildfly/standalone/log,test/tmp:/wildfly/standalone/tmp \
+    optaplanner_7.23.0.sif
+
+
+singularity shell \
+    --writable-tmpfs \
+    -B test/data:/wildfly/standalone/data,test/log:/wildfly/standalone/log,test/tmp:/wildfly/standalone/tmp \
+    optaplanner_7.23.0.sif
+
+
+export JAVA_OPTS="-Xms64m -Xmx32g -XX:MetaspaceSize=1000M -XX:MaxMetaspaceSize=2560m -Djava.net.preferIPv4Stack=true"
+
+    bin/standalone.sh --server-config=standalone-full.xml \
+        -Dorg.kie.server.user=planner \
+        -Dorg.kie.server.pwd=Planner123_ \
+        -Dorg.kie.server.controller.user=planner \
+        -Dorg.kie.server.controller.pwd=Planner123_ \
+        -Dorg.kie.server.id=wildfly-kieserver \
+        -Dorg.kie.server.location=http://localhost:8080/kie-server/services/rest/server \
+        -Dorg.kie.server.controller=http://localhost:8080/business-central/rest/controller
+
+# download and build?
+apt install maven git openjdk-8-jre
+git clone https://github.com/kiegroup/optaweb-employee-rostering.git
+mvn clean install -DskipTests
+# to skip past javadoc errors
+mvn clean install -DskipTests -DargLine="--add-modules java.xml.ws.annotation"
+
+%labels
+    MAINTAINER "Tom Harrop"
+
+%post
+    # dependencies
+    apt-get update
+    # xorg?
+    apt-get install -y \
+        default-jre \
+        unzip \
+        wget
+
+    # install wildfly
+    wget \
+        -O wildfly.tar.gz \
+        --no-check-certificate \
+        https://download.jboss.org/wildfly/17.0.0.Final/wildfly-17.0.0.Final.tar.gz
+    mkdir wildfly
+    tar -zxf wildfly.tar.gz \
+        -C wildfly \
+        --strip-components 1
+    rm -r wildfly.tar.gz
+
+    # kie-server
+    mkdir kie-server
+    cd kie-server || exit 1
+    wget -O kie-server.zip \
+        https://download.jboss.org/drools/release/7.23.0.Final/kie-server-distribution-7.23.0.Final.zip 
+    unzip kie-server
+    cp kie-server-7.23.0.Final-ee7.war \
+        ../wildfly/standalone/deployments/kie-server.war
+    cd .. || exit 1
+    rm -rf kie-server kie-server.zip
+
+    # workbench
+    cd wildfly/standalone/deployments || exit 1
+    wget -O business-central.war \
+        https://download.jboss.org/drools/release/7.23.0.Final/business-central-7.23.0.Final-wildfly14.war
+
+    # add user
+    cd /wildfly
+    bin/add-user.sh -a \
+        --group kie-server,admin \
+        --user planner \
+        --password Planner123_
+
+%environment
+    export JAVA_OPTS="-Xms64m -Xmx32g -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true"
+
+%runscript
+    exec \
+        /wildfly/bin/standalone.sh --server-config=standalone-full.xml \
+        -Dorg.kie.server.user=planner \
+        -Dorg.kie.server.pwd=Planner123_ \
+        -Dorg.kie.server.controller.user=planner \
+        -Dorg.kie.server.controller.pwd=Planner123_ \
+        -Dorg.kie.server.id=wildfly-kieserver \
+        -Dorg.kie.server.location=http://localhost:8080/kie-server/services/rest/server \
+        -Dorg.kie.server.controller=http://localhost:8080/business-central/rest/controller \
+        "$@"
+
+%startscript
+    cd /wildfly/bin &
+    nohup ./standalone.sh > /dev/null 2>&1 < /dev/null &

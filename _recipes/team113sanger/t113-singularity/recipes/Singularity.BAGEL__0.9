@@ -1,0 +1,31 @@
+BootStrap: docker
+From: python:2.7.16-alpine3.10
+
+%labels
+        Maintainer Team113 Wellcome Sanger Institute
+        Version v1.0.0
+
+%environment
+        export LC_ALL=en_US.UTF-8
+        export LANG=en_US.UTF-8
+
+%runscript
+        exec BAGEL.py "$@"
+
+%post
+        # Link python
+        ln -s /usr/local/bin/python /usr/bin/python
+        
+        # Get python dependencies
+        apk add py2-numpy py2-scipy
+        apk add py2-pandas --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted
+        
+        # Get BAGEL scripts and reference files
+        apk add wget
+        wget -O /usr/local/bin/BAGEL-calc_foldchange.py https://sourceforge.net/p/bagel-for-knockout-screens/code/ci/master/tree/BAGEL-calc_foldchange.py?format=raw
+        wget -O /usr/local/bin/BAGEL.py https://sourceforge.net/p/bagel-for-knockout-screens/code/ci/master/tree/BAGEL.py?format=raw
+        wget -O /usr/local/training_essentials.txt https://sourceforge.net/projects/bagel-for-knockout-screens/files/training_essentials.txt
+        wget -O /usr/local/training_nonessential.txt https://sourceforge.net/projects/bagel-for-knockout-screens/files/training_nonessential.txt
+
+        # Update permissions
+        chmod +x /usr/local/bin/BAGEL*

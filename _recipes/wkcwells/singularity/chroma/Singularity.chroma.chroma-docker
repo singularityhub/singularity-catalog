@@ -1,0 +1,12 @@
+# Version 0.9 (just to trigger commits and singularity-hub builds)
+Bootstrap: docker
+From: kwells/chroma
+
+%labels
+    AUTHOR ako.jamil@yale.edu
+    AUTHOR kevin.wells@stanford.edu
+
+%environment
+    export PATH=/usr/local/cuda/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+    export CUDA_INC_DIR=/usr/local/cuda/include

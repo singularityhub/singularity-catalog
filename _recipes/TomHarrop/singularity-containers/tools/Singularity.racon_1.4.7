@@ -1,0 +1,18 @@
+Bootstrap: library
+From: tomharrop/default/genomics:racon_1.4.7
+
+%help
+    Racon v1.4.7
+    https://github.com/isovic/racon
+
+%labels
+    MAINTAINER "Tom Harrop"
+    VERSION "Racon v1.4.7"
+
+%post
+
+%runscript
+    exec /racon/build/bin/racon "$@"
+
+%environment
+    export PATH="${PATH}:/racon/build/bin"

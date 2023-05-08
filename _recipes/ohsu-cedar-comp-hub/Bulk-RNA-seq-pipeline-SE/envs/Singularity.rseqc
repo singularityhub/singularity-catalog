@@ -1,0 +1,17 @@
+Bootstrap: docker
+
+From: continuumio/miniconda3
+
+%files
+    rseqc.yaml
+
+%environment
+    PATH=/opt/conda/envs/$(head -1 rseqc.yaml | cut -d' ' -f2)/bin:$PATH
+
+%post
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc
+    echo "source activate $(head -1 rseqc.yaml | cut -d' ' -f2)" > ~/.bashrc
+    /opt/conda/bin/conda env create -f rseqc.yaml
+
+%runscript
+    exec /bin/bash

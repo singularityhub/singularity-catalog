@@ -83,7 +83,7 @@ From: nemo_baseOS.sif
     # output directory. By default, the output directory will be the job id 
     # (passed using $SLURM_JOB_ID).    
 
-    echo $PWD
+    echo  "We start in :" $PWD
     
     if ! [[ $1 == "nemo" || $1 == "xios" ]]    
     then
@@ -110,16 +110,18 @@ From: nemo_baseOS.sif
     fi 
     echo "Results directory is: " $results_dir
     cd $results_dir
-    ls
-    echo $PWD
+  
+    echo "We are in :" $PWD
     for file in /nemo/nemo/cfgs/NEMO/EXP00/*
     do
-    
+        
         # Check if the file is already symlinked to prevent lots of spurious 
         # error messages
         
         linkfile=`basename $file`
-
+ 
+        echo "linking file: " $linkfile
+        
         if ! [[ -L $linkfile ]]
         then
             echo $file $linkfile
@@ -127,7 +129,6 @@ From: nemo_baseOS.sif
         fi
     done
     echo "done linking"
-    echo $PWD
     if [[ $1 == 'nemo' ]]
     then
         /opt/nemo/nemo

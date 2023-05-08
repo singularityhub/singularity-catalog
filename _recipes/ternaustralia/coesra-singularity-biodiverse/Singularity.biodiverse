@@ -1,0 +1,56 @@
+BootStrap: docker
+From: ubuntu:16.04
+
+
+%startscript
+  /opt/biodiverse/BiodiverseGUI
+
+%runscript
+  exec /opt/biodiverse/BiodiverseGUI
+
+%post
+  apt update -y
+  apt install -y wget curl
+
+  apt install -y libexpat1-dev \
+		 libssl-dev \
+		 libgnome2-canvas-perl \
+		 libcairo2-dev \
+		 libpango1.0-dev \
+		 libgtk2.0-dev	\
+		 libgnomecanvas2-dev \
+		 libarmadillo-dev \
+		 libpoppler-dev \
+		 libepsilon-dev \
+		 liblzma-dev \
+		 libkml-dev \
+		 libfreexl-dev \
+		 libogdi3.2-dev
+
+  apt install -y software-properties-common
+  apt update -y
+  add-apt-repository ppa:ubuntugis/ppa
+  apt-get -y update
+  apt-get install -y gdal-bin openssl libssl-dev
+
+  curl -L https://cpanmin.us | perl - App::cpanminus --force
+
+  cpanm Task::Biodiverse::NoGUI --force
+  cpanm Task::Biodiverse --force
+
+  cpanm Panda::Lib
+
+  cpanm http://www.biodiverse.unsw.edu.au/downloads/Biodiverse-Utils-1.06.tar.gz
+
+  cd /opt
+  wget http://biodiverse.unsw.edu.au/downloads/biodiverse_2.1_linux.tar.gz
+  tar -xvf biodiverse*.gz
+
+  rm biodiverse*.gz
+
+  mv biodiverse* biodiverse
+
+
+   
+
+

@@ -1,0 +1,16 @@
+Bootstrap: docker
+
+From: debian:latest
+
+%labels
+    Topic Bioinformatics
+    IGB latest
+
+%post
+    apt-get update --fix-missing && apt-get install -y openjdk-8-jre git maven openjfx
+    git clone https://bitbucket.org/lorainelab/integrated-genome-browser
+    cd integrated-genome-browser
+    mvn clean install -DskipTests=true
+
+%runscript
+    exec /integrated-genome-browser/run_igb.sh 

@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: python:3.8.0-buster
+
+%help
+
+    Python 3.8.0 with Cutadapt 2.6
+    
+%labels
+
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "Cutadapt 2.6"
+
+%runscript
+
+    exec /usr/local/bin/cutadapt "$@"
+
+%post
+    /usr/local/bin/pip3 install \
+        cutadapt==2.6
+

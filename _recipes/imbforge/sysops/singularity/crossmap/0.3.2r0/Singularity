@@ -1,0 +1,24 @@
+BootStrap: docker
+From: alpine:latest
+
+%labels
+  Maintainer Christian Dietrich
+  CrossMap_Version 0.3.2
+
+%apprun CrossMap.py
+  exec CrossMap.py "${@}"
+
+%runscript
+  exec CrossMap.py "${@}"
+
+%post
+  # Get dependencies
+  apk update
+  apk add python3 python3-dev gcc g++ zlib-dev zlib bzip2-dev libbz2 xz-dev xz-libs make
+
+  # Install CrossMap
+  pip3 --no-cache-dir install CrossMap==0.3.2
+
+  # Clean up
+  apk del python3-dev make gcc g++ zlib-dev bzip2-dev xz-dev
+  rm -rf /var/cache/apk/*

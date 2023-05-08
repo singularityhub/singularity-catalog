@@ -1,0 +1,46 @@
+Bootstrap: docker
+From: ubuntu:19.10
+
+%help
+    Container for vcflib 1.0.1
+
+%labels
+    VERSION "vcflib 1.0.1"
+
+%post
+    # faster apt downloads
+    export DEBIAN_FRONTEND=noninteractive
+    (
+        . /etc/os-release
+        cat << _EOF_ > mirror.txt
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME} main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-updates main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-backports main restricted universe multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-security main restricted universe multiverse
+
+_EOF_
+        mv /etc/apt/sources.list /etc/apt/sources.list.bak
+        cat mirror.txt /etc/apt/sources.list.bak > /etc/apt/sources.list
+    )
+
+    # packages
+    apt update
+    apt install -y \
+        build-essential \
+        git \
+        libbz2-dev \
+        liblzma-dev \
+        python3 \
+        wget \
+        zlib1g-dev
+
+    # download vcflib
+    git clone \
+        https://github.com/vcflib/vcflib.git
+    cd vcflib || exit 1
+    git checkout tags/v1.0.1
+    git submodule update --init --recursive
+    make openmp
+
+%environment
+    export PATH="${PATH}:/vcflib/bin"

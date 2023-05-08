@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%environment
+    unset LC_ALL
+    LANG=C
+    export LANG
+
+%post
+    apt-get -y update
+    apt-get -y install build-essential git zlib1g-dev libgsl0-dev
+    mkdir -p /usr/local/src
+    cd /usr/local/src
+    git clone https://github.com/ExpressionAnalysis/ea-utils.git
+    cd ea-utils/clipper
+    make install
+    # TODO: copy other executables?
+    cp /usr/local/src/ea-utils/clipper/fastq-mcf /usr/local/bin
+
+

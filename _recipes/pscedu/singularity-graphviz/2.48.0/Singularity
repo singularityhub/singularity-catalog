@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://github.com/pscedu/singularity-graphviz
+    COPYRIGHT Copyright © 2021-2022 Pittsburgh Supercomputing Center. All Rights Reserved. 
+    VERSION 2.48.0
+
+%post
+    apt update
+    apt install -y software-properties-common
+    apt install -y curl gcc g++ build-essential mesa-common-dev
+    cd /opt
+    curl --output graphviz-2.48.0.tar.gz https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/2.48.0/graphviz-2.48.0.tar.gz
+    tar -xvf graphviz-2.48.0.tar.gz && rm -f graphviz-2.48.0.tar.gz
+    cd graphviz-2.48.0
+    ./configure
+    make
+    make install
+    apt remove -y curl
+    apt clean
+
+####################################################################################
