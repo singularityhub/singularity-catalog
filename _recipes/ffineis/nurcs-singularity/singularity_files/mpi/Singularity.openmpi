@@ -1,0 +1,78 @@
+BootStrap: docker
+From: ubuntu:16.04
+
+%post
+
+    # ------------------------------------------------ #
+    #                   Kernel overhead                #
+    # ------------------------------------------------ #
+
+    apt-get -y update && apt-get -y upgrade
+    apt-get -y --allow-unauthenticated install \
+        apt-utils \
+        autoconf \
+        automake \
+        make \
+        cmake \
+        build-essential \
+        zlib1g-dev \
+        libncurses5-dev \
+        libssl-dev \
+        libffi-dev \
+        locales \
+        gfortran \
+        libtool \
+        wget \
+        git \
+        zip \
+        pkg-config \
+        python-dev \
+        python-pip \
+        openmpi-bin \
+        libcr-dev \
+        mpich \
+        mpich-doc
+
+    locale-gen "en_US.UTF-8"
+    dpkg-reconfigure locales
+    export LANGUAGE="en_US.UTF-8"
+    echo 'LANGUAGE="en_US.UTF-8"' >> /etc/default/locale
+    echo 'LC_ALL="en_US.UTF-8"' >> /etc/default/locale
+
+    # ------------------------------------------------ #
+    #    Scientific computing packages for Python2     #
+    # ------------------------------------------------ #
+
+    pip install numpy # requisite for everything else
+    pip install cython \
+        pandas \
+        feather-format \
+        mock \
+        scipy \
+        sklearn \
+        matplotlib \
+        nose \
+        mlpy \
+        nltk \
+        statsmodels \
+        opencv-python \
+        biopython
+
+    # mission critical - mpi4py package
+    pip install mpi4py
+
+
+%files
+
+    mpi_hello.py /opt
+    singularity_logo.txt /opt
+
+
+%runscript
+
+    cat /opt/singularity_logo.txt
+
+
+%test
+
+    mpirun --allow-run-as-root -np 1 python /opt/mpi_hello.py

@@ -1,0 +1,21 @@
+Bootstrap:docker
+From:nvidia/cuda:9.0-cudnn7-devel-centos7
+
+%environment
+export KERAS_BACKEND=tensorflow
+export PATH=/usr/local/cuda/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64
+
+%post
+yum update -y
+yum install -y @"Development Tools"
+yum install -y epel-release
+yum install -y libgomp cmake3 vim cuda-9.0 cuda-drivers xorg-x11-drv-nvidia-cuda
+yum install -y git gcc-c++ sudo curl openblas lapack python36 wget
+wget https://bootstrap.pypa.io/get-pip.py
+python36 get-pip.py
+python36 -m pip install tensorflow-gpu
+python36 -m pip install keras pillow
+
+%runscript
+#exec th "$@"

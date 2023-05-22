@@ -1,0 +1,24 @@
+BootStrap: docker
+From: python:3.7.16-slim-bullseye
+
+%files
+    setup.py app/
+    README.md app/
+    requirements.txt app/
+    src/ app/src/
+    src/tools/acme_cems/docker_startup_scripts/ACME_processing_and_eval.sh app/
+
+%post
+    apt-get -y update && apt-get -y upgrade
+    apt-get -y install ffmpeg
+    chmod +x app/ACME_processing_and_eval.sh
+    pip install --upgrade pip
+    pip install --no-cache-dir -e app/
+
+%runscript
+    echo "Container was created $NOW"
+    echo "Arguments received: $*"
+    exec ./ACME_processing_and_eval.sh $@
+
+%help
+    This is a Singularity container to run the OWLS-Autonomy ACME package for processing mass spec data..

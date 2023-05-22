@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: ubuntu
+
+%help
+Help me. I'm in the container.
+
+%setup
+
+# 2. This is how to copy files for >= 2.3
+%post
+    apt update 
+    apt install -y  g++ build-essential tar wget cmake
+    wget http://cern.ch/geant4-data/releases/geant4.10.05.p01.tar.gz -O geant4.tar.gz
+    tar -zxvf geant4.tar.gz
+    cd geant4*/
+    mkdir build
+    cd build
+    cmake -D GEANT4_USE_SYSTEM_EXPAT=OFF -D GEANT4_INSTALL_DATA=ON ..
+    make 
+    make install
+    cd ../../
+    rm -rf geant4

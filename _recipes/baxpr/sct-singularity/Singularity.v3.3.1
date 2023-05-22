@@ -1,0 +1,130 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+  Full installation of Spinal Cord Toolbox in /opt/sct. For more information:
+    /opt/README.md
+    singularity apps <container>
+    singularity help --app fmri_pipeline <container>
+    singularity help --app mffe_pipeline <container>
+    singularity help --app swi_pipeline <container>
+
+  
+%files
+  fmri_pipeline /opt
+  mffe_pipeline /opt
+  swi_pipeline /opt
+  README.md /opt
+  test_fmri.sh /opt
+  test_mffe.sh /opt
+
+
+%post
+
+  apt-get update
+  apt-get install -y zip unzip
+    
+  #apt-get install -y linux-libc-dev
+  # Workaround for filename case collision in linux-libc-dev
+  # https://superuser.com/questions/1238903/cant-install-linux-libc-dev-in-ubuntu-on-windows
+  apt-get install -y binutils xz-utils 
+  mkdir pkgtemp
+  cd pkgtemp
+  apt-get download linux-libc-dev
+  ar x linux-libc-dev*deb
+  tar xJf data.tar.xz
+  tar cJf data.tar.xz ./usr
+  ar rcs linux-libc-dev*.deb debian-binary control.tar.xz data.tar.xz
+  dpkg -i linux-libc-dev*.deb
+  cd ..
+  rm -fr pkgtemp
+
+  ## SCT installation
+  apt-get install -y curl wget gcc git libglib2.0-0
+  REPO=neuropoly
+  SCTVER=4.2.1
+  SCTDIR=/opt/sct
+  git clone --branch ${SCTVER} --depth 1 https://github.com/${REPO}/spinalcordtoolbox.git ${SCTDIR}
+  cd ${SCTDIR}
+  ASK_REPORT_QUESTION=false change_default_path=Yes add_to_path=No ./install_sct
+
+  ## Add DICOM, NII, time to the SCT python
+  ${SCTDIR}/python/envs/venv_sct/bin/pip install pydicom nilearn nitime
+  
+  # For X
+  apt-get -y install xvfb
+  
+  # For AFNI
+  apt-get -y install libxkbcommon-x11-0
+  
+  # ImageMagick
+  apt-get install -y ghostscript imagemagick
+  sed -i 's/rights="none" pattern="PDF"/rights="read | write" pattern="PDF"/' \
+    /etc/ImageMagick-6/policy.xml
+
+  # Possible dependencies for wxpython
+  # https://github.com/wxWidgets/Phoenix/issues/465#issuecomment-321891912
+  # libwebkitgtk-dev libjpeg-dev libtiff-dev libgtk2.0-dev libsdl1.2-dev freeglut3 freeglut3-dev
+  # libnotify-dev libgstreamerd-3-dev
+  
+  # Get fsleyes via pip. wxpython and pathlib2 are required first
+  #   https://github.com/wxWidgets/Phoenix/blob/master/README.rst#prerequisites
+  #   https://wxpython.org/pages/downloads/
+  apt-get install -y dpkg-dev build-essential freeglut3-dev libgl1-mesa-dev libglu1-mesa-dev \
+      libgstreamer-plugins-base1.0-dev libgtk-3-dev libjpeg-dev libnotify-dev libpng-dev \
+      libsdl1.2-dev libsdl2-dev libsm-dev libtiff-dev libwebkit2gtk-4.0-dev libxtst-dev
+  ${SCTDIR}/python/envs/venv_sct/bin/pip install -f \
+      https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
+  ${SCTDIR}/python/envs/venv_sct/bin/pip install pathlib2 fsleyes
+
+
+%environment
+  PATH="/opt/sct/bin:${PATH}"
+
+
+%runscript
+  xvfb-run --server-num=$(($$ + 99)) \
+  --server-args='-screen 0 1600x1200x24 -ac +extension GLX' \
+  sct_check_dependencies "$@"
+
+
+
+%apphelp fmri_pipeline
+  Functional MRI analysis pipeline
+
+%appenv fmri_pipeline
+  PATH="/opt/fmri_pipeline:/opt/fmri_pipeline/external/afni:${PATH}"
+
+%apprun fmri_pipeline
+  exec \
+  xvfb-run --server-num=$(($$ + 99)) \
+  --server-args='-screen 0 1600x1200x24 -ac +extension GLX' \
+  fmri_pipeline_launch.sh "$@"
+
+
+%apphelp mffe_pipeline
+  mFFE analysis pipeline
+
+%appenv mffe_pipeline
+  PATH="/opt/mffe_pipeline:${PATH}"
+
+%apprun mffe_pipeline
+  exec \
+  xvfb-run --server-num=$(($$ + 99)) \
+  --server-args='-screen 0 1600x1200x24 -ac +extension GLX' \
+  mffe_pipeline_launch.sh "$@"
+
+
+%apphelp sw_pipeline
+  SWI analysis pipeline
+
+%appenv swi_pipeline
+  PATH="/opt/swi_pipeline:${PATH}"
+
+%apprun swi_pipeline
+  exec \
+  xvfb-run --server-num=$(($$ + 99)) \
+  --server-args='-screen 0 1600x1200x24 -ac +extension GLX' \
+  swi_pipeline_launch.sh "$@"
+

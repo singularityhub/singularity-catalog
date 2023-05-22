@@ -1,0 +1,71 @@
+Bootstrap: docker
+From: ubuntu
+%labels
+MAINTAINER John McCallum cfljam@users.noreply.github.com
+%post
+
+## A Docker Image for MAPGD + htslib + Samtools
+
+
+DEBIAN_FRONTEND=noninteractive
+apt-get update && \
+apt-get -y install \
+build-essential \
+curl \
+gcc \
+git \
+gettext \
+libgsl-dev \
+libcurl4-openssl-dev \
+libgettextpo-dev \
+libbz2-dev \
+libncurses5-dev \
+libsqlite3-dev \
+liblzma-dev \
+nano \
+sqlite3 \
+unzip \
+zlib1g \
+zlib1g-dev \
+zip \
+wget && \
+rm -rf /var/lib/apt/lists/*
+
+###############################
+## Install Samtools + htlslib##
+###############################
+
+export SAMTOOLS_URL="https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2"
+
+wget $SAMTOOLS_URL  -O samtools.tar.bz2 && \
+tar -xjvf samtools.tar.bz2 && \
+cd samtools-* && \
+./configure && \
+make && \
+make prefix=/usr/local install &&\
+cd htslib-* && \
+./configure && \
+make && \
+sudo make install && \
+make test
+
+LD_LIBRARY_PATH='/samtools-1.9/htslib-1.9/'
+
+###########
+# MAPGD ###
+###########
+
+MAPGD_URL="https://github.com/LynchLab/MAPGD/archive/master.zip"
+wget -O MAPGD.zip $MAPGD_URL  && \
+unzip MAPGD.zip   && \
+cd MAPGD-* && \
+./configure && \
+make && \
+make install  # && \
+#make test
+
+%environment
+export DEBIAN_FRONTEND=noninteractive
+export LD_LIBRARY_PATH='/samtools-1.9/htslib-1.9/'
+%runscript
+exec /bin/bash "$@"

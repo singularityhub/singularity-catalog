@@ -1,0 +1,43 @@
+Bootstrap: docker
+From: caffe2ai/caffe2:c2.cuda8.cudnn5.ubuntu16.04
+
+%environment
+
+	#Environment variables
+
+
+	#Add CUDA paths
+	CPATH="/usr/local/cuda/include:$CPATH"
+	PATH="/usr/local/cuda/bin:$PATH"
+	LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+	CUDA_HOME="/usr/local/cuda"
+
+	#Adding caffe2 paths
+	PYTHONPATH="/usr/local:$PYTHONPATH"
+	LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+	LIBRARY_PATH="/usr/local/lib:$LIBRARY_PATH"
+
+
+	export PATH LD_LIBRARY_PATH CPATH CUDA_HOME PYTHONPATH
+
+%setup
+	#Runs on host
+	#The path to the image is $SINGULARITY_ROOTFS
+
+
+%post
+	#Post setup script
+
+  #Default mount paths
+	mkdir /scratch /data /shared /fastdata
+
+
+%runscript
+	#Executes with the singularity run command
+	#delete this section to use existing docker ENTRYPOINT command
+
+
+
+
+%test
+	#Test that script is a success

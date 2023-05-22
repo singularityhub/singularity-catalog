@@ -1,0 +1,67 @@
+Bootstrap: docker
+From: bids/freesurfer:latest
+
+%environment
+
+	#Environment variables
+
+
+
+
+	#Add CUDA paths
+	CPATH="/usr/local/cuda/include:$CPATH"
+	PATH="/usr/local/cuda/bin:$PATH"
+	LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+	CUDA_HOME="/usr/local/cuda"
+
+
+	PATH="/opt/freesurfer/bin:/opt/freesurfer/fsfast/bin:/opt/freesurfer/tktools:/opt/freesurfer/mni/bin:$PATH"
+	FREESURFER_HOME="/opt/freesurfer"
+	PATH="/opt/freesurfer/mni/bin:$PATH"
+	PERL5LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
+	FSLMULTIFILEQUIT=TRUE
+	POSSUMDIR=/usr/share/fsl/5.0
+	LOCAL_DIR=/opt/freesurfer/local
+	LD_LIBRARY_PATH=/usr/lib/fsl/5.0:
+	FSFAST_HOME=/opt/freesurfer/fsfast
+	MNI_PERL5LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
+	FMRI_ANALYSIS_DIR=/opt/freesurfer/fsfast
+	FSF_OUTPUT_FORMAT=nii.gz
+	MINC_BIN_DIR=/opt/freesurfer/mni/bin
+	FSLTCLSH=/usr/bin/tclsh
+	MINC_LIB_DIR=/opt/freesurfer/mni/lib
+	FSLWISH=/usr/bin/wish
+	SHLVL=1
+	MNI_DIR=/opt/freesurfer/mni
+	FREESURFER_HOME=/opt/freesurfer
+	FSLDIR=/usr/share/fsl/5.0
+	MNI_DATAPATH=/opt/freesurfer/mni/data
+	FSLOUTPUTTYPE=NIFTI_GZ
+
+
+
+	export PATH LD_LIBRARY_PATH CPATH CUDA_HOME
+	export FREESURFER_HOME PERL5LIB FSLMULTIFILEQUIT POSSUMDIR LOCAL_DIR FSFAST_HOME MNI_PERL5LIB FMRI_ANALYSIS_DIR FSF_OUTPUT_FORMAT MINC_BIN_DIR FSLTCLSH MINC_LIB_DIR FSLWISH SHLVL MNI_DIR FSLDIR MNI_DATAPATH FSLOUTPUTTYPE
+
+%setup
+	#Runs on host
+	#The path to the image is $SINGULARITY_ROOTFS
+
+
+
+%post
+	#Post setup script
+
+
+	#Default mount paths
+	mkdir /scratch /data /shared /fastdata
+
+
+
+%runscript
+	#Executes with the singularity run command
+	#delete this section to use existing docker ENTRYPOINT command
+
+
+%test
+	#Test that script is a success

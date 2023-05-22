@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: alpine:3.18
+
+
+
+%labels
+    MAINTAINER thomas cokelaer
+    Author thomas cokelaer
+    Version v0.12.0
+
+
+%files
+
+%post
+
+    apk update\
+     && apk upgrade\
+     && apk add perl wget unzip bash
+
+    export PYTHONUNBUFFERED=1
+    apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python && ln -sf /usr/bin/python
+    python3 -m ensurepip
+    pip3 install --no-cache --upgrade pip setuptools
+
+    apk add openjdk8
+
+    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip
+    unzip fastqc_v0.12.1.zip
+    export PATH=$PATH:/FastQC
+    chmod 755 /FastQC/fastqc
+
+    rm -f /var/cache/apk/*
+
+%environment
+    export PATH=$PATH:/FastQC
+
+%runscript
+    exec fastqc "$@"
+

@@ -1,0 +1,12 @@
+BootStrap: shub
+From: shub://elisadonnard/singularity:r3.5
+
+%labels
+
+    AUTHOR Elisa Donnard
+    Version v4.0
+
+%post
+apt-get update && apt-get -y upgrade && apt-get -y install python3 && apt-get -y install python3-pip
+pip3 install biopython numpy pandas PyBrain regex scipy
+

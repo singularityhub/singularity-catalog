@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%post
+    apt-get update && apt-get install -y wget python3 python3-pip python3-dev
+    echo 'Downloading the Paraview Installer'
+    wget -O /opt/ParaView-5.7.0-osmesa-MPI-Linux-Python3.7-64bit.tar.gz "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v5.7&type=binary&os=Linux&downloadFile=ParaView-5.7.0-osmesa-MPI-Linux-Python3.7-64bit.tar.gz"
+    tar zxvf /opt/ParaView-5.7.0-osmesa-MPI-Linux-Python3.7-64bit.tar.gz -C /opt/
+    mv /opt/ParaView-5.7.0-osmesa-MPI-Linux-Python3.7-64bit/ /opt/paraview/
+    rm /opt/ParaView-5.7.0-osmesa-MPI-Linux-Python3.7-64bit.tar.gz
+    chmod -R 777 /opt/
+   
+%runscript
+    exec /opt/ParaView-5.7.0-osmesa-MPI-Linux-Python3.7-64bit/bin/pvbatch "$@" 

@@ -1,0 +1,12 @@
+Bootstrap: library
+From: gipert/default/bat:1.0.0
+
+%files
+    src /opt/src/gerda-fitter
+
+%post
+    cd /opt/src/gerda-fitter
+    make clean && make && make PREFIX=/opt install
+
+%environment
+    export PATH="$PATH:/opt/bin"

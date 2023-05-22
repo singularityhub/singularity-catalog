@@ -1,0 +1,54 @@
+Bootstrap: docker
+From: debian:stable
+
+%help
+Debian container with configured and installed petsc.
+
+%labels
+    Author Dan Kapner (danielk@alleninstitute.org)
+    PETSc_version 3.11.1
+
+%post
+    # requirements for petsc and the petsc build
+    apt-get update
+    apt-get upgrade -y
+    apt-get install git vim wget gcc g++ gfortran make cmake        \
+                    curl python pkg-config build-essential          \
+                    valgrind openssh-client openssh-server          \
+                    libopenblas-dev libopenblas-base bison flex -y
+
+    # we need these variables right now
+    export PETSC_VERSION=petsc-3.11.1
+    export PETSC_ARCH=arch-linux2-c
+    export PETSC_DIR=/${PETSC_VERSION}
+
+    # we will reuse these at runtime and child containers
+    echo "export PETSC_DIR=$PETSC_DIR" >> /sourceme
+    echo "export PATH=$PETSC_DIR/$PETSC_ARCH/bin:$PATH" >> /sourceme
+    echo "export LD_LIBRARY_PATH=$PETSC_DIR/$PETSC_ARCH/lib" >> /sourceme
+
+    # download the petsc version we want and extract it
+    wget http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/${PETSC_VERSION}.tar.gz
+    tar -xzf ${PETSC_VERSION}.tar.gz
+    cd ${PETSC_DIR}
+    
+    # configure the build
+    ./configure --with-blaslapack-lib=-lopenblas \
+                --download-mpich                 \
+                --download-hypre                 \
+                --download-superlu_dist          \
+                --download-parmetis              \
+                --download-metis                 \
+                --download-ptscotch              \
+                --download-hdf5                  \
+                --download-pastix                \
+                --with-cxx-dialect=C++11         \
+                --with-debugging=0               \
+                --with-64-bit-indices=1          \
+                --with-debugging=no              \
+                COPTFLAGS=-O3                    \
+                CXXOPTFLAGS=-O3                  \
+                FOPTFLAGS=-O3
+
+    # build and test 
+    make all test

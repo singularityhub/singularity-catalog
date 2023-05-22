@@ -1,0 +1,104 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%post
+
+    # ------------------------------------------------ #
+    #                   Kernel overhead                #
+    # ------------------------------------------------ #
+
+    apt-get -y update && apt-get -y upgrade
+    apt-get -y --allow-unauthenticated install \
+    apt-utils \
+	autoconf \
+	automake \
+	build-essential \
+	cmake \
+	curl \
+	git \
+	gfortran \
+	libtool \
+	libssl-dev \
+	libffi-dev \
+	libopencv-dev \
+	pkg-config \
+	python-dev \
+	unzip \
+	wget \
+    vim \
+	zip
+
+    # move to /tmp to store temp files during container build
+    cd /tmp
+    
+    # ------------------------------------------------ #
+    #                  Bazel installation              #
+    # ------------------------------------------------ #
+
+    apt-get -y --allow-unauthenticated install openjdk-8-jdk \
+	zlib1g-dev
+
+    wget https://github.com/bazelbuild/bazel/releases/download/0.13.1/bazel-0.13.1-installer-linux-x86_64.sh
+    chmod +x bazel-0.13.1-installer-linux-x86_64.sh
+    ./bazel-0.13.1-installer-linux-x86_64.sh --user
+    export PATH="$PATH:$HOME/bin"
+
+    echo "---- bazel metadata ---- "
+    bazel version
+
+    # install pip
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    python get-pip.py
+    rm get-pip.py
+
+    # ------------------------------------------------ #
+    #                   TF for python2                 #
+    # ------------------------------------------------ #
+
+    # python2 TF/data science package dependencies
+    pip install numpy # requisite for everything else
+    pip install Cython \
+	pandas \
+	feather-format \
+	mock \
+	scipy \
+	sklearn \
+	matplotlib \
+	ipython \
+	nose \
+	mlpy \
+	nltk \
+	statsmodels \
+	opencv-python \
+    	biopython
+
+    # get tensorflow from source
+    cd /opt
+    git clone https://github.com/tensorflow/tensorflow
+    cd tensorflow
+    git checkout r1.8
+
+    # Clear /home/root/.cache prior to bazel build. Otherwise, previous builds may cause some conflicts. See 'dangling symbolic links' at https://github.com/tensorflow/tensorflow/issues/13928
+    rm -rf /home/root/.cache
+    
+    # build TF with bazel
+    bazel build --config=opt //tensorflow/tools/pip_package:build_pip_package
+    bazel-bin/tensorflow/tools/pip_package/build_pip_package tensorflow_pkg
+
+    # install TF
+    pip install tensorflow_pkg/tensorflow-1.8.0-cp27-cp27mu-linux_x86_64.whl
+
+%test
+
+    # python2
+    python /opt/tensorflow/tensorflow/examples/tutorials/mnist/mnist_deep.py
+
+%files
+
+    singularity_logo.txt /opt
+
+%runscript
+
+    cat /opt/singularity_logo.txt
+
+%environment

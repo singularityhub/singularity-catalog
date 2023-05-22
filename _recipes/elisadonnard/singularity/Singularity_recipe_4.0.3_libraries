@@ -1,0 +1,51 @@
+BootStrap: shub
+From: shub://elisadonnard/singularity:0.3
+
+%labels
+
+    AUTHOR Elisa Donnard
+    Version v1
+
+%apprun R
+exec R "$@"
+
+%apprun Rscript
+exec Rscript "$@"
+
+%runscript
+exec R "$@"
+
+%post  
+  R --version
+  
+  # installing packages from cran
+  R --slave -e 'install.packages("devtools",repos="https://cran.rstudio.com/")'
+  R --slave -e 'install.packages("BiocManager",repos="https://cran.rstudio.com/")'
+  R --slave -e 'install.packages("Seurat",repos="https://cran.rstudio.com/")'
+
+  # installing from bioc
+  R --slave -e 'if (!requireNamespace("BiocManager",quietly=TRUE)) install.packages("BiocManager")'
+  R --slave -e 'BiocManager::install()'
+  R --slave -e 'BiocManager::install("tximport",ask=FALSE)'
+  R --slave -e 'BiocManager::install("biomaRt",ask=FALSE)'
+  R --slave -e 'BiocManager::install("DESeq2",ask=FALSE)'
+  R --slave -e 'BiocManager::install("tidyverse")'
+  R --slave -e 'BiocManager::install("edgeR")'
+  R --slave -e 'BiocManager::install("gplots")'
+  R --slave -e 'BiocManager::install("Biobase", dep = TRUE)'
+  R --slave -e 'BiocManager::install("DropletUtils", dep = TRUE)'
+  R --slave -e 'BiocManager::install("stringr", dep = TRUE)'
+  R --slave -e 'BiocManager::install("densityClust", dep = TRUE)'
+  R --slave -e 'BiocManager::install("RColorBrewer", dep = TRUE)'
+  R --slave -e 'BiocManager::install("Rtsne", dep = TRUE)'
+  R --slave -e 'BiocManager::install("ggpubr", dep = TRUE)'
+  R --slave -e 'BiocManager::install("limSolve", dep = TRUE)'
+  R --slave -e 'BiocManager::install("scran", dep = TRUE)'
+  R --slave -e 'BiocManager::install("fpc", dep = TRUE)'
+  R --slave -e 'BiocManager::install("irlba", dep = TRUE)'
+  
+ 
+###################
+# mount directories
+
+mkdir /seq

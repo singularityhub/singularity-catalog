@@ -1,0 +1,18 @@
+Bootstrap: library
+From: djkapner/default/emaligner-petsc:v1.0.0
+
+%setup
+    # singularity build should be run from repo base dir
+    git clone --single-branch ./ ${SINGULARITY_ROOTFS}/EM_aligner_python
+
+%post
+    # variables from parent image
+    . /sourceme
+
+    cd /EM_aligner_python/EMaligner/distributed/
+
+    make allen
+
+%runscript
+    . /sourceme
+    exec /EM_aligner_python/EMaligner/distributed/bin/em_dist_solve "$@"

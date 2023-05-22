@@ -1,0 +1,38 @@
+BootStrap: shub
+From: shub://elisadonnard/singularity:0.3_libraries
+
+%labels
+
+    AUTHOR Elisa Donnard
+    Version v1
+
+%apprun R
+exec R "$@"
+
+%apprun Rscript
+exec Rscript "$@"
+
+%runscript
+exec R "$@"
+
+%post  
+  R --version
+  
+  R --slave -e 'BiocManager::install("AUCell")'
+  R --slave -e 'BiocManager::install("RcisTarget")'
+  R --slave -e 'BiocManager::install("GENIE3")' 
+  R --slave -e 'BiocManager::install(c("zoo", "mixtools", "rbokeh"))'
+  R --slave -e 'BiocManager::install(c("DT", "NMF", "ComplexHeatmap", "R2HTML", "Rtsne"))'
+  R --slave -e 'BiocManager::install(c("doMC", "doRNG"))'
+  R --slave -e 'devtools::install_github("aertslab/SCENIC")'
+
+  R --slave -e 'BiocManager::install("BiocParallel")'
+  R --slave -e 'BiocManager::install("data.table")'
+  R --slave -e 'BiocManager::install("grid")'
+  R --slave -e 'BiocManager::install("ComplexHeatmap")' 
+
+###################
+# mount directories
+
+mkdir /seq
+

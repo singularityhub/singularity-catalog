@@ -1,0 +1,26 @@
+Bootstrap: docker
+
+From: continuumio/miniconda3
+
+%files
+    environment.yml
+
+%environment
+    PATH=/opt/conda/envs/$(head -1 /environment.yml | cut -d' ' -f2)/bin:$PATH
+
+%post
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc
+    echo "source activate $(head -1 /environment.yml | cut -d' ' -f2)" > ~/.bashrc
+    /opt/conda/bin/conda env create -f /environment.yml
+    #/opt/conda/bin/conda activate $(head -1 /environment.yml | cut -d' ' -f2)
+    /opt/conda/envs/$(head -1 /environment.yml | cut -d' ' -f2)/bin/R --slave -e 'install.packages("INLA", repos=c("http://cran.us.r-project.org", INLA="https://inla.r-inla-download.org/R/testing"), dep=TRUE)'
+    # Fix libgfortran
+    cd /opt/conda/envs/$(head -1 /environment.yml | cut -d' ' -f2)/lib/R/library/INLA/bin/linux/64bit/
+    mv libgfortran.so.4 libgfortran.so.4.b
+    ln -s ../../../../../../libgfortran.so.4 libgfortran.so.4
+    cd ~
+    
+
+%runscript
+    exec "$@"
+

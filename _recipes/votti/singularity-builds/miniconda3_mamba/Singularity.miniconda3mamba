@@ -1,0 +1,12 @@
+Bootstrap: docker
+
+From: continuumio/miniconda3
+
+%post
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc
+    echo "source activate $(head -1 /environment.yml | cut -d' ' -f2)" > ~/.bashrc
+    /opt/conda/bin/conda install -c conda-forge mamba
+
+%runscript
+    exec "$@"
+

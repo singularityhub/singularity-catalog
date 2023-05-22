@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: centos:latest
+
+%post
+    yum install -y git wget gcc make openssl-devel readline-devel zlib-devel vim bzip2
+    yum install -y epel-release
+    yum install -y pandoc
+    mkdir -p /usr/local/src && cd /usr/local/src
+    git clone https://github.com/snic-nsc/nscjekyllsetup.git
+    cd nscjekyllsetup && git checkout 'v1.17'
+    bash presetup.sh
+    bash setup.sh

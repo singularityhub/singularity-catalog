@@ -1,0 +1,24 @@
+Bootstrap: shub
+FROM: magland/mlsing
+
+%labels
+    Maintainer Jeremy Magland
+
+%setup
+  mkdir ${SINGULARITY_ROOTFS}/working
+  cp -r . ${SINGULARITY_ROOTFS}/working/src
+
+%post
+  echo "################################## Activating conda environment"
+  . /opt/conda/etc/profile.d/conda.sh
+  conda activate mountainlab
+ 
+  echo "################################## Installing ML package via conda"
+  conda install -c flatiron -c conda-forge ml_ms3
+
+  echo "################################## Testing package"
+  ml-list-processors
+
+%environment
+  . /opt/conda/etc/profile.d/conda.sh
+  conda activate mountainlab

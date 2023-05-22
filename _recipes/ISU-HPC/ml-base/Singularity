@@ -1,0 +1,61 @@
+bootstrap:docker
+From:nvidia/cuda:9.0-cudnn7-devel-centos7
+
+%labels
+AUTHOR Yasasvy Nanyam ynanyam@iastate.edu
+
+%environment
+
+    LD_LIBRARY_PATH=/host-libs:/usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda-9.0/lib64:/usr/local/lib:/usr/local/lib64
+    export LD_LIBRARY_PATH
+    PATH=/usr/local/cuda-9.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+    export PATH
+    PYTHONPATH=/usr/local:/usr/local/lib/python2.7/site-packages
+    export PYTHONPATH
+
+%post
+
+    yum update -y
+
+    yum install -y epel-release
+
+        yum install -y \
+            cmake \
+            cuda-drivers \
+            curl \
+            git \
+            freetype-devel \
+            libpng-devel \
+            openssl-devel \
+            libXpm-devel \
+            zeromq3-devel \
+            module-init-tools \
+            pkgconfig \
+            python \
+            python-devel \
+            python-pip \
+            python36 \
+            python36-devel \
+            rsync \
+            unzip \
+            zip \
+            zlib-devel \
+            vim \
+            wget \
+            java \
+            pygtk2 \
+            cmake3 \
+            boost \
+            boost-devel \
+            tkinter \
+            python36-tkinter
+    
+    yum clean all
+
+    rm -rf /var/cache/yum
+
+    curl https://bootstrap.pypa.io/get-pip.py | python36
+
+    pip3 --no-cache-dir install --upgrade pip
+    
+    ln -s /usr/bin/python36 /usr/bin/python3
