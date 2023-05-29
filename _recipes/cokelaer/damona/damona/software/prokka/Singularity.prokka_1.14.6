@@ -7,14 +7,19 @@ From: debian:bookworm-slim
   BARRNAP_VERSION=0.9
   PRODIGAL_VERSION=2.6.3
 
+  # for snakemake we need python and bash
+
   # additional tools needed
-  apt update && apt install -yq --no-install-recommends ncbi-blast+ curl hmmer make cmake gcc g++ cpanminus \
+   apt update && apt install -yq python3 && apt install -yq --no-install-recommends ncbi-blast+ curl hmmer make cmake gcc g++ cpanminus \
     libdatetime-perl libxml-simple-perl libdigest-md5-perl default-jre bioperl perl parallel libssl-dev libidn12 \
     && apt autoclean && rm -rf /var/lib/apt/lists/*
   cpanm --notest Bio::SearchIO::hmmer3
 
   # little hack for libidn
   ln -sf /usr/lib/x86_64-linux-gnu/libidn.so.12 /usr/lib/x86_64-linux-gnu/libidn.so.11
+
+    # link for snakemake to find python
+    cp /usr/bin/python3 /usr/bin/python
 
   # install aragorn
   curl -sSLO http://www.ansikte.se/ARAGORN/Downloads/aragorn1.2.41.c \
@@ -37,6 +42,8 @@ From: debian:bookworm-slim
       && chmod 755 tbl2asn && mv tbl2asn /usr/local/bin/
   curl -sSL "https://github.com/tseemann/prokka/archive/refs/tags/v${PROKKA_VERSION}.tar.gz" | tar zx && mv prokka-$PROKKA_VERSION prokka
   /prokka/bin/prokka --setupdb
+
+
 
   apt purge -y curl make cmake gcc g++
 

@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: quay.io/biocontainers/infernal:1.1.3--h516909a_0
+
+%labels
+    AUTHOR icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE http://gitlab.psc.edu/icaoberg/singularity-infernal
+    VERSION 1.1.3
+
+%post
+   rm /etc/resolv.conf
+
+####################################################################################

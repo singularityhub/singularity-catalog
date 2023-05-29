@@ -1,0 +1,86 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%help
+  Compute fMRI connectivity matrices and maps for cerebellar space ROIs.
+  Info and usage:
+    /opt/cerconn/README.md
+
+
+%setup
+  mkdir -p ${SINGULARITY_ROOTFS}/opt/cerconn
+
+
+%files
+  bin                          /opt/cerconn
+  src                          /opt/cerconn
+  build                        /opt/cerconn
+  README.md                    /opt/cerconn
+
+ 
+%labels
+  Maintainer baxter.rogers@vanderbilt.edu
+
+
+%post
+  apt-get update > /dev/null 2>&1
+  apt-get install -y wget unzip zip gzip xvfb ghostscript imagemagick bc  > /dev/null 2>&1  # Misc tools
+  apt-get install -y openjdk-8-jre                                        > /dev/null 2>&1  # Matlab
+  apt-get install -y libopenblas-base language-pack-en                    > /dev/null 2>&1   # FSL
+  
+  # Fix imagemagick policy to allow PDF output. See https://usn.ubuntu.com/3785-1/
+  sed -i 's/rights="none" pattern="PDF"/rights="read | write" pattern="PDF"/' \
+    /etc/ImageMagick-6/policy.xml
+		  
+  # Download the Matlab Compiled Runtime installer, install, clean up
+  mkdir /MCR
+  wget -nv -P /MCR https://ssd.mathworks.com/supportfiles/downloads/R2019b/Release/6/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2019b_Update_6_glnxa64.zip
+  unzip -qq /MCR/MATLAB_Runtime_R2019b_Update_6_glnxa64.zip -d /MCR/MATLAB_Runtime_R2019b_Update_6_glnxa64
+  /MCR/MATLAB_Runtime_R2019b_Update_6_glnxa64/install -mode silent -agreeToLicense yes > /dev/null 2>&1
+  rm -r /MCR/MATLAB_Runtime_R2019b_Update_6_glnxa64 /MCR/MATLAB_Runtime_R2019b_Update_6_glnxa64.zip
+  rmdir /MCR
+
+  # Get and install main FSL package
+  fsl_version=6.0.4
+  cd /usr/local
+  wget -nv https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-${fsl_version}-centos7_64.tar.gz
+  tar zxf fsl-${fsl_version}-centos7_64.tar.gz
+  rm fsl-${fsl_version}-centos7_64.tar.gz
+  
+  # FSL setup
+  export FSLDIR=/usr/local/fsl
+  . ${FSLDIR}/etc/fslconf/fsl.sh
+  export PATH=${FSLDIR}/bin:${PATH}
+
+  # Run the FSL python installer
+  ${FSLDIR}/etc/fslconf/fslpython_install.sh
+
+  # Singularity-hub doesn't work with github LFS (it gets the pointer info instead 
+  # of the actual file) so we get the compiled matlab executable via direct download.
+  rm /opt/cerconn/bin/spm12.ctf
+  wget -nv -P /opt/cerconn/bin https://github.com/baxpr/cerconn/raw/master/bin/spm12.ctf
+
+  # We need to run the matlab executable now to extract the CTF, because
+  # now is the only time the container is writeable
+  /opt/cerconn/bin/run_spm12.sh /usr/local/MATLAB/MATLAB_Runtime/v97 function exit
+
+  # Create input/output directories for binding
+  mkdir /INPUTS && mkdir /OUTPUTS
+  
+
+%environment
+  # We don't need to set the Matlab library path here, because Matlab's
+  # auto-generated run_??.sh script does it for us.
+  
+  # Matlab shell
+  MATLAB_SHELL=/bin/bash
+  
+  # FSL
+  export FSLDIR=/usr/local/fsl
+  
+  # Path
+  export PATH=/opt/cerconn/src:/opt/cerconn/bin:/usr/local/fsl/bin:${PATH}
+
+
+%runscript
+  wrapper.sh "$@"

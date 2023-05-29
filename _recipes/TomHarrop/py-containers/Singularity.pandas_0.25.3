@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: python:3.8.1-slim-buster
+
+%help
+
+    Python 3.8.1 with Pandas 0.25.3
+    
+%labels
+
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "Pandas 0.25.3"
+
+%runscript
+
+    exec /usr/local/bin/python "$@"
+
+%post
+    /usr/local/bin/pip3 install --upgrade pip
+    /usr/local/bin/pip3 install \
+        pandas==0.25.3

@@ -1,0 +1,48 @@
+Bootstrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch/
+Include: yum
+
+%labels
+    Name agalma
+    Maintainer "Benjamin Evans" <b.evans@yale.edu>
+    Version 1.0.0
+    Architecture x86_64
+    URL https://bitbucket.org/caseywdunn/agalma
+
+%post
+    MINICONDA=Miniconda2-latest-Linux-x86_64.sh
+    PREFIX=/opt/agalma
+    AGALMABIN=$PREFIX/bin
+    AGALMAVERSION=1.0.0
+
+    cd /tmp
+
+    # yum updates and prereqs
+    yum update -y
+    yum install -y gzip bzip2 wget which tar
+
+    # install miniconda
+    wget https://repo.continuum.io/miniconda/$MINICONDA
+    bash $MINICONDA -b -p $PREFIX
+    PATH=$AGALMABIN:$PATH
+
+    # install agalma
+    conda install -yc dunnlab agalma=$AGALMAVERSION
+
+    # cleanup
+    yum autoremove -y
+    yum clean all
+    conda clean -ay
+    rm $MINICONDA
+    
+    # simple test
+    agalma -h
+
+%environment
+    # add agalma environment variables to singularity runtime environment
+    export AGALMABIN=/opt/agalma/bin
+    export PATH=$AGALMABIN:$PATH
+
+%runscript
+    exec agalma "$@"

@@ -1,0 +1,19 @@
+Bootstrap: shub
+From: oliviermattelaer/singularity-recipe:mg5_alone
+
+%runscript
+    /usr/mg5amcnlo/bin/mg5_aMC
+
+
+%post
+    # PY8 specific
+    apt-get -y install rsync
+    # MA5 specific
+    cd /usr
+    echo "install pythia8;" > cmd.py8
+    ./mg5amcnlo/bin/mg5 cmd.py8
+
+    # for PY8
+    chmod 777 /usr/mg5amcnlo/HEPTools/pythia8/bin/pythia8-config
+
+

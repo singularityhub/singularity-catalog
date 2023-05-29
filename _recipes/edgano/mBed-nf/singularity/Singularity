@@ -1,0 +1,29 @@
+Bootstrap:docker
+From:debian:jessie
+
+%labels
+MAINTAINER Edgar Garriga
+
+%post
+  apt-get update
+  apt-get install -y --no-install-recommends ed less vim-tiny wget git
+  apt-get install -y --no-install-recommends python build-essential cmake curl libargtable2-0
+  apt-get install -y --no-install-recommends python-biopython python-numpy ruby python-setuptools
+  apt-get install -y --no-install-recommends default-jdk libpng-dev
+
+##
+# install SeqFilter
+##
+  git clone https://github.com/edgano/mBed-nf
+  cd mBed-nf/bin/SeqFilter
+  rm -rf lib
+  make
+
+##
+# install mBed
+##
+  cd ../mBed
+  make
+
+%environment
+export PATH=/mBed-nf/bin/mBed/:/mBed-nf/bin/SeqFilter:$PATH

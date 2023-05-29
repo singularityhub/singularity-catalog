@@ -1,0 +1,52 @@
+Bootstrap: docker
+From: alpine:3.11
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    apk update && apk upgrade
+
+    #Add here what kind of dependencies you need in general
+    apk add --no-cache wget curl build-base git ca-certificates unzip bash openjdk11 bash
+
+    # Temp dir for downloading and building stuff
+    TMPDIR=/build
+    mkdir $TMPDIR
+    cd $TMPDIR
+
+    # the installation directory of snpEff
+    INSTALLDIR=/usr/local/lib
+    BINDIR=/usr/local/bin
+
+    # at the time
+    wget https://snpeff.blob.core.windows.net/versions/snpEff_v5_0_core.zip
+
+    # Unzip snpEff archive
+    ls $TMPDIR | xargs -i unzip "$TMPDIR/{}" -d $INSTALLDIR
+
+    echo "#!/bin/sh" > $BINDIR/snpEff
+    echo "java -jar $INSTALLDIR/snpEff/snpEff.jar \$*" >> $BINDIR/snpEff
+
+    chmod +x $BINDIR/snpEff
+
+    # snpEff needs a data directory to which it can write
+    # (Downloading reference genomes for example)
+    #mkdir $INSTALLDIR/SnpEff/data
+    #chmod 777 -R $INSTALLDIR/SnpEff/data
+
+    ## Remove tmp snpEff directory
+    rm -rf $TMPDIR
+    #Clean up
+    rm -rf /var/cache/apk/*
+
+    cd /
+    rm -rf /build
+
+#%environment
+#    export PATH=$PATH:/usr/local/go/bin
+
+%runscript
+    exec snpEff "$@"
+

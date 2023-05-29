@@ -1,0 +1,33 @@
+Bootstrap: shub
+From: pndni/minc-and-ants-container:1.0.1
+# OSVersion: 7
+# MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/x86_64/
+# Include: yum
+#
+%post
+
+    #######
+    # fsl #
+    #######
+    wget --output-document=/root/fslinstaller.py https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py 
+    python /root/fslinstaller.py -p -V 6.0.1 -d /opt/fsl
+    rm /root/fslinstaller.py
+
+%appenv fsl
+    export FSLDIR=/opt/fsl
+    source $FSLDIR/etc/fslconf/fsl.sh
+    export PATH=$FSLDIR/bin:$PATH
+
+%applabels fsl
+    License https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Licence
+    URL https://fsl.fmrib.ox.ac.uk/fsl/fslwiki
+    Version 6.0.1
+
+%apphelp fsl
+    Before using FSL you must agree to the license at
+    https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Licence
+
+%labels
+    Maintainer Steven Tilley
+    Version dev
+

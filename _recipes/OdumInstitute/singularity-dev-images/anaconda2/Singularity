@@ -1,0 +1,48 @@
+BootStrap: docker
+From: continuumio/anaconda
+
+%help
+  anaconda 5.3.0
+  ---------------------------
+  ipython version: 5.8.0
+  python version: 2.7.16
+  conda version: 4.6.11
+  anaconda CLI version: 1.7.2
+
+  Usage:
+  $ singularity run --app ipython anaconda2-anaconda2-latest.simg [args]
+  $ singularity run --app python anaconda2-anaconda2-latest.simg [args]
+  $ singularity run --app conda anaconda2-anaconda2-latest.simg [args]
+  $ singularity run --app anaconda anaconda2-anaconda2-latest.simg [args]
+  $ singularity shell anaconda2-anaconda2-latest.simg
+
+%setup
+
+%files
+
+%labels
+  Maintainer Michael J. Stealey
+  Maintainer_Email stealey@renci.org
+
+%runscript
+  exec "${@}"
+
+%post
+
+%apprun ipython
+  exec ipython "${@}"
+
+%apprun python
+  exec python "${@}"
+
+%apprun conda
+  exec conda "${@}"
+
+%apprun anaconda
+  exec anaconda "${@}"
+
+%runscript
+  exec "${@}"
+
+%test
+  python -V

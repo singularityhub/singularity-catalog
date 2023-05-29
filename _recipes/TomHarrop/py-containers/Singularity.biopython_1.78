@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: python:3.8.6-buster
+
+%help
+
+    Python 3.8.6 with Biopython 1.78
+    
+%labels
+
+    MAINTAINER "Tom Harrop (twharrop@gmail.com)"
+    VERSION "Biopython 1.78"
+
+%runscript
+
+    exec /usr/local/bin/python3 "$@"
+
+%post
+        /usr/local/bin/python3 \
+        	-m pip install \
+        	--upgrade \
+        	--no-cache-dir \
+        	pip setuptools wheel
+
+        /usr/local/bin/python3 \
+        	-m pip install \
+	        biopython==1.78 \
+    	    intermine==1.11.0 \
+    	    pandas==1.1.3

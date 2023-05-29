@@ -1,0 +1,82 @@
+BootStrap: debootstrap
+OSVersion: stable
+MirrorURL: http://ftp.us.debian.org/debian/
+
+%runscript
+    mg5amcnlo/bin/mg5_aMC
+
+
+%post
+    echo "Hello from inside the container"
+    apt-get update
+    apt-get -y install emacs bzr python2.7 gcc gfortran g++ make python-pip wget gnuplot bc
+    pip install numpy scipy
+    # PY8 specific
+    apt-get -y install rsync
+    # MA5 specific
+    apt-get -y install texlive-latex-base rlwrap latex-xcolor python-tk
+    pip install matplotlib
+    
+    cd /usr
+    wget https://bazaar.launchpad.net/~mg5core1/mg5amcnlo/2.6.5/tarball/283
+    echo "install lhapdf6;" > cmd
+    echo "install pythia8;" >> cmd
+    echo "install MadAnalysis5;" >> cmd
+    echo "install maddm;" >> cmd
+    echo "generate p p > t t~; output /tmp/proc;" >> cmd
+    tar -xzpvf 283
+    mv ~mg5core1/mg5amcnlo/2.6.5  mg5amcnlo
+    rm -rf 283
+    ./mg5amcnlo/bin/mg5 cmd
+
+    # for PY8
+    chmod 777 /usr/mg5amcnlo/HEPTools/pythia8/bin/pythia8-config
+
+    # Set up graphic renderer for MA5:
+    cd /usr/mg5amcnlo/HEPTools/madanalysis5/madanalysis5/madanalysis/layout/
+    sed -i "s/#        outputPy.write(\"    matplotlib.use/        outputPy.write(\"    matplotlib.use/" plotflow.py
+    # avoid the change in the library:
+    cd /usr/mg5amcnlo/HEPTools/madanalysis5/madanalysis5/madanalysis/core/
+    sed -i "s/UpdateNeed=True/UpdateNeed=False/" main.py
+    cd /usr/mg5amcnlo/HEPTools/madanalysis5/madanalysis5/madanalysis/misc/
+    sed  -i "s/raise/pass#/" freeze_environment.py
+
+    # Delphes need Root
+    apt-get clean
+    df -h
+    apt-get -y install git cmake dpkg-dev python-dev make g++ gcc binutils libx11-dev libxpm-dev libxft-dev libxext-dev
+    cd /usr/local/
+    git clone --depth 1 https://github.com/root-mirror/root.git
+    cd root
+    mkdir compile
+    cd compile
+    cmake -Dpython=ON -Droofit=ON -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/root ..
+    make
+    make install
+    ls /usr/local/root/bin/
+    source /usr/local/root/bin/thisroot.sh
+
+    # Delphes itself + looptools (since cmake is present now)
+    cd /usr
+    echo "install Delphes;" > cmd2
+    echo "install looptools;" >> cmd2
+    echo "generate g g > t t~ [QCD]; output" >> cmd2
+    ./mg5amcnlo/bin/mg5 cmd2
+
+    # directory for UFOMODEL loading (to be linked to a directory via singularity)
+    mkdir /UFO
+
+%environment
+   export LC_ALL=C
+   export PYTHONPATH=$PYTHONPATH:/usr/mg5amcnlo/HEPTools/lhapdf6/lib/python2.7/site-packages
+   export LD_LIBRARY_PATH=/usr/mg5amcnlo/HEPTools/lhapdf6/lib:/usr/mg5amcnlo/HEPTools/lib/:$LD_LIBRARY_PATH
+   export LHAPATH=/tmp
+   source /usr/local/root/bin/thisroot.sh
+   #CERN ROOT
+   export ROOTSYS=/usr/local/root
+   export PATH=$ROOTSYS/bin:$PATH
+   export PYTHONDIR=$ROOTSYS
+   export LD_LIBRARY_PATH=$ROOTSYS/lib:$PYTHONDIR/lib:$ROOTSYS/bindings/pyroot:$LD_LIBRARY_PATH
+   export PYTHONPATH=$ROOTSYS/lib:$PYTHONPATH:$ROOTSYS/bindings/pyroot
+   #FOR UFOMODEL
+   export PYTHONPATH=$PYTHONPATH:/UFO

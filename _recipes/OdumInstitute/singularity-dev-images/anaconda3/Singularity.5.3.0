@@ -1,0 +1,48 @@
+BootStrap: docker
+From: continuumio/anaconda3
+
+%help
+  anaconda 5.3.0
+  ---------------------------
+  ipython version: 6.5.0
+  python version: 3.7.0
+  conda version: 4.5.11
+  anaconda CLI version: 1.7.2
+
+  Usage:
+  $ singularity run --app ipython anaconda3-anaconda3-5.3.0.simg [args]
+  $ singularity run --app python anaconda3-anaconda3-5.3.0.simg [args]
+  $ singularity run --app conda anaconda3-anaconda3-5.3.0.simg [args]
+  $ singularity run --app anaconda anaconda3-anaconda3-5.3.0.simg [args]
+  $ singularity shell anaconda3-anaconda3-5.3.0.simg
+
+%setup
+
+%files
+
+%labels
+  Maintainer Michael J. Stealey
+  Maintainer_Email stealey@renci.org
+
+%runscript
+  exec "${@}"
+
+%post
+
+%apprun ipython
+  exec ipython "${@}"
+
+%apprun python
+  exec python "${@}"
+
+%apprun conda
+  exec conda "${@}"
+
+%apprun anaconda
+  exec anaconda "${@}"
+
+%runscript
+  exec "${@}"
+
+%test
+  python -V

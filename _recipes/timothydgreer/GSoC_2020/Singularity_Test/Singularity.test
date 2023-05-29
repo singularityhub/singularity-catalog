@@ -1,0 +1,20 @@
+Bootstrap:docker  
+From:ubuntu:latest  
+
+%labels
+MAINTAINER timothydgreer
+
+
+%environment
+RAWR_BASE=/code
+export RAWR_BASE
+
+%runscript
+echo "This is singularity with tag"
+exec /bin/bash /code/rawr.sh "$@"  
+
+%post  
+echo "This section happens once after bootstrap to build the image."  
+mkdir -p /code  
+echo "RoooAAAAR" >> /code/rawr.sh
+chmod u+x /code/rawr.sh 

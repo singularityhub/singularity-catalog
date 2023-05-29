@@ -1,0 +1,61 @@
+Bootstrap: docker
+From: ros:melodic
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/jackal_ws/src
+
+%files
+    . /jackal_ws/src/nav-competition-icra2022
+
+%post -c /bin/bash
+    apt -y update; apt-get -y install python3-venv
+    apt-get install -y wget
+    python3 -m venv /venv
+    export PATH="/venv/bin:$PATH"
+    pip3 install --upgrade pip
+    pip3 install defusedxml rospkg netifaces numpy
+    pip install scipy
+    sudo apt install -y libgoogle-glog-dev libgflags-dev liblua5.1-0-dev
+
+    cd /jackal_ws/src
+    git clone https://github.com/jackal/jackal.git --branch melodic-devel
+    git clone https://github.com/jackal/jackal_simulator.git --branch melodic-devel
+    git clone https://github.com/jackal/jackal_desktop.git --branch melodic-devel
+    git clone https://github.com/utexas-bwi/eband_local_planner.git
+
+    source /opt/ros/melodic/setup.bash
+    cd ..
+    rosdep init; rosdep update
+    rosdep install -y --from-paths . --ignore-src --rosdistro=melodic
+    source devel/setup.bash
+    catkin_make
+
+
+    export ROS_PACKAGE_PATH=/jackal_ws/src/nav-competition-icra2022/vagn/graph_navigation:$ROS_PACKAGE_PATH
+    export ROS_PACKAGE_PATH=/jackal_ws/src/nav-competition-icra2022/vagn/amrl_msgs:$ROS_PACKAGE_PATH
+    export ROS_PACKAGE_PATH=/jackal_ws/src/nav-competition-icra2022/vagn/enml:$ROS_PACKAGE_PATH
+    export PATH=/jackal_ws/src/nav-competition-icra2022/vagn/graph_navigation/libtorch:$PATH
+    cd /jackal_ws/src/nav-competition-icra2022/vagn/amrl_msgs
+    make 
+    cd ..
+
+    cd /jackal_ws/src/nav-competition-icra2022/vagn
+    cd enml
+    ./InstallPackages
+    make
+    cd ..
+
+    cd /jackal_ws/src/nav-competition-icra2022/vagn/graph_navigation
+    wget https://download.pytorch.org/libtorch/lts/1.8/cpu/libtorch-cxx11-abi-shared-with-deps-1.8.2%2Bcpu.zip
+    unzip libtorch-cxx11-abi-shared-with-deps-1.8.2+cpu.zip 
+    make
+    cd ..
+
+%environment
+    export ROS_PACKAGE_PATH=/jackal_ws/src/nav-competition-icra2022/vagn/graph_navigation:$ROS_PACKAGE_PATH
+    export ROS_PACKAGE_PATH=/jackal_ws/src/nav-competition-icra2022/vagn/amrl_msgs:$ROS_PACKAGE_PATH
+    export ROS_PACKAGE_PATH=/jackal_ws/src/nav-competition-icra2022/vagn/enml:$ROS_PACKAGE_PATH
+    export PATH=/jackal_ws/src/nav-competition-icra2022/vagn/graph_navigation/libtorch:$PATH
+    export PATH="/venv/bin:$PATH"
+    export ROS_MASTER_URI=http://localhost:11311
+    export ROS_HOSTNAME=localhost

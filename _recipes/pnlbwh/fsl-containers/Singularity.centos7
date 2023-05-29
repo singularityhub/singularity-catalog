@@ -1,0 +1,49 @@
+Bootstrap: docker
+From: centos:7.5.1804
+
+
+%labels
+    Maintainer: Tashrif Billah <tbillah@bwh.harvard.edu>
+    Organization: PNL-BWH-HMS
+
+
+%help
+    Singularity recipe for FSL and FSLeyes
+
+
+%post
+    # set up user and working directory
+
+    cd /
+
+
+    # libraries and commands for FSL
+
+    yum -y update
+    yum -y install epel-release wget file bzip2 openblas-devel which libmng libpng12 libSM gtk2 mesa-dri-drivers
+
+
+    # install FSL, -V 5.0.11, you are welcome to change it below
+
+    wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py -O fslinstaller.py
+    python fslinstaller.py -V 6.0.1 -d `pwd`/fsl-5.0.11-centos7 -p
+
+
+    # setup FSL environment
+
+    export FSLDIR=/fsl-5.0.11-centos7
+    # export PATH=$FSLDIR/bin/:$PATH
+    # source $FSLDIR/etc/fslconf/fsl.sh
+
+    # apply patch
+
+    $FSLDIR/fslpython/bin/conda install -y -n fslpython -c conda-forge deprecation==1.*
+
+
+%environment
+    
+    export FSLDIR=/fsl-5.0.11-centos7
+    export PATH=$FSLDIR/bin/:$PATH
+    source $FSLDIR/etc/fslconf/fsl.sh
+
+

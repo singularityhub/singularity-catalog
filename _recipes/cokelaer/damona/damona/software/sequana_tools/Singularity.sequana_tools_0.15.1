@@ -1,0 +1,23 @@
+Bootstrap: localimage
+From: sequana_tools_0.14.5.img
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    # just install sequana 
+    pip install sequana==0.15.1
+
+    conda install 'snpEff=5.1d'
+
+    # cleanup
+    conda clean --packages -y
+    conda clean --all -y # next requires lots of space
+    rm -rf /usr/local/anaconda/pkgs
+
+%environment
+    echo "backend:agg" > matplotlibrc
+
+%runscript
+    PYTHONNOUSERSITE=1 exec ${1+"$@"}

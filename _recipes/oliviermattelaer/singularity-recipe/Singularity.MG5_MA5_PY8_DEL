@@ -1,0 +1,12 @@
+BootStrap: shub
+From: oliviermattelaer/singularity-recipe:mg5_ma5_py8_root
+
+
+%post
+
+    # Delphes itself
+    cd /usr
+    echo "install Delphes;" > cmd.del
+    ./mg5amcnlo/bin/mg5 cmd.del
+
+

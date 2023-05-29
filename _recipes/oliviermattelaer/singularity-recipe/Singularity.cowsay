@@ -1,0 +1,53 @@
+BootStrap: debootstrap
+OSVersion: stable
+MirrorURL: http://ftp.us.debian.org/debian/
+
+%runscript
+    echo "This is what happens when you run the container..."
+    infile=
+    outfile=
+
+    usage() {
+      >&2 echo "Usage:"
+      >&2 echo "$SINGULARITY_NAME -i <infile> -o <outfile> [ -- <cowsay options> ]"
+      exit 1
+    }
+
+    while getopts i:o: argument
+    do
+    case $argument in
+        i)
+          infile="$OPTARG"
+	  ;;
+	  o)
+	  outfile="$OPTARG"
+	  ;;
+	  ?)
+	  usage
+	  ;;
+    esac
+    done
+
+    shift "$((OPTIND - 1))"
+
+    if [ -z "$infile" ] || [ -z "$outfile" ]
+        then
+	usage
+    fi
+
+    cat "$infile" | cowsay "$@" > "$outfile"
+
+
+%post
+    echo "Hello from inside the container"
+    apt-get update
+    apt-get -y install fortune cowsay lolcat
+    #	        apt-get clean
+
+%labels
+   author Olivier Mattelaer
+
+%environment
+    export PATH=$PATH:/usr/games
+    export LC_ALL=C
+	

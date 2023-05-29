@@ -1,0 +1,26 @@
+BootStrap: shub
+From: oliviermattelaer/singularity-recipe:mg5_ma5_py8
+
+
+%post
+
+    apt-get -y install git cmake dpkg-dev python-dev make g++ gcc binutils libx11-dev libxpm-dev libxft-dev libxext-dev
+    cd /usr/local/
+    git clone --depth 1 https://github.com/root-mirror/root.git
+    cd root
+    mkdir compile
+    cd compile
+    cmake -Dpython=ON -Droofit=ON -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/root ..
+    make
+    make install
+
+
+
+%environment
+   source /usr/local/root/bin/thisroot.sh
+   #CERN ROOT
+   export ROOTSYS=/usr/local/root
+   export PATH=$ROOTSYS/bin:$PATH
+   export PYTHONDIR=$ROOTSYS
+   export LD_LIBRARY_PATH=$ROOTSYS/lib:$PYTHONDIR/lib:$ROOTSYS/bindings/pyroot:$LD_LIBRARY_PATH
+   export PYTHONPATH=$ROOTSYS/lib:$PYTHONPATH:$ROOTSYS/bindings/pyroot
