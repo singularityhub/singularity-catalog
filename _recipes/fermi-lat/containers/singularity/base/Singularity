@@ -1,0 +1,32 @@
+Bootstrap:docker
+From:centos:6
+
+%labels
+    Maintainer "Joris Guillouf <jguillouf@lupm.in2p3.fr>"
+
+%setup
+    cp -r workspace $SINGULARITY_ROOTFS/opt
+
+%post
+    yum update -y && yum install -y epel-release
+
+    yum install -y curl gcc gcc-c++ scons \
+        time sendmail \
+        freetype-devel libX11-devel libXt-devel openmotif-devel \
+        libXcursor-devel mesa-libGL-devel libGLU-devel \
+        libXrandr-devel libtiff-devel \
+        xrootd-client
+
+    cd /opt
+
+    curl "http://www-glast.stanford.edu/cgi-bin/viewcvs/SCons-installer/src/installer.py?revision=1.10&content-type=text%2Fplain" > installer.py
+
+    mkdir /opt/GLAST_EXT && \
+    python installer.py  -c install -x --package GlastRelease \
+        --versionType RELEASE --version 20-10-04-gr02 \
+        --variant Optimized --os redhat6-x86_64-64bit-gcc44 \
+        -e GLAST_EXT && \
+    cd /opt/workspace && scons --with-GLAST-EXT /opt/GLAST_EXT all
+
+    chmod 777 /opt/workspace && chmod 777 /opt/workspace/data/Gleam
+

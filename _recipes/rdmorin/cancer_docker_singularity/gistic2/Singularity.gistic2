@@ -1,0 +1,12 @@
+Bootstrap: docker
+Namespace:
+From: genepattern/docker-gistic:latest
+
+%labels
+MAINTAINER rdmorin
+
+%environment
+    LD_LIBRARY_PATH=/usr/local/MATLAB/MATLAB_Compiler_Runtime/v83/runtime/glnxa64:/usr/local/MATLAB/MATLAB_Compiler_Runtime/v83/bin/glnxa64:/usr/local/MATLAB/MATLAB_Compiler_Runtime/v83/sys/os/glnxa64
+    XAPPLRESDIR=/usr/local/MATLAB/MATLAB_Compiler_Runtime/v83/X11/app-defaults
+    export LD_LIBRARY_PATH XAPPLRESDIR
+
