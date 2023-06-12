@@ -1,0 +1,17 @@
+bootstrap: docker
+from: ubuntu:16.04
+
+
+%post
+  apt-get update
+  apt-get install -y  vim \
+                      nano \
+                      git \
+                      git-annex \
+                      python3 \
+                      python3-pip \
+                      python3-numpy \
+                      python3-setuptools \
+                      python3-wheel \
+
+  pip3 install datalad
