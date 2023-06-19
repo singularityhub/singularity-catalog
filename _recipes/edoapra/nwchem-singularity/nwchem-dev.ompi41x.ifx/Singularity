@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: ubuntu:20.04
+From: ubuntu:22.04
 %labels
 MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 
@@ -10,6 +10,7 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
     ls -l ${SINGULARITY_ROOTFS}
     rm -f ${SINGULARITY_ROOTFS}/*.txt
     echo "FC=$FC " >> ${SINGULARITY_ROOTFS}/fc.txt
+    echo "ARMCI_NETWORK=$ARMCI_NETWORK " >> ${SINGULARITY_ROOTFS}/armci_network.txt
     echo "MPI_IMPL=$MPI_IMPL " >> ${SINGULARITY_ROOTFS}/mpi_impl.txt
     echo "BRANCH=$BRANCH " >> ${SINGULARITY_ROOTFS}/branch.txt
     echo '@@@ ls -lart $SINGULARITY_ROOTFS'
@@ -19,7 +20,7 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
     ls -la  ${CACHEDIR}/ompi/lib || true
     ls -la  ${CACHEDIR}/simint.l5_p5_d1.install/lib/libnwc_simint.a || true
     ls -la  ${CACHEDIR}/simint.l5_p5_d1.install/lib/libsimint.a ||true
-    bash -c "if [[ ! -z "${GITHUB_WORKSPACE}" ]]; then mkdir -p ${SINGULARITY_ROOTFS}/nwchem/contrib; rsync -a ${GITHUB_WORKSPACE}/nwchem/src ${SINGULARITY_ROOTFS}/nwchem/. ; rsync -a ${GITHUB_WORKSPACE}/nwchem/contrib/getmem.nwchem ${SINGULARITY_ROOTFS}/nwchem/contrib/. ;rsync -a ${GITHUB_WORKSPACE}/nwchem/travis ${SINGULARITY_ROOTFS}/nwchem/. ;fi"
+    bash -c "if [[ ! -z "${GITHUB_WORKSPACE}" ]]; then mkdir -p ${SINGULARITY_ROOTFS}/nwchem/contrib; rsync -a ${GITHUB_WORKSPACE}/nwchem/src ${SINGULARITY_ROOTFS}/nwchem/. ; rsync -a ${GITHUB_WORKSPACE}/nwchem/contrib/getmem.nwchem ${SINGULARITY_ROOTFS}/nwchem/contrib/. ;rsync -a ${GITHUB_WORKSPACE}/nwchem/travis ${SINGULARITY_ROOTFS}/nwchem/. ; rsync -a ${GITHUB_WORKSPACE}/nwchem/.git ${SINGULARITY_ROOTFS}/nwchem/. ; fi"
     bash -c "if [[  -f ${CACHEDIR}/ompi/lib/libmpi.so ]]; then mkdir -p ${SINGULARITY_ROOTFS}/opt ;rsync -a ${CACHEDIR}/ompi ${SINGULARITY_ROOTFS}/opt/. ; echo ompi/ucx cache fetched ;fi"
     bash -c "if [[  -f ${CACHEDIR}/libext/lib/libnwc_openblas.a ]]; then rsync -a ${CACHEDIR}/libext/* ${SINGULARITY_ROOTFS}/nwchem/src/libext/. ; echo libext cache fetched ;fi"
     bash -c "if [[  -f ${CACHEDIR}/simint.l5_p5_d1.install/lib/libsimint.a ]]; then rsync -av ${CACHEDIR}/simint.l5_p5_d1.install ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/. ; ln -sf ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/simint.l5_p5_d1.install  ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/simint_install;  ls -l ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/; echo simint cache fetched ;fi"
@@ -44,14 +45,17 @@ export SINGULARITY_PATH=$OMPI_DIR/bin:/root/apps/oneapi/compiler/latest/linux/bi
 export SINGULARITY_LD_LIBRARY_PATH=$OMPI_DIR/lib:/root/apps/oneapi/compiler/latest/linux/lib:/root/apps/oneapi/compiler/latest/linux/lib/x64:~/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin 
 export SINGULARITY_LIBRARY_PATH=/root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/root/apps/oneapi/compiler/latest/linux/lib 
 export `cat ./fc.txt`
+export `cat ./armci_network.txt`
 export `cat ./mpi_impl.txt`
 export `cat ./branch.txt`
 echo FC is $FC
+echo ARMCI_NETWORK is $ARMCI_NETWORK
 echo MPI_IMPL is $MPI_IMPL
 echo BRANCH is $BRANCH
 pwd \
 && apt-get -y update \
 && apt-get -y install -y tzdata git moreutils  wget curl rsync  sudo \
+&& bash -o  pipefail -c "if [[ $(echo $FC | cut -c -8) == gfortran ]]; then apt-get -y install -y  ${FC}; fi" \
 && pwd \
 && echo '@@ ls -lart ' \
 && ls -lart  \
@@ -63,21 +67,26 @@ pwd \
  python3 python3-dev cmake  unzip zip perl automake libtool autoconf flex  \
  libnuma-dev libslurm-dev libpmi2-0-dev libpmi0-dev  libnl-3-dev libnl-route-3-dev udev \
  librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers \
+ pkg-config \
 && apt-get clean \
 && echo TTTTT \
 &&  ./nwchem/travis/build_env.sh || true \
 && echo TTTTT \
 && echo "PATH" $PATH \
 && echo "LD_LIBRARY_PATH" $LD_LIBRARY_PATH \
-&& echo ' ls -lart  ~/apps' `ls -lart  ~/apps` \
 && echo FFFFF \
 && echo 'FC -v ' `$FC -v` \
-&& if [[ "$FC" == 'ifx' ]]; then CC='icx'; fi \
+&& rm -f ./cc.txt || true \
+&& if [ -f ./cc.txt ]; then export `cat ./cc.txt` ; fi \
+&& if [ -f ./cxx.txt ]; then export `cat ./cxx.txt` ; fi \
 && echo ' CC is ' "$CC" \
+&& echo ' CXX is ' "$CXX" || true \
 && bash -o pipefail -c "if [[ ! -f /opt/ompi/lib/libmpi.so ]]; then  \
 $FC -v \
 && wget --progress=dot:giga  https://github.com/openucx/ucx/releases/download/v$ucx/ucx-$ucx.tar.gz -O - | tar xzf - \
 && cd ucx-$ucx \
+&& curl -LJO https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/ucx_malloc.patch \
+&& patch -p0 < ./ucx_malloc.patch \
 && mkdir build && cd build \
 && ../configure --prefix=$OMPI_DIR --disable-logging --disable-debug --disable-assertions --disable-params-check \
 && make -j4 && make install \
@@ -104,13 +113,16 @@ echo ' check ucx' \
 && echo '********' 
 export PATH=$OMPI_DIR/bin:$PATH
 export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
-export ARMCI_NETWORK=MPI-PR
+#export ARMCI_NETWORK=MPI-PR
+echo ARMCI_NETWORK is $ARMCI_NETWORK
 #export NWCHEM_TOP=/opt/nwchem
 export NWCHEM_TARGET=LINUX64
-export NWCHEM_MODULES="all python gwmol"
+export NWCHEM_MODULES="all python gwmol xtb"
+export USE_TBLITE=1 
 #export NWCHEM_MODULES="nwdft driver solvation"
-if [ $FC == "gfortran" ]; then
+if [ "$FC" = "gfortran" ]; then
    export BUILD_PLUMED=1
+   export PYTHON_BIN=python3
 fi	  
 export USE_LIBXC=1
 export BUILD_OPENBLAS=1
@@ -118,7 +130,7 @@ export BUILD_SCALAPACK=1
 export BLAS_SIZE=8
 export SCALAPACK_SIZE=8
 #export USE_64TO32=y
-if [ $BRANCH !=  "master" ]; then
+if [ "$BRANCH" !=  "master" ]; then
    export USE_OPENMP=1
 fi
 export USE_MPI=y
@@ -136,25 +148,28 @@ ls -l nwchem* || true \
 && /usr/bin/env|egrep BUILD_ \
 && bash -o pipefail -c "if [[ ! -f nwchem/src/GNUmakefile ]]; then git clone -b $BRANCH --depth 1  https://github.com/nwchemgit/nwchem.git; fi" \
 && cd nwchem \
+&& echo "output of git describe  --always " `git describe  --always` || true \
+&& curl -LJO https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/largebasis.patch \
+&& patch -p1 < largebasis.patch \
+&& curl  https://raw.githubusercontent.com/nwchemgit/nwchem/7e4ea3c5cd9205572fbe42c8a86f18ada43409ec/src/NWints/simint/libsimint_source/build_simint.sh > src/NWints/simint/libsimint_source/build_simint.sh \
+&& curl -LJO https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/simint_forceg++.patch \
+&& patch -p1 < simint_forceg++.patch \
 && export NWCHEM_TOP=`pwd` \
 && ls -lrt \
 && cd src \
 && ls -lrt libext/lib || true \
-&& make nwchem_config \
+&& make nwchem_config || { echo "config Failure"; exit 1; } \
 && bash -o pipefail -c " \
 echo 'ls ~/' `ls -lrt ~/` \
-&& echo 'ls ~/apps' `ls -lrt ~/apps` || true \
 && echo '222 PATH is ' `/usr/bin/env | grep PATH` \
 && echo '111 which FC ' `which $FC` || true \
-&& echo '333 which FC ' `which $FC` || true \
 && mpif90 -show \
 && echo FC is $FC \
 && $FC -v \
-&& make FC=$FC -j6  \
+&& make FC=$FC -j6 || { echo 'Compilation Failure'; exit 1; } \
 && FC=$FC ../contrib/getmem.nwchem 2000  || true \
 && make FC=$FC install INSTALL_PREFIX=/opt/nwchem \
-&& ldd  ../bin/LINUX64/nwchem  \
-" \
+&& ldd  ../bin/LINUX64/nwchem  "\
 && if [ -f ~/apps/oneapi/compiler/latest/env/vars.sh ]; then  \
 rsync -av ~/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin/lib*.so* $OMPI_DIR/lib/. ; fi \
 && DEBIAN_FRONTEND=noninteractive apt-get -y install localepurge \
@@ -163,8 +178,9 @@ rsync -av ~/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin/lib*.so* 
 && echo en_US.UTF-8 >> /etc/locale.nopurge \
 && localepurge \
 && rm -rf /usr/share/doc  /usr/share/man \
-a&& du -sh /opt/nwchem \
+&& du -sh /opt/nwchem \
 && du -sk /opt/nwchem/*|sort -n \
+&& rm -rf ../.git \
 && rm -rf tce tools nwdft NWints/simint/libsimint_source/simint.l?_p?_d? geom symmetry util nwxc ddscf lapack blas rism argos peigs rmdft gradients symmetry property smd lucia dplot propery hessian ccsd mp2_grad moints cafe analyz dimqm   develop libext/scalapack libext/openblas libext/libxc/libxc* libext/plumed* libext/libext_utils   ../lib \
 && du -sh * |sort -n \
 && cd ../.. \
@@ -180,8 +196,8 @@ rm -rf ~/apps  /var/intel  l_*sh ; fi"   \
 && echo "dddddddddddd" \
 &&  du -sk /tmp/* || true \
 &&  ls -lart /tmp ||true \
-&&  apt-get  -y purge cmake git  gcc-9  g++-9  gfortran-9  libstdc++-9-dev  libgcc-9-dev git \
-&& apt-get -y install libgcc-s1  \
+&&  apt-get  -y purge cmake git  gcc-11  g++-11  gfortran-11  libstdc++-11-dev  libgcc-11-dev git \
+&& apt-get -y install libgcc-s1 libgfortran5 \
 && apt-get -y autoremove && apt-get clean
 
 

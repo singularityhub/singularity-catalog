@@ -1,0 +1,90 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%help
+This container contains mtrack, a package for tracking of microtubules in EM volumes
+
+%labels
+
+    Maintainer Nils Eckstein
+    Version 0.1
+
+
+MTRACK_BASE="/groups/funke/home/ecksteinn/Projects/microtubules/mtrack"
+
+%setup
+mkdir -p ${SINGULARITY_ROOTFS}/src/mtrack
+cp -rf /groups/funke/home/ecksteinn/Projects/microtubules/mtrack/mtrack ${SINGULARITY_ROOTFS}/src/mtrack
+cp -rf /groups/funke/home/ecksteinn/Projects/microtubules/mtrack/tests ${SINGULARITY_ROOTFS}/src/mtrack
+cp /groups/funke/home/ecksteinn/Projects/microtubules/mtrack/requirements.txt ${SINGULARITY_ROOTFS}/src/mtrack
+cp /groups/funke/home/ecksteinn/Projects/microtubules/mtrack/setup.py ${SINGULARITY_ROOTFS}/src/mtrack
+
+%post
+# install requirements
+apt-get update && apt-get install -y --no-install-recommends \
+cmake \
+git \
+ca-certificates \
+mercurial \
+libboost1.58-all-dev \
+libhdf5-serial-dev \
+libtiff5-dev \
+libfftw3-dev \
+python2.7-dev \
+python-numpy \
+python-pip \
+python-setuptools \
+python-scipy \
+wget \
+curl \
+vim \
+bzip2 \
+gzip && \
+rm -rf /var/lib/apt/lists/*
+
+#install graph-tool
+#echo "deb http://downloads.skewed.de/apt/xenial xenial universe" >> /etc/apt/sources.list && \
+#echo "deb-src http://downloads.skewed.de/apt/xenial xenial universe" >> /etc/apt/sources.list && \
+#apt-get update && \
+#apt-get install -y --allow-unauthenticated python-graph-tool
+
+# install conda
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+bash miniconda.sh -b -p /miniconda
+PATH="/miniconda/bin:$PATH"
+conda config --set always_yes yes --set changeps1 no
+conda update -q conda
+conda info -a
+conda install python=2.7
+
+# install graph-tool
+conda install -c defaults -c conda-forge -c ostrokach-forge -c pkgw-forge 'graph-tool>=2.27'
+
+#install pylp
+conda install -c funkey pylp
+
+#install hungarian_match
+COMATCH_ROOT=/src/comatch
+COMATCH_REPOSITORY=https://github.com/funkey/comatch
+COMATCH_REVISION=hungarian
+
+mkdir -p ${COMATCH_ROOT}
+cd ${COMATCH_ROOT}
+git clone ${COMATCH_REPOSITORY} . && \
+git checkout ${COMATCH_REVISION}
+python setup.py install
+
+#install mtrack
+cd /src/mtrack
+conda install --yes --file requirements.txt
+pip install .
+
+%environment
+export GUROBI_HOME=/misc/local/gurobi-8.0.1
+export PATH=${GUROBI_HOME}/bin
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${GUROBI_HOME}/lib
+export GRB_LICENSE_FILE=${GUROBI_HOME}/gurobi.lic
+#export GUROBI_ROOT_DIR=/opt/gurobi810/linux64
+export PYTHONPATH=${PYLP_ROOT}:$PYTHONPATH
+export PYTHONPATH=/src/mtrack:$PYTHONPATH
+export PATH=/miniconda/bin:$PATH
