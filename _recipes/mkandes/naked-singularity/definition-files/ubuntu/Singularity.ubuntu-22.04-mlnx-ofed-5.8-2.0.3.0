@@ -4,17 +4,17 @@ From: ghcr.io/mkandes/naked-singularity:ubuntu-22.04
 %labels
 
     APPLICATION_NAME ubuntu + mlnx-ofed
-    APPLICATION_VERSION 20.04 + 5.8-2.0.3.0
+    APPLICATION_VERSION 22.04 + 5.8-2.0.3.0
     APPLICATION_URL https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed
 
     IMAGE_URI oras://ghcr.io/mkandes/naked-singularity:ubuntu-22.04-mlnx-ofed-5.8-2.0.3.0
-    IMAGE_MD5 a9c230e58c57a206d985745213ac6535
-    IMAGE_SHA256 e3e7c6d850a5830c2ba808e57cd3ad5c72eea9cf76ec737a27f111564451447f
+    IMAGE_MD5
+    IMAGE_SHA256
 
     AUTHOR_NAME Marty Kandes
     AUTHOR_EMAIL mkandes@sdsc.edu
 
-    LAST_UPDATED 20230614
+    LAST_UPDATED 20230622
 
 %setup
 
@@ -31,7 +31,7 @@ From: ghcr.io/mkandes/naked-singularity:ubuntu-22.04
     export MIRRORURL='http://us.archive.ubuntu.com/ubuntu'
 
     # Set operating system version
-    export OSVERSION='jammy'
+    export OSVERSION='focal'
 
     # Set system locale
     export LC_ALL='C'

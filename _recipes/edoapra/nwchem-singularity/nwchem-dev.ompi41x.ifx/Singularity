@@ -20,7 +20,8 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
     ls -la  ${CACHEDIR}/ompi/lib || true
     ls -la  ${CACHEDIR}/simint.l5_p5_d1.install/lib/libnwc_simint.a || true
     ls -la  ${CACHEDIR}/simint.l5_p5_d1.install/lib/libsimint.a ||true
-    bash -c "if [[ ! -z "${GITHUB_WORKSPACE}" ]]; then mkdir -p ${SINGULARITY_ROOTFS}/nwchem/contrib; rsync -a ${GITHUB_WORKSPACE}/nwchem/src ${SINGULARITY_ROOTFS}/nwchem/. ; rsync -a ${GITHUB_WORKSPACE}/nwchem/contrib/getmem.nwchem ${SINGULARITY_ROOTFS}/nwchem/contrib/. ;rsync -a ${GITHUB_WORKSPACE}/nwchem/travis ${SINGULARITY_ROOTFS}/nwchem/. ; rsync -a ${GITHUB_WORKSPACE}/nwchem/.git ${SINGULARITY_ROOTFS}/nwchem/. ; fi"
+    bash -c "if [ ! -z "${GITHUB_WORKSPACE}" ]; then mkdir -p ${SINGULARITY_ROOTFS}/nwchem/contrib; rsync -a ${GITHUB_WORKSPACE}/nwchem/src ${SINGULARITY_ROOTFS}/nwchem/. ; rsync -a ${GITHUB_WORKSPACE}/nwchem/contrib/getmem.nwchem ${SINGULARITY_ROOTFS}/nwchem/contrib/. ;rsync -a ${GITHUB_WORKSPACE}/nwchem/travis ${SINGULARITY_ROOTFS}/nwchem/. ; rsync -a ${GITHUB_WORKSPACE}/nwchem/.git ${SINGULARITY_ROOTFS}/nwchem/. ; fi"
+    echo done1
     bash -c "if [[  -f ${CACHEDIR}/ompi/lib/libmpi.so ]]; then mkdir -p ${SINGULARITY_ROOTFS}/opt ;rsync -a ${CACHEDIR}/ompi ${SINGULARITY_ROOTFS}/opt/. ; echo ompi/ucx cache fetched ;fi"
     bash -c "if [[  -f ${CACHEDIR}/libext/lib/libnwc_openblas.a ]]; then rsync -a ${CACHEDIR}/libext/* ${SINGULARITY_ROOTFS}/nwchem/src/libext/. ; echo libext cache fetched ;fi"
     bash -c "if [[  -f ${CACHEDIR}/simint.l5_p5_d1.install/lib/libsimint.a ]]; then rsync -av ${CACHEDIR}/simint.l5_p5_d1.install ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/. ; ln -sf ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/simint.l5_p5_d1.install  ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/simint_install;  ls -l ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/; echo simint cache fetched ;fi"
@@ -67,10 +68,14 @@ pwd \
  python3 python3-dev cmake  unzip zip perl automake libtool autoconf flex  \
  libnuma-dev libslurm-dev libpmi2-0-dev libpmi0-dev  libnl-3-dev libnl-route-3-dev udev \
  librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers \
- pkg-config \
+ pkg-config gawk  software-properties-common \
 && apt-get clean \
 && echo TTTTT \
-&&  ./nwchem/travis/build_env.sh || true \
+&& wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/build_env.sh  \
+&& cp build_env.sh nwchem/travis/. \
+&& chmod +x nwchem/travis/build_env.sh \
+&& df -h \
+&& bash -o  pipefail -c  ./nwchem/travis/build_env.sh || true \
 && echo TTTTT \
 && echo "PATH" $PATH \
 && echo "LD_LIBRARY_PATH" $LD_LIBRARY_PATH \
@@ -123,6 +128,7 @@ export USE_TBLITE=1
 if [ "$FC" = "gfortran" ]; then
    export BUILD_PLUMED=1
    export PYTHON_BIN=python3
+   export BUILD_ELPA=1
 fi	  
 export USE_LIBXC=1
 export BUILD_OPENBLAS=1
@@ -130,9 +136,9 @@ export BUILD_SCALAPACK=1
 export BLAS_SIZE=8
 export SCALAPACK_SIZE=8
 #export USE_64TO32=y
-if [ "$BRANCH" !=  "master" ]; then
+#if [ "$BRANCH" !=  "master" ]; then
    export USE_OPENMP=1
-fi
+#fi
 export USE_MPI=y
 export USE_MPIF=y
 export USE_MPIF4=y
@@ -170,8 +176,8 @@ echo 'ls ~/' `ls -lrt ~/` \
 && FC=$FC ../contrib/getmem.nwchem 2000  || true \
 && make FC=$FC install INSTALL_PREFIX=/opt/nwchem \
 && ldd  ../bin/LINUX64/nwchem  "\
-&& if [ -f ~/apps/oneapi/compiler/latest/env/vars.sh ]; then  \
-rsync -av ~/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin/lib*.so* $OMPI_DIR/lib/. ; fi \
+&& if [ -f /root/apps/oneapi/compiler/latest/env/vars.sh ]; then  \
+rsync -av /root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin/lib*.so* $OMPI_DIR/lib/. ; fi \
 && DEBIAN_FRONTEND=noninteractive apt-get -y install localepurge \
 && echo MANDELETE >  /etc/locale.nopurge \
 && echo DONTBOTHERNEWLOCALE >> /etc/locale.nopurge \
