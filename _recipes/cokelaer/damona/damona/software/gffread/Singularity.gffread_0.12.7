@@ -1,0 +1,27 @@
+Bootstrap: localimage
+From: ../../library/micromamba/micromamba_1.4.3.img
+
+%post
+    apt -y update && apt -y upgrade
+
+    # export the PATH here so that pip is found later on
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+
+    # an alias
+    export OPTS=" -q -c conda-forge -c bioconda -n main -y "
+
+    micromamba install $OPTS python="3.10"
+
+    micromamba install $OPTS gffread
+
+    # cleanup
+    micromamba clean --packages -y
+    micromamba clean --all -y
+    rm -rf /opt/condas/pkg
+
+%environment
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+
+%runscript
+    # Set the default command to run sequana
+    gffread "$@"

@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:1.15.2-py3
+
+%labels
+    CREATER hlya23dd
+
+%files
+    requirements.txt
+
+%post
+    pip install -r requirements.txt
+

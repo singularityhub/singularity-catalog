@@ -1,0 +1,24 @@
+Bootstrap: localimage
+From: micromamba_1.4.3.img
+
+
+%environment
+    export DEBIAN_FRONTEND=noninteractive
+
+%post
+
+    micromamba install -q -c conda-forge -c bioconda -n main -y pigz pbzip2 pangolin minimap2 usher gofasta
+
+
+    micromamba clean --packages -y
+    micromamba clean --all -y # next requires lots of space
+    rm -rf /opt/condas/pkg
+
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+
+%environment
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+
+%runscript
+    # Set the default command to run Nextclade
+    pangolin "$@"

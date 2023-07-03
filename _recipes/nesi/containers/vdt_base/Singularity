@@ -1,0 +1,124 @@
+Bootstrap: docker
+From: nvidia/cuda:11.0-devel-centos7
+%help
+    see https://github.com/nesi/nesi-virtual-desktops
+%post
+    export TURBOVNC_VERSION=2.2.4
+    export WEBSOCKIFY_VERSION=0.9.0
+    export FIREFOX_VERSION=9.0
+    export VGL_VERSION=2.6.3
+    export DESKTOP_VERSION=2.0
+
+	yum -y update
+	yum -y upgrade 
+	yum -y install epel-release
+
+	yum -y --enablerepo=epel install VirtualGL
+	
+	yum -y groupinstall "Xfce"
+        yum -y install gnome-terminal
+	yum -y groups install "X Window System"
+
+	yum -y install libXp # For ANSYS EM
+	yum -y install git
+	yum -y install wget
+        yum -y install patch
+        yum -y install numpy
+	yum -y install bzip2
+	yum -y install libX11
+	yum -y install glibc
+	yum -y install giflib # For ANSYS EM
+	yum -y install python
+	yum -y install python3
+	yum -y install polkit
+	yum -y install libXext
+	yum -y install cmake3
+	yum -y install cmake3-gui
+	yum -y install libglvnd-egl
+	yum -y install qt-devel
+	yum -y install qt5-qtbase-devel
+	yum -y install turbojpeg
+	yum -y install diffutils
+	yum -y install mesa-libGL 
+	yum -y install mesa-libGL-devel
+	yum -y install mesa-libGLU
+	yum -y install mesa-libGLU-devel
+	yum -y install libvncserver
+	yum -y install bash-completion 
+	yum -y install libcanberra-gtk3
+	yum -y install libXext-devel.x86_64
+	yum -y install bash-completion-extras
+	yum -y install -y gcc-c++ # Needed to compile Websocketify rebind lib.
+	
+	yum -y install tcl-8.5.13-8.el7.x86_64 \
+	lua-filesystem-1.6.2-2.el7.x86_64 \
+	lua-devel-5.1.4-15.el7.x86_64 \
+    	tcl-devel-8.5.13-8.el7.x86_64 \
+	lua-bitop-1.0.2-3.el7.x86_64 \
+	lua-json-1.3.2-2.el7.noarch \
+	lua-term-0.03-3.el7.x86_64 \
+	lua-lpeg-0.12-1.el7.x86_64 \
+	lua-posix-32-2.el7.x86_64 \
+	lua-5.1.4-15.el7.x86_64 
+			
+	#CUDA
+	distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+	curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.repo | tee /etc/yum.repos.d/nvidia-container-runtime.repo
+	
+	yum -y install nvidia-container-runtime
+	# Create sockets folder.
+	mkdir -p /var/run/nvidia-persistenced/ 
+	
+	nvidia-xconfig
+	
+	# Generic python
+	python3 -m pip install numpy scipy matplotlib ipython jupyter pandas
+
+	# Virtual GL
+	mkdir -p /etc/yum.repos.d
+    	cd /etc/yum.repos.d
+	wget https://virtualgl.org/pmwiki/uploads/Downloads/VirtualGL.repo
+    	yum -y install VirtualGL
+	
+	# TurboVNC
+	wget https://sourceforge.net/projects/turbovnc/files/${TURBOVNC_VERSION}/turbovnc-${TURBOVNC_VERSION}.x86_64.rpm -q
+  	yum install -y turbovnc-${TURBOVNC_VERSION}.x86_64.rpm
+  	rm -rf turbovnc-${TURBOVNC_VERSION}.x86_64.rpm
+	
+	# Websockify
+    	mkdir -p /opt/websockify
+  	wget https://github.com/novnc/websockify/archive/master.tar.gz -q -O - | tar xzf - -C /opt/websockify --strip-components=1
+	# This just changes print statements. Can be safely commented out if needed.
+	wget https://raw.githubusercontent.com/nesi/nesi-virtual-desktops/main/utils/nesi_websockify.diff  	
+	patch --verbose /opt/websockify/websockify/websocketproxy.py < nesi_websockify.diff
+	
+	#sed  '/.*self.msg("%s", msg)/i\        msg += \"\\n  - Now open a browser to http:\/\/localhost:\" + str(os.getenv(\"VNC_SOCKET_PORT\"))\n        msg += \"\\n  - Press CTRL + C to kill.\"' \
+	cd /opt/websockify && make && cp rebind.so websockify
+	
+	# noVNC
+	mkdir -p /opt/noVNC
+  	git clone https://github.com/novnc/noVNC/ /opt/noVNC
+	echo "<meta http-equiv=\"refresh\" content=\"0; URL='vnc.html'\"/>" > /opt/noVNC/index.html
+	
+	# VScode
+	rpm --import https://packages.microsoft.com/keys/microsoft.asc
+	echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" >> /etc/yum.repos.d/vscode.repo
+	yum -y install code	
+	
+	
+	
+%environment	
+	export PATH=${PATH}:/opt/TurboVNC/bin:/opt/VirtualGL/bin/
+	
+	# General
+	export LANG="en_US.UTF-8"
+	export LANGUAGE="en_US"
+	export TZ="Pacific/Auckland"
+	export LC_ALL=C
+	export VGL_VERBOSE=1
+	export TERM="xterm-256color"
+	export SHELL=/bin/bash
+
+
+%runscript 
+    source "${VDT_ROOT}/utils/singularity_runscript.sh" 

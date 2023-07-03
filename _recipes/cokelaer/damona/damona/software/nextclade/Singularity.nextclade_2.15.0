@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%environment
+    export DEBIAN_FRONTEND=noninteractive
+
+%post
+    # Install required dependencies
+    apt-get update
+    apt-get install -y wget curl unzip python3-setuptools
+
+    ln -sf /usr/bin/python3 /usr/bin/python
+
+    # Install Nextclade dependencies
+    apt-get install -y libssl-dev libcurl4-openssl-dev liblzma-dev libbz2-dev zlib1g-dev
+
+    # Download and install Nextclade
+    wget https://github.com/nextstrain/nextclade/releases/download/2.14.0/nextclade-x86_64-unknown-linux-musl
+
+    mv /nextclade-x86_64-unknown-linux-musl /usr/local/bin/nextclade
+    chmod +x /usr/local/bin/nextclade
+
+
+%runscript
+    # Set the default command to run Nextclade
+    nextclade "$@"

@@ -1,0 +1,50 @@
+Bootstrap: docker
+From: alpine:3.8
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+
+    # Install dependencies
+    apk update && \
+        apk upgrade && \
+        apk add --no-cache bash curl ca-certificates && \
+        apk add autoconf automake make gcc g++  && \
+        apk add bzip2-dev zlib-dev xz-dev ncurses-dev 
+
+    # 2. Get Python, PIP
+    apk add --no-cache python3 \
+              && if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi 
+
+
+
+    # install samtools
+    SAMTOOLS_VERSION=1.17
+   HTSLIB_VERSION=1.17
+    curl -L https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 | tar -jxf - \
+    && cd samtools-${SAMTOOLS_VERSION} \
+    && ./configure && make all && make install \
+    && cd htslib-${HTSLIB_VERSION} \
+    && make && make install \
+    && cd /
+
+
+    # Install ivar
+    IVAR_VERSION=1.3.1
+    curl -L https://github.com/andersen-lab/ivar/archive/refs/tags/v${IVAR_VERSION}.tar.gz -o ivar.tar.gz && \
+        tar -xzvf ivar.tar.gz && \
+        rm ivar.tar.gz && \
+        cd ivar-${IVAR_VERSION} && \
+        ./autogen.sh && ./configure && make && make install && \
+        cd ../ && rm -rf ivar-${IVAR_VERSION}
+
+    apk del make automake autoconf 
+    rm -rf /var/cache/apk/*
+
+
+
+%runscript
+    exec ivar "$@"
+

@@ -1,0 +1,40 @@
+Bootstrap: docker
+From: ubuntu:23.10
+
+%labels
+    Author thomas cokelaer,etienne kornobis
+
+%test
+    python --version > /dev/null
+    bowtie2 --version > /dev/null
+    bash --version > /dev/null
+
+%post
+
+    apt-get update --fix-missing
+    apt-get install -y wget gcc g++ make zlib1g-dev libtbb-dev perl python3
+
+    ln -sf /usr/bin/python3 /usr/bin/python
+
+    cd /usr/local/ \
+    && wget -O bowtie.tar.gz  https://github.com/BenLangmead/bowtie2/archive/v2.5.1.tar.gz \
+    && tar -xzvf bowtie.tar.gz \
+    && rm -rf bowtie.tar.gz \
+    && cd bowtie2-2.5.1 \
+    && make \
+    && mv bowtie2 bowtie2-align-s bowtie2-align-l bowtie2-build \
+       bowtie2-build-s bowtie2-build-l bowtie2-inspect \
+       bowtie2-inspect-s bowtie2-inspect-l /usr/local/bin/
+
+    # some cleanup
+    cd /usr/local \
+    && rm -rf /usr/local/bowtie2-2.5.1 \
+    && rm -rf /var/lib/apt/lists/*  \
+    && apt-get remove -y wget gcc g++ make  zlib1g-dev libtbb-dev \
+    && apt-get autoremove -y \
+    && apt-get clean
+
+%environment
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+    export LANG=C

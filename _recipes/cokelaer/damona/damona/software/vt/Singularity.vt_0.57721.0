@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: alpine:3.18
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    apk update
+    apk upgrade
+    apk add bash git make gcc g++
+
+    apk add bzip2-dev libc-dev curl-dev ncurses-dev zlib-dev  xz-dev
+
+
+    #this will create a directory named vt in the directory you cloned the repository
+    git clone https://github.com/atks/vt.git && cd vt
+    #update submodules
+    git submodule update --init --recursive
+    make
+    make test
+
+    #. cleanup
+    apk del git
+    apk del make zlib-dev  libc-dev ncurses-dev
+    rm -rf /var/cache/apk/*
+
+
+%environment
+    export PATH=$PATH:/vt
+
+%runscript
+    exec /vt/vt "$@"
+

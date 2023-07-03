@@ -1,6 +1,7 @@
 Bootstrap: docker
 From: alpine:3.17
 
+
 %labels
   Author Sequana Team
 
@@ -8,7 +9,7 @@ From: alpine:3.17
   SAMTOOLS_VERSION=1.17
   MINIMAP2_VERSION=2.24
 
-  apk update && apk upgrade && apk add bash libc6-compat curl
+  apk update && apk upgrade && apk add bash libc6-compat curl python3
   # samtools deps
   apk add autoconf automake make gcc musl-dev perl zlib-dev bzip2-dev xz-dev curl-dev ncurses-dev
 
@@ -19,4 +20,4 @@ From: alpine:3.17
     && ./configure && make all all-htslib && make install
   rm -rf samtools-${SAMTOOLS_VERSION}
 
-  apk del curl autoconf automake make gcc musl-dev ncurses-dev
+  apk del curl autoconf automake make gcc musl-dev ncurses-dev 

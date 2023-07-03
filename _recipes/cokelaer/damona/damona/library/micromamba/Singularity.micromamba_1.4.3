@@ -1,0 +1,25 @@
+BootStrap: docker
+From: mambaorg/micromamba:latest
+
+%environment
+  # Define environment variables
+
+%post
+    # Create a micromamba environment (based won't work)
+    micromamba create -y -n main
+
+    # Example of installing bwa inside the environment
+    # micromamba install -q -y -n main -c bioconda bwa
+
+    # set anaconda path
+    export PATH=$PATH:/usr/local/micromamba/bin
+
+    #cleanup 
+    #rm -rf /opt/conda/pkgs/
+
+%environment
+    export PATH=$PATH:/usr/local/micromamba/bin
+    export LANG=C   # prevents perl for raising warnings
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+

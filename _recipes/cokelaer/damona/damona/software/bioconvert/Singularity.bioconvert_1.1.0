@@ -1,0 +1,47 @@
+BootStrap: localimage
+From: ../../library/micromamba/micromamba_1.4.3.img
+
+##############################################
+# do not change. This is a tagged version 0.6.1
+###############################################
+
+%labels
+  maintainer Thomas Cokelaer
+  package.name bioconvert
+  package.version 1.1.0
+  package.homepage https://pypi.python.org/pypi/bioconvert/
+  package.source.url https://github.com/bioconvert/bioconvert
+  package.license GPLv3
+
+%files
+   environment_1.1.0.yml
+
+%post
+  ######### install system #########
+   export BIOCONVERT_VERSION="1.1.0"
+
+     apt -y update && apt -y upgrade
+
+  # export the PATH here so that pip is found later on
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+
+     # an alias
+     export OPTS=" -q -c conda-forge -c bioconda -n main -y "
+
+     micromamba install $OPTS bioconvert=1.0.0
+
+    pip install bioconvert=="1.1.0"
+     # cleanup
+     micromamba clean --packages -y
+     micromamba clean --all -y
+     rm -rf /opt/condas/pkg
+
+
+%environment
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+
+
+%runscript
+  exec /opt/conda/envs/main/bin/bioconvert "$@"
+
+

@@ -1,0 +1,15 @@
+BootStrap: docker
+From: trinityrnaseq/trinotate:4.0.1
+
+
+%post
+    #for snakemake wrappers
+    ln -sf /usr/bin/python3 /usr/bin/python
+
+
+%environment
+    export LANG=C   # prevents perl for raising warnings
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+    TRINOTATE_HOME=/usr/local/src/Trinotate
+    export PATH=$TRINOTATE_HOME:$PATH

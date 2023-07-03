@@ -1,0 +1,57 @@
+Bootstrap: library
+From: ubuntu:20.04
+
+%help
+    This is a container that runs guppy.
+
+%labels
+    guppy
+
+
+%test
+    guppy_aligner -h
+    guppy_barcoder -h
+    guppy_basecaller --version
+    guppy_basecaller -h
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+
+    # update system and install prerequisites
+    apt-get -qq update && apt-get -qq install -y --no-install-recommends gnupg \
+        lsb-release \
+        curl \
+        wget \
+        apt-transport-https \
+        zlib1g-dev \
+        tar \
+        bzip2 \
+        gzip \
+        xz-utils \
+        unzip \
+        ca-certificates \
+        libcuda1-384 \
+        python3
+
+    ln -sf /usr/bin/python3 /usr/bin/python
+
+    wget https://mirror.oxfordnanoportal.com/software/analysis/ont-guppy-cpu_6.4.2_linux64.tar.gz
+    tar xvfz ont-guppy-cpu_6.4.2_linux64.tar.gz
+    rm -f ont-guppy-cpu_6.4.2_linux64.tar.gz
+ 
+    mv ont-guppy-cpu /opt
+
+
+    # Place Guppy installation commands below
+
+    # cleanup
+    rm -rf /tmp/downloaded\_packages/ && \
+    rm -rf /tmp/*.rds && \
+    rm -rf /var/lib/apt/lists/*
+
+%environment
+    LANG=C.UTF-8
+    LC_ALL=C.UTF-8
+    export LANG LC_ALL
+
+    export PATH=/opt/ont-guppy-cpu/bin/:${PATH}

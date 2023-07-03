@@ -1,0 +1,10 @@
+BootStrap: docker
+From: trinityrnaseq/trinityrnaseq:2.15.1
+
+
+%environment
+    export LANG=C   
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+    TRINITY_UTIL_HOME=/usr/local/bin/util
+    export PATH=$TRINITY_UTIL_HOME:$PATH

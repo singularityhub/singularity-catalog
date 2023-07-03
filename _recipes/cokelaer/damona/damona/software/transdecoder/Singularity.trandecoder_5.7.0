@@ -1,0 +1,13 @@
+BootStrap: docker
+From: trinityrnaseq/transdecoder:5.7.0
+
+
+%post
+    #for snakemake wrappers
+    ln -sf /usr/bin/python3 /usr/bin/python
+
+
+%environment
+    export LANG=C
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
