@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%help
+Ubuntu16.04
+
+To start your container simply try
+singularity exec THIS_CONTAINER.simg bash
+
+%labels
+Maintainer drinkingkazu
+Version ub16.04-step1
+
+%environment
+    export ANSWER=42
+
+%post
+    apt-get -y update
+    apt-get -y install lsb-release
