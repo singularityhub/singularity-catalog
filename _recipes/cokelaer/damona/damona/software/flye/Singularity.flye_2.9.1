@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: python:3.11-slim
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    apt update -y && apt install -y git build-essential zlib1g-dev
+
+    git clone https://github.com/fenderglass/Flye
+    cd Flye
+    python setup.py install
+    #cp /Flye/bin/* /usr/local/bin
+    cd ../
+    rm -rf /Flye
+
+    apt-get autoremove -y
+    apt-get clean -y
+
+
+

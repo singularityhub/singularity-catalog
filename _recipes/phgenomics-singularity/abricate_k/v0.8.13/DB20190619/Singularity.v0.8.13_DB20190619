@@ -1,0 +1,95 @@
+Bootstrap: docker
+From: ubuntu:trusty-20170817
+
+%help
+A Singularity image for ABRICATE v0.8.13
+
+%labels
+Maintainer Anders Goncalves da Silva
+Build 1.0
+ABRICATE version 0.8.13
+BLAST version 2.7.1+
+
+%environment
+ABRICATE_VERSION=0.8.13
+export ABRICATE_VERSION
+
+%post
+ # set versions of software to install
+  ABRICATE_VERSION=0.8
+  BLAST_VERSION=2.7.1
+
+  sudo locale-gen en_US.utf8
+  sudo update-locale
+
+  sudo apt-get --yes update
+  sudo apt-get --yes install make wget unzip gzip emboss git bioperl libjson-perl libtext-csv-perl libfile-slurp-perl liblwp-protocol-https-perl libwww-perl liblist-moreutils-perl
+
+  echo "Installing BLAST"
+
+  BLAST_DL="ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/${BLAST_VERSION}/ncbi-blast-${BLAST_VERSION}+-x64-linux.tar.gz"
+  BLAST_TAR=blast.tar.gz
+  wget -O ${BLAST_TAR} "${BLAST_DL}"
+  tar xzf ${BLAST_TAR}
+  BLAST_DIR="ncbi-blast-${BLAST_VERSION}+"
+  sudo cp -R ${BLAST_DIR}/bin/* /usr/local/bin
+  rm -r ${BLAST_DIR} ${BLAST_TAR}
+
+  echo "Installing eDirect"
+
+  perl -MNet::FTP -e \
+    '$ftp = new Net::FTP("ftp.ncbi.nlm.nih.gov", Passive => 1);
+     $ftp->login; $ftp->binary;
+     $ftp->get("/entrez/entrezdirect/edirect.tar.gz");'
+  gunzip -c edirect.tar.gz | tar xf -
+  rm edirect.tar.gz
+  # export PATH=${PATH}:$HOME/edirect >& /dev/null || setenv PATH "${PATH}:$HOME/edirect"
+  ./edirect/setup.sh
+  sudo cp edirect/e* /usr/local/bin
+  rm -rf edirect*
+
+  echo "Installing ABRICATE"
+
+  ABRICATE_GH="https://github.com/tseemann/abricate/archive/v${ABRICATE_VERSION}.tar.gz"
+  ABRICATE_TAR=abricate.tar.gz
+  wget -O ${ABRICATE_TAR} "${ABRICATE_GH}"
+  tar zxf ${ABRICATE_TAR}
+  ABRICATE_DIR="abricate-${ABRICATE_VERSION}"
+  sudo cp ${ABRICATE_DIR}/bin/* /usr/local/bin
+  sudo mkdir -p /usr/local/db
+  sudo cp -R ${ABRICATE_DIR}/db/* /usr/local/db
+  rm -r ${ABRICATE_DIR} ${ABRICATE_TAR}
+
+  echo "UPDATING DATABASES"
+  sudo abricate-get_db --db resfinder --force
+  sudo abricate-get_db --db ncbi --force
+  sudo abricate-get_db --db vfdb --force
+  sudo abricate-get_db --db ecoh --force
+  sudo abricate-get_db --db plasmidfinder --force
+  sudo abricate-get_db --db argannot --force
+  sudo abricate-get_db --db card --force
+
+  echo "Sorting some env variables..."
+  echo "All DBs updated on $(date "+%Y-%m-%d")" > /etc/dbupdate
+  sudo chmod 555 /etc/dbupdate
+  sudo echo 'LANGUAGE="en_US:en"' >> $SINGULARITY_ENVIRONMENT
+  sudo echo 'LC_ALL="en_US.UTF-8"' >> $SINGULARITY_ENVIRONMENT
+  sudo echo 'LC_CTYPE="UTF-8"' >> $SINGULARITY_ENVIRONMENT
+  sudo echo 'LANG="en_US.UTF-8"' >>  $SINGULARITY_ENVIRONMENT
+
+  echo "Done"
+
+%runscript
+  echo "Welcome to ABRICATE ${ABRICATE_VERSION}" >&2
+  cat /etc/dbupdate >&2
+  exec abricate "$@"
+
+%test
+  echo "Testing ABRICATE"
+  echo "Test Genome is a Neisseria meningitidis ST74!"
+  GENOME="ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/008/805/GCF_000008805.1_ASM880v1/GCF_000008805.1_ASM880v1_genomic.gbff.gz"
+  wget -O /tmp/test.gbk.gz ${GENOME}
+  abricate /tmp/test.gbk.gz > /tmp/res 2> /dev/null
+  cat /tmp/res
+  res=$(grep penA_1 /tmp/res)
+  rm /tmp/test.gbk.gz /tmp/res

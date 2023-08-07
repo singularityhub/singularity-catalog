@@ -1,0 +1,90 @@
+Bootstrap: docker
+From: scientificlinux/sl:7
+
+%help
+This container is a version of aligner_jrc2018_20x_40x which is customized for 20x gen1 samples.
+
+%labels
+AUTHOR Konrad Rokicki
+VERSION 1.1
+
+%files
+./aligner /opt/aligner
+
+%post
+cd /opt # Install all software in /opt
+
+echo "Installing dependencies"
+EPEL_FILE=epel-release-latest-7.noarch.rpm
+curl -sL http://dl.fedoraproject.org/pub/epel/{$EPEL_FILE} -o '#1'
+rpm -ivh $EPEL_FILE && /bin/rm -f $EPEL_FILE
+yum install -y python-pip jq bc
+pip install PyYAML==5.4.1 yq==2.12.2
+
+echo "Installing Vaa3d"
+# Prereqs for Vaa3d
+yum install -y mesa-libGLU qt qt-x11 libXv numactl-libs
+# Install Vaa3d
+VAA3D_FILE=vaa3d-redhat-mark13.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$VAA3D_FILE} -o '#1'
+tar xvf $VAA3D_FILE && /bin/rm -f $VAA3D_FILE
+ln -s /opt/vaa3d-redhat-mark13 Vaa3D
+
+echo "Installing Fiji"
+# Prereqs for Fiji
+yum install -y libXtst-devel libXrender
+# Install Fiji
+FIJI_FILE=fiji-1.52c.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$FIJI_FILE} -o '#1'
+tar xvfz $FIJI_FILE && /bin/rm -rf $FIJI_FILE
+rm -rf Fiji
+mv Fiji.app Fiji
+
+echo "Installing Fiji plugins"
+PLUGINS_SOURCE=/opt/aligner/fiji_plugins
+PLUGINS_TARGET=/opt/Fiji/plugins
+cp -R $PLUGINS_SOURCE/* $PLUGINS_TARGET && /bin/rm -rf $PLUGINS_SOURCE
+
+echo "Installing CMTK"
+# Prereqs for CMTK
+yum install -y fftw-libs-double
+# Install CMTK
+CMTK_FILE=cmtk-20171001-sl7avx.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$CMTK_FILE} -o '#1'
+tar xvf $CMTK_FILE && /bin/rm -f $CMTK_FILE
+ln -s cmtk-scm-2017-10-01 CMTK
+
+echo "Fixing permissions"
+chown -R root:root /opt/*
+chmod -R g+r /opt/*
+
+%apprun align_ol_intact_bridging
+/opt/aligner/20xBrain_Align_CMTK.sh $@ "Intact" bridging
+%apphelp align_ol_intact_bridging
+Uses the CMTK aligner to align a brain with optic lobes to the JRC2018 template, and bridging alignments to legacy templates.
+
+%apprun align_both_ol_missing_bridging
+/opt/aligner/20xBrain_Align_CMTK.sh $@ "Both_OL_missing (40x)" bridging
+%apphelp align_both_old_missing_bridging
+Uses the CMTK aligner to align a brain missing its optic lobes to the JRC2018 template, and bridging alignments to legacy templates.
+
+%apprun align_ol_unknown_bridging
+/opt/aligner/20xBrain_Align_CMTK.sh $@ "Unknown" bridging
+%apphelp align_ol_unknown_bridging
+Uses the CMTK aligner to align a brain with unknown optic lobe status to the JRC2018 template, and bridging alignments to legacy templates. 
+
+%apprun align_ol_intact
+/opt/aligner/20xBrain_Align_CMTK.sh $@ "Intact"
+%apphelp align_ol_intact
+Uses the CMTK aligner to align a brain with optic lobes to the JRC2018 template
+
+%apprun align_both_ol_missing
+/opt/aligner/20xBrain_Align_CMTK.sh $@ "Both_OL_missing (40x)"
+%apphelp align_both_old_missing
+Uses the CMTK aligner to align a brain missing its optic lobes to the JRC2018 template
+
+%apprun align_ol_unknown
+/opt/aligner/20xBrain_Align_CMTK.sh $@ "Unknown"
+%apphelp align_ol_unknown
+Uses the CMTK aligner to align a brain with unknown optic lobe status to the JRC2018 template. Use this for all 20x brains.
+

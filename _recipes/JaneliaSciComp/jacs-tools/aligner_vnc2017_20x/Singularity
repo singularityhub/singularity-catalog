@@ -1,0 +1,76 @@
+Bootstrap: docker
+From: scientificlinux/sl:7
+
+%help
+Recipe for a Singularity container running Hideo's VNC aligner against the JRC 20x male/female VNC templates
+
+%labels
+AUTHOR Konrad Rokicki
+VERSION 1.0
+
+%files
+./aligner /opt/aligner
+
+%post
+cd /opt # Install all software in /opt
+
+echo "Installing dependencies"
+EPEL_FILE=epel-release-latest-7.noarch.rpm
+curl -sL http://dl.fedoraproject.org/pub/epel/{$EPEL_FILE} -o '#1'
+rpm -ivh $EPEL_FILE && /bin/rm -f $EPEL_FILE
+yum install -y python-pip jq
+pip install numpy==1.15.1 pynrrd==0.3.2 PyYAML==5.4.1 yq==2.12.2
+
+echo "Installing Fiji"
+# Prereqs for Fiji
+yum install -y libXtst-devel
+# Install Fiji
+FIJI_FILE=fiji-1.52c.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$FIJI_FILE} -o '#1'
+tar xfz $FIJI_FILE && /bin/rm -f $FIJI_FILE
+rm -rf Fiji
+mv Fiji.app Fiji
+
+echo "Installing Fiji plugins"
+PLUGINS_SOURCE=/opt/aligner/fiji_plugins
+PLUGINS_TARGET=/opt/Fiji/plugins
+cp -R $PLUGINS_SOURCE/* $PLUGINS_TARGET && /bin/rm -rf $PLUGINS_SOURCE
+
+echo "Installing Vaa3d"
+# Prereqs for Vaa3d
+yum install -y mesa-libGLU qt qt-x11 libXv numactl-libs
+# Install Vaa3d
+VAA3D_FILE=vaa3d-redhat-mark13.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$VAA3D_FILE} -o '#1'
+tar xvf $VAA3D_FILE && /bin/rm -f $VAA3D_FILE
+ln -s vaa3d-redhat-mark13 Vaa3D
+
+echo "Installing CMTK"
+# Prereqs for CMTK
+yum install -y fftw-libs-double
+# Install CMTK
+CMTK_FILE=cmtk-20171001-sl7avx.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$CMTK_FILE} -o '#1'
+tar xvf $CMTK_FILE && /bin/rm -f $CMTK_FILE
+ln -s cmtk-scm-2017-10-01 CMTK
+
+echo "Fixing permissions"
+chown -R root:root /opt/*
+chmod -R g+r /opt/*
+
+%apprun align
+/opt/aligner/flyalign20xVNC_CMTK.sh "$@"
+%apphelp align
+Uses the CMTK aligner to align a VNC to the JRC 20x male or female VNC templates
+
+%apprun align_female
+YAML_FILE=$1
+WORK_DIR=$2
+YAML_NAME=`basename $YAML_FILE`
+NEW_FILE="${WORK_DIR}/${YAML_NAME%.*}-female.yml"
+cat $YAML_FILE | sed -e "s/gender: m/gender: f/" > $NEW_FILE
+echo "/opt/aligner/flyalign20xVNC_CMTK.sh $NEW_FILE $WORK_DIR"
+/opt/aligner/flyalign20xVNC_CMTK.sh $NEW_FILE $WORK_DIR
+%apphelp align_female
+Uses the CMTK aligner to align a VNC (regardless of provided gender) to the JRC 20x female template
+

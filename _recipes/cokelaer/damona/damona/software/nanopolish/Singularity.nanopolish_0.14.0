@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: alpine:3.17
+
+
+%labels
+  Author Sequana Team
+
+%post
+  #SAMTOOLS_VERSION=1.17
+  MINIMAP2_VERSION=2.24
+
+  apk update && apk upgrade && apk add bash libc6-compat  python3
+  # samtools deps
+  apk add autoconf automake make g++ gcc zlib-dev xz-dev bzip2-dev libgomp 
+
+    apk add git
+
+
+    git clone --recursive https://github.com/jts/nanopolish.git
+    cd nanopolish
+    make
+
+    apk del curl autoconf automake make gcc git g++ #musl-dev ncurses-dev 
+
+    export PATH=$PATH:/nanopolish
+
+%environment
+    export PATH=$PATH:/nanopolish
+
+%runscript
+    exec nanopolish "$@"
+

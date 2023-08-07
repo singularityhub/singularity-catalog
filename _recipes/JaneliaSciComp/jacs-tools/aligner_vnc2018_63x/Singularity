@@ -1,0 +1,91 @@
+Bootstrap: docker
+From: scientificlinux/sl:7
+
+%help
+Recipe for a singuality container for running 63x VNC aligner against the JRC2018 template
+
+%labels
+AUTHOR Konrad Rokicki
+VERSION 1.3
+
+%files
+./aligner /opt/aligner
+
+%post
+cd /opt # Install all software in /opt
+
+echo "Installing dependencies"
+EPEL_FILE=epel-release-latest-7.noarch.rpm
+EPEL_MIRROR=mirror.chpc.utah.edu
+curl -sL http://${EPEL_MIRROR}/pub/epel/{$EPEL_FILE} -o '#1'
+rpm -ivh $EPEL_FILE && /bin/rm -f $EPEL_FILE
+yum install -y python-pip jq bc
+pip install PyYAML==5.4.1 yq==2.12.2
+
+echo "Installing Vaa3d"
+# Prereqs for Vaa3d
+yum install -y mesa-libGLU qt qt-x11 libXv numactl-libs
+# Install Vaa3d
+VAA3D_FILE=vaa3d-redhat-mark13.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$VAA3D_FILE} -o '#1'
+tar xvf $VAA3D_FILE && /bin/rm -f $VAA3D_FILE
+ln -s /opt/vaa3d-redhat-mark13 Vaa3D
+
+echo "Installing Fiji"
+# Prereqs for Fiji
+yum install -y libXtst-devel libXrender
+# Install Fiji
+FIJI_FILE=fiji-1.52c.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$FIJI_FILE} -o '#1'
+tar xvfz $FIJI_FILE && /bin/rm -rf $FIJI_FILE
+rm -rf Fiji
+mv Fiji.app Fiji
+
+echo "Installing Fiji plugins"
+PLUGINS_SOURCE=/opt/aligner/fiji_plugins
+PLUGINS_TARGET=/opt/Fiji/plugins
+cp -R $PLUGINS_SOURCE/* $PLUGINS_TARGET && /bin/rm -rf $PLUGINS_SOURCE
+
+echo "Installing Perl"
+# Needed for CMTK munger
+yum install -y perl perl-IO-Compress
+
+echo "Installing CMTK"
+# Prereqs for CMTK
+yum install -y fftw-libs-double
+# Install CMTK
+CMTK_FILE=cmtk-20190116-sl7avx2.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$CMTK_FILE} -o '#1'
+tar xvf $CMTK_FILE && /bin/rm -f $CMTK_FILE
+ln -s cmtk-20190116-sl7avx2 CMTK
+
+echo "Install ffmpeg"
+# From https://www.vultr.com/docs/how-to-install-ffmpeg-on-centos
+rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
+rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
+yum install -y ffmpeg ffmpeg-devel
+
+echo "Fixing permissions"
+chown -R root:root /opt/*
+chmod -R g+r /opt/*
+
+%apprun align_bridging
+/opt/aligner/63xVNC_Aligner_Pipeline.sh $@ 0 bridging
+%apphelp align_bridging
+Uses the CMTK aligner to align a VNC to the JRC2018 template
+
+%apprun align_half_bridging
+/opt/aligner/63xVNC_Aligner_Pipeline.sh $@ 2 bridging
+%apphelp align_half_bridging
+Uses the CMTK aligner to align a VNC to the JRC2018 template with half-sized outputs
+
+%apprun align
+/opt/aligner/63xVNC_Aligner_Pipeline.sh $@ 0
+%apphelp align
+Uses the CMTK aligner to align a VNC to the JRC2018 template
+
+%apprun align_half
+/opt/aligner/63xVNC_Aligner_Pipeline.sh $@ 2
+%apphelp align_half
+Uses the CMTK aligner to align a VNC to the JRC2018 template with half-sized outputs
+

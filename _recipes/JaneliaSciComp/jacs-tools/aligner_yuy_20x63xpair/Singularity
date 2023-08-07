@@ -1,0 +1,52 @@
+Bootstrap: docker
+From: scientificlinux/sl:7
+
+%help
+Recipe for a Singularity container running Yang Yu's 20x/63x brain pair aligner
+
+%labels
+AUTHOR Konrad Rokicki
+VERSION 1.0
+
+%files
+./aligner /opt/aligner
+
+%post
+cd /opt # Install all software in /opt
+
+echo "Installing dependencies"
+yum install -y bc
+EPEL_FILE=epel-release-latest-7.noarch.rpm
+curl -sL http://dl.fedoraproject.org/pub/epel/{$EPEL_FILE} -o '#1'
+rpm -ivh $EPEL_FILE && /bin/rm -f $EPEL_FILE
+yum install -y python-pip jq
+pip install PyYAML==5.4.1 yq==2.12.2
+
+echo "Installing Vaa3d"
+# Prereqs for Vaa3d
+yum install -y mesa-libGLU qt qt-x11 libXv numactl-libs
+# Install Vaa3d
+VAA3D_FILE=vaa3d-redhat-mark13.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$VAA3D_FILE} -o '#1'
+tar xvf $VAA3D_FILE && /bin/rm -f $VAA3D_FILE
+ln -s /opt/vaa3d-redhat-mark13 Vaa3D
+
+echo "Installing ANTS"
+ANTS_FILE=ants-yuy2013.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$ANTS_FILE} -o '#1'
+tar xvf $ANTS_FILE && /bin/rm -f $ANTS_FILE
+
+echo "Installing FSL"
+FSL_FILE=fsl-flirt-yuy2017.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$FSL_FILE} -o '#1'
+tar xvf $FSL_FILE && /bin/rm -f $FSL_FILE
+
+echo "Fixing permissions"
+chown -R root:root /opt/*
+chmod -R g+r /opt/*
+
+%apprun align
+/opt/aligner/brainalignPolarityPair_ds_dpx_1024px_INT_v3.sh "$@"
+%apphelp align
+Yang Yu's 20x/63x brain pair aligner
+

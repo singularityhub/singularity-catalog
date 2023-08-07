@@ -1,0 +1,97 @@
+Bootstrap: docker
+From: scientificlinux/sl:7
+
+%help
+Recipe for a Singularity container running Yang Yu's ANTS-based brain aligners.
+
+%labels
+AUTHOR Konrad Rokicki
+VERSION 1.1
+
+%files
+./aligner /opt/aligner
+
+%post
+cd /opt # Install all software in /opt
+
+echo "Installing dependencies"
+yum install -y ImageMagick bc
+EPEL_FILE=epel-release-latest-7.noarch.rpm
+curl -sL http://dl.fedoraproject.org/pub/epel/{$EPEL_FILE} -o '#1'
+rpm -ivh $EPEL_FILE && /bin/rm -f $EPEL_FILE
+yum install -y python-pip jq
+pip install PyYAML==5.4.1 yq==2.12.2
+
+echo "Installing Vaa3d"
+# Prereqs for Vaa3d
+yum install -y mesa-libGLU qt qt-x11 libXv numactl-libs
+# Install Vaa3d
+VAA3D_DIR=vaa3d-redhat-mark13
+VAA3D_FILE=$VAA3D_DIR.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$VAA3D_FILE} -o '#1'
+tar xvf $VAA3D_FILE && /bin/rm -f $VAA3D_FILE
+ln -s /opt/$VAA3D_DIR Vaa3D
+
+echo "Installing JBA"
+mkdir -p /opt/JBA
+ln -s /opt/$VAA3D_DIR/brainaligner /opt/JBA/brainaligner
+
+echo "Installing ANTS"
+ANTS_FILE=ants-yuy2013.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$ANTS_FILE} -o '#1'
+tar xvf $ANTS_FILE && /bin/rm -f $ANTS_FILE
+
+echo "Installing FSL"
+FSL_FILE=fsl-flirt-yuy2017.tgz
+curl -sL https://github.com/JaneliaSciComp/tools-archive/releases/download/1.0.0/{$FSL_FILE} -o '#1'
+tar xvf $FSL_FILE && /bin/rm -f $FSL_FILE
+
+echo "Fixing permissions"
+chown -R root:root /opt/*
+chmod -R g+r /opt/*
+
+%apprun brainalign40xMCFO_INT
+/opt/aligner/brainalign40xMCFO_INT.sh "$@"
+%apphelp brainalign40xMCFO_INT
+FlyLight MCFO 40x brain aligner
+
+%apprun brainalign63xFlpout_1024px_INT
+/opt/aligner/brainalign63xFlpout_1024px_INT.sh "$@"
+%apphelp brainalign63xFlpout_1024px_INT
+Aso 63x MCFO aligner for 1024px stacks
+
+%apprun brainalign63xFlpout_512px_INT
+/opt/aligner/brainalign63xFlpout_512px_INT.sh "$@"
+%apphelp brainalign63xFlpout_512px_INT
+Aso 63x MCFO aligner for 512px stacks
+
+%apprun brainalign63xLexAGAL4_1024px_INT
+/opt/aligner/brainalign63xLexAGAL4_1024px_INT.sh "$@"
+%apphelp brainalign63xLexAGAL4_1024px_INT
+Aso 63x Polarity aligner for 1024px stacks
+
+%apprun brainalign63xLexAGAL4_512px_INT
+/opt/aligner/brainalign63xLexAGAL4_512px_INT.sh "$@"
+%apphelp brainalign63xLexAGAL4_512px_INT
+Aso 63x Polarity aligner for 512px stacks
+
+%apprun brainalignPolarity20xBrainVNCRescale_dpx
+/opt/aligner/brainalignPolarity20xBrainVNCRescale_dpx.sh "$@"
+%apphelp brainalignPolarity20xBrainVNCRescale_dpx
+FlyLight 20x aligner with intensity scaling
+
+%apprun flyalign20x_JBA_Qiscore
+/opt/aligner/flyalign20x_JBA_Qiscore.sh "$@"
+%apphelp flyalign20x_JBA_Qiscore
+FlyLight JBA-based 20x aligner
+
+%apprun flyleftopticlobealign_512px_INT_MT
+/opt/aligner/flyleftopticlobealign_512px_INT_MT.sh "$@"
+%apphelp flyleftopticlobealign_512px_INT_MT
+Nern 63x left optic lobe aligner
+
+%apprun flyrightopticlobealign_512px_INT_MT
+/opt/aligner/flyrightopticlobealign_512px_INT_MT.sh "$@"
+%apphelp flyrightopticlobealign_512px_INT_MT
+Nern 63x right optic lobe aligner
+

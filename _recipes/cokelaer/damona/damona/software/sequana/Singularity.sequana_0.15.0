@@ -1,0 +1,40 @@
+BootStrap: docker
+From: python:3.11-slim
+
+%labels
+
+    AUTHOR Thomas Cokelaer
+
+%post
+    SAMTOOLS_VERSION=1.14
+
+    apt-get update
+    apt-get install -y wget make curl bzip2 build-essential
+    apt-get install -y libhts-dev
+    apt-get install -y graphviz
+
+    # to compile samtools
+    apt install -y libncurses5-dev libbz2-dev
+    # install samtools
+    curl -sSL https://github.com/samtools/samtools/releases/download/$SAMTOOLS_VERSION/samtools-$SAMTOOLS_VERSION.tar.bz2 | tar -xjf - \
+         && cd samtools-$SAMTOOLS_VERSION \
+         && ./configure && make && make install && cd -
+
+    # install htslib
+    cd samtools-${SAMTOOLS_VERSION}/htslib-${SAMTOOLS_VERSION} && make && make install && cd -
+
+    rm -rf /samtools-$SAMTOOLS_VERSION
+
+    # Sequana source code
+    pip install cython
+    pip install sequana==0.15.0
+
+    apt-get remove -y wget \
+    && apt-get autoremove -y \
+    && apt-get clean
+
+%environment
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+
+

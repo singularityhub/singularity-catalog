@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: tiagopeixoto/graph-tool
+Stage: spython-base
+
+%files
+container/mujoco-py mujoco-py
+container/d4rl d4rl
+%post
+pacman -Syu && pacman -S --noconfirm libxi \
+libxcursor \
+libxdamage \
+libxcomposite \
+libxinerama \
+unzip \
+gcc \
+mesa \
+libgcrypt \
+python \
+git \
+patchelf \
+python-pip \
+wget
+pip install pandas scipy scikit-learn tqdm ipdb gym torch==1.8.1+cu111 -f https://download.pytorch.org/whl/torch_stable.html tensorboard
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mujoco/mujoco200/bin:/mujoco/bin
+pip install -e mujoco-py
+pip install -e d4rl
+# pip install git+https://github.com/rail-berkeley/d4rl@master#egg=d4rl
+mkdir -p /bats/experiments
+rm /mujoco-py/mujoco_py/generated/mujocopy-buildlock
+chmod 777 -R /mujoco-py
+# python run.py -h
+%environment
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco200/bin
+export MJLIB_PATH=/mujoco/mujoco200_linux/bin/
+export MJKEY_PATH=/mujoco/mjkey.txt
+%runscript
+exec /bin/bash /bin/bash "$@"
+%startscript
+exec /bin/bash /bin/bash "$@"
