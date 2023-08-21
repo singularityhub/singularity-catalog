@@ -1,0 +1,53 @@
+BootStrap: docker
+From: continuumio/miniconda3:latest
+IncludeCmd: yes
+
+%help
+
+%setup
+	#chmod 755 snRNA.simg
+
+%files
+
+%labels
+
+%environment
+	export PYTHONPATH=/sw/SeabornCustomGrid/:$PYTHONPATH
+	export PYTHONPATH=/sw/pandas_extra/:$PYTHONPATH
+	export PYTHONPATH=/sw/extract_qc/:$PYTHONPATH
+	export PATH=/sw/subset-bam-1.0-x86_64-linux:$PATH
+%post
+	umask 0022
+	apt update
+	apt -y dist-upgrade
+	apt -y install build-essential git environment-modules wget
+	export PATH=/opt/conda/bin:$PATH
+	apt install -y libboost-all-dev libhts-dev libncurses5-dev libtinfo-dev zlib1g-dev lcov
+
+	apt install -y vcftools
+	pip install seaborn
+	pip install pybedtools
+	pip install pysam
+	pip install openpyxl
+	pip install adjustText	
+	conda install -c conda-forge -c bioconda -c r -c defaults -c biobuilds -c anaconda -c esri bedtools=2.27.1 libgcc=5.2.0 biopython samtools  r=3.5.1  r-devtools r-ggplot2=3.1.0  r-ggrepel=0.8.0  r-dplyr r-tidyr=0.8.2 r-viridis r-rcolorbrewer r-ggpointdensity bioconductor-genomicranges=1.34.0  r-optparse=1.6.0  r-glue=1.3.0  r-MASS=7.3-50  sra-tools=2.8.1  fastx-toolkit=0.0.14 
+	mkdir -p /sw
+	mkdir -p /scratch
+	mkdir -p /gpfs
+	mkdir -p /lab
+
+	# for plotting
+	cd /sw
+	git clone https://github.com/arushiv/SeabornCustomGrid.git
+	cd /sw
+	git clone https://github.com/arushiv/pandas_extra.git
+
+	cd /sw
+	git clone https://github.com/arushiv/extract_qc.git
+	cd extract_qc
+
+	# subset bam:
+	cd /sw
+	wget https://github.com/10XGenomics/subset-bam/releases/download/1.0/subset-bam-1.0-x86_64-linux.tar.gz
+	tar -xvf subset-bam-1.0-x86_64-linux.tar.gz
+	

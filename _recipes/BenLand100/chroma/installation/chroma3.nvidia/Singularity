@@ -1,6 +1,10 @@
 Bootstrap: docker
-From: benland100/chroma3:nvidia
 
-%post
+#From: benland100/chroma3:nvidia
+From: smnaugle/chroma_imgs
+
+%post 
+    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
     apt-get -y update
     apt-get -y install vim npm nodejs
+    mkdir /opt/root/etc/notebook/migrated

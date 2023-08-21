@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%post
+    apt-get update && apt-get install -y redis-server
+    mkdir /var/run/redis
+
+%runscript
+    service redis-server start
+    redis-server --daemonize yes --port $PORT
+
+%labels
+    Author r3tex
+    Description database based on Redis

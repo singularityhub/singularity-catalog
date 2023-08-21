@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%post
+    apt-get update
+    apt-get install -y curl
+    curl -1sLfo redpanda.deb.sh 'https://dl.redpanda.com/nzc4ZYQK3WRGd9sy/redpanda/cfg/setup/bash.deb.sh' 
+    bash redpanda.deb.sh
+    apt-get update
+    apt-get install -y redpanda
+    apt-get install -y redpanda-console
+    rpk redpanda config bootstrap --self localhost --ips localhost
+    rpk redpanda config set redpanda.empty_seed_starts_cluster false
+
+%runscript
+    systemctl start redpanda
+
+%labels
+    Author r3tex
+    Description message streaming service based on Redpanda

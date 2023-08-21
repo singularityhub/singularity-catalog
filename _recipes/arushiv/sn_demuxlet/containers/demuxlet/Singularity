@@ -1,0 +1,51 @@
+BootStrap: docker
+From: ubuntu:19.04
+
+% help
+    Container for SN profiling analyses
+ 
+%post
+    apt-get -y update
+    apt-get -y install  wget git make gcc  autoconf
+    apt-get -y install zlib1g-dev  libbz2-dev liblzma-dev  libcurl4-gnutls-dev  libssl-dev
+    
+    wget https://github.com/samtools/htslib/releases/download/1.9/htslib-1.9.tar.bz2
+    tar -xjf htslib-1.9.tar.bz2
+    cd htslib-1.9
+    ./configure --prefix=/htslib
+    make		
+    make install
+
+    apt-get -y install build-essential
+
+    cd /
+    git clone https://github.com/arushiv/demuxlet.git
+    ls /
+    apt-get -y install libtool
+    cd /demuxlet
+    autoreconf -vfi
+    ./configure --prefix=`pwd`
+    sed -i 's:../../htslib/htslib:../../htslib/include:g' Makefile
+    sed -i 's:../htslib/libhts.a:../htslib/lib/libhts.a:g' Makefile
+    make
+    make install
+
+
+    
+%runscript
+    echo "container is running" > container.OK
+    
+    
+%environment
+    export PATH=/demuxlet/bin:$PATH
+    
+%labels
+    Author NonuPerson
+
+% test
+    #!/bin/sh
+    echo "I'm alive"
+
+
+
+    
