@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: ubuntu:latest
+#Env: DEBIAN_FRONTEND=noninteractive
+
+#Stage: spython-base
+
+%environment
+export DEBIAN_FRONTEND=noninteractive
+
+%files
+calculations ./
+
+%labels
+maintainer="Tobias Weber <tobias.weber01@stud.uni-goettingen.de>"
+%post
+
+# infos
+export DEBIAN_FRONTEND=noninteractive
+apt-get update && apt-get install -y --no-install-recommends build-essential r-base r-cran-randomforest python3.6 python3-pip python3-setuptools python3-dev
+apt-get install -y r-cran-spatstat
+cp -r /usr/lib/R/site-library/* /usr/local/lib/R/site-library/
+pip3 install -r /calculations/requirements.txt
+
+chmod +x /calculations/run.sh
+
+%runscript
+exec /bin/bash /calculations/run.sh "$@"
+%startscript
+exec /bin/bash /calculations/run.sh "$@"

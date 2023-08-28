@@ -1,0 +1,88 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%post
+    apt update && apt -y upgrade
+    apt-get install -y build-essential
+    apt-get install -y \
+        wget \
+        git \
+        python3 \
+        python3-pip \
+        python3-venv
+
+    # apt update && apt upgrade && apt install midori
+    # apt install -y snap
+    # snap install midori
+
+    apt -y install imagemagick
+    apt-get install -y x11-apps gedit gimp evince nano
+    apt-get install -y ghostscript
+
+    TZ=Europe/Paris
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    apt update && apt -y install falkon
+    # /usr/bin/falkon to provide /usr/bin/x-www-browser
+    # apt -y install snap
+    # snap install firefox
+
+
+%post
+    apt-get -y purge nvidia-*
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb
+    dpkg -i cuda-keyring_1.0-1_all.deb
+    apt-get update
+    apt-get -y install cuda
+    apt-get -y install pciutils mesa-utils
+        
+    pip3 install numpy
+    pip3 install fastapi
+    pip3 install packaging
+
+%post
+    pip3 install nvidia-cublas-cu11==11.10.3.66 nvidia-cudnn-cu11==8.5.0.96 nvidia-cufft-cu11==10.9.0.58
+
+%post
+    pip3 install torch --cache-dir /data/lbondonneau/tmp
+    pip3 install urllib3 pillow charset-normalizer certifi requests --cache-dir /data/lbondonneau/tmp
+    pip3 install torchvision --cache-dir /data/lbondonneau/tmp
+    # pip3 install tk
+    apt -y install python3-tk
+
+
+%post
+    cd /usr/local
+    # bash <(wget -qO- https://raw.githubusercontent.com/AUTOMATIC1111/stable-diffusion-webui/master/webui.sh)
+    wget -qO /tmp/webui.sh https://raw.githubusercontent.com/AUTOMATIC1111/stable-diffusion-webui/master/webui.sh
+    chmod +x /tmp/webui.sh
+    sed -i 's|exec "${python_cmd}" "${LAUNCH_SCRIPT}" "$@"|echo '\''exec "${python_cmd}" "${LAUNCH_SCRIPT}" "$@"'\''|g' /tmp/webui.sh
+    sed -i 's|exec accelerate launch --num_cpu_threads_per_process=6 "${LAUNCH_SCRIPT}" "$@"|echo '\''exec accelerate launch --num_cpu_threads_per_process=6 "${LAUNCH_SCRIPT}" "$@"'\''|g' /tmp/webui.sh
+    /tmp/webui.sh -f
+    sed -i "s|webui.api_only()|print('Would execute: webui.api_only()')|g" /usr/local/stable-diffusion-webui/launch.py
+    sed -i "s|webui.webui()|print('Would execute: webui.webui()')|g" /usr/local/stable-diffusion-webui/launch.py
+    cd /usr/local/stable-diffusion-webui
+    exec python3 launch.py
+
+
+%post
+    cd /usr/local/stable-diffusion-webui/models/Stable-diffusion
+    wget https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors
+    wget https://huggingface.co/andite/anything-v4.0/resolve/main/anything-v4.0-pruned.safetensors
+    wget https://huggingface.co/andite/anything-v4.0/blob/main/anything-v4.5-pruned.ckpt
+    wget https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/v2-1_768-ema-pruned.safetensors
+
+    # cd /usr/local
+    # wget https://huggingface.co/andite/anything-v4.0/blob/main/anything-v4.5-pruned.ckpt -P your-model-path
+    # mv your-model-path/anything-v4.5-pruned.ckpt stable-diffusion-webui/models/Stable-diffusion
+
+# singularity build --nv -B /data/lbondonneau/tmp:/tmp /data/lbondonneau/Singularity/stable_diffusion.sif Singularity
+# singularity run --nv --writable-tmpfs -B /data/lbondonneau/tmp:/tmp /data/lbondonneau/Singularity/stable_diffusion.sif
+# %runscript
+#     exec python3 launch.py
+#     cd /usr/local/stable-diffusion-webui
+#     python3 webui.py
+# 
+# cd /usr/local/stable-diffusion-webui/models/Stable-diffusion
+# wget https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors
+
+

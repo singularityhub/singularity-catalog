@@ -1,0 +1,65 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%files
+    config/bashrc
+    config/observatories.dat
+    config/obsys.dat
+    config/psrchive.cfg
+    config/clk_dir
+    config/plk_setup_fr606_embrace.dat
+
+#####  python2 & python3  #####
+%post
+    export PSRHOME=/usr/local/pulsar
+    mkdir -p $PSRHOME/src
+    cat config/bashrc >  /etc/bash.bashrc
+    
+    . /etc/bash.bashrc
+    
+    TZ=Europe/Paris
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    apt update
+    apt -y install python3-pip
+    apt -y install python2-dev
+
+
+    pip3 install numpy==1.21
+
+    apt -y install python2.7 curl
+    cd /usr/local/src
+    curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+    python2.7 get-pip.py
+    pip2 install numpy
+    ln -s /usr/bin/python2.7 /usr/bin/python
+
+%environment
+    export PSRHOME=/home/root/pulsar
+    export PGPLOT_DIR=/usr/lib/pgplot5
+    export PGPLOT_FONT="$PGPLOT_DIR"/grfont.dat
+    export PRESTO="$PSRHOME"/presto
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH":"$PSRHOME"/lib:"$PRESTO"/lib
+    export C_INCLUDE_PATH="$C_INCLUDE_PATH":"$PSRHOME"/include:"$PSRHOME"/tempo2/include
+    export PATH="$PATH":$PRESTO/bin
+    export TEMPO2="$PSRHOME"/tempo2
+    export TEMPO="$PSRHOME"/tempo
+    export PSRCAT_FILE="$PSRHOME"/psrcat/psrcat.db
+    export PSRCHIVE_CONFIG="$HOME"/.psrchive.cfg
+    export PATH=${PATH}:"$PSRHOME"/bin:"$TEMPO2"/bin
+    export PYTHONPATH="$PYTHONPATH":$PRESTO/lib/python
+    export PSRCAT_FILE=$PSRHOME/psrcat.db
+
+%post
+    echo 'export PSRHOME=/home/root/pulsar' >> /etc/bash.bashrc
+    echo 'export PGPLOT_DIR=/usr/lib/pgplot5' >> /etc/bash.bashrc
+    echo 'export PGPLOT_FONT="$PGPLOT_DIR"/grfont.dat' >> /etc/bash.bashrc
+    echo 'export PRESTO="$PSRHOME"/presto' >> /etc/bash.bashrc
+    echo 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH":"$PSRHOME"/lib:"$PRESTO"/lib' >> /etc/bash.bashrc
+    echo 'export C_INCLUDE_PATH="$C_INCLUDE_PATH":"$PSRHOME"/include:"$PSRHOME"/tempo2/include' >> /etc/bash.bashrc
+    echo 'export PATH="$PATH":$PRESTO/bin' >> /etc/bash.bashrc
+    echo 'export TEMPO2="$PSRHOME"/tempo2' >> /etc/bash.bashrc
+    echo 'export TEMPO="$PSRHOME"/tempo' >> /etc/bash.bashrc
+    echo 'export PSRCAT_FILE="$PSRHOME"/psrcat/psrcat.db' >> /etc/bash.bashrc
+    echo 'export PSRCHIVE_CONFIG="$HOME"/.psrchive.cfg' >> /etc/bash.bashrc
+    echo 'export PATH=${PATH}:"$PSRHOME"/bin:"$TEMPO2"/bin' >> /etc/bash.bashrc
+    echo 'export PYTHONPATH="$PYTHONPATH":$PRESTO/lib/python' >> /etc/bash.bashrc

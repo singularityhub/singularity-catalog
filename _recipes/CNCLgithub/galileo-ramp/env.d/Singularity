@@ -1,0 +1,42 @@
+bootstrap: docker
+from: ubuntu:22.04
+
+%environment
+ export PATH=$PATH:"/usr/local/julia-1.9.0/bin"
+
+%runscript
+  exec bash "$@"
+
+%post
+ apt-get update
+ apt-get install -y software-properties-common
+ apt-get install -y  build-essential \
+                     python3-pip \
+                     git \
+                     wget \
+                     ffmpeg \
+                     cmake \
+                     blender
+ apt-get clean
+
+ /usr/bin/python3 -m pip install --upgrade pip
+ /usr/bin/python3 -m pip install pipenv virtualenv
+
+ JURL="https://julialang-s3.julialang.org/bin/linux/x64/1.9/julia-1.9.0-linux-x86_64.tar.gz"
+ wget "$JURL" -O "julia.tar.gz"
+ tar -xzf "julia.tar.gz" -C "/usr/local/"
+ chmod +x /usr/local/julia-1.9.0/bin/*
+ rm "julia.tar.gz"
+
+
+ # Add an sbatch workaround
+ echo '#!/bin/bash\nssh -y "$HOSTNAME"  sbatch "$@"'  > /usr/bin/sbatch
+ chmod +x /usr/bin/sbatch
+
+ # Add an scancel workaround
+ echo '#!/bin/bash\nssh -y "$HOSTNAME"  scancel "$@"'  > /usr/bin/scancel
+ chmod +x /usr/bin/scancel
+
+ # Add an srun workaround
+ echo '#!/bin/bash\nssh -y "$HOSTNAME"  srun "$@"'  > /usr/bin/srun
+ chmod +x /usr/bin/srun
