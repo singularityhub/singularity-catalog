@@ -1,17 +1,17 @@
 bases:
-- count: 1880
+- count: 1884
   name: ubuntu
-- count: 424
+- count: 425
   name: nvidia/cuda
 - count: 340
   name: debian
 - count: 279
   name: centos
-- count: 236
+- count: 238
   name: alpine
 - count: 206
   name: aibasel/downward
-- count: 200
+- count: 201
   name: continuumio/miniconda3
 - count: 182
   name: ghcr.io/mkandes/naked-singularity
@@ -47,14 +47,14 @@ bases:
   name: busybox
 - count: 31
   name: godloved/secure/ubuntu-bionic
+- count: 28
+  name: continuumio/miniconda
 - count: 27
   name: bids/validator
 - count: 27
   name: modakopt/modak
 - count: 26
   name: nvcr.io/nvidia/tensorflow
-- count: 26
-  name: continuumio/miniconda
 - count: 26
   name: pytorch/pytorch
 - count: 25
@@ -219,6 +219,8 @@ bases:
   name: thomasrobinson/centos7-netcdff
 - count: 7
   name: archlinux
+- count: 7
+  name: letaylor/sc_qc_cluster
 - count: 6
   name: i386/ubuntu
 - count: 6
@@ -553,8 +555,6 @@ bases:
   name: tikk3r/lofar-grid-hpccloud
 - count: 2
   name: twongjirad/docker-caffe-larbys-dlee-ssnet
-- count: 2
-  name: letaylor/sc_qc_cluster
 - count: 2
   name: gcr.io/self-fluids/self-base
 - count: 2
@@ -1940,7 +1940,7 @@ bases:
 - count: 1
   name: sherlockpipe/sherlockpipe
 bootstraps:
-- count: 6068
+- count: 6083
   name: docker
 - count: 468
   name: shub
@@ -2283,8 +2283,6 @@ orgs:
   name: alantrrs
 - count: 1
   name: lcazenille
-- count: 1
-  name: letaylor
 - count: 1
   name: thakk
 - count: 1
@@ -2863,9 +2861,11 @@ orgs:
   name: pytorch
 - count: 1
   name: sherlockpipe
+- count: 1
+  name: letaylor
 tags:
-  latest: 655
-  other: 5660
+  latest: 663
+  other: 5666
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -2979,7 +2979,7 @@ versions:
     3.8.4: 1
     '3.9': 6
     edge: 46
-    latest: 61
+    latest: 63
   alpine/git:
     1.0.4: 1
   amazon/aws-cli:
@@ -3365,14 +3365,14 @@ versions:
     4.5.11: 1
     4.5.4: 3
     4.7.12-alpine: 1
-    latest: 9
+    latest: 10
   continuumio/miniconda2:
     4.7.12: 5
   continuumio/miniconda3:
     4.10.3: 5
     4.4.10: 1
     4.5.11: 7
-    4.5.12: 4
+    4.5.12: 5
     4.6.14: 6
     4.7.10: 2
     4.7.12: 10
@@ -4047,7 +4047,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 2
+    latest: 7
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -4465,7 +4465,7 @@ versions:
     11.1-devel-ubuntu20.04: 1
     11.1.1-cudnn8-devel-ubuntu20.04: 1
     11.1.1-cudnn8-runtime-ubuntu18.04: 2
-    11.1.1-cudnn8-runtime-ubuntu20.04: 3
+    11.1.1-cudnn8-runtime-ubuntu20.04: 4
     11.1.1-devel-ubuntu20.04: 3
     11.2.0-devel-ubuntu16.04: 1
     11.2.1-cudnn8-devel-ubuntu18.04: 1
@@ -5378,11 +5378,11 @@ versions:
     '12.04': 1
     '14.04': 35
     14.04.5: 1
-    '16.04': 307
+    '16.04': 308
     '16.10': 3
     '17.04': 8
     '17.10': 4
-    '18.04': 379
+    '18.04': 380
     '18.04 ': 9
     18.04': 1
     '18.10': 9
@@ -5393,7 +5393,7 @@ versions:
     '20.10': 3
     '21.04': 3
     '21.10': 3
-    '22.04': 42
+    '22.04': 44
     '22.10': 6
     '23.10': 1
     UBUNTU_VERSION: 1
