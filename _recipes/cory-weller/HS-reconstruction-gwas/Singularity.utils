@@ -1,0 +1,59 @@
+Bootstrap: docker 
+From: ubuntu:18.04
+
+
+%environment
+    R_VERSION=3.6.1
+    export R_VERSION
+    R_CONFIG_DIR=/etc/R/
+    export R_CONFIG_DIR
+    export LC_ALL=C
+    export PATH=$PATH
+
+%post
+    apt-get update
+    apt-get install -y apt-transport-https apt-utils software-properties-common
+    apt-get install -y add-apt-key
+    export DEBIAN_FRONTEND=noninteractive
+    ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+    add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/'
+    apt-get -y update
+    apt-get install -y r-base r-base-dev
+    
+    #libcurl4-openssl-dev libopenmpi-dev openmpi-bin openmpi-common openmpi-doc openssh-client openssh-server libssh-dev wget vim git nano git cmake  gfortran g++ curl wget python autoconf bzip2 libtool libtool-bin python-pip python-dev
+
+    R --slave -e "install.packages('data.table')"
+    R --slave -e "install.packages('ggplot2')"
+    R --slave -e "install.packages('foreach')"
+    R --slave -e "install.packages('ggthemes')"
+    R --slave -e "install.packages('cowplot')"
+    R --slave -e "install.packages('doMC')"
+
+    # Install GATK4 plus tools
+    apt-get install -y bwa tabix default-jre openjdk-8-jdk parallel bzip2 gzip sed grep zip wget tar coreutils
+    GATKVER="4.1.8.1"
+    wget "https://github.com/broadinstitute/gatk/releases/download/${GATKVER}/gatk-${GATKVER}.zip"
+    unzip "gatk-${GATKVER}.zip"
+    mv gatk-${GATKVER}/gatk-package-${GATKVER}-local.jar /opt/gatk4.jar
+    rm -rf "gatk-${GATKVER}.zip" gatk-${GATKVER}
+
+    # Install GATK3 (indelrealigner not in GATK4)
+    wget https://storage.googleapis.com/gatk-software/package-archive/gatk/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef.tar.bz2
+    bunzip2 GenomeAnalysisTK-3.8-1-0-gf15c1c3ef.tar.bz2
+    tar -xvf GenomeAnalysisTK-3.8-1-0-gf15c1c3ef.tar
+    mv GenomeAnalysisTK-3.8-1-0-gf15c1c3ef/GenomeAnalysisTK.jar /opt/gatk3.jar
+    rm -rf GenomeAnalysisTK-3.8-1-0-gf15c1c3ef GenomeAnalysisTK-3.8-1-0-gf15c1c3ef.tar
+
+    # Retrieve pear binary
+    wget -O pear-0.9.11-linux-x86_64.tar.gz "https://onedrive.live.com/download?cid=77DD71E598E5B51B&resid=77DD71E598E5B51B%2118198&authkey=AHPKCVLrX8ZLCFQ"
+    tar -zxvf pear-0.9.11-linux-x86_64.tar.gz
+    mv pear-0.9.11-linux-x86_64/bin/pear /opt/pear
+
+    mkdir /sscratch/
+
+%files
+
+%runscript
+

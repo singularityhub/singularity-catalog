@@ -191,6 +191,8 @@ echo 'ls ~/' `ls -lrt ~/` \
 && ldd  ../bin/LINUX64/nwchem  "\
 && if [ -f /root/apps/oneapi/compiler/latest/env/vars.sh ]; then  \
 rsync -av /root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin/lib*.so* $OMPI_DIR/lib/. ; fi \
+&&  rm -rf /root/apps/oneapi/  /opt/nwchem/src/tce /opt/nwchem/src/NWints/simint/libsimint_source/simint.l?_p?_d? \
+&& DEBIAN_FRONTEND=noninteractive apt-get clean -y \
 && DEBIAN_FRONTEND=noninteractive apt-get -y install localepurge \
 && echo MANDELETE >  /etc/locale.nopurge \
 && echo DONTBOTHERNEWLOCALE >> /etc/locale.nopurge \

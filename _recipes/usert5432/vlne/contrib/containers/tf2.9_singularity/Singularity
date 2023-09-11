@@ -1,0 +1,24 @@
+BootStrap: docker
+From: tensorflow/tensorflow:2.9.0-gpu
+
+%post
+    apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install \
+        -yq --no-install-recommends \
+        cython3 \
+        python3-graphviz \
+        python3-h5py \
+        python3-matplotlib \
+        python3-numpy \
+        python3-pandas \
+        python3-pydot \
+        python3-scipy \
+        python3-termcolor \
+        python3-tables \
+        python3-tqdm \
+        python3-memory-profiler \
+        ipython3 fish tmux vim less
+
+    pip3 install --no-cache-dir --upgrade pylint
+
+    apt-get clean && apt-get autoremove && rm -rf /var/lib/apt/lists/*
+
