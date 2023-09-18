@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%post
+    # Set non-interactive (this prevents some prompts)
+    export DEBIAN_FRONTEND=noninteractive
+
+    # Update and install essential packages
+    apt-get update
+    apt-get install -y build-essential wget git libgomp1 curl unzip tar
+
+    # Install libraries and development packages
+    apt-get install -y libopenmpi-dev openmpi-bin libboost-all-dev
+
+    # Install CMake from binary
+    wget https://github.com/Kitware/CMake/releases/download/v3.25.0/cmake-3.25.0-Linux-x86_64.sh
+    chmod +x cmake-3.25.0-Linux-x86_64.sh
+    ./cmake-3.25.0-Linux-x86_64.sh --skip-license --prefix=/usr/local
+
+    # Install Eigen 3.4 from source
+    wget https://gitlab.com/libeigen/eigen/-/archive/3.4/eigen-3.4.tar.bz2
+    tar -xf eigen-3.4.tar.bz2
+    cd eigen-3.4
+    mkdir build
+    cd build
+    cmake ..
+    make install
+
+    # Cleanup to reduce image size
+    apt-get clean
+    rm -rf eigen-3.4 eigen-3.4.tar.bz2
+    rm -rf cmake-3.25.0-Linux-x86_64.sh
+
+%environment
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
+%runscript
+
+  $@
