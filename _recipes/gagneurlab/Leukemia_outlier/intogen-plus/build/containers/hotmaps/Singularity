@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: alpine:3.8
+
+%environment
+    export LC_ALL=C.UTF-8
+    
+%runscript
+    exec "/bin/sh" "/hotmaps/hotmaps.sh" "$@"
+
+%setup
+    mkdir ${SINGULARITY_ROOTFS}/hotmaps
+    cp -r scripts ${SINGULARITY_ROOTFS}/hotmaps/
+    cp hotmaps.sh ${SINGULARITY_ROOTFS}/hotmaps/
+    chmod -R a+r ${SINGULARITY_ROOTFS}/hotmaps/
+
+%post
+    apk add --no-cache python-dev py-pip py-curl zlib-dev make ncurses-dev g++ bash procps
+    pip --no-cache-dir install numpy==1.16.5 
+    pip --no-cache-dir install pandas==0.24.2 tqdm futures bgreference biopython==1.76 pyliftover

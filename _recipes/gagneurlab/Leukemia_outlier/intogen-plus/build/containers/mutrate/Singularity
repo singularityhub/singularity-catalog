@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: python:3
+
+%environment
+    export LC_ALL=C.UTF-8
+
+%runscript
+    exec "/mutrate/run.sh" "$@"
+
+%setup
+    mkdir ${SINGULARITY_ROOTFS}/mutrate
+    cp signature_assignment.py ${SINGULARITY_ROOTFS}/mutrate/
+    cp compute_mutrate.py ${SINGULARITY_ROOTFS}/mutrate/
+    cp utils.py ${SINGULARITY_ROOTFS}/mutrate/
+    cp config.py ${SINGULARITY_ROOTFS}/mutrate/
+    cp run.sh ${SINGULARITY_ROOTFS}/mutrate/
+    chmod -R a+rx ${SINGULARITY_ROOTFS}/mutrate/
+
+%post
+    pip install numpy pandas click tqdm bgoncotree

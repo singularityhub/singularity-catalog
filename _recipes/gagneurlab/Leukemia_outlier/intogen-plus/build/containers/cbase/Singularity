@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: debian:buster-slim
+
+%environment
+    export LC_ALL=C.UTF-8
+
+%runscript
+    exec "/usr/bin/python" "/cbase/cbase.py" "$@"
+
+%setup
+    mkdir ${SINGULARITY_ROOTFS}/cbase
+    cp cbase.py ${SINGULARITY_ROOTFS}/cbase/
+    chmod -R a+r ${SINGULARITY_ROOTFS}/cbase/
+
+%post
+    apt-get update
+    apt-get install -y python-scipy python-statsmodels python-mpmath
+    rm -rf /var/lib/apt/lists/*

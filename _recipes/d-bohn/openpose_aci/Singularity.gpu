@@ -1,0 +1,27 @@
+BootStrap: docker
+From: exsidius/openpose
+
+%runscript
+    cd /openpose
+    exec /build/examples/openpose/openpose.bin "$@"
+%environment
+
+%post
+    # apt-get update --fix-missing
+    # apt-get install software-properties-common
+    # apt-get update
+    
+    #need to install correct gpu drivers
+    # install nvidia driver (current system version: 390.30)
+    # add-apt-repository ppa:graphics-drivers
+    # apt-get update --fix-missing
+    # apt-get install -y nvidia-390-dev
+
+    #------------------------------------------------------------------------------
+    # Create local binding points for our ICS-ACI
+    #------------------------------------------------------------------------------
+    mkdir -p /storage/home
+    mkdir -p /storage/work
+    mkdir -p /gpfs/scratch
+    mkdir -p /gpfs/group
+    mkdir -p /var/spool/torque

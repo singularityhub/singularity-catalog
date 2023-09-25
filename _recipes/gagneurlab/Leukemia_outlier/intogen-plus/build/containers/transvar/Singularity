@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: zhouwanding/transvar
+
+%environment
+    LC_ALL=C.UTF-8
+    TRANSVAR_CFG=/data/transvar.cfg
+    TRANSVAR_DOWNLOAD_DIR=/data
+    export LC_ALL TRANSVAR_CFG TRANSVAR_DOWNLOAD_DIR
+
+%runscript
+    exec "/usr/local/bin/transvar" "$@"
+
+%post
+	rm -rf /anno
+    mkdir /data
+    
+%test
+    transvar --help
