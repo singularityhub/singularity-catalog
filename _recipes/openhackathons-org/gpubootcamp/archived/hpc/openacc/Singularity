@@ -1,0 +1,32 @@
+# Copyright (c) 2020 NVIDIA Corporation.  All rights reserved. 
+
+Bootstrap: docker
+FROM: nvcr.io/nvidia/nvhpc:22.3-devel-cuda_multi-ubuntu20.04
+
+%runscript
+ 
+    "$@"
+
+%post
+
+    apt-get -y update
+    DEBIAN_FRONTEND=noninteractive apt-get -yq install --no-install-recommends python3-pip python3-setuptools zip build-essential
+    rm -rf /var/lib/apt/lists/*
+    
+    pip3 install --upgrade pip
+    pip3 install gdown
+    apt-get update -y
+    apt-get -y install git nvidia-modprobe
+    pip3 install jupyterlab
+    pip3 install ipywidgets
+
+%files
+
+    English/ /labs
+
+%environment
+XDG_RUNTIME_DIR=
+
+%labels
+
+AUTHOR dholt
