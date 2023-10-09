@@ -1,9 +1,9 @@
 bases:
-- count: 1900
+- count: 1906
   name: ubuntu
 - count: 427
   name: nvidia/cuda
-- count: 347
+- count: 348
   name: debian
 - count: 282
   name: centos
@@ -203,6 +203,8 @@ bases:
   name: sebastientourbier/connectomemapper-bidsapp
 - count: 7
   name: nipreps/nibabies
+- count: 7
+  name: letaylor/sc_qc_cluster
 - count: 7
   name: mattocci/rstan
 - count: 7
@@ -524,8 +526,6 @@ bases:
 - count: 3
   name: quay.io/fenicsproject/stable
 - count: 2
-  name: letaylor/sc_qc_cluster
-- count: 2
   name: nvcr.io/nvidia/caffe
 - count: 2
   name: sriggi/caesar-base
@@ -611,6 +611,8 @@ bases:
   name: OSKAR-base-dep.sif
 - count: 2
   name: quay.io/biocontainers/methylpy
+- count: 2
+  name: quay.io/biocontainers/fastqc
 - count: 2
   name: icaoberg/braker2
 - count: 2
@@ -742,6 +744,8 @@ bases:
 - count: 2
   name: uppmax/offline-uppmax-env
 - count: 2
+  name: UCL-BLIC/singularity_recipes
+- count: 2
   name: docker.km3net.de/orcanet
 - count: 2
   name: nysbc/topaz
@@ -843,6 +847,8 @@ bases:
   name: registry.gitlab.com/rode0day/fuzzer-testing/symcc_runner
 - count: 2
   name: vibpsb/i-adhore
+- count: 2
+  name: ISU-HPC/centos7-base
 - count: 2
   name: mysql
 - count: 2
@@ -1316,8 +1322,6 @@ bases:
 - count: 1
   name: quay.io/biocontainers/blat
 - count: 1
-  name: quay.io/biocontainers/fastqc
-- count: 1
   name: quay.io/biocontainers/kraken2
 - count: 1
   name: quay.io/biocontainers/bismark
@@ -1573,6 +1577,8 @@ bases:
   name: sebastientourbier/multiscalebrainparcellator
 - count: 1
   name: bids/cpac
+- count: 1
+  name: pennlinc/aslprep
 - count: 1
   name: bids/fibredensityandcrosssection
 - count: 1
@@ -1926,8 +1932,6 @@ bases:
 - count: 1
   name: granek/orthomcl
 - count: 1
-  name: ISU-HPC/centos7-base
-- count: 1
   name: mdzik/TCLB_singularity
 - count: 1
   name: mdzik/default/tclb
@@ -1946,9 +1950,9 @@ bases:
 - count: 1
   name: arm32v7/ubuntu
 bootstraps:
-- count: 6141
+- count: 6155
   name: docker
-- count: 468
+- count: 471
   name: shub
 - count: 397
   name: debootstrap
@@ -1958,9 +1962,9 @@ bootstraps:
   name: oras
 - count: 169
   name: localimage
-- count: 150
+- count: 155
   name: yum
-- count: 24
+- count: 25
   name: zypper
 - count: 20
   name: scratch
@@ -2162,6 +2166,8 @@ orgs:
 - count: 2
   name: repronim
 - count: 2
+  name: pennlinc
+- count: 2
   name: cpplab
 - count: 2
   name: openfoamplus
@@ -2219,8 +2225,6 @@ orgs:
   name: dalbohn
 - count: 2
   name: docker.km3net.de
-- count: 1
-  name: letaylor
 - count: 1
   name: wav2letter
 - count: 1
@@ -2578,8 +2582,6 @@ orgs:
 - count: 1
   name: peerherholz
 - count: 1
-  name: pennlinc
-- count: 1
   name: neuronets
 - count: 1
   name: sherlockpipe
@@ -2589,6 +2591,8 @@ orgs:
   name: yelpmoe
 - count: 1
   name: mambaorg
+- count: 1
+  name: letaylor
 - count: 1
   name: scientificlinux
 - count: 1
@@ -2611,6 +2615,8 @@ orgs:
   name: uppmax
 - count: 1
   name: prete
+- count: 1
+  name: UCL-BLIC
 - count: 1
   name: geoedf
 - count: 1
@@ -2874,8 +2880,8 @@ orgs:
 - count: 1
   name: arm32v7
 tags:
-  latest: 658
-  other: 5730
+  latest: 664
+  other: 5740
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -2929,6 +2935,8 @@ versions:
     vcflib_1.0.0-rc2: 1
   TomHarrop/variant-utils:
     vcflib_1.0.1: 1
+  UCL-BLIC/singularity_recipes:
+    env: 2
   acpype:
     singularity: 1
   adamwilsonlab/emma:
@@ -3473,7 +3481,7 @@ versions:
     buster-slim: 31
     jessie: 10
     jessie-slim: 17
-    latest: 56
+    latest: 57
     sid: 1
     sid-slim: 1
     stable: 2
@@ -4065,7 +4073,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 2
+    latest: 7
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -4665,6 +4673,8 @@ versions:
     '1.0': 1
     1.2.1: 1
     1.2.3: 1
+  pennlinc/aslprep:
+    0.5.0: 1
   pennlinc/xcp_d:
     '04.0': 1
   percona/pmm-server:
@@ -4903,6 +4913,7 @@ versions:
     1.9.0--0: 2
   quay.io/biocontainers/fastqc:
     0.11.9--hdfd78af_1: 1
+    0.12.1--hdfd78af_0: 1
   quay.io/biocontainers/fastx_toolkit:
     0.0.14--he1b5a44_8: 1
   quay.io/biocontainers/flash:
@@ -5402,22 +5413,22 @@ versions:
     '12.04': 1
     '14.04': 36
     14.04.5: 1
-    '16.04': 308
+    '16.04': 310
     '16.10': 3
     '17.04': 8
     '17.10': 4
-    '18.04': 382
+    '18.04': 381
     '18.04 ': 9
     18.04': 1
     '18.10': 9
     '19.04': 33
     '19.10': 16
-    '20.04': 406
+    '20.04': 409
     '20.04  ': 1
     '20.10': 3
     '21.04': 3
     '21.10': 3
-    '22.04': 44
+    '22.04': 45
     '22.10': 6
     '23.10': 1
     UBUNTU_VERSION: 1
@@ -5432,7 +5443,7 @@ versions:
     cosmic: 2
     disco: 4
     eoan-20200410: 2
-    focal: 48
+    focal: 49
     focal-20200729: 1
     focal-20200925: 3
     focal-20210827: 1

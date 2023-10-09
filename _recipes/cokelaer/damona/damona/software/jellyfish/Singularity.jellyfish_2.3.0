@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%environment
+    export PATH="/usr/local/bin:$PATH"
+
+%post
+    # Update the system and install necessary dependencies
+    apt-get update
+    apt-get install -y build-essential wget python3-pip bash
+
+    # Download and install Jellyfish
+    wget https://github.com/gmarcais/Jellyfish/releases/download/v2.3.0/jellyfish-2.3.0.tar.gz
+    tar -xzvf jellyfish-2.3.0.tar.gz
+    cd jellyfish-2.3.0
+    ./configure
+    make
+    make install
+
+    # Clean up
+    cd ..
+    rm -rf jellyfish-2.3.0*
+    apt-get remove -y build-essential wget
+    apt-get autoremove -y
+    apt-get clean
+
+%test
+    # Verify that Jellyfish is installed
+    jellyfish --version
+
+%environment
+    export LANG=C.UTF-8
+
+%runscript
+    exec jellyfish "$@"
+

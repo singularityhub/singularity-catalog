@@ -1,0 +1,43 @@
+BootStrap: docker
+From: ubuntu:16.04
+
+
+%post
+
+    # install some stuff
+    #-------------------
+    apt-get -y update
+    apt-get -y install curl unzip wget 
+    apt-get clean
+
+    # download and install miniconda3
+    #---------------------------------
+    curl -sSL -O https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash Miniconda3-latest-Linux-x86_64.sh -p /opt/miniconda3 -b
+    rm -fr Miniconda3-latest-Linux-x86_64.sh
+    export PATH=/opt/miniconda3/bin:$PATH
+    conda update -n base conda
+    conda config --add channels conda-forge
+    conda config --add channels bioconda
+
+    # install what i need from Bioconda
+    #---------------------------------
+    conda install -y -c bioconda salmon
+    conda install -y -c bioconda bioawk
+    
+    # prepare reference files for alevin (https://combine-lab.github.io/alevin-tutorial/2018/setting-up-resources/)
+    #---------------------------------------------------------------------------------------------------------------
+    wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.pc_transcripts.fa.gz
+    salmon index -i index -k 31 --gencode -p 1 -t gencode.v32.pc_transcripts.fa.gz
+    wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.primary_assembly.annotation.gtf.gz
+    gunzip -c gencode.v32.primary_assembly.annotation.gtf.gz > gencode.v32.primary_assembly.annotation.gtf
+    bioawk -c gff '$feature=="transcript" {print $group}' gencode.v32.primary_assembly.annotation.gtf | awk -F ' ' '{print substr($4,2,length($4)-3) "\t" substr($2,2,length($2)-3)}' - > txp2gene.tsv
+
+    mkdir /scRNAseq_refs
+    mv gencode.v32.pc_transcripts.fa.gz index gencode.v32.primary_assembly.annotation.gtf* txp2gene.tsv /scRNAseq_refs/.
+
+
+%environment
+    export LC_ALL=C
+    export PATH=/opt/miniconda3/bin:$PATH
+

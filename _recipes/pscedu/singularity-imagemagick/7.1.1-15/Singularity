@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: debian:latest
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://github.com/pscedu/singularity-imagemagick
+    COPYRIGHT Copyright © 2023 Pittsburgh Supercomputing Center. All Rights Reserved.
+    VERSION 7.1.1-15
+
+%post
+    apt update
+    apt -y upgrade
+    apt install -y imagemagick libtiff-tools
+    sed -i 's|<policy domain="resource" name="width" value="16KP"/>|<policy domain="resource" name="width" value="128KP"/>|g' /etc/ImageMagick-6/policy.xml
+    sed -i 's|<policy domain="resource" name="height" value="16KP"/>|<policy domain="resource" name="height" value="128KP"/>|g' /etc/ImageMagick-6/policy.xml
+    sed -i 's|<policy domain="resource" name="memory" value="256MiB"/>|<policy domain="resource" name="memory" value="32GiB"/>|g' /etc/ImageMagick-6/policy.xml
+    sed -i 's|<policy domain="resource" name="map" value="512MiB"/>|<policy domain="resource" name="map" value="12GiB"/>|g' /etc/ImageMagick-6/policy.xml
+    sed -i 's|<!-- <policy domain="resource" name="temporary-path" value="/tmp"/> -->|<policy domain="resource" name="temporary-path" value="/tmp"/>|g' /etc/ImageMagick-6/policy.xml
+    sed -i 's|<policy domain="resource" name="map" value="512MiB"/>|<policy domain="resource" name="map" value="12GiB"/>|g' /etc/ImageMagick-6/policy.xml
+    sed -i 's|<policy domain="resource" name="disk" value="1GiB"/>|<policy domain="resource" name="disk" value="12GiB"/>|g' /etc/ImageMagick-6/policy.xml
+
+####################################################################################

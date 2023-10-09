@@ -13,19 +13,33 @@ From: alpine:3.17
   # samtools deps
   apk add autoconf automake make g++ gcc zlib-dev xz-dev bzip2-dev libgomp 
 
+# 
+#apk add zstd zstd-dev cmake
+
+
     apk add git
+
+
+    wget https://github.com/nanoporetech/vbz_compression/releases/download/v1.0.1/ont-vbz-hdf-plugin-1.0.1-Linux-x86_64.tar.gz
+    tar -xf ont-vbz-hdf-plugin-1.0.1-Linux-x86_64.tar.gz
+
+    export HDF5_PLUGIN_PATH=/ont-vbz-hdf-plugin-1.0.1-Linux/usr/local/hdf5/lib/plugin
 
 
     git clone --recursive https://github.com/jts/nanopolish.git
     cd nanopolish
-    make
+    make 
 
-    apk del curl autoconf automake make gcc git g++ #musl-dev ncurses-dev 
+
+
+
+    apk del curl autoconf automake make gcc git g++ 
 
     export PATH=$PATH:/nanopolish
 
 %environment
     export PATH=$PATH:/nanopolish
+    export HDF5_PLUGIN_PATH=/ont-vbz-hdf-plugin-1.0.1-Linux/usr/local/hdf5/lib/plugin
 
 %runscript
     exec nanopolish "$@"

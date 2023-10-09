@@ -1,0 +1,74 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+
+%runscript
+
+	echo "Hello from inside the sex classifier container!"
+
+%post
+
+	# Install version 4.0 of R (based on https://linuxize.com/post/how-to-install-r-on-ubuntu-18-04/)
+	#  (do it this way otherwise by default will install 3.2)
+	#----------------------------------------------------------------------------------------	
+	apt -y update
+	
+	apt install -y apt-transport-https software-properties-common
+	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+	add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/'
+	
+	apt -y update
+	apt -y install r-base
+
+	#- Add libcurl and opensll as some dependencies below complained of not having them installed
+	#-------------------------------------------------------------------------------------------
+	apt-get -y install libssl-dev
+	apt-get -y install libcurl4-openssl-dev
+	apt-get -y install libhdf5-dev
+	apt-get -y install libxml2-dev
+
+	# Install required R packages
+	#------------------------------
+	R --slave -e 'install.packages("BiocManager", dependencies=TRUE, repos = "http://cran.us.r-project.org")'
+	R --slave -e 'BiocManager::install("tximport")' 
+	R --slave -e 'BiocManager::install("dplyr")' 
+	R --slave -e 'BiocManager::install("rhdf5")' 
+
+	R --slave -e 'install.packages("caret", dependencies=TRUE, repos = "http://cran.us.r-project.org")'
+	R --slave -e 'install.packages("factoextra", dependencies=TRUE, repos = "http://cran.us.r-project.org")' 
+	R --slave -e 'install.packages("rmarkdown", dependencies=TRUE, repos = "http://cran.us.r-project.org")'
+
+	# install pandoc to generate summary pdf (https://stackoverflow.com/questions/22081991/rmarkdown-pandoc-pdflatex-not-found)
+	#---------------------------------------------------------------------------------------------------------------------------
+	apt -y install pandoc
+	apt-get -y --no-install-recommends install texlive-latex-base texlive-fonts-recommended texlive-latex-extra lmodern
+
+	# install other stuff 
+	#--------------------
+	apt-get -y install curl wget unzip
+	apt-get clean
+	
+	# install kallisto
+	#---------------------------------
+	cd /usr/bin
+	wget "https://github.com/pachterlab/kallisto/releases/download/v0.46.2/kallisto_linux-v0.46.2.tar.gz"
+	tar xvf kallisto_linux-v0.46.2.tar.gz
+	rm -rf kallisto_linux-v0.46.2.tar.gz
+	rm -rf kallisto/test/
+
+	# install sex_classifier
+	#---------------------------------
+	cd /usr/bin
+	wget https://github.com/UCL-BLIC/sex_classifier/archive/v0.1.zip
+	unzip v0.1.zip
+	rm -rf v0.1.zip
+	chmod ga+rwX sex_classifier-0.1/*.pl
+	chmod -R ga+rwX sex_classifier-0.1/code/
+
+    
+%environment
+	export LC_ALL=C
+	export PATH=$PWD:$PATH
+	export PATH=/usr/bin/kallisto:$PATH
+	export PATH=/usr/bin/sex_classifier-0.1:$PATH
+

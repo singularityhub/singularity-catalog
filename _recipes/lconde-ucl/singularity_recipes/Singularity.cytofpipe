@@ -1,0 +1,29 @@
+Bootstrap: shub
+From: shub://UCL-BLIC/singularity_recipes:env
+
+
+%runscript
+echo "Hello from inside the cytofpipe container!"
+
+
+%setup
+mkdir ${SINGULARITY_ROOTFS}/cytofpipe_v2.0
+
+
+%post
+wget https://github.com/UCL-BLIC/cytofpipe/archive/v2.0.zip
+unzip v2.0.zip 
+cp -r cytofpipe-2.0/* /cytofpipe_v2.0/.
+
+cd /cytofpipe_v2.0
+chmod ga+rwX /cytofpipe_v2.0/*.pl
+chmod -R ga+rwX /cytofpipe_v2.0/code/
+chmod ga+rwX /cytofpipe_v2.0/code/*.sh
+chmod ga+rwX /cytofpipe_v2.0/code/*.R
+
+
+%environment
+export LC_ALL=C
+cytofpipeDir=/cytofpipe_v2.0
+export cytofpipeDir
+export PATH=/cytofpipe_v2.0:$PATH
