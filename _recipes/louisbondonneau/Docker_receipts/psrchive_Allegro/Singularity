@@ -1,0 +1,316 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+#####  CHECKOUT #####
+%post
+    GIT_PSRCHIVE_TAG="d706adce0b3faeeb7caa4dbb3f365e59dd06b299"
+    GIT_DSPSR_TAG="879158a8e98a1ffbe99aa6cd06ea57a30508df79"
+
+%files
+    config/bashrc
+    config/observatories.dat
+    config/obsys.dat
+    config/psrchive.cfg
+    config/clk_dir
+    config/plk_setup_fr606_embrace.dat
+    config/get_casacore_data.sh
+    config/pyfits-2.2.2.tar
+    config/shm-1.2.2.tar
+
+
+#####  python2 & python3  #####
+%post
+    export PSRHOME=/usr/local/pulsar
+    mkdir -p $PSRHOME/src
+    cat config/bashrc >  /etc/bash.bashrc
+
+    TZ=Europe/Paris
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    apt update && apt -y upgrade
+
+    # Set debconf to non-interactive
+    export DEBIAN_FRONTEND=noninteractive
+
+    # Preconfigure keyboard-configuration
+    echo 'keyboard-configuration keyboard-configuration/layout select French' | debconf-set-selections
+
+
+    apt -y install python3-pyqt5 python3-pyqt5.qtwebengine
+    apt -y install python3-tk
+    apt -y install build-essential manpages-dev htop tar wget rsync locate git tmux curl autotools-dev autoconf libtool make g++ gfortran libgsl-dev libfftw3-dev pgplot5 python3-pip csh tcsh swig python-tk pkg-config x11-apps gedit ghostscript libpng-dev libx11-dev libglib2.0-dev mpich openmpi-bin nvidia-cuda-toolkit firefox imagemagick gnuplot s-nail
+    apt -y install bc 
+    pip3 install numpy==1.21
+    pip3 install matplotlib astropy astroplan scipy tinydb lmfit
+    pip3 install pyfits
+    pip3 install psrqpy jupyter astroquery mailutils
+
+
+    apt -y install python2-dev
+    curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+    python2.7 get-pip.py
+    pip2 install numpy==1.16.6
+    pip2 install pyslalib==1.0.4
+    pip2 install matplotlib astropy astroplan scipy tinydb lmfit
+    # pip2 install jupyter  # ERROR: Could not find a version that satisfies the requirement comm>=0.1.3
+    ln -s /usr/bin/python2.7 /usr/bin/python
+    apt -y install libbz2-dev
+    pip2 install fitsio
+    
+%post
+    cd /usr/local
+    tar -xvf /config/pyfits-2.2.2.tar
+    cd pyfits-2.2.2
+    python2 setup.py install
+
+%post
+    cd /usr/local
+    tar -xvf /config/shm-1.2.2.tar
+    cd shm-1.2.2
+    python2 setup.py install
+
+#####  GPU TOOLS + DRIVER  #####
+%post
+    apt-get -y install pciutils mesa-utils xvfb
+    export LIBGL_ALWAYS_SOFTWARE=1
+    echo 'export LIBGL_ALWAYS_SOFTWARE=1' >> /etc/bash.bashrc
+    # apt-get -y purge nvidia-*
+    # wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb
+    # dpkg -i cuda-keyring_1.0-1_all.deb
+    # apt-get update
+    # apt-get -y install cuda
+
+%environment
+    export PSRHOME=/usr/local/pulsar
+    export PGPLOT_DIR=/usr/lib/pgplot5
+    export PGPLOT_FONT="$PGPLOT_DIR"/grfont.dat
+    export PRESTO="$PSRHOME"/presto
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH":"$PSRHOME"/lib:"$PRESTO"/lib
+    export C_INCLUDE_PATH="$C_INCLUDE_PATH":"$PSRHOME"/include:"$PSRHOME"/tempo2/include
+    export PATH="$PATH":$PRESTO/bin
+    export TEMPO2="$PSRHOME"/tempo2
+    export TEMPO="$PSRHOME"/tempo
+    export PSRCAT_FILE="$PSRHOME"/psrcat/psrcat.db
+    export PSRCHIVE_CONFIG="$PSRHOME"/.psrchive.cfg
+    export PATH=${PATH}:"$PSRHOME"/bin:"$TEMPO2"/bin
+    export PYTHONPATH="$PYTHONPATH":$PRESTO/lib/python
+    export PSRCAT_FILE=$PSRHOME/psrcat.db
+
+%post
+    echo 'export PSRHOME=/usr/local/pulsar' >> /etc/bash.bashrc
+    echo 'export PGPLOT_DIR=/usr/lib/pgplot5' >> /etc/bash.bashrc
+    echo 'export PGPLOT_FONT="$PGPLOT_DIR"/grfont.dat' >> /etc/bash.bashrc
+    echo 'export PRESTO="$PSRHOME"/presto' >> /etc/bash.bashrc
+    echo 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH":"$PSRHOME"/lib:"$PRESTO"/lib' >> /etc/bash.bashrc
+    echo 'export C_INCLUDE_PATH="$C_INCLUDE_PATH":"$PSRHOME"/include:"$PSRHOME"/tempo2/include' >> /etc/bash.bashrc
+    echo 'export PATH="$PATH":$PRESTO/bin' >> /etc/bash.bashrc
+    echo 'export TEMPO2="$PSRHOME"/tempo2' >> /etc/bash.bashrc
+    echo 'export TEMPO="$PSRHOME"/tempo' >> /etc/bash.bashrc
+    echo 'export PSRCAT_FILE="$PSRHOME"/psrcat/psrcat.db' >> /etc/bash.bashrc
+    echo 'export PSRCHIVE_CONFIG="$PSRHOME"/.psrchive.cfg' >> /etc/bash.bashrc
+    echo 'export PATH=${PATH}:"$PSRHOME"/bin:"$TEMPO2"/bin' >> /etc/bash.bashrc
+    echo 'export PYTHONPATH="$PYTHONPATH":$PRESTO/lib/python' >> /etc/bash.bashrc
+
+
+%post
+    cd $PSRHOME && \
+        wget http://ftp.debian.org/debian/pool/main/c/cfitsio/libcfitsio9_3.490-3_amd64.deb && \
+        wget http://ftp.br.debian.org/debian/pool/main/c/cfitsio/libcfitsio-dev_3.490-3_amd64.deb && \
+        dpkg -i libcfitsio9_3.490-3_amd64.deb && \
+        dpkg -i libcfitsio-dev_3.490-3_amd64.deb
+
+    apt-get install -y csh swig
+    export TZ=Europe/Paris
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    apt-get update
+    apt-get install -y python-tk
+    apt-get install -y pkg-config
+    apt-get install -y texlive-latex-base
+    apt-get install -y texlive-extra-utils
+
+#####  TEMPO 2  #####
+%post
+    . /etc/bash.bashrc && \
+        cd $PSRHOME/src && \
+        git clone https://bitbucket.org/psrsoft/tempo2.git
+
+    . /etc/bash.bashrc && \
+        cd $PSRHOME/src/tempo2 && \
+        ./bootstrap && \
+        ./configure --prefix=$PSRHOME && \
+        make && \
+        make install && \
+        make plugins && \
+        make plugins-install && \
+        cp -r T2runtime/* $TEMPO2/
+
+#####  PSRCHIVE  #####
+%post
+    cd $PSRHOME && \
+        git clone http://git.code.sf.net/p/psrchive/code psrchive
+
+    cd $PSRHOME/psrchive && \
+        git checkout master && \
+        git checkout $GIT_PSRCHIVE_TAG && \
+        ./bootstrap
+    cd $PSRHOME/psrchive && \
+        ./configure --prefix=$PSRHOME || true && \
+        cd packages && make
+    cd $PSRHOME/psrchive && \
+        ./packages/fftw.csh
+    cd $PSRHOME/psrchive && \
+        ./packages/cfitsio.csh && \
+        ./configure --prefix=$PSRHOME || true
+    cd $PSRHOME/src && \
+        wget http://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz && \
+        tar --no-same-owner -xzvf psrcat_pkg.tar.gz && \
+        cd psrcat_tar && \
+        csh makeit && \
+        mkdir -p /usr/local/pulsar/bin || true && \
+        mv psrcat /usr/local/pulsar/bin && \
+        mkdir -p /usr/local/pulsar/psrcat && \
+        mv psrcat.db /usr/local/pulsar/psrcat
+    cd $PSRHOME/psrchive && \
+        ./configure --prefix=$PSRHOME --enable-shared --with-x --with-psrcat=psrcat && \
+        make -j 6 && \
+        make install
+    echo '/usr/local/pulsar/lib/python2.7/site-packages' > /usr/local/lib/python2.7/dist-packages/mymodule.pth
+
+#####  TEMPO 1  #####
+%post
+    cd $PSRHOME
+    rm -r tempo || true
+    git clone https://github.com/nanograv/tempo
+    cd tempo
+    ./prepare
+    ./configure
+    make
+    make install
+
+%post
+    apt-get install -y x11-apps gedit gimp evince nano vim emacs subversion
+    apt-get install -y ghostscript
+
+
+#####  PRESTO  #####
+%post
+    apt-get install -y libpng-dev libx11-dev libglib2.0-dev mpich openmpi-bin
+    . /etc/bash.bashrc
+    cd $PSRHOME
+    git clone -b v2.2maint https://github.com/scottransom/presto
+    cd presto/src
+    make makewisdom
+    make clean
+    make prep
+    make
+
+    cd $PRESTO/python && \
+        pip2 install ./
+
+
+##### SIGPROC #####
+%post
+    . /etc/bash.bashrc
+    cd $PSRHOME
+    git clone https://github.com/SixByNine/sigproc
+    cd sigproc
+    ./bootstrap
+    ./configure --prefix=$PSRHOME
+    make
+    make install
+
+##### RFICLEAN #####
+%post
+    . /etc/bash.bashrc
+    cd $PSRHOME
+    git clone https://github.com/ymaan4/RFIClean.git
+    cd RFIClean
+    sed -i "s#MYBIN=.*#MYBIN=/usr/local/pulsar/bin/#" Makefile
+    make
+    make install
+
+##### GPTOOL #####
+%post
+    . /etc/bash.bashrc
+    cd $PSRHOME
+    git clone https://github.com/chowdhuryaditya/gptool.git
+    cd gptool
+    sed -i "s#PGPLOT_INCL=.*#PGPLOT_INCL=-I$(PGPLOT_DIR)/include#" makefile
+    sed -i "s#PGPLOT_LIB=.*#PGPLOT_LIB=-L$(PGPLOT_DIR)/lib#" makefile
+    make
+    mv gptool /usr/local/pulsar/bin/
+    cp plotgptoolsummary.py /usr/local/pulsar/bin/
+
+#####  DSPSR  #####
+%post
+    . /etc/bash.bashrc
+    cd $PSRHOME
+    git clone git://git.code.sf.net/p/dspsr/code dspsr
+    cd $PSRHOME/dspsr
+    git checkout master
+    git checkout $GIT_DSPSR_TAG
+    echo  'apsr asp bcpm bpsr cpsr cpsr2 gmrt lbadr lbadr64 mark4 mark5 maxim mwa pdev pmdaq puma2 sigproc psrfits caspsr dummy fits spda1k spigot guppi lump' > $PSRHOME/dspsr/backends.list
+    ./bootstrap
+    ./configure --prefix=$PSRHOME --enable-shared --with-x
+    make
+    make install
+
+#####  COASTGUARD  #####
+%post
+    . /etc/bash.bashrc
+    cd /usr/local/pulsar/lib/python2.7/site-packages
+    git clone https://github.com/plazar/coast_guard.git
+    cp coast_guard/clean.py /usr/local/pulsar/bin/
+    echo 'export COASTGUARD_CFG=/usr/local/pulsar/lib/python2.7/site-packages/coast_guard/configurations' >> /etc/bash.bashrc
+
+
+##### PSRSALSA #####
+%post
+    . /etc/bash.bashrc
+    gsl_version=`gsl-config --version`
+    gsl_version=`python -c "import numpy as np; print('%d0%d' % (np.floor($gsl_version), 10*($gsl_version % 1)))"`
+    cd $PSRHOME
+    git clone https://github.com/weltevrede/psrsalsa.git
+    cd psrsalsa
+    sed -i "s/GSLFLAGS *= *-DGSL_VERSION_NUMBER=.*/GSLFLAGS = -DGSL_VERSION_NUMBER=$gsl_version/" Makefile
+    make
+    echo 'export PATH="$PATH":$PSRHOME/psrsalsa/bin' >> /etc/bash.bashrc
+
+
+#####  NENUPY  #####
+%post
+    pip3 install nenupy
+    cd $PSRHOME/src
+    git clone https://github.com/telegraphic/PyGSM
+    cd PyGSM
+    wget -O gsm2016_components.h5 https://zenodo.org/record/3479985/files/gsm2016_components.h5?download=1
+    wget -O gsm_components.h5 https://zenodo.org/record/3479985/files/gsm_components.h5?download=1
+    python3 setup.py install
+    
+#####  CASACORE_DATA #####
+%post
+    bash /config/get_casacore_data.sh
+
+#####  ANTPAT  #####
+%post
+    pip3 install python-casacore
+    cd $PSRHOME/src
+    git clone https://github.com/2baOrNot2ba/AntPat.git
+    cd $PSRHOME/src/AntPat/
+    python3 setup.py install
+
+#####  DREAMBEAM  #####
+%post
+    cd $PSRHOME/src
+    git clone https://github.com/2baOrNot2ba/dreamBeam.git
+    cd $PSRHOME/src/dreamBeam
+    python3 setup.py install
+
+#####  MV config files  #####
+%post
+    mv /config/observatories.dat /usr/local/pulsar/tempo2/observatory/observatories.dat
+    mv /config/obsys.dat /usr/local/pulsar/tempo/obsys.dat
+    mv /config/psrchive.cfg /usr/local/pulsar/.psrchive.cfg
+    mv /config/clk_dir /usr/local/pulsar/
+    mv /config/plk_setup_fr606_embrace.dat /usr/local/pulsar/
+
+# mv: cannot move '/config/observatories.dat' to '/usr/local/pulsar/tempo2/observatory/observatories.dat': No such file or directory
