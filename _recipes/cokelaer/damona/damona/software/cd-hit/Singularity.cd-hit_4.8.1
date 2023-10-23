@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: debian:latest
+
+%post
+    apt-get update
+    apt-get -y upgrade
+    apt-get -y install git make
+    apt-get -y install bash curl g++ gcc libbz2-dev liblzma-dev zlib1g-dev
+    apt-get -y install perl python3
+
+    cd /usr/local/bin
+    curl -fsSL "https://github.com/weizhongli/cdhit/releases/download/V4.8.1/cd-hit-v4.8.1-2019-0228.tar.gz" | tar xz
+    cd cd-hit-v4.8.1-2019-0228
+    make -j 4
+    make install
+    cd cd-hit-auxtools
+    make
+

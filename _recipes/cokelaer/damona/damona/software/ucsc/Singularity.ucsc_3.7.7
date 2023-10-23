@@ -1,26 +1,25 @@
-Bootstrap: library
-From: cokelaer/damona/conda:4.9.2
-
-
-
-%labels
-    Author thomas cokelaer
+Bootstrap: localimage
+From: ../../library/micromamba/micromamba_1.4.3.img
 
 %post
+    apt -y update && apt -y upgrade
 
-    # snakemake will require this tool:
-    apt-get install -y graphviz
+    # export the PATH here so that pip is found later on
+    export PATH=$PATH:/opt/conda/envs/main/bin/
 
-    export PATH=$PATH:/usr/local/anaconda/bin
-    export LANG=C   # prevents perl for raising warnings
-    export PERL5LIB=/usr/local/anaconda/lib/perl5/5.22.0
+    # an alias
+    export OPTS=" -q -c conda-forge -c bioconda -n main -y "
 
-    # misc
-    conda install pigz pbzip2 dsrc
+    micromamba install $OPTS python="3.10"
 
-    # no dependencies
-    conda install ucsc-bedgraphtobigwig ucsc-bedcoverage ucsc-bedintersect   ucsc-bedtobigbed ucsc-blasttopsl 
+    micromamba install $OPTS ucsc-bedgraphtobigwig ucsc-bedcoverage ucsc-bedintersect \
+        ucsc-bedtobigbed ucsc-blasttopsl
 
-    
+    # cleanup
+    micromamba clean --packages -y
+    micromamba clean --all -y
+    rm -rf /opt/condas/pkg
 
+%environment
+    export PATH=$PATH:/opt/conda/envs/main/bin/
 

@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: python:3.10-slim
+#From: centos:7
+
+%files
+    bcl2fastq.rpm
+
+%post
+
+    apt-get update -y && apt-get upgrade -y && apt-get install -y bash curl gzip
+
+    curl -o cellranger-atac-2.1.0.tar.gz "https://cf.10xgenomics.com/releases/cell-atac/cellranger-atac-2.1.0.tar.gz?Expires=1696888588&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1hdGFjL2NlbGxyYW5nZXItYXRhYy0yLjEuMC50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2OTY4ODg1ODh9fX1dfQ__&Signature=dP0BCF6EGEalzuNfMFcMvMuVTPaKACXThSswQceqwjaSG-K54W00cBBJQgCE0kPppH8WIzgBb0~jdQSYrr2~xYai4ogBbEU1VWuMLdbiSi3PDt3Oj~-uH8kppqBUSi2-jfsGKtBh1VaGYbkcm7areyJQjAKMSWXe62U~mLHaAUCLOq68VxujetfOS9CkH~~uYln5lcf1At97e9n~q25BKyP3VDaDl-V54XIAJZajHuA0dRN5mFpImgirHkPuy7VdBHflXYiyeNWX4evHkc5foq4tPT15ViBQuJfkfR67-3zTjcNkmDKmd8R10O2AEtGW2lA-x8fGShscggEgZTFqoA__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"
+
+
+    tar xvfz cellranger-atac-2.1.0.tar.gz
+    rm -f cellranger-atac-2.1.0.tar.gz
+
+    export PATH=/cellranger-atac-2.1.0/bin:$PATH
+
+    apt-get install -y alien
+    alien bcl2fastq.rpm
+    dpkg -i bcl2fastq2_0v2.20.0.422-2_amd64.deb
+
+    rm  bcl2fastq.rpm
+    rm bcl2fastq2_0v2.20.0.422-2_amd64.deb
+
+%environment
+    export PATH=/cellranger-atac-2.1.0:$PATH
+
+%runscript
+    exec /cellranger-atac-2.1.0/bin/cellranger-atac "$@"
+
