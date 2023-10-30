@@ -1,0 +1,8 @@
+Bootstrap: docker
+From: bioconductor/bioconductor_docker:RELEASE_3_18
+
+%post
+    quarto install tinytex
+    Rscript --vanilla -e 'BiocManager::install(c("igraph", "pulsar", "huge", "tidyverse", "cowplot", "future", "furrr", "BDgraph"))'
+%help
+    This is a container for reproducing the analysis in the project.
