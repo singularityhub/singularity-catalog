@@ -1,0 +1,81 @@
+Bootstrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch/
+Include: yum
+
+%help
+  Gephi - The Open Graph Viz Platform
+  Version 0.9.1
+
+  Usage:
+  $ singularity run --app gephi gephi-gephi-latest.simg [args]
+  $ singularity run gephi gephi-gephi-latest.simg [args]
+
+%setup
+
+%labels
+  Maintainer Michael J. Stealey
+  Maintainer_Email stealey@renci.org
+  Gephi_Version 0.9.1
+  Java_Version 1.7.0
+
+%environment
+  JAVA_VERSION=1.7.0
+  GEPHI_VERSION=0.9.1
+
+%post
+  export JAVA_VERSION=1.7.0
+  export GEPHI_VERSION=0.9.1
+  yum -y install \
+    tar \
+    which \
+    gzip \
+    libXext \
+    libXrender \
+    libXtst \
+    mesa-libGL \
+    mesa-libGLES \
+    mesa-dri-drivers \
+    libXcursor \
+    libXinerama \
+    libXrandr \
+    libXxf86vm
+
+  # install java 1.7.0_xxx
+  curl -o /opt/jdk-7u80-linux-x64.rpm http://people.renci.org/~stealey/java/jdk-7u80-linux-x64.rpm
+  yum -y localinstall /opt/jdk-*.rpm
+  rm -f /opt/jdk-*.rpm
+  JAVA_DIR='/usr/java/'$(ls /usr/java/ | grep jdk)
+  export JAVA_HOME=${JAVA_DIR}
+  export JRE_HOME=${JAVA_DIR}/jre/bin
+  export PATH=${JAVA_DIR}/bin:$PATH
+
+  # install gephi
+  cd /usr/local
+  curl -L https://github.com/gephi/gephi/releases/download/v${GEPHI_VERSION}/gephi-${GEPHI_VERSION}-linux.tar.gz -o gephi-${GEPHI_VERSION}-linux.tar.gz
+  tar xzvf gephi-${GEPHI_VERSION}-linux.tar.gz
+  rm -f gephi-${GEPHI_VERSION}-linux.tar.gz
+  export PATH=/usr/local/gephi-${GEPHI_VERSION}/bin:$PATH
+  cd /
+
+  # create init.sh
+  cat > /usr/local/init.sh <<EOF
+#!/usr/bin/env bash
+export JAVA_HOME=${JAVA_DIR}
+export JRE_HOME=${JAVA_DIR}/jre/bin
+export PATH=${JAVA_DIR}/bin:$PATH
+export PATH=/usr/local/gephi-${GEPHI_VERSION}/bin:\$PATH
+EOF
+  chmod a+x /usr/local/init.sh
+
+%apprun gephi
+  source /usr/local/init.sh
+  exec gephi "${@}"
+
+%runscript
+  source /usr/local/init.sh
+  exec "${@}"
+
+%test
+  source /usr/local/init.sh
+  env

@@ -1,0 +1,46 @@
+BootStrap: docker
+From: continuumio/anaconda3
+
+%help
+  Jupyter: Interactive Computing
+  Version 4.4.0
+
+  Usage:
+  $ singularity run --app notebook \
+    -B /run/user:/run/user \
+    -B $(pwd):/opt/notebooks \
+    jupyter-jupyter-latest.simg
+  $ singularity run \
+    -B /run/user:/run/user \
+    -B $(pwd):/opt/notebooks \
+    jupyter-jupyter-latest.simg [args]
+
+%setup
+
+%files
+
+%labels
+  Maintainer Michael J. Stealey
+  Maintainer_Email stealey@renci.org
+
+%runscript
+  echo "Starting notebook..."
+  echo "Open browser to localhost:8888"
+  exec /opt/conda/bin/jupyter notebook --notebook-dir=/opt/notebooks --ip='*' \
+    --allow-root --port=8888 --no-browser
+
+%post
+  # Install jupyter notebook
+  /opt/conda/bin/conda install jupyter -y --quiet
+  mkdir /opt/notebooks
+  apt-get autoremove -y
+  apt-get clean
+
+%apprun notebook
+  echo "Starting notebook..."
+  echo "Open browser to localhost:8888"
+  exec /opt/conda/bin/jupyter notebook --notebook-dir=/opt/notebooks --ip='*' \
+    --allow-root --port=8888 --no-browser --NotebookApp.token=''
+
+%test
+  exec /opt/conda/bin/jupyter --version
