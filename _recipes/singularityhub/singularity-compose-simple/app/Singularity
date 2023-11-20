@@ -1,0 +1,52 @@
+Bootstrap: docker
+From: python:alpine3.8
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/code
+
+%environment
+    PYTHONUNBUFFERED=1
+    NGINX_VERSION=1.13.6
+    export NGINX_VERSION PYTHONUNBUFFERED
+
+%files
+    requirements.txt /opt/requirements.txt
+    manage.py /code/manage.py
+    run_uwsgi.sh /code/run_uwsgi.sh
+    upload /code/upload
+    uwsgi.ini /code/uwsgi.ini
+    nginx/install.sh /usr/src/install.sh
+    nginx/nginx.key /usr/src/nginx.key
+    nginx/nginx.conf /etc/nginx/nginx.conf
+    nginx/nginx.vh.default.conf /etc/nginx/conf.d/default.conf
+
+%post
+    apk update
+    apk add --no-cache --virtual .build-deps \
+        sqlite \
+        libc-dev \
+        linux-headers \
+        sqlite-dev \
+        cmake \
+        gcc \
+        openssl \
+        wget \
+        git \
+        vim
+
+    pip install --upgrade pip
+    pip install -r /opt/requirements.txt
+
+    # Prepare nginx
+    NGINX_VERSION=1.13.6
+    export NGINX_VERSION
+    sh -x /usr/src/install.sh
+
+    # Create hashed temporary upload locations
+    mkdir -p /tmp/0 /tmp/1 /tmp/2 /tmp/3 /tmp/4 /tmp/5 /tmp/6 /tmp/7 /tmp/8 /tmp/9
+
+%startscript
+    cd /code
+    nginx &&
+    /bin/sh /code/run_uwsgi.sh &&
+    echo "Started nginx with uwsgi"

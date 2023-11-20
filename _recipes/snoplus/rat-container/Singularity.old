@@ -1,0 +1,143 @@
+Bootstrap: docker
+From: scientificlinux/sl:7
+
+%help
+Container to build and utilize RAT
+Direct questions, comments or bugs to Jamie at 
+<jrajewski@ualberta.ca>
+
+To build RAT:
+- After acquiring the container, clone RAT from GitHub OUTSIDE the container
+- Enter the following command, filling in the path to RAT with your own. This will mount your RAT repo to the directory /rat inside the container:
+    singularity run -B path/to/rat:/rat rat-container.simg
+- RAT is now ready to use!
+
+To exit the container:
+- Enter the command:
+    exit
+
+To update RAT:
+- Outside of the container, `cd` into your RAT repo, and run:
+    git fetch && git merge
+- Then, follow the instructions above to (re)build RAT
+
+To run RAT:
+- Enter the following command, filling in the path to RAT with your own:
+    singularity shell -B path/to/rat:/rat rat-container.simg
+    * It is important to mount your rat dir to /rat as the build
+    * scripts look there for it!
+- RAT is primed, now you can navigate to /rat to run things
+  in the repository. To use other directories as well, see below.
+
+To read/write files from directories outside of RAT/home:
+- Add additional bind mounts to your singularity shell command
+- Example:
+    singularity shell -B path/to/rat:/rat,other/path:/stuff rat-container.simg
+- Now in the container, you have access to other/path by going to /stuff
+
+To use a specific branch of RAT:
+- Ensure you git checkout to the branch OUTSIDE the
+  container to avoid issues, then run RAT like above
+
+
+%labels
+    Maintainer JamieRajewski
+    Version v1.0
+
+
+# This sources the following into the containers' environment
+# but ONLY during RUN, not BUILD
+%environment
+    source /home/root/bin/thisroot.sh
+    source /home/geant4.10.00.p02/bin/geant4.sh
+    export RAT_SCONS=/home/scons-2.1.0
+    if [ -f /rat/env.sh ]; then
+       source /rat/env.sh
+    fi
+
+
+# This is where actual execution will get done when someone runs the container. Since
+# typical usage will revolve around shelling into the container, we can make default
+# execution the build-rat command
+%runscript
+    
+    printf "Would you like to build RAT? (y/n): "                                   
+    read ANSWER                                                                     
+                                                                                    
+    while [[ "$ANSWER" != "y" && "$ANSWER" != "n" ]]                                
+    do                                                                              
+        printf "Invalid answer; would you like to build RAT? (y/n): "               
+        read ANSWER                                                                 
+    done                                                                            
+                                                                                    
+    if [[ "$ANSWER" == "y" ]]; then                                                 
+        echo "Now checking to see if RAT was mounted correctly..."                                                                  
+    elif [[ "$ANSWER" == "n" ]]; then                                               
+        echo "Now exiting..."
+        exit 0                                                                  
+    fi 
+
+    # Ensure that a directory has been mounted so that rat can be cloned
+    if [ -d /rat ]; then
+        # Fetch and install the latest RAT and build from source
+        cd /rat
+        ./configure
+
+        # Add execute permissions to the newly created env.sh
+        /bin/bash -c 'chmod +x /rat/env.sh'
+        
+        # Now source it to make scons available
+        source /rat/env.sh
+	
+        scons
+    else
+        echo "RAT was not mounted correctly; please ensure that it was mounted to /rat."
+    fi
+
+
+# This is where stuff gets installed AFTER the OS is set up (such as installing packages)
+%post
+    # Install all tools, compilers, libraries, languages, and general pre-requisites
+    # for the SNO+ tools
+    yum -y groups mark convert && \
+    yum -y grouplist && \
+    yum -y groupinstall "Compatibility Libraries" "Development Tools" "Scientific Support" && \
+    yum -y install avahi-compat-libdns_sd-devel bc binutils binutils-devel bzip2 bzip2-devel cfitsio-devel \
+    cmake coreutils curl curl-devel emacs expat-devel fftw fftw-devel fontconfig ftgl-devel g++ \
+    gcc-4.8.5 gcc-gfortran git glew-devel glib2-devel glib-devel graphviz graphviz-devel \
+    gsl gsl-devel gsl-static java-1.8.0-openjdk java-1.8.0-openjdk-devel libcurl-devel \
+    libgfortran libgomp libldap-dev libX11-devel libXext-devel libXft-devel libxml2-devel \
+    libXpm-devel libXt-devel make man mesa-libGL-devel mesa-libGLU-devel mysql-devel nano \
+    openssl-devel pcre-devel python python-devel python-pip rsync strace valgrind wget
+
+    # Fetch and install ROOT 5.34.36 from source
+    cd /home
+    wget https://root.cern.ch/download/root_v5.34.36.source.tar.gz
+    tar zxvf root_v5.34.36.source.tar.gz
+    cd root
+    ./configure --enable-minuit2 --enable-python --enable-mathmore
+    # Currently set to compile on 4 cores; increase this if you have more available
+    make -j4
+    chmod +x /home/root/bin/thisroot.sh && source /home/root/bin/thisroot.sh
+
+    # Fetch and install GEANT4 from source
+    cd /home
+    wget http://geant4.cern.ch/support/source/geant4.10.00.p02.tar.gz
+    tar zxvf geant4.10.00.p02.tar.gz
+    mkdir geant4.10.00.p02-build
+    cd geant4.10.00.p02-build
+    cmake -DGEANT4_INSTALL_DATA=ON -DCMAKE_INSTALL_PREFIX=../geant4.10.00.p02 ../geant4.10.00.p02
+    make -j4
+    make install
+    chmod +x /home/geant4.10.00.p02/bin/geant4.sh && source /home/geant4.10.00.p02/bin/geant4.sh
+    chmod +x /home/geant4.10.00.p02/share/Geant4-10.0.2/geant4make/geant4make.sh
+    source /home/geant4.10.00.p02/share/Geant4-10.0.2/geant4make/geant4make.sh
+
+    # Fetch and install scons
+    cd /home
+    wget http://downloads.sourceforge.net/project/scons/scons/2.1.0/scons-2.1.0.tar.gz
+    tar zxvf scons-2.1.0.tar.gz
+    chmod +x scons-2.1.0/script/scons
+
+    ### CLEANUP ###
+    cd /home && yum -y clean all && rm -rf /var/cache/yum && rm *.gz*

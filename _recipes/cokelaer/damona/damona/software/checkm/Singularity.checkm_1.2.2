@@ -1,0 +1,43 @@
+Bootstrap: docker
+From: python:3.10-slim
+
+%files
+    pplacer-linux-v1.1.alpha19.zip
+
+%post
+  PRODIGAL_VERSION=2.6.3
+
+  apt update && apt install -yq --no-install-recommends unzip curl hmmer make g++ wget
+
+
+  # install pplacer
+  wget https://zenodo.org/records/10039738/files/pplacer-linux-v1.1.alpha19.zip
+  unzip pplacer-linux-v1.1.alpha19.zip && rm -f pplacer-linux-v1.1.alpha19.zip
+
+
+  # install python package
+  pip install --upgrade pip
+  pip install checkm-genome
+
+
+  ## install prodigal
+  curl -sSL https://github.com/hyattpd/Prodigal/archive/refs/tags/v$PRODIGAL_VERSION.tar.gz | tar zx \
+    && cd Prodigal-$PRODIGAL_VERSION && make install && cd -
+  rm -rf Prodigal-$PRODIGAL_VERSION
+
+
+  mkdir checkm_data
+  cd checkm_data
+  curl -sSL https://zenodo.org/records/7401545/files/checkm_data_2015_01_16.tar.gz | tar zx
+  checkm data setRoot /checkm_data
+
+
+  export PATH=/pplacer-Linux-v1.1.alpha19/:$PATH
+
+  apt purge -yq git curl g++ wget
+  apt autoremove -yq
+
+%environment
+  export PATH=/pplacer-Linux-v1.1.alpha19/:$PATH
+  export LC_ALL=C.UTF-8
+

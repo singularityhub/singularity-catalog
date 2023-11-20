@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: python:3.10-slim
+
+
+%post
+
+  apt update  && apt install -yq --no-install-recommends unzip wget
+
+
+  # install pplacer
+  wget https://zenodo.org/records/10039738/files/pplacer-linux-v1.1.alpha19.zip
+  unzip pplacer-linux-v1.1.alpha19.zip && rm -f pplacer-linux-v1.1.alpha19.zip
+
+
+  export PATH=/pplacer-Linux-v1.1.alpha19/:$PATH
+
+  apt purge -yq unzip wget
+  apt autoremove -yq
+
+%environment
+  export PATH=/pplacer-Linux-v1.1.alpha19/:$PATH
+  export LC_ALL=C.UTF-8
+

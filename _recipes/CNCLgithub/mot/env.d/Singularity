@@ -2,7 +2,7 @@ bootstrap: docker
 from: ubuntu:22.04
 
 %environment
- export PATH=$PATH:"/usr/local/julia-1.7.3/bin"
+ export PATH=$PATH:"/usr/local/julia-1.9.1/bin"
 
 %runscript
   exec bash "$@"
@@ -23,10 +23,10 @@ from: ubuntu:22.04
  /usr/bin/python3 -m pip install pipenv virtualenv
 
  # setup julia
- JURL="https://julialang-s3.julialang.org/bin/linux/x64/1.7/julia-1.7.3-linux-x86_64.tar.gz"
+ JURL="https://julialang-s3.julialang.org/bin/linux/x64/1.9/julia-1.9.1-linux-x86_64.tar.gz"
  wget "$JURL" -O "julia.tar.gz"
  tar -xzf "julia.tar.gz" -C "/usr/local/"
- chmod +x /usr/local/julia-1.7.3/bin/*
+ chmod +x /usr/local/julia-1.9.1/bin/*
  rm "julia.tar.gz"
 
 

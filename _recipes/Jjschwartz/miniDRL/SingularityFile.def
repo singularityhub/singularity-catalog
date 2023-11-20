@@ -1,0 +1,73 @@
+Bootstrap: docker
+From: nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu22.04
+
+%post
+	# -- system setup --
+	apt -y update
+	apt -y upgrade
+
+	# -- install general system dependencies --
+	apt -y install \
+	git \
+	build-essential \
+	zlib1g-dev \
+	libncurses5-dev \
+	libgdbm-dev \
+	libnss3-dev \
+	libssl-dev \
+	libreadline-dev \
+	libffi-dev \
+	libsqlite3-dev \
+	libbz2-dev \
+	wget \
+	bzip2 \
+	unzip
+    
+    # -- install miniconda --
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash Miniconda3-latest-Linux-x86_64.sh -b -f -p /opt/miniconda3/
+    rm Miniconda3-latest-Linux-x86_64.sh
+    export PATH="/opt/miniconda3/bin:$PATH"
+    
+    # -- install python and pip --
+    # actually just installing desired python version
+    conda install -y python=3.10
+    conda install -y -c conda-forge pip
+    # Help conda resolving Python "import" 
+    conda update --all
+	
+	# -- install minidrl specific system dependencies --
+	# ffmpeg - for saving environment renders to mp4
+	# xvfb - incase you want to ssh into container and use X11 display 
+	apt -y install ffmpeg xvfb
+	
+	# mujoco and box2d dependencies
+	apt -y install \
+	software-properties-common \
+    libgl1-mesa-dev \
+    libgl1-mesa-glx \
+    libglew-dev \
+    libosmesa6-dev \
+    patchelf \
+    swig
+	
+%environment
+	# set locale environment variable
+	# reef: https://sylabs.io/guides/3.5/user-guide/build_a_container.html
+    export LC_ALL=C
+    
+    # add miniconda to path
+    export PATH="/opt/miniconda3/bin:$PATH"
+
+%runscript
+    exec "$@"
+
+%labels
+	Author Jonathon Schwartz
+
+%help
+	This is a definition for a Ubuntu 22.04 singularity image with CUDA 11.7,
+	and cuDNN8 installed.
+
+	It is built on top of the nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu22.04
+	docker image.

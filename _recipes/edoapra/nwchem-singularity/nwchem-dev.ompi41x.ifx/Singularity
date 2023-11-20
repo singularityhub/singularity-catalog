@@ -82,9 +82,6 @@ pwd \
  pkg-config gawk  software-properties-common \
 && apt-get clean \
 && echo TTTTT \
-&& wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/build_env.sh  \
-&& cp build_env.sh nwchem/travis/. \
-&& chmod +x nwchem/travis/build_env.sh \
 && df -h \
 && bash -o  pipefail -c  ./nwchem/travis/build_env.sh || true \
 && echo TTTTT \
@@ -164,12 +161,11 @@ export SIMINT_MAXAM=5
 #ENV         CCSDTLR=y
 ls -l nwchem* || true \
 && /usr/bin/env|egrep BUILD_ \
-&& bash -o pipefail -c "if [[ ! -f nwchem/src/GNUmakefile ]]; then git clone -b $BRANCH --depth 1  https://github.com/nwchemgit/nwchem.git; fi" \
+&& bash -o pipefail -c "if [[ ! -f nwchem/src/GNUmakefile ]]; then git clone -b $BRANCH --depth 1  https://github.com/$MYUSERNAME/nwchem.git; fi" \
 && cd nwchem \
 && echo "output of git describe  --always " `git describe  --always` || true \
 && wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/largebasis.patch \
 && patch -p1 < largebasis.patch \
-&& wget https://raw.githubusercontent.com/nwchemgit/nwchem/3179a43a8b72512fd777129f674fae5a848b3e81/src/NWints/simint/libsimint_source/build_simint.sh -O src/NWints/simint/libsimint_source/build_simint.sh \
 && export NWCHEM_TOP=`pwd` \
 && echo 'ls -lrta ' $(ls -lrta) \
 && echo 'pwd ' $(pwd) \

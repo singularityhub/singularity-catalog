@@ -1,0 +1,22 @@
+BootStrap: docker
+From: python:3.11-slim
+
+%labels
+
+    AUTHOR Thomas Cokelaer
+
+%post
+
+    apt-get update
+
+    # Sequana source code
+    pip install multiqc==1.17
+
+    apt-get autoremove -y && apt-get clean
+
+
+%environment
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+
+

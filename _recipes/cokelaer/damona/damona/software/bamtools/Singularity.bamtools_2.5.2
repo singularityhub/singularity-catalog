@@ -7,14 +7,12 @@ From: alpine:3.15
 
 %post
 
+    # Version https://zenodo.org/record/7345682/files/bamtools_2.5.2.img was missing
+    # python and bash 
 
-    apk update
-    apk add  unzip wget add ca-certificates && update-ca-certificates
-    #apk add --update --no-cache ncurses --force-non-repository
-    #apk add --virtual=deps --update --no-cache curl-dev ncurses-dev musl-dev g++ make zlib-dev xz-dev xz bzip2 bzip2-dev xz-libs --force-non-repository cmake
+    apk update && apk upgrade &&  apk add  bash unzip wget python3 && apk add ca-certificates && update-ca-certificates
     apk add --virtual=deps --update --no-cache g++ make zlib-dev xz-dev xz bzip2 bzip2-dev xz-libs --force-non-repository cmake
- 
-    rm -rf /var/lib/apt/list/*
+
 
     # install samtools
     mkdir /opt/build
@@ -22,7 +20,12 @@ From: alpine:3.15
     wget https://github.com/pezmaster31/bamtools/archive/refs/tags/v2.5.2.zip  &&  unzip v2.5.2.zip && cd bamtools-2.5.2 && cmake -DCMAKE_INSTALL_PREFIX=/usr/local/ &&  make install
 
     # clean package needed only for install
-    #apt purge -y wget && apt autoremove -y
+    apk del wget make 
+    rm -rf /var/cache/apk/*
+
+    # link for snakemake to find python
+    ln -s /usr/bin/python3 /usr/bin/python
+
 
 %environment
     export LC_ALL=C.UTF-8
