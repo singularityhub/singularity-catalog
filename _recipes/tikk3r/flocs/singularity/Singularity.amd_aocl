@@ -25,7 +25,7 @@ From: fedora:36
 	# Leave at latest, release versions crash for some reason.
 	export CASAREST_VERSION=latest
 	export CFITSIO_VERSION=7.3.47
-    export DPPP_VERSION=161559ff
+    export DPPP_VERSION=13d310c6
 	export DYSCO_VERSION=2e7f331
     export EVERYBEAM_VERSION=22cd113b
     export FFTW_VERSION=3.5.8
@@ -91,10 +91,14 @@ From: fedora:36
 	dnf -y install arpack-devel python-devel python3-devel lapack-devel libpng-devel libxml2-devel readline-devel ncurses-devel f2py bzip2-devel libicu-devel python3-scipy python-setuptools gsl gsl-devel gdal gdal-devel libpqxx libpqxx-devel
 	dnf -y install bison flex ncurses tar bzip2 which gettext nomacs
 	dnf -y install cmake3 nodejs
-    dnf -y install swarp rclone
+    dnf -y install swarp rclone bc
     # Necessary for nomacs
     sudo strip --remove-section=.note.ABI-tag /usr/lib64/libQt5Core.so.5
 
+    mkdir -p $INSTALLDIR/patches
+    cd $INSTALLDIR && git clone --single-branch -b fedora-py3 https://github.com/tikk3r/flocs.git
+    mv $INSTALLDIR/flocs/patches/* $INSTALLDIR/patches/
+    
 	# Install OpenBLAS
 	mkdir -p /opt/OpenBLAS
 	cd /opt/OpenBLAS
@@ -218,7 +222,7 @@ From: fedora:36
     #tar xf hdf5-1.14.1-2.tar.gz
     #cd hdf5-1.14.1-2/
     # Thread safety required for WSClean's parallel gridding with facets.
-    ./configure -prefix=/opt/hdf5 --enable-build-mode=production --enable-threadsafe --enable-shared --disable-sharedlib-rpath --disable-hl
+    ./configure -prefix=/opt/hdf5 --enable-build-mode=production --enable-threadsafe --enable-shared --disable-sharedlib-rpath --disable-hl --enable-cxx -enable-unsupported
     make -j $J
     #make check
     make install
@@ -458,7 +462,6 @@ From: fedora:36
     cd $INSTALLDIR/DPPP/src
     git checkout ${DPPP_VERSION}
     echo export DPPP_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
-    sed -i '106s/min/max/' ddecal/constraints/Constraint.h
     cd $INSTALLDIR/DPPP/build
     if [ $MARCH = 'x86-64' ] && [ $MTUNE = 'generic' ]; then
         cmake3 -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLDIR/DPPP -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include -DAOFLAGGER_INCLUDE_DIR=$INSTALLDIR/aoflagger/include -DAOFLAGGER_LIB=$INSTALLDIR/aoflagger/lib/libaoflagger.so -DPORTABLE=True -DLIBDIRAC_PREFIX=$INSTALLDIR/sagecal/ -DBUILD_BENCHMARKS=OFF \
@@ -565,7 +568,7 @@ From: fedora:36
     #
     mkdir -p $INSTALLDIR/ds9/bin
     cd $INSTALLDIR/ds9
-    wget http://ds9.si.edu/download/fedora36x86/ds9.fedora36x86.8.5b1.tar.gz
+    wget http://ds9.si.edu/download/fedora36x86/ds9.fedora36x86.8.5.tar.gz
     tar xf ds9*.tar.gz -C $INSTALLDIR/ds9/bin
     rm ds9*.tar.gz
 
@@ -581,10 +584,6 @@ From: fedora:36
 
     dnf -y install dnf-plugins-core patch yum-utils git svn wget automake autoconf cmake make
     dnf -y install patch lzma xz-devel fpack mariadb-devel git automake autoconf cmake make gcc gcc-c++ gcc-gfortran redhat-rpm-config python-devel python3-devel wget postgresql-devel nodejs
-
-    mkdir -p $INSTALLDIR/patches
-    cd $INSTALLDIR && git clone --single-branch -b fedora https://github.com/tikk3r/flocs.git
-    mv $INSTALLDIR/flocs/patches/* $INSTALLDIR/patches
 
     pip --no-cache-dir install meqtrees-cattery --no-deps
     pip --no-cache-dir install owlcat --no-deps
@@ -627,6 +626,8 @@ From: fedora:36
     cd src && python setup.py install --prefix=$INSTALLDIR/DDFacet
     #cp -r SkyModel/Mask /opt/lofar/DDFacet/lib/python3.9/site-packages/SkyModel/
     cp -r SkyModel/Sky /opt/lofar/DDFacet/lib/python$PYTHON_VERSION/site-packages/SkyModel/
+    wget https://raw.githubusercontent.com/rvweeren/lofar_facet_selfcal/main/sub-sources-outside-region.py -O /opt/lofar/ddf-pipeline/scripts/sub-sources-outside-region.py
+    chmod 755 /opt/lofar/ddf-pipeline/scripts/sub-sources-outside-region.py
 
     #
     # Install killMS
@@ -678,13 +679,23 @@ From: fedora:36
     git clone https://github.com/mhardcastle/lotss-query.git
 
     #
+    # Install lotss-hba-survey
+    #
+    cd $INSTALLDIR
+    git clone https://github.com/mhardcastle/lotss-hba-survey.git
+
+
+    #
     # Install custom runners
     #
     mkdir -p /opt/lofar/runners
     cd /opt/lofar/runners
-    wget 'https://raw.githubusercontent.com/tikk3r/flocs/fedora-py3/runners/run_LINC_calibrator.sh' -O run_LINC_calibrator
-    wget 'https://raw.githubusercontent.com/tikk3r/flocs/fedora-py3/runners/run_LINC_target.sh' -O run_LINC_target
-    chmod 755 /opt/lofar/runners/run_LINC*
+    git clone https://github.com/tikk3r/flocs.git
+    cp flocs/runners/run* .
+    cp flocs/utility /opt/lofar/
+    rm -rf flocs
+    chmod 755 /opt/lofar/runners/*.sh
+    chmod 755 /opt/lofar/utility/*.sh
     cd $INSTALLDIR
 
     #
@@ -742,6 +753,7 @@ From: fedora:36
 	echo export PATH=\$INSTALLDIR/sagecal/bin:\$PATH  >> $INSTALLDIR/init.sh
 	echo export PATH=\$INSTALLDIR/wsclean/bin:\$PATH  >> $INSTALLDIR/init.sh
     echo export PATH=\$INSTALLDIR/runners:\$PATH >> $INSTALLDIR/init.sh
+    echo export PATH=\$INSTALLDIR/utility:\$PATH >> $INSTALLDIR/init.sh
 
 	echo export LD_LIBRARY_PATH=/opt/flang/lib:$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
 	echo export PATH=/opt/flang/bin:\$PATH >> $INSTALLDIR/init.sh
@@ -779,15 +791,13 @@ From: fedora:36
     echo export KILLMS_DIR=$INSTALLDIR >> $INSTALLDIR/init.sh
     echo export PATH=\$INSTALLDIR/killMS/lib/python$PYTHON_VERSION/site-packages/killMS:\$PATH >> $INSTALLDIR/init.sh
     echo export PYTHONPATH=\$INSTALLDIR/DPPP/lib/python$PYTHON_VERSION/site-packages:\$PYTHONPATH >> $INSTALLDIR/init.sh
-    echo export PYTHONPATH=\$INSTALLDIR/lotss-query:\$INSTALLDIR/killMS/lib/python$PYTHON_VERSION/site-packages:\$INSTALLDIR/ddf-pipeline/scripts:$INSTALLDIR/ddf-pipeline/utils:$INSTALLDIR/DDFacet/lib/python${PYTHON_VERSION}/site-packages:$INSTALLDIR/killMS:$INSTALLDIR/killMS/Predict:$INSTALLDIR/killMS/Array:$INSTALLDIR/killMS/Array/Dot:$INSTALLDIR/killMS/Gridder:$INSTALLDIR/DDFacet/bin:$INSTALLDIR/DynSpecMS:\$PYTHONPATH >> $INSTALLDIR/init.sh
+    echo export PYTHONPATH=\$INSTALLDIR/lotss-hba-survey:\$INSTALLDIR/lotss-query:\$INSTALLDIR/killMS/lib/python$PYTHON_VERSION/site-packages:\$INSTALLDIR/ddf-pipeline/scripts:$INSTALLDIR/ddf-pipeline/utils:$INSTALLDIR/DDFacet/lib/python${PYTHON_VERSION}/site-packages:$INSTALLDIR/killMS:$INSTALLDIR/killMS/Predict:$INSTALLDIR/killMS/Array:$INSTALLDIR/killMS/Array/Dot:$INSTALLDIR/killMS/Gridder:$INSTALLDIR/DDFacet/bin:$INSTALLDIR/DynSpecMS:\$PYTHONPATH >> $INSTALLDIR/init.sh
     echo export PATH=\$INSTALLDIR/killMS/bin:\$INSTALLDIR/DDFacet/bin:$INSTALLDIR/DDFacet/src/SkyModel:\$INSTALLDIR/DynSpecMS/:\$INSTALLDIR/ddf-pipeline/scripts:\$PATH >> $INSTALLDIR/init.sh
     echo "if echo \$(hostname) | grep -qi leiden; then export DDF_PIPELINE_CLUSTER="paracluster"; else export DDF_PIPELINE_CLUSTER=; fi" >> $INSTALLDIR/init.sh
     
     #
     # entrypoint
     #
-%runscript
-    echo LOFAR-SKSP Singularity Container v4.1.0
 
 %help
     This Singularity image contains a variety of LOFAR software. In order to run your pipelines, you may need to know where the software is installed. The root directory is /opt/lofar, with most software installed as follows:
