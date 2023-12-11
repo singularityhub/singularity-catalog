@@ -1,0 +1,13 @@
+BootStrap: docker
+From: alpine:3.8
+
+%post
+
+    apk update && apk add bash
+
+%environment
+    export PATH=/usr/local/bin:$PATH
+
+%runscript
+    echo "Hello Lenny"
+

@@ -1,0 +1,33 @@
+BootStrap: docker
+From: python:3.11-slim
+
+%labels
+
+    AUTHOR Thomas Cokelaer
+
+%files
+
+    sequana_0.16.0/
+
+%post
+
+    apt-get update 
+
+    # force the version in case there is a pin on sequana
+    pip install  multiqc==1.16
+
+    # this contains the multiqc modules only
+    cp -r sequana_0.16.0 /opt
+    cd /opt/sequana_0.16.0/sequana_0.16.0
+    pip install .
+
+    pip install colorlog
+
+    apt-get autoremove -y && apt-get clean
+
+
+%environment
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+
+

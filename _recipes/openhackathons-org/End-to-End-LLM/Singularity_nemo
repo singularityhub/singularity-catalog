@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/nemo:23.06
+
+%environment
+    export XDG_RUNTIME_DIR=
+
+%post
+     
+    # Install jupyterlab and packages
+    pip install lightning
+    pip install megatron.core
+    pip install nemoguardrails
+    pip install openai
+    pip install ujson
+    
+    
+%runscript
+    "$@"
+
+%labels
+    Author Tosin
+    
