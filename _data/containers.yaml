@@ -1,5 +1,5 @@
 bases:
-- count: 1931
+- count: 1933
   name: ubuntu
 - count: 430
   name: nvidia/cuda
@@ -23,7 +23,7 @@ bases:
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
 - count: 78
   name: mkandes/naked-singularity
-- count: 76
+- count: 77
   name: nfcore/base
 - count: 65
   name: neurodebian
@@ -49,7 +49,7 @@ bases:
   name: vitchyr/railrl_v12_cuda10-1_mj2-0-2-2_torch1-1-0_gym0-12-5_py3-6-5
 - count: 31
   name: godloved/secure/ubuntu-bionic
-- count: 29
+- count: 30
   name: bids/validator
 - count: 29
   name: nvcr.io/nvidia/tensorflow
@@ -61,10 +61,10 @@ bases:
   name: pytorch/pytorch
 - count: 25
   name: osrf/ros
+- count: 23
+  name: nipreps/fmriprep
 - count: 22
   name: pennbbl/qsiprep
-- count: 22
-  name: nipreps/fmriprep
 - count: 22
   name: r-base
 - count: 22
@@ -86,6 +86,8 @@ bases:
 - count: 15
   name: jtchilders/singularity_image_recipes
 - count: 15
+  name: nipy/heudiconv
+- count: 15
   name: ResearchIT/spack-singularity
 - count: 15
   name: poldracklab/mriqc
@@ -93,8 +95,6 @@ bases:
   name: khanlab/neuroglia-dwi
 - count: 14
   name: ebothmann/sherpa-singularity
-- count: 14
-  name: nipy/heudiconv
 - count: 14
   name: mambaorg/micromamba
 - count: 14
@@ -168,6 +168,8 @@ bases:
 - count: 8
   name: bids/rshrf
 - count: 8
+  name: nipreps/nibabies
+- count: 8
   name: ewels/multiqc
 - count: 8
   name: quay.io/qiime2/core
@@ -194,9 +196,9 @@ bases:
 - count: 7
   name: pranithavangala/singularity
 - count: 7
-  name: nipreps/nibabies
-- count: 7
   name: sebastientourbier/connectomemapper-bidsapp
+- count: 7
+  name: nipreps/smriprep
 - count: 7
   name: mattocci/rstan
 - count: 7
@@ -239,8 +241,6 @@ bases:
   name: bud42/fs6
 - count: 6
   name: bids/mrtrix3_connectome
-- count: 6
-  name: nipreps/smriprep
 - count: 6
   name: conda/miniconda3-centos7
 - count: 6
@@ -445,6 +445,8 @@ bases:
   name: bud42/tracula
 - count: 3
   name: bids/baracus
+- count: 3
+  name: pennlinc/aslprep
 - count: 3
   name: poldracklab/fitlins
 - count: 3
@@ -698,9 +700,9 @@ bases:
 - count: 2
   name: bids/broccoli
 - count: 2
-  name: cpplab/bidsmreye
+  name: pennlinc/xcp_d
 - count: 2
-  name: pennlinc/aslprep
+  name: cpplab/bidsmreye
 - count: 2
   name: peerherholz/bidsonym
 - count: 2
@@ -715,6 +717,8 @@ bases:
   name: alexisespinosa/openfoam
 - count: 2
   name: uppmax/offline-uppmax-env
+- count: 2
+  name: docker
 - count: 2
   name: bids/ndmg
 - count: 2
@@ -1093,8 +1097,6 @@ bases:
   name: registry
 - count: 1
   name: vcatechnology/linux-mint
-- count: 1
-  name: docker
 - count: 1
   name: amd64/centos
 - count: 1
@@ -1501,8 +1503,6 @@ bases:
   name: nipreps/dmriprep
 - count: 1
   name: bids/afni_proc
-- count: 1
-  name: pennlinc/xcp_d
 - count: 1
   name: bids/oppni
 - count: 1
@@ -1974,7 +1974,7 @@ bases:
 - count: 1
   name: nitesh1989/biocparallel-example
 bootstraps:
-- count: 6276
+- count: 6287
   name: docker
 - count: 472
   name: shub
@@ -2909,7 +2909,7 @@ orgs:
   name: nitesh1989
 tags:
   latest: 683
-  other: 5828
+  other: 5838
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3202,6 +3202,7 @@ versions:
     v1.12.0: 1
     v1.13.0: 1
     v1.13.1: 1
+    v1.14.0: 1
     v1.4.2: 1
     v1.5.2: 1
     v1.5.4: 1
@@ -3548,6 +3549,8 @@ versions:
     '1.1': 1
   djkapner/default/emaligner-petsc:
     v1.0.0: 1
+  docker:
+    24.0.7-dind-rootless: 1
   docker-openstudio:
     latest: 1
   docker.io/library/archlinux:
@@ -4318,6 +4321,7 @@ versions:
     23.1.2: 1
     23.1.3: 1
     23.1.4: 1
+    23.2.0: 1
   nipreps/mriqc:
     22.0.1: 1
     22.0.2: 1
@@ -4336,6 +4340,7 @@ versions:
     22.1.3: 1
     22.2.0: 1
     23.0.0: 1
+    23.1.0: 1
   nipreps/nirodents:
     0.2.1: 1
   nipreps/smriprep:
@@ -4343,6 +4348,7 @@ versions:
     0.12.0: 1
     0.12.1: 1
     0.12.2: 1
+    0.13.2: 1
     0.9.1: 1
     0.9.2: 1
   nipy/heudiconv:
@@ -4352,6 +4358,7 @@ versions:
     0.13.0: 1
     0.13.1: 1
     1.0.0: 1
+    1.0.1: 1
     latest: 3
     v0.11.1: 1
     v0.11.2: 1
@@ -4720,7 +4727,9 @@ versions:
   pennlinc/aslprep:
     0.5.0: 1
     0.5.1: 1
+    0.6.0: 1
   pennlinc/xcp_d:
+    0.6.0: 1
     '04.0': 1
   percona/pmm-server:
     latest: 1
@@ -5481,7 +5490,7 @@ versions:
     '18.10': 9
     '19.04': 33
     '19.10': 16
-    '20.04': 429
+    '20.04': 431
     '20.04  ': 1
     '20.10': 3
     '21.04': 3

@@ -1,0 +1,234 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%files
+    config/bashrc
+    config/observatories.dat
+    config/obsys.dat
+    config/psrchive.cfg
+    config/clk_dir
+    config/plk_setup_fr606_embrace.dat
+
+%runscript
+    singularity run --writable-tmpfs \
+        -B /databf:/databf \
+        -B /data:/data \
+        -B /cep:/cep \
+        /path/to/image.sif "$@"
+
+#####  python2 & python3  #####
+%post
+    export HOME=/home/root
+    export PSRHOME=/home/root/pulsar
+
+    mkdir -p $PSRHOME/src
+    mv config/bashrc ~/.bashrc
+    . /home/root/.bashrc
+    
+    TZ=Europe/Paris
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    apt update
+    apt -y install build-essential tar wget rsync locate git curl autotools-dev autoconf libtool make g++ gfortran libfftw3-dev pgplot5 python3-pip csh tcsh swig python-tk pkg-config x11-apps gedit ghostscript libpng-dev libx11-dev libglib2.0-dev mpich openmpi-bin nvidia-cuda-toolkit firefox
+    apt -y install python2-dev
+
+
+    pip3 install numpy==1.21 --user
+    pip3 install matplotlib astropy astroplan scipy tinydb lmfit --user
+    pip3 install pyfits --user
+    pip3 install psrqpy jupyter --user
+    apt -y install python2.7 -y
+    curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+    python2.7 get-pip.py
+    pip2 install numpy --user
+    pip2 install matplotlib astropy astroplan scipy tinydb lmfit --user
+    pip2 install pyfits jupyter --user
+    pip2 install jupyter
+    ln -s /usr/bin/python2.7 /usr/bin/python
+
+%environment
+    export HOME=/home/root
+    export PSRHOME=/home/root/pulsar
+    export PGPLOT_DIR=/usr/lib/pgplot5
+    export PGPLOT_FONT="$PGPLOT_DIR"/grfont.dat
+    export PRESTO="$PSRHOME"/presto
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH":"$PSRHOME"/lib:"$PRESTO"/lib
+    export C_INCLUDE_PATH="$C_INCLUDE_PATH":"$PSRHOME"/include:"$PSRHOME"/tempo2/include
+    export PATH="$PATH":$PRESTO/bin
+    export TEMPO2="$PSRHOME"/tempo2
+    export TEMPO="$PSRHOME"/tempo
+    export PSRCAT_FILE="$PSRHOME"/psrcat/psrcat.db
+    export PSRCHIVE_CONFIG="$HOME"/.psrchive.cfg
+    export PATH=${PATH}:"$PSRHOME"/bin:"$TEMPO2"/bin
+    export PYTHONPATH="$PYTHONPATH":$PRESTO/lib/python
+    export PSRCAT_FILE=$PSRHOME/psrcat.db
+
+%post
+    echo 'export HOME=/home/root' >> ~/.bashrc
+    echo 'export PSRHOME=/home/root/pulsar' >> ~/.bashrc
+    echo 'export PGPLOT_DIR=/usr/lib/pgplot5' >> ~/.bashrc
+    echo 'export PGPLOT_FONT="$PGPLOT_DIR"/grfont.dat' >> ~/.bashrc
+    echo 'export PRESTO="$PSRHOME"/presto' >> ~/.bashrc
+    echo 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH":"$PSRHOME"/lib:"$PRESTO"/lib' >> ~/.bashrc
+    echo 'export C_INCLUDE_PATH="$C_INCLUDE_PATH":"$PSRHOME"/include:"$PSRHOME"/tempo2/include' >> ~/.bashrc
+    echo 'export PATH="$PATH":$PRESTO/bin' >> ~/.bashrc
+    echo 'export TEMPO2="$PSRHOME"/tempo2' >> ~/.bashrc
+    echo 'export TEMPO="$PSRHOME"/tempo' >> ~/.bashrc
+    echo 'export PSRCAT_FILE="$PSRHOME"/psrcat/psrcat.db' >> ~/.bashrc
+    echo 'export PSRCHIVE_CONFIG="$HOME"/.psrchive.cfg' >> ~/.bashrc
+    echo 'export PATH=${PATH}:"$PSRHOME"/bin:"$TEMPO2"/bin' >> ~/.bashrc
+    echo 'export PYTHONPATH="$PYTHONPATH":$PRESTO/lib/python' >> ~/.bashrc
+
+
+%post
+    cd $HOME/pulsar && \
+        wget http://ftp.debian.org/debian/pool/main/c/cfitsio/libcfitsio9_3.490-3_amd64.deb && \
+        wget http://ftp.br.debian.org/debian/pool/main/c/cfitsio/libcfitsio-dev_3.490-3_amd64.deb && \
+        dpkg -i libcfitsio9_3.490-3_amd64.deb && \
+        dpkg -i libcfitsio-dev_3.490-3_amd64.deb
+
+    apt-get install -y csh swig
+    export TZ=Europe/Paris
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    apt-get update
+    apt-get install -y python-tk
+    apt-get install -y pkg-config
+
+#####  TEMPO 2  #####
+%post
+    . /home/root/.bashrc && \
+        cd $HOME/pulsar/src && \
+        git clone https://bitbucket.org/psrsoft/tempo2.git
+
+    . /home/root/.bashrc && \
+        cd $HOME/pulsar/src/tempo2 && \
+        ./bootstrap && \
+        ./configure --prefix=$PSRHOME && \
+        make && \
+        make install && \
+        make plugins && \
+        make plugins-install && \
+        cp -r T2runtime/* $TEMPO2/
+
+#####  PSRCHIVE  #####
+%post
+    cd $PSRHOME && \
+        git clone git://git.code.sf.net/p/psrchive/code psrchive
+
+    cd $PSRHOME/psrchive && \
+        ./bootstrap
+    cd $PSRHOME/psrchive && \
+        ./configure --prefix=$PSRHOME || true && \
+        cd packages && make
+    cd $PSRHOME/psrchive && \
+        ./packages/fftw.csh
+    cd $PSRHOME/psrchive && \
+        ./packages/cfitsio.csh && \
+        ./configure --prefix=$PSRHOME || true
+    cd $PSRHOME/src && \
+        wget http://www.atnf.csiro.au/research/pulsar/psrcat/downloads/psrcat_pkg.tar.gz && \
+        tar --no-same-owner -xzvf psrcat_pkg.tar.gz && \
+        cd psrcat_tar && \
+        csh makeit && \
+        mkdir -p /home/root/pulsar/bin || true && \
+        mv psrcat /home/root/pulsar/bin && \
+        mkdir -p /home/root/pulsar/psrcat && \
+        mv psrcat.db /home/root/pulsar/psrcat
+    cd $PSRHOME/psrchive && \
+        ./configure --prefix=$PSRHOME --enable-shared --with-x --with-psrcat=psrcat && \
+        make -j 6 && \
+        make install
+    echo '/home/root/pulsar/lib/python2.7/site-packages' > /home/root/.local/lib/python2.7/site-packages/mymodule.pth
+
+#####  TEMPO 1  #####
+%post
+    cd $PSRHOME
+    rm -r tempo || true
+    git clone https://github.com/nanograv/tempo
+    cd tempo
+    ./prepare
+    ./configure
+    make
+    make install
+
+%post
+    apt-get install -y x11-apps gedit gimp evince nano vim emacs subversion
+    apt-get install -y ghostscript
+
+
+#####  PRESTO  #####
+%post
+    apt-get install -y libpng-dev libx11-dev libglib2.0-dev mpich openmpi-bin
+    . /home/root/.bashrc
+    cd $PSRHOME
+    git clone -b v2.2maint https://github.com/scottransom/presto
+    cd presto/src
+    make makewisdom
+    make clean
+    make prep
+    make
+
+    cd $PRESTO/python && \
+        pip2 install ./
+
+#####  DSPSR  #####
+%post
+    . /home/root/.bashrc
+    # export TEMPO2=/home/root/tempo2/T2runtime
+    cd $PSRHOME
+    git clone git://git.code.sf.net/p/dspsr/code dspsr
+    cd $PSRHOME/dspsr
+    echo  'apsr asp bcpm bpsr cpsr cpsr2 gmrt lbadr lbadr64 mark4 mark5 maxim mwa pdev pmdaq puma2 s2 sigproc psrfits caspsr dummy fits spda1k spigot guppi' > $PSRHOME/dspsr/backends.list
+    ./bootstrap
+    ./configure --prefix=$PSRHOME --enable-shared --with-x 
+    make
+    make install
+
+##### PSRSALSA #####
+%post
+    . /home/root/.bashrc
+    apt -y install libgsl-dev
+    gsl_version=`gsl-config --version`
+    gsl_version=`python -c "import numpy as np; print('%d0%d' % (np.floor($gsl_version), 10*($gsl_version % 1)))"`
+    cd $PSRHOME
+    git clone https://github.com/weltevrede/psrsalsa.git
+    cd psrsalsa
+    sed -i "s/GSLFLAGS *= *-DGSL_VERSION_NUMBER=.*/GSLFLAGS = -DGSL_VERSION_NUMBER=$gsl_version/" Makefile
+    make
+    echo 'export PATH="$PATH":$PSRHOME/psrsalsa/bin' >> ~/.bashrc
+
+#####  NENUPY  #####
+%post
+    pip3 install nenupy
+    cd $PSRHOME/src
+    git clone https://github.com/telegraphic/PyGSM
+    cd PyGSM
+    wget -O gsm2016_components.h5 https://zenodo.org/record/3479985/files/gsm2016_components.h5?download=1
+    wget -O gsm_components.h5 https://zenodo.org/record/3479985/files/gsm_components.h5?download=1
+    python3 setup.py install
+
+#####  ANTPAT  #####
+%post
+    pip3 install python-casacore
+    cd $PSRHOME/src
+    git clone https://github.com/2baOrNot2ba/AntPat.git
+    cd $PSRHOME/src/AntPat/
+    python3 setup.py install
+
+#####  DREAMBEAM  #####
+%post
+    cd $PSRHOME/src
+    git clone https://github.com/2baOrNot2ba/dreamBeam.git
+    cd $PSRHOME/src/dreamBeam
+    python3 setup.py install
+
+#####  MV config files  #####
+%post
+    mv /config/observatories.dat /home/root/pulsar/tempo2/observatory/observatories.dat
+    mv /config/obsys.dat /home/root/pulsar/tempo/obsys.dat
+    mv /config/psrchive.cfg /home/root/.psrchive.cfg
+    mv /config/clk_dir /home/root/pulsar/
+    mv /config/plk_setup_fr606_embrace.dat /home/root/pulsar/
+
+# root@4d226bfa8032:~/pulsar# export C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME/tempo2/include
+# root@4d226bfa8032:~/pulsar# export C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME/include
+# sigproc

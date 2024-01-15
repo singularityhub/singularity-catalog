@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: docker:24.0.7-dind-rootless
+
+%post
+    # Mise à jour des référentiels de paquets et installation des outils essentiels
+    apk update
+    apk add --no-cache bash git curl gitlab-runner ca-certificates sudo
+
+    # Ajouter un utilisateur spécifique pour les opérations sudo (optionnel)
+    adduser mon_utilisateur --disabled-password
+    echo "mon_utilisateur ALL=(ALL) NOPASSWD: /usr/bin/dockerd" >> /etc/sudoers
+
+    # Nettoyage du cache du gestionnaire de paquets pour réduire la taille de l'image
+    rm -rf /var/cache/apk/*
+
+
+%startscript
+    # Démarrer le démon Docker avec sudo si nécessaire
+    su mon_utilisateur
+    sudo dockerd
+
+    # Start GitLab Runner
+    gitlab-runner start
+
+%runscript
+    gitlab-runner run
+
+# Build, Shell, Register, and Run commands
+# singularity build gitlab-runner.sif Singularity
+# singularity shell gitlab-runner.sif
+#   gitlab-runner register (FILL WITH URL AND TOKEN)
+#   gitlab-runner run

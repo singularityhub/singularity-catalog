@@ -31,8 +31,9 @@ From: ubuntu:20.04
     apt -y install python2-dev
     pip3 install numpy==1.21
 
-    pip3 install matplotlib astropy astroplan scipy tinydb lmfit
-    pip3 install pyfits
+    pip3 install matplotlib astropy astroplan scipy tinydb lmfit 
+    pip3 install pyfits 
+    pip3 install ipykernel
     pip3 install psrqpy jupyter astroquery mailutils
     apt -y install python2.7
     curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
@@ -40,12 +41,26 @@ From: ubuntu:20.04
     pip2 install numpy
     pip2 install matplotlib astropy astroplan scipy tinydb lmfit
     pip2 install pyfits
+    pip2 install ipykernel
     # pip2 install jupyter  # ERROR: Could not find a version that satisfies the requirement comm>=0.1.3
     ln -s /usr/bin/python2.7 /usr/bin/python
     apt -y install libbz2-dev
     pip2 install fitsio
-    
 
+
+#####  Gitlab runner  #####
+%post 
+    # Download the binary for your system
+    curl -L --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
+
+    # Give it permission to execute
+    chmod +x /usr/local/bin/gitlab-runner
+
+    # Create a GitLab Runner user
+    useradd --comment 'GitLab Runner' --create-home gitlab-runner --shell /bin/bash
+
+    # Install and run as a service
+    gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
 
 #####  GPU TOOLS + DRIVER  #####
 %post
@@ -125,7 +140,7 @@ From: ubuntu:20.04
 #####  PSRCHIVE  #####
 %post
     cd $PSRHOME && \
-        git clone git://git.code.sf.net/p/psrchive/code psrchive
+        git clone http://git.code.sf.net/p/psrchive/code psrchive
 
     cd $PSRHOME/psrchive && \
         git checkout master && \

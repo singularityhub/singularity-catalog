@@ -37,12 +37,21 @@ From: ubuntu:20.04
 
     apt -y install python3-pyqt5 python3-pyqt5.qtwebengine
     apt -y install python3-tk
-    apt -y install build-essential manpages-dev htop tar wget rsync locate git tmux curl autotools-dev autoconf libtool make g++ gfortran libgsl-dev libfftw3-dev pgplot5 python3-pip csh tcsh swig python-tk pkg-config x11-apps gedit ghostscript libpng-dev libx11-dev libglib2.0-dev mpich openmpi-bin nvidia-cuda-toolkit firefox imagemagick gnuplot s-nail
+    apt -y install build-essential manpages-dev htop tar wget rsync locate git tmux curl autotools-dev autoconf libtool make g++ gfortran libgsl-dev libfftw3-dev pgplot5 python3-pip csh tcsh swig python-tk pkg-config x11-apps gedit ghostscript libpng-dev libx11-dev libglib2.0-dev mpich openmpi-bin firefox imagemagick gnuplot s-nail
     apt -y install bc 
     pip3 install numpy==1.21
     pip3 install matplotlib astropy astroplan scipy tinydb lmfit
     pip3 install pyfits
     pip3 install psrqpy jupyter astroquery mailutils
+
+
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.1-1_all.deb
+    dpkg -i cuda-keyring_1.1-1_all.deb
+    apt-get update
+    apt-get -y install cuda
+    echo 'export PATH=/usr/local/cuda-12.2/bin:$PATH' >> /etc/bash.bashrc
+    echo 'export LD_LIBRARY_PATH=/usr/local/cuda-12.2/lib64:$LD_LIBRARY_PATH' >> /etc/bash.bashrc
+
 
 
     apt -y install python2-dev
@@ -103,6 +112,7 @@ From: ubuntu:20.04
     echo 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH":"$PSRHOME"/lib:"$PRESTO"/lib' >> /etc/bash.bashrc
     echo 'export C_INCLUDE_PATH="$C_INCLUDE_PATH":"$PSRHOME"/include:"$PSRHOME"/tempo2/include' >> /etc/bash.bashrc
     echo 'export PATH="$PATH":$PRESTO/bin' >> /etc/bash.bashrc
+    echo 'export PATH="$PATH":$HOME/bin' >> /etc/bash.bashrc
     echo 'export TEMPO2="$PSRHOME"/tempo2' >> /etc/bash.bashrc
     echo 'export TEMPO="$PSRHOME"/tempo' >> /etc/bash.bashrc
     echo 'export PSRCAT_FILE="$PSRHOME"/psrcat/psrcat.db' >> /etc/bash.bashrc
@@ -131,6 +141,7 @@ From: ubuntu:20.04
 %post
     . /etc/bash.bashrc && \
         cd $PSRHOME/src && \
+        git config --global http.postBuffer 524288000
         git clone https://bitbucket.org/psrsoft/tempo2.git
 
     . /etc/bash.bashrc && \
@@ -146,7 +157,24 @@ From: ubuntu:20.04
 #####  PSRCHIVE  #####
 %post
     cd $PSRHOME && \
-        git clone http://git.code.sf.net/p/psrchive/code psrchive
+        git config --global http.postBuffer 524288000
+
+        MAX_ATTEMPTS=5
+        COUNT=0
+    
+        while [ $COUNT -lt $MAX_ATTEMPTS ]; do
+            git clone http://git.code.sf.net/p/psrchive/code psrchive || true
+
+            # Vérifiez si le clone a réussi
+            if [ -d "psrchive" ]; then
+                break
+            fi
+    
+            # Si le git clone échoue, attendez 2 minutes puis réessayez
+            echo "Tentative de git clone a échoué. Attendre 5 minutes avant de réessayer..."
+            sleep 300
+            COUNT=$((COUNT+1))
+        done
 
     cd $PSRHOME/psrchive && \
         git checkout master && \
