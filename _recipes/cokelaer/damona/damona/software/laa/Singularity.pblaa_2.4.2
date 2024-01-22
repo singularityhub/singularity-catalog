@@ -1,0 +1,46 @@
+Bootstrap: docker
+From: redhat/ubi9
+
+
+%files
+    bin/ /usr/local/
+    lib/ /usr/local
+
+%post
+  yum -y update && yum install -y glibc*
+
+  chmod 775 /usr/local/bin/*
+
+  yum clean all
+  rm -rf /var/cache/yum
+  rm -rf /var/cache/dnf
+
+  rm -rf /var/tmp/*
+
+
+%environment
+  export LC_ALL=C.UTF-8
+  export LD_LIBRARY_PATH=/usr/local/lib
+
+%test
+    laa --help
+    if [ $? -eq 0 ]; then
+        echo "Container successed."
+    else
+        echo "Container failed."
+        exit 1
+    fi
+
+    pbindex --help
+    if [ $? -eq 0 ]; then
+        echo "Container successed."
+    else
+        echo "Container failed."
+        exit 1
+    fi
+
+%runscript
+    exec laa "$@"
+
+
+

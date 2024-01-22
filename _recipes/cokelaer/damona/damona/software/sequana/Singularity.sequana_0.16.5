@@ -1,0 +1,33 @@
+Bootstrap: localimage
+From: ../../library/micromamba/micromamba_1.4.3.img
+
+%post
+
+    apt -y update && apt -y upgrade
+
+    apt-get install -y  make curl bzip2 build-essential
+
+    # export the PATH here so that pip is found later on
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+
+    # an alias
+    export OPTS=" -q -c conda-forge -c bioconda -n main -y "
+
+    micromamba install $OPTS python="3.10"
+
+    pip install cython
+    pip install sequana==0.16.5
+
+    micromamba install $OPTS cd-hit kraken2 krona bwa snpeff samtools shustring
+
+    # cleanup
+    micromamba clean --packages -y
+    micromamba clean --all -y
+    rm -rf /opt/condas/pkg
+
+%environment
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+
+%runscript
+    sequana "$@"
+
