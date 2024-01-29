@@ -1,0 +1,273 @@
+Bootstrap: docker
+From: ubuntu:22.04
+%labels
+MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
+
+%setup
+    #!/bin/bash
+    echo "$(readlink /proc/$$/exe) is the shell in use"
+    env|egrep SHELL
+    ls -la  ${GITHUB_WORKSPACE}
+    export CACHEDIR=${GITHUB_WORKSPACE}/../../../cache
+#    echo '@@@ ls -l $SINGULARITY_ROOTFS'
+#    ls -l ${SINGULARITY_ROOTFS}
+    rm -f ${SINGULARITY_ROOTFS}/*.txt || true
+    bash -c "if [[ -z '${FC}' ]]; then echo 'FC=gfortran ' >> ${SINGULARITY_ROOTFS}/fc.txt ; else echo 'FC is ${FC}'; echo 'FC=${FC} ' >> ${SINGULARITY_ROOTFS}/fc.txt ; fi"
+    bash -c "if [[ -z '${ARMCI_NETWORK}' ]]; then echo 'ARMCI_NETWORK=MPI-PR ' >> ${SINGULARITY_ROOTFS}/armci_network.txt ; else echo 'ARMCI_NETWORK is ${ARMCI_NETWORK}'; echo 'ARMCI_NETWORK=${ARMCI_NETWORK} ' >> ${SINGULARITY_ROOTFS}/armci_network.txt ; fi"
+    bash -c "if [[ -z '${MPI_IMPL}' ]]; then echo 'MPI_IMPL=ompi ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; else echo 'MPI_IMPL is ${MPI_IMPL}'; echo 'MPI_IMPL=${MPI_IMPL} ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; fi"
+    bash -c "if [[ -z '${TAMM_BRANCH}' ]]; then echo 'TAMM_BRANCH=main ' >> ${SINGULARITY_ROOTFS}/branch.txt ; else echo 'TAMM_BRANCH is ${TAMM_BRANCH}'; echo 'TAMM_BRANCH=${TAMM_BRANCH} ' >> ${SINGULARITY_ROOTFS}/branch.txt ; fi"
+    bash -c "if [[ -z '${MYUSERNAME}' ]]; then echo 'MYUSERNAME=edoapra ' >> ${SINGULARITY_ROOTFS}/myusername.txt ; else echo 'MYUSERNAME is ${MYUSERNAME}'; echo 'MYUSERNAME=${MYUSERNAME} ' >> ${SINGULARITY_ROOTFS}/myusername.txt ; fi"
+    ls -lrt ${CACHEDIR} || true
+    ls -la  ${CACHEDIR}/ || true
+    ls -la  ${CACHEDIR}/ompi || true
+    ls -la  ${CACHEDIR}/ompi/lib || true
+    ls -la  ${CACHEDIR}/libint.tar.bz2 || true
+    bash -c "if [[  -f ${CACHEDIR}/ompi/lib/libmpi.so ]]; then mkdir -p ${SINGULARITY_ROOTFS}/opt ;rsync -a ${CACHEDIR}/ompi ${SINGULARITY_ROOTFS}/opt/. ; echo ompi/ucx cache fetched ;fi"
+    bash -c "if [[  -f ${CACHEDIR}/libint.tar.bz2 ]]; then cd ${SINGULARITY_ROOTFS}/ ; tar xvjf ${CACHEDIR}/libint.tar.bz2; echo libint cache fetched ;fi"
+    ls -lrta ${SINGULARITY_ROOTFS}/opt  ||true
+
+##%files
+##    ${GITHUB_WORKSPACE}/nwchem nwchem
+
+%post 
+#!/bin	/bash
+
+echo "$(readlink /proc/$$/exe) is the shell in use"
+#
+#https://sylabs.io/guides/3.6/user-guide/mpi.html
+export DEBIAN_FRONTEND=noninteractive
+export ompi=4.1.6
+export ompi_prefix=ompi-$ompi
+export ucx=1.14.0
+export xpmem=2.7.3
+export knem=1.1.4
+export OMPI_DIR=/opt/ompi
+export SINGULARITY_ompi=$ompi
+export SINGULARITY_ompi_prefix=ompi-$ompi
+export CUDA_VERSION_MAJOR=11 
+export CUDA_VERSION_MINOR=7
+export GCC_VERSION=11
+export PY_VERSION=3.11
+export TAMM_BRANCH=main
+export USE_CPU=N
+export USE_SYSV=N
+
+export PATH=$OMPI_DIR/bin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin::/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin 
+export LD_LIBRARY_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$OMPI_DIR/lib
+export SINGULARITY_PATH=$PATH
+export SINGULARITY_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+export `cat ./fc.txt`
+export `cat ./armci_network.txt`
+export `cat ./mpi_impl.txt`
+export `cat ./branch.txt`
+export `cat ./myusername.txt`
+echo FC is $FC
+echo ARMCI_NETWORK is $ARMCI_NETWORK
+echo MPI_IMPL is $MPI_IMPL
+echo TAMM_BRANCH is $TAMM_BRANCH
+cd / \
+&& pwd \
+&& apt-get -y update \
+&& apt-get -y install -y tzdata git moreutils  wget rsync  sudo ca-certificates \
+&& wget https://github.com/moparisthebest/static-curl/releases/download/v8.1.2/curl-amd64 -O /usr/bin/curl \
+&& chmod +x /usr/bin/curl \
+&& echo ca_certificate=/etc/ssl/certs/ca-certificates.crt >  ~/.wgetrc \
+&& echo        "cacert=/etc/ssl/certs/ca-certificates.crt" >> ~/.curlrc \
+&& bash -o  pipefail -c "if [[ $(echo $FC | cut -c -8) == gfortran ]]; then apt-get -y install -y  ${FC}; fi" \
+&& pwd \
+&& echo '@@ ls -lart ' \
+&& ls -lart  \
+&& echo '@@ ls on /opt' \
+&& ls -lart /opt \
+&& echo " ==========" \
+&& pwd \
+&& echo pwd $(pwd) \
+&& apt-get -y install -y   tar libnl-3-200 libnl-route-3-200 libgomp1 libnuma1 \
+ g++ gfortran   make ssh patch   unzip perl-base file \
+ python3 python3-dev cmake  unzip zip perl automake libtool autoconf flex  \
+ libnuma-dev libslurm-dev libpmi2-0-dev libpmi0-dev  libnl-3-dev libnl-route-3-dev udev \
+ librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers \
+ pkg-config gawk  software-properties-common linux-headers-generic \
+            && apt-get install -q=2 -y  gcc-"$GCC_VERSION"  g++-"$GCC_VERSION" gfortran-"$GCC_VERSION"   make ssh patch curl rsync wget git file python"$PY_VERSION" libpython"$PY_VERSION"-dev python"$PY_VERSION"-dev bzip2 tar gnupg2 cmake \
+            && apt-get install  -q=2 -y  autoconf automake libtool git \
+	    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-"$GCC_VERSION" 100 \
+	    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-"$GCC_VERSION" 100 \
+	    && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-"$GCC_VERSION" 100 \
+	    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 100 \
+	    && update-alternatives --install /usr/bin/python3-config python3-config /usr/bin/python3.11-config 100 \
+ && curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-archive-keyring.gpg \
+ && cp cuda-archive-keyring.gpg /usr/share/keyrings/cuda-archive-keyring.gpg \
+ && echo "deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /" |  tee /etc/apt/sources.list.d/cuda-ubuntu2204-x86_64.list \
+ &&  curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin \
+ && mv cuda-*.pin /etc/apt/preferences.d/cuda-repository-pin-600 \
+ && apt-get -q=2 update \
+ && apt-get -q=2 -y install cuda-nvcc-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" cuda-cudart-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcublas-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR"  \
+&& export kernelv=$(dpkg-query -W linux-headers-generic|cut -f2 ) \
+&& echo kernelv is $kernelv \
+&& export k1=$(dpkg-query -W linux-headers-generic|cut -f2 | cut -d "." -f 1)\
+&& export k2=$(dpkg-query -W linux-headers-generic|cut -f2 | cut -d "." -f 2)\
+&& export k3=$(dpkg-query -W linux-headers-generic|cut -f2 | cut -d "." -f 3)\
+&& export k4=$(dpkg-query -W linux-headers-generic|cut -f2 | cut -d "." -f 4)\
+&&  export ktag=$k1.$k2.$k3-$k4-generic \
+&& echo ktag is $ktag \
+&& ls /lib/modules/$ktag  || true
+
+ apt-get clean 
+ echo TTTTT 
+ df -h 
+ echo TTTTT 
+ echo "PATH" $PATH 
+ echo "LD_LIBRARY_PATH" $LD_LIBRARY_PATH 
+ echo FFFFF 
+ echo 'FC -v ' `$FC -v` 
+ echo ' CC is ' "$CC" 
+ echo 	 ' CXX is ' "$CXX" || true 
+ echo 'ls -l /opt/ompi/lib/libmpi.so' $(ls -l /opt/ompi/lib/libmpi.so) || true 
+ bash -o pipefail -c "if [[ ! -f /opt/ompi/lib/libmpi.so ]]; then  \
+$FC -v \
+&& wget --progress=dot:giga https://github.com/openucx/xpmem/archive/refs/tags/v$xpmem.tar.gz -O - |tar xzf - \
+&& cd xpmem-$xpmem \
+&& sh autogen.sh \
+&& ./configure --prefix=$OMPI_DIR --disable-kernel-module  \
+&& make -j3 \
+&& make install \
+&& cd .. \
+&& wget https://gitlab.inria.fr/knem/knem/uploads//4a43e3eb860cda2bbd5bf5c7c04a24b6/knem-$knem.tar.gz -O - | tar xzf - \
+&& cd knem-$knem \
+&& echo 'ktag is $ktag' \
+&& ./configure --prefix=$OMPI_DIR --with-linux-build=/lib/modules/$ktag/build --with-linux-release=$ktag \
+&& make -j3 \
+&& make install \
+&& cd .. \
+&& wget --progress=dot:giga  https://github.com/openucx/ucx/releases/download/v$ucx/ucx-$ucx.tar.gz -O - | tar xzf - \
+&& cd ucx-$ucx \
+&& wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/ucx_malloc.patch \
+&& patch -p0 < ./ucx_malloc.patch \
+&& mkdir build && cd build \
+&& echo 'Configuring ucx ..........' \
+&& ../configure --prefix=$OMPI_DIR --disable-logging --disable-debug --disable-assertions --disable-params-check \
+ --with-xpmem=$OMPI_DIR --with-knem=$OMPI_DIR  >& config.log && tail -50 config.log \
+&& echo 'Checking xpmem .........' $(grep -i xpmem conf*) \
+&& echo 'Checking knem ..........' $(grep -i knem conf*) \
+&& echo 'Compiling ucx ..........' \
+&& make -j4 >& make.log && tail -50 make.log \
+&& echo 'Installing ucx ..........' \
+&& make install >& makei.log && tail -50 makei.log \
+&& echo 'Cleaning up ucx ..........' \
+&& make clean >& makec.log \
+&& cd ../.. \
+&& wget --progress=dot:giga https://github.com/open-mpi/ompi/archive/v$ompi.tar.gz -O - | tar xzf -   && \
+cd $ompi_prefix                                                        && \
+echo './autogen.pl openmpi ..........' &&\
+./autogen.pl   >& autogen.log && tail -50 autogen.log                  && \
+echo 'Configuring openmpi ..........' &&\
+./configure  --prefix=$OMPI_DIR --with-ucx=$OMPI_DIR --enable-mca-no-build=btl-uct   \
+ --with-pmi --with-pmi-libdir=/usr/lib/x86_64-linux-gnu --enable-mpi1-compatibility --with-slurm --without-tm --without-lsf  \
+ --without-sge --without-alps --without-lustre --disable-memchecker \
+ --without-hcoll --disable-static  \
+--disable-mpi-java --enable-dlopen --without-cuda --without-verbs \
+--disable-mpi-cxx --disable-cxx-exceptions FC=$FC >& config.log && tail -50 config.log && \
+echo 'Compiling openmpi ..........' &&\
+make FC=$FC -j 4 >& make.log && tail -50 make.log                                  && \
+echo 'Installing openmpi ..........' &&\
+make -j4 install >& makei.log && tail -50 makei.log               && \
+echo 'Cleaning up openmpi ..........' && \
+make clean >& makec.log                                                   && \
+#cd /tmp && \
+#rm -rf /usr/share/doc/ && \
+#rm -rf /usr/share/man/
+cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx ;fi "
+echo ' check ucx' \
+&& echo ' /opt/ompi/bin/ucx_info -v ' `/opt/ompi/bin/ucx_info -v|| true` \
+&& echo ' ucx Transports' `/opt/ompi/bin/ucx_info  -d |grep Transport |cut -c 19- || true` \
+&& echo '********' 
+export PATH=$OMPI_DIR/bin:$PATH
+export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+export PATH=$PATH:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin
+export LD_LIBRARY_PATH=$$LD_LIBRARY_PATHL/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64
+#export ARMCI_NETWORK=MPI-PR
+echo ARMCI_NETWORK is $ARMCI_NETWORK \
+	    && echo TAMM_BRANCH is ${TAMM_BRANCH} \
+	    && echo 'cloning tamm source *** ' || true \
+            && cd /opt || { echo "Failure"; exit 1; } \
+            && git clone -b ${TAMM_BRANCH} --depth 20  https://github.com/ExaChem/exachem.git CoupledCluster  \
+            && cd CoupledCluster \
+	    && mkdir build && cd build \
+	    && echo " USE_SYSV is " $USE_SYSV \
+	    && echo " USE_CPU is " $USE_CPU \
+	    && echo ' === ls -l /opt/install/CC ===' $(ls -l /opt/install/CC) \
+	    && echo ' === ls -l /opt/install/CC/lib ===' $(ls -l /opt/install/CC/lib) \
+	    && if [ -f /opt/install/CC/lib/libint2.a ]; then echo 'found libint cache' ;\
+	    mkdir -p /opt/CoupledCluster/build/stage/opt || true ; \
+	    rsync -av /opt/install /opt/CoupledCluster/build/stage/opt/. ; fi \
+            && CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/opt/install/CC -DMODULES=CC  -DBLIS_CONFIG=zen3 -DMARCH_FLAGS=-march=znver3 " \
+            && if [ ${USE_SYSV} = "Y" ]; then echo "sysv enabled"; CMAKE_OPTIONS="$CMAKE_OPTIONS -DGA_ENABLE_SYSV=ON "; fi \
+            && if [ ${USE_CPU} = "N" ]; then echo "gpu code"; CMAKE_OPTIONS="$CMAKE_OPTIONS -DUSE_CUDA=ON" ; else echo "cpu code" ;fi \
+            && export CMAKE_OPTIONS \
+	    && echo CMAKE_OPTIONS $CMAKE_OPTIONS \
+	    && CC=gcc CXX=g++ FC=gfortran cmake  $CMAKE_OPTIONS .. \
+            && make -j3 \
+	    && echo exit code for compilation $? \
+            && make install \
+	    && echo exit code for make install $? \
+	    && echo git describe --always `git describe --always`  >> /opt/install/info.txt \
+	    && echo git rev-parse HEAD git `git rev-parse HEAD` >> /opt/install/info.txt \
+            && echo 'clean unnecessary source to reduce docker size' \
+            && cd /opt && rm  -rf CoupledCluster \
+	    && cd /opt/install/CC/share/libint/2.7.2/basis/ \
+	    && wget -O aug-cc-pvdz.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvdz/format/gaussian94/?version=1&elements=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36&optimize_general=true&uncontract_general=true" \
+	    && wget -O aug-cc-pvtz.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvtz/format/gaussian94/?version=1&elements=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36&optimize_general=true&uncontract_general=true" \
+	    && wget -O aug-cc-pvqz.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz/format/gaussian94/?version=1&elements=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36&optimize_general=true&uncontract_general=true" \
+            && echo 'clean unnecessary packages ' \
+            && DEBIAN_FRONTEND=noninteractive apt-get -q=2 -y install localepurge \
+	    && echo MANDELETE >  /etc/locale.nopurge \
+	    && echo DONTBOTHERNEWLOCALE >> /etc/locale.nopurge \
+	    && echo en_US.UTF-8 >> /etc/locale.nopurge \
+	    && localepurge \
+	    && rm -rf /usr/share/doc \
+            &&  apt-get -q=2 -y purge   patch curl  wget  make git cpp-"$GCC_VERSION" gfortran-"$GCC_VERSION" gcc-"$GCC_VERSION" libicu-dev libpython"$PY_VERSION"-dev libstdc++-"$GCC_VERSION"-dev libc6-dev libgcc-"$GCC_VERSION"-dev libgfortran-"$GCC_VERSION"-dev  || true \
+            && apt-get -q=2 -y install libgfortran5 libgomp1 && apt-get clean \
+	    && apt-get purge -y cuda-cccl-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcublas-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" \
+            && chown -R nwchem /opt/nwchem && chgrp -R nwchem /opt/nwchem \
+	    && echo '*** ls -l CC/bin **' \
+	    && ls -l /opt/install/CC/bin/ || true \
+	    && echo '*** ldd ***'  \
+	    && LD_LIBRARY_PATH=/usr/local/lib:/opt/lib ldd /opt/install/CC/bin/ExaChem || true \
+&& DEBIAN_FRONTEND=noninteractive apt-get clean -y \
+&& DEBIAN_FRONTEND=noninteractive apt-get -y install localepurge \
+&& echo MANDELETE >  /etc/locale.nopurge \
+&& echo DONTBOTHERNEWLOCALE >> /etc/locale.nopurge \
+&& echo en_US.UTF-8 >> /etc/locale.nopurge \
+&& localepurge \
+&& rm -rf /usr/share/doc  /usr/share/man \
+&& du -sk /opt/*|sort -n \
+&& echo "dddddddddddd"  \
+&& dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n | tail -n 50 \
+&& echo "dddddddddddd" \
+&&  du -sk /tmp/* || true \
+&&  ls -lart /tmp ||true \
+&& ls -Rlart  /opt/install/CC || true \
+&& ls -lart  /opt/install/CC/include || true \
+&& ls -lart  /opt/install/CC || true 
+
+#&&  apt-get  -y purge cmake git  gcc-11  g++-11  gfortran-11  libstdc++-11-dev  libgcc-11-dev git \
+#&& apt-get -y install libgcc-s1 libgfortran5 \
+#&& apt-get -y autoremove && apt-get clean
+
+
+
+
+#cd /data
+%environment
+export OMPI_DIR=/opt/ompi
+export SINGULARITY_OMPI_DIR=$OMPI_DIR
+export CUDA_VERSION_MAJOR=11 
+export CUDA_VERSION_MINOR=7
+export PATH=/opt/install/CC/bin:$OMPI_DIR/bin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:$PATH
+export LD_LIBRARY_PATH=$OMPI_DIR/lib:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$OMPI_DIR/lib:$LD_LIBRARY_PATH
+export SINGULARITYENV_APPEND_PATH=/opt/install/CC/bin:$OMPI_DIR/bin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin
+export SINGULARITYENV_APPEND_LD_LIBRARY_PATH=$OMPI_DIR/lib:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$OMPI_DIR/lib
+export COMEX_MAX_NB_OUTSTANDING=6
+export SINGULARITY_COMEX_MAX_NB_OUTSTANDING=6
+#%runscript
+#exec /bin/bash "$@"

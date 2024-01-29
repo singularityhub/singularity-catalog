@@ -1,0 +1,243 @@
+Bootstrap: docker
+From: ubuntu:22.04
+%labels
+MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
+
+%setup
+    ls -la  ${GITHUB_WORKSPACE}
+    export CACHEDIR=${GITHUB_WORKSPACE}/../../../cache
+    echo '@@@ ls -l $SINGULARITY_ROOTFS'
+    ls -l ${SINGULARITY_ROOTFS}
+    rm -f ${SINGULARITY_ROOTFS}/*.txt
+    echo "FC=$FC " >> ${SINGULARITY_ROOTFS}/fc.txt
+    echo "ARMCI_NETWORK=$ARMCI_NETWORK " >> ${SINGULARITY_ROOTFS}/armci_network.txt
+    echo "MPI_IMPL=$MPI_IMPL " >> ${SINGULARITY_ROOTFS}/mpi_impl.txt
+    echo "BRANCH=$BRANCH " >> ${SINGULARITY_ROOTFS}/branch.txt
+    echo '@@@ ls -lart $SINGULARITY_ROOTFS'
+    ls -lrt ${CACHEDIR} || true
+    ls -la  ${CACHEDIR}/ || true
+    ls -la  ${CACHEDIR}/simint.l5_p5_d1.install/lib/libnwc_simint.a || true
+    ls -la  ${CACHEDIR}/simint.l5_p5_d1.install/lib/libsimint.a ||true
+    bash -c "if [[ ! -z "${GITHUB_WORKSPACE}" ]]; then mkdir -p ${SINGULARITY_ROOTFS}/nwchem/contrib; rsync -a ${GITHUB_WORKSPACE}/nwchem/src ${SINGULARITY_ROOTFS}/nwchem/. ||  true ; rsync -a ${GITHUB_WORKSPACE}/nwchem/contrib/getmem.nwchem ${SINGULARITY_ROOTFS}/nwchem/contrib/. || true ;rsync -a ${GITHUB_WORKSPACE}/nwchem/travis ${SINGULARITY_ROOTFS}/nwchem/. ||  true ; rsync -a ${GITHUB_WORKSPACE}/nwchem/.git ${SINGULARITY_ROOTFS}/nwchem/. ||true ; fi"
+    echo '==== ls on SINGnwchem/'
+    ls -lrta  ${SINGULARITY_ROOTFS}/nwchem/
+    echo '==== ls on GITSPnwchem/'
+    ls -lrta  ${GITHUB_WORKSPACE}/nwchem/
+    echo '==== ls on SINGnwchem/src'
+    ls -lrta  ${SINGULARITY_ROOTFS}/nwchem/src
+    bash -c "if [[  -f ${CACHEDIR}/libext/lib/libnwc_openblas.a ]]; then rsync -a ${CACHEDIR}/libext/* ${SINGULARITY_ROOTFS}/nwchem/src/libext/. ; echo libext cache fetched ;fi"
+    bash -c "if [[  -f ${CACHEDIR}/simint.l5_p5_d1.install/lib/libsimint.a ]]; then rsync -av ${CACHEDIR}/simint.l5_p5_d1.install ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/. ; ln -sf ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/simint.l5_p5_d1.install  ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/simint_install;  ls -l ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/; echo simint cache fetched ;fi"
+    echo '==== ls on SINGnwchem/src'
+    ls -lrta  ${SINGULARITY_ROOTFS}/nwchem/src
+    echo ' SINGULARITY_ROOTFS is $SINGULARITY_ROOTFS'
+    echo '@@@ ls -l SINGULARITY_ROOTFS'
+    ls -l ${SINGULARITY_ROOTFS}
+
+##%files
+##    ${GITHUB_WORKSPACE}/nwchem nwchem
+
+%post -c /bin/bash
+#
+#https://sylabs.io/guides/3.6/user-guide/mpi.html
+export DEBIAN_FRONTEND=noninteractive
+export HPCX_HOME=/opt/hpcx 
+export OMPI_HOME=$HPCX_HOME/ompi
+export OPAL_PREFIX=$HPCX_HOME/ompi
+export PATH=$HPCX_HOME/ompi/bin:$HPCX_HOME/ucx/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin 
+export LD_LIBRARY_PATH=$HPCX_HOME/ompi/lib:$HPCX_HOME/ucx/lib:$HPCX_HOME/ucx/lib/ucx
+export SINGULARITY_PATH=$PATH
+export SINGULARITY_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+export `cat ./fc.txt`
+export `cat ./armci_network.txt`
+export `cat ./mpi_impl.txt`
+export `cat ./branch.txt`
+echo FC is $FC
+echo ARMCI_NETWORK is $ARMCI_NETWORK
+echo MPI_IMPL is $MPI_IMPL
+echo BRANCH is $BRANCH
+pwd \
+&& apt-get -y update \
+&& apt-get -y install -y tzdata git moreutils  wget curl rsync  sudo ca-certificates \
+&& echo ca_certificate=/etc/ssl/certs/ca-certificates.crt >  ~/.wgetrc \
+&& pwd \
+&& echo '@@ ls -lart ' \
+&& ls -lart  \
+&& echo '@@ ls on /opt' \
+&& ls -lart /opt \
+&& bash -o  pipefail -c "if [[ ! -f nwchem/src/GNUmakefile ]]; then git clone -b $BRANCH --depth 1  https://github.com/nwchemgit/nwchem.git; fi " \
+&& apt-get -y install -y curl  tar libnl-3-200 libnl-route-3-200 libgomp1 libnuma1 \
+ g++ gfortran   make ssh patch curl  unzip perl-base file \
+ python3 python3-dev cmake  unzip zip perl automake libtool autoconf flex  \
+ libnuma-dev libslurm-dev libpmi2-0-dev libpmi0-dev  libnl-3-dev libnl-route-3-dev udev \
+ librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers \
+ pkg-config \
+&& apt-get clean \
+&& echo TTTTT \
+&&  ./nwchem/travis/build_env.sh || true \
+&& echo TTTTT \
+&& echo "PATH" $PATH \
+&& echo "LD_LIBRARY_PATH" $LD_LIBRARY_PATH \
+&& echo FFFFF \
+&& echo 'FC -v ' `$FC -v` \
+&& rm -f ./cc.txt || true \
+&& if [ -f ./cc.txt ]; then export `cat ./cc.txt` ; fi \
+&& if [ -f ./cxx.txt ]; then export `cat ./cxx.txt` ; fi \
+&& echo ' CC is ' "$CC" \
+&& echo ' CXX is ' "$CXX" || true \
+&& $FC -v \
+&& echo " ==== last dir === " \
+&& pwd \
+&& echo pwd $(pwd) \
+&& cd /opt \
+&& echo pwd is $(pwd) \
+&& wget --progress=dot:giga http://www.mellanox.com/downloads/hpc/hpc-x/v2.15/hpcx-v2.15-gcc-MLNX_OFED_LINUX-5-ubuntu22.04-cuda12-gdrcopy2-nccl2.17-x86_64.tbz -O - | tar --exclude=sharp --exclude=ucc  -xjf - \
+&& ln  -sf hpcx-v2.15-gcc-MLNX_OFED_LINUX-5-ubuntu22.04-cuda12-gdrcopy2-nccl2.17-x86_64 hpcx \
+&& export HPCX_HOME=/opt/hpcx \
+&& export OMPI_HOME=/opt/hpcx/ompi \
+&& export OPAL_PREFIX=/opt/hpcx/ompi \
+&& echo  " ls OMPI_HOME/lib ======= " 
+ ls -lrt $OMPI_HOME/lib 
+ find $HPCX_HOME -name libopen-pal.so.40 
+ echo PATH is $PATH \
+ ls -lrt hpcx/ucx/bin 
+ rm -rf *tbz   
+ echo ' check ucx' 
+ echo ' ucx_info -v ' `ucx_info -v|| true` 
+ echo ' ucx Transports' `ucx_info  -d |grep Transport |cut -c 19- || true` 
+ echo '====='
+ . $HPCX_HOME/hpcx-init.sh
+ hpxc_load
+ env|egrep hpcx
+ echo ' ===== mpif90 ===='
+ echo ' mpif90 -v $(mpif90 -v)'
+ mpif90 -v
+ mpif90 -show
+ echo ' ================='
+
+export HPCX_HOME=/opt/hpcx
+export OMPI_HOME=$HPCX_HOME/ompi
+export OPAL_PREFIX=$HPCX_HOME/ompi
+#export PATH=$HPCX_HOME/ompi/bin:$HPCX_DIR/ucx/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin 
+#export LD_LIBRARY_PATH=$HPCX_DIR/ompi/lib:$HPCX_DIR/ucx/lib:$HPCX_DIR/ucx/lib/ucx
+#export ARMCI_NETWORK=MPI-PR
+echo ARMCI_NETWORK is $ARMCI_NETWORK
+#export NWCHEM_TOP=/opt/nwchem
+export NWCHEM_TARGET=LINUX64
+#export NWCHEM_MODULES="all python gwmol xtb"
+#export USE_TBLITE=1 
+export NWCHEM_MODULES="nwdft driver solvation"
+export BLAS_SIZE=8
+export USE_INTERNALBLAS=1
+#export SCALAPACK_SIZE=8
+#export USE_64TO32=y
+   export USE_OPENMP=1
+export USE_MPI=y
+export USE_MPIF=y
+export USE_MPIF4=y
+export USE_HWOPT=n
+#export USE_LIBXC=y
+export USE_NOIO=y
+#export USE_SIMINT=y
+#export SIMINT_MAXAM=5
+#ENV         MRCC_METHODS=y
+#ENV         CCSDTQ=y
+#ENV         CCSDTLR=y
+#/usr/bin/env|egrep BUILD_
+ls -l ${SINGULARITY_ROOTFS}/
+ls -l ${SINGULARITY_ROOTFS}/nwchem
+echo '===== cd SG_RFS/nwchem ===='
+echo '================'
+cd ${SINGULARITY_ROOTFS}/nwchem 
+echo '===== done cd SG_RFS/nwchem ===='
+echo pwd is $(pwd)
+ ls -lart  
+ echo ' === git descr == ' 
+ echo "output of git describe  --always " `git describe  --always` || true 
+ echo ' texas check ' \
+ ls -lrt src/NWints/texas ||true 
+ MYCURL2="curl -LJO "\
+ MYCURL="wget "
+ $MYCURL https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/largebasis.patch 
+ patch -p1 < largebasis.patch 
+ $MYCURL https://raw.githubusercontent.com/nwchemgit/nwchem/7e4ea3c5cd9205572fbe42c8a86f18ada43409ec/src/NWints/simint/libsimint_source/build_simint.sh > src/NWints/simint/libsimint_source/build_simint.sh 
+export NWCHEM_TOP=`pwd` 
+ ls -lrt 
+ cd src 
+ ls -lrt libext/lib || true 
+    mkdir -p ../bin/$NWCHEM_TARGET
+    gcc -o ../bin/$NWCHEM_TARGET/depend.x config/depend.c
+ make nwchem_config || { echo "config Failure"; exit 1; } 
+ echo '222 PATH is ' `/usr/bin/env | grep PATH` 
+ echo '111 which FC ' `which $FC` || true 
+ mpif90 -show 
+ echo FC is $FC 
+ $FC -v
+   cd libext   && make V=-1  && cd ..
+   cd tools    && make V=-1  && cd ..
+    make SKIP_COMPILERS=1 USE_INTERNALBLAS=1 deps_stamp  >& deps.log 
+ tail -50 deps.log 
+    make directories 
+    export QUICK_BUILD=1 
+ make FC=$FC V=-1 -j6 || { echo 'Compilation Failure'; exit 1; } 
+ unset QUICK_BUILD 
+ FC=$FC ../contrib/getmem.nwchem 2000  || true 
+ make FC=$FC install INSTALL_PREFIX=/opt/nwchem 
+ ldd  ../bin/LINUX64/nwchem  \
+&& DEBIAN_FRONTEND=noninteractive apt-get -y install localepurge \
+&& echo MANDELETE >  /etc/locale.nopurge \
+&& echo DONTBOTHERNEWLOCALE >> /etc/locale.nopurge \
+&& echo en_US.UTF-8 >> /etc/locale.nopurge \
+&& localepurge \
+&& rm -rf /usr/share/doc  /usr/share/man \
+&& du -sh /opt/nwchem \
+&& du -sk /opt/nwchem/*|sort -n \
+&& rm -rf ../.git \
+&& rm -rf tce tools nwdft NWints/simint/libsimint_source/simint.l?_p?_d? geom symmetry util nwxc ddscf lapack blas rism argos peigs rmdft gradients symmetry property smd lucia dplot propery hessian ccsd mp2_grad moints cafe analyz dimqm   develop libext/scalapack libext/openblas libext/libxc/libxc* libext/plumed* libext/libext_utils   ../lib \
+&& du -sh * |sort -n \
+&& cd ../.. \
+&& du -sh nwchem \
+&& du -sk *|sort -n  \
+&& ls -lrth    \
+&&  ldd  /opt/nwchem/bin/nwchem  \
+&& du -sk *|sort -n \
+&& echo "dddddddddddd"  \
+&& dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n | tail -n 100 \
+&& echo "dddddddddddd" \
+&&  du -sk /tmp/* || true \
+&&  ls -lart /tmp ||true \
+&&  apt-get  -y purge cmake git  gcc-9  g++-9  gfortran-9  libstdc++-9-dev  libgcc-9-dev git \
+&& apt-get -y install libgcc-s1  \
+&& apt-get -y autoremove && apt-get clean
+
+
+
+#clean unnecessary packages
+
+#apt-get -y purge curl wget tar  cmake  unzip zip perl automake libtool autoconf flex  \
+#&&  apt-get -y autoremove && apt-get clean
+
+#cd /data
+%environment
+export HPCX_HOME=/opt/hpcx
+export OMPI_HOME=$HPCX_HOME/ompi
+export OPAL_PREFIX=$HPCX_HOME/ompi
+export SINGULARITYENV_APPEND_PATH=$HPCX_HOME/ompi/bin:$HPCX_HOME/ucx/bin
+export SINGULARITYENV_APPEND_LD_LIBRARY_PATH=$HPCX_HOME/ompi/lib:$HPCX_HOME/ucx/lib:$HPCX_HOME/ucx/lib/ucx
+
+#export nwchem_hash=77ba3a6e1dd6f9ba26879d0416bb93b302f1f4f7
+#export NWCHEM_TOP=/opt/nwchem
+export FFIELD=amber
+export AMBER_1=$NWCHEM_TOP/src/data/amber_s/
+export AMBER_2=$NWCHEM_TOP/src/data/amber_q/
+export AMBER_3=$NWCHEM_TOP/src/data/amber_x/
+export AMBER_4=$NWCHEM_TOP/src/data/amber_u/
+export SPCE=${NWCHEM_TOP}/src/data/solvents/spce.rst
+export CHARMM_S=$NWCHEM_TOP/src/data/charmm_s/
+export CHARMM_X=$NWCHEM_TOP/src/data/charmm_x/
+export PATH=$PATH:/opt/nwchem/bin/
+export PATH=$HPCX_HOME/ompi/bin:$HPCX_HOME/ucx/bin:$PATH
+export NWCHEM_BASIS_LIBRARY=/opt/nwchem/share/libraries/
+export NWCHEM_NWPW_LIBRARY=/opt/nwchem/share/libraryps/
+export LD_LIBRARY_PATH=$HPCX_HOME/ompi/lib:$HPCX_HOME/ucx/lib:$HPCX_HOME/ucx/lib/ucx:$LD_LIBRARY_PATH
+#%runscript
+#exec /bin/bash "$@"

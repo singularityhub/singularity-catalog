@@ -1,0 +1,64 @@
+Bootstrap: docker
+From: ubuntu
+
+%help
+AAA Heeeeelp! Meeee.
+
+%environment
+    VADER=badguy
+    LUKE=goodguy
+    SOLO=someguy
+    export VADER LUKE SOLO
+
+%labels
+   Maintainer Vanessasaurus
+
+##############################
+# foo
+##############################
+
+%apprun foo
+    exec echo "RUNNING FOO"
+
+%applabels foo
+   BESTAPP=FOO
+   export BESTAPP
+
+%appinstall foo
+   touch foo.exec
+
+%appenv foo
+    SOFTWARE=foo
+    export SOFTWARE
+
+%apphelp foo
+    This is the help for foo.
+
+
+##############################
+# bar
+##############################
+
+%apphelp bar
+    This is the help for bar.
+
+%applabels bar
+   BESTAPP=BAR
+   export BESTAPP
+
+%appinstall bar
+    touch bar.exec
+
+%appenv bar
+    SOFTWARE=bar
+    HOWMUCH=THISMUCH
+    export SOFTWARE HOWMUCH
+
+%runscript
+exec echo "Try running with --app dog/cat"
+
+%apprun dog
+exec echo Hello "$@", this is Dog
+
+%apprun cat
+exec echo Meow "$@", this is Cat
