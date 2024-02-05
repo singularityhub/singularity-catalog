@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: alpine:3.19
+
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    apk update
+    apk add unzip
+
+    apk add ca-certificates
+    update-ca-certificates
+    apk add --update --no-cache ncurses --force-non-repository
+
+    apk add --no-cache wget g++ make zlib-dev bzip2 bzip2-dev patch bash
+
+    # get archive in the build/ directory
+    export VERSION=0.19.8
+
+
+    wget https://github.com/chhylp123/hifiasm/archive/refs/tags/${VERSION}.tar.gz
+    tar xvfz ${VERSION}.tar.gz
+    cd /hifiasm-${VERSION} 
+    make
+    cp hifiasm /usr/local/bin
+
+    rm -rf /hifiasm-${VERSION}
+    apk del make  g++
+
+
+%environment
+    export LANG=C.UTF-8
+
+%runscript
+    exec /usr/local/bin/hifiasm "$@"
+

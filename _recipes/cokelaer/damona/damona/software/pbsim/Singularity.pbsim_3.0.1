@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: alpine:3.17
+
+
+%post
+
+  apk update && apk upgrade && apk add make bzip2 g++ wget cmake bash python3 autoconf automake
+
+
+  wget https://github.com/yukiteruono/pbsim3/archive/refs/tags/v3.0.1.tar.gz
+  tar xvfz v3.0.1.tar.gz
+
+
+  cd pbsim3-3.0.1
+  ./configure
+  make
+  make check
+  make install
+
+  cd .. && rm -rf pbsim3-3.0.1
+
+  apk del wget autoconf automake cmake g++ make
+  rm -rf /var/cache/apk/*
+
+
+%environment
+  export LC_ALL=C.UTF-8
+
+%runscript
+    exec /usr/local/bin/pbsim "$@"
