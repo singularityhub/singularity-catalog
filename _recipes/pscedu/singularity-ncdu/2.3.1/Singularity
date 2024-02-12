@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: debian:latest
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-ncdu
+    COPYRIGHT Copyright © 2021-2023 Pittsburgh Supercomputing Center. All Rights Reserved.
+    VERSION 2.3.1
+
+%post
+    apt update
+    apt install -y wget
+    wget -nc https://dev.yorhel.nl/download/ncdu-2.3-linux-x86.tar.gz
+    tar -xvf ncdu-2.3-linux-x86.tar.gz
+    rm -f ncdu-2.3-linux-x86.tar.gz
+    mv ncdu /usr/local/bin
+    apt remove -y wget
+    apt -y autoremove
+
+%runscript
+    ncdu "$@"
