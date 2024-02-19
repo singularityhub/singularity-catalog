@@ -1,0 +1,64 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+    
+    AUTHOR James Santangelo
+    EMAIL james.santangelo37@gmail.com
+    JAVA_VERSION 11
+    PYTHON_VERSION 3
+    PERL_VERSION 5
+    INTERPOSCAN_VERSION 5.61-93.0
+
+%environment
+
+    export PATH="/opt/bin:$PATH"
+
+%post
+    
+    apt-get update && \
+    apt-get -y --no-install-recommends install \
+        build-essential \
+        wget \
+        git \
+        curl \
+        ca-certificates \
+        locales
+    
+    # Configure default locale
+    # Taken from https://github.com/nickjer/singularity-r/blob/master/Singularity.3.6.2
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+    # ===========================
+    # Install dependencies 
+    # ===========================
+
+    export DEBIAN_FRONTEND="noninteractive"
+    apt-get update &&
+    apt-get -y install \
+        openjdk-11-jre-headless \
+        libdw1 \
+        libdw-dev \
+        libgomp1 \
+        software-properties-common
+
+    add-apt-repository ppa:deadsnakes/ppa
+
+    apt-get update &&
+    apt-get -y install python3.8
+
+    # ============================
+    # Install InterProScan
+    # ============================
+
+    cd /opt && mkdir bin
+    wget https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.61-93.0/alt/interproscan-core-5.61-93.0.tar.gz
+    wget https://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/5.61-93.0/alt/interproscan-core-5.61-93.0.tar.gz.md5 
+    md5sum -c interproscan-core-5.61-93.0.tar.gz.md5 && 
+    tar -pxvzf interproscan-core-5.61-93.0.tar.gz
+
+    ln -sf /opt/interproscan-5.61-93.0/interproscan.sh /opt/bin/interproscan.sh

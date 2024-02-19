@@ -1,0 +1,80 @@
+Bootstrap: docker
+From: ubuntu:bionic
+MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+
+%post
+    # ~~~~~~ General setup and folder creation ~~~~~~ #
+    export LC_ALL=C
+    export LC_CTYPE=C
+    export LC_COLLATE=C
+    export LC_TIME=C
+    export LC_MESSAGES=C
+    export LC_MONETARY=C
+    export LC_PAPER=C
+    export LC_MEASUREMENT=C
+
+    # ~~~~~~ Install packages ~~~~~~ #
+    apt-get update
+    apt-get install -y software-properties-common
+    add-apt-repository universe
+    add-apt-repository multiverse
+    apt-get install -y wget bzip2 build-essential \
+      make gcc g++ gfortran libxml2-dev libcairo2-dev unzip libcpan-meta-perl \
+      libgd-dev libkrb5-3 python3 python3-pip git
+
+    # ~~~~~ MINICONDA ~~~~~ #
+    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /conda && \
+    rm -f Miniconda3-latest-Linux-x86_64.sh
+    export PATH="/conda/bin:${PATH}"
+	  conda config --add channels defaults
+    conda config --add channels conda-forge
+    conda config --add channels bioconda
+
+    # ~~~~~ Mamba ~~~~~ #
+    conda install -c conda-forge mamba=0.5.3
+
+    # ~~~~~ R 3.6.2 ~~~~~ #
+    mamba install -y -c conda-forge icu=67.1
+    mamba install -y -c conda-forge r-base=4.0.3
+
+    #~~~~~ Snakemake ~~~~~ #
+    mamba install -y -c bioconda -c conda-forge snakemake=5.3.0
+
+    #~~~~~ docopt ~~~~~ #
+    mamba install -y -c anaconda docopt=0.6.2
+
+    #~~~~~ pandas ~~~~~ #
+    mamba install -y -c conda-forge pandas=1.0.1
+
+    #~~~~~ installing Tidyverse ~~~~~ #
+    mamba install -y -c conda-forge r-tidyverse=1.2.1
+
+    #~~~~~ installing rms ~~~~~ #
+    mamba install -y -c conda-forge r-rms
+
+    #~~~~~ installing R packages ~~~~~ #
+  	R --slave -e 'install.packages(c("latticeExtra", "Hmisc", "scales", "WriteXLS", "BiocManager"), dep=TRUE, repos="https://cloud.r-project.org/")'
+  	R --slave -e 'BiocManager::install("DESeq2")' 
+  	
+  	#~~~~~ SalmonTE ~~~~~ #
+  	cd /opt
+    #git clone https://github.com/hyunhwaj/SalmonTE
+    git clone -b ftabaro/no-lock https://github.com/ftabaro/SalmonTE.git
+    export PATH=$PATH:/opt/SalmonTE
+    	
+
+%environment
+
+    export PATH="${PATH}:/conda/bin"
+    export PATH="${PATH}:/opt/SalmonTE"
+
+	  export LC_ALL=C
+    export LC_CTYPE=C 
+    export LC_COLLATE=C 
+    export LC_TIME=C
+    export LC_MESSAGES=C
+    export LC_MONETARY=C
+    export LC_PAPER=C 
+    export LC_MEASUREMENT=C
+    

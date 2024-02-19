@@ -1,0 +1,106 @@
+Bootstrap: docker
+From: ubuntu:jammy
+
+%labels
+    
+    AUTHOR James Santangelo
+    EMAIL james.santangelo37@gmail.com
+    R_VERSION 4.0.3
+    ORTHOFINDER_VERSION 2.5.5 
+    MCSCANX_VERSION 1.0.0
+    DIAMOND_VERSION 2.0.13
+    R_VERSION 4.3.0
+
+%environment
+
+    export PATH="/opt/bin:$PATH"
+
+%post
+    
+    apt-get update && \
+    apt-get -y --no-install-recommends install \
+        gnupg2 \
+        git \
+        build-essential \
+        wget \
+        git \
+        curl \
+        locales
+    
+    # Configure default locale
+    # Taken from https://github.com/nickjer/singularity-r/blob/master/Singularity.3.6.2
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+    # ===========================
+    # Install R and packages
+    # ===========================
+
+    export DEBIAN_FRONTEND="noninteractive"
+    apt-get update &&
+    apt-get install -y --no-install-recommends \
+        software-properties-common \
+        dirmngr
+
+    wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+    add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
+
+    apt-get install -y --no-install-recommends \
+        libcurl4-openssl-dev \
+        libfontconfig1-dev \
+        libxml2-dev \
+        libssl-dev \
+        libharfbuzz-dev \
+        libfribidi-dev \
+        libfreetype6-dev \
+        libpng-dev \
+        libtiff5-dev \
+        libjpeg-dev \
+        r-cran-littler \
+        r-base \
+        r-base-dev \
+        r-recommended 
+
+    # Install R packages
+    R -e "install.packages(c('BiocManager', 'devtools'))"
+
+    # Use Bioconductor to install Biostrings and rtracklayer 
+    R -e "BiocManager::install(c('Biostrings', 'rtracklayer'))" 
+
+    # Install Genespace
+    R -e "devtools::install_github('jtlovell/GENESPACE@v1.2.3')"
+
+    # ===========================
+    # Install Orthofinder 
+    # ===========================
+
+    apt-get update &&
+    apt-get -y install \
+        glibc-source
+    cd /opt && mkdir bin
+    wget --no-check-certificate \
+        https://github.com/davidemms/OrthoFinder/releases/download/2.5.5/OrthoFinder.tar.gz
+    tar -xvzf OrthoFinder.tar.gz
+    ln -s /opt/OrthoFinder/orthofinder /opt/bin/orthofinder
+    ln -s /opt/OrthoFinder/bin/* /opt/bin/
+
+    # ===========================
+    # Install MCScanX
+    # ===========================
+
+    apt-get update &&
+    apt-get -y install \
+        zip \
+        unzip \
+        default-jdk
+    wget --no-check-certificate \
+        https://github.com/wyp1125/MCScanX/archive/refs/heads/master.zip
+    unzip master.zip
+    cd MCScanX-master
+    make
+    ln -s /opt/MCScanX-master/MCScanX /opt/bin/MCScanX
+    ln -s /opt/MCScanX-master/Duplicate_gene_classifier /opt/bin/Duplicate_gene_classifier
+    ln -s /opt/MCScanX-master/MCScanX_h /opt/bin/MCScanX_h

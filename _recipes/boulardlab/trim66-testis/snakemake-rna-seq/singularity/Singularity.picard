@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: alpine:3.12
+
+%labels
+MAINTAINER francesco.tabaro@embl.it
+VERSION 1.0
+
+%post
+  apk update && apk add bash openjdk8
+
+%apprun picard
+   exec picard
+
+%appinstall picard
+   wget https://github.com/broadinstitute/picard/releases/download/2.23.8/picard.jar
+   mv picard.jar /usr/local/bin
+   echo "#"'!'"/bin/bash" > /usr/local/bin/picard
+   echo "java -jar /usr/local/bin/picard.jar \"\$@\"" >> /usr/local/bin/picard
+   chmod +x /usr/local/bin/picard
+
+%apphelp picard
+   Picard 2.23.8 - http://broadinstitute.github.io/picard/

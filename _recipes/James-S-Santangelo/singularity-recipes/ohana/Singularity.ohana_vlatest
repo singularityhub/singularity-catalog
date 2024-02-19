@@ -1,0 +1,58 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%labels
+    
+    AUTHOR James Santangelo
+    EMAIL james.santangelo37@gmail.com
+    OHANA_VERSION Latest
+
+%environment
+
+    export PATH="/opt/bin:$PATH"
+
+%post
+    
+    apt-get update && \
+    apt-get -y --no-install-recommends install \
+        build-essential \
+        git \
+        curl \
+        ca-certificates \
+        locales
+    
+    # Configure default locale
+    # Taken from https://github.com/nickjer/singularity-r/blob/master/Singularity.3.6.2
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+    # ===========================
+    # Install selscan 
+    # ===========================
+
+    export DEBIAN_FRONTEND="noninteractive"
+    apt-get update && \
+    apt-get -y --no-install-recommends install \
+        libblas-dev \
+        liblapacke-dev \
+        python-dev \
+        python-pip \
+        python-tk
+
+    pip install setuptools wheel
+    pip install matplotlib numpy 
+
+    cd /opt &&
+    mkdir bin &&
+
+    git clone https://github.com/jade-cheng/ohana
+    cd ohana
+    make
+
+    chmod +x /opt/ohana/tools/*
+
+    ln -s /opt/ohana/bin/* /opt/bin/
+    ln -s /opt/ohana/tools/* /opt/bin/

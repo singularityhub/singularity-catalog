@@ -6,7 +6,7 @@ From: ubuntu:bionic
     AUTHOR James Santangelo
     EMAIL james.santangelo37@gmail.com
     PYTHON_VERSION 3.6.9
-    NGSLD_VERSION 0.99
+    PCANGSD_VERSION Latest
 
 %post
     
@@ -43,4 +43,4 @@ From: ubuntu:bionic
     cd pcangsd/ &&
     pip3 install -r requirements.txt &&
     python3 setup.py build_ext --inplace
-
+    pip3 install -e .

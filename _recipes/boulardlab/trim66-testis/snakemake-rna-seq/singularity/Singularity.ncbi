@@ -1,0 +1,47 @@
+Bootstrap: docker
+From: ubuntu:bionic
+
+%post
+  export LC_ALL=C
+  export LC_CTYPE=C
+  export LC_COLLATE=C
+  export LC_TIME=C
+  export LC_MESSAGES=C
+  export LC_MONETARY=C
+  export LC_PAPER=C
+  export LC_MEASUREMENT=C
+
+  apt-get update && apt-get install -y wget bzip2 build-essential \
+    make gcc g++ gfortran libxml2-dev libcairo2-dev unzip libcpan-meta-perl \
+    libgd-dev libkrb5-3 gzip libxtst6 libx11-dev libxext-dev libxfixes-dev \
+    libxi6 libxi-dev libxmu-dev libio-socket-ssl-perl libhtml-parser-perl \
+    libwww-perl libxml-simple-perl parallel
+
+  # Install Miniconda
+  wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /conda && \
+    rm -f Miniconda3-latest-Linux-x86_64.sh
+    export PATH="/conda/bin:${PATH}"
+
+  # Install EDirect utils
+  conda install -c bioconda entrez-direct
+
+  # Install SRA-tools
+  conda install -c bioconda sra-tools
+
+%environment
+    export PATH="${PATH}:/conda/bin"
+    export PATH="${PATH}:/opt"
+	  export LC_ALL=C
+    export LC_CTYPE=C
+    export LC_COLLATE=C
+    export LC_TIME=C
+    export LC_MESSAGES=C
+    export LC_MONETARY=C
+    export LC_PAPER=C
+    export LC_MEASUREMENT=C
+
+%labels
+  Author Francesco Tabaro
+  Version v0.0.1
+

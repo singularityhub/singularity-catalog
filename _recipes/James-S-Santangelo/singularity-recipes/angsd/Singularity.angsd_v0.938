@@ -1,0 +1,58 @@
+Bootstrap: docker
+From: ubuntu:focal
+
+%labels
+    
+    AUTHOR James Santangelo
+    EMAIL james.santangelo37@gmail.com
+    HTSLIB_VERSION 1.16
+    ANGSD_VERSION 0.938
+
+%environment
+
+    export PATH="/opt/bin:$PATH"
+
+%post
+    
+    apt-get update && \
+    apt-get -y --no-install-recommends install \
+        build-essential \
+        wget \
+        git \
+        curl \
+        ca-certificates \
+        locales
+    
+    # Configure default locale
+    # Taken from https://github.com/nickjer/singularity-r/blob/master/Singularity.3.6.2
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+    # ===========================
+    # Install angsd 
+    # ===========================
+    
+    apt-get update &&
+    apt-get -y install \
+        zlib1g \
+        zlib1g-dev \
+        autoconf \
+        libbz2-dev \
+        liblzma-dev \
+        libcurl4-gnutls-dev \
+        libcrypto++-dev
+
+    cd /opt && mkdir bin
+    wget https://github.com/ANGSD/angsd/releases/download/0.938/angsd0.938.tar.gz
+    tar -xvf angsd0.938.tar.gz
+    cd htslib
+    make -j4
+    cd ..
+    cd angsd
+    make HTSSRC=../htslib -j4
+
+    ln -sf /opt/angsd/angsd /opt/bin/angsd
+    ln -sf /opt/angsd/misc/* /opt/bin/

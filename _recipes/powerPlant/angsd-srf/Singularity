@@ -2,8 +2,8 @@ Bootstrap: docker
 From: ubuntu:focal
 
 %labels
-Maintainer eric.burgueno@plantandfood.co.nz
-Version 0.937
+Maintainer ben.warren@plantandfood.co.nz
+Version 0.940
 
 %post
   ## Download build prerequisites
@@ -11,9 +11,9 @@ Version 0.937
   apt-get -y install g++ gcc libbz2-dev libcurl4 libcurl4-openssl-dev libhts3 libhts-dev libssl-dev libzip5 libzip-dev make wget
 
   cd /opt
-  wget https://github.com/ANGSD/angsd/archive/0.937.tar.gz
-  tar -xzf 0.937.tar.gz
-  cd angsd-0.937
+  wget https://github.com/ANGSD/angsd/archive/0.940.tar.gz
+  tar -xzf 0.940.tar.gz
+  cd angsd-0.940
   export HTSSRC=systemwide
   make
   make install

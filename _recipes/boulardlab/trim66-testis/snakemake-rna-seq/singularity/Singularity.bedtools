@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: alpine:3.12
+Stage: compile
+
+%post
+    apk update
+    apk add build-base bash zlib-dev bzip2-dev xz-dev python3
+
+    ln -s /usr/bin/python3 /usr/bin/python
+
+    mkdir -p /install_src /install_dir/bin
+    cd /install_src
+    wget https://github.com/arq5x/bedtools2/archive/refs/tags/v2.30.0.tar.gz
+    tar xf v2.30.0.tar.gz
+    cd bedtools2-2.30.0
+    make -j 16
+    find bin/ -type f -exec cp {} /install_dir/bin \;
+
+Bootstrap: docker
+From: alpine:3.12
+Stage: deploy
+
+%post
+    apk update
+    apk add bash python3 libgcc libstdc++
+    ln -s /usr/bin/python3 /usr/bin/python
+
+%files from compile
+    /install_dir/bin /usr/
+
+%apprun bedtools
+    exec bedtools
+
+%apphelp bedtools
+    BEDTools v2.30.0
+
+%labels
+    Author "Francesco Tabaro"
+    Version 1.0

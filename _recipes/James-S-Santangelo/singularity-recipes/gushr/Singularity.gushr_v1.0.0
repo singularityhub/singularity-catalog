@@ -1,0 +1,64 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+    
+    AUTHOR James Santangelo
+    EMAIL james.santangelo37@gmail.com
+    JAVA_VERSION 1.8
+    SAMTOOLS_VERSION 1.10
+    GUSHR_VERSION 1.0.0
+
+%environment
+
+    export PATH="/opt/bin:$PATH"
+
+%post
+    
+    apt-get update && \
+    apt-get -y --no-install-recommends install \
+        build-essential \
+        wget \
+        git \
+        curl \
+        ca-certificates \
+        locales
+    
+    # Configure default locale
+    # Taken from https://github.com/nickjer/singularity-r/blob/master/Singularity.3.6.2
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen en_US.utf8
+    /usr/sbin/update-locale LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+    # ===========================
+    # Install JAVA and Samtools
+    # ===========================
+
+    export DEBIAN_FRONTEND="noninteractive"
+    apt-get update &&
+    apt-get -y install \
+        openjdk-8-jdk \
+        samtools
+
+    # ===========================
+    # Get AUGUSTUS gtf2gff.pl
+    # ===========================
+
+    cd /opt && mkdir bin
+    wget https://raw.githubusercontent.com/Gaius-Augustus/Augustus/master/scripts/gtf2gff.pl -P /opt/bin/
+
+    # ===========================
+    # Install GUSHR
+    # ===========================
+    
+    git clone https://github.com/Gaius-Augustus/GUSHR.git
+
+    chmod ugo+x GUSHR/gushr.py
+    chmod ugo+x GUSHR/GeMoMa-1.6.2.jar
+    chmod ugo+x /opt/bin/gtf2gff.pl
+
+    ln -s /opt/GUSHR/gushr.py /opt/bin/gushr.py
+    ln -s /opt/GUSHR/GeMoMa-1.6.2.jar /opt/bin/GeMoMa-1.6.2.jar
+

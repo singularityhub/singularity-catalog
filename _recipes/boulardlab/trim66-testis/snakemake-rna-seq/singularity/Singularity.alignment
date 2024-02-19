@@ -1,0 +1,66 @@
+Bootstrap: docker
+From: alpine:3.12
+
+%post
+  export LC_ALL=C
+  export LC_CTYPE=C
+  export LC_COLLATE=C
+  export LC_TIME=C
+  export LC_MESSAGES=C
+  export LC_MONETARY=C
+  export LC_PAPER=C
+  export LC_MEASUREMENT=C
+
+  apk update && apk add wget bash pigz alpine-sdk zlib-dev
+
+%environment
+  export LC_ALL=C
+  export LC_CTYPE=C
+  export LC_COLLATE=C
+  export LC_TIME=C
+  export LC_MESSAGES=C
+  export LC_MONETARY=C
+  export LC_PAPER=C
+  export LC_MEASUREMENT=C
+
+%labels
+  Author Francesco Tabaro
+  Version v0.0.1
+
+
+##################
+## STAR 2.7.6a
+##################
+
+%appinstall STAR
+  wget https://github.com/alexdobin/STAR/archive/2.7.6a.zip && \
+  unzip 2.7.6a.zip && \
+  cp STAR-2.7.6a/bin/Linux_x86_64_static/STAR /usr/local/bin/ &&
+  cp STAR-2.7.6a/bin/Linux_x86_64_static/STARlong /usr/local/bin/ &&
+  rm -r 2.7.6a.zip STAR-2.7.6a
+
+%apprun STAR
+  exec STAR
+
+%apphelp STAR
+  STAR v2.7.6a - https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
+
+
+##################
+## Subread
+##################
+
+%appinstall featureCounts
+  wget -P /opt/ "https://downloads.sourceforge.net/project/subread/subread-2.0.1/subread-2.0.1-source.tar.gz" && \
+  tar xf /opt/subread-2.0.1-source.tar.gz -C /opt && \
+  cd /opt/subread-2.0.1-source/src && \
+  make -f Makefile.Linux && \
+  for p in $(find $(realpath ../bin) -type f); do O=$(basename $p); cp $p /usr/local/bin/$O; done && \
+  cd / && rm -rf /opt/subread-2.0.1.source
+
+%apprun featureCounts
+  exec featureCounts
+
+%apphelp featureCounts
+  Subread v2.0.1 - http://subread.sourceforge.net/
+

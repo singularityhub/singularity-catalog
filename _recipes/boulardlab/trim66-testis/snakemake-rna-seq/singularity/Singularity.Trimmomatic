@@ -1,0 +1,35 @@
+BootStrap: docker
+From: alpine:3.12
+Stage: compile
+
+%post
+    apk update
+    apk add wget
+
+%appinstall Trimmomatic
+    mkdir /install_src
+    wget https://github.com/usadellab/Trimmomatic/files/5854859/Trimmomatic-0.39.zip
+    unzip Trimmomatic-0.39.zip -d /install_src
+
+
+Bootstrap: docker
+From: alpine:3.12
+Stage: release
+
+%post
+    apk update
+    apk add openjdk8
+
+%files from compile
+    /install_src/Trimmomatic-0.39 /opt/
+
+%environment
+    export TRIMMOMATICVER=0.39
+    export TRIMMOMATICROOT=/opt/Trimmomatic-$TRIMMOMATICVER
+    export ADAPTERS=$TRIMMOMATICROOT/adapters
+
+%apprun Trimmomatic
+    echo Adapters path: $ADAPTERS
+    echo Available adapters: $(ls $ADAPTERS | tr "\n" " ")
+    exec java -jar $TRIMMOMATICROOT/trimmomatic-$TRIMMOMATICVER.jar
+
