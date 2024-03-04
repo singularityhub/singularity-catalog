@@ -1,5 +1,5 @@
 bases:
-- count: 1950
+- count: 1952
   name: ubuntu
 - count: 432
   name: nvidia/cuda
@@ -49,7 +49,7 @@ bases:
   name: vitchyr/railrl_v12_cuda10-1_mj2-0-2-2_torch1-1-0_gym0-12-5_py3-6-5
 - count: 31
   name: godloved/secure/ubuntu-bionic
-- count: 30
+- count: 31
   name: bids/validator
 - count: 29
   name: nvcr.io/nvidia/tensorflow
@@ -84,13 +84,13 @@ bases:
 - count: 18
   name: rocker/r-ver
 - count: 16
+  name: nipy/heudiconv
+- count: 16
   name: rocker/tidyverse
 - count: 15
   name: ResearchIT/spack-singularity
 - count: 15
   name: poldracklab/mriqc
-- count: 15
-  name: nipy/heudiconv
 - count: 15
   name: khanlab/neuroglia-dwi
 - count: 15
@@ -250,6 +250,8 @@ bases:
 - count: 6
   name: ml4ai/UA-hpc-containers
 - count: 6
+  name: ghcr.io/mkandes/mofed
+- count: 6
   name: centos-7.7.1908.sif
 - count: 6
   name: anibali/pytorch
@@ -352,9 +354,9 @@ bases:
 - count: 4
   name: willgpaik/qt5_aci
 - count: 4
-  name: ghcr.io/mkandes/mofed
-- count: 4
   name: centos-7.7.1908-cuda-11.0.sif
+- count: 4
+  name: ghcr.io/mkandes/openmpi
 - count: 4
   name: rocker/r-ubuntu
 - count: 4
@@ -389,6 +391,8 @@ bases:
   name: sebastientourbier/mialsuperresolutiontoolkit
 - count: 4
   name: bids/pymvpa
+- count: 4
+  name: pennlinc/xcp_d
 - count: 4
   name: nvcr.io/hpc/namd
 - count: 4
@@ -481,8 +485,6 @@ bases:
   name: arcsUVA/anaconda
 - count: 3
   name: uvarc/default/anaconda
-- count: 3
-  name: pennlinc/xcp_d
 - count: 3
   name: poldracklab/fitlins
 - count: 3
@@ -1988,7 +1990,7 @@ bases:
 - count: 1
   name: OSKAR-2.7.6-base.sif
 bootstraps:
-- count: 6335
+- count: 6340
   name: docker
 - count: 473
   name: shub
@@ -1996,7 +1998,7 @@ bootstraps:
   name: debootstrap
 - count: 370
   name: library
-- count: 213
+- count: 219
   name: oras
 - count: 176
   name: localimage
@@ -2066,6 +2068,8 @@ orgs:
 - count: 5
   name: netreconlab
 - count: 5
+  name: ghcr.io/mkandes
+- count: 5
   name: twongjirad
 - count: 5
   name: jupyter
@@ -2081,8 +2085,6 @@ orgs:
   name: willgpaik
 - count: 4
   name: centos
-- count: 4
-  name: ghcr.io/mkandes
 - count: 4
   name: conda
 - count: 4
@@ -2927,7 +2929,7 @@ orgs:
   name: bilbydev
 tags:
   latest: 687
-  other: 5905
+  other: 5916
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3222,6 +3224,7 @@ versions:
     v1.13.0: 1
     v1.13.1: 1
     v1.14.0: 1
+    v1.14.1: 1
     v1.4.2: 1
     v1.5.2: 1
     v1.5.4: 1
@@ -3704,8 +3707,8 @@ versions:
   ghcr.io/mkandes/cuda:
     12.1-ubuntu-22.04-x86_64: 1
   ghcr.io/mkandes/mofed:
-    5.8-cuda-12.1-ubuntu-22.04-x86_64: 2
-    5.8-ubuntu-22.04-x86_64: 2
+    5.8-cuda-12.1-ubuntu-22.04-x86_64: 3
+    5.8-ubuntu-22.04-x86_64: 3
   ghcr.io/mkandes/naked-singularity:
     anaconda3-py39-2021.11-ubuntu-20.04: 2
     ubuntu-18.04: 22
@@ -3758,6 +3761,10 @@ versions:
     ubuntu-22.04-mlnx-ofed-5.8-2.0.3.0: 2
     ubuntu-22.04-mlnx-ofed-5.8-2.0.3.0-openmpi-4.1.3: 1
     ubuntu-22.04-openmpi-4.1.3: 1
+  ghcr.io/mkandes/openmpi:
+    4.1-mofed-5.8-cuda-12.1-ubuntu-22.04-x86_64: 1
+    4.1-mofed-5.8-ubuntu-22.04-x86_64: 1
+    4.1.6-mofed-5.8-2.0.3.0-cuda-12.1-ubuntu-22.04-x86_64: 2
   ghcr.io/mkandes/ubuntu:
     22.04-cuda-12.1-mlnx-ofed-5.8-2.0.3.0-mvapich-2.3.7-x86_64-2024-01-31: 1
     22.04-cuda-12.1-mlnx-ofed-5.8-2.0.3.0-openmpi-4.1.5a1-x86_64-2024-01-29: 2
@@ -3768,8 +3775,8 @@ versions:
     22.04-mlnx-ofed-5.8-2.0.3.0-mvapich-2.3.7-x86_64-2024-01-29: 3
     22.04-mlnx-ofed-5.8-2.0.3.0-openmpi-4.1.5a1-x86_64-2024-01-27: 3
     22.04-mlnx-ofed-5.8-2.0.3.0-x86_64-2024-01-27: 1
-    22.04-x86_64: 2
-    22.04-x86_64-2024-01-27: 4
+    22.04-x86_64: 3
+    22.04-x86_64-2024-01-27: 3
   ghcr.io/napari/napari:
     main: 1
   ghcr.io/plasmafair/epoch:
@@ -4399,6 +4406,7 @@ versions:
     0.13.1: 1
     1.0.0: 1
     1.0.1: 1
+    1.0.2: 1
     latest: 3
     v0.11.1: 1
     v0.11.2: 1
@@ -4773,6 +4781,7 @@ versions:
   pennlinc/xcp_d:
     0.6.0: 1
     0.6.1: 1
+    0.6.2: 1
     '04.0': 1
   percona/pmm-server:
     latest: 1
@@ -5544,7 +5553,7 @@ versions:
     '20.10': 3
     '21.04': 3
     '21.10': 3
-    '22.04': 49
+    '22.04': 51
     '22.10': 6
     '23.10': 1
     UBUNTU_VERSION: 1
