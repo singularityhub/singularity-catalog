@@ -1,0 +1,81 @@
+Bootstrap: docker
+From: {{NV_BASE_IMAGE}}
+
+%arguments
+	NV_BASE_IMAGE=nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04
+	MICROMAMBA_VERSION=1.5.6
+	PYTHON_VERSION=3.11
+	LLAVA_URL=https://codeload.github.com/haotian-liu/LLaVA/tar.gz/refs/heads/main
+	CUDA_ARCHITECTURES=sm_86 sm_89
+
+%labels
+	VERSION 0.0.4
+
+%setup
+	[ -n "${APPTAINER_ROOTFS:-}" ] && ../.build-scripts/write-apptainer-labels.sh >"${APPTAINER_ROOTFS}/.build_labels"
+
+%files
+	../llava-run.py /opt/local/bin/llava-run
+	../runscript.help /.singularity.d/runscript.help
+	../hyak-llava-web /opt/local/bin/hyak-llava-web
+	requirements.txt /opt/setup/requirements.txt
+
+%post
+	set -ex
+	export DEBIAN_FRONTEND=noninteractive
+	apt-get update
+	apt-get install -y --no-install-recommends \
+		bzip2 \
+		ca-certificates \
+		curl \
+		git &&
+		rm -rf /var/lib/apt /var/lib/dpkg /var/lib/cache /var/lib/log
+	
+	export LANG=C.UTF-8 LC_ALL=C.UTF-8
+	export MAMBA_ROOT_PREFIX="/opt/conda"
+	
+	# Install micromamba:
+	curl -L "https://micro.mamba.pm/api/micromamba/linux-64/{{MICROMAMBA_VERSION}}" | tar -xj -C "/bin" --strip-components=1 "bin/micromamba"
+	mkdir -p "$MAMBA_ROOT_PREFIX/conda-meta"
+	chmod -R a+rwx "$MAMBA_ROOT_PREFIX"
+	
+	# Set up the micromamba base environment, using requests to download LLaVA:
+	micromamba install -y -n base -c conda-forge python={{ PYTHON_VERSION }} pip requests
+	micromamba run -n base python -m pip install --upgrade pip
+	
+	# Download and install LLaVA:
+	mkdir -p /opt/setup/llava && cd /opt/setup/llava
+	micromamba run -n base python -c \
+		'import requests;open("llava.tar.gz", "wb").write(requests.get("{{ LLAVA_URL }}",allow_redirects=True).content)' &&
+		tar -xzf llava.tar.gz --strip-components=1
+	
+	# Update pyproject.toml to include the package data in examples (web server breaks without):
+	printf '[tool.setuptools.package-data]\nllava = ["serve/examples/*.jpg"]' >>pyproject.toml
+	
+	# Install LLaVA dependencies:
+	micromamba run -n base python -m pip install --no-cache-dir -r /opt/setup/requirements.txt
+	
+	# Install LLaVA:
+	micromamba run -n base python -m pip install --no-cache-dir --config-settings="--install-data=$PWD/llava" .
+	
+	# Install training dependencies:
+	micromamba run -e TORCH_CUDA_ARCH_LIST="{{ CUDA_ARCHITECTURES }}" -n base python -m pip install ".[train]"
+	micromamba run -e TORCH_CUDA_ARCH_LIST="{{ CUDA_ARCHITECTURES }}" -n base python -m pip install flash-attn --no-build-isolation
+	
+	# Clean up:
+	micromamba run -n base python -m pip cache purge
+	micromamba clean --all --yes
+	rm -rf /opt/setup
+
+%environment
+	export MAMBA_ROOT_PREFIX="/opt/conda"
+	export PATH="/opt/local/bin:${PATH}"
+	export LC_ALL=C.UTF-8 LANG=C.UTF-8
+
+%runscript
+	# Run the provided command with the micromamba base environment activated:
+	eval "$(micromamba shell hook --shell posix)"
+	micromamba activate "${ENV_NAME:-base}"
+	echo "Using HUGGINGFACE_HUB_CACHE=\"${HUGGINGFACE_HUB_CACHE:-}\"" >&2
+	exec "$@"
+

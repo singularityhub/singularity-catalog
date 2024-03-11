@@ -1,0 +1,54 @@
+Bootstrap: docker
+From: mambaorg/micromamba:{{ MICROMAMBA_TAG }}
+
+%arguments
+	MICROMAMBA_TAG=jammy-cuda-12.3.1
+	PYTHON_VERSION=3.11
+	LLAVA_URL=https://codeload.github.com/haotian-liu/LLaVA/tar.gz/refs/heads/main
+
+%labels
+	VERSION 0.0.4
+
+%setup
+	[ -n "${APPTAINER_ROOTFS:-}" ] && ../.build-scripts/write-apptainer-labels.sh >"${APPTAINER_ROOTFS}/.build_labels"
+
+%files
+	../llava-run.py /opt/local/bin/llava-run
+	../runscript.help /.singularity.d/runscript.help
+	../hyak-llava-web /opt/local/bin/hyak-llava-web
+
+%post
+	set -ex
+	
+	# Set up the micromamba base environment, using requests to download LLaVA:
+	micromamba install -y -n base -c conda-forge python={{ PYTHON_VERSION }} pip requests
+	micromamba run -n base python -m pip install --upgrade pip
+	
+	# Download and install LLaVA:
+	mkdir -p /opt/setup/llava && cd /opt/setup/llava
+	micromamba run -n base python -c \
+		'import requests;open("llava.tar.gz", "wb").write(requests.get("{{ LLAVA_URL }}",allow_redirects=True).content)' &&
+		tar -xzf llava.tar.gz --strip-components=1
+	
+	# Update pyproject.toml to include the package data in examples (web server breaks without):
+	printf '[tool.setuptools.package-data]\nllava = ["serve/examples/*.jpg"]' >>pyproject.toml
+	
+	# Install LLaVA and dependencies:
+	micromamba run -n base python -m pip install --no-cache-dir --config-settings="--install-data=$PWD/llava" .
+	
+	# Clean up:
+	micromamba run -n base python -m pip cache purge
+	micromamba clean --all --yes
+	rm -rf /opt/setup
+
+%environment
+	export MAMBA_DOCKERFILE_ACTIVATE=1
+	export PATH="/opt/local/bin:${PATH}"
+
+%runscript
+	# Run the provided command with the micromamba base environment activated:
+	eval "$(micromamba shell hook --shell posix)"
+	micromamba activate "${ENV_NAME:-base}"
+	echo "Using HUGGINGFACE_HUB_CACHE=\"${HUGGINGFACE_HUB_CACHE:-}\"" >&2
+	exec "$@"
+

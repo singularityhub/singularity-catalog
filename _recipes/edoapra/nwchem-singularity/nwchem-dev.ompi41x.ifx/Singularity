@@ -126,9 +126,7 @@ $FC -v \
 && export USE_OPENMP=1 \
 && export USE_TBLITE=1 \
 && if [ "$FC" = "gfortran" ]; then 
-   export BUILD_PLUMED=1
-   export PYTHON_BIN=python3
-   export BUILD_ELPA=1
+   export BUILD_PLUMED=1;    export PYTHON_BIN=python3;   export BUILD_ELPA=1
 fi	   \
 && export USE_LIBXC=1\
 && export BUILD_OPENBLAS=1\
@@ -141,8 +139,12 @@ fi	   \
 && export USE_HWOPT=n\
 && export USE_LIBXC=y\
 && export USE_NOIO=y\
+&& export IPCCSD=y \
+&& export EACCSD=y \
+&& export MRCC_METHODS=y \
 && export USE_SIMINT=y\
 && export SIMINT_MAXAM=5\
+&& export PYTHONVERSION=$(python -V| cut -d ' ' -f 2 |cut -d . -f 1-2) \
 && ls -l nwchem* || true \
 && /usr/bin/env|egrep BUILD_ \
 && echo " ==========" \

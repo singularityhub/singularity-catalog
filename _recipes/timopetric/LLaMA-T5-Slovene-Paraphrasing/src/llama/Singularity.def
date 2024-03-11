@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: pytorch/pytorch:2.0.0-cuda11.7-cudnn8-devel
+Stage: build
+
+%post
+
+apt update
+apt install -y git
+rm -rf /var/lib/apt/lists/*
+
+# transformers are installed from main so that latest 4.29 can be used (needed for llama)
+
+pip install --no-cache-dir sentencepiece
+pip install --no-cache-dir git+https://github.com/huggingface/transformers.git
+pip install --no-cache-dir accelerate
+pip install --no-cache-dir protobuf==3.20.0
+pip install --no-cache-dir fschat==0.2.3
+pip install --no-cache-dir deepspeed>=0.9.1
+pip install --no-cache-dir datasets
+pip install --no-cache-dir pandas
+
+# build with:
+# srun --pty --partition=gpu -N1 -n1 -c24 --gpus=1 --mem=24000 singularity build containers/hf.sif Singularity.def

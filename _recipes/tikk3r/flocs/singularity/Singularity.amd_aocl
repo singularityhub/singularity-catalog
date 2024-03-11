@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: fedora:36
+From: fedora:38
 
 %environment
     export INSTALLDIR=/opt/lofar
@@ -9,7 +9,7 @@ From: fedora:36
 	# General environment settings.
 	export J=`nproc`
 	export INSTALLDIR=/opt/lofar
-	export PYTHON_VERSION=3.10
+	export PYTHON_VERSION=3.11
     export OPENBLAS_NUM_THREADS=1
 
 	# Path to where the patch for python-casacore's setup is stored.
@@ -25,12 +25,13 @@ From: fedora:36
 	# Leave at latest, release versions crash for some reason.
 	export CASAREST_VERSION=latest
 	export CFITSIO_VERSION=7.3.47
-    export DPPP_VERSION=13d310c6
+    export DDFPIPELINE_VERSION=72e5285
+    export DPPP_VERSION=791b90f3
 	export DYSCO_VERSION=2e7f331
     export EVERYBEAM_VERSION=22cd113b
     export FFTW_VERSION=3.5.8
 	export HDF5_VERSION=1.12.1
-    export IDG_VERSION=f4a3a96c
+    export IDG_VERSION=011687ed
 	export LAPACK_VERSION=3.8.0
 	export LOSOTO3_VERSION=latest
     export LSMTOOL_VERSION=master
@@ -39,7 +40,7 @@ From: fedora:36
 	export PYTHON_CASACORE_VERSION=v3.5.0
     export RMEXTRACT_VERSION=f161b0a
 	export SUPERLU_VERSION=5.2.1
-	export WSCLEAN_VERSION=a5b4e037
+	export WSCLEAN_VERSION=843f87c8
 	export WCSLIB_VERSION=6.4
 	export HDF5_USE_FILE_LOCKING=FALSE
     export OMPI_ALLOW_RUN_AS_ROOT=1
@@ -69,10 +70,11 @@ From: fedora:36
         export CFLAGS="-g $CFLAGS"
         export CXXFLAGS="-g $CXXFLAGS"
     fi
-    export CPLUS_INCLUDE_PATH="/opt/OpenBLAS/include:/opt/hdf5/include:/usr/include/openmpi-x86_64:/usr/include/c++/9:$CPLUS_INCLUDE_PATH:/usr/include/python${PYTHON_VERSION}:$INSTALLDIR/casacore/include:/usr/include/boost:/usr/include/cfitsio:$INSTALLDIR/idg/include:$INSTALLDIR/EveryBeam/include:/usr/include/wcslib:/usr/include/freetype2/freetype:/usr/include/freetype2/freetype/config:$CPLUS_INCLUDE_PATH"
-    export CPATH="/opt/OpenBLAS/include:/usr/include/openmpi-x86_64/:/usr/local/cuda/include:/opt/hdf5/include:${INSTALLDIR}/casacore/include:$INSTALLDIR/idg/include:$INSTALLDIR/aoflagger/include:$INSTALLDIR/EveryBeam/include:/usr/include/wcslib:/usr/include/freetype2/freetype:/usr/include/freetype2/freetype/config:$CPATH"
-    export CMAKE_PREFIX_PATH="/opt/OpenBLAS:$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:/opt/hdf5:$INSTALLDIR/lofar:$INSTALLDIR/idg:/usr/local/cuda/lib64:/usr/lib64/openmpi:$INSTALLDIR/EveryBeam"
-    export LD_LIBRARY_PATH="$INSTALLDIR/lofarstman/lib64/:/opt/lofar/sagecal/lib:/opt/OpenBLAS/lib64:$INSTALLDIR/aoflagger/lib:$INSTALLDIR/casacore/lib:/opt/hdf5/lib:$INSTALLDIR/idg/lib:/usr/local/cuda/lib64:/usr/lib64/openmpi/lib/:$INSTALLDIR/EveryBeam/lib:$LD_LIBRARY_PATH"
+    export CPLUS_INCLUDE_PATH="/usr/include/python${PYTHON_VERSION}/:/opt/intel/oneapi/mkl/latest/include:/opt/hdf5/include:/opt/OpenBLAS/include:/usr/include/openmpi-x86_64:/usr/include/c++/9:$CPLUS_INCLUDE_PATH:/usr/include/python${PYTHON_VERSION}:$INSTALLDIR/casacore/include:/usr/include/boost:/usr/include/cfitsio:$INSTALLDIR/idg/include:$INSTALLDIR/EveryBeam/include:/usr/include/wcslib:/usr/include/freetype2/freetype:/usr/include/freetype2/freetype/config:$CPLUS_INCLUDE_PATH"
+    export CPATH="/usr/include/python{$PYTHON_VERSION}:/opt/intel/oneapi/mkl/latest/include:/opt/hdf5/include:/opt/OpenBLAS/include:/usr/include/openmpi-x86_64/:/usr/local/cuda/include:/opt/intel/mkl/include:${INSTALLDIR}/casacore/include:$INSTALLDIR/idg/include:$INSTALLDIR/aoflagger/include:$INSTALLDIR/EveryBeam/include:/usr/include/wcslib:/usr/include/freetype2/freetype:/usr/include/freetype2/freetype/config:$CPATH"
+    export CMAKE_PREFIX_PATH="/opt/hdf5:/opt/OpenBLAS:$INSTALLDIR/aoflagger:$INSTALLDIR/casacore:$INSTALLDIR/lofar:$INSTALLDIR/idg:/opt/intel/mkl/lib/intel64:/usr/lib64/openmpi:$INSTALLDIR/EveryBeam"
+    export LD_LIBRARY_PATH="/opt/hdf5/lib:$INSTALLDIR/lofarstman/lib64:/opt/OpenBLAS/lib64:$INSTALLDIR/aoflagger/lib:$INSTALLDIR/casacore/lib:$INSTALLDIR/idg/lib:/opt/intel/mkl/lib/intel64:/usr/lib64/openmpi/lib/:$INSTALLDIR/EveryBeam/lib:$INSTALLDIR/sagecal/lib:$LD_LIBRARY_PATH"
+    echo export LD_LIBRARY_PATH=/opt/intel/oneapi/mkl/latest/lib/intel64/:/opt/intel/oneapi/compiler/latest/linux/compiler/lib/intel64_lin/:/opt/intel/oneapi/tbb/latest/env/../lib/intel64/gcc4.8:/opt/intel/oneapi/mkl/latest/lib/intel64:/opt/intel/oneapi/compiler/latest/linux/lib:/opt/intel/oneapi/compiler/latest/linux/lib/x64:/opt/intel/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/opt/intel/oneapi/mkl/latest/lib/intel64:$LD_LIBRARY_PATH
     export PATH="/opt/hdf5/bin:/usr/lib64/openmpi/bin:$PATH"
     export make=`which make`
     export OLD_PYTHONPATH=$PYTHONPATH
@@ -105,7 +107,7 @@ From: fedora:36
 	git clone https://github.com/xianyi/OpenBLAS.git src
 	cd src && git checkout $OPENBLAS_VERSION
 	mkdir build && cd build
-	cmake3 -DCMAKE_INSTALL_PREFIX=/opt/OpenBLAS -DTARGET=$OPENBLAS_TARGET -DUSE_THREAD=1 -DNUM_THREADS=256 -DBUILD_SHARED_LIBS=ON -DNO_AVX512=$NOAVX512 ..
+	cmake3 -DCMAKE_INSTALL_PREFIX=/opt/OpenBLAS -DTARGET=$OPENBLAS_TARGET -DUSE_THREAD=1 -DNUM_THREADS=256 -DNUM_CORES=256  -DBUILD_SHARED_LIBS=ON -DNO_AVX512=$NOAVX512 ..
 	make -j$J
 	make install
 	rm -rf /opt/OpenBLAS/src
@@ -163,7 +165,6 @@ From: fedora:36
     dnf -y install python
 	dnf -y install python-pip python3-tkinter
     dnf -y install libsigc++20-devel gtkmm30-devel
-    dnf -y install python3-devel
     dnf -y install lua lua-devel
     dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
     dnf -y install pgplot
@@ -171,8 +172,9 @@ From: fedora:36
     dnf -y install qt5-qtbase qt5-qtx11extras
     dnf -y install perf
     dnf -y install rsync
+    dnf -y install openmpi openmpi-devel
     dnf -y install htop
-    dnf -y install python3-pybind11 pybind11-devel mysql mysql-devel python-devel python3-devel
+    dnf -y install python3-pybind11 pybind11-devel mysql mysql-devel python-devel python3-devel python3.11-devel
     if [ $DEBUG = true ]; then
 	    dnf -y install gdb valgrind
 	    debuginfo-install -y libstdc++
@@ -226,6 +228,8 @@ From: fedora:36
     make -j $J
     #make check
     make install
+    cd /opt/hdf5
+    rm -r hdf5-1.*
     export CC=`which gcc`
 	export CXX=`which g++`
 
@@ -233,10 +237,10 @@ From: fedora:36
         #
         # Install CUDA 11.5
         #
-        sudo dnf -y config-manager --add-repo http://developer.download.nvidia.com/compute/cuda/repos/fedora34/x86_64/cuda-fedora34.repo
+        sudo dnf -y config-manager --add-repo http://developer.download.nvidia.com/compute/cuda/repos/fedora37/x86_64/cuda-fedora37.repo
         sudo dnf -y clean all
         sudo dnf -y upgrade
-        sudo dnf -y install cuda-11-5
+        sudo dnf -y install cuda-12-3
     fi
 
     ln -s /usr/lib64/libnsl.so.2.0.0 /usr/lib64/libnsl.so
@@ -262,20 +266,15 @@ From: fedora:36
     printf "unset \$PROMPT_COMMAND\n$(cat $INSTALLDIR/pyenv-py3/bin/activate)" > $INSTALLDIR/pyenv-py3/bin/activate
     source $INSTALLDIR/pyenv-py3/bin/activate
     pip install --upgrade pip wheel "Cython==0.29.30"
-    # Link NumPy to our own OpenBLAS installation.
-    mkdir -p /opt/numpy && cd /opt/numpy
-    git clone https://github.com/numpy/numpy.git
-    cd numpy
-    git checkout v1.22.4
-    git submodule update --init
-    wget https://raw.githubusercontent.com/tikk3r/flocs/fedora-py3/site.cfg
-    python setup.py build -j 64 install
+    pip install "numpy==1.26.2"
     pip install --no-binary pandas 'pandas==2.0.0'
     pip install --no-binary h5py h5py
     pip install -r $INSTALLDIR/requirements3.txt
     pip install lofar-h5plot
     pip install legacystamps
     pip install Kittens
+    # Install this separately since it keeps forcefully downgrading numpy.
+    pip install --no-deps aplpy
 
     #
     # Install Montage
@@ -359,7 +358,9 @@ From: fedora:36
 	#
 	# Install Python-CASAcore
 	#
-	pip install --no-deps --no-binary python-casacore "python-casacore==3.5.2"
+	# In case anything was installed previously
+	pip uninstall -y python-casacore
+    pip install --no-deps --no-binary python-casacore "python-casacore==3.5.2"
     
 	#
 	# Install Dysco
@@ -583,7 +584,7 @@ From: fedora:36
 
 
     dnf -y install dnf-plugins-core patch yum-utils git svn wget automake autoconf cmake make
-    dnf -y install patch lzma xz-devel fpack mariadb-devel git automake autoconf cmake make gcc gcc-c++ gcc-gfortran redhat-rpm-config python-devel python3-devel wget postgresql-devel nodejs
+    dnf -y install patch lzma xz-devel fpack mariadb-devel git automake autoconf cmake make gcc gcc-c++ gcc-gfortran redhat-rpm-config wget postgresql-devel nodejs
 
     pip --no-cache-dir install meqtrees-cattery --no-deps
     pip --no-cache-dir install owlcat --no-deps
@@ -612,35 +613,46 @@ From: fedora:36
     # Install DDFacet
     #
     cd $INSTALLDIR
-    mkdir -p $INSTALLDIR/DDFacet && cd $INSTALLDIR/DDFacet
-    git clone --single-branch -b v0.7.1 https://github.com/saopicc/DDFacet.git src
-    # Figure out how to adapt this patch
-    #patch $INSTALLDIR/DDFacet/src/DDFacet/Other/AsyncProcessPool.py $PATCH_DDFACET_CPUS
-    wget https://raw.githubusercontent.com/saopicc/DDFacet/v0.6.0/setup.py -O src/setup.py
-    #sed -i "s/MIN_REQ = 8/MIN_REQ = 9/" src/setup.py
-    #sed -i "s/python-casacore >= 3.0.0, <=3.4.0/python-casacore >= 3.0.0/" src/setup.py
-    #sed -i "s/3\.7/3\.10/" src/setup.py
-    sed -i "s/__version__ = "0.6.0.0"/__version__ = "0.7.1.0"/" src/setup.py
-    wget https://raw.githubusercontent.com/tikk3r/flocs/fedora-py3/patches/DDF_Gridder_CMake.patch -O /opt/lofar/patches/DDF_Gridder_CMake.patch
-    patch src/DDFacet/Gridder/CMakeLists.txt /opt/lofar/patches/DDF_Gridder_CMake.patch
-    cd src && python setup.py install --prefix=$INSTALLDIR/DDFacet
-    #cp -r SkyModel/Mask /opt/lofar/DDFacet/lib/python3.9/site-packages/SkyModel/
-    cp -r SkyModel/Sky /opt/lofar/DDFacet/lib/python$PYTHON_VERSION/site-packages/SkyModel/
-    wget https://raw.githubusercontent.com/rvweeren/lofar_facet_selfcal/main/sub-sources-outside-region.py -O /opt/lofar/ddf-pipeline/scripts/sub-sources-outside-region.py
-    chmod 755 /opt/lofar/ddf-pipeline/scripts/sub-sources-outside-region.py
+    git clone --single-branch -b v0.7.2 https://github.com/saopicc/DDFacet.git
+    ## Strip out version requirements.
+    sed -i 's/>=.*;/;/' DDFacet/setup.py
+    sed -i 's/<=.*"/"/' DDFacet/setup.py
+    sed -i "s/MIN_REQ = 8/MIN_REQ = 11/" DDFacet/setup.py
+    # sed doesn't support negative lookahead, so we use perl here.
+    grep -rl "np.float" DDFacet | xargs perl -pi -e 's/np\.float(?![0-9a-zA-Z])/np\.float_/g'
+    grep -rl "np.int" DDFacet | xargs perl -pi -e 's/np\.int(?![0-9a-zA-Z])/np\.int_/g'
+    grep -rl "np.complex" DDFacet | xargs perl -pi -e 's/np\.complex(?![0-9a-zA-Z])/np\.complex128/g'
+    #grep -rl "np.int(" DDFacet | xargs sed -i 's/np\.int(/np\.int_(/g'
+    grep -rl "np.bool" DDFacet | xargs perl -pi -e 's/np\.bool(?![0-9a-zA-Z])/np\.bool_/'
+    grep -rl "np.bool8" DDFacet | xargs perl -pi -e 's/np\.bool8/np\.bool_/'
+
+    sed -i "s/npzfile\.iteritems/npzfile\.items/" DDFacet/DDFacet/Imager/ClassFacetMachine.py
+    sed -i "4d" DDFacet/pyproject.toml
+    sed -i '9s?$? -DPYTHON_NUMPY_INCLUDE_DIR=/opt/lofar/pyenv-py3/lib64/python3.11/site-packages/numpy/core/include?' DDFacet/setup.cfg
+    sed -i '13s?$? -DPYTHON_NUMPY_INCLUDE_DIR=/opt/lofar/pyenv-py3/lib64/python3.11/site-packages/numpy/core/include?' DDFacet/setup.cfg
+    pip install --no-deps DDFacet/
+
 
     #
     # Install killMS
     #
-    mkdir -p $INSTALLDIR/killMS
-    cd $INSTALLDIR/killMS && git clone --single-branch -b v3.1.0 https://github.com/saopicc/killMS.git
+    cd $INSTALLDIR
+    git clone --single-branch -b v3.1.0 https://github.com/saopicc/killMS.git
     sed -i "s/gcc/gcc -march=${MARCH} -mtune=${MTUNE}/" killMS/killMS/Predict/Makefile
     sed -i "s/gcc/gcc -march=${MARCH} -mtune=${MTUNE}/" killMS/killMS/Array/Dot/Makefile
     sed -i "s/gcc/gcc -march=${MARCH} -mtune=${MTUNE}/" killMS/killMS/Gridder/Makefile
-    cd killMS
-    sed -i "s?DDFacet >= 0.7.0?DDFacet >= 0.6.0?" setup.py
-    python setup.py install --prefix=$INSTALLDIR/killMS
-    chmod u+x /opt/lofar/killMS/lib/python3.10/site-packages/killMS/*.py
+    grep -rl "np.float" killMS | xargs perl -pi -e 's/np\.float(?![0-9a-zA-Z])/np\.float_/g'
+    grep -rl "np.int" killMS | xargs perl -pi -e 's/np\.int(?![0-9a-zA-Z])/np\.int_/g'
+    grep -rl "np.complex" killMS | xargs perl -pi -e 's/np\.complex(?![0-9a-zA-Z])/np\.complex128/g'
+    #grep -rl "np.int(" killMS | xargs sed -i 's/np\.int(/np\.int_(/g'
+    grep -rl "np.bool" killMS | xargs perl -pi -e 's/np\.bool(?![0-9a-zA-Z])/np\.bool_/'
+    grep -rl "np.bool8" killMS | xargs perl -pi -e 's/np\.bool8/np\.bool_/'
+    sed -i '9s?$? -DPYTHON_NUMPY_INCLUDE_DIR=/opt/lofar/pyenv-py3/lib64/python3.11/site-packages/numpy/core/include?' killMS/setup.cfg
+    sed -i '13s?$? -DPYTHON_NUMPY_INCLUDE_DIR=/opt/lofar/pyenv-py3/lib64/python3.11/site-packages/numpy/core/include?' killMS/setup.cfg
+    sed -i "147d" killMS/setup.py
+    pip install --no-deps killMS/
+
+
 
     #   
     # Install DynSpecMS
@@ -653,7 +665,7 @@ From: fedora:36
     #
     rm -rf $INSTALLDIR/ddf-pipeline
     cd $INSTALLDIR && git clone https://github.com/mhardcastle/ddf-pipeline.git
-    cd ddf-pipeline && git checkout 68afe56 && cd ..
+    cd ddf-pipeline && git checkout $DDFPIPELINE_VERSION && cd ..
     cd $INSTALLDIR
     sed -i "s/DDF.py/DDF.py --Misc-IgnoreDeprecationMarking=1/" $INSTALLDIR/ddf-pipeline/scripts/pipeline.py
     sed -i "s/--Beam-PhasedArrayMode/--Beam-LOFARBeamMode/g" $INSTALLDIR/ddf-pipeline/scripts/pipeline.py
@@ -661,7 +673,6 @@ From: fedora:36
     sed -i "s/pybdsm\.srl\.fits/pybdsf\.srl\.fits/g" $INSTALLDIR/ddf-pipeline/scripts/pipeline.py
     sed -i "s/pybdsm\.srl\.fits/pybdsf\.srl\.fits/g" $INSTALLDIR/ddf-pipeline/scripts/bootstrap.py
     sed -i '353s/readonly=True/readonly=False/' $INSTALLDIR/ddf-pipeline/utils/auxcodes.py
-
     mkdir $INSTALLDIR/DDFCatalogues
     cd $INSTALLDIR/DDFCatalogues
     wget https://www.extragalactic.info/bootstrap/VLSS.fits
@@ -671,7 +682,14 @@ From: fedora:36
     #wget https://lambda.gsfc.nasa.gov/data/foregrounds/tgss_adr/TGSSADR1_7sigma_catalog.fits
     wget http://tgssadr.strw.leidenuniv.nl/catalogs/TGSSADR1_7sigma_catalog.fits
     cd $INSTALLDIR
+    wget https://raw.githubusercontent.com/rvweeren/lofar_facet_selfcal/main/sub-sources-outside-region.py -O /opt/lofar/ddf-pipeline/scripts/sub-sources-outside-region.py
+    chmod 755 /opt/lofar/ddf-pipeline/scripts/sub-sources-outside-region.py
+    sed -i "s/np\.float/np\.float_/" /opt/lofar/ddf-pipeline/scripts/sub-sources-outside-region.py
+    sed -i "s/(np\.int)[^0-9]/np\.int_/g" /opt/lofar/ddf-pipeline/scripts/sub-sources-outside-region.py
+    grep -rl "np.int" /opt/lofar/ddf-pipeline/utils | xargs sed -i "s/(np\.int)[^0-9]/np\.int_/g"
+    grep -rl "np.bool" /opt/lofar/ddf-pipeline/utils | xargs sed -i "s/np\.bool/np\.bool_/g"
 
+    
     #
     # Install lotss-query
     #
@@ -689,10 +707,9 @@ From: fedora:36
     # Install custom runners
     #
     mkdir -p /opt/lofar/runners
-    cd /opt/lofar/runners
-    git clone https://github.com/tikk3r/flocs.git
-    cp flocs/runners/run* .
-    cp flocs/utility /opt/lofar/
+    cd /opt/lofar/
+    cp flocs/runners/run* ./runners/
+    cp -r flocs/utility /opt/lofar/
     rm -rf flocs
     chmod 755 /opt/lofar/runners/*.sh
     chmod 755 /opt/lofar/utility/*.sh
@@ -789,15 +806,11 @@ From: fedora:36
     echo export DDF_DIR=$INSTALLDIR >> $INSTALLDIR/init.sh
     echo export DDF_PIPELINE_CATALOGS=$INSTALLDIR/DDFCatalogues >> $INSTALLDIR/init.sh
     echo export KILLMS_DIR=$INSTALLDIR >> $INSTALLDIR/init.sh
-    echo export PATH=\$INSTALLDIR/killMS/lib/python$PYTHON_VERSION/site-packages/killMS:\$PATH >> $INSTALLDIR/init.sh
+    echo export PATH=\$INSTALLDIR/killMS/killMS:\$PATH >> $INSTALLDIR/init.sh
     echo export PYTHONPATH=\$INSTALLDIR/DPPP/lib/python$PYTHON_VERSION/site-packages:\$PYTHONPATH >> $INSTALLDIR/init.sh
     echo export PYTHONPATH=\$INSTALLDIR/lotss-hba-survey:\$INSTALLDIR/lotss-query:\$INSTALLDIR/killMS/lib/python$PYTHON_VERSION/site-packages:\$INSTALLDIR/ddf-pipeline/scripts:$INSTALLDIR/ddf-pipeline/utils:$INSTALLDIR/DDFacet/lib/python${PYTHON_VERSION}/site-packages:$INSTALLDIR/killMS:$INSTALLDIR/killMS/Predict:$INSTALLDIR/killMS/Array:$INSTALLDIR/killMS/Array/Dot:$INSTALLDIR/killMS/Gridder:$INSTALLDIR/DDFacet/bin:$INSTALLDIR/DynSpecMS:\$PYTHONPATH >> $INSTALLDIR/init.sh
-    echo export PATH=\$INSTALLDIR/killMS/bin:\$INSTALLDIR/DDFacet/bin:$INSTALLDIR/DDFacet/src/SkyModel:\$INSTALLDIR/DynSpecMS/:\$INSTALLDIR/ddf-pipeline/scripts:\$PATH >> $INSTALLDIR/init.sh
+    echo export PATH=$INSTALLDIR/DDFacet/src/SkyModel:\$INSTALLDIR/DynSpecMS/:\$INSTALLDIR/ddf-pipeline/scripts:\$PATH >> $INSTALLDIR/init.sh
     echo "if echo \$(hostname) | grep -qi leiden; then export DDF_PIPELINE_CLUSTER="paracluster"; else export DDF_PIPELINE_CLUSTER=; fi" >> $INSTALLDIR/init.sh
-    
-    #
-    # entrypoint
-    #
 
 %help
     This Singularity image contains a variety of LOFAR software. In order to run your pipelines, you may need to know where the software is installed. The root directory is /opt/lofar, with most software installed as follows:
@@ -822,14 +835,4 @@ From: fedora:36
     To enter a shell within the image, use
         singularity shell -B <paths,that,need,to,be,accessible> <path to image>
 
-    The container base is Fedora 36 and relevant key dependencies have the following versions:
-
-    * Armadillo 9.900.3
-    * Boost 1.69.0
-    * CFITSIO 7.3.47
-    * FFTW 3.5.8
-    * HDF5 1.10.5
-    * LAPACK 3.8.0
-    * OpenBLAS 3.8.0
-    * SuperLU 5.2.1
-    * WCSLIB 6.4
+    The container base is Fedora 38.

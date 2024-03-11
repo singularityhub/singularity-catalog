@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/nemo:22.08
+Stage: service
+
+%post
+
+DEBIAN_FRONTEND=noninteractive
+
+mkdir -p /opt/nmt
+git clone https://github.com/clarinsi/Slovene_NMT.git /opt/nmt
+python3 -m pip install -r /opt/nmt/requirements.txt
+cd /opt/nmt
