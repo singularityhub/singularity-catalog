@@ -23,6 +23,8 @@ OSVersion: jammy
 
 %setup
 
+%files
+
 %environment
  
     # Set operating system mirror URL
@@ -85,8 +87,6 @@ OSVersion: jammy
     apt-get -y install automake
     apt-get -y install build-essential
     apt-get -y install cmake
-    apt-get -y install evince
-    apt-get -y install expect
     apt-get -y install gfortran
     apt-get -y install libtool
     apt-get -y install mlocate
@@ -95,16 +95,30 @@ OSVersion: jammy
     apt-get -y install zip
 
     # Store information about the container image build system
-    lscpu > /opt/lscpu.txt
-
+    mkdir -p /opt/.nxis
+    cd /opt/.nxis
+    dmidecode > dmidecode.default
+    df -ahPT > df.default
+    fdisk --list > fdisk.default
+    lsblk --output-all > lsblk.default
+    lsblk --output-all --json > lsblk.json
+    lscpu --output-all > lscpu.default
+    lscpu --output-all --json > lscpu.json
+    lshw > lshw.default
+    lshw -json > lshw.json
+    lshw -short > lshw.short
+    lspci > lspci.default
+    lspci -vvv > lspci.verbose
+    free -h > free.default
+    cat /proc/meminfo > meminfo.default
+    
     # Cleanup
     apt-get -y autoremove --purge
     apt-get -y clean
+    rm -rf /var/lib/apt/lists/*
 
     # Update database for mlocate
     updatedb
-
-%files
 
 %runscript
 

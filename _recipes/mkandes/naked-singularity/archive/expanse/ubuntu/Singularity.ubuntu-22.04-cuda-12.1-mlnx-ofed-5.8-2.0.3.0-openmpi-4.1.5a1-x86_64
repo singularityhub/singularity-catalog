@@ -1,0 +1,165 @@
+Bootstrap: oras
+From: ghcr.io/mkandes/ubuntu:22.04-cuda-12.1-x86_64-2024-02-19
+
+%labels
+
+    org.opencontainers.image.ref.name ghcr.io/mkandes/ubuntu:22.04-cuda-12.1-mlnx-ofed-5.8-2.0.3.0-openmpi-4.1.5a1-x86_64-2024-02-19
+
+    org.opencontainers.image.base.name ghcr.io/mkandes/ubuntu:22.04-cuda-12.1-x86_64-2024-02-19
+    org.opencontainers.image.base.digest sha256:fdfc90c7e6e7695f94dc6a7e373d4e6e2afa9dcc9f45e058c92e4e5afaa7206a
+
+    org.opencontainers.image.title openmpi
+    org.opencontainers.image.description Open MPI is an open source Message Passing Interface (MPI) implementation
+    org.opencontainers.image.url https://www.open-mpi.org
+    org.opencontainers.image.documentation https://www-lb.open-mpi.org/doc/v4.1
+    org.opencontainers.image.source http://www.mellanox.com/downloads/ofed/MLNX_OFED-5.8-2.0.3.0/MLNX_OFED_LINUX-5.8-2.0.3.0-ubuntu22.04-x86_64.tgz
+    org.opencontainers.image.vendor The Open MPI Project
+    org.opencontainers.image.licenses BSD-3-Clause-Open-MPI
+    org.opencontainers.image.version 4.1.5a1
+    org.opencontainers.image.revision 1.58101
+
+    org.opencontainers.image.authors Marty Kandes (mkandes@sdsc.edu)
+
+%setup
+
+%environment
+
+    # Set Mellanox OFED version, operating system, and hardware platform
+    export MLNX_ROOT_URL='http://www.mellanox.com/downloads/ofed'
+    export MLNX_OFED_VERSION='5.8-2.0.3.0'
+    export MLNX_OS_VERSION='ubuntu22.04'
+    export MLNX_PLATFORM='x86_64'
+
+    # Set OpenMPI major, minor, and revision numbers, root and
+    # installation directories
+    export OMPI_MAJOR='4'
+    export OMPI_MINOR='1'
+    export OMPI_REVISION='5a1'
+    export OMPI_VERSION="${OMPI_MAJOR}.${OMPI_MINOR}.${OMPI_REVISION}"
+    export OMPI_ROOT_DIR='/usr/mpi/gcc'
+    export OMPI_INSTALL_DIR="${OMPI_ROOT_DIR}/openmpi-${OMPI_VERSION}"
+
+    # Set paths to OpenMPI binaries and libraries
+    export PATH="${OMPI_INSTALL_DIR}/bin:${PATH}"
+    export LD_LIBRARY_PATH="${OMPI_INSTALL_DIR}/lib:${LD_LIBRARY_PATH}"
+
+%post -c /bin/bash
+
+    # Set operating system mirror URL
+    export MIRRORURL='http://us.archive.ubuntu.com/ubuntu'
+
+    # Set operating system version
+    export OSVERSION='jammy'
+
+    # Set system locale
+    export LC_ALL=C
+
+    # Set debian frontend interface
+    export DEBIAN_FRONTEND='noninteractive'
+
+    # Set NVIDIA driver and CUDA version numbers
+    export NVIDIA_DRIVER_MAJOR='525'
+    export NVIDIA_DRIVER_MINOR='85'
+    export NVIDIA_DRIVER_REVISION='12'
+    export NVIDIA_DRIVER_VERSION="${NVIDIA_DRIVER_MAJOR}.${NVIDIA_DRIVER_MINOR}.${NVIDIA_DRIVER_REVISION}"
+
+    export CUDA_MAJOR='12'
+    export CUDA_MINOR='1'
+    export CUDA_REVISION='1'
+    export CUDA_VERSION="${CUDA_MAJOR}.${CUDA_MINOR}.${CUDA_REVISION}"
+
+    export CUDNN_MAJOR='8'
+    export CUDNN_MINOR='9'
+    export CUDNN_REVISION='0.131'
+    export CUDNN_VERSION="${CUDNN_MAJOR}.${CUDNN_MINOR}.${CUDNN_REVISION}"
+
+    export NCCL_MAJOR='2'
+    export NCCL_MINOR='18'
+    export NCCL_REVISION='3'
+    export NCCL_VERSION="${NCCL_MAJOR}.${NCCL_MINOR}.${NCCL_REVISION}"
+
+    export TENSORRT_MAJOR='8'
+    export TENSORRT_MINOR='6'
+    export TENSORRT_REVISION='1.6'
+    export TENSORRT_VERSION="${TENSORRT_MAJOR}.${TENSORRT_MINOR}.${TENSORRT_REVISION}"
+
+    export CUTENSOR_MAJOR='2'
+    export CUTENSOR_MINOR='0'
+    export CUTENSOR_REVISION='0.7'
+    export CUTENSOR_VERSION="${CUTENSOR_MAJOR}.${CUTENSOR_MINOR}.${CUTENSOR_REVISION}"
+
+    export CUSPARSELT_MAJOR='0'
+    export CUSPARSELT_MINOR='5'
+    export CUSPARSELT_REVISION='2.1'
+    export CUSPARSELT_VERSION="${CUSPARSELT_MAJOR}.${CUSPARSELT_MINOR}.${CUSPARSELT_REVISION}"
+
+    # Set paths to CUDA binaries and libraries
+    export CUDA_HOME="/usr/local/cuda-${CUDA_MAJOR}.${CUDA_MINOR}"
+
+    export CUDNN_INCLUDE_DIR='/usr/include'
+    export CUDNN_LIB_DIR='/usr/lib/x86_64-linux-gnu'
+
+    export NCCL_INCLUDE_DIR='/usr/include'
+    export NCCL_LIB_DIR='/usr/lib/x86_64-linux-gnu'
+
+    export TENSORRT_INCLUDE='/usr/include'
+    export TENSORRT_LIB='/usr/lib/x86_64-linux-gnu'
+
+    export CUTENSOR_INCLUDE_DIR='/usr/include'
+    export CUTENSOR_LIB_DIR='/usr/lib/x86_64-linux-gnu'
+
+    export CUSPARSELT_INCLUDE_DIR='/usr/include'
+    export CUSPARSELT_LIB_DIR='/usr/lib/x86_64-linux-gnu'
+
+    export PATH="${CUDA_HOME}/bin${PATH:+:${PATH}}"
+    export LD_LIBRARY_PATH="${CUDA_HOME}/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+    export LD_LIBRARY_PATH="${CUDNN_LIB_DIR}:${LD_LIBRARY_PATH}"
+    export LD_LIBRARY_PATH="${NCCL_LIB_DIR}:${LD_LIBRARY_PATH}"
+    export LD_LIBRARY_PATH="${TENSORRT_LIB}:${LD_LIBRARY_PATH}"
+    export LD_LIBRARY_PATH="${CUTENSOR_LIB_DIR}:${LD_LIBRARY_PATH}"
+    export LD_LIBRARY_PATH="${CUSPARSELT_LIB_DIR}:${LD_LIBRARY_PATH}"
+
+    # DO NOT Upgrade all software packages to their latest versions
+    # apt-get -y update && apt-get -y upgrade
+
+    # Set Mellanox OFED version, operating system, and hardware platform
+    export MLNX_ROOT_URL='http://www.mellanox.com/downloads/ofed'
+    export MLNX_OFED_VERSION='5.8-2.0.3.0'
+    export MLNX_OS_VERSION='ubuntu22.04'
+    export MLNX_PLATFORM='x86_64'
+
+    cd /tmp
+
+    # Download and install Mellanox OFED drivers and supporting
+    # libraries for user space access to Ethernet, RDMA, and Infiniband.
+    # https://docs.mellanox.com/pages/releaseview.action?pageId=15049785
+    wget "${MLNX_ROOT_URL}/MLNX_OFED-${MLNX_OFED_VERSION}/MLNX_OFED_LINUX-${MLNX_OFED_VERSION}-${MLNX_OS_VERSION}-${MLNX_PLATFORM}.tgz"
+    tar -xf "MLNX_OFED_LINUX-${MLNX_OFED_VERSION}-${MLNX_OS_VERSION}-${MLNX_PLATFORM}.tgz"
+    cd "MLNX_OFED_LINUX-${MLNX_OFED_VERSION}-${MLNX_OS_VERSION}-${MLNX_PLATFORM}"
+    ./mlnxofedinstall --user-space-only --without-fw-update --force
+
+    cd /tmp
+
+    # Remove Mellanox OFED archive directory and tarball
+    rm -rf "MLNX_OFED_LINUX-${MLNX_OFED_VERSION}-${MLNX_OS_VERSION}-${MLNX_PLATFORM}"
+    rm "MLNX_OFED_LINUX-${MLNX_OFED_VERSION}-${MLNX_OS_VERSION}-${MLNX_PLATFORM}.tgz"
+
+    # Install additional tools
+    apt-get -y install numactl
+    apt-get -y install libnuma-dev
+
+    # Store information about the CPU arch of the build system
+    lscpu > /.singularity.d/lscpu.txt
+
+    # Cleanup
+    apt-get -y autoremove --purge
+    apt-get -y clean
+
+    # Update database for mlocate
+    updatedb
+
+%files
+
+%runscript
+
+%test
