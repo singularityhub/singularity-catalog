@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: nvidia/cuda:11.7.1-base-ubuntu22.04
+%labels
+	MANTAINER Nick Jakuschona
+
+%post
+	WORKDIR /app
+
+    RUN apt-get update && \
+        apt-get install -y python3.10 python3-pip 
+
+    RUN apt-get install -y libgl1-mesa-glx
+    WORKDIR /app
+
+    RUN apt-get update && \
+        apt-get install -y python3.10 python3-pip 
+
+    RUN apt-get install -y libgl1-mesa-glx
+
+    # Copy your Open3D script or application to the container
+    COPY ./Open3D-ML /app/Open3D-ML
+
+
+    RUN pip install open3D
+    RUN pip install -r Open3D-ML/requirements-torch-cuda.txt
+
+    WORKDIR /app/Open3D-ML
+
+    RUN chmod +x set_open3d_ml_root.sh && /bin/bash -c "source set_open3d_ml_root.sh"
+

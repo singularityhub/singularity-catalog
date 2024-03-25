@@ -1,9 +1,11 @@
 Bootstrap: docker
-From:  nvidia/cuda:10.2-devel-ubuntu18.04 # Needed for fetch
+From: nvidia/cuda:11.8.0-devel-ubuntu20.04
 
 
 %post
     apt-get update # update and install packages we need for the build
+    export DEBIAN_FRONTEND=noninteractive 
+    export TZ=Etc/UTC
     apt-get -y install autoconf build-essential cmake csh git htop libboost-all-dev libtool libtool-bin software-properties-common wget
     # need these to build packages
 
@@ -20,8 +22,8 @@ From:  nvidia/cuda:10.2-devel-ubuntu18.04 # Needed for fetch
     rm ~/miniconda.sh
     eval "$(/usr/local/miniconda/bin/conda shell.bash hook)"
     conda init
-    conda create -y --name RT python=3.7
-    conda create -y --name PE python=3.7
+    conda create -y --name RT python=3.8
+    conda create -y --name PE python=3.8
     conda activate RT
         
     # As described in https://github.com/hpcng/singularity/issues/5075#issuecomment-594391772
@@ -42,6 +44,7 @@ From:  nvidia/cuda:10.2-devel-ubuntu18.04 # Needed for fetch
     cd ~/source
     git clone https://github.com/ajameson/dedisp.git
     cd dedisp
+    sed -i 's/sm_30/all-major/g' Makefile.inc
     make INSTALL_DIR=$HOME/software/dedisp install
     cp ~/software/dedisp/lib/* /usr/local/lib
     export LD_LIBRARY_PATH=LD_LIBRARY_PATH:~/software/dedisp
@@ -207,6 +210,22 @@ From:  nvidia/cuda:10.2-devel-ubuntu18.04 # Needed for fetch
     echo "your Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)"  >> "$SINGULARITY_LABELS"
     cd ~ && rm -rf your
 
+    echo "Installing jess"
+    cd ~
+    git clone https://github.com/josephwkania/jess.git
+    cd jess
+    pip install .[cupy]
+    echo "jess Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)"  >> "$SINGULARITY_LABELS"
+    cd ~ && rm -rf jess
+
+    echo "Installing will"
+    cd ~
+    git clone https://github.com/josephwkania/will.git
+    cd will
+    pip install .
+    echo "will Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)"  >> "$SINGULARITY_LABELS"
+    cd ~ && rm -rf will
+
     echo "Installing FETCH"
     conda install -y -c anaconda "tensorflow-gpu>=2.0,<=2.6"
     # https://stackoverflow.com/a/68601733 use 1.3.0 until this is fixed
@@ -259,12 +278,13 @@ From:  nvidia/cuda:10.2-devel-ubuntu18.04 # Needed for fetch
     This container has software to search for radio transients.
 
     Contains the following programs:
-    CUDA 10.2
+    CUDA 11.5
     fetch          https://github.com/devanshkv/fetch
     heimdall       https://sourceforge.net/p/heimdall-astro/wiki/Use/
     - dedisp       https://github.com/ajameson/dedisp
     htop           https://htop.dev/
     iqrm_apollo    https://gitlab.com/kmrajwade/iqrm_apollo
+    jess           https://github.com/josephwkania/jess
     jupyterlab     https://jupyter.org/
     PRESTO         https://www.cv.nrao.edu/~sransom/presto/
     psrdada        http://psrdada.sourceforge.net/
@@ -275,11 +295,12 @@ From:  nvidia/cuda:10.2-devel-ubuntu18.04 # Needed for fetch
     sigproc        https://github.com/SixByNine/sigproc
     Tempo          http://tempo.sourceforge.net/
     RFIClean       https://github.com/ymaan4/RFIClean
+    will           https://github.com/josephwkania/will
     YAPP           https://github.com/jayanthc/yapp
     your           https://github.com/thepetabyteproject/your
     
 
 %labels
     Author Joseph W Kania
-    Version v0.0.4
+    Version v0.1.0
     Build-date 27-Nov-2021

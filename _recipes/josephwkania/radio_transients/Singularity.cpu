@@ -5,6 +5,8 @@ From: ubuntu:20.04
 %post
     echo "Installing packages needed for multiple programs"
     apt-get -y update
+    export DEBIAN_FRONTEND=noninteractive 
+    export TZ=Etc/UTC
     apt-get -y install build-essential cmake git htop software-properties-common wget # need these to build packages
     
     apt-add-repository multiverse # add the multiverse repository (where pgplot5 lives)
@@ -20,7 +22,7 @@ From: ubuntu:20.04
     rm ~/miniconda.sh
     eval "$(/usr/local/miniconda/bin/conda shell.bash hook)"
     conda init
-    conda create -y --name RT python=3.7
+    conda create -y --name RT python=3.8
     conda activate RT 
  
     # As described in https://github.com/hpcng/singularity/issues/5075#issuecomment-594391772
@@ -147,7 +149,23 @@ From: ubuntu:20.04
     cd your
     pip install .
     echo "your Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)"
-    cd ~ && rm -rf your        
+    cd ~ && rm -rf your
+
+    echo "Installing jess"
+    cd ~
+    git clone https://github.com/josephwkania/jess.git
+    cd jess
+    pip install .
+    echo "jess Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)"  >> "$SINGULARITY_LABELS"
+    cd ~ && rm -rf jess
+
+    echo "Installing will"
+    cd ~
+    git clone https://github.com/josephwkania/will.git
+    cd will
+    pip install .
+    echo "will Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)"  >> "$SINGULARITY_LABELS"
+    cd ~ && rm -rf will
 
     # This wants to remove libboost, which we need
     #apt-get -y purge cmake build-essential git wget # remove build time dependencies
@@ -190,6 +208,7 @@ From: ubuntu:20.04
     Contains the following programs:
     htop          https://htop.dev/
     iqrm_apollo   https://gitlab.com/kmrajwade/iqrm_apollo
+    jess           https://github.com/josephwkania/jess
     jupyterlab    https://jupyter.org/
     PRESTO        https://www.cv.nrao.edu/~sransom/presto/
     psrcat        https://www.atnf.csiro.au/people/pulsar/psrcat/download.html
@@ -198,11 +217,12 @@ From: ubuntu:20.04
     sigproc       https://github.com/SixByNine/sigproc
     Tempo         http://tempo.sourceforge.net/
     RFIClean      https://github.com/ymaan4/RFIClean
+    will           https://github.com/josephwkania/will
     YAPP          https://github.com/jayanthc/yapp
     your          https://github.com/thepetabyteproject/your
 
 
 %labels
     Author Joseph W Kania
-    Version v0.0.4
+    Version v0.1.0
     Build-date 27-Nov-2021

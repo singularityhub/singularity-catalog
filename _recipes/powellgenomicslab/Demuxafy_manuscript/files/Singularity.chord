@@ -1,0 +1,44 @@
+Bootstrap: docker
+From: r-base:4.3.2
+
+
+%labels
+    Image_Motivation = "chord"
+	Author = Drew Neavin
+	Image_version = 0.0.1
+
+
+%environment
+	export PATH=/opt/google-cloud-sdk/bin:/opt/micromamba/bin:$PATH
+    export LC_ALL=C 
+
+
+%post 
+
+    yes | apt-get update
+    #yes | apt upgrade
+    apt-get install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6 libpng-dev libtiff5-dev libjpeg-dev libcairo2-dev libxt-dev
+
+    R --slave -e 'install.packages("V8", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("rversions", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("tidyverse", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("data.table", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("Seurat", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("remotes", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("systemfonts", repos = "http://cran.us.r-project.org", dependencies = TRUE)'
+    R --slave -e 'install.packages("ragg", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("pkgdown", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("devtools", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'devtools::install_github(repo="chris-mcginnis-ucsf/DoubletFinder")'
+    R --slave -e 'install.packages("Rtsne", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/spatstat/spatstat_1.64-1.tar.gz", repos=NULL, type="source")'
+    R --slave -e 'install.packages("adabag", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("cowplot", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("gbm", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("rsvd", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("BiocManager")'
+    R --slave -e 'install.packages("Cairo", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("ggrastr", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'BiocManager::install("scater")'
+    R --slave -e 'BiocManager::install("scds")'
+    R --slave -e 'devtools::install_github(repo="13308204545/Chord")'

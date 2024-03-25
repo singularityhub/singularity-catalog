@@ -1,7 +1,7 @@
 bases:
-- count: 1953
+- count: 1956
   name: ubuntu
-- count: 432
+- count: 433
   name: nvidia/cuda
 - count: 353
   name: debian
@@ -15,7 +15,7 @@ bases:
   name: aibasel/downward
 - count: 204
   name: continuumio/miniconda3
-- count: 200
+- count: 201
   name: python
 - count: 129
   name: tensorflow/tensorflow
@@ -44,11 +44,11 @@ bases:
 - count: 35
   name: busybox
 - count: 34
+  name: bids/validator
+- count: 34
   name: nvcr.io/nvidia/pytorch
 - count: 33
   name: provarepro/mlperf_inference
-- count: 33
-  name: bids/validator
 - count: 32
   name: vitchyr/railrl_v12_cuda10-1_mj2-0-2-2_torch1-1-0_gym0-12-5_py3-6-5
 - count: 31
@@ -65,10 +65,10 @@ bases:
   name: osrf/ros
 - count: 24
   name: nipreps/fmriprep
+- count: 24
+  name: r-base
 - count: 23
   name: pennbbl/qsiprep
-- count: 23
-  name: r-base
 - count: 22
   name: khanlab/tar2bids
 - count: 22
@@ -214,6 +214,8 @@ bases:
 - count: 7
   name: sebastientourbier/connectomemapper-bidsapp
 - count: 7
+  name: letaylor/sc_qc_cluster
+- count: 7
   name: anair17/railrl_hand_v2
 - count: 7
   name: pranithavangala/singularity
@@ -249,6 +251,8 @@ bases:
   name: conda/miniconda3-centos7
 - count: 6
   name: bids/freesurfer
+- count: 6
+  name: pennlinc/xcp_d
 - count: 6
   name: bids/mrtrix3_connectome
 - count: 6
@@ -291,8 +295,6 @@ bases:
   name: genomicpariscentre/guppy-gpu
 - count: 5
   name: neuronets/kwyk
-- count: 5
-  name: pennlinc/xcp_d
 - count: 5
   name: combinelab/salmon
 - count: 5
@@ -671,8 +673,6 @@ bases:
   name: tgagor/centos
 - count: 2
   name: kwells/chroma
-- count: 2
-  name: letaylor/sc_qc_cluster
 - count: 2
   name: nistmni/minc-toolkit-min
 - count: 2
@@ -2000,11 +2000,11 @@ bases:
 - count: 1
   name: lizhen0909/graph_clustering_toolkit
 bootstraps:
-- count: 6353
+- count: 6366
   name: docker
 - count: 499
   name: shub
-- count: 405
+- count: 406
   name: debootstrap
 - count: 370
   name: library
@@ -2488,8 +2488,6 @@ orgs:
 - count: 1
   name: hkmo
 - count: 1
-  name: letaylor
-- count: 1
   name: kaldiasr
 - count: 1
   name: danigoland
@@ -2693,6 +2691,8 @@ orgs:
   name: buisciii
 - count: 1
   name: tikhonovapolly
+- count: 1
+  name: letaylor
 - count: 1
   name: BIDS-Apps
 - count: 1
@@ -2938,8 +2938,8 @@ orgs:
 - count: 1
   name: tikk3r
 tags:
-  latest: 687
-  other: 6075
+  latest: 692
+  other: 6083
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3237,6 +3237,7 @@ versions:
     v1.14.1: 1
     v1.14.2: 1
     v1.14.3: 1
+    v1.14.4: 1
     v1.4.2: 1
     v1.5.2: 1
     v1.5.4: 1
@@ -3375,11 +3376,11 @@ versions:
     '6.10': 2
     '6.8': 2
     '6.9': 1
-    '7': 102
+    '7': 101
     7.4.1708: 12
     7.5.1804: 6
     '7.6': 4
-    7.6.1810: 3
+    7.6.1810: 4
     7.7.1908: 4
     7.9.2009: 1
     '8': 23
@@ -4190,7 +4191,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 2
+    latest: 7
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -4615,7 +4616,6 @@ versions:
     10.2-cudnn7-runtime-ubuntu16.04: 1
     10.2-devel-centos7: 3
     10.2-devel-ubuntu18.04: 1
-    '10.2-devel-ubuntu18.04 ': 2
     10.2-runtime-centos7: 3
     11.0-cudnn8-devel-centos8: 1
     11.0-cudnn8-devel-ubuntu18.04: 3
@@ -4643,9 +4643,11 @@ versions:
     11.4.2-base-ubuntu20.04: 3
     11.6.0-devel-ubuntu20.04: 1
     11.7.0-cudnn8-devel-ubuntu20.04: 1
+    11.7.1-base-ubuntu22.04: 1
     11.7.1-cudnn8-devel-ubuntu20.04: 1
     11.7.1-cudnn8-runtime-ubuntu22.04: 1
     11.8.0-cudnn8-devel-ubuntu20.04: 2
+    11.8.0-devel-ubuntu20.04: 2
     7.0-cudnn4-devel-ubuntu14.04: 1
     7.5-cudnn5-devel: 1
     7.5-cudnn5-devel-ubuntu14.04: 3
@@ -4821,6 +4823,7 @@ versions:
     0.6.1: 1
     0.6.2: 1
     0.6.3: 1
+    0.6.4: 1
     '04.0': 1
   percona/pmm-server:
     latest: 1
@@ -4972,7 +4975,7 @@ versions:
     3.7.6-alpine3.11: 1
     3.7.7-slim-buster: 1
     3.7.9: 1
-    '3.8': 13
+    '3.8': 14
     3.8-alpine: 7
     3.8-buster: 2
     3.8-slim: 8
@@ -5159,6 +5162,7 @@ versions:
     4.0.0: 1
     4.0.3: 1
     4.0.4: 1
+    4.3.2: 1
   railrl_v9p5_cuda10-1_mj1-50-1-59_torch1-1-0_gym0-10-5_py3-5-2_local:
     latest: 4
   raj76/singularity:
@@ -5582,7 +5586,7 @@ versions:
     '16.10': 3
     '17.04': 8
     '17.10': 4
-    '18.04': 382
+    '18.04': 385
     '18.04 ': 9
     18.04': 1
     '18.10': 9

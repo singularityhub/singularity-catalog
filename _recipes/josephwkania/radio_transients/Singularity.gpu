@@ -1,9 +1,11 @@
 Bootstrap: docker
-From:  nvidia/cuda:10.2-devel-ubuntu18.04 # Needed for fetch
+From:  nvidia/cuda:11.8.0-devel-ubuntu20.04
 
 
 %post
     apt-get update # update and install packages we need for the build
+    export DEBIAN_FRONTEND=noninteractive 
+    export TZ=Etc/UTC
     apt-get -y install autoconf build-essential csh git htop libboost-dev libtool libtool-bin software-properties-common wget
  
     # I can't get your to build in ubuntu's python3.7, llvmlite fails and there is no clear way around this
@@ -12,7 +14,7 @@ From:  nvidia/cuda:10.2-devel-ubuntu18.04 # Needed for fetch
     rm ~/miniconda.sh
     eval "$(/usr/local/miniconda/bin/conda shell.bash hook)"
     conda init
-    conda create -y --name RT python=3.7
+    conda create -y --name RT python=3.8
     conda activate RT
 
     # As described in https://github.com/hpcng/singularity/issues/5075#issuecomment-594391772
@@ -20,13 +22,14 @@ From:  nvidia/cuda:10.2-devel-ubuntu18.04 # Needed for fetch
     echo "source /usr/local/miniconda/etc/profile.d/conda.sh" >> /.singularity_bash
     echo "conda activate RT" >> /.singularity_bash    
     
-    echo "Building FETCH"
-    conda install -y -c anaconda cudatoolkit==10.0.130 tensorflow-gpu==1.13.1
-    conda install -y -c anaconda keras scikit-learn pandas scipy numpy matplotlib scikit-image tqdm numba pyyaml=3.13
+    echo "Installing FETCH"
+    conda install -y -c anaconda "tensorflow-gpu>=2.0,<=2.6"
+    # https://stackoverflow.com/a/68601733 use 1.3.0 until this is fixed
+    conda install -y -c anaconda keras pandas==1.3.0 scipy numpy
     git clone https://github.com/devanshkv/fetch.git
     cd fetch
-    pip install . 
-    echo "Fetch Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)" >> "$SINGULARITY_LABELS"
+    pip install .
+    echo "Fetch Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)"  >> "$SINGULARITY_LABELS"
     cd ~ && rm -rf fetch
     
     echo "Installing jupyterlab"
@@ -45,6 +48,7 @@ From:  nvidia/cuda:10.2-devel-ubuntu18.04 # Needed for fetch
     cd ~/source
     git clone https://github.com/ajameson/dedisp.git
     cd dedisp
+    sed -i 's/sm_30/all-major/g' Makefile.inc
     make INSTALL_DIR=$HOME/software/dedisp install
     cp ~/software/dedisp/lib/* /usr/local/lib
     export LD_LIBRARY_PATH=LD_LIBRARY_PATH:~/software/dedisp
@@ -101,6 +105,14 @@ From:  nvidia/cuda:10.2-devel-ubuntu18.04 # Needed for fetch
     echo "your Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)" >> "$SINGULARITY_LABELS"
     cd ~ && rm -rf your
 
+    echo "Installing jess"
+    cd ~
+    git clone https://github.com/josephwkania/jess.git
+    cd jess
+    pip install .[cupy]
+    echo "jess Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)"  >> "$SINGULARITY_LABELS"
+    cd ~ && rm -rf jess
+
     apt-get -y purge autoconf build-essential git wget # remove build time dependencies
     apt-get -y autoremove 
     apt-get -y clean # /var/cache/apt/archives is not emptied on its own, 
@@ -137,8 +149,9 @@ This container is for running your_heimdall on dada buffers for search for singl
 These pulses can be classified with FETCH. 
 
     Contains:
-    CUDA 10.0         
+    CUDA 11.5
     fetch          https://github.com/devanshkv/fetch
+    jess           https://github.com/josephwkania/jess
     jupyterlab     https://jupyter.org
     heimdall       https://sourceforge.net/p/heimdall-astro/wiki/Use/
     - dedisp       https://github.com/ajameson/dedisp
@@ -150,5 +163,5 @@ These pulses can be classified with FETCH.
 
 %labels
     Author Joseph W Kania 
-    Version v0.0.4
+    Version v0.1.0
     Build-date 27-Nov-2021

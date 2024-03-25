@@ -3,10 +3,9 @@ From: arm32v7/ubuntu
 
 
 %post
-
-    export DEBIAN_FRONTEND=noninteractive 
     echo "Installing packages needed for multiple programs"
     apt-get -y update
+    export DEBIAN_FRONTEND=noninteractive 
     apt-get -y install build-essential cmake git htop software-properties-common wget # need these to build packages
      
     apt-add-repository multiverse # add the multiverse repository (where pgplot5 lives)
@@ -22,7 +21,7 @@ From: arm32v7/ubuntu
     #rm ~/miniconda.sh
     # eval "$(/usr/local/miniconda/bin/conda shell.bash hook)"
     # conda init
-    # conda create -y --name RT python=3.7
+    # conda create -y --name RT python=3.8
     # conda activate RT 
  
     # As described in https://github.com/hpcng/singularity/issues/5075#issuecomment-594391772
@@ -32,12 +31,10 @@ From: arm32v7/ubuntu
     
     echo "Installing iqrm_apollo"
     cd ~
-    apt-get -y install libboost1.67-all-dev # iqrm does not like 1.71 versions
+    apt-get -y install libboost-all-dev
     git clone https://gitlab.com/kmrajwade/iqrm_apollo.git
     cd iqrm_apollo
     mkdir build; cd build
-    git checkout 4b8847ecd702eed582e1d28411e96a6d650a432f # This is the last commit I can get to make
-    # see https://gitlab.com/kmrajwade/iqrm_apollo/-/issues/1
     cmake -DBOOST_ROOT=/ ../
     make -j
     cp iqrm_apollo/iqrm_apollo_cli /usr/local/bin/
@@ -46,6 +43,7 @@ From: arm32v7/ubuntu
 
     apt-get -y install libffi-dev # need this dependency for juyterlab
     echo "Installing juyterlab"
+    pip3 install --upgrade pip
     pip3 install jupyterlab
     echo "Jupiterlab Built from pip" >> "$SINGULARITY_LABELS"
 
@@ -155,6 +153,22 @@ From: arm32v7/ubuntu
     echo "your built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)" >> "$SINGULARITY_LABELS"
     cd ~ && rm -rf your        
 
+    echo "Installing jess"
+    cd ~
+    git clone https://github.com/josephwkania/jess.git
+    cd jess
+    pip install .
+    echo "jess Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)"  >> "$SINGULARITY_LABELS"
+    cd ~ && rm -rf jess
+
+    echo "Installing will"
+    cd ~
+    git clone https://github.com/josephwkania/will.git
+    cd will
+    pip install .
+    echo "will Built at commit $(git rev-parse HEAD) which was on $(git log -1 --format=%cd)"  >> "$SINGULARITY_LABELS"
+    cd ~ && rm -rf will
+
     # This wants to remove libboost, which we need
     #apt-get -y purge cmake build-essential git wget # remove build time dependencies
     #apt-get -y autoremove 
@@ -195,6 +209,7 @@ From: arm32v7/ubuntu
     Contains the following programs:
     htop          https://htop.dev/
     iqrm_apollo   https://gitlab.com/kmrajwade/iqrm_apollo
+    jess           https://github.com/josephwkania/jess
     jupyterlab    https://jupyter.org/
     PRESTO        https://www.cv.nrao.edu/~sransom/presto/
     psrcat        https://www.atnf.csiro.au/people/pulsar/psrcat/download.html
@@ -203,11 +218,12 @@ From: arm32v7/ubuntu
     sigproc       https://github.com/SixByNine/sigproc
     Tempo         http://tempo.sourceforge.net/ - modified to compile on arm
     RFIClean      https://github.com/ymaan4/RFIClean
+    will           https://github.com/josephwkania/will
     YAPP          https://github.com/jayanthc/yapp
     your          https://github.com/thepetabyteproject/your
 
 
 %labels
     Author Joseph W Kania
-    Version v0.0.4
+    Version v0.1.0
 
