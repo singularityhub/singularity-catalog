@@ -1,0 +1,452 @@
+Bootstrap: oras
+From: ghcr.io/mkandes/openmpi:4.1-mofed-5.8-cuda-12.1-ubuntu-22.04-x86_64
+
+%labels
+
+    org.opencontainers.image.ref.name ghcr.io/mkandes/pytorch:2.2-openmpi-4.1-mofed-5.8-cuda-12.1-ubuntu-22.04-x86_64
+
+    org.opencontainers.image.base.name ghcr.io/mkandes/openmpi:4.1-mofed-5.8-cuda-12.1-ubuntu-22.04-x86_64
+    org.opencontainers.image.base.digest sha256:59403be9a4886a6571866bd3a83be6407f33a55e14d87aba473816e7c183099a
+
+    org.opencontainers.image.title pytorch
+    org.opencontainers.image.description PyTorch is an optimized tensor library for deep learning
+    org.opencontainers.image.url https://pytorch.org
+    org.opencontainers.image.documentation https://pytorch.org/docs/stable/index.html
+    org.opencontainers.image.source https://github.com/pytorch/pytorch.git
+    org.opencontainers.image.vendor The PyTorch Foundation
+    org.opencontainers.image.licenses BSD-3-Clause
+    org.opencontainers.image.version 2.2.1
+    org.opencontainers.image.revision 8ac9b20d4b090c213799e81acf48a55ea8d437d6
+
+    org.opencontainers.image.authors Marty Kandes (mkandes@sdsc.edu)
+
+%setup
+
+%environment
+
+    # Set MAGMA version number
+    export MAGMA_MAJ='2'
+    export MAGMA_MIN='7'
+    export MAGMA_REV='2'
+    export MAGMA_VER="${MAGMA_MAJ}.${MAGMA_MIN}.${MAGMA_REV}"
+    export MAGMA_ROOT_DIR='/opt/magma'
+    export MAGMA_INSTALL_DIR="${MAGMA_ROOT_DIR}/${MAGMA_VER}"
+
+    # Set path to MAGMA ibraries
+    export LD_LIBRARY_PATH="${MAGMA_INSTALL_DIR}/lib:${LD_LIBRARY_PATH}"
+
+%post -c /bin/bash
+
+    # Set operating system mirror URL
+    export MIRRORURL='http://us.archive.ubuntu.com/ubuntu'
+
+    # Set operating system version
+    export OSVERSION='jammy'
+
+    # Set system locale
+    export LC_ALL=C
+
+    # Set debian frontend interface
+    export DEBIAN_FRONTEND='noninteractive'
+
+    # Set NVIDIA driver and CUDA versions
+    export NV_DRIVER_MAJ='525'
+    export NV_DRIVER_MIN='85'
+    export NV_DRIVER_REV='12'
+    export NV_DRIVER_VER="${NV_DRIVER_MAJ}.${NV_DRIVER_MIN}.${NV_DRIVER_REV}"
+
+    export CUDA_MAJ='12'
+    export CUDA_MIN='1'
+    export CUDA_REV='1'
+    export CUDA_VER="${CUDA_MAJ}.${CUDA_MIN}.${CUDA_REV}"
+
+    export CUDNN_MAJ='8'
+    export CUDNN_MIN='9'
+    export CUDNN_REV='0.131'
+    export CUDNN_VER="${CUDNN_MAJ}.${CUDNN_MIN}.${CUDNN_REV}"
+
+    export NCCL_MAJ='2'
+    export NCCL_MIN='18'
+    export NCCL_REV='3'
+    export NCCL_VER="${NCCL_MAJ}.${NCCL_MIN}.${NCCL_REV}"
+
+    export TENSORRT_MAJ='8'
+    export TENSORRT_MIN='6'
+    export TENSORRT_REV='1.6'
+    export TENSORRT_VER="${TENSORRT_MAJ}.${TENSORRT_MIN}.${TENSORRT_REV}"
+
+    export CUTENSOR_MAJ='2'
+    export CUTENSOR_MIN='0'
+    export CUTENSOR_REV='0.7'
+    export CUTENSOR_VER="${CUTENSOR_MAJ}.${CUTENSOR_MIN}.${CUTENSOR_REV}"
+
+    export CUSPARSELT_MAJ='0'
+    export CUSPARSELT_MIN='5'
+    export CUSPARSELT_REV='2.1'
+    export CUSPARSELT_VER="${CUSPARSELT_MAJ}.${CUSPARSELT_MIN}.${CUSPARSELT_REV}"
+
+    # Set paths to CUDA binaries and libraries
+    export CUDA_HOME="/usr/local/cuda-${CUDA_MAJ}.${CUDA_MIN}"
+    export CUDNN_INCLUDE_DIR='/usr/include'
+    export CUDNN_LIB_DIR='/usr/lib/x86_64-linux-gnu'
+    export NCCL_INCLUDE_DIR='/usr/include'
+    export NCCL_LIB_DIR='/usr/lib/x86_64-linux-gnu'
+    export TENSORRT_INCLUDE_DIR='/usr/include'
+    export TENSORRT_LIB_DIR='/usr/lib/x86_64-linux-gnu'
+    export CUTENSOR_INCLUDE_DIR='/usr/include'
+    export CUTENSOR_LIB_DIR='/usr/lib/x86_64-linux-gnu'
+    export CUSPARSELT_INCLUDE_DIR='/usr/include'
+    export CUSPARSELT_LIB_DIR='/usr/lib/x86_64-linux-gnu'
+    export PATH="${CUDA_HOME}/bin${PATH:+:${PATH}}"
+    export LD_LIBRARY_PATH="${CUDA_HOME}/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+    export LD_LIBRARY_PATH="${CUDNN_LIB_DIR}:${LD_LIBRARY_PATH}"
+    export LD_LIBRARY_PATH="${NCCL_LIB_DIR}:${LD_LIBRARY_PATH}"
+    export LD_LIBRARY_PATH="${TENSORRT_LIB_DIR}:${LD_LIBRARY_PATH}"
+
+    # Set Mellanox OFED version, operating system, and platform architecture
+    export MOFED_MAJ='5'
+    export MOFED_MIN='8'
+    export MOFED_REV='2.0.3.0'
+    export MOFED_VER="${MOFED_MAJ}.${MOFED_MIN}-${MOFED_REV}"
+    export MOFED_OS='ubuntu22.04'
+    export MOFED_ARCH='x86_64'
+
+    # Set paths to additional Mellanox OFED binaries and libraries
+    export PATH="/opt/mellanox/hcoll/bin:${PATH}"
+    export LD_LIBRARY_PATH="/opt/mellanox/hcoll/lib:${LD_LIBRARY_PATH}"
+    export PATH="/opt/mellanox/sharp/bin:${PATH}"
+    export LD_LIBRARY_PATH="/opt/mellanox/sharp/lib:${LD_LIBRARY_PATH}"
+
+    # Set OpenMPI version and install path
+    export OPENMPI_MAJ='4'
+    export OPENMPI_MIN='1'
+    export OPENMPI_REV='6'
+    export OPENMPI_VER="${OPENMPI_MAJ}.${OPENMPI_MIN}.${OPENMPI_REV}"
+    export OPENMPI_ROOT_DIR='/opt/openmpi'
+    export OPENMPI_INSTALL_DIR="${OPENMPI_ROOT_DIR}/${OPENMPI_VER}"
+
+    # Set paths to OpenMPI binaries and libraries
+    export PATH="${OPENMPI_INSTALL_DIR}/bin:${PATH}"
+    export LD_LIBRARY_PATH="${OPENMPI_INSTALL_DIR}/lib:${LD_LIBRARY_PATH}"
+
+    # Update software package index, but DO NOT upgrade all installed
+    # packages to their latest versions. This is done primarily to
+    # prevent the upgrade of NVIDIA CUDA to a newer version.
+    apt-get -y update #&& apt-get -y upgrade
+
+    # Install base python environment
+    apt-get -y install python3-dev
+    apt-get -y install python3-pip
+    apt-get -y install python3-setuptools
+    apt-get -y install python3-wheel
+    apt-get -y install python-is-python3
+
+    # Install common python packags
+    apt-get -y install python3-numpy
+    apt-get -y install python3-scipy
+    apt-get -y install python3-pandas
+    apt-get -y install python3-sklearn
+    apt-get -y install python3-matplotlib
+
+    # Install additional python packages
+    apt-get -y install python3-h5py
+    apt-get -y install python3-netcdf4
+    apt-get -y install python3-nltk
+    apt-get -y install python3-skimage
+
+    # Install PyTorch dependencies
+    apt-get -y install ninja-build
+    apt-get -y install python3-astunparse
+    apt-get -y install python3-hypothesis
+    apt-get -y install python3-typing-extensions
+    apt-get -y install python3-filelock
+    apt-get -y install python3-fsspec
+    python -m pip install expecttest
+    python -m pip install types-dataclasses
+    python -m pip install optree
+
+    # Install optional PyTorch dependencies
+    apt-get -y install ffmpeg
+    apt-get -y install libffmpeg-nvenc-dev
+    apt-get -y install libavcodec-dev
+    apt-get -y install libavdevice-dev
+    apt-get -y install libavutil-dev 
+    apt-get -y install libjpeg-dev
+    apt-get -y install libpng-dev
+    apt-get -y install python3-opencv
+
+    # Install JupyterLab
+    python -m pip install jupyterlab
+
+    # Install mpi4py
+    python -m pip install mpi4py
+
+    cd /tmp 
+
+    # Set MAGMA version number
+    export MAGMA_MAJ='2'
+    export MAGMA_MIN='7'
+    export MAGMA_REV='2'
+    export MAGMA_VER="${MAGMA_MAJ}.${MAGMA_MIN}.${MAGMA_REV}"
+    export MAGMA_ROOT_DIR='/opt/magma'
+    export MAGMA_INSTALL_DIR="${MAGMA_ROOT_DIR}/${MAGMA_VER}"
+
+    # Set MAGMA build configuration environment variables 
+
+    # Download, build, and install MAGMA for PyTorch with NVIDIA GPU support
+    wget "https://icl.utk.edu/projectsfiles/magma/downloads/magma-${MAGMA_VER}.tar.gz"
+    tar -xf "magma-${MAGMA_VER}.tar.gz"
+    cd "magma-${MAGMA_VER}/"
+    rm -rf CMakeCache.txt CMakeFiles/
+    mkdir build
+    cd build
+    cmake .. \
+      -DCMAKE_INSTALL_PREFIX="${MAGMA_INSTALL_DIR}" \
+      -DBUILD_SHARED_LIBS='ON' \
+      -DUSE_FORTRAN='ON' \
+      -DBLA_VENDOR='Generic' \
+      -DLAPACK_LIBRARIES='-llapack -lblas' \
+      -DMAGMA_ENABLE_CUDA='ON' \
+      -DGPU_TARGET='sm_60,sm_70,sm_80'
+    make -j 4
+    make install
+
+    cd ../../
+
+    # Remove MAGMA build directory and source tarball
+    rm -rf "magma-${MAGMA_VER}/"
+    rm "magma-${MAGMA_VER}.tar.gz"
+
+    # Set path to MAGMA libraries
+    export MAGMA_HOME="${MAGMA_INSTALL_DIR}"
+    export LD_LIBRARY_PATH="${MAGMA_INSTALL_DIR}/lib:${LD_LIBRARY_PATH}"
+
+    cd /tmp
+
+    # Set PyTorch version number
+    export TORCH_MAJ='2'
+    export TORCH_MIN='2'
+    export TORCH_REV='1'
+    export TORCH_VER="${TORCH_MAJ}.${TORCH_MIN}.${TORCH_REV}"
+
+    # Download PyTorch source code
+    git clone --recursive https://github.com/pytorch/pytorch.git
+    cd pytorch/
+    git checkout "v${TORCH_VER}"
+    git submodule sync
+    git submodule update --init --recursive --jobs 0
+
+    # Apply patches and fixes found during PyTorch build process
+    # https://github.com/pytorch/pytorch/issues/103805
+    # https://github.com/microsoft/onnxruntime/issues/18029 
+    rm -r third_party/onnx-tensorrt
+    git clone --recursive https://github.com/onnx/onnx-tensorrt.git third_party/onnx-tensorrt
+
+    # Set PyTorch build configuration environment variables for distributed training
+    export RELEASE=1
+    export BUILD_TEST=0
+    export MAX_JOBS=4
+    export CC='mpicc'
+    export CFLAGS='-O3 -mtune=generic'
+    export CXX='mpicxx'
+    export CXXFLAGS='-O3 -mtune=generic -std=gnu++17'
+    export FC='mpif90'
+    export FFLAGS='-O3 -mtune=generic'
+    export BUILD_CAFFE2=0
+    export BUILD_CAFFE2_OPS=0
+    export BLAS='OpenBLAS'
+    export USE_MKL=0
+    export USE_MKLDNN=0
+    export USE_MKLDNN_ACL=0
+    export USE_MKLDNN_CBLAS=0
+    export USE_OPENMP=1
+    export MKL_THREADING='OMP'
+    export MKLDNN_CPU_RUNTIME='OMP'
+    export USE_FBGEMM=1
+    export USE_KINETO=1
+    export USE_NNPACK=1
+    export USE_NUMPY=1
+    export USE_QNNPACK=1
+    export TORCH_CUDA_ARCH_LIST='6.0;7.0;8.0'
+    export USE_CUDA=1
+    export USE_CUDNN=1
+    export USE_CUSPARSELT=0
+    export USE_NCCL=1
+    export USE_SYSTEM_NCCL=1
+    export USE_TENSORRT=1
+    export USE_DISTRIBUTED=1
+    export USE_MPI=1
+    export USE_GLOO=1
+    export USE_TENSORPIPE=1
+    export USE_FFMPEG=1
+    export USE_OPENCV=1
+
+    # Run PyTorch build and installation
+    python setup.py install
+
+    cd ../
+
+    # Remove PyTorch build directory and source repository
+    rm -rf pytorch/
+
+    cd /tmp
+
+    # Set TorchData version number
+    export TORCHDATA_MAJ='0'
+    export TORCHDATA_MIN='7'
+    export TORCHDATA_REV='1'
+    export TORCHDATA_VER="${TORCHDATA_MAJ}.${TORCHDATA_MIN}.${TORCHDATA_REV}"
+
+    # Set TorchData build configuration environment variables
+    export BUILD_S3=0
+
+    # Download, build and install TorchText
+    # https://github.com/pytorch/data/tree/v0.7.1?tab=readme-ov-file#from-source
+    git clone https://github.com/pytorch/data.git
+    cd data/
+    git checkout "v${TORCHDATA_VER}"
+    git submodule sync
+    git submodule update --init --recursive
+    python setup.py clean install
+
+    cd ../
+
+    # Remove TorchData build directory and source repository
+    rm -rf data/
+
+    cd /tmp
+
+    # Set TorchVision version number
+    export TORCHVISION_MAJ='0'
+    export TORCHVISION_MIN='17'
+    export TORCHVISION_REV='1'
+    export TORCHVISION_VER="${TORCHVISION_MAJ}.${TORCHVISION_MIN}.${TORCHVISION_REV}"
+
+    # Set TorchVision build configuration environment variables
+    export FORCE_CUDA=1
+
+    # Download, build and install TorchVision
+    git clone https://github.com/pytorch/vision.git
+    cd vision/
+    git checkout "v${TORCHVISION_VER}"
+    git submodule sync
+    git submodule update --init --recursive
+    python setup.py clean install
+
+    cd ../
+
+    # Remove TorchVision build directory and source repository
+    rm -rf vision/
+
+    cd /tmp
+
+    # Set TorchAudio version number
+    # https://pytorch.org/audio/main/build.html
+    export TORCHAUDIO_MAJ='2'
+    export TORCHAUDIO_MIN='2'
+    export TORCHAUDIO_REV='1'
+    export TORCHAUDIO_VER="${TORCHAUDIO_MAJ}.${TORCHAUDIO_MIN}.${TORCHAUDIO_REV}"
+
+    # Set TorchAudio build configuration environment variables
+    export TORCHAUDIO_USE_SOX=1
+    export BUILD_SOX=1
+
+    # Download, build and install TorchAudio
+    # https://pytorch.org/audio/main/build.html
+    git clone https://github.com/pytorch/audio.git
+    cd audio/
+    git checkout "v${TORCHAUDIO_VER}"
+    git submodule sync
+    git submodule update --init --recursive
+    python setup.py clean install
+
+    cd ../
+
+    # Remove TorchAudio build directory and source repository
+    rm -rf audio/
+
+    cd /tmp
+
+    # Set Horovod version number
+    export HOROVOD_MAJ='0'
+    export HOROVOD_MIN='28'
+    export HOROVOD_REV='1'
+    export HOROVOD_VER="${HOROVOD_MAJ}.${HOROVOD_MIN}.${HOROVOD_REV}"
+
+    # Set Horovod build configuration environment variables
+    export HOROVOD_WITHOUT_MXNET=1
+    export HOROVOD_WITH_PYTORCH=1
+    export HOROVOD_WITHOUT_TENSORFLOW=1
+    export HOROVOD_WITH_MPI=1
+    export HOROVOD_WITH_GLOO=1
+    export HOROVOD_GPU='CUDA'
+    export HOROVOD_CUDA_HOME="${CUDA_HOME}"
+    export HOROVOD_BUILD_CUDA_CC_LIST='60,70,80'
+    export HOROVOD_GPU_OPERATIONS='NCCL'
+    export HOROVOD_NCCL_INCLUDE_DIR="${NCCL_INCLUDE_DIR}"
+    export HOROVOD_NCCL_LIB_DIR="${NCCL_LIB_DIR}"
+
+    # Download, build, and install Horovod for PyTorch with NVIDIA GPU support
+    #git clone --recursive https://github.com/horovod/horovod.git
+    #cd horovod/
+    #git checkout "v${HOROVOD_VER}"
+    #git submodule sync
+    #git submodule update --init --recursive
+    #pip install -v .
+
+    # https://github.com/horovod/horovod/pull/3998
+    pip install git+https://github.com/thomas-bouvier/horovod.git@compile-cpp17
+
+    cd /tmp
+
+    # Set PyTorch Lightning version number
+    export TORCH_LIGHTNING_MAJ='2'
+    export TORCH_LIGHTNING_MIN='2'
+    export TORCH_LIGHTNING_REV='1'
+    export TORCH_LIGHTNING_VER="${TORCH_LIGHTNING_MAJ}.${TORCH_LIGHTNING_MIN}.${TORCH_LIGHTNING_REV}"
+
+    # Download, build and install PyTorch Lightning
+    git clone https://github.com/Lightning-AI/pytorch-lightning.git
+    cd pytorch-lightning/
+    git checkout "${TORCH_LIGHTNING_VER}"
+    git submodule sync
+    git submodule update --init --recursive
+    #python setup.py clean install
+    pip install -v .
+
+    cd ../
+
+    # Remove TorchAudio build directory and source repository
+    rm -rf pytorch-lightning/
+
+    # Store information about the container image build system
+    mkdir -p /opt/.nxis
+    cd /opt/.nxis
+    dmidecode > dmidecode.default
+    df -ahPT > df.default
+    fdisk --list > fdisk.default
+    lsblk --output-all > lsblk.default
+    lsblk --output-all --json > lsblk.json
+    lscpu --output-all > lscpu.default
+    lscpu --output-all --json > lscpu.json
+    lshw > lshw.default
+    lshw -json > lshw.json
+    lshw -short > lshw.short
+    lspci > lspci.default
+    lspci -vvv > lspci.verbose
+    free -h > free.default
+    cat /proc/meminfo > meminfo.default
+
+    # Cleanup
+    apt-get -y autoremove --purge
+    apt-get -y clean
+    rm -rf /var/lib/apt/lists/*
+
+    # Update database for mlocate
+    updatedb
+
+%files
+
+%runscript
+
+%test

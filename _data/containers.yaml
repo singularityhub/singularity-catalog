@@ -1,21 +1,21 @@
 bases:
-- count: 1956
+- count: 1958
   name: ubuntu
 - count: 433
   name: nvidia/cuda
 - count: 353
   name: debian
-- count: 282
+- count: 281
   name: centos
 - count: 258
   name: ghcr.io/mkandes/naked-singularity
-- count: 254
+- count: 255
   name: alpine
 - count: 222
   name: aibasel/downward
 - count: 204
   name: continuumio/miniconda3
-- count: 201
+- count: 203
   name: python
 - count: 129
   name: tensorflow/tensorflow
@@ -104,9 +104,9 @@ bases:
 - count: 14
   name: shahzebmsiddiqui/default/easybuild
 - count: 13
-  name: nitishnarula/secure/ubuntu-focal
-- count: 12
   name: ghcr.io/mkandes/openmpi
+- count: 13
+  name: nitishnarula/secure/ubuntu-focal
 - count: 12
   name: pawsey/openfoam
 - count: 12
@@ -148,6 +148,8 @@ bases:
 - count: 11
   name: golang
 - count: 10
+  name: nipreps/mriqc
+- count: 10
   name: scientificlinux/sl
 - count: 10
   name: quay.io/vgteam/vg
@@ -162,7 +164,7 @@ bases:
 - count: 9
   name: dcgc-bfx/dcgc-jupyter-rstudio
 - count: 9
-  name: nipreps/mriqc
+  name: nipreps/smriprep
 - count: 9
   name: centos-7.7.1908.sif
 - count: 9
@@ -183,8 +185,6 @@ bases:
   name: bids/rshrf
 - count: 8
   name: nipreps/nibabies
-- count: 8
-  name: nipreps/smriprep
 - count: 8
   name: ewels/multiqc
 - count: 8
@@ -214,7 +214,7 @@ bases:
 - count: 7
   name: sebastientourbier/connectomemapper-bidsapp
 - count: 7
-  name: letaylor/sc_qc_cluster
+  name: pennlinc/xcp_d
 - count: 7
   name: anair17/railrl_hand_v2
 - count: 7
@@ -251,8 +251,6 @@ bases:
   name: conda/miniconda3-centos7
 - count: 6
   name: bids/freesurfer
-- count: 6
-  name: pennlinc/xcp_d
 - count: 6
   name: bids/mrtrix3_connectome
 - count: 6
@@ -673,6 +671,8 @@ bases:
   name: tgagor/centos
 - count: 2
   name: kwells/chroma
+- count: 2
+  name: letaylor/sc_qc_cluster
 - count: 2
   name: nistmni/minc-toolkit-min
 - count: 2
@@ -2000,7 +2000,7 @@ bases:
 - count: 1
   name: lizhen0909/graph_clustering_toolkit
 bootstraps:
-- count: 6366
+- count: 6368
   name: docker
 - count: 499
   name: shub
@@ -2008,7 +2008,7 @@ bootstraps:
   name: debootstrap
 - count: 370
   name: library
-- count: 342
+- count: 343
   name: oras
 - count: 188
   name: localimage
@@ -2488,6 +2488,8 @@ orgs:
 - count: 1
   name: hkmo
 - count: 1
+  name: letaylor
+- count: 1
   name: kaldiasr
 - count: 1
   name: danigoland
@@ -2691,8 +2693,6 @@ orgs:
   name: buisciii
 - count: 1
   name: tikhonovapolly
-- count: 1
-  name: letaylor
 - count: 1
   name: BIDS-Apps
 - count: 1
@@ -2938,8 +2938,8 @@ orgs:
 - count: 1
   name: tikk3r
 tags:
-  latest: 692
-  other: 6083
+  latest: 687
+  other: 6091
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3041,7 +3041,7 @@ versions:
     3.11.5: 24
     '3.12': 9
     3.13.1: 1
-    '3.15': 9
+    '3.15': 10
     3.15.0: 1
     '3.16': 2
     3.16.0: 2
@@ -3376,7 +3376,7 @@ versions:
     '6.10': 2
     '6.8': 2
     '6.9': 1
-    '7': 101
+    '7': 100
     7.4.1708: 12
     7.5.1804: 6
     '7.6': 4
@@ -3788,7 +3788,7 @@ versions:
     0.3-ubuntu-22.04-x86_64: 2
   ghcr.io/mkandes/openmpi:
     4.1-mofed-5.8-cuda-12.1-miniconda-py310-24.1-ubuntu-22.04-x86_64: 1
-    4.1-mofed-5.8-cuda-12.1-ubuntu-22.04-x86_64: 2
+    4.1-mofed-5.8-cuda-12.1-ubuntu-22.04-x86_64: 3
     4.1-mofed-5.8-openblas-0.3-ubuntu-22.04-x86_64: 1
     4.1-mofed-5.8-ubuntu-22.04-x86_64: 2
     4.1-ucx-1.14-cuda-12.1-ubuntu-22.04-x86_64: 1
@@ -4191,7 +4191,7 @@ versions:
   larbys/uboonecode:
     v08_00_00_40: 1
   letaylor/sc_qc_cluster:
-    latest: 7
+    latest: 2
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -4415,6 +4415,7 @@ versions:
     23.0.0: 1
     23.0.1: 1
     23.1.0: 1
+    23.1.1: 1
   nipreps/nibabies:
     22.0.2: 1
     22.1.0: 1
@@ -4433,6 +4434,7 @@ versions:
     0.12.2: 1
     0.13.2: 1
     0.14.0: 1
+    0.15.0: 1
     0.9.1: 1
     0.9.2: 1
   nipy/heudiconv:
@@ -4824,6 +4826,7 @@ versions:
     0.6.2: 1
     0.6.3: 1
     0.6.4: 1
+    0.7.0: 1
     '04.0': 1
   percona/pmm-server:
     latest: 1
@@ -4963,7 +4966,7 @@ versions:
     3.6.8-slim-jessie: 1
     3.6.8-stretch: 1
     '3.7': 2
-    3.7-slim: 57
+    3.7-slim: 58
     3.7-stretch: 1
     3.7.1-stretch: 2
     3.7.16-slim-bullseye: 1
@@ -4976,7 +4979,7 @@ versions:
     3.7.7-slim-buster: 1
     3.7.9: 1
     '3.8': 14
-    3.8-alpine: 7
+    3.8-alpine: 8
     3.8-buster: 2
     3.8-slim: 8
     3.8-slim-bullseye: 2
@@ -5597,9 +5600,9 @@ versions:
     '20.10': 3
     '21.04': 3
     '21.10': 3
-    '22.04': 51
+    '22.04': 52
     '22.10': 6
-    '23.10': 1
+    '23.10': 2
     UBUNTU_VERSION: 1
     artful: 7
     bionic: 201

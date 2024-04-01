@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: alpine:3.15
+
+%post
+
+    # Version https://zenodo.org/record/7345682/files/bamtools_2.5.2.img was missing
+    # python and bash 
+
+    apk update && apk upgrade &&  apk add  bash wget python3 curl 
+
+
+    curl -o datasets 'https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/LATEST/linux-amd64/datasets'
+    chmod +x datasets
+    mv datasets /usr/local/bin
+
+
+
+%environment
+    export LC_ALL=C.UTF-8
+
+%runscript
+    exec datasets "$@"
+
+

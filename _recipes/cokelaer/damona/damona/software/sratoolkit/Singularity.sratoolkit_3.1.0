@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: ubuntu:23.10
+
+%test
+    python3 --version > /dev/null
+    bash --version > /dev/null
+    fastq-dump --stdout -X 2 SRR390728  > /dev/null
+
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+
+
+    apt-get update --fix-missing
+    apt-get install -y wget python3
+
+    wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
+    tar -vxzf sratoolkit.current-ubuntu64.tar.gz
+    rm -rf /sratoolkit.current-ubuntu64.tar.gz
+
+    export PATH=$PATH:/sratoolkit.3.1.0-ubuntu64/bin
+
+ # some cleanup
+    cd /usr/local \
+    && apt-get remove -y wget \
+    && apt-get autoremove -y \
+    && apt-get clean
+
+%environment
+  export LC_ALL=C.UTF-8
+    export PATH=$PATH:/sratoolkit.3.1.0-ubuntu64/bin
+
+
+%runscript
+    exec fastq-dump "$@"
+
