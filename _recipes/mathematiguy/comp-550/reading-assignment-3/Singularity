@@ -1,0 +1,39 @@
+################# Header: Define the base system you want to use ################
+# Reference of the kind of base you want to use (e.g., docker, debootstrap, shub).
+Bootstrap: docker
+# Select the docker image you want to use (Here we choose tensorflow)
+From: texlive/texlive:latest-full-doc
+
+# Environment variables that should be sourced at runtime.
+%environment
+    # use bash as default shell
+    SHELL=/bin/bash
+    PYTHON_VERSION=3.9
+    PATH="/opt/local/bin:${PATH}"
+    PYTHONPATH="/opt/llama:/opt/local/bin/:${PYTHONPATH}"
+    export SHELL PYTHON_VERSION PATH PYTHONPATH
+
+################# Section: Defining the system #################################
+# Commands in the %post section are executed within the container.
+%post
+    echo "Setting environment variables"
+    export DEBIAN_FRONTEND=noninteractive
+
+    echo "Installing Tools with apt-get"
+    apt-get update
+    apt-get install -y curl \
+            wget \
+            unzip \
+            software-properties-common \
+            git \
+            entr
+    apt-get clean
+
+    # Install apt packages
+    apt update
+    apt install -y curl software-properties-common build-essential rsync python3-launchpadlib
+    add-apt-repository ppa:deadsnakes/ppa -y
+    add-apt-repository ppa:rmescandon/yq -y
+
+    # Install yq (yaml processing)
+    apt install -y yq
