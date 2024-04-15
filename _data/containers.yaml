@@ -1,5 +1,5 @@
 bases:
-- count: 1958
+- count: 1963
   name: ubuntu
 - count: 433
   name: nvidia/cuda
@@ -42,9 +42,9 @@ bases:
 - count: 36
   name: poldracklab/fmriprep
 - count: 35
-  name: busybox
-- count: 34
   name: bids/validator
+- count: 35
+  name: busybox
 - count: 34
   name: nvcr.io/nvidia/pytorch
 - count: 33
@@ -891,6 +891,8 @@ bases:
   name: pmitev/Teoroo-singularity
 - count: 2
   name: ubuntu@sha256
+- count: 2
+  name: andreweiner/of_pytorch
 - count: 2
   name: ruby
 - count: 2
@@ -1788,8 +1790,6 @@ bases:
 - count: 1
   name: ghcr.io/junghawoo/simpleg_tool
 - count: 1
-  name: andreweiner/of_pytorch
-- count: 1
   name: caid/deepseacat_singularity
 - count: 1
   name: caid/ashs
@@ -2004,7 +2004,7 @@ bases:
 - count: 1
   name: spark.img
 bootstraps:
-- count: 6376
+- count: 6383
   name: docker
 - count: 499
   name: shub
@@ -2786,8 +2786,6 @@ orgs:
 - count: 1
   name: ghcr.io/junghawoo
 - count: 1
-  name: andreweiner
-- count: 1
   name: jekriske
 - count: 1
   name: scientificlinux
@@ -2882,6 +2880,8 @@ orgs:
 - count: 1
   name: thinca
 - count: 1
+  name: andreweiner
+- count: 1
   name: nipy
 - count: 1
   name: singularityhub
@@ -2946,8 +2946,8 @@ orgs:
 - count: 1
   name: aibasel
 tags:
-  latest: 687
-  other: 6099
+  latest: 688
+  other: 6105
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3081,6 +3081,7 @@ versions:
   andersenlabapps/ivar:
     1.3.1: 2
   andreweiner/of_pytorch:
+    of2006-py1.6-cpu: 1
     of2106-py1.9.0-cpu: 1
   anibali/pytorch:
     1.4.0-cuda10.1-ubuntu16.04: 6
@@ -3246,6 +3247,7 @@ versions:
     v1.14.2: 1
     v1.14.3: 1
     v1.14.4: 1
+    v1.14.5: 1
     v1.4.2: 1
     v1.5.2: 1
     v1.5.4: 1
@@ -5607,12 +5609,12 @@ versions:
     '18.10': 9
     '19.04': 33
     '19.10': 16
-    '20.04': 434
+    '20.04': 437
     '20.04  ': 1
     '20.10': 3
     '21.04': 3
     '21.10': 3
-    '22.04': 52
+    '22.04': 53
     '22.10': 6
     '23.10': 2
     UBUNTU_VERSION: 1
@@ -5632,7 +5634,7 @@ versions:
     focal-20200925: 3
     focal-20210827: 1
     jammy: 10
-    latest: 149
+    latest: 150
     rolling: 1
     sha256.21678b2846063434e2009dee535d3e28ded35774ca72722e1d62b37077de30da: 5
     sha256.80c52afadf3e7c3f9573de4fe79b7dca57fb3290df6c8dc46a75b02768a81146: 3

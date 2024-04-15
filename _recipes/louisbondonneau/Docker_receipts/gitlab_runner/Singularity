@@ -28,5 +28,6 @@ From: docker:24.0.7-dind-rootless
 # Build, Shell, Register, and Run commands
 # singularity build gitlab-runner.sif Singularity
 # singularity shell gitlab-runner.sif
+#  singularity shell --no-home --userns --writable-tmpfs gitlab-runner.sif
 #   gitlab-runner register (FILL WITH URL AND TOKEN)
 #   gitlab-runner run

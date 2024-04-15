@@ -231,18 +231,7 @@ echo 'ls ~/' `ls -lrt ~/` \
 && echo FC is $FC \
 && $FC -v \
 && echo pwd is $(pwd) \
-&& mkdir -p ../bin/LINUX64 \
-&& gcc  config/depend.c -o ../bin/LINUX64/depend.x \
-&& echo cd libext \
-&& echo 'Compiling libext ..........' \
-&& cd libext ; make FC=$FC ; cd .. \
-&& echo 'Compiling tools ..........' \
-&& cd tools  ; make FC=$FC ; cd .. \
-&& make SKIP_COMPILERS=1 deps_stamp   \
-&& make directories \
-&& export QUICK_BUILD=1 \
 && make FC=$FC -j6 || { echo 'Compilation Failure'; exit 1; } \
-&& unset QUICK_BUILD \
 && FC=$FC ../contrib/getmem.nwchem 2000  || true \
 && make FC=$FC install INSTALL_PREFIX=/opt/nwchem \
 && ldd  ../bin/LINUX64/nwchem  "\

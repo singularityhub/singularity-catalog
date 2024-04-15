@@ -1,0 +1,21 @@
+bootstrap:docker
+From:ubuntu:20.04
+
+%labels
+
+AUTHOR Rafael Papallas (rpapallas.com)
+
+%environment
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+    export XDG_RUNTIME_DIR=/tmp  # This fixes an issue with /run read-only permissions when using Rviz and other tools.
+    export LD_LIBRARY_PATH=/opt/ros/noetic/lib:/.singularity.d/libs
+    export CPATH=/opt/ros/noetic/include
+    export PATH=/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    export MJ_HOME="/mujoco"
+%files
+  scripts /scripts
+  mujoco /mujoco
+
+%post
+  /scripts/post_script.sh
