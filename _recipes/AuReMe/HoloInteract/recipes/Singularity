@@ -1,0 +1,55 @@
+
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+    Maintainer Got Jeanne
+    Version v0.1
+    Description HoloInteract Singularity recipe
+     
+%environment
+     export PYTHONIOENCODING=utf8
+     export LANG=C.UTF-8
+
+%post
+     apt-get -y update && \
+     echo "deb http://security.ubuntu.com/ubuntu bionic-security main" >> /etc/apt/sources.list ;\
+     apt-get -y update && \
+     DEBIAN_FRONTEND=noninteractive apt-get install -y \
+     csh \
+     make \
+     wget \
+     git\
+     build-essential\
+     checkinstall\
+     libreadline-gplv2-dev\
+     libncursesw5-dev\
+     libssl-dev\
+     libsqlite3-dev\
+     tk-dev\
+     libgdbm-dev\
+     libc6-dev\
+     libbz2-dev\
+     libffi-dev\
+     zlib1g-dev;\
+     cd /opt;\
+     wget https://www.python.org/ftp/python/3.9.16/Python-3.9.16.tgz;\
+     tar xzf Python-3.9.16.tgz;\
+     cd Python-3.9.16;\
+     ./configure --enable-optimizations;\
+     make altinstall;\
+     apt-get clean;\
+     apt-get purge;\
+     mkdir /programs;\
+     cd /programs;\
+     git clone https://github.com/AuReMe/HoloInteract.git;\
+     cd HoloInteract;\
+     mkdir local_packages;\
+     cd local_packages;\
+     git clone https://github.com/PaulineGHG/Ontology_sunburst.git;\
+     cd Ontology_sunburst;\
+     python3.9 -m pip install -r requirements.txt;\
+     python3.9 -m pip install -e . ;\
+     cd ../.. ;\
+     bash install_dependencies.sh;\
+     python3.9 -m pip install -e .

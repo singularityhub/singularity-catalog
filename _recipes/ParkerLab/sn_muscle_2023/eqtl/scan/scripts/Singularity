@@ -1,0 +1,65 @@
+BootStrap: docker
+From: ubuntu:20.04
+IncludeCmd: yes
+	
+%help
+
+%setup
+
+%files
+
+%labels
+
+%environment
+	alias ll='ls -al'
+	
+%post
+	apt-get update && apt-get -y install --no-install-recommends --no-install-suggests ca-certificates software-properties-common
+	
+	# qtltools
+	apt-get -y install g++ gcc gfortran make autoconf automake libtool zlib1g-dev liblzma-dev libbz2-dev lbzip2 libgsl-dev libblas-dev libx11-dev libboost1.71-all-dev git libreadline-dev libxt-dev libpcre2-dev libcurl4-openssl-dev autoconf automake r-mathlib wget locate libcrypto++-dev libssl-dev
+
+	# 2. Create a directory for downloads and change to it:
+	mkdir /opt/Tools
+	cd /opt/Tools
+	wget https://cran.r-project.org/src/base/R-4/R-4.0.2.tar.gz
+			tar zxvf R-4.0.2.tar.gz
+	
+	# 4. Rmath standalone..
+	cd /opt/Tools/R-4.0.2/
+	./configure
+	cd src/nmath/standalone/
+	make
+	rm /opt/Tools/R-4.0.2.tar.gz 
+		
+	# 5. Compile HTSlib:
+	cd /opt/Tools
+	wget https://github.com/samtools/htslib/releases/download/1.10.2/htslib-1.10.2.tar.bz2
+	tar jxvf htslib-1.10.2.tar.bz2
+	cd /opt/Tools/htslib-1.10.2/
+	./configure
+	make 
+
+	rm /opt/Tools/htslib-1.10.2.tar.bz2
+
+	# 6. Get QTLtools, here using git but you can also download and extract the source code:
+	cd /opt/Tools/
+	git clone https://github.com/qtltools/qtltools.git
+	cd qtltools
+
+	# 7. Edit QTLtools Makefile to set the necessary variables:
+	########################################################
+	# YOU NEED TO UPDATE THESE 6 PATHS TO COMPILE QTLTOOLS #
+	########################################################
+	sed -i 's:BOOST_INC=:BOOST_INC=/usr/include:g' Makefile
+	sed -i 's:BOOST_LIB=:BOOST_LIB=/usr/lib/x86_64-linux-gnu:g' Makefile
+	sed -i 's:RMATH_INC=:RMATH_INC=/opt/Tools/R-4.0.2/src/include:g' Makefile
+	sed -i 's:RMATH_LIB=:RMATH_LIB=/opt/Tools/R-4.0.2/src/nmath/standalone:g' Makefile
+	sed -i 's:HTSLD_INC=:HTSLD_INC=/opt/Tools/htslib-1.10.2:g' Makefile
+	sed -i 's:HTSLD_LIB=:HTSLD_LIB=/opt/Tools/htslib-1.10.2:g' Makefile
+	sed -i 's:LIB_FLAGS=-lz -lgsl -lbz2 -llzma -lgslcblas -lm -lpthread -lcurl:LIB_FLAGS=-lz -lgsl -lbz2 -llzma -lgslcblas -lm -lpthread -lcurl -lssl -lcrypto:g' Makefile
+	# # 8. Compile and install QTLtools
+	make 
+	make install
+	exec bash # necessary to immediately enable autocompletion
+

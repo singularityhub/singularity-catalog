@@ -1,0 +1,29 @@
+Bootstrap: docker                                                                                                                                                                    
+From: ubuntu:latest                                                                                                                                                                  
+                                                                                                                                                                                     
+%environment
+    source /opt/software/conda/bin/activate /opt/software/conda-env
+%post
+    apt -y update
+    apt -y install -y build-essential wget git automake zlib1g zlib1g-dev pkg-config curl unzip
+
+    mkdir -p /opt/software && cd /opt/software
+
+    cd /opt/software
+    curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    sh ./Miniconda3-latest-Linux-x86_64.sh -p /opt/software/conda -b
+       
+    /opt/software/conda/bin/conda config --add channels bioconda
+    /opt/software/conda/bin/conda config --add channels conda-forge
+
+    /opt/software/conda/bin/conda create -p /opt/software/conda-env -y fastp bbmap fastqc spades quast barrnap blast trinity=2.15.1 cd-hit transdecoder diamond kraken2 minimap2 samtools hisat2 qualimap seqtk
+    /opt/software/conda/bin/conda clean --all --yes
+
+    wget https://github.com/DaehwanKimLab/centrifuge/archive/refs/tags/v1.0.4.zip
+    unzip v1.0.4.zip
+    rm v1.0.4.zip
+
+    cd centrifuge-1.0.4
+    make
+    make install prefix=/usr/
+    cd ../

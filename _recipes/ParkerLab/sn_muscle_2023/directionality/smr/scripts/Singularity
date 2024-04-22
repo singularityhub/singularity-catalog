@@ -1,0 +1,28 @@
+BootStrap: library
+From: library://arushiv/default/r_py:sha256.ec52d9e5f64d136b1b2f5291ff03e13a5f44dce3e0ac79f67860fbeedfa88151
+IncludeCmd: yes
+	
+%help
+
+%setup
+
+	
+%files
+
+%labels
+
+%environment
+	export R_LIBS=/usr/local/lib/R/site-library:/usr/lib/R/site-library:/usr/lib/R/library
+	alias python='python3'
+
+%post
+
+	apt-get install -y libgmp3-dev  build-essential libcurl4-openssl-dev libssl-dev libxml2-dev  libboost-all-dev 
+
+    R --slave -e 'install.packages("remotes")'
+	R --slave -e 'remotes::install_github("MRCIEU/TwoSampleMR")'
+
+	mkdir -p /sw
+	mkdir -p /scratch
+	mkdir -p /gpfs
+	mkdir -p /lab

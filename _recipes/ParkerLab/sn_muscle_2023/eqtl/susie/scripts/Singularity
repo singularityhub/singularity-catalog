@@ -1,0 +1,43 @@
+BootStrap: library
+From: library://arushiv/default/r4py3:sha256.c9800b39d8d8ee10a83ebfd7e03222be6e1074176ab1056cbac2106eef6354d1
+IncludeCmd: yes
+
+%help
+
+%setup
+
+%files
+
+%labels
+
+%environment
+    export R_LIBS=/usr/local/lib/R/site-library:/usr/lib/R/site-library:/usr/lib/R/library
+    alias python="python3"
+    export PATH=/opt/bcftools/bin:$PATH
+%post
+
+    apt-get update -y
+    apt-get install -y libgmp3-dev  libmariadbclient-dev libmpfr-dev wget tar libblas-dev locate tabix zlib1g-dev
+
+    # bcftools
+    wget https://github.com/samtools/bcftools/releases/download/1.14/bcftools-1.14.tar.bz2
+    bzip2 -d bcftools-1.14.tar.bz2
+    tar xvf bcftools-1.14.tar
+    cd bcftools-1.14/
+    ./configure --prefix=/opt/bcftools
+    make
+    make install
+    cd
+
+    # ## build_vignettes for coloc and hyprcoloc needs pandoc and some additional stuff like rmarkdown, skipping for now.
+
+    R --slave -e 'devtools::install_github("jrs95/hyprcoloc", build_opts = c("--no-resave-data", "--no-manual"), build_vignettes=FALSE)'
+    R --slave -e 'devtools::install_github("boxiangliu/locuscomparer")'
+    R --slave -e 'install.packages("remotes")'
+    R --slave -e 'remotes::install_github("stephenslab/susieR", build_vignettes=FALSE)'
+    R --slave -e 'remotes::install_github("chr1swallace/coloc@main", build_vignettes=FALSE)'
+    R --slave -e 'install.packages("BiocManager")'
+    R --slave -e "BiocManager::install(c('BiocCheck','SummarizedExperiment','lumi', 'limma', 'dplyr','cqn','ggplot2','htmlwidgets', 'tidyr','assertthat','GenomicRanges','readr', 'GDSArray','plotly'))"
+    R --slave -e 'devtools::install_github("kauralasoo/eQTLUtils", build_vignettes=FALSE)'
+
+    pip install pyyaml pybedtools configargparse
