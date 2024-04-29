@@ -19,8 +19,8 @@ EPEL_FILE=epel-release-latest-7.noarch.rpm
 EPEL_MIRROR=mirror.chpc.utah.edu
 curl -sL http://${EPEL_MIRROR}/pub/epel/{$EPEL_FILE} -o '#1'
 rpm -ivh $EPEL_FILE && /bin/rm -f $EPEL_FILE
-yum install -y python-pip jq bc
-pip install PyYAML==5.4.1 yq==2.12.2
+yum install -y python36 python36-pip jq
+pip3 install PyYAML==5.4.1 yq==2.12.2
 
 echo "Installing Vaa3d"
 # Prereqs for Vaa3d

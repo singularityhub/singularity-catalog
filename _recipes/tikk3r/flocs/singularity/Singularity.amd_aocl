@@ -275,6 +275,18 @@ From: fedora:38
     pip install Kittens
     # Install this separately since it keeps forcefully downgrading numpy.
     pip install --no-deps aplpy
+    pip install --no-deps lofarSun
+
+    #
+    # Install LTA client
+    #
+    cd $INSTALLDIR
+    wget https://lta.lofar.eu/software/lofar_lta-2.8.0.tar.gz
+    tar xf lofar_lta-*
+    cd lofar_lta*
+    python setup.py install_oracle
+    python setup.py install
+    rm lofar_lta*.tar.gz
 
     #
     # Install Montage
@@ -501,6 +513,11 @@ From: fedora:38
     python setup.py install --add-lofar-utils
     cd $INSTALLDIR
     rm -rf $INSTALLDIR/RMextract
+
+    #
+    # Install LoSiTo
+    #
+    pip install --no-deps git+https://github.com/darafferty/losito.git
 
 	#
 	# Install LoSoTo Py 3
