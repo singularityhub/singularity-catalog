@@ -1,5 +1,5 @@
 bases:
-- count: 1966
+- count: 1972
   name: ubuntu
 - count: 433
   name: nvidia/cuda
@@ -7,10 +7,10 @@ bases:
   name: debian
 - count: 283
   name: centos
+- count: 261
+  name: alpine
 - count: 258
   name: ghcr.io/mkandes/naked-singularity
-- count: 257
-  name: alpine
 - count: 222
   name: aibasel/downward
 - count: 204
@@ -35,6 +35,8 @@ bases:
   name: fedora
 - count: 47
   name: conda/miniconda3
+- count: 39
+  name: busybox
 - count: 37
   name: ghcr.io/mkandes/ubuntu
 - count: 37
@@ -43,8 +45,6 @@ bases:
   name: poldracklab/fmriprep
 - count: 35
   name: bids/validator
-- count: 35
-  name: busybox
 - count: 34
   name: nvcr.io/nvidia/pytorch
 - count: 33
@@ -61,12 +61,12 @@ bases:
   name: pytorch/pytorch
 - count: 27
   name: modakopt/modak
-- count: 25
+- count: 26
   name: pennbbl/qsiprep
 - count: 25
-  name: osrf/ros
-- count: 24
   name: nipreps/fmriprep
+- count: 25
+  name: osrf/ros
 - count: 24
   name: r-base
 - count: 22
@@ -102,11 +102,15 @@ bases:
 - count: 14
   name: shahzebmsiddiqui/default/easybuild
 - count: 14
+  name: 'GodloveD/busybox   '
+- count: 14
   name: ebothmann/sherpa-singularity
 - count: 13
   name: ghcr.io/mkandes/openmpi
 - count: 13
   name: nitishnarula/secure/ubuntu-focal
+- count: 13
+  name: golang
 - count: 12
   name: conda/miniconda2
 - count: 12
@@ -121,8 +125,6 @@ bases:
   name: openfluid/openfluid
 - count: 12
   name: ufscar/ubuntu_ompi
-- count: 12
-  name: 'GodloveD/busybox   '
 - count: 12
   name: julia
 - count: 12
@@ -145,8 +147,6 @@ bases:
   name: perl
 - count: 11
   name: deeplearnphysics/larcv2
-- count: 11
-  name: golang
 - count: 11
   name: rockylinux
 - count: 10
@@ -302,6 +302,8 @@ bases:
 - count: 5
   name: combinelab/salmon
 - count: 5
+  name: bids/pymvpa
+- count: 5
   name: neuronets/kwyk
 - count: 5
   name: rockylinux/rockylinux
@@ -353,8 +355,6 @@ bases:
   name: ghcr.io/mkandes/mvapich
 - count: 4
   name: sebastientourbier/mialsuperresolutiontoolkit
-- count: 4
-  name: bids/pymvpa
 - count: 4
   name: repronim/reproin
 - count: 4
@@ -2010,31 +2010,31 @@ bases:
 - count: 1
   name: nvidia/vulkan
 bootstraps:
-- count: 6402
+- count: 6415
   name: docker
-- count: 499
+- count: 501
   name: shub
-- count: 406
+- count: 412
   name: debootstrap
-- count: 372
+- count: 378
   name: library
 - count: 343
   name: oras
 - count: 189
   name: localimage
-- count: 162
+- count: 168
   name: yum
-- count: 28
+- count: 34
   name: zypper
-- count: 22
+- count: 26
   name: scratch
+- count: 17
+  name: arch
+- count: 16
+  name: busybox
 - count: 15
   name: docker-daemon
-- count: 15
-  name: arch
-- count: 14
-  name: busybox
-- count: 11
+- count: 13
   name: self
 - count: 9
   name: 'library  '
@@ -2954,8 +2954,8 @@ orgs:
 - count: 1
   name: pmitev
 tags:
-  latest: 692
-  other: 6122
+  latest: 694
+  other: 6139
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3054,7 +3054,7 @@ versions:
     3.10.1: 2
     3.10.3: 4
     '3.11': 4
-    3.11.5: 24
+    3.11.5: 28
     '3.12': 9
     3.13.1: 1
     '3.15': 10
@@ -3228,6 +3228,7 @@ versions:
     v2.0.2: 1
     v4.0.1: 1
     v4.0.3: 1
+    v4.0.4: 1
   bids/rs_signal_extract:
     '0.1': 1
   bids/rshrf:
@@ -3385,9 +3386,9 @@ versions:
   buisciii/centos7_base_image:
     latest: 2
   busybox:
-    1.31.1: 8
+    1.31.1: 10
     latest: 8
-    'latest   ': 12
+    'latest   ': 14
   bvlc/caffe:
     cpu: 2
     gpu: 2
@@ -3907,7 +3908,7 @@ versions:
     3.5.3: 1
   golang:
     1.11.5-stretch: 1
-    1.12.3-alpine3.9: 9
+    1.12.3-alpine3.9: 11
     1.18.3-alpine3.16: 1
   google/deepvariant:
     0.10.0: 1
@@ -4431,6 +4432,7 @@ versions:
     23.1.4: 1
     23.2.0: 1
     23.2.1: 1
+    23.2.2: 1
   nipreps/mriqc:
     22.0.1: 1
     22.0.2: 1
@@ -4836,6 +4838,7 @@ versions:
     0.20.0: 1
     0.21.1: 1
     0.21.3: 1
+    0.21.4: 1
     0.6.4: 1
     0.6.6: 1
     0.7.2: 1
@@ -5618,9 +5621,9 @@ versions:
   ubuntu:
     $VERSION: 3
     '12.04': 1
-    '14.04': 39
+    '14.04': 41
     14.04.5: 1
-    '16.04': 312
+    '16.04': 314
     '16.10': 3
     '17.04': 8
     '17.10': 4
@@ -5655,7 +5658,7 @@ versions:
     focal-20200925: 3
     focal-20210827: 1
     jammy: 10
-    latest: 151
+    latest: 153
     rolling: 1
     sha256.21678b2846063434e2009dee535d3e28ded35774ca72722e1d62b37077de30da: 5
     sha256.80c52afadf3e7c3f9573de4fe79b7dca57fb3290df6c8dc46a75b02768a81146: 3
