@@ -1,0 +1,46 @@
+
+Bootstrap: docker
+
+From: continuumio/anaconda3:2019.03
+
+
+%post
+export PATH=/opt/conda/bin:$PATH
+
+#update
+apt-get update
+apt-get install -y tree
+pip install --upgrade pip
+
+#tensorflow
+
+#tensorflow-gpu>=1.13.2, <=1.14
+conda install tensorflow-gpu==1.14
+
+#scikit-learn
+conda install -c anaconda scikit-learn
+
+# niftynet Supported loaders: nibabel, opencv, skimage, pillow, simpleitk, dummy in priority order.
+
+#nibabel
+conda install -c conda-forge nibabel
+
+#opencv
+conda install -c anaconda opencv
+
+#skimage
+conda install -c conda-forge scikit-image
+
+#pillow
+conda install -c anaconda pillow
+
+#simpleitk
+conda install -c simpleitk simpleitk
+
+#niwidgets
+conda install -c conda-forge ipywidgets
+
+#niftynet
+conda install -c anaconda pyyaml
+pip install niftynet==0.6.0
+
