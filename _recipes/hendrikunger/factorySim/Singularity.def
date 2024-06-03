@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: nvcr.io/nvidia/tensorflow:23.04-tf2-py3
+From: nvcr.io/nvidia/pytorch:23.09-py3
 
 %files
 requirements_factorySim.txt /workspace/factorySim/
@@ -14,9 +14,12 @@ pkg-config \
 python3-dev \
 ffmpeg \
 bash-completion \
-&& python3 -m pip install --upgrade pip \
-&& python3 -m pip --no-cache-dir install -U -r requirements_factorySim.txt
- 
+
+python3 -m pip install --upgrade pip
+python3 -m pip install --no-cache-dir -U -r requirements_factorySim.txt
+python3 -m pip install --no-cache-dir -U lark
+python3 -m pip install --no-cache-dir -U typing_extensions
+
 
 
 %environment
@@ -24,7 +27,9 @@ bash-completion \
 
 %runscript
 cd $HOME/factorySim
+python3 -u train.py "$SLURM_CPUS_PER_TASK"
 
 %startscript
 cd $HOME/factorySim
+python3 -u train.py "$SLURM_CPUS_PER_TASK"
 
