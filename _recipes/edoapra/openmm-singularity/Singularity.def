@@ -1,0 +1,67 @@
+Bootstrap: docker
+#From: nvidia/cuda:11.7.0-runtime-ubuntu22.04
+From: ubuntu:22.04
+Stage: spython-base
+
+%files
+%labels
+maintainer  Edoardo Apra <edoardo.apra@pnnl.gov>
+org.opencontainers.image.version  "1.0.0"
+org.opencontainers.image.authors  "Edoardo Apra"
+%post
+CUDA=11.7
+SINGULARITY_CUDA=11.7
+CUDA_V1=11
+CUDA_V2=7
+
+apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get -q install -y wget libstdc++6 gcc g++ gfortran && \
+ rm -rf /var/lib/apt/lists/* && \
+ apt-get autoremove -y && \
+ apt-get clean
+
+
+MYPREFIX="/opt/conda"
+    MINIFORGE3=Miniforge3-Linux-x86_64.sh && \
+    wget -q -P /tmp  https://github.com/conda-forge/miniforge/releases/latest/download/$MINIFORGE3 && \
+    bash /tmp/$MINIFORGE3 -b -u -p $MYPREFIX && \
+    rm -f /tmp/$MINIFORGE3 && \
+    export PATH="$MYPREFIX/bin:$PATH" && \
+    eval "$($MYPREFIX/bin/conda shell.dash hook)" && \
+      conda update -n base -c conda-forge conda  && \
+      conda install -y -c conda-forge micromamba && \
+    export MAMBA_ROOT_PREFIX=/opt/micromamba && \
+      eval "$(micromamba shell hook --shell dash)" && \
+    export MAMBA_ROOT_PREFIX=/opt/micromamba 
+export CONDA_FETCH_THREADS=2 # parallel download for recent conda versions
+export MAX_JOBS=2 # ninja workers
+ eval "$(${MYPREFIX}/bin/conda shell.bash hook)"
+#hack to fix miniconda GLIBCXX error
+#conda install -q -y libstdcxx-ng
+#ls -l /opt/miniconda3/lib/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so.6 || true
+#rm -f /opt/miniconda3/lib/libstdc++.so.6*
+#cp /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /opt/miniconda3/lib/libstdc++.so.6
+
+
+#conda config --set  fetch_threads 2 || true
+
+micromamba install  -y -c conda-forge  openmm=7.7.0
+micromamba install  -y -c conda-forge  openmm-setup
+
+
+python -m openmm.testInstallation
+
+# extra python components for https://github.com/molmod/openmm-tutorial-msbs/blob/main/01_first_steps/02_lennard_jones.ipynb
+
+python -m pip install matplotlib mdtraj nglview numpy pandas
+
+%environment
+    export MYPREFIX=/opt/conda
+    export MAMBA_ROOT_PREFIX=/opt/micromamba
+    eval "$($MYPREFIX/bin/conda shell.dash hook)"
+    eval "$(micromamba shell hook --shell dash)"
+#export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:$PATH
+#%runscript
+#exec /bin/bash "$@"
+#%startscript
+#exec /bin/bash "$@"
+

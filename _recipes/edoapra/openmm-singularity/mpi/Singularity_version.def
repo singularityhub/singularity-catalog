@@ -1,0 +1,166 @@
+Bootstrap: docker
+#From: ubuntu:22.04
+#From: nvidia/cuda:11.7.0-runtime-ubuntu22.04
+From: {{ MY_BOOTSTRAP }}
+#From: nvidia/cuda:{{ CUDA_VERSION }}-runtime-ubuntu22.04
+Stage: spython-base
+
+%arguments
+   CUDA_DRIVER_VERSION=530
+   CUDA_VERSION=12.2.0
+   MY_BOOTSTRAP=nvidia/cuda:{{ CUDA_VERSION }}-runtime-ubuntu22.04
+
+
+%files
+%labels
+maintainer  Edoardo Apra <edoardo.apra@pnnl.gov>
+org.opencontainers.image.version  "1.0.0"
+org.opencontainers.image.authors  "Edoardo Apra"
+%post
+
+apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get -q install -y wget libstdc++6 gcc g++ gfortran tzdata lsof && \
+ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime && \
+dpkg-reconfigure --frontend noninteractive tzdata && \
+echo CUDA_DRIVER_VERSION is {{ CUDA_DRIVER_VERSION }} && \
+if [ {{  CUDA_DRIVER_VERSION }} != "0" ]; then echo CUDA_DRIVER_VERSION is {{ CUDA_DRIVER_VERSION }} ; \
+apt-get install -y  nvidia-utils-{{ CUDA_DRIVER_VERSION }} nvidia-compute-utils-{{ CUDA_DRIVER_VERSION }};fi   &&\
+ rm -rf /var/lib/apt/lists/* && \
+ apt-get autoremove -y && \
+ dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n |tail -120 && \
+ apt-get clean
+
+echo ' which python' $(which python)
+echo ' python -V ' $(python -V) ||true
+echo ' python3 -V ' $(python3 -V) ||true
+#install openmpi
+apt-get update \
+&& apt-get -y install -y   tar libnl-3-200 libnl-route-3-200 libgomp1 libnuma1 \
+ g++  make ssh patch   unzip perl-base file \
+ python3 python3-dev cmake  unzip zip perl automake libtool autoconf flex  \
+ libnuma-dev libslurm-dev libpmi2-0-dev libpmi0-dev  libnl-3-dev libnl-route-3-dev udev \
+ librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers  \
+ libhwloc-dev \
+ pkg-config gawk  software-properties-common \
+&& export ompi=4.1.4\
+&& export ompi_prefix=ompi-$ompi\
+&& export OMPI_DIR=/opt/ompi\
+&& export SINGULARITY_ompi=4.1.4\
+&& export SINGULARITY_ompi_prefix=ompi-$ompi\
+&& export PATH=$OMPI_DIR/bin:$PATH \
+&& export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH \
+&& wget --progress=dot:giga https://github.com/open-mpi/ompi/archive/v$ompi.tar.gz -O - | tar xzf -   \
+&& cd $ompi_prefix                                                        && \
+./autogen.pl                                                           && \
+./configure  --prefix=$OMPI_DIR --without-ucx --enable-mca-no-build=btl-uct   \
+--disable-mpi-fortran \
+ --with-pmi --with-pmi-libdir=/usr/lib/x86_64-linux-gnu --enable-mpi1-compatibility --with-slurm --without-tm --without-lsf  \
+ --without-sge --without-alps --without-lustre --disable-memchecker \
+ --without-hcoll --disable-static  \
+--disable-mpi-java --enable-dlopen --without-cuda --without-verbs \
+--disable-mpi-cxx --disable-cxx-exceptions  \
+&& make -j 6                                                  \
+&&make install                                                             \
+&& cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx  \
+&& echo ' mpicc' `/opt/ompi/bin/mpicc -show || true` \
+&& echo '********'  \
+&& export PATH=$OMPI_DIR/bin:$PATH  \
+&& export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+
+apt-get install -y python-is-python3 python3-pip
+python -m pip install --upgrade pip
+python -m pip install  --no-binary :all: mpi4py
+# might need to compile from source NetCDF & HDF5
+# NetCDF (compiled with netcdf4 support) and HDF5
+apt-get install -y libhdf5-dev libhdf4-dev libnetcdf-dev
+ dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n |tail -120 
+python -m pip install netCDF4
+
+
+#install openmm from source
+apt-get install -y g++
+if [ {{  CUDA_DRIVER_VERSION }} != "0" ]; then apt-get install -y nvidia-cuda-toolkit; \
+else wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin && \
+mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600 && \
+apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub && \
+add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /" && \
+apt-get install -y cuda-cudart-dev-11-7; fi
+apt-get install -y cmake-curses-gui cmake make swig doxygen curl bzip2 gzip tar graphviz
+ dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n |tail -120 
+python -m pip install numpy Cython
+
+curl -LJO https://github.com/openmm/openmm/archive/refs/tags/8.1.1.tar.gz
+tar xzf openmm-8.1.1.tar.gz
+cd openmm-8.1.1
+mkdir build
+cd build
+cmake ..
+make -j4
+make install
+make PythonInstall
+cd ../..
+rm -rf openmm-*
+python -m openmm.testInstallation||true
+
+# mpiplus
+
+curl -LJO https://github.com/choderalab/mpiplus/archive/refs/tags/v0.0.2.tar.gz
+tar xzf mpiplus-0.0.2.tar.gz
+cd mpiplus-0.0.2
+python -m pip install . -vv
+cd ..
+
+# openmmtools deps
+
+python -m pip install \
+     cython \
+     numpy \
+     scipy \
+     mdtraj \
+     numpydoc \
+     netcdf4 \
+     libnetcdf \
+     numba \
+     pymbar[jax] \
+     pyyaml
+
+
+
+# openmmtools
+
+curl -LJO https://github.com/choderalab/openmmtools/archive/0.23.1.tar.gz
+tar xzf openmmtools-0.23.1.tar.gz
+cd openmmtools-0.23.1
+python -m pip install . -vv
+cd ..
+
+#yank 
+
+#curl -LJO https://github.com/choderalab/yank/archive/0.25.2.tar.gz
+#tar xzf yank-0.25.2.tar.gz
+#cd yank-0.25.2
+#python -m pip install . -vv
+#cd ..
+
+#cg_openmm
+
+#curl -LJO https://github.com/shirtsgroup/cg_openmm/archive/refs/tags/v0.2.0.tar.gz
+#tar xzf cg_openmm-0.2.0.tar.gz
+#cd cg_openmm-0.2.0
+#python setup.py install
+#cd ..
+# extra python components for https://github.com/molmod/openmm-tutorial-msbs/blob/main/01_first_steps/02_lennard_jones.ipynb
+
+python -m pip install matplotlib mdtraj nglview numpy pandas
+# for repex
+python -m pip install scipy numpy
+#test with https://github.com/choderalab/gibbs/blob/master/openmm/python/repexmpi.py
+%environment
+export CUDA=$(echo $CUDA_VERSION |cut -c 1-4)
+export OMPI_DIR=/opt/ompi
+export PATH=$OMPI_DIR/bin:/opt/miniconda3/bin:/opt/miniconda3/condabin:$PATH
+export LD_LIBRARY_PATH=$OMPI_DIR/lib:/usr/local/cuda-${CUDA}/compat:/usr/local/cuda-${CUDA}/lib64:$LD_LIBRARY_PATH
+#%runscript
+#exec /bin/bash "$@"
+#%startscript
+#exec /bin/bash "$@"
+

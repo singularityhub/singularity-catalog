@@ -1,11 +1,11 @@
 bases:
-- count: 1988
+- count: 2015
   name: ubuntu
-- count: 436
+- count: 443
   name: nvidia/cuda
-- count: 356
+- count: 357
   name: debian
-- count: 285
+- count: 288
   name: centos
 - count: 263
   name: alpine
@@ -13,9 +13,9 @@ bases:
   name: ghcr.io/mkandes/naked-singularity
 - count: 228
   name: aibasel/downward
-- count: 209
+- count: 211
   name: continuumio/miniconda3
-- count: 203
+- count: 206
   name: python
 - count: 130
   name: tensorflow/tensorflow
@@ -27,17 +27,17 @@ bases:
   name: nfcore/base
 - count: 67
   name: neurodebian
+- count: 52
+  name: fedora
 - count: 50
   name: cokelaer/damona/conda
 - count: 50
   name: nvcr.io/nvidia/cuda
-- count: 50
-  name: fedora
 - count: 47
   name: conda/miniconda3
 - count: 39
   name: busybox
-- count: 37
+- count: 38
   name: ghcr.io/mkandes/ubuntu
 - count: 37
   name: bilbydev/bilby-test-suite-python37
@@ -105,6 +105,8 @@ bases:
   name: shahzebmsiddiqui/default/easybuild
 - count: 14
   name: 'GodloveD/busybox   '
+- count: 14
+  name: rocker/verse
 - count: 13
   name: ghcr.io/mkandes/openmpi
 - count: 13
@@ -127,8 +129,6 @@ bases:
   name: conda/miniconda2
 - count: 12
   name: vitchyr/railrl-torch4cuda9
-- count: 12
-  name: rocker/verse
 - count: 11
   name: qiime2/core
 - count: 11
@@ -173,6 +173,8 @@ bases:
   name: centos-7.7.1908.sif
 - count: 9
   name: google/deepvariant
+- count: 9
+  name: bioconductor/release_core2
 - count: 8
   name: slaclab/relion
 - count: 8
@@ -202,8 +204,6 @@ bases:
 - count: 8
   name: nickjer/singularity-r
 - count: 8
-  name: bioconductor/release_core2
-- count: 8
   name: kaitj/mrtpipelines
 - count: 8
   name: nvcr.io/nvidia/deepstream
@@ -231,6 +231,8 @@ bases:
   name: bids/example
 - count: 7
   name: node
+- count: 7
+  name: broadinstitute/gatk
 - count: 7
   name: iarcbioinfo/mutect-nf
 - count: 7
@@ -267,8 +269,6 @@ bases:
   name: centos-7.7.1908-cuda-11.0.sif
 - count: 6
   name: i386/ubuntu
-- count: 6
-  name: broadinstitute/gatk
 - count: 6
   name: bids/hcppipelines
 - count: 6
@@ -966,6 +966,8 @@ bases:
 - count: 1
   name: arushiv/default/r4py3
 - count: 1
+  name: twongjirad/docker-genie-deps-root5-ubuntu14.04
+- count: 1
   name: bdgenomics/rhapsody
 - count: 1
   name: pndni/minc-and-ants-container
@@ -1602,6 +1604,10 @@ bases:
 - count: 1
   name: dezordi/viralflow
 - count: 1
+  name: datascienceworkshops/data-science-at-the-command-line
+- count: 1
+  name: abhi18av/cli-tools
+- count: 1
   name: pcawg-sanger-cgp-workflow
 - count: 1
   name: bioconductor_docker
@@ -1962,6 +1968,8 @@ bases:
 - count: 1
   name: granek/orthomcl
 - count: 1
+  name: ttubb/nanopolish
+- count: 1
   name: wangyoucao577/centos7-gcc7.4
 - count: 1
   name: antismash/standalone
@@ -2034,15 +2042,15 @@ bases:
 - count: 1
   name: sherlockpipe/sherlockpipe
 bootstraps:
-- count: 6480
+- count: 6532
   name: docker
 - count: 505
   name: shub
-- count: 417
+- count: 418
   name: debootstrap
-- count: 381
+- count: 382
   name: library
-- count: 343
+- count: 344
   name: oras
 - count: 190
   name: localimage
@@ -2111,10 +2119,10 @@ orgs:
   name: library
 - count: 6
   name: TomHarrop
+- count: 6
+  name: twongjirad
 - count: 5
   name: netreconlab
-- count: 5
-  name: twongjirad
 - count: 5
   name: jupyter
 - count: 4
@@ -2650,6 +2658,10 @@ orgs:
 - count: 1
   name: dezordi
 - count: 1
+  name: datascienceworkshops
+- count: 1
+  name: abhi18av
+- count: 1
   name: team113sanger
 - count: 1
   name: adriansevcenco
@@ -2918,6 +2930,8 @@ orgs:
 - count: 1
   name: quay.io/vgteam
 - count: 1
+  name: ttubb
+- count: 1
   name: wangyoucao577
 - count: 1
   name: pytorch
@@ -2986,8 +3000,8 @@ orgs:
 - count: 1
   name: sherlockpipe
 tags:
-  latest: 702
-  other: 6188
+  latest: 710
+  other: 6226
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3390,6 +3404,7 @@ versions:
     4.2.0.0: 1
     4.2.6.1: 2
     gatkbase-2.0.2: 1
+    latest: 1
   broadinstitute/gatk3:
     3.5-0: 1
     3.8-0: 5
@@ -3523,7 +3538,7 @@ versions:
     4.10.3: 5
     4.4.10: 1
     4.5.11: 7
-    4.5.12: 8
+    4.5.12: 10
     4.5.4: 1
     4.6.14: 6
     4.7.10: 2
@@ -3594,7 +3609,7 @@ versions:
     '11': 2
     '7': 1
     '8': 3
-    '8.5': 1
+    '8.5': 2
     '9': 9
     9-slim: 12
     '9.13': 2
@@ -3735,10 +3750,10 @@ versions:
     nix_alpine_base_e51467b4ad06617b8b104f6c9066df915fb4dfbd: 2
   fedora:
     '27': 11
-    '28': 8
+    '28': 9
     '29': 5
     '31': 7
-    '32': 2
+    '32': 3
     '33': 1
     '34': 5
     '35': 3
@@ -3867,7 +3882,7 @@ versions:
     22.04-mlnx-ofed-5.8-2.0.3.0-mvapich-2.3.7-x86_64-2024-01-29: 6
     22.04-mlnx-ofed-5.8-2.0.3.0-openmpi-4.1.5a1-x86_64-2024-01-27: 5
     22.04-mlnx-ofed-5.8-2.0.3.0-x86_64-2024-01-27: 2
-    22.04-x86_64: 6
+    22.04-x86_64: 7
     22.04-x86_64-2024-01-27: 4
   ghcr.io/mkandes/ucx:
     1.14-cuda-12.1-ubuntu-22.04-x86_64: 1
@@ -4719,9 +4734,11 @@ versions:
     11.4.2-base-ubuntu20.04: 3
     11.6.0-devel-ubuntu20.04: 1
     11.7.0-cudnn8-devel-ubuntu20.04: 1
+    11.7.0-runtime-ubuntu22.04: 1
     11.7.1-base-ubuntu22.04: 1
     11.7.1-cudnn8-devel-ubuntu20.04: 1
     11.7.1-cudnn8-runtime-ubuntu22.04: 1
+    11.7.1-runtime-ubuntu22.04: 1
     11.8.0-cudnn8-devel-ubuntu20.04: 2
     11.8.0-devel-ubuntu20.04: 2
     12.1.0-runtime-ubuntu22.04: 1
@@ -4739,20 +4756,22 @@ versions:
     8.0-cudnn7-devel: 1
     8.0-cudnn7-devel-centos7: 1
     8.0-devel: 1
+    8.0-devel-ubuntu14.04: 1
     8.0-devel-ubuntu16.04: 6
     8.0-runtime-centos7: 7
+    8.0-runtime-ubuntu14.04: 1
     9.0-base-ubuntu16.04: 3
     9.0-cudnn7-devel: 2
     9.0-cudnn7-devel-centos7: 8
-    9.0-cudnn7-devel-ubuntu16.04: 47
+    9.0-cudnn7-devel-ubuntu16.04: 48
     9.0-cudnn7-runtime: 1
     9.0-cudnn7-runtime-ubuntu16.04: 13
-    9.0-devel: 1
+    9.0-devel: 2
     9.0-devel-centos7: 1
     9.0-devel-ubuntu16.04: 14
     9.0-runtime-ubuntu16.04: 12
     9.1-cudnn7-devel-centos7: 2
-    9.1-cudnn7-devel-ubuntu16.04: 5
+    9.1-cudnn7-devel-ubuntu16.04: 6
     9.1-cudnn7-runtime-ubuntu16.04: 4
     9.1-devel-centos7: 1
     9.1-runtime-centos7: 2
@@ -5038,6 +5057,7 @@ versions:
     3.10-slim: 7
     3.10-slim-bullseye: 2
     3.10.3-bullseye: 1
+    '3.11': 1
     3.11-slim: 11
     3.4-slim: 1
     '3.5': 1
@@ -5052,7 +5072,7 @@ versions:
     3.6.7-stretch: 1
     3.6.8-slim-jessie: 1
     3.6.8-stretch: 1
-    '3.7': 2
+    '3.7': 3
     3.7-slim: 58
     3.7-stretch: 1
     3.7.1-stretch: 2
@@ -5066,7 +5086,7 @@ versions:
     3.7.7-slim-buster: 1
     3.7.9: 1
     '3.8': 14
-    3.8-alpine: 8
+    3.8-alpine: 9
     3.8-buster: 2
     3.8-slim: 8
     3.8-slim-bullseye: 2
@@ -5382,7 +5402,7 @@ versions:
   rocker/verse:
     3.4.4: 2
     3.5.1: 2
-    3.6.0: 2
+    3.6.0: 4
     4.0.3: 1
     4.0.4: 1
     4.1.1: 1
@@ -5662,6 +5682,8 @@ versions:
     specific_commits01: 1
   tswetnam/cloudcompare:
     latest: 1
+  ttubb/nanopolish:
+    latest: 1
   twesterhout/default/alpine-openblas:
     sha256.4812ceb0d1fe9c270dae93a24ab3eae506bf27ebc91985f8325bc8b5c9e18ba8: 2
   twongjirad/docker-ubuntu16.04-root:
@@ -5678,22 +5700,22 @@ versions:
     '12.04': 1
     '14.04': 41
     14.04.5: 1
-    '16.04': 315
+    '16.04': 319
     '16.10': 3
     '17.04': 8
     '17.10': 4
-    '18.04': 388
+    '18.04': 395
     '18.04 ': 9
     18.04': 1
     '18.10': 9
     '19.04': 33
     '19.10': 16
-    '20.04': 446
+    '20.04': 448
     '20.04  ': 1
     '20.10': 3
     '21.04': 3
     '21.10': 3
-    '22.04': 54
+    '22.04': 57
     '22.10': 6
     '23.10': 2
     UBUNTU_VERSION: 1
@@ -5714,15 +5736,15 @@ versions:
     focal-20200925: 3
     focal-20210827: 1
     jammy: 10
-    latest: 153
+    latest: 159
     rolling: 1
     sha256.21678b2846063434e2009dee535d3e28ded35774ca72722e1d62b37077de30da: 5
     sha256.80c52afadf3e7c3f9573de4fe79b7dca57fb3290df6c8dc46a75b02768a81146: 3
     sha256.cb37e547a14249943c5a3ee5786502f8db41384deb83fa6d2b62f3c587b82b17: 7
     trusty: 6
     trusty-20170119: 1
-    trusty-20170817: 14
-    xenial: 84
+    trusty-20170817: 17
+    xenial: 85
     'xenial  ': 1
     xenial-20161213: 1
     xenial-20180525: 1

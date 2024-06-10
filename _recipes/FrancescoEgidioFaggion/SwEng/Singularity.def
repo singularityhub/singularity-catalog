@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: ubuntu:latest
+
+%post
+    apt-get update && apt-get install -y cmake \
+    build-essential \
+    mpi-default-dev \
+    git
+
+    git clone https://github.com/FrancescoEgidioFaggion/SwEng --recurse-submodules
+
+    cd SwEng
+    mkdir build && cd build
+    cmake ..
+    make
+
+%runscript
+    ./main
+
+

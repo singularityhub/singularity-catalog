@@ -1,0 +1,73 @@
+Bootstrap: docker
+#From: ubuntu:22.04
+#From: nvidia/cuda:11.7.0-runtime-ubuntu22.04
+From: nvidia/cuda:12.2.0-runtime-ubuntu22.04
+Stage: spython-base
+
+%arguments
+   CUDA_DRIVER_VERSION=530
+
+
+%files
+%labels
+maintainer  Edoardo Apra <edoardo.apra@pnnl.gov>
+org.opencontainers.image.version  "1.0.0"
+org.opencontainers.image.authors  "Edoardo Apra"
+%post
+
+apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get -q install -y wget libstdc++6 gcc g++ gfortran tzdata && \
+ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime && \
+dpkg-reconfigure --frontend noninteractive tzdata && \
+echo CUDA_DRIVER_VERSION is {{ CUDA_DRIVER_VERSION }} && \
+apt-get install -y  nvidia-utils-{{ CUDA_DRIVER_VERSION }} nvidia-compute-utils-{{ CUDA_DRIVER_VERSION }} && \
+ rm -rf /var/lib/apt/lists/* && \
+ apt-get autoremove -y && \
+ dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n |tail -120 && \
+ apt-get clean
+
+
+MYPREFIX="/opt/miniconda3"
+echo MYPREFIX is $MYPREFIX
+wget --quiet -O /tmp/miniconda3.sh \
+https://repo.anaconda.com/miniconda/Miniconda3-py39_23.3.1-0-Linux-x86_64.sh && \
+ bash /tmp/miniconda3.sh -b -p ${MYPREFIX}  && \
+ rm /tmp/miniconda3.sh
+export CONDA_FETCH_THREADS=2 # parallel download for recent conda versions
+export MAX_JOBS=2 # ninja workers
+ eval "$(${MYPREFIX}/bin/conda shell.bash hook)"
+#hack to fix miniconda GLIBCXX error
+#conda config --set auto_update_conda False
+conda install -q -y libstdcxx-ng
+ls -l /opt/miniconda3/lib/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so.6 || true
+rm -f /opt/miniconda3/lib/libstdc++.so.6*
+cp /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /opt/miniconda3/lib/libstdc++.so.6
+
+
+conda config --set  fetch_threads 2 || true
+
+conda install  -y -c conda-forge  micromamba
+micromamba install  -y -c conda-forge  openmm=7.7.0
+micromamba install  -y -c conda-forge  openmm-setup
+
+    conda clean -y --force-pkgs-dirs
+    du -sk $MYPREFIX/lib/*|sort -n    
+    rm -f /usr/local/cuda-*/targets/x86_64-linux/lib/lib*.a
+    rm -f $MYPREFIX/lib/*amdg*
+#    rm -f $MYPREFIX/lib/*cublas*
+
+
+python -m openmm.testInstallation
+
+# extra python components for https://github.com/molmod/openmm-tutorial-msbs/blob/main/01_first_steps/02_lennard_jones.ipynb
+
+python -m pip install matplotlib mdtraj nglview numpy pandas
+
+%environment
+export CUDA=$(echo $CUDA_VERSION |cut -c 1-4)
+export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda-${CUDA}/compat:/usr/local/cuda-${CUDA}/lib64:$LD_LIBRARY_PATH
+#%runscript
+#exec /bin/bash "$@"
+#%startscript
+#exec /bin/bash "$@"
+
