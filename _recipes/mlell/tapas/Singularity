@@ -28,7 +28,7 @@ export LANG=en_US.UTF-8
 # pandoc, samtools: For creating the manual  
 apt-get install --no-install-recommends -y r-base r-base-dev \
   python3 python3-dev python3-pip python3-wheel python3-setuptools \
-  bsdmainutils pandoc samtools curl
+  bsdmainutils pandoc samtools curl bwa
 
 update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1
 update-alternatives --install /usr/bin/pip    pip /usr/bin/pip3 1
