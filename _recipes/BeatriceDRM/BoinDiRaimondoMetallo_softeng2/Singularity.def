@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: ubuntu:latest
+
+%post
+	apt-get update && apt-get install -y cmake \
+	build-essential \
+	mpi-default-dev \
+	git
+
+	# clone the repo of the project
+	git clone https://github.com/BeatriceDRM/BoinDiRaimondoMetallo_softeng2 --recurse -submodules
+
+	# compile the project
+	cd BoinDiRaimondoMetallo_softeng2
+	mkdir build && cd build
+	cmake ..
+	make
+	
+	# Set execute permissions for the main executable
+    chmod +x main
+	
+	cd ..
+	mv matrixA.txt build
+	mv matrixB.txt build
+	 
+%runscript
+	cd /BoinDiRaimondoMetallo_softeng2/build
+    mpirun -np 2 ./main

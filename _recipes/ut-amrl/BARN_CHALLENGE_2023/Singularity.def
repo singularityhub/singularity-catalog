@@ -1,0 +1,102 @@
+Bootstrap: docker
+From: osrf/ros:noetic-desktop-full-focal
+Stage: spython-base
+
+%labels
+com.nvidia.volumes.needed="nvidia_driver"
+
+%setup
+    mkdir -p ${SINGULARITY_ROOTFS}/barn
+    cp -r /opt/libtorch ${SINGULARITY_ROOTFS}/opt/libtorch
+%files  
+    ./ /barn/nav-competition-icra2023
+
+
+%post
+
+NVIDIA_VISIBLE_DEVICES=all
+NVIDIA_DRIVER_CAPABILITIES=compute,utility
+
+DEBIAN_FRONTEND=noninteractive
+TZ=America/Chicago
+
+# Package installation tools
+apt-get update && apt-get install -y \
+apt-utils \
+curl \
+python-is-python3 \
+python3-catkin-tools \
+python3-pip \
+software-properties-common 
+
+pip3 install scipy
+pip3 install scikit-learn
+pip3 install matplotlib==3.7.1
+
+# https://github.com/ut-amrl/amrl_shared_lib
+apt-get update && apt-get install -y \
+libgtest-dev libgoogle-glog-dev cmake build-essential
+
+# https://github.com/ut-amrl/graph_navigation
+apt-get update && apt-get install -y \
+libgoogle-glog-dev libgflags-dev liblua5.1-0-dev
+
+# https://github.com/ut-amrl/enml
+apt-get update && apt-get install -y \
+liblua5.1-dev libeigen3-dev \
+libjpeg8-dev libgoogle-perftools-dev \
+libsuitesparse-dev libblas-dev liblapack-dev libopenmpi-dev \
+libgoogle-glog-dev libgflags-dev libceres-dev libtbb-dev \
+libncurses5-dev libpopt-dev
+
+# https://github.com/ut-amrl/webviz
+# https://github.com/ut-amrl/robofleet_client
+apt-get update && apt-get install -y \
+cmake qt5-default libqt5websockets5-dev
+
+# Development tools
+apt-get update && apt-get install -y \
+build-essential \
+clang-12 \
+clang-format \
+cmake \
+g++ \
+gdb \
+git \
+nano \
+valgrind \
+vim
+
+# Additional utilities to make things easier inside the container.
+apt-get update && apt-get install -y \
+iputils-ping \
+less \
+mesa-utils \
+net-tools \
+rsync \
+tmux \
+tree \
+unzip \
+usbutils \
+zip \
+zsh \
+ros-noetic-jackal-gazebo \
+ros-noetic-move-base
+
+
+# TODO: "roscore" is shared between containers with the current network
+# configuration. The container will fail to start if an instance of roscore is
+# already running, whether on the host or within a different container. Users
+# will need to manually check and launch roscore within the Docker environment
+# until proper container network isolation is implemented. In the meantime, the
+# sleep command keeps the container running.
+# CMD roscore
+
+%environment
+export PATH="/venv/bin:$PATH"
+export NVIDIA_VISIBLE_DEVICES=all
+export NVIDIA_DRIVER_CAPABILITIES=compute,utility
+export DEBIAN_FRONTEND=noninteractive
+export TZ=America/Chicago
+export BARN=`pwd`
+

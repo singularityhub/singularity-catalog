@@ -1,0 +1,70 @@
+Bootstrap: docker
+From: archlinux/base
+
+# https://git.skewed.de/count0/graph-tool/wikis/installation-instructions
+# Based on https://git.skewed.de/count0/graph-tool/wikis/uploads/83c2d24a8bd6dc14e6f023cc8fce3f10/Dockerfile
+
+%files
+  requirements.txt
+
+%environment
+
+%post
+  
+  echo 'Server=https://archive.archlinux.org/repos/2019/07/14/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+
+  pacman-key --refresh-keys
+  pacman -Suy --noconfirm
+  pacman -S binutils make gcc fakeroot --noconfirm --needed
+  pacman -S expac yajl git --noconfirm --needed
+  pacman -S sudo grep file --noconfirm --needed
+
+  pacman -S sudo boost python3 python3-scipy python-numpy \
+		cgal cairomm python-cairo sparsehash cairomm   \
+		autoconf-archive pkg-config --noconfirm --needed
+
+  export MAKEPKG_USER=mkpkg
+  export MAKEPKG_GROUP=mkpkg
+  export MAKEPKG_ROOT=/tmp/build
+
+  groupadd "${MAKEPKG_USER}" \
+      && useradd -g "${MAKEPKG_GROUP}" "${MAKEPKG_USER}"
+
+  # mkdir -p ${MAKEPKG_ROOT}
+  mkdir -p ${MAKEPKG_ROOT}; chown mkpkg:mkpkg ${MAKEPKG_ROOT}
+
+  cd ${MAKEPKG_ROOT}
+
+  # USER ${MAKEPKG_USER}
+  curl -o PKGBUILD https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=python-graph-tool
+  chown ${MAKEPKG_USER}:${MAKEPKG_GROUP} PKGBUILD
+  sudo -u ${MAKEPKG_USER} makepkg PKGBUILD -f --needed CXXFLAGS="-mtune=generic -O3 -pipe -flto=4 -ffunction-sections -fdata-sections" LDFLAGS="-Wl,--gc-sections"
+
+  mv -v "${MAKEPKG_ROOT}/"python-graph-tool-*-x86_64.pkg.tar.xz /tmp/python-graph-tool.pkg.tar.xz
+
+  # # Non-build
+  #
+  # FROM base/archlinux:latest
+  # echo 'Server=https://archive.archlinux.org/repos/2019/07/14/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+  #
+  # COPY --from=builder /tmp/python-graph-tool.pkg.tar.xz /var/cache/pacman/pkg/python-graph-tool.pkg.tar.xz
+  # cp /tmp/python-graph-tool.pkg.tar.xz /var/cache/pacman/pkg/python-graph-tool.pkg.tar.xz
+  #
+  pacman -Sy archlinux-keyring --noconfirm
+  pacman-key --refresh-keys
+  # pacman -Suy --noconfirm \
+  #  && pacman -U --noconfirm --noprogressbar --needed \
+  #     /var/cache/pacman/pkg/python-graph-tool.pkg.tar.xz \
+  #  && yes | pacman -Scc --noconfirm
+  pacman -Suy --noconfirm \
+   && pacman -U --noconfirm --noprogressbar --needed \
+      /tmp/python-graph-tool.pkg.tar.xz \
+   && yes | pacman -Scc --noconfirm
+
+  pacman -S ipython gtk3 python-gobject python-matplotlib python-pandas jupyter-notebook mathjax python-cairocffi pandoc --noconfirm --needed
+
+  useradd -m -g users user
+
+  export PYTHONIOENCODING=utf8
+  # pip install -r requirements.txt
+
