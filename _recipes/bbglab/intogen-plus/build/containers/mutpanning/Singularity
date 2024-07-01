@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: debian:buster-slim
+
+%environment
+    export LC_ALL=C.UTF-8
+
+%runscript
+    exec "/usr/bin/java" "-cp" "/mutpanning/MutPanning.jar" "MutPanning" "$@"
+	# argument 0: root file, where all the other files can be found
+	# argument 1: maf file (standard value: root file/MutationsComplete.maf)
+	# argument 2: sample annotation file (standard value: root file/SamplesComplete.txt)
+	# argument 3: path to Hg19 folder (standard value root file/Hg19/)
+	# java -cp MutPanning.jar MutPanning <path_to_outputs> <mutation_file.maf> <samples_file.txt> Hg19/
+
+%setup
+    mkdir ${SINGULARITY_ROOTFS}/mutpanning
+    cp MutPanning.jar ${SINGULARITY_ROOTFS}/mutpanning/
+    chmod -R a+rx ${SINGULARITY_ROOTFS}/mutpanning/
+
+%post
+    # Load environment
+    export LC_ALL=C.UTF-8
+
+    # Install dependencies
+    apt update
+    # apt upgrade -y
+    apt install -y openjdk-11-jre python3 procps
+
+    # Clean unused things
+    apt-get clean
+    apt remove -y python3-pip
+    rm -rf /var/lib/apt/lists/*

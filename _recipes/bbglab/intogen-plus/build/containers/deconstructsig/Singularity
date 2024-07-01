@@ -1,0 +1,25 @@
+Bootstrap: docker
+From: debian:buster-slim
+
+%environment
+    export LC_ALL=C.UTF-8
+    
+%runscript
+    exec "/usr/bin/python3" "/deconstructsig/run_deconstruct.py" "$@"
+
+%setup
+    mkdir ${SINGULARITY_ROOTFS}/deconstructsig
+    cp run_deconstruct.py ${SINGULARITY_ROOTFS}/deconstructsig/
+    cp deconstructSigs.r ${SINGULARITY_ROOTFS}/deconstructsig/
+    cp signature_assignment.py ${SINGULARITY_ROOTFS}/deconstructsig/
+    cp output_pass_drivers_01.csv ${SINGULARITY_ROOTFS}/deconstructsig/
+    chmod -R a+rx ${SINGULARITY_ROOTFS}/deconstructsig/
+
+%post
+    apt-get update
+    apt-get install -y python3-pandas python3-click r-bioc-bsgenome r-cran-gplots procps
+    rm -rf /var/lib/apt/lists/*
+    echo "install.packages(\"BiocManager\", repos=\"https://cran.r-project.org\")" | R --no-save
+    echo "BiocManager::install(\"BSgenome.Hsapiens.UCSC.hg19\")" | R --no-save
+    echo "BiocManager::install(\"BSgenome.Hsapiens.UCSC.hg38\")" | R --no-save
+    echo "install.packages(\"deconstructSigs\", repos=\"https://cran.r-project.org\")" | R --no-save

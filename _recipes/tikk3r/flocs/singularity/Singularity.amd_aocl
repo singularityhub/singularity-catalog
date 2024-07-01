@@ -26,11 +26,11 @@ From: fedora:38
 	export CASAREST_VERSION=latest
 	export CFITSIO_VERSION=7.3.47
     export DDFPIPELINE_VERSION=72e5285
-    export DPPP_VERSION=791b90f3
+    export DPPP_VERSION=8db55779
 	export DYSCO_VERSION=2e7f331
-    export EVERYBEAM_VERSION=22cd113b
+    export EVERYBEAM_VERSION=v0.6.0
     export FFTW_VERSION=3.5.8
-	export HDF5_VERSION=1.12.1
+	export HDF5_VERSION=1.14.3
     export IDG_VERSION=011687ed
 	export LAPACK_VERSION=3.8.0
 	export LOSOTO3_VERSION=latest
@@ -40,7 +40,7 @@ From: fedora:38
 	export PYTHON_CASACORE_VERSION=v3.5.0
     export RMEXTRACT_VERSION=f161b0a
 	export SUPERLU_VERSION=5.2.1
-	export WSCLEAN_VERSION=843f87c8
+	export WSCLEAN_VERSION=master
 	export WCSLIB_VERSION=6.4
 	export HDF5_USE_FILE_LOCKING=FALSE
     export OMPI_ALLOW_RUN_AS_ROOT=1
@@ -217,12 +217,10 @@ From: fedora:38
 	export CXX=`which mpic++`
     mkdir /opt/hdf5
     cd /opt/hdf5
-    wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.12/hdf5-${HDF5_VERSION}/src/hdf5-${HDF5_VERSION}.tar.gz
-    tar xf hdf5-${HDF5_VERSION}.tar.gz
-    cd hdf5-${HDF5_VERSION}
-    #wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.14/hdf5-1.14.1/src/hdf5-1.14.1-2.tar.gz
-    #tar xf hdf5-1.14.1-2.tar.gz
-    #cd hdf5-1.14.1-2/
+    wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.14/hdf5-1.14.3/src/hdf5-1.14.3.tar.gz
+    gunzip hdf5-1.14.3.tar.gz
+    tar xf hdf5-1.14.3.tar
+    cd hdf5-1.14.3/
     # Thread safety required for WSClean's parallel gridding with facets.
     ./configure -prefix=/opt/hdf5 --enable-build-mode=production --enable-threadsafe --enable-shared --disable-sharedlib-rpath --disable-hl --enable-cxx -enable-unsupported
     make -j $J
@@ -251,13 +249,20 @@ From: fedora:38
     export FLEXIBLAS=OPENBLAS
     export FLEXIBLAS64=OPENBLAS
 
+    # MultiNest
+    cd $INSTALLDIR
+    git clone https://github.com/JohannesBuchner/MultiNest
+    cd MultiNest/build
+    cmake -DCMAKE_INSTALL_PREFIX=$INSTALLDIR/MultiNest ..
+    make
+    cd $INSTALLDIR
+
     #
     # Setup the Python environment.
     #
     wget https://raw.githubusercontent.com/tikk3r/flocs/fedora-py3/requirements3.txt -O $INSTALLDIR/requirements3.txt
     pip --version
     #pip install --upgrade setuptools
-    pip install xmlrunner
     pip --no-cache-dir install virtualenv
 
     /usr/bin/python -m pip uninstall -y numpy
@@ -283,9 +288,10 @@ From: fedora:38
     cd $INSTALLDIR
     wget https://lta.lofar.eu/software/lofar_lta-2.8.0.tar.gz
     tar xf lofar_lta-*
-    cd lofar_lta*
+    cd lofar_lta-2.8.0
     python setup.py install_oracle
     python setup.py install
+    cd ..
     rm lofar_lta*.tar.gz
 
     #
@@ -704,7 +710,7 @@ From: fedora:38
     sed -i "s/np\.float/np\.float_/" /opt/lofar/ddf-pipeline/scripts/sub-sources-outside-region.py
     sed -i "s/(np\.int)[^0-9]/np\.int_/g" /opt/lofar/ddf-pipeline/scripts/sub-sources-outside-region.py
     grep -rl "np.int" /opt/lofar/ddf-pipeline/utils | xargs sed -i "s/(np\.int)[^0-9]/np\.int_/g"
-    grep -rl "np.bool" /opt/lofar/ddf-pipeline/utils | xargs sed -i "s/np\.bool/np\.bool_/g"
+    #grep -rl "np.bool" /opt/lofar/ddf-pipeline/utils | xargs sed -i "s/np\.bool/np\.bool_/g"
 
     
     #
@@ -719,6 +725,11 @@ From: fedora:38
     cd $INSTALLDIR
     git clone https://github.com/mhardcastle/lotss-hba-survey.git
 
+#
+# Install LINC
+#
+cd $INSTALLDIR
+git clone https://git.astron.nl/RD/LINC.git
 
     #
     # Install custom runners
@@ -774,7 +785,7 @@ From: fedora:38
 	echo source \$INSTALLDIR/pyenv-py3/bin/activate >> $INSTALLDIR/init.sh
 	echo source /opt/aocl/4.0/amd-libs.cfg >> $INSTALLDIR/init.sh
 	echo export HDF5_USE_FILE_LOCKING=FALSE >> $INSTALLDIR/init.sh
-	echo export PYTHONPATH=\$INSTALLDIR/lofar/lib64/python$PYTHON_VERSION/site-packages:\$INSTALLDIR/DPPP/lib/python$PYTHON_VERSION/site-packages:\$INSTALLDIR/DPPP/usermodules:\$INSTALLDIR/EveryBeam/lib64/python$PYTHON_VERSION/site-packages:\$PYTHONPATH >> $INSTALLDIR/init.sh
+	echo export PYTHONPATH=\$INSTALLDIR/LINC/scripts:\$INSTALLDIR/lofar/lib64/python$PYTHON_VERSION/site-packages:\$INSTALLDIR/DPPP/lib/python$PYTHON_VERSION/site-packages:\$INSTALLDIR/DPPP/usermodules:\$INSTALLDIR/EveryBeam/lib64/python$PYTHON_VERSION/site-packages:\$PYTHONPATH >> $INSTALLDIR/init.sh
     echo export PATH=/usr/local/cuda/bin:/opt/hdf5/bin:\$PATH >> $INSTALLDIR/init.sh
 	echo export PATH=/opt/montage/Montage-6.0/bin:\$PATH  >> $INSTALLDIR/init.sh
 	echo export PATH=\$INSTALLDIR/aoflagger/bin:\$PATH  >> $INSTALLDIR/init.sh
@@ -787,7 +798,9 @@ From: fedora:38
 	echo export PATH=\$INSTALLDIR/sagecal/bin:\$PATH  >> $INSTALLDIR/init.sh
 	echo export PATH=\$INSTALLDIR/wsclean/bin:\$PATH  >> $INSTALLDIR/init.sh
     echo export PATH=\$INSTALLDIR/runners:\$PATH >> $INSTALLDIR/init.sh
+    echo export PATH=\$INSTALLDIR/LINC/scripts:\$INSTALLDIR/utility:\$PATH >> $INSTALLDIR/init.sh
     echo export PATH=\$INSTALLDIR/utility:\$PATH >> $INSTALLDIR/init.sh
+    echo export PATH=\$INSTALLDIR/MultiNest/bin:\$PATH >> $INSTALLDIR/init.sh
 
 	echo export LD_LIBRARY_PATH=/opt/flang/lib:$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
 	echo export PATH=/opt/flang/bin:\$PATH >> $INSTALLDIR/init.sh
@@ -799,6 +812,7 @@ From: fedora:38
     echo export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
     echo export LD_LIBRARY_PATH=\$INSTALLDIR/sagecal/lib:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
     echo export LD_LIBRARY_PATH=\$INSTALLDIR/lofarstman/lib64/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
+    echo export LD_LIBRARY_PATH=\$INSTALLDIR/MultiNest/lib/:\$LD_LIBRARY_PATH >> $INSTALLDIR/init.sh
     # OPENBLAS_NUM_THREADS=1 is required for WSClean
     echo export NCPU=\$\(nproc\) >> $INSTALLDIR/init.sh
 	echo export OPENBLAS_NUM_THREADS=1 >> $INSTALLDIR/init.sh
@@ -814,6 +828,7 @@ From: fedora:38
     echo export NUMBA_CACHE_DIR=/tmp >> $INSTALLDIR/init.sh
 
     echo export EVERYBEAM_DATADIR=\$INSTALLDIR/EveryBeam/share/everybeam >> $INSTALLDIR/init.sh
+    echo export LINC_DATA_ROOT=/opt/lofar/LINC >> $INSTALLDIR/init.sh
 
 
     echo "measures.directory: $INSTALLDIR/casacore/data" > $INSTALLDIR/.casarc 

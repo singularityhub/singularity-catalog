@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: python:3.9
+
+%environment
+
+%runscript
+
+%setup
+	cp -r ../../../combination ${SINGULARITY_ROOTFS}/combination/
+
+%post
+
+	pip install /combination
+
+    # Clean unused things
+    rm -rf /var/lib/apt/lists/*

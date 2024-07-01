@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: debian:stable-slim
+
+%labels
+	erafef 1
+
+%post
+	export DEBIAN_FRONTEND=noninteractive
+	set -eE
+	# Install cowsay
+	apt-get update -qq && \
+	apt-get install -yq cowsay && \
+	apt-get clean -yq && \
+	rm -rf /var/lib/apt/lists/*
+
+%environment
+	export PATH=/usr/games:$PATH
+	export LC_ALL=C.UTF-8
+	export LANGUAGE=C.UTF-8
+	export LANG=C.UTF-8
+
+%runscript
+	# Run fortune with the arguments passed to the container
+	cowsay "${@:-}"
+
+%test
+	set -eE
+	/.singularity.d/runscript "Cowsay runs!"
+
+%labels
+	org.opencontainers.image.version 0.0.1
+

@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: debian:buster-slim
+
+%environment
+    export LC_ALL=C.UTF-8
+    
+%runscript
+    exec "Rscript" "/dndscv/dndscv.R" "$@"
+
+%setup
+    mkdir ${SINGULARITY_ROOTFS}/dndscv
+    cp dndscv.R ${SINGULARITY_ROOTFS}/dndscv/
+    cp dndscv.tar.gz ${SINGULARITY_ROOTFS}/dndscv/
+    chmod -R a+rx ${SINGULARITY_ROOTFS}/dndscv/
+
+%post
+    apt-get update
+    apt-get -y install locales-all r-base r-cran-devtools r-bioc-biostrings r-bioc-genomicranges r-bioc-rsamtools r-cran-ade4 r-cran-seqinr procps
+    rm -rf /var/lib/apt/lists/*
+    # echo "library(devtools); install_github('im3sanger/dndscv')" | R --no-save
+    echo "library(devtools)" | R --no-save
+    R CMD INSTALL "/dndscv/dndscv.tar.gz"

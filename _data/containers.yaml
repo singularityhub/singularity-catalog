@@ -1,23 +1,23 @@
 bases:
-- count: 2027
+- count: 2036
   name: ubuntu
 - count: 444
   name: nvidia/cuda
-- count: 361
+- count: 367
   name: debian
-- count: 290
+- count: 291
   name: centos
-- count: 264
+- count: 265
   name: alpine
 - count: 258
   name: ghcr.io/mkandes/naked-singularity
 - count: 228
   name: aibasel/downward
+- count: 213
+  name: python
 - count: 212
   name: continuumio/miniconda3
-- count: 206
-  name: python
-- count: 130
+- count: 131
   name: tensorflow/tensorflow
 - count: 103
   name: mkandes/naked-singularity
@@ -51,22 +51,22 @@ bases:
   name: provarepro/mlperf_inference
 - count: 32
   name: vitchyr/railrl_v12_cuda10-1_mj2-0-2-2_torch1-1-0_gym0-12-5_py3-6-5
+- count: 32
+  name: pytorch/pytorch
 - count: 31
   name: godloved/secure/ubuntu-bionic
 - count: 31
-  name: pytorch/pytorch
-- count: 30
   name: continuumio/miniconda
 - count: 28
   name: nvcr.io/nvidia/tensorflow
 - count: 27
   name: modakopt/modak
+- count: 27
+  name: nipreps/fmriprep
 - count: 26
   name: osrf/ros
 - count: 26
   name: pennbbl/qsiprep
-- count: 26
-  name: nipreps/fmriprep
 - count: 24
   name: r-base
 - count: 23
@@ -153,6 +153,8 @@ bases:
   name: khanlab/hippunfold
 - count: 11
   name: nipreps/mriqc
+- count: 11
+  name: pennlinc/xcp_d
 - count: 10
   name: images/common.simg
 - count: 10
@@ -160,9 +162,9 @@ bases:
 - count: 10
   name: provarepro/openvino
 - count: 10
-  name: khanlab/prepdwi
+  name: bioconductor/release_core2
 - count: 10
-  name: pennlinc/xcp_d
+  name: khanlab/prepdwi
 - count: 9
   name: DeepLearnPhysics/larcv3-singularity
 - count: 9
@@ -172,7 +174,7 @@ bases:
 - count: 9
   name: dcgc-bfx/dcgc-jupyter-rstudio
 - count: 9
-  name: bioconductor/release_core2
+  name: continuumio/anaconda
 - count: 9
   name: nipreps/smriprep
 - count: 8
@@ -199,8 +201,6 @@ bases:
   name: nvcr.io/nvidia/deepstream
 - count: 8
   name: kaitj/mrtpipelines
-- count: 8
-  name: continuumio/anaconda
 - count: 8
   name: bioconductor/bioconductor_docker
 - count: 8
@@ -490,6 +490,8 @@ bases:
 - count: 3
   name: library/default/ubuntu
 - count: 3
+  name: zhouwanding/transvar
+- count: 3
   name: brentp/smoove
 - count: 3
   name: pennbbl/xcpengine
@@ -636,6 +638,8 @@ bases:
 - count: 2
   name: uppmax/offline-uppmax-env
 - count: 2
+  name: hariszaf/darn
+- count: 2
   name: ghcr.io/truatpasteurdotfr/singularity-docker-centos7-ci
 - count: 2
   name: cokelaer/damona
@@ -711,8 +715,6 @@ bases:
   name: trinityctat/fusioninspector
 - count: 2
   name: taiji
-- count: 2
-  name: zhouwanding/transvar
 - count: 2
   name: maoj/cicero
 - count: 2
@@ -1309,6 +1311,8 @@ bases:
   name: amd64/centos
 - count: 1
   name: twongjirad/docker-genie-deps-root5-ubuntu14.04
+- count: 1
+  name: twongjirad/cern-root6-yakkety
 - count: 1
   name: vcatechnology/linux-mint
 - count: 1
@@ -2020,6 +2024,8 @@ bases:
 - count: 1
   name: khanlab/funcmasker-flex
 - count: 1
+  name: dcanumn/bibsnet
+- count: 1
   name: bids/fibredensityandcrosssection
 - count: 1
   name: magland/pc-mountainsort5
@@ -2054,21 +2060,21 @@ bases:
 - count: 1
   name: anapsix/alpine-java
 bootstraps:
-- count: 6584
+- count: 6618
   name: docker
 - count: 505
   name: shub
-- count: 419
+- count: 420
   name: debootstrap
-- count: 381
+- count: 383
   name: library
 - count: 344
   name: oras
 - count: 190
   name: localimage
-- count: 169
+- count: 171
   name: yum
-- count: 34
+- count: 35
   name: zypper
 - count: 26
   name: scratch
@@ -2118,13 +2124,13 @@ orgs:
 - count: 8
   name: vanessa
 - count: 7
+  name: twongjirad
+- count: 7
   name: nvcr.io/hpc
 - count: 7
   name: nvidia
 - count: 7
   name: continuumio
-- count: 6
-  name: twongjirad
 - count: 6
   name: library
 - count: 6
@@ -2245,6 +2251,8 @@ orgs:
   name: ncbi
 - count: 2
   name: uvarc
+- count: 2
+  name: hariszaf
 - count: 2
   name: jec
 - count: 2
@@ -2469,8 +2477,6 @@ orgs:
   name: djkapner
 - count: 1
   name: miccourse
-- count: 1
-  name: hariszaf
 - count: 1
   name: bigdatalabteam
 - count: 1
@@ -2980,6 +2986,8 @@ orgs:
 - count: 1
   name: peerherholz
 - count: 1
+  name: dcanumn
+- count: 1
   name: trends
 - count: 1
   name: neuronets
@@ -3020,8 +3028,8 @@ orgs:
 - count: 1
   name: nitishnarula
 tags:
-  latest: 714
-  other: 6259
+  latest: 716
+  other: 6290
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3136,7 +3144,7 @@ versions:
     '3.5': 1
     '3.6': 3
     '3.7': 4
-    '3.8': 32
+    '3.8': 33
     3.8.4: 1
     '3.9': 6
     edge: 50
@@ -3376,6 +3384,7 @@ versions:
   bioconductor/release_core2:
     R3.5.0_Bioc3.7: 1
     R3.5.1_Bioc3.7: 1
+    latest: 1
   bioconductor_docker:
     RELEASE_3_11: 1
   biocontainers/bowtie2:
@@ -3492,7 +3501,7 @@ versions:
     centos7.5.1804: 2
     centos7.6.1810: 9
     centos7.7.1908: 1
-    centos7.8.2003: 2
+    centos7.8.2003: 3
     centos7.9.2009: 1
     centos8: 7
     latest: 23
@@ -3617,6 +3626,8 @@ versions:
     of2112_hisa1.4.6_pt1.10.2_ub22.04: 1
   datalad/datalad:
     fullmaster: 1
+  dcanumn/bibsnet:
+    release-3.3.0: 1
   dceoy/macs2:
     latest: 1
   dcgc-bfx/dcgc-base-conda:
@@ -3646,17 +3657,18 @@ versions:
     buster: 93
     buster-20200908-slim: 4
     buster-20201012: 1
-    buster-slim: 31
+    buster-slim: 35
     jessie: 10
     jessie-slim: 18
     latest: 61
     sid-slim: 2
     stable: 2
-    stable-slim: 5
+    stable-slim: 6
     stretch: 54
     stretch-slim: 11
     testing: 2
     testing-slim: 2
+    trixie: 1
     unstable: 4
   deeplabcut/deeplabcut:
     latest-core: 1
@@ -4018,6 +4030,9 @@ versions:
     latest: 2
   haotingwang/giga_connectome:
     0.4.1: 1
+  hariszaf/darn:
+    latest: 1
+    v.1.0.0: 1
   hariszaf/pema:
     latest: 1
     v.1.3: 1
@@ -4518,6 +4533,7 @@ versions:
     23.2.1: 1
     23.2.2: 1
     23.2.3: 1
+    24.0.0: 1
   nipreps/mriqc:
     22.0.1: 1
     22.0.2: 1
@@ -4960,6 +4976,7 @@ versions:
     0.7.1: 1
     0.7.3: 1
     0.7.4: 1
+    0.7.5: 1
     '04.0': 1
   percona/pmm-server:
     latest: 1
@@ -5083,7 +5100,7 @@ versions:
     2.7.16-buster: 1
     2.7.17-buster: 1
     2.7.18-buster: 1
-    '3': 10
+    '3': 14
     3-slim: 1
     3.10-slim: 7
     3.10-slim-bullseye: 2
@@ -5094,7 +5111,7 @@ versions:
     '3.5': 1
     3.5.1: 1
     3.5.9-buster: 1
-    '3.6': 2
+    '3.6': 3
     3.6-stretch: 1
     3.6.15-buster: 2
     3.6.3-stretch: 1
@@ -5103,7 +5120,7 @@ versions:
     3.6.7-stretch: 1
     3.6.8-slim-jessie: 1
     3.6.8-stretch: 1
-    '3.7': 3
+    '3.7': 4
     3.7-slim: 58
     3.7-stretch: 1
     3.7.1-stretch: 2
@@ -5128,7 +5145,7 @@ versions:
     3.8.3-buster: 1
     3.8.6: 1
     3.8.6-buster: 2
-    '3.9': 1
+    '3.9': 2
     3.9-alpine: 1
     3.9-buster: 4
     3.9-slim: 2
@@ -5162,6 +5179,7 @@ versions:
     1.9.0-cuda10.2-cudnn7-runtime: 2
     1.9.0-cuda11.1-cudnn8-devel: 1
     2.0.0-cuda11.7-cudnn8-devel: 1
+    2.1.2-cuda12.1-cudnn8-runtime: 1
   qiime2/core:
     '2018.11': 1
     '2018.2': 1
@@ -5602,6 +5620,7 @@ versions:
   tensorflow:
     19.07-py3: 1
   tensorflow/tensorflow:
+    1.0.0-gpu-py3: 1
     1.1.0-gpu: 1
     1.11.0-gpu-py3: 1
     1.11.0-py3: 1
@@ -5721,6 +5740,8 @@ versions:
     latest: 1
   twesterhout/default/alpine-openblas:
     sha256.4812ceb0d1fe9c270dae93a24ab3eae506bf27ebc91985f8325bc8b5c9e18ba8: 2
+  twongjirad/cern-root6-yakkety:
+    6.08.06: 1
   twongjirad/docker-ubuntu16.04-root:
     6.12.04_cuda8.0: 1
   twongjirad/larflow:
@@ -5733,31 +5754,31 @@ versions:
   ubuntu:
     $VERSION: 3
     '12.04': 1
-    '14.04': 41
+    '14.04': 42
     14.04.5: 1
-    '16.04': 322
+    '16.04': 323
     '16.10': 3
     '17.04': 8
     '17.10': 4
-    '18.04': 396
+    '18.04': 399
     '18.04 ': 9
     18.04': 1
     '18.10': 9
     '19.04': 33
     '19.10': 16
-    '20.04': 449
+    '20.04': 450
     '20.04  ': 1
     '20.10': 3
     '21.04': 3
     '21.10': 3
-    '22.04': 59
+    '22.04': 60
     '22.10': 6
     '23.10': 2
     '24.04': 1
     UBUNTU_VERSION: 1
     artful: 7
     artful-20180227: 1
-    bionic: 201
+    bionic: 202
     'bionic   ': 1
     bionic-20180526: 1
     bionic-20190307: 4
@@ -5777,7 +5798,7 @@ versions:
     sha256.21678b2846063434e2009dee535d3e28ded35774ca72722e1d62b37077de30da: 5
     sha256.80c52afadf3e7c3f9573de4fe79b7dca57fb3290df6c8dc46a75b02768a81146: 3
     sha256.cb37e547a14249943c5a3ee5786502f8db41384deb83fa6d2b62f3c587b82b17: 7
-    trusty: 6
+    trusty: 7
     trusty-20170119: 1
     trusty-20170817: 17
     xenial: 85

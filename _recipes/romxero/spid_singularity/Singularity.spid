@@ -1,0 +1,172 @@
+Bootstrap: docker
+From: debian:trixie
+#From: debian:unstable-slim
+
+%post
+# Note. Theres a ton of packages here to make sure we have somewhat of a sink for when patrons use this container in OOD
+mkdir -p /usr/local/bin/
+apt-get -y update
+apt-get -y install samtools jupyter minimap2 curl procps python3 python3-pip git wget \
+chromium \
+parallel python3-seaborn python3-pandas python3-scipy python3-pickleshare libargparse-dev \
+python3-argparse-addons gdb make m4 python3-matplotlib python-matplotlib-data python3-matplotlib-inline python3-matplotlib-venn python3-sklearn-pandas python3-geopandas locales strace gdb tree nano vim lldb
+
+# locales
+export LC_ALL=C
+update-locale
+
+#julia install
+cd /tmp
+wget https://julialang-s3.julialang.org/bin/linux/x64/1.10/julia-1.10.0-linux-x86_64.tar.gz
+tar zxvf julia-1.10.0-linux-x86_64.tar.gz -C /opt
+rm julia-1.10.0-linux-x86_64.tar.gz
+
+# depot paths  
+export CONT_JULIA_DEPOT_PATH=/opt/spid_depot
+export CONT_JULIA_LOAD_PATH=/opt/spid_load
+export CONT_JULIA_PKGDIR=/opt/spid_pkg
+export JULIA_PROJECT=/opt/Spid.jl
+
+mkdir -p ${CONT_JULIA_DEPOT_PATH}
+mkdir -p ${CONT_JULIA_PKGDIR}
+mkdir -p ${CONT_JULIA_LOAD_PATH}
+
+export JULIA_DEPOT_PATH=${CONT_JULIA_DEPOT_PATH}:${JULIA_DEPOT_PATH}
+export JULIA_PKGDIR=${CONT_JULIA_PKGDIR}:${JULIA_PKGDIR}
+export JULIA_LOAD_PATH=${CONT_JULIA_LOAD_PATH}:${JULIA_LOAD_PATH}
+
+# set the jupyter data directory before installing the kernel
+export JUPYTER_DATA_DIR=/usr/share/jupyter
+
+# set 8 threads- that should be enough here
+export JULIA_NUM_THREADS=8
+
+# make sure to concat the julia dist
+ln -s /opt/julia-1.10.0 /opt/julia
+
+# create the user hidden cache directory if it doesn't exist
+mkdir -p /opt/julia/src/
+
+# hash for working spid commit
+COMMIT_HASH="ae8dec64da679ab3d96aad4d7411f48202fb2218" 
+# grab spid repo
+cd /opt
+
+# official spid repo
+git clone https://github.com/czbiohub-sf/Spid.jl.git
+
+# we also need to clone my patch 
+git clone https://github.com/romxero/spid_singularity.git
+
+
+#extra steps to grab specific commit
+cd Spid.jl
+git fetch --all
+git switch --detach ${COMMIT_HASH}
+cd /opt
+
+# patch the julia source files
+patch /opt/Spid.jl/src/Pileup2Consensus.jl /opt/spid_singularity/fixes.patch
+patch /opt/Spid.jl/Project.toml /opt/spid_singularity/project_toml_fixes.patch
+
+
+#git clone https://github.com/romxero/Spid.jl-fixes.git
+#mv Spid.jl-fixes Spid.jl
+
+# copy files to their right places
+cp -rf /opt/Spid.jl/Project.toml /opt/julia/
+cp -rf /opt/Spid.jl/src/*.jl /opt/julia/src/
+cp -rf /opt/Spid.jl/bin/spid.jl /usr/local/bin/
+
+# build julia packages
+/opt/julia/bin/julia -O3 -e 'using Pkg; Pkg.instantiate(); using Spid; Pkg.add("IJulia"); using IJulia; Pkg.activate("/opt/Spid.jl");'
+
+# change permissions AFTER installing julia packages
+chmod -R oga+rwx /opt/julia
+
+# force the ijulia installation again
+/opt/julia/bin/julia -O3 -e 'using Pkg; Pkg.instantiate(); Pkg.add("IJulia"); using IJulia; Pkg.build("IJulia");'
+
+# force the installation of argparse. 
+/opt/julia/bin/julia -O3 -e 'using Pkg; Pkg.add("ArgParse"); Pkg.add("ZeroMQ_jll"); Pkg.add("ZMQ"); Pkg.build("ZMQ");'
+
+# initialize one last time
+/opt/julia/bin/julia -O3 -e 'using Pkg; Pkg.instantiate(); Pkg.update(); Pkg.precompile(); Pkg.gc()'
+
+# make sure we make /opt writable for others/users/owners
+chmod -R oga+rwx /opt
+
+# make sure the `/hpc` directory exists in the container, also make sure that its writable
+mkdir -p /hpc
+chmod -R oga+rwx /hpc
+
+#### end of post initialization
+%environment
+# make the proper julia exports
+export CONT_JULIA_DEPOT_PATH=/opt/spid_depot
+export CONT_JULIA_LOAD_PATH=/opt/spid_load
+export CONT_JULIA_PKGDIR=/opt/spid_pkg
+
+# make sure julia kernel is in path
+export JUPYTER_DATA_DIR=/usr/share/jupyter
+
+# make sure spid is in the path
+export PATH=/opt/julia/bin:/opt/Spid.jl/bin:$PATH
+
+# quiet things down right here 
+#export PYDEVD_DISABLE_FILE_VALIDATION=1
+
+# try to get the locales right here
+export LC_ALL="C"
+
+# set 8 threads- that should be enough here
+#export JULIA_NUM_THREADS=8
+
+
+# Cache directory for overlay creation embedded into the container. 
+export SPID_USER_HAX=$(basename $HOME)
+export SPID_CACHE_DIR_NAME=spid_cache
+export SPID_USER_HOME_CACHE_DIR=${HOME}/${SPID_CACHE_DIR_NAME}
+export SPID_USER_MYDATA_CACHE_DIR=/hpc/mydata/${SPID_USER_HAX}/${SPID_CACHE_DIR_NAME}
+
+
+#check to see if our hpc directory exists, then make sure to generate cache directory for user
+
+PREFERRED_CACHE_DIR=${SPID_USER_MYDATA_CACHE_DIR}
+
+if [ -d '/hpc' ]
+then
+    PREFERRED_CACHE_DIR=${SPID_USER_MYDATA_CACHE_DIR}
+else
+    PREFERRED_CACHE_DIR=${SPID_USER_HOME_CACHE_DIR}
+fi
+
+if ! [ -d ${PREFERRED_CACHE_DIR} ]
+then
+    #make the user directory
+    mkdir -p ${PREFERRED_CACHE_DIR}
+fi
+
+
+if ! [ -d ${PREFERRED_CACHE_DIR}/overlay ]
+then
+    #make the user directory
+    mkdir -p ${PREFERRED_CACHE_DIR}/overlay
+fi
+# Look at adding more to the depot directory. 
+
+####
+export PREFERRED_CACHE_DIR
+
+export JULIA_DEPOT_PATH=${CONT_JULIA_DEPOT_PATH}:~/.julia:${PREFERRED_CACHE_DIR}:${JULIA_DEPOT_PATH}
+export JULIA_PKGDIR=${CONT_JULIA_PKGDIR}:${JULIA_PKGDIR}
+export JULIA_LOAD_PATH=${CONT_JULIA_LOAD_PATH}:${JULIA_LOAD_PATH}
+export JULIA_PROJECT=/opt/Spid.jl
+
+#try this for stopping auto precompile
+#export JULIA_PKG_PRECOMPILE_AUTO=0
+
+%runscript
+/usr/local/bin/spid.jl
+
+

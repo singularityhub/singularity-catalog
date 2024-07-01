@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: python:3.7
+
+%environment
+    export LC_ALL=C.UTF-8
+
+%runscript
+    exec "/bin/bash" "/mutrate/run.sh" "$@"
+
+%setup
+    mkdir ${SINGULARITY_ROOTFS}/mutrate
+    cp cds_triplet_abundance.json ${SINGULARITY_ROOTFS}/mutrate/
+    cp genome_triplet_abundance.json ${SINGULARITY_ROOTFS}/mutrate/
+    cp compute_mutrate.py ${SINGULARITY_ROOTFS}/mutrate/
+    cp utils.py ${SINGULARITY_ROOTFS}/mutrate/
+    cp run.sh ${SINGULARITY_ROOTFS}/mutrate/
+    chmod -R a+rx ${SINGULARITY_ROOTFS}/mutrate/
+
+%post
+    pip install numpy pandas click tqdm 

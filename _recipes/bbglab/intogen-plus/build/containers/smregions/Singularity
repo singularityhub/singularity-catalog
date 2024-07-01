@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: python:3
+
+%environment
+    export BBGLAB_HOME=/smregions
+
+%runscript
+    exec "/usr/local/bin/smregions" "$@"
+
+%setup
+    mkdir ${SINGULARITY_ROOTFS}/smregions
+    cp smregions.conf ${SINGULARITY_ROOTFS}/smregions/
+    chmod -R a+r,a+x ${SINGULARITY_ROOTFS}/smregions/
+
+%post
+
+    # Install SMRegions
+    pip --no-cache-dir install https://bitbucket.org/bbglab/smregions/get/master.tar.gz

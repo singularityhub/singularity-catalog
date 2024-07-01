@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: python:3.6
+
+%environment
+    export BBGLAB_HOME=/oncodrivefml
+
+%runscript
+
+%setup
+    mkdir ${SINGULARITY_ROOTFS}/oncodrivefml
+    cp oncodrivefml_v2.conf ${SINGULARITY_ROOTFS}/oncodrivefml/
+    chmod -R a+rx ${SINGULARITY_ROOTFS}/oncodrivefml/
+
+%post
+
+    # Install OncodriveFML
+    pip --no-cache-dir install oncodrivefml

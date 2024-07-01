@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: python:3
+
+%environment
+
+%runscript
+
+%setup
+	cp -r ../../../core ${SINGULARITY_ROOTFS}/core/
+	cp get_field.sh ${SINGULARITY_ROOTFS}/usr/local/bin/get_field.sh
+	chmod a+rx ${SINGULARITY_ROOTFS}/usr/local/bin/get_field.sh
+
+%post
+	# Install openVariant
+    pip install open-variant
+    # Install bgparsers
+    #pip --no-cache-dir install https://bitbucket.org/bgframework/bgparsers/get/master.tar.gz
+	pip install /core
+
+    # Clean unused things
+    rm -rf /var/lib/apt/lists/*
