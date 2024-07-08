@@ -5,6 +5,14 @@ From: ubuntu:18.04
 %files
 
     #/home-local/kimm58/AtlasToDiffusionReg/code/get_transforms.sh /
+    
+    #The following should run as long as you ran git pull for the repository
+
+    FILES/JHUEVE3/Labels_JHU_MNI_SS_WMPM_Type-III.txt /FILES/JHUEVE3/Labels_JHU_MNI_SS_WMPM_Type-III.txt
+    FILES/JHUEVE3/Atlas_JHU_MNI_SS_WMPM_Type-III.nii.gz /FILES/JHUEVE3/Atlas_JHU_MNI_SS_WMPM_Type-III.nii.gz
+    FILES/JHUEVE3/template.nii.gz /FILES/JHUEVE3/template.nii.gz
+    FILES/MNI152/template.nii.gz /FILES/MNI152/template.nii.gz
+    FILES/T1_seg.txt /FILES/T1_seg.txt
 
 %help
 
@@ -158,17 +166,45 @@ https://github.com/MASILab/AtlasToDiffusionReg
     #export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
     #export CUDA_HOME="/usr/local/cuda"
 
-%runscript 
+%runscript
 	#everything below this will run when you call singularity run xxx.simg
 	#this creates the PDF, figure out later
     #xvfb-run -a --server-num=$((65536+$$)) --server-args="-screen 0 1600x1280x24 -ac" bash /CODE/run_dtiQA.sh /INPUTS /OUTPUTS "$@"
 
-	#bash /CODE/get_transforms.sh
+    case "$1" in
+        --EVE3)
+            echo "Registering to EVE3 Atlas."
+            ln -s /FILES/JHUEVE3/template.nii.gz /INPUTS/template.nii.gz
+            ln -s /FILES/JHUEVE3/Atlas_JHU_MNI_SS_WMPM_Type-III.nii.gz /INPUTS/Atlas_JHU_MNI_SS_WMPM_Type-III.nii.gz
+            ln -s /FILES/JHUEVE3/Labels_JHU_MNI_SS_WMPM_Type-III.txt /INPUTS/Labels_JHU_MNI_SS_WMPM_Type-III.txt
+            ;;
+        --MNI)
+            echo "Registering to MNI152 Atlas."
+            ln -s /FILES/MNI152/template.nii.gz /INPUTS/template.nii.gz
+            ;;
+        --custom)
+            echo "Registering to custom template. Ensure that there is a file named 'template.nii.gz' in the inputs directory."
+            echo "Also, if you want to register Atlases, make sure there are corresponding Atlas* and Labels* files in the inputs directory."
+            ;;
+        *)
+            echo "Invalid arguments."
+            echo "USAGE: singularity run <BINDS> <SIMG> [--EVE3|--MNI|--custom]"
+            exit 1
+            ;;
+    esac
+
+    #if [ ! -f /INPUTS/template.nii.gz ]; then
+    #    ln -s /FILES/template.nii.gz /INPUTS/template.nii.gz
+    #    ln -s /FILES/Atlas_JHU_MNI_SS_WMPM_Type-III.nii.gz /INPUTS/Atlas_JHU_MNI_SS_WMPM_Type-III.nii.gz
+    #    ln -s /FILES/Labels_JHU_MNI_SS_WMPM_Type-III.txt /INPUTS/Labels_JHU_MNI_SS_WMPM_Type-III.txt
+    #fi
+    ln -s /FILES/T1_seg.txt /INPUTS/T1_seg.txt
     cd /CODE
     bash get_transforms.sh
     bash apply_transforms.sh
-    source venv/bin/activate
+    bash activate_venv.sh
     python3 extract_single_shell.py
     bash calc_scalars.sh
     python3 calc_metrics_per_roi.py
+    python3 create_QA_png.py
     deactivate

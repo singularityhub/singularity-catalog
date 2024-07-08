@@ -1,5 +1,5 @@
 bases:
-- count: 2036
+- count: 2039
   name: ubuntu
 - count: 444
   name: nvidia/cuda
@@ -23,7 +23,7 @@ bases:
   name: mkandes/naked-singularity
 - count: 96
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 83
+- count: 84
   name: nfcore/base
 - count: 69
   name: neurodebian
@@ -96,6 +96,8 @@ bases:
 - count: 15
   name: jtchilders/singularity_image_recipes
 - count: 15
+  name: rocker/verse
+- count: 15
   name: khanlab/neuroglia-dwi
 - count: 15
   name: poldracklab/mriqc
@@ -103,8 +105,6 @@ bases:
   name: ebothmann/sherpa-singularity
 - count: 14
   name: golang
-- count: 14
-  name: rocker/verse
 - count: 14
   name: 'GodloveD/busybox   '
 - count: 14
@@ -1344,6 +1344,8 @@ bases:
 - count: 1
   name: granek/orthomcl
 - count: 1
+  name: makaho/hisat2-zstd
+- count: 1
   name: ttubb/nanopolish
 - count: 1
   name: nvidia/container-toolkit
@@ -1900,6 +1902,8 @@ bases:
 - count: 1
   name: vanessa/sherlock
 - count: 1
+  name: biocontainers/bamtools
+- count: 1
   name: pdal/pdal
 - count: 1
   name: ubuntu-focal
@@ -2060,11 +2064,11 @@ bases:
 - count: 1
   name: anapsix/alpine-java
 bootstraps:
-- count: 6618
+- count: 6625
   name: docker
 - count: 505
   name: shub
-- count: 420
+- count: 421
   name: debootstrap
 - count: 383
   name: library
@@ -2138,13 +2142,13 @@ orgs:
 - count: 6
   name: slaclab
 - count: 6
+  name: biocontainers
+- count: 6
   name: nipreps
 - count: 5
   name: jupyter
 - count: 5
   name: netreconlab
-- count: 5
-  name: biocontainers
 - count: 4
   name: willgpaik
 - count: 4
@@ -2539,6 +2543,8 @@ orgs:
   name: electronioncollider
 - count: 1
   name: ryanpepper
+- count: 1
+  name: makaho
 - count: 1
   name: ttubb
 - count: 1
@@ -3028,8 +3034,8 @@ orgs:
 - count: 1
   name: nitishnarula
 tags:
-  latest: 716
-  other: 6290
+  latest: 718
+  other: 6293
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3387,6 +3393,8 @@ versions:
     latest: 1
   bioconductor_docker:
     RELEASE_3_11: 1
+  biocontainers/bamtools:
+    latest: 1
   biocontainers/bowtie2:
     v2.4.1_cv1: 1
   biocontainers/fastqc:
@@ -5453,7 +5461,7 @@ versions:
   rocker/verse:
     3.4.4: 2
     3.5.1: 2
-    3.6.0: 4
+    3.6.0: 5
     4.0.3: 1
     4.0.4: 1
     4.1.1: 1
@@ -5760,7 +5768,7 @@ versions:
     '16.10': 3
     '17.04': 8
     '17.10': 4
-    '18.04': 399
+    '18.04': 400
     '18.04 ': 9
     18.04': 1
     '18.10': 9
@@ -5771,7 +5779,7 @@ versions:
     '20.10': 3
     '21.04': 3
     '21.10': 3
-    '22.04': 60
+    '22.04': 61
     '22.10': 6
     '23.10': 2
     '24.04': 1
@@ -5793,7 +5801,7 @@ versions:
     focal-20200925: 3
     focal-20210827: 1
     jammy: 10
-    latest: 162
+    latest: 163
     rolling: 1
     sha256.21678b2846063434e2009dee535d3e28ded35774ca72722e1d62b37077de30da: 5
     sha256.80c52afadf3e7c3f9573de4fe79b7dca57fb3290df6c8dc46a75b02768a81146: 3
