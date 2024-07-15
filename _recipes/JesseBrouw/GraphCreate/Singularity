@@ -47,7 +47,7 @@ From: ubuntu:xenial
         $DOMAINFILE \
         $PROBLEMFILE \
         $PLANFILE \
-        --image-from-lifted-task
+        --image-from-grounded-task
     
 
 ## Update the following fields with meta data about your submission.

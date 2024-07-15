@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+    Container for Muscle 5.1.0
+    https://drive5.com/muscle5/
+
+%labels
+
+    MAINTAINER "Sarah Inwood (sninwood@gmail.com)"
+    VERSION "Muscle 5.1.0"
+
+%post
+
+# install wget
+    apt-get update
+    apt-get install -y wget
+    apt-get install -y zip
+
+# install Muscle
+    wget --no-check-certificate \
+        https://github.com/rcedgar/muscle/releases/download/5.1.0/muscle5.1.linux_intel64
+    mkdir /Muscle
+    mv muscle5.1.linux_intel64 /Muscle/
+    chmod 755 /Muscle/muscle5.1.linux_intel64
+
+%runscript
+
+    exec /Muscle/muscle5.1.linux_intel64 "$@"

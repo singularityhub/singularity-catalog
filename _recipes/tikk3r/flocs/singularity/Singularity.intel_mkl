@@ -269,6 +269,7 @@ EOF
     cd lofar_lta-2.8.0
     python setup.py install_oracle
     python setup.py install
+    cd ..
     rm lofar_lta*.tar.gz
 
     #
@@ -639,7 +640,7 @@ EOF
     sed -i "s/np\.float/np\.float_/" /opt/lofar/ddf-pipeline/scripts/sub-sources-outside-region.py
     sed -i "s/(np\.int)[^0-9]/np\.int_/g" /opt/lofar/ddf-pipeline/scripts/sub-sources-outside-region.py
     grep -rl "np.int" /opt/lofar/ddf-pipeline/utils | xargs sed -i "s/(np\.int)[^0-9]/np\.int_/g"
-    grep -rl "np.bool" /opt/lofar/ddf-pipeline/utils | xargs sed -i "s/np\.bool/np\.bool_/g"
+    #grep -rl "np.bool" /opt/lofar/ddf-pipeline/utils | xargs sed -i "s/np\.bool/np\.bool_/g"
 
     #
     # Install lotss-query

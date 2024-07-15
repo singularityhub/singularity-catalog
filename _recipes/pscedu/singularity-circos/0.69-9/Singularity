@@ -6,7 +6,7 @@ From: perl:5.32.1
     EMAIL icaoberg@psc.edu
     SUPPORT help@psc.edu
     REPOSITORY http://gitub.com/pscedu/singularity-circos
-    COPYRIGHT Copyright © 2021 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    COPYRIGHT Copyright © 2021-2023 Pittsburgh Supercomputing Center. All Rights Reserved.    
     VERSION 0.69-9
 
 %environment
@@ -34,6 +34,9 @@ From: perl:5.32.1
     cpan install SVG
     cpan install Text::Format
     cd /opt
-    wget http://circos.ca/distribution/circos-0.69-9.tgz
+    wget -nc --no-check-certificate http://circos.ca/distribution/circos-0.69-9.tgz
     tar -xvf circos-0.69-9.tgz && rm -f circos-0.69-9.tgz
     ln -s $(pwd)/circos-0.69-9/bin/circos /usr/local/bin/circos
+
+%runscript
+    /usr/local/bin/circos "$@"

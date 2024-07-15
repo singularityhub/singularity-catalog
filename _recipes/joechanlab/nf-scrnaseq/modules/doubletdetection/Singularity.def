@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: python:3.8-slim
+
+%post
+    pip install doubletdetection scanpy anndata numpy scipy tables
+    mkdir -p /tmp/numba_cache
+    chmod 777 /tmp/numba_cache
+
+%environment
+    export NUMBA_CACHE_DIR=/tmp/numba_cache
+
+%runscript
+    exec python "$@"

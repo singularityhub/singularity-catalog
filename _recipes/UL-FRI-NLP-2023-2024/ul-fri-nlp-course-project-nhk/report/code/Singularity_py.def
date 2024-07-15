@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: python:3.9
+
+%post
+    apt-get update && apt-get install -y \
+        python3-pip
+
+
+    pip3 install bitsandbytes
+    pip3 install notebook 
+    pip3 install bitsandbytes
+    pip3 install datasets
+    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+    pip3 install transformers 
+    pip3 install accelerate
+    pip install evaluate
+    pip install nltk
+    pip install bert-score
+    pip install rouge-score
+
+
+%environment
+    export PYTHONPATH=/usr/local/lib/python3.9/site-packages:$PYTHONPATH

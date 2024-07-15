@@ -1,0 +1,13 @@
+Bootstrap: docker
+
+From: continuumio/miniconda3
+
+%post
+    wget https://raw.githubusercontent.com/joechanlab/nf-scrnaseq/main/modules/scvi/environment.yml
+    /opt/conda/bin/conda env create -f environment.yml
+
+%environment
+    export PATH=/opt/conda/envs/scvi/bin/:$PATH
+
+%runscript
+    exec python "$@"

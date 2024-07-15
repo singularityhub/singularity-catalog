@@ -1,0 +1,89 @@
+Bootstrap: docker
+From: mambaorg/micromamba
+
+%labels
+AUTHOR earlm@lanl.gov
+
+%post
+    # save when the container was built
+    NOW=`date`
+    echo "export NOW=\"${NOW}\"" >> $SINGULARITY_ENVIRONMENT
+
+    apt-get update
+    apt-get install -y build-essential git
+    apt-get install -y python3 pip libgl1
+    apt-get install -y wget zip bc procps 
+    apt-get clean
+    # instal conda and conda packages
+    micromamba install --yes --name base --channel bioconda --channel conda-forge prodigal orthofinder=2.5.4 bbmap=39.01 fasttree hmmer pal2nal prodigal ete3 raxml trimal r-essentials scipy
+    pip install scipy
+    micromamba clean --all --yes
+    chmod --recursive a+rw /opt/conda/bin/*
+
+    # make path to gits (duh)
+    Path_to_gits=/opt/Path_to_gits
+    echo "Path_to_gits=/opt/Path_to_gits" >> $SINGULARITY_ENVIRONMENT
+    export PATH="/opt/conda/bin/:/opt/Path_to_gits/OrthoPhyl/:/opt/miniconda3/bin/:$PATH"
+    mkdir $Path_to_gits
+    cd $Path_to_gits/
+    
+    # get ASTRAL
+    git clone https://github.com/smirarab/ASTRAL.git
+    cd ASTRAL
+    unzip Astral.5.7.8.zip
+
+    # get catfasta2phyml
+    cd $Path_to_gits/
+    git clone https://github.com/nylander/catfasta2phyml.git
+    
+    # get Alignemnt assessment and convert to python3
+    git clone https://github.com/dportik/Alignment_Assessment.git
+    cd Alignment_Assessment/
+    # convert script to python3
+    2to3 -w Alignment_Assessment_v2.py 
+
+    # get fastANI and place in ~/apps/
+    cd /opt
+    wget https://github.com/ParBLiSS/FastANI/releases/download/v1.33/fastANI-Linux64-v1.33.zip
+    unzip fastANI-Linux64-v1.33.zip
+    mkdir /opt/apps/
+    mv fastANI /opt/apps/ 
+    rm fastANI-Linux64-v1.33.zip
+
+
+    # finally get OrthoPhyl
+    cd $Path_to_gits
+    git clone https://github.com/eamiddlebrook/OrthoPhyl.git
+    cd OrthoPhyl
+    chmod a+rw OrthoPhyl.sh
+
+    # do some final cleanup
+    apt-get clean
+    chmod --recursive a+rw $Path_to_gits
+
+%environment
+    export PATH="/opt/conda/bin/:/opt/Path_to_gits/OrthoPhyl/:/opt/miniconda3/bin/:$PATH"
+    export Path_to_gits="/opt/Path_to_gits"
+    export OrthoPhyl="bash /opt/Path_to_gits/OrthoPhyl/OrthoPhyl.sh"
+    export FASTANI="/opt/apps/fastANI"
+    export ASTRAL_cmd="$Path_to_gits/ASTRAL/Astral/astral.5.7.8.jar"
+    export catfasta2phyml_cmd="$Path_to_gits/catfasta2phyml/catfasta2phyml.pl"
+    export Alignment_Assessment="$Path_to_gits/Alignment_Assessment/Alignment_Assessment_v2.py"
+    #stupid stuff for perl
+    export LC_ALL=C.UTF-8 # Sets locale to UTF-8
+    export LANG=C.UTF-8 # Sets locale to UTF-8
+
+
+%runscript
+    echo "Container was created $NOW"
+    echo "Arguments received: $*"
+    exec $OrthoPhyl "$@"
+
+%help
+    This container holds OrthoPhyl and all of its dependencies.
+    A test run can be performed with:
+        "singularity run OrthoPhyl.0.X.X.sif -T TESTER_chloroplast -s ./test_sing_chlorophyl3 -t 10"    
+    To see a help message:
+	"singularity run OrthoPhyl.0.X.X.sif -h"
+    For a custom OrthoPhyl run:
+	"singularity run OrthoPhyl.0.X.X.sif -g Path/to/assembly_files/ -s path/to/store/output/ -t #_threads"

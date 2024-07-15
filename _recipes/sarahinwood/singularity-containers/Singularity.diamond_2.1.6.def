@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+
+    Container for diamond 2.1.6
+    https://github.com/bbuchfink/diamond
+
+%labels
+
+    MAINTAINER "Sarah Inwood (sninwood@gmail.com)"
+    VERSION "diamond 2.1.6"
+
+%post
+
+# install wget
+    apt-get update
+    apt-get install -y wget
+    apt-get install -y zip
+
+# install diamond
+    wget --no-check-certificate \
+         http://github.com/bbuchfink/diamond/releases/download/v2.1.6/diamond-linux64.tar.gz
+    tar -xzvf diamond-linux64.tar.gz

@@ -1,0 +1,50 @@
+Bootstrap: docker
+From: bioconductor/bioconductor_docker:RELEASE_3_18
+
+%help
+
+    R 4.4.1 with Bioconductor 3.18
+
+%labels
+
+    MAINTAINER "Sarah Inwood (sninwood@gmail.com)"
+    VERSION "Bioconductor 3.18"
+
+%post
+    # install packages from bioconductor
+    Rscript -e "options(Ncpus=8); \
+        BiocManager::install(c( \
+            'adegenet', \
+            'apeglm', \
+            'BatchJobs', \
+            'Biostrings', \
+            'clusterProfiler', \
+            'dada2', \
+            'data.table', \
+            'DESeq2', \
+            'DEXSeq', \
+            'fgsea', \
+            'microbiome', \
+            'pcadapt', \
+            'pheatmap', \
+            'phyloseq', \
+            'qqman', \
+            'RnaSeqSampleSize', \
+            'rtracklayer', \
+            'ShortRead', \
+            'S4Vectors', \
+            'tidyverse', \
+            'tximport', \
+            'vcfR', \
+            'VennDiagram', \
+            'viridis'
+            ), \
+        type='source', ask=FALSE)"
+
+    # install zoo
+    Rscript -e "options(Ncpus=8); \
+        install.packages('zoo')"
+
+%runscript
+
+    exec /usr/local/bin/R "$@"

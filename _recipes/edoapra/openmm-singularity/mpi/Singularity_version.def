@@ -86,7 +86,7 @@ add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos
 apt-get install -y cuda-cudart-dev-11-7; fi
 apt-get install -y cmake-curses-gui cmake make swig doxygen curl bzip2 gzip tar graphviz
  dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n |tail -120 
-python -m pip install numpy Cython
+python -m pip install numpy==1.26.4 Cython
 
 curl -LJO https://github.com/openmm/openmm/archive/refs/tags/8.1.1.tar.gz
 tar xzf openmm-8.1.1.tar.gz
@@ -113,7 +113,7 @@ cd ..
 
 python -m pip install \
      cython \
-     numpy \
+     numpy==1.26.4 \
      scipy \
      mdtraj \
      numpydoc \
@@ -157,7 +157,6 @@ python -m pip install scipy numpy
 %environment
 export CUDA=$(echo $CUDA_VERSION |cut -c 1-4)
 export OMPI_DIR=/opt/ompi
-export PATH=$OMPI_DIR/bin:/opt/miniconda3/bin:/opt/miniconda3/condabin:$PATH
 export LD_LIBRARY_PATH=$OMPI_DIR/lib:/usr/local/cuda-${CUDA}/compat:/usr/local/cuda-${CUDA}/lib64:$LD_LIBRARY_PATH
 #%runscript
 #exec /bin/bash "$@"

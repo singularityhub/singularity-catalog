@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: alpine:edge
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY http://gitub.com/pscedu/singularity-jq
+    COPYRIGHT Copyright © 2021-2023 Pittsburgh Supercomputing Center. All Rights Reserved.    
+    VERSION 1.7-r2
+
+%post 
+    apk update
+    apk add jq=1.7-r2
+
+%runscript
+    jq "$@"
