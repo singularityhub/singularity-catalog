@@ -1,0 +1,277 @@
+Bootstrap: docker
+From: ubuntu:22.04
+%labels
+MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
+
+%setup
+    ls -la  ${GITHUB_WORKSPACE} \
+&&     export CACHEDIR=${GITHUB_WORKSPACE}/../../../cache\
+&&     rm -f ${SINGULARITY_ROOTFS}/*.txt || true\
+&&     bash -c "if [[ -z '${FC}' ]]; then echo 'FC=gfortran ' >> ${SINGULARITY_ROOTFS}/fc.txt ; else echo 'FC is ${FC}'; echo 'FC=${FC} ' >> ${SINGULARITY_ROOTFS}/fc.txt ; fi"\
+&&     bash -c "if [[ -z '${OMPI}' ]]; then echo 'OMPI=4.1.6 ' >> ${SINGULARITY_ROOTFS}/OMPI.txt ; else echo 'OMPI is ${OMPI}'; echo 'OMPI=${OMPI} ' >> ${SINGULARITY_ROOTFS}/ompi.txt ; fi"\
+&&     bash -c "if [[ -z '${ARMCI_NETWORK}' ]]; then echo 'ARMCI_NETWORK=MPI-PR ' >> ${SINGULARITY_ROOTFS}/armci_network.txt ; else echo 'ARMCI_NETWORK is ${ARMCI_NETWORK}'; echo 'ARMCI_NETWORK=${ARMCI_NETWORK} ' >> ${SINGULARITY_ROOTFS}/armci_network.txt ; fi"\
+&&     bash -c "if [[ -z '${MPI_IMPL}' ]]; then echo 'MPI_IMPL=ompi ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; else echo 'MPI_IMPL is ${MPI_IMPL}'; echo 'MPI_IMPL=${MPI_IMPL} ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; fi"\
+&&     bash -c "if [[ -z '${BRANCH}' ]]; then echo 'BRANCH=master ' >> ${SINGULARITY_ROOTFS}/branch.txt ; else echo 'BRANCH is ${BRANCH}'; echo 'BRANCH=${BRANCH} ' >> ${SINGULARITY_ROOTFS}/branch.txt ; fi"\
+&&     bash -c "if [[ -z '${MYUSERNAME}' ]]; then echo 'MYUSERNAME=nwchemgit ' >> ${SINGULARITY_ROOTFS}/myusername.txt ; else echo 'MYUSERNAME is ${MYUSERNAME}'; echo 'MYUSERNAME=${MYUSERNAME} ' >> ${SINGULARITY_ROOTFS}/myusername.txt ; fi"\
+&&     ls -lrt ${CACHEDIR} || true\
+&&     ls -la  ${CACHEDIR}/ || true\
+&&     ls -la  ${CACHEDIR}/ompi || true\
+&&     ls -la  ${CACHEDIR}/ompi/lib || true\
+&&     ls -la  ${CACHEDIR}/simint.l5_p5_d1.install/lib/libnwc_simint.a || true\
+&&     ls -la  ${CACHEDIR}/simint.l5_p5_d1.install/lib/libsimint.a ||true\
+&&     bash -c "if [ ! -z "${GITHUB_WORKSPACE}" ]; then mkdir -p ${SINGULARITY_ROOTFS}/nwchem/contrib; rsync -a ${GITHUB_WORKSPACE}/nwchem/src ${SINGULARITY_ROOTFS}/nwchem/. ; rsync -a ${GITHUB_WORKSPACE}/nwchem/contrib/getmem.nwchem ${SINGULARITY_ROOTFS}/nwchem/contrib/. ;rsync -a ${GITHUB_WORKSPACE}/nwchem/travis ${SINGULARITY_ROOTFS}/nwchem/. ; rsync -a ${GITHUB_WORKSPACE}/nwchem/.git ${SINGULARITY_ROOTFS}/nwchem/. ; fi"\
+&&     bash -c "if [[  -f ${CACHEDIR}/ompi/lib/libmpi.so ]]; then mkdir -p ${SINGULARITY_ROOTFS}/opt ;rsync -a ${CACHEDIR}/ompi ${SINGULARITY_ROOTFS}/opt/. ; echo ompi/ucx cache fetched ;fi"\
+&&     bash -c "if [[  -f ${CACHEDIR}/libext/lib/libnwc_openblas.a ]]; then rsync -a ${CACHEDIR}/libext/* ${SINGULARITY_ROOTFS}/nwchem/src/libext/. ; echo libext cache fetched ;fi"\
+&&     bash -c "if [[  -f ${CACHEDIR}/simint.l5_p5_d1.install/lib/libsimint.a ]]; then rsync -av ${CACHEDIR}/simint.l5_p5_d1.install ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/. ; ln -sf ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/simint.l5_p5_d1.install  ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/simint_install;  ls -l ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/; echo simint cache fetched ;fi"
+
+##%files
+##    ${GITHUB_WORKSPACE}/nwchem nwchem
+
+%post
+#https://sylabs.io/guides/3.6/user-guide/mpi.html
+export DEBIAN_FRONTEND=noninteractive \
+&& export OMPI_DIR=/opt/ompi\
+&& export PATH=$OMPI_DIR/bin:/root/apps/oneapi/compiler/latest/bin:/root/apps/oneapi/compiler/latest/linux/bin/intel64:/root//apps/oneapi/compiler/latest/linux/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+&& export LD_LIBRARY_PATH=$OMPI_DIR/lib:/root/apps/oneapi/compiler/latest/lib:/root/apps/oneapi/compiler/latest/linux/lib:/root/apps/oneapi/compiler/latest/linux/lib/x64:/root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin \
+&& export LIBRARY_PATH=/root/apps/oneapi/compiler/latest/lib:/root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/root/apps/oneapi/compiler/latest/linux/lib \
+&& export SINGULARITY_PATH=$OMPI_DIR/bin:/root/apps/oneapi/compiler/latest/bin:/root/apps/oneapi/compiler/latest/linux/bin/intel64:/root/apps/oneapi/compiler/latest/linux/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+&& export SINGULARITY_LD_LIBRARY_PATH=$OMPI_DIR/lib:/root/apps/oneapi/compiler/latest/lib:/root/apps/oneapi/compiler/latest/linux/lib:/root/apps/oneapi/compiler/latest/linux/lib/x64:~/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin \
+&& export SINGULARITY_LIBRARY_PATH=/root/apps/oneapi/compiler/latest/lib:/root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/root/apps/oneapi/compiler/latest/linux/lib \
+&& export `cat ./fc.txt`\
+&& export `cat ./ompi.txt`\
+&& export ucx=1.14.1\
+&& export `cat ./armci_network.txt`\
+&& export `cat ./mpi_impl.txt`\
+&& export `cat ./branch.txt`\
+&& export `cat ./myusername.txt`\
+&& echo FC is $FC\
+&& echo OMPI is $OMPI\
+&& export ompi_prefix=openmpi-$OMPI\
+&& echo ompi_prefix is $ompi_prefix \
+&& export ompi_major=$(echo $OMPI | cut -d . -f1) \
+&& echo ompi_major is $ompi_major \
+&& export ompi_minor=$(echo $OMPI | cut -d . -f2) \
+&& echo ompi_minor is $ompi_minor \
+&& echo ompi_major is $ompi_major \
+&& if [ $ompi_major = '5' ]; then
+    export ompi_options=' --with-pmix --with-pmix-libdir=/usr/lib/x86_64-linux-gnu --enable-mca-no-build=coll-han '
+else
+    export ompi_options=' --with-pmi --with-pmi-libdir=/usr/lib/x86_64-linux-gnu --without-verbs '
+fi \
+&& echo ompi_options $ompi_options \
+&& echo ARMCI_NETWORK is $ARMCI_NETWORK\
+&& echo MPI_IMPL is $MPI_IMPL\
+&& echo BRANCH is $BRANCH\
+&& pwd \
+&& apt-get -y update \
+&& apt-get -y install -y tzdata git moreutils  wget rsync  sudo ca-certificates \
+&& wget https://github.com/moparisthebest/static-curl/releases/download/v8.1.2/curl-amd64 -O /usr/bin/curl \
+&& chmod +x /usr/bin/curl \
+&& echo ca_certificate=/etc/ssl/certs/ca-certificates.crt >  ~/.wgetrc \
+&& echo        "cacert=/etc/ssl/certs/ca-certificates.crt" >> ~/.curlrc \
+&& bash -o  pipefail -c "if [[ $(echo $FC | cut -c -8) == gfortran ]]; then apt-get -y install -y  ${FC}; fi" \
+&& pwd \
+&& echo '@@ ls -lart ' \
+&& ls -lart  \
+&& echo '@@ ls on /opt' \
+&& ls -lart /opt \
+&& echo " ==========" \
+&& pwd \
+&& echo pwd $(pwd) \
+&& echo 'ls nwchem' $(ls -lrta nwchem) \
+&& echo 'ls nwchem/src' $(ls -lrta nwchem/src) \
+&& bash -o  pipefail -c "if [[ ! -f nwchem/src/GNUmakefile ]]; then git clone -b $BRANCH --depth 1  https://github.com/$MYUSERNAME/nwchem.git; fi " \
+&& apt-get -y install -y   tar libnl-3-200 libnl-route-3-200 libgomp1 libnuma1 \
+ g++ gfortran   make ssh patch   unzip perl-base file \
+ python3 python3-dev cmake  unzip zip perl automake libtool autoconf flex  \
+ libnuma-dev libslurm-dev \
+libpmix-bin libpmix-dev libpmix2 \
+libpmi2-0-dev libpmi0-dev  \
+ libnl-3-dev  libnl-route-3-dev udev \
+ librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers  \
+ libhwloc-dev \
+ pkg-config gawk  software-properties-common \
+&& if [ $ompi_major = '5' ]; then
+    apt-get -y install -y libpmix-bin libpmix-dev libpmix2
+else
+    apt-get -y install -y libpmi2-0-dev libpmi0-dev
+fi \
+&& apt-get clean \
+&& echo TTTTT \
+&& df -h \
+&& bash -o  pipefail -c  ./nwchem/travis/build_env.sh || true \
+&& echo TTTTT \
+&& echo "PATH" $PATH \
+&& echo "LD_LIBRARY_PATH" $LD_LIBRARY_PATH \
+&& echo FFFFF \
+&& echo 'FC -v ' `$FC -v` \
+&& rm -f ./cc.txt || true \
+&& if [ -f ./cc.txt ]; then export `cat ./cc.txt` ; fi \
+&& if [ -f ./cxx.txt ]; then export `cat ./cxx.txt` ; fi \
+&& echo ' CC is ' "$CC" \
+&& echo ' CXX is ' "$CXX" || true \
+&& echo 'ls -l /opt/ompi/lib/libmpi.so' $(ls -l /opt/ompi/lib/libmpi.so) || true \
+&& bash -o pipefail -c "if [[ ! -f /opt/ompi/lib/libmpi.so ]]; then  \
+$FC -v \
+&& wget --progress=dot:giga  https://github.com/openucx/ucx/releases/download/v$ucx/ucx-$ucx.tar.gz -O - | tar xzf - \
+&& cd ucx-$ucx \
+&& wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/ucx_malloc.patch \
+&& patch -p0 < ./ucx_malloc.patch \
+&& mkdir build && cd build \
+&& ../configure --prefix=$OMPI_DIR --disable-logging --disable-debug --disable-assertions --disable-params-check \
+&& make -j4 && make install \
+&& if [ ! -f $OMPI_DIR/bin/ucx_info ]; then echo ucx_info\ not\ found ; exit 1 ; fi \
+&& cd ../.. \
+&& wget  --progress=dot:giga https://download.open-mpi.org/release/open-mpi/v'$ompi_major'.'$ompi_minor'/openmpi-'$OMPI'.tar.gz  -O - | tar xzf -   \
+&& cd $ompi_prefix                                                        && \
+./configure  --prefix=$OMPI_DIR --with-ucx=$OMPI_DIR --enable-mca-no-build=btl-uct   \
+$ompi_options \
+--enable-mpi1-compatibility --with-slurm --without-tm --without-lsf  \
+ --without-sge --without-alps --without-lustre --disable-memchecker \
+ --without-hcoll --disable-static  \
+ --disable-mpi-java --enable-dlopen --without-cuda  \
+  FC=$FC \
+&& head config.log \
+&& make FC=$FC -j 6                                                  \
+&& make install                  \
+&& if [ ! -f $OMPI_DIR/bin/mpif90 ]; then echo mpif90\ not\ found ; exit 1 ; fi \
+&& echo mpif90 show is $($OMPI_DIR/bin/mpif90 -show) \
+&& cd .. ; rm -rf *tar*gz openmpi-* ucx-* ;fi " \
+&& echo ' check ucx' \
+&& if [ ! -f $OMPI_DIR//bin/ucx_info ]; then echo ucx_info\ not\ found ; exit 1 ; fi \
+&& echo ' /opt/ompi/bin/ucx_info -v ' `/opt/ompi/bin/ucx_info -v|| true` \
+&& echo ' ucx Transports' `/opt/ompi/bin/ucx_info  -d |grep Transport |cut -c 19- || true` \
+&& if [ ! -f $OMPI_DIR/bin/mpif90 ]; then echo mpif90\ not\ found ; exit 1 ; fi \
+&& echo '********'  \
+&& export PATH=$OMPI_DIR/bin:$PATH\
+&& export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH\
+&& echo ARMCI_NETWORK is $ARMCI_NETWORK\
+&& export NWCHEM_TARGET=LINUX64\
+&& export NWCHEM_MODULES="all python gwmol xtb"\
+&& export USE_OPENMP=1 \
+&& export USE_TBLITE=1 \
+&& if [ "$FC" = "gfortran" ]; then 
+   export BUILD_PLUMED=1;    export PYTHON_BIN=python3;   export BUILD_ELPA=1
+fi	   \
+&& export USE_LIBXC=1\
+&& export BUILD_OPENBLAS=1\
+&& export BUILD_SCALAPACK=1\
+&& export BLAS_SIZE=8\
+&& export SCALAPACK_SIZE=8\
+&& export USE_MPI=y\
+&& export USE_MPIF=y\
+&& export USE_MPIF4=y\
+&& export USE_HWOPT=n\
+&& export USE_LIBXC=y\
+&& export USE_NOIO=y\
+&& export IPCCSD=y \
+&& export EACCSD=y \
+&& export MRCC_METHODS=y \
+&& export USE_SIMINT=y\
+&& export SIMINT_MAXAM=5\
+&& export PYTHONVERSION=$(python -V| cut -d ' ' -f 2 |cut -d . -f 1-2) \
+&& ls -l nwchem* || true \
+&& /usr/bin/env|egrep BUILD_ \
+&& echo " ==========" \
+&& pwd \
+&& echo pwd $(pwd) \
+&& echo 'ls nwchem' $(ls -lrta nwchem) \
+&& echo 'ls nwchem/src' $(ls -lrta nwchem/src) \
+&& bash -o pipefail -c "if [[ ! -f nwchem/src/GNUmakefile ]]; then git clone -b $BRANCH --depth 1  https://github.com/$MYUSERNAME/nwchem.git; fi" \
+&& cd nwchem \
+&& echo "output of git describe  --always " `git describe  --always` || true \
+&& wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/largebasis.patch \
+&& patch -p1 < largebasis.patch \
+&& wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi5x/okeep.patch \
+&& patch -p1 < okeep.patch \
+&& cd src/tools \
+&& mv get-tools-github get-tools-github.org && wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi5x/get-tools-github  \
+&& chmod +x get-tools-github \
+&& wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi5x/scalasl2_patch.sh \
+&& cd ../.. \
+&& export NWCHEM_TOP=`pwd` \
+&& echo 'ls -lrta ' $(ls -lrta) \
+&& echo 'pwd ' $(pwd) \
+&& cd src \
+&& echo 'ls -lrta ' $(ls -lrta) \
+&& echo 'pwd ' $(pwd) \
+&& ls -lrt libext/lib || true \
+&& make nwchem_config || { echo "config Failure"; exit 1; } \
+&& bash -o pipefail -c " \
+echo 'ls ~/' `ls -lrt ~/` \
+&& echo '222 PATH is ' `/usr/bin/env | grep PATH` \
+&& echo '111 which FC ' `which $FC` || true \
+&& mpif90 -show \
+&& echo FC is $FC \
+&& $FC -v \
+&& make FC=$FC -j6 || { echo 'Compilation Failure'; exit 1; } \
+&& FC=$FC ../contrib/getmem.nwchem 2000   \
+&& make FC=$FC install INSTALL_PREFIX=/opt/nwchem \
+&& ldd  ../bin/LINUX64/nwchem  "\
+&& if [ -f /root/apps/oneapi/compiler/latest/env/vars.sh ]; then  \
+rsync -av /root/apps/oneapi/compiler/latest/lib/lib*.so* $OMPI_DIR/lib/. ; fi \
+&&  rm -rf /root/apps/oneapi/  /opt/nwchem/src/tce /opt/nwchem/src/NWints/simint/libsimint_source/simint.l?_p?_d? || true \
+&& DEBIAN_FRONTEND=noninteractive apt-get clean -y \
+&& DEBIAN_FRONTEND=noninteractive apt-get -y install localepurge \
+&& echo MANDELETE >  /etc/locale.nopurge \
+&& echo DONTBOTHERNEWLOCALE >> /etc/locale.nopurge \
+&& echo en_US.UTF-8 >> /etc/locale.nopurge \
+&& localepurge \
+&& rm -rf /usr/share/doc  /usr/share/man \
+&& du -sh /opt/nwchem \
+&& du -sk /opt/nwchem/*|sort -n \
+&& rm -rf ../.git \
+&& rm -rf tce tools nwdft NWints/simint/libsimint_source/simint.l?_p?_d? geom symmetry util nwxc ddscf lapack blas rism argos peigs rmdft gradients symmetry property smd lucia dplot propery hessian ccsd mp2_grad moints cafe analyz dimqm   develop libext/scalapack libext/openblas libext/libxc/libxc* libext/plumed* libext/libext_utils  libext/elpa  ../lib  \
+&& du -sh * |sort -n \
+&& cd ../.. \
+&& du -sh nwchem \
+&& du -sk *|sort -n  \
+&& bash -o pipefail -c "if [[ $FC == 'ifx' ]] || [[ $FC  == 'ifort' ]]; then \
+rm -rf ~/apps  /var/intel  l_*sh ; fi"   \
+&& ls -lrth    \
+&&  ldd  /opt/nwchem/bin/nwchem  \
+&& du -sk *|sort -n \
+&& echo "dddddddddddd"  \
+&& dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n | tail -n 100 \
+&& echo "dddddddddddd" \
+&&  du -sk /tmp/* || true \
+&&  ls -lart /tmp ||true \
+&&  apt-get  -y purge cmake git  gcc-11  g++-11  gfortran-11  libstdc++-11-dev  libgcc-11-dev git \
+&& apt-get -y install libgcc-s1 libgfortran5 \
+&& apt-get -y autoremove && apt-get clean
+
+
+
+#clean unnecessary packages
+
+#apt-get -y purge curl wget tar  cmake  unzip zip perl automake libtool autoconf flex  \
+#&&  apt-get -y autoremove && apt-get clean
+
+#cd /data
+%environment
+export OMPI_DIR=/opt/ompi
+export SINGULARITY_OMPI_DIR=$OMPI_DIR
+export SINGULARITYENV_APPEND_PATH=$OMPI_DIR/bin
+export SINGULARITYENV_APPEND_LD_LIBRARY_PATH=$OMPI_DIR/lib
+export OMP_NUM_THREADS=1
+export SINGULARITY_OMP_NUM_THREADS=1
+export COMEX_MAX_NB_OUTSTANDING=12
+export SINGULARITY_COMEX_MAX_NB_OUTSTANDING=12
+#export nwchem_hash=77ba3a6e1dd6f9ba26879d0416bb93b302f1f4f7
+#export NWCHEM_TOP=/opt/nwchem
+export NWCHEM_SHARE=/opt/nwchem/share/
+export FFIELD=amber
+export AMBER_1=$NWCHEM_SHARE/data/amber_s/
+export AMBER_2=$NWCHEM_SHARE/data/amber_q/
+export AMBER_3=$NWCHEM_SHARE/data/amber_x/
+export AMBER_4=$NWCHEM_SHARE/data/amber_u/
+export SPCE=${NWCHEM_SHARE}/data/solvents/spce.rst
+export CHARMM_S=$NWCHEM_SHARE/data/charmm_s/
+export CHARMM_X=$NWCHEM_SHARE/data/charmm_x/
+export PATH=$PATH:/opt/nwchem/bin/
+export PATH=$OMPI_DIR/bin:$PATH
+export NWCHEM_BASIS_LIBRARY=${NWCHEM_SHARE}//libraries/
+export NWCHEM_NWPW_LIBRARY=${NWCHEM_SHARE}//libraryps/
+export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+#%runscript
+#exec /bin/bash "$@"

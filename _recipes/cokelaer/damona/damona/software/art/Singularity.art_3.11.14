@@ -1,17 +1,30 @@
-Bootstrap: library
-From: cokelaer/damona/conda:4.7.12
+Bootstrap: localimage
+From: ../../library/micromamba/micromamba_1.5.8.img
 
 %labels
     Author thomas cokelaer
 
 %post
+    apt -y update && apt -y upgrade
 
-    export PATH=$PATH:/usr/local/anaconda/bin
+    # export the PATH here so that pip is found later on
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+    # an alias
+    export OPTS=" -q -c conda-forge -c bioconda -n main -y "
 
-    conda install art==3.11.14
+    micromamba install $OPTS python="3.9"
 
-    # Let us save some space
-    conda clean --packages -y
-    conda clean --all -y # next requires lots of space
+    # wierd but actual version is 2.1.8 while version on conda is 3.11.14
+    micromamba install $OPTS "art==3.11.14"
 
+   # cleanup
+   micromamba clean --packages -y
+    micromamba clean --all -y
+    rm -rf /opt/condas/pkg
+
+%environment
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+
+%runscript
+    art_illumina "$@"
 

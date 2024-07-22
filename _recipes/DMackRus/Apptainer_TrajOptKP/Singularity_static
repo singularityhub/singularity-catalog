@@ -12,10 +12,13 @@ AUTHOR Rafael Papallas (rpapallas.com)
     export LD_LIBRARY_PATH=/opt/ros/noetic/lib:/.singularity.d/libs
     export CPATH=/opt/ros/noetic/include
     export PATH=/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-    export MJ_HOME="/mujoco"
+    export MJ_HOME="/opt/mujoco"
 %files
   scripts /scripts
-  mujoco /mujoco
-
+  mujoco /opt/mujoco
+  
 %post
-  /scripts/post_script.sh
+  /scripts/post_script_static.sh
+  
+%runscript
+  exec /bin/bash "$@" --rcfile /scripts/run_script_static.sh

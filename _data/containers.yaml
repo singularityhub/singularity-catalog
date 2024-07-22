@@ -1,21 +1,21 @@
 bases:
-- count: 2045
+- count: 2048
   name: ubuntu
-- count: 444
+- count: 445
   name: nvidia/cuda
 - count: 368
   name: debian
 - count: 291
   name: centos
-- count: 267
+- count: 268
   name: alpine
 - count: 258
   name: ghcr.io/mkandes/naked-singularity
-- count: 232
+- count: 246
   name: aibasel/downward
 - count: 232
   name: python
-- count: 216
+- count: 217
   name: continuumio/miniconda3
 - count: 131
   name: tensorflow/tensorflow
@@ -23,7 +23,7 @@ bases:
   name: mkandes/naked-singularity
 - count: 96
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 85
+- count: 86
   name: nfcore/base
 - count: 69
   name: neurodebian
@@ -31,7 +31,7 @@ bases:
   name: fedora
 - count: 50
   name: nvcr.io/nvidia/cuda
-- count: 50
+- count: 49
   name: cokelaer/damona/conda
 - count: 47
   name: conda/miniconda3
@@ -58,9 +58,9 @@ bases:
 - count: 31
   name: continuumio/miniconda
 - count: 28
-  name: nvcr.io/nvidia/tensorflow
-- count: 27
   name: nipreps/fmriprep
+- count: 28
+  name: nvcr.io/nvidia/tensorflow
 - count: 27
   name: modakopt/modak
 - count: 26
@@ -85,7 +85,7 @@ bases:
   name: glotzerlab/software
 - count: 18
   name: ezlabgva/busco
-- count: 17
+- count: 18
   name: mambaorg/micromamba
 - count: 16
   name: rocker/tidyverse
@@ -148,6 +148,8 @@ bases:
 - count: 11
   name: scientificlinux/sl
 - count: 11
+  name: bioconductor/release_core2
+- count: 11
   name: rust
 - count: 11
   name: perl
@@ -161,8 +163,6 @@ bases:
   name: images/common.simg
 - count: 10
   name: quay.io/vgteam/vg
-- count: 10
-  name: bioconductor/release_core2
 - count: 10
   name: continuumio/anaconda
 - count: 10
@@ -542,6 +542,8 @@ bases:
 - count: 3
   name: ctpelok77/forbiditerative
 - count: 3
+  name: ../library/micromamba/micromamba_1.5.8.img
+- count: 3
   name: richelbilderbeek/default/gcaer
 - count: 3
   name: richelbilderbeek/default/plinkr
@@ -861,6 +863,8 @@ bases:
   name: quay.io/biocontainers/phylip
 - count: 2
   name: quay.io/biocontainers/bamtools
+- count: 2
+  name: pandoc/latex
 - count: 2
   name: andreweiner/of_pytorch
 - count: 2
@@ -1364,6 +1368,8 @@ bases:
 - count: 1
   name: jeffquinnmsk/bayestme
 - count: 1
+  name: nixpkgs/cachix-flakes
+- count: 1
   name: cokelaer/damona/sequana
 - count: 1
   name: impica
@@ -1652,6 +1658,8 @@ bases:
 - count: 1
   name: rocker/r-devel
 - count: 1
+  name: nvidia/12.2.2-runtime-ubuntu20.04
+- count: 1
   name: kaldiasr/kaldi
 - count: 1
   name: morinlab/vcf2maf-vep
@@ -1820,6 +1828,8 @@ bases:
 - count: 1
   name: joey3639570/mellanox4.4-tensorflow1.13
 - count: 1
+  name: bioc3.8.simg
+- count: 1
   name: airl_lab/default/airl_env
 - count: 1
   name: uiuccs484parallelprog/cs484_base
@@ -1879,8 +1889,6 @@ bases:
   name: genomicpariscentre/guppy
 - count: 1
   name: quay.io/biocontainers/infernal
-- count: 1
-  name: pandoc/latex
 - count: 1
   name: quay.io/biocontainers/sra-tools
 - count: 1
@@ -2000,8 +2008,6 @@ bases:
 - count: 1
   name: redhat/ubi9
 - count: 1
-  name: ../library/micromamba/micromamba_1.5.8.img
-- count: 1
   name: trinityrnaseq/trinotate
 - count: 1
   name: sequana_tools_0.14.5.img
@@ -2074,19 +2080,19 @@ bases:
 - count: 1
   name: gcr.io/deepvariant-docker/deepvariant
 bootstraps:
-- count: 6674
+- count: 6700
   name: docker
 - count: 505
   name: shub
-- count: 421
+- count: 423
   name: debootstrap
 - count: 383
   name: library
 - count: 344
   name: oras
-- count: 192
+- count: 195
   name: localimage
-- count: 171
+- count: 173
   name: yum
 - count: 35
   name: zypper
@@ -2137,12 +2143,12 @@ orgs:
   name: vanessa
 - count: 8
   name: taccaci
+- count: 8
+  name: nvidia
 - count: 7
   name: nvcr.io/hpc
 - count: 7
   name: twongjirad
-- count: 7
-  name: nvidia
 - count: 7
   name: continuumio
 - count: 6
@@ -2616,6 +2622,8 @@ orgs:
 - count: 1
   name: jeffquinnmsk
 - count: 1
+  name: nixpkgs
+- count: 1
   name: pdal
 - count: 1
   name: tswetnam
@@ -3052,8 +3060,8 @@ orgs:
 - count: 1
   name: google
 tags:
-  latest: 722
-  other: 6331
+  latest: 725
+  other: 6351
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3118,12 +3126,12 @@ versions:
   adriansevcenco/alienpy.dock:
     latest: 1
   aibasel/downward:
-    '19.06': 45
-    '19.12': 47
-    '20.06': 64
-    '21.12': 26
-    '22.06': 28
-    '22.12': 22
+    '19.06': 47
+    '19.12': 49
+    '20.06': 66
+    '21.12': 28
+    '22.06': 30
+    '22.12': 26
   airl_lab/default/airl_env:
     base_ci: 1
   alan0415/singularity_tf_rdma:
@@ -3167,7 +3175,7 @@ versions:
     '3.4': 2
     '3.5': 1
     '3.6': 3
-    '3.7': 4
+    '3.7': 5
     '3.8': 33
     3.8.4: 1
     '3.9': 6
@@ -3408,6 +3416,7 @@ versions:
   bioconductor/release_core2:
     R3.5.0_Bioc3.7: 1
     R3.5.1_Bioc3.7: 1
+    R3.5.2_Bioc3.8: 1
     latest: 1
   bioconductor_docker:
     RELEASE_3_11: 1
@@ -3548,7 +3557,7 @@ versions:
   cokelaer/damona:
     r_4.0.2: 2
   cokelaer/damona/conda:
-    4.7.12: 29
+    4.7.12: 28
     4.9.2: 21
   cokelaer/damona/sequana:
     0.9.1: 1
@@ -4382,7 +4391,7 @@ versions:
     1.3.1: 1
     1.4.4: 1
     latest: 4
-    '{{ MICROMAMBA_TAG }}': 1
+    '{{ MICROMAMBA_TAG }}': 2
   maplesond/portcullis:
     test: 2
   mariadb:
@@ -4564,6 +4573,7 @@ versions:
     23.2.2: 1
     23.2.3: 1
     24.0.0: 1
+    24.0.1: 1
   nipreps/mriqc:
     22.0.1: 1
     22.0.2: 1
@@ -4627,6 +4637,8 @@ versions:
   nitishnarula/secure/ubuntu-focal:
     '20200902': 5
     '20210121': 3
+  nixpkgs/cachix-flakes:
+    latest: 1
   node:
     '10': 1
     '12': 3
@@ -4857,6 +4869,7 @@ versions:
     9.2-devel-ubuntu16.04: 8
     9.2-devel-ubuntu18.04: 2
     9.2-runtime-centos7: 5
+    latest: 1
   nvidia/cudagl:
     10.1-devel-ubuntu18.04: 1
     11.4.2-base-ubuntu20.04: 1
@@ -4925,6 +4938,7 @@ versions:
     latest-gpu: 2
   pandoc/latex:
     2.18.0: 1
+    latest: 1
   pangeo/pangeo-notebook:
     latest: 1
   parsertongue/adc:
@@ -5805,7 +5819,7 @@ versions:
     '20.10': 3
     '21.04': 3
     '21.10': 3
-    '22.04': 61
+    '22.04': 64
     '22.10': 6
     '23.10': 2
     '24.04': 1

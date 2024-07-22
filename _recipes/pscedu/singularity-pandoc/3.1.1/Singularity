@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: pandoc/latex:latest
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    WEBSITE https://github.com/icaoberg/singularity-pandoc
+    COPYRIGHT Copyright © 2021-2023 Pittsburgh Supercomputing Center. All Rights Reserved.
+    VERSION 3.1.1
+
+%post
+    apk update
+    apk add librsvg
