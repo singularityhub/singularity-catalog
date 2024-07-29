@@ -1,0 +1,37 @@
+Bootstrap: shub
+From: ISU-HPC/augustus
+
+
+%labels
+MAINTAINER arnstrm@iastate.edu
+
+%post
+
+#Install GeneMark-ES/ET/EP ver 4.59_lic
+cd /
+wget http://topaz.gatech.edu/GeneMark/tmp/GMtool_kK79Q/gmes_linux_64.tar.gz
+tar xvf gmes_linux_64.tar.gz
+rm gmes_linux_64.tar.gz
+cd gmes_linux_64
+wget http://topaz.gatech.edu/GeneMark/tmp/GMtool_kK79Q/gm_key_64.gz
+gunzip gm_key_64.gz
+mv gm_key_64 .gm_key
+echo 'export PATH=/gmes_linux_64/gmes_petap:$PATH' >>$SINGULARITY_ENVIRONMENT
+#Install perl dependencies
+echo 'export LANG=C' >>$SINGULARITY_ENVIRONMENT
+cpan App::cpanminus
+cpanm YAML File::Spec::Functions Hash::Merge List::Util Logger::Simple \
+  Module::Load::Conditional Parallel::ForkManager POSIX Scalar::Util::Numeric File::Which
+
+#Install blast,biotools and bamtools
+apt-get install -y ncbi-blast+ bamtools python3-biopython
+
+#Install braker and set required variables
+cd /
+wget https://github.com/Gaius-Augustus/BRAKER/archive/v2.1.5.tar.gz
+
+tar xvf v2.1.5.tar.gz
+rm v2.1.5.tar.gz
+echo 'export PATH=/augustus/scripts:/BRAKER-2.1.2/scripts:$PATH' >>$SINGULARITY_ENVIRONMENT
+echo 'export AUGUSTUS_SCRIPTS_PATH=/augustus/scripts' >>$SINGULARITY_ENVIRONMENT
+echo 'export AUGUSTUS_BIN_PATH=/augustus/bin' >>$SINGULARITY_ENVIRONMENT

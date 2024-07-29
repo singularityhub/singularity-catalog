@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%environment
+
+%post
+    echo "Update apt-get"
+    apt-get -y update
+
+    echo "Install python3"
+    apt-get -y install python3-matplotlib python3-pip git  
+   
+    ln -s /usr/bin/python3 /usr/bin/python
+    
+    echo "Install python packages"
+    python3 -m pip install --upgrade pip numpy
+    python3 -m pip install dash==0.41.0 plotly==3.7.1 ipywidgets==7.0.0 CoolProp
+
+
+    echo "Clone the InteractiveCoolProp"
+    git clone https://github.com/stephansmit/interactive_coolprop.git /opt/interactive_coolprop/
+    chmod -R 777 /opt/interactive_coolprop
+
+%startscript
+     python3 /opt/interactive_coolprop/app.py
+
+%runscript
+     exec /usr/bin/python3 "$@"  
