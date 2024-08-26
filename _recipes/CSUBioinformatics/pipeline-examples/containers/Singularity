@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+##############################################################
+# Singularity File Version: 0.1
+# Software: trimmomatic
+# Software Version: 0.36
+# Software Website: http://www.usadellab.org
+# Description: A flexible read trimming tool for Illumina NGS data 
+# Build command: sudo singularity build trimmomatic.simg containers/Singularity
+##############################################################
+%post
+    # Define variables
+    APP_NAME="Trimmomatic"
+    VERSION="0.36"
+    DEST="/usr/local/lib/${APP_NAME}"
+    PATH="${DEST}/${VERSION}:${PATH}"
+    TRIMMOMATIC="${DEST}/${VERSION}/trimmomatic-${VERSION}.jar"
+    ADAPTERPATH="${DEST}/${VERSION}/adapters"
+    
+    # Install base packages
+    apt-get update && apt-get install -y --no-install-recommends \
+    wget \
+    unzip \
+    openjdk-8-jre
+    
+    # Install Trimmomatic
+    cd /opt
+    wget -O ${APP_NAME}-${VERSION}.zip \
+        http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-$VERSION.zip
+    unzip ${APP_NAME}-${VERSION}.zip
+    rm -f ${APP_NAME}-${VERSION}.zip
+    mkdir ${DEST}
+    mv ${APP_NAME}-${VERSION} ${DEST}/${VERSION}
+

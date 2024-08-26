@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:2.8.4-gpu
+Stage: build
+
+%post
+    pip install ipython
+    pip install tensorflow-addons
+    pip install matplotlib==3.3.4
+    pip install https://github.com/huynhngoc/deoxys-image/archive/master.zip
+    pip install https://github.com/huynhngoc/deoxys/archive/master.zip
+    pip install scikit-image
+    pip install scikit-learn
+    pip install mypy
+    pip install nptyping
+    pip install ray
+    pip install elasticdeform
+
+%environment
+    export KERAS_MODE=TENSORFLOW

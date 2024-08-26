@@ -1,0 +1,11 @@
+
+Bootstrap: docker
+From: registry.gitlab.com/cheese-coe/ucis4eq/slipgen
+
+%post
+
+%environment
+  export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+%runscript
+  /bin/bash

@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: redhat/ubi9-minimal
+
+%labels
+    MAINTAINER thomas cokelaer
+
+%files
+
+    # wget https://zenodo.org/records/13276261/files/seaview?download=1
+    seaview
+
+%post
+
+
+    # Install Python and pip using microdnf
+    microdnf install -y python3 python3-pip bash
+
+    microdnf install -y libXrender libXcursor libXext pango libXinerama
+
+    # Verify installation
+    python --version
+    pip3 --version
+
+    # Clean up to reduce image size
+    microdnf clean all
+
+    cp seaview /usr/local/bin
+
+
+%environment
+    # Set environment variables
+    export LC_ALL=C
+    export LANG=C
+    export PATH=/usr/local/bin:/usr/bin:/bin:$PATH
+
+%runscript
+    exec seaview "$@"
+

@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: debian:latest
+Stage: spython-base
+
+%files
+autoSRT.sh .
+%post
+su -  root # USER root
+cd workdir /src
+
+apt-get update
+apt-get -y install curl gnupg git build-essential
+curl -sL https://deb.nodesource.com/setup_10.x  | bash -
+apt-get -y install nodejs
+npm i -g jest
+run chmod +x autoSRT.sh
+
+
+
+
+%runscript
+cd workdir /src
+exec ./autoSRT.sh HEAD "$@"
+%startscript
+cd workdir /src
+exec ./autoSRT.sh HEAD "$@"

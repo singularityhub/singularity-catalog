@@ -1,0 +1,78 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+authors="Akihiro Hayashi <ahayashi@gatech.edu>,Sri Raj Paul <sriraj@gatech.edu>,Youssef Elmougy <yelmougy3@gatech.edu>"
+
+%post
+apt-get update && apt-get install -y \
+apt-utils \
+autoconf \
+git \
+libtool \
+pkg-config \
+vim \
+gcc \
+g++ \
+libmpich-dev \
+mpich \
+unzip \
+python3.8
+
+LOCAL=/root/local
+
+cd /root
+git clone https://github.com/ofiwg/libfabric.git
+cd /root/libfabric
+git checkout tags/v1.10.0rc3 -b v1.10.0rc3
+./autogen.sh && ./configure --prefix=$LOCAL && make install
+
+cd /root
+git clone https://github.com/Sandia-OpenSHMEM/SOS.git
+cd /root/SOS
+git checkout tags/v1.4.5 -b v1.4.5
+./autogen.sh && ./configure --prefix=$LOCAL --with-ofi=$LOCAL --enable-pmi-simple && make install
+
+CC=/root/local/bin/oshcc
+CXX=/root/local/bin/oshc++
+OSHRUN=/root/local/bin/oshrun
+
+cd /root
+git clone https://github.com/jdevinney/bale.git bale
+cd /root/bale/src/bale_classic
+./bootstrap.sh
+python3.8 ./make_bale -s
+
+BALE_INSTALL=/root/local/bale/src/bale_classic/build_unknown
+
+cd /root
+git clone https://github.com/srirajpaul/hclib
+cd /root/hclib
+git fetch && git checkout bale3_actor
+./install.sh
+HCLIB_ROOT=/root/hclib/hclib-install
+cd modules/bale_actor && make
+
+cd /root/hclib/modules/bale_actor/benchmarks
+unzip ../inc/boost.zip -d ../inc/
+
+LD_LIBRARY_PATH=$LOCAL/lib:$BALE_INSTALL/lib:$HCLIB_ROOT/lib:$HCLIB_ROOT/../modules/bale_actor/lib
+HCLIB_WORKERS=1
+
+%environment
+export LOCAL=/root/local
+export CC=/root/local/bin/oshcc
+export CXX=/root/local/bin/oshc++
+export OSHRUN=/root/local/bin/oshrun
+export BALE_INSTALL=/root/bale/src/bale_classic/build_unknown
+export HCLIB_ROOT=/root/hclib/hclib-install
+export LD_LIBRARY_PATH=$LOCAL/lib:$BALE_INSTALL/lib:$HCLIB_ROOT/lib:$HCLIB_ROOT/../modules/bale_actor/lib
+export HCLIB_WORKERS=1
+
+%runscript
+cd /root/hclib/modules/bale_actor/benchmarks
+exec /bin/bash "$@"
+
+%startscript
+cd /root/hclib/modules/bale_actor/benchmarks
+exec /bin/bash "$@"

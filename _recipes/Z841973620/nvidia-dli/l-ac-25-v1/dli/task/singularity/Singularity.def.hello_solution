@@ -1,0 +1,15 @@
+BootStrap: docker
+From: ubuntu:16.04
+
+%files
+    sources/hello.c /var/tmp/hello.c
+
+%post
+    # Add the command to install gcc here
+    apt-get update -y
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        gcc
+    rm -rf /var/lib/apt/lists/*
+
+    gcc -o /usr/local/bin/hello /var/tmp/hello.c
