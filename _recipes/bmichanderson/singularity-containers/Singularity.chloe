@@ -1,0 +1,78 @@
+# Author: B.M. Anderson
+# Singularity recipe for creating a container for using the program Chloe (chloroplast annotation)
+
+
+Bootstrap: docker
+From: ubuntu:20.04
+
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM Chloe
+	VERSION latest
+
+
+%help
+	# This message is displayed when called as: singularity run-help [container]
+
+	This container is for running Chloe
+	To run Chloe, use:
+		singularity run -H "$(pwd)" chloe.sif <args>
+		
+		e.g. for help: 
+		singularity run -H "$(pwd)" chloe.sif --help
+		
+		for annotation:
+		singularity run -H "$(pwd)" chloe.sif annotate <args>
+	or
+		singularity exec -H "$(pwd)" chloe.sif julia --project=/chloe /chloe/chloe.jl <args>
+
+	or to run another way
+		singularity exec -H "$(pwd)" chloe.sif julia --project=/chloe -e 'using Chloe; chloe_main()' annotate --reference=/chloe_references <fasta files>
+
+
+%post
+	export DEBIAN_FRONTEND=noninteractive
+
+	# install needed software
+	apt update && apt install -y \
+		curl \
+		git
+
+
+	# clean-up
+	apt autoremove -y && apt clean all
+
+
+	# install Julia
+	JVER="1.10.4"
+	curl -sSL "https://julialang-s3.julialang.org/bin/linux/x64/1.10/julia-"$JVER"-linux-x86_64.tar.gz" > julia.tar.gz
+	tar -C / -xzf julia.tar.gz
+	rm julia.tar.gz
+	mkdir /depot
+
+	export PATH=$PATH:/julia-${JVER}/bin
+	echo "export PATH=$PATH:/julia-${JVER}/bin" >> $SINGULARITY_ENVIRONMENT
+	export LD_LIBRARY_PATH=/julia-${JVER}/lib:/julia-${JVER}/lib/julia:$LD_LIBRARY_PATH
+	echo "export LD_LIBRARY_PATH=/julia-${JVER}/lib:/julia-${JVER}/lib/julia:$LD_LIBRARY_PATH" >> $SINGULARITY_ENVIRONMENT
+	export JULIA_DEPOT_PATH=/depot
+	echo "export JULIA_DEPOT_PATH=/depot" >> $SINGULARITY_ENVIRONMENT
+	export JULIA_DEPOT_PATH=/tmp/:${JULIA_DEPOT_PATH}
+	echo "export JULIA_DEPOT_PATH=/tmp/:${JULIA_DEPOT_PATH}" >> $SINGULARITY_ENVIRONMENT
+
+
+	# install Chloe
+	git clone https://github.com/ian-small/chloe
+	git clone https://github.com/ian-small/chloe_references
+	cd chloe
+	julia --project=. -e 'using Pkg; Pkg.instantiate()'
+
+
+%environment
+	# Set up environmental variables within the container
+	export LC_ALL=C
+
+
+%runscript
+	# This will be executed when the container is run (singularity run [container])
+	julia --project=/chloe /chloe/chloe.jl "$@"

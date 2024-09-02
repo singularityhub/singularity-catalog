@@ -109,21 +109,6 @@ From: ubuntu:20.04
 		# upgrade pip
 		python3 -m pip install --upgrade pip
 
-		# ABYSS
-		# NOTE: this used to be a dependency, but no longer used (?)
-#		VER=2.3.1
-#		URL=https://github.com/bcgsc/abyss/releases/download/"$VER"/abyss-"$VER".tar.gz
-#		wget "$URL"
-#		tar -xzf abyss-"$VER".tar.gz && rm abyss-"$VER".tar.gz
-#		cd abyss-"$VER"
-#		./autogen.sh
-#		mkdir build
-#		cd build
-#		../configure --prefix=/usr/bin/abyss
-#		make
-#		make install
-#		cd ../.. && rm -r abyss-"$VER"
-
 		# Biopython
 		VER=1.79
 		pip install biopython=="$VER"
@@ -175,13 +160,13 @@ From: ubuntu:20.04
 		cd .. && rm -r samtools-"$VER"
 
 		# SPAdes
-		VER=3.15.2
-		URL=http://cab.spbu.ru/files/release"$VER"/SPAdes-"$VER".tar.gz
+		VER=4.0.0
+		URL=https://github.com/ablab/spades/archive/refs/tags/v"$VER".tar.gz
 		wget "$URL"
-		tar -xzf SPAdes-"$VER".tar.gz && rm SPAdes-"$VER".tar.gz
-		cd SPAdes-"$VER"
+		tar -xzf v"$VER".tar.gz && rm v"$VER".tar.gz
+		cd spades-"$VER"
 		PREFIX=/usr ./spades_compile.sh
-		cd .. && rm -r SPAdes-"$VER"
+		cd .. && rm -r spades-"$VER"
 
 		# trimal
 		VER=1.4.1
@@ -204,17 +189,14 @@ From: ubuntu:20.04
 
 	# install SECAPR
 	# since conda install doesn't seem to work, let's try directly from github
-	# note: this doesn't seem to set the version properly when pip installs
-	VER=2.2.8
-	# now I've set my development version to a specific branch
-	#URL=https://github.com/AntonelliLab/seqcap_processor/archive/refs/tags/v"$VER".tar.gz
-	# note: I've made a small patch of paralogs_to_ref.py, so I'll use my fork for now
-	#URL=https://github.com/bmichanderson/seqcap_processor/archive/refs/tags/v2.2.8_patch2.tar.gz
-	#pip install "$URL"
-	# now I've made some other changes to scripts, so I'll just point to my repo
-	# updated to now point to my develop branch with the most up to date changes
-	URL=https://github.com/bmichanderson/seqcap_processor.git@develop_b
-	pip install git+"$URL"
+	# I'll just point to my repo and my develop branch with the most up to date changes
+	URL=https://github.com/bmichanderson/seqcap_processor.git
+	#pip install git+"$URL"
+	# This has a problem with pip and the version number, so I'll try a direct setup.py run  
+	git clone "$URL" --branch develop_b
+	cd seqcap_processor
+	python3 setup.py install
+	cd .. && rm -rf seqcap_processor/
 
 
 %environment

@@ -1,6 +1,7 @@
 # Author: B. Anderson
 # Singularity recipe for creating a container for using the program ipyrad
-
+# Note: for building this, bind the "/run" directory
+# (`sudo singularity build -B /run ipyrad.sif Singularity.ipyrad`) or it fails...
 
 Bootstrap: docker
 From: continuumio/miniconda3
@@ -12,22 +13,39 @@ From: continuumio/miniconda3
 	VERSION latest
 
 
+%help
+	This container is for running ipyrad
+	To run use: 
+
+		singularity exec ipyrad.sif ipyrad <args>
+
+	or:
+
+		singularity run ipyrad.sif <args>
+
+
+	To execute a python script:
+	
+		singularity exec ipyrad.sif python3 <script> <args>
+
+
 %post
-	# install ipyrad with conda along with packages for analysis
-	# note: trying to install tetrad leads to conflicts, so it needs its own container
-	conda install \
-	-c conda-forge \
-	-c bioconda \
-	-c eaton-lab \
-	-c ipyrad \
-	ipyrad scikit-learn toyplot structure clumpp
+	# set up so that conda doesn't break...
+	mkdir /opt/conda/pkgs
+	conda config --add pkgs_dirs /opt/conda/pkgs
+
+	# address issues with solving dependencies...
+	conda update -n base conda
+	conda install -n base conda-libmamba-solver
+	conda config --set solver libmamba
+
+	# adjust python3 version
+	conda install -c conda-forge python=3.10
+
+	# install ipyrad with conda
+	conda install -c conda-forge -c bioconda ipyrad
 	
 	conda clean -ay
-
-
-%test
-	# test that the program works
-	ipyrad --version
 
 
 %environment
@@ -36,15 +54,4 @@ From: continuumio/miniconda3
 
 %runscript
 	# This will be executed when the container is run (singularity run [container])
-
 	ipyrad "$@"
-
-
-%help
-	# This message is displayed when called as: singularity run-help [container]
-	******************************************************************************
-	This container is for running ipyrad
-	To run, use: singularity run ipyrad.sif [args]
-	To execute a python script: singularity exec ipyrad.sif python [script] [args]
-	Check contents by entering it as: singularity shell ipyrad.sif
-	******************************************************************************

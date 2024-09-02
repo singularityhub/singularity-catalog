@@ -1,0 +1,61 @@
+# Author: B.M. Anderson
+# Singularity recipe for creating a container for using the program HybPiper (https://github.com/mossmatters/HybPiper)
+# This container is built to emulate a conda environment install
+# When building, use `sudo singularity build -B /run:/run hybpiper.sif Singularity.hybpiper`
+
+
+Bootstrap: docker
+From: continuumio/miniconda3
+
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM HybPiper
+	VERSION 2.1.7
+
+
+%help
+	This container is for running the program HybPiper to assemble target capture data
+
+	You can execute programs in it with:
+		singularity exec hybpiper.sif hybpiper {args}
+		singularity exec hybpiper.sif mafft {args}
+		etc.
+
+	Or run the program hybpiper with:
+		singularity run hybpiper.sif {args}
+
+
+%post
+	# set version
+	export HVER="2.1.7"
+
+	# set frontend for package installation
+	export DEBIAN_FRONTEND=noninteractive
+
+	# set up channels
+	conda config --add channels bioconda
+	conda config --add channels conda-forge
+
+	# create an environment
+	export MY_ENV="hybpiper_env"
+	conda create -n $MY_ENV
+	
+	# install with conda
+	. /opt/conda/etc/profile.d/conda.sh
+	conda activate $MY_ENV
+	conda install hybpiper="$HVER"
+	
+	conda clean -ay
+
+	# ensure the new environment is accessible
+	echo "export PATH=/opt/conda/envs/$MY_ENV/bin:$PATH" >> $SINGULARITY_ENVIRONMENT
+
+
+%environment
+	# Set up environmental variables within the container
+
+
+%runscript
+	# This will be executed when the container is run
+	hybpiper "$@"

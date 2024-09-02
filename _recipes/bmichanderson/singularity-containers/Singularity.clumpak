@@ -1,0 +1,100 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using the CLUMPAK pipeline
+# CLUMPAK scripts from the Mayrose Lab: https://github.com/MayroseLab/ClumpakScripts.git
+# CLUMPAK site (may be down): http://clumpak.tau.ac.il
+# Inspiration and ideas from: https://github.com/stevemussmann/admixturePipeline/
+
+
+Bootstrap: docker
+From: ubuntu:20.04
+
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM CLUMPAK
+	VERSION latest
+
+
+%help
+	This container is for running the CLUMPAK pipeline from the Mayrose Lab
+	
+	To run the program, use either:
+		singularity exec [container] CLUMPAK.pl args
+	or
+		singularity run [container] args
+
+	Typical args require:
+
+	--id			a name for the run
+	--dir			a folder to put results in
+	--file  		the input zipped Structure results
+	--inputtype 	use "structure" for Structure results
+
+
+	If wanting to run BestKByEvanno, use:
+		singularity exec [container] BestKByEvanno.pl args
+
+
+%post
+	export DEBIAN_FRONTEND=noninteractive
+
+	# install dependencies
+	apt update && apt install -y \
+	autoconf \
+	automake \
+	build-essential \
+	ghostscript \
+	git \
+	libarchive-extract-perl \
+	libarchive-zip-perl \
+	libarray-utils-perl \
+	libgd-graph-perl \
+	libgetopt-long-descriptive-perl \
+	libfile-slurp-perl \
+	libfile-path-tiny-perl \
+	liblist-moreutils-perl \
+	libpdf-api2-perl \
+	libpdf-table-perl \
+	libscalar-list-utils-perl \
+	libscalar-util-numeric-perl \
+	libstatistics-distributions-perl \
+	make \
+	perl \
+	wget
+
+	# install the List::Permutator module
+	URL="https://cpan.metacpan.org/authors/id/P/PH/PHOENIX/List-Permutor-0.022.tar.gz"
+	wget $URL
+	tar -xzvf List-Permutor-0.022.tar.gz
+	cd List-Permutor-0.022
+	perl Makefile.PL
+	make
+	make install
+	cd ..
+	rm -r List-Permutor*
+
+	# clone the git repository
+	git clone https://github.com/MayroseLab/ClumpakScripts.git
+
+	# make modifications
+	cd ClumpakScripts
+	sed -i '1s/^/\#!\/usr\/bin\/perl\n/' BestKByEvanno.pl
+	cp *.pm /etc/perl/
+	cd /etc/perl
+	sed -i 's/CLUMPP\//\/ClumpakScripts\/CLUMPP\//g' ClumppAccessor.pm
+	sed -i 's/mcl\/bin\//\/ClumpakScripts\/mcl\/bin\//g' MCLAccessor.pm
+	sed -i 's/distruct\//\/ClumpakScripts\/distruct\//g' ClusterAccessor.pm
+
+	# link the scripts so they are in PATH
+	cd /usr/bin
+	ln -s /ClumpakScripts/CLUMPAK.pl
+	ln -s /ClumpakScripts/BestKByEvanno.pl
+
+
+%environment
+	# Set up environmental variables within the container
+
+
+%runscript
+	# This will be executed when the container is run (singularity run [container])
+	CLUMPAK.pl "$@"

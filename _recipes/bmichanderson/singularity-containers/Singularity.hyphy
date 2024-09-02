@@ -1,0 +1,68 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using Hyphy
+
+
+Bootstrap: docker
+From: ubuntu:20.04
+
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM Hyphy
+	VERSION latest
+
+
+%help
+	This container is for running Hyphy
+	To run use: 
+
+		singularity exec hyphy.sif hyphy <method> --alignment <alignment> <args>
+
+	or:
+
+		singularity run hyphy.sif <method> --alignment <alignment> <args>
+
+
+	where method is one of absrel, bgm, busted, fade, fel, fubar, gard, meme, relax or slac
+
+
+%post
+	export DEBIAN_FRONTEND=noninteractive
+
+	# install dependencies
+	apt update && apt install -y --no-install-recommends \
+		autoconf \
+		automake \
+		build-essential \
+		cmake \
+		git \
+		libcurl4-openssl-dev \
+		libpthread-workqueue-dev \
+		make \
+		zlib1g-dev
+
+
+	# turn off certificate verification to avoid error
+	export GIT_SSL_NO_VERIFY=1
+
+
+	# build and install Hybphy
+	git clone https://github.com/veg/hyphy.git
+	cd hyphy
+	cmake .
+	make install
+	cd ..
+	rm -rf hyphy/
+
+
+	# clean-up
+	apt autoremove -y && apt clean all
+
+
+%environment
+	# Set up environmental variables within the container
+
+
+%runscript
+	# This will be executed when the container is run (singularity run [container])
+	hyphy "$@"

@@ -1,0 +1,56 @@
+Bootstrap: docker
+From: python:3.10-slim
+
+%files
+
+    vadr-install.sh
+
+%post
+
+    VERSION="1.6.4"
+
+    #apt update && apt install -yq --no-install-recommends default-jre ncbi-blast+ \
+    apt update && apt install -yq --no-install-recommends ncbi-blast+ \
+        make  autoconf build-essential curl g++ wget git libz-dev unzip cpanminus libssl-dev
+
+    cpanm --notest Inline::C
+    cpanm --notest LWP::Simple
+    cpanm --notest Net::SSLeay
+    cpanm --notest LWP::Protocol::https
+    cpanm --notest Mozilla::CA
+
+    # install python package
+    pip install --upgrade pip
+
+
+    mkdir /install_tmp
+    cp vadr-install.sh /install_tmp
+    sh vadr-install.sh linux
+
+    rm -rf /var/cache/apt/* /var/lib/apt/lists/*;
+
+    apt purge -yq git wget make libz-dev && apt autoremove -yq cpanminus
+
+%environment
+   export LC_ALL=C.UTF-8
+
+    export VADRINSTALLDIR="/"
+    export VADRSCRIPTSDIR="$VADRINSTALLDIR/vadr"
+    export VADRMODELDIR="$VADRINSTALLDIR/vadr-models-calici"
+    export VADRINFERNALDIR="$VADRINSTALLDIR/infernal/binaries"
+    export VADREASELDIR="$VADRINSTALLDIR/infernal/binaries"
+    export VADRHMMERDIR="$VADRINSTALLDIR/infernal/binaries"
+    export VADRBIOEASELDIR="$VADRINSTALLDIR/Bio-Easel"
+    export VADRSEQUIPDIR="$VADRINSTALLDIR/sequip"
+    export VADRBLASTDIR="$VADRINSTALLDIR/ncbi-blast/bin"
+    export VADRFASTADIR="$VADRINSTALLDIR/fasta/bin"
+    export VADRMINIMAP2DIR="$VADRINSTALLDIR/minimap2"
+    export PERL5LIB="$VADRSCRIPTSDIR":"$VADRSEQUIPDIR":"$VADRBIOEASELDIR/blib/lib":"$VADRBIOEASELDIR/blib/arch":"$PERL5LIB"
+    export PATH="$VADRSCRIPTSDIR":"$VADRSCRIPTSDIR/miniscripts":"$PATH"
+    
+   
+%runscript
+    # several utilities are available, let us add this one v-build.pl is also required.
+    v-annotate.pl "$@"
+
+

@@ -1,0 +1,38 @@
+Bootstrap: localimage
+From: ../../library/micromamba/micromamba_1.5.8.img
+
+%labels
+    Author thomas cokelaer
+
+%post
+    # issue with ligGL.1 requires to install ffmpeg libsm6 and libext6
+    apt -y update && apt -y upgrade && apt-get -y install ffmpeg libsm6 libxext6 
+
+    # export the PATH here so that pip is found later on
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+
+    # an alias
+    export OPTS=" -q -c conda-forge -c bioconda -n main -y "
+
+    micromamba install $OPTS python="3.10"
+
+    micromamba install $OPTS "bandage==0.8.1"
+
+    # cleanup
+    micromamba clean --packages -y
+    micromamba clean --all -y
+    rm -rf /opt/condas/pkg
+
+    mkdir -p /run/user/1000
+    chmod 0700 /run/user/1000
+
+%environment
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+    export XDG_SESSION_TYPE="xcb"
+    # to remove warning about 
+    # Qt: Session management error: None of the authentication protocols specified are supported
+    unset SESSION_MANAGER
+
+%runscript
+    Bandage "$@"
+

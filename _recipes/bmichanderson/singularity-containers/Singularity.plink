@@ -1,0 +1,61 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using PLINK
+
+
+Bootstrap: docker
+From: ubuntu:20.04
+
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM PLINK
+	VERSION 1.9
+
+
+%help
+	This container is for using PLINK
+
+	Execute it with:
+
+	singularity exec -H "$(pwd)" plink.sif plink [args]
+
+	Or run it with:
+
+	singularity run plink.sif [args]
+
+
+%post
+	export DEBIAN_FRONTEND=noninteractive
+
+	# install dependencies
+	apt update && apt install -y \
+		autoconf \
+		automake \
+		build-essential \
+		curl \
+		gcc \
+		libatlas-base-dev \
+		libblas-dev \
+		liblapack-dev \
+		libstdc++6 \
+		make \
+		unzip \
+		wget
+
+	# download source and compile
+	URL=https://www.cog-genomics.org/static/bin/plink/plink_src.zip
+	wget "$URL"
+	unzip plink_src.zip && rm plink_src.zip
+	cd 1.9
+	./plink_first_compile
+	cp plink /usr/bin/
+	cd .. && rm -r 1.9/ 2.0/ zlib*.gz
+
+
+%environment
+	# Set up environmental variables within the container
+
+
+%runscript
+	# This will be executed when the container is run (singularity run [container])
+	plink "$@"

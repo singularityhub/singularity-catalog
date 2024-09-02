@@ -1,0 +1,39 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for using GATK 4
+
+
+Bootstrap: docker
+From: broadinstitute/gatk:4.4.0.0
+
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM GATK
+	VERSION 4.4.0.0
+
+
+%help
+	This container is for running GATK 4
+	To run use: 
+
+		singularity exec gatk.sif gatk [--java-options] <method> <args>
+
+	or:
+
+		singularity run gatk.sif [--java-options] <method> <args>
+
+
+	where method is one of ...
+
+
+%post
+	# Commands to run during installation
+
+
+%environment
+	# Set up environmental variables within the container
+
+
+%runscript
+	# This will be executed when the container is run (singularity run [container])
+	gatk "$@"
