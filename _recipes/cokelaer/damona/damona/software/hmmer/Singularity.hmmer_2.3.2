@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: alpine:3.20
+
+%post
+    # Update and install necessary packages
+    apk update && apk add --no-cache bash python3 py3-pip
+
+    # Install build dependencies for HMMER
+    apk add --no-cache gcc make musl-dev perl
+
+    # Download and install HMMER
+    HMMER_VERSION=2.3.2
+    wget http://eddylab.org/software/hmmer/hmmer-${HMMER_VERSION}.tar.gz
+    tar -xzf hmmer-${HMMER_VERSION}.tar.gz
+    cd hmmer-${HMMER_VERSION}
+    ./configure --prefix=/usr/local
+    make
+    make install
+    cd ..
+    rm -rf hmmer-${HMMER_VERSION}*
+
+    # Clean up unnecessary packages
+    apk del gcc make musl-dev perl
+
+%environment
+    export PATH="/usr/local/bin:$PATH"
+    export LC_ALL=C
+
+%runscript
+    exec hmmsearch "$@"
+

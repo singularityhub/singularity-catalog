@@ -1,0 +1,326 @@
+Bootstrap: localimage
+From: ubuntu_{{ UBUNTU_VERSION }}.sif
+Stage: spython-base
+
+%arguments
+   UBUNTU_VERSION=focal
+
+%files
+%labels
+MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
+
+%setup
+    #!/bin/bash
+    echo "$(readlink /proc/$$/exe) is the shell in use"
+    env|egrep SHELL
+    ls -la  ${GITHUB_WORKSPACE}
+    if [ -d ${GITHUB_WORKSPACE}/../../../cache ]; then export CACHEDIR=${GITHUB_WORKSPACE}/../../../cache; else  export CACHEDIR=$(pwd)/cache; fi
+#    echo '@@@ ls -l $SINGULARITY_ROOTFS'
+#    ls -l ${SINGULARITY_ROOTFS}
+    rm -f ${SINGULARITY_ROOTFS}/*.txt || true
+    bash -c "if [[ -z '${GPU}' ]]; then echo 'GPU=nvidia ' >> ${SINGULARITY_ROOTFS}/gpu.txt ; else echo 'GPU is ${GPU}'; echo 'GPU=${GPU} ' >> ${SINGULARITY_ROOTFS}/gpu.txt ; fi"
+    bash -c "if [[ -z '${GA_RUNTIME}' ]]; then echo 'GA_RUNTIME=MPI_PROGRESS_RANK ' >> ${SINGULARITY_ROOTFS}/ga_runtime.txt ; else echo 'GA_RUNTIME is ${GA_RUNTIME}'; echo 'GA_RUNTIME=${GA_RUNTIME} ' >> ${SINGULARITY_ROOTFS}/ga_runtime.txt ; fi"
+    bash -c "if [[ -z '${MPI_IMPL}' ]]; then echo 'MPI_IMPL=mpich ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; else echo 'MPI_IMPL is ${MPI_IMPL}'; echo 'MPI_IMPL=${MPI_IMPL} ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; fi"
+    bash -c "if [[ -z '${TAMM_BRANCH}' ]]; then echo 'TAMM_BRANCH=main' >> ${SINGULARITY_ROOTFS}/tamm_branch.txt ; else echo 'TAMM_BRANCH is ${TAMM_BRANCH}'; echo 'TAMM_BRANCH=${TAMM_BRANCH} ' >> ${SINGULARITY_ROOTFS}/tamm_branch.txt ; fi"
+    bash -c "if [[ -z '${EXACHEM_BRANCH}' ]]; then echo 'EXACHEM_BRANCH=main ' >> ${SINGULARITY_ROOTFS}/exachem_branch.txt ; else echo 'EXACHEM_BRANCH is ${EXACHEM_BRANCH}'; echo 'EXACHEM_BRANCH=${EXACHEM_BRANCH} ' >> ${SINGULARITY_ROOTFS}/exachem_branch.txt ; fi"
+    bash -c "if [[ -z '${MPICH}' ]]; then echo 'MPICH=3.4.2 ' >> ${SINGULARITY_ROOTFS}/MPICH.txt ; else echo 'MPICH is ${MPICH}'; echo 'MPICH=${MPICH} ' >> ${SINGULARITY_ROOTFS}/mpich.txt ; fi"
+    ls -lrt ${CACHEDIR} || true
+    ls -la  ${CACHEDIR}/ || true
+    ls -la  ${CACHEDIR}/mpich || true
+    ls -la  ${CACHEDIR}/mpich/lib || true
+    ls -la  ${CACHEDIR}/libint.tar.bz2 || true
+    bash -c "if [[  -f ${CACHEDIR}/mpich/lib/libmpi.so ]]; then mkdir -p ${SINGULARITY_ROOTFS}/opt ;rsync -a ${CACHEDIR}/mpich ${SINGULARITY_ROOTFS}/opt/. ; echo mpich cache fetched ;fi"
+    bash -c "if [[  -f ${CACHEDIR}/libint.tar.bz2 ]]; then cd ${SINGULARITY_ROOTFS}/ ; tar xvjf ${CACHEDIR}/libint.tar.bz2; echo libint cache fetched ;fi"
+    ls -lrta ${SINGULARITY_ROOTFS}/opt  ||true
+
+%post 
+#!/bin	/bash
+
+echo "$(readlink /proc/$$/exe) is the shell in use"
+#
+#https://sylabs.io/guides/3.6/user-guide/mpi.html
+export DEBIAN_FRONTEND=noninteractive
+export `cat ./mpich.txt`
+export mpich_prefix=mpich-$MPICH
+echo mpich_prefix is $mpich_prefix 
+export MPICH_DIR=/opt/mpich
+export SINGULARITY_mpich=$mpich
+export SINGULARITY_mpich_prefix=mpich-$mpich
+export `cat ./gpu.txt`
+bash -o  pipefail -c "if [[ $(echo $GPU | cut -c 1-3)  == 'amd' ]]; then echo gpus is amd;
+echo 'ROCM_VERSION='`echo $GPU | cut -c 16-` > rocm_version.txt ;
+echo 'GPU_ARCH='`echo $GPU | cut -c 5-10` > gpu_arch.txt ;
+echo 'GPU=amd ' >  gpu.txt  ; fi"
+bash -o  pipefail -c "if [[ $(echo $GPU | cut -c 1-6)  == 'nvidia' ]]; then echo gpus is nvidia;
+echo 'GPU_ARCH='`echo $GPU | cut -c 8-9` > gpu_arch.txt ;
+echo 'GPU=nvidia ' >  gpu.txt  ; fi"
+export `cat ./gpu.txt`
+export `cat ./rocm_version.txt`
+export `cat ./gpu_arch.txt`
+if [ ${GPU} = "nvidia" ]; then
+if [ ${GPU_ARCH} = "90" ]; then export CUDA_VERSION_MAJOR=12 ; export CUDA_VERSION_MINOR=0; \
+else export CUDA_VERSION_MAJOR=11 ; export CUDA_VERSION_MINOR=7 ; fi
+fi
+export ROCM_PATH=/opt/rocm-${ROCM_VERSION}
+if [ ${#ROCM_VERSION} = 3 ]; then export ROCM_PATH="$ROCM_PATH".0; fi
+echo ROCM_PATH is $ROCM_PATH
+echo GPU is $GPU
+export GCC_VERSION=11
+
+export PATH=$MPICH_DIR/bin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin::/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"$ROCM_PATH"/bin
+export LD_LIBRARY_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$MPICH_DIR/lib:"$ROCM_PATH"/lib
+export SINGULARITY_PATH=$PATH
+export SINGULARITY_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+export `cat ./ga_runtime.txt`
+export `cat ./mpi_impl.txt`
+export `cat ./exachem_branch.txt`
+export `cat ./tamm_branch.txt`
+echo GPU is $GPU
+echo ROCM_PATH is ${ROCM_PATH}
+echo GA_RUNTIME is $GA_RUNTIME
+echo MPI_IMPL is $MPI_IMPL
+echo EXACHEM_BRANCH is $EXACHEM_BRANCH
+echo TAMM_BRANCH is $TAMM_BRANCH
+ if [ "$GPU" = "amd" ]; then export FC=amdflang ; export CC=amdclang; export CXX=amdclang++; \
+ else export FC=gfortran ; export CC=gcc; export CXX=g++; fi \
+&& echo 'FC is' "$FC"  \
+&& echo ' CC is ' "$CC" \
+&& echo ' CXX is ' "$CXX" \
+&& echo MPICH is $MPICH \
+&& cd / \
+&& pwd \
+&& apt-get -y update \
+&& apt-get -y install -y tzdata git moreutils  wget rsync  sudo ca-certificates  \
+&& wget https://github.com/moparisthebest/static-curl/releases/download/v8.1.2/curl-amd64 -O /usr/bin/curl \
+&& chmod +x /usr/bin/curl \
+&& echo ca_certificate=/etc/ssl/certs/ca-certificates.crt >  ~/.wgetrc \
+&& echo        "cacert=/etc/ssl/certs/ca-certificates.crt" >> ~/.curlrc \
+&& export CMAKE_VER=3.29.5 \
+&& curl -LJO https://github.com/Kitware/CMake/releases/download/v"$CMAKE_VER"/cmake-"$CMAKE_VER"-linux-x86_64.tar.gz && tar xzf cmake-"$CMAKE_VER"-linux-x86_64.tar.gz \
+&& export PATH=/cmake-"$CMAKE_VER"-linux-x86_64/bin:$PATH \
+&& cmake --version \
+&& pwd \
+&& echo '@@ ls -lart ' \
+&& ls -lart  \
+&& echo '@@ ls on /opt' \
+&& ls -lart /opt \
+&& echo " ==========" \
+&& pwd \
+&& echo pwd $(pwd) \
+&& apt-get -y install -y coreutils  tar libnl-3-200 libnl-route-3-200 libgomp1 libnuma1 \
+ g++ gfortran   make  patch   unzip perl-base file \
+ python3 python3-dev   unzip zip perl automake libtool autoconf flex  \
+ libnuma-dev libslurm-dev libpmi2-0-dev libpmi0-dev  libnl-3-dev libnl-route-3-dev udev \
+ librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers \
+ libhwloc-dev  lsb-release \
+ pkg-config gawk  software-properties-common  gdb \
+&& export UBUNTU_CODE=$(lsb_release -c |cut -d : -f 2 | sed 's/\t//') \
+&& echo UBUNTU_CODE is $UBUNTU_CODE \
+&& export UBUNTU_RELEASE=$(lsb_release -r |cut -d : -f 2 | sed 's/\t//') \
+&& echo UBUNTU_RELEASE is $UBUNTU_RELEASE \
+&& if [ $UBUNTU_CODE = "focal" ]; then add-apt-repository -y ppa:ubuntu-toolchain-r/test && apt-get update ; fi \
+            && apt-get install -q=2 -y  gcc-"$GCC_VERSION"  g++-"$GCC_VERSION" gfortran-"$GCC_VERSION" libgfortran-"$GCC_VERSION"-dev  make patch curl rsync wget git file  bzip2 tar gnupg2  \
+&& update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-"$GCC_VERSION" 100 \
+&& update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-"$GCC_VERSION" 100 \
+&& update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-"$GCC_VERSION" 100 \
+            && apt-get install  -q=2 -y  autoconf automake libtool git \
+&& bash -o  pipefail -c "if [[ $GPU == nvidia ]]; then  \	    
+ curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-archive-keyring.gpg \
+ && cp cuda-archive-keyring.gpg /usr/share/keyrings/cuda-archive-keyring.gpg \
+ && echo 'deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /' |  tee /etc/apt/sources.list.d/cuda-ubuntu2204-x86_64.list \
+ &&  curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin \
+ && mv cuda-*.pin /etc/apt/preferences.d/cuda-repository-pin-600 \
+ && apt-get  update \
+&& apt-get  -y install cuda-nvcc-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-cudart-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} libcublas-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} ; fi " \
+&& if [ $GPU = "amd" ]; then mkdir --parents --mode=0755 /etc/apt/keyrings \
+&& wget --quiet https://repo.radeon.com/rocm/rocm.gpg.key -O - |  gpg --dearmor | tee /etc/apt/keyrings/rocm.gpg > /dev/null \
+&& echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/'$ROCM_VERSION $UBUNTU_CODE 'main' | tee --append /etc/apt/sources.list.d/rocm.list \
+&& echo  'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600'  |  tee /etc/apt/preferences.d/rocm-pin-600 \
+&& echo '$$$$ cat /etc/apt/preferences.d/rocm-pin-600 ' $(cat /etc/apt/preferences.d/rocm-pin-600) \
+&& apt-get  update -y &&  apt-get -y install hip-dev hip-runtime-amd rocm-llvm rocm-device-libs rocblas-dev openmp-extras rocm-smi-lib rocminfo hipcc hipblas-dev\
+&& ls -lrt /opt \
+&& ls -lrt  /opt/rocm* || true \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo 'dpkg-query -L rocminfo' $(dpkg-query -L rocminfo) \
+&& if [ $UBUNTU_CODE = "jammy_std" ]; then ln -sf /usr/bin/rocm_agent_enumerator $ROCM_PATH/bin/. ;  ln -sf /usr/bin/rocminfo $ROCM_PATH/bin/. ; fi \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo 'rocminfo' $(/opt/rocm/bin/rocm_agent_enumerator) \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo 'hipcc --version' $(hipcc --version) \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo 'hipconfig' $(hipconfig) \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo ' ls -l  ROCM_PATH/lib' $(ls -l $ROCM_PATH/lib)   \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo ' ls -l  ROCM_PATH/lib/libamdhip64.so*' $(ls -l $ROCM_PATH/lib/libamdhip64.so*)   \
+&& echo '$$$$$$$$$$$$$$$$$$$$' ; fi \
+&& echo 'FC -v ' `$FC -v`  \
+&& echo 'CC -v ' `$CC -v`  \
+&& echo 'CXX -v ' `$CXX -v` || { echo "CXX not installed"; exit  1; } \
+&& apt-get clean  \
+&& echo 'ls -l /opt/mpich/lib/libmpi.a' $(ls -l /opt/mpich/lib/libmpi.a) || true  \
+&& if [ $FC = gfortran ]; then export mpich_options=" FFLAGS=-fallow-argument-mismatch  FCFLAGS=-fallow-argument-mismatch " ; fi  \
+&& echo FC is $FC \
+&& echo mpich_options is $mpich_options \
+&& if [ ! -f /opt/mpich/lib/libmpi.a ]; then  \
+$FC -v \
+&& wget  --progress=dot:giga https://www.mpich.org/static/downloads/$MPICH/mpich-$MPICH.tar.gz  -O - | tar xzf - \
+&& cd $mpich_prefix     \
+&& mv autogen.sh autogen.sh.org \
+&& wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/autogen.sh \
+&& chmod +x autogen.sh \
+&& wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/install-autotools.sh \
+&& chmod +x install-autotools.sh \
+&& wget https://github.com/pmodels/mpich/commit/3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch \
+&& patch -p1 < 3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch \
+&& cd maint/patches/optional/confdb && rm -f flang.patch &&  wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/flang.patch && cd ../../../../  && pwd \
+&& sh ./autogen.sh \
+&& ./configure  --prefix=$MPICH_DIR   \
+ $mpich_options \
+--with-device=ch4:ofi  \
+--enable-fortran=all \
+--disable-opencl --enable-silent-rules \
+--disable-cuda \
+  FC=$FC \
+&& head config.log \
+&& tail -300 config.log \
+&& make FC=$FC -j 6                                                  \
+&& make install                  \
+&& if [ ! -f $MPICH_DIR/bin/mpif90 ]; then echo mpif90\ not\ found ; exit 1 ; fi \
+&& echo mpif90 show is $($MPICH_DIR/bin/mpif90 -show) \
+&& cd .. ; rm -rf *tar*gz mpich-*  ;fi  \
+&& if [ ! -f $MPICH_DIR/bin/mpif90 ]; then echo mpif90\ not\ found ; exit 1 ; fi \
+&& echo '********' \
+&& export PATH=$MPICH_DIR/bin:$PATH \
+&& export LD_LIBRARY_PATH=$MPICH_DIR/lib:$LD_LIBRARY_PATH \
+&& export PATH=$PATH:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin \
+&& export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64 \
+&& export PATH=$PATH:"$ROCM_PATH"/bin \
+&& export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"$ROCM_PATH"/lib \
+&& which mpicc \
+&& sed -i 's/final_cflags=\" \"/final_cflags=\" -Wno-implicit-function-declarations \"/' /opt/mpich/bin/mpicc \
+&& if [ $(command -v mpicc) ]; then echo mpicc present; else echo mpicc missing; exit 1; fi  \
+&& echo "which mpicc is" $(which mpicc)  \
+&& echo "mpicc -show is " $(mpicc -show)  || { tail -700 $mpich_prefix/config.log ;echo "mpi compilation failed"; exit 1; } \
+&& wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/autoconf-2.71.tar.xz && tar -xf autoconf-2.71.tar.xz \
+&& cd autoconf-2.71/ && ./configure --prefix=/usr && make -j3 && make -j3 install \
+&& echo autoconf $(autoconf --version) \
+&& echo GA_RUNTIME is $GA_RUNTIME  \
+&& 	     echo TAMM_BRANCH is ${TAMM_BRANCH}   \
+&& 	     echo 'cloning tamm source *** ' || true   \
+&&            cd /opt || { echo "Failure"; exit 1; }  \
+&&              git clone -b ${EXACHEM_BRANCH} --depth 100  https://github.com/ExaChem/exachem.git exachem    \
+&&              git clone -b ${TAMM_BRANCH} --depth 100 https://github.com/NWChemEx/TAMM.git   \
+&& 	     cd TAMM   \
+&& 	     mkdir build && cd build  \
+&&              CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/opt/install/exachem -DMODULES='CC;DFT' "  \
+&&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DDFT_CPU=ON " \
+&& 	     CMAKE_OPTIONS="$CMAKE_OPTIONS -DBLIS_CONFIG=zen3 -DMARCH_FLAGS=-march=znver3"  \
+&&              if [ ${GPU} = "nvidia" ]; then echo "nvidia gpu "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_CUDA=ON -DGPU_ARCH=${GPU_ARCH}" ; fi  \
+&&              if [ ${GPU} = "amd" ]; then echo "amd gpu "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_HIP=ON -DROCM_ROOT=$ROCM_PATH -DGPU_ARCH=${GPU_ARCH} -DGCCROOT=/usr " ; ls -lrt $ROCM_PATH/include/rocblas/rocblas.h $ROCM_PATH/include/ ; ln -sf $ROCM_PATH/include/rocblas/rocblas.h $ROCM_PATH/include/rocblas.h; fi  \
+&&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_SCALAPACK=ON "   \
+&&              if [ ${CC} = "gcc" ]; then CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_ELPA=ON " ; fi  \
+&&              if [ ${CC} = "amdclang" ]; then echo "scalapack workaround for clang "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DUSE_SCALAPACK=ON -DCMAKE_C_FLAGS_INIT='-Wno-error=implicit-function-declaration' 	" ; fi  \
+&&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DGA_RUNTIME=${GA_RUNTIME}"  \
+&&              export CMAKE_OPTIONS   \
+&& 	     echo CMAKE_OPTIONS $CMAKE_OPTIONS  \
+&& 	     USE_SCALAPACK=ON CC="$CC" CXX="$CXX" FC="$FC" cmake  $CMAKE_OPTIONS .. || { echo "Cmake failure"; exit 1; }  \
+&&             make -j3 || { echo "Compilation failure in tamm step";
+	    cat $(find /opt/TAMM/ -name CMakeOutput.log) || true ; \
+            cat $(find /opt/TAMM/ -name CMakeError.log ) || true; exit 1; } \
+&& 	     echo exit code for TAMM compilation $?   \
+&&              make install   \
+&& 	     echo exit code for TAMM make install $?   \
+&&              cd /opt/exachem   \
+&& 	     mkdir build && cd build   \
+&& 	     echo ' === ls -l /opt/install/exachem ===' $(ls -l /opt/install/exachem)   \
+&& 	     echo ' === ls -l /opt/install/exachem/lib ===' $(ls -l /opt/install/exachem/lib)   \
+&&	     if [ -f /opt/install/exachem/lib/libint2.a ]; then echo 'found libint cache' ; \
+             mkdir -p /opt/exachem/build/stage/opt || true ; \
+	     rsync -av /opt/install /opt/exachem/build/stage/opt/. ; fi \
+&&             export CMAKE_OPTIONS  \
+&&	     echo CMAKE_OPTIONS $CMAKE_OPTIONS  \
+&&	     CC="$CC" CXX="$CXX" FC="$FC" cmake  $CMAKE_OPTIONS .. || { echo "Cmake failure"; exit 1; }  \
+&&             make V=1 VERBOSE=1 -j3 || { echo "Compilation failure"; exit 1; }  \
+&&	     echo exit code for compilation $?  \
+&&             make install  \
+&&	     echo exit code for make install $?  \
+&&	     bash -c "if [[ -f /opt/install/exachem/bin/ExaChem ]]; then echo 'Exachem binary created' ; else  echo 'compilation error1'; exit 1; fi"  \
+&&	     echo git describe --always `git describe --always`  >> /opt/install/info.txt \
+	    && echo git rev-parse HEAD git `git rev-parse HEAD` >> /opt/install/info.txt \
+            && echo 'clean unnecessary source to reduce docker size' \
+            && rm  -rf /opt/exachem \
+            && rm  -rf /opt/TAMM \
+	    && cd /opt/install/exachem/share/libint/2.9.0/basis/ \
+	    && wget -O aug-cc-pvdz.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvdz/format/gaussian94/?version=1&elements=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36&optimize_general=true&uncontract_general=true" \
+	    && wget -O aug-cc-pvtz.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvtz/format/gaussian94/?version=1&elements=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36&optimize_general=true&uncontract_general=true" \
+	    && wget -O aug-cc-pvqz.g94 "https://www.basissetexchange.org/download_basis/basis/aug-cc-pvqz/format/gaussian94/?version=1&elements=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36&optimize_general=true&uncontract_general=true" \
+            && echo 'clean unnecessary packages ' \
+            && DEBIAN_FRONTEND=noninteractive apt-get -q=2 -y install localepurge \
+	    && echo MANDELETE >  /etc/locale.nopurge \
+	    && echo DONTBOTHERNEWLOCALE >> /etc/locale.nopurge \
+	    && echo en_US.UTF-8 >> /etc/locale.nopurge \
+	    && localepurge \
+	    && rm -rf /usr/share/doc \
+            &&  apt-get -q=2 -y purge   patch curl  wget  make git cpp-"$GCC_VERSION" gfortran-"$GCC_VERSION" gcc-"$GCC_VERSION" libicu-dev libpython"$PY_VERSION"-dev libstdc++-"$GCC_VERSION"-dev libc6-dev libgcc-"$GCC_VERSION"-dev libgfortran-"$GCC_VERSION"-dev  || true \
+            && apt-get -q=2 -y install libgfortran5 libgomp1 && apt-get clean \
+	    && if [ "$GPU" = nvidia ]; then apt-get purge -y cuda-cccl-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcublas-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" cuda-nvml-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} ; fi\
+	    && if [ "$GPU" = "amd" ]; then  apt-get  purge -y   git-man openmp-extras \
+	    lib32gcc-11-dev  libc6-dev-i386 libx32gcc-11-dev libc6-dev-x32 lib32gcc-11-dev  \
+	    lib32asan6 lib32atomic1 lib32gcc-s1 lib32gomp1 lib32itm1 lib32quadmath0 lib32stdc++6 lib32ubsan1 libc6-i386 \
+	    libc6-x32 libx32asan6 libx32atomic1 libx32gcc-s1 libx32gomp1 libx32itm1 libx32quadmath0 libx32stdc++6 libx32ubsan1 \
+	    javascript-common less liberror-perl libjs-jquery libjs-sphinxdoc libjs-underscore libltdl-dev libltdl7 libpython3.10  ; \
+	    apt-get install -y hip-runtime-amd rocblas openmp-extras-runtime rocm-smi-lib;  \
+	    cd $ROCM_PATH/lib/rocblas/ ; mkdir keep ; mv library/*"$GPU_ARCH"* keep/.  ; \
+	    rm -rf library ; mv keep library ; \
+	    ln -sf "$ROCM_PATH"/ /opt/rocm ;\
+	    rm -rf   "$ROCM_PATH"/llvm/bin  ; fi\
+	    && echo '*** ls -l CC/bin **' \
+	    && ls -l /opt/install/exachem/bin/ || true \
+	    && echo '*** ldd ***'  \
+	    && LD_LIBRARY_PATH=/usr/local/lib:/opt/lib ldd /opt/install/exachem/bin/ExaChem || true \
+&& DEBIAN_FRONTEND=noninteractive apt-get clean -y \
+&& DEBIAN_FRONTEND=noninteractive apt-get -y install localepurge \
+&& echo MANDELETE >  /etc/locale.nopurge \
+&& echo DONTBOTHERNEWLOCALE >> /etc/locale.nopurge \
+&& echo en_US.UTF-8 >> /etc/locale.nopurge \
+&& localepurge \
+&& rm -rf /usr/share/doc  /usr/share/man \
+&& du -sk /opt/*|sort -n \
+&& echo "dddddddddddd"  \
+&& dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n | tail -n 50 \
+&& echo "dddddddddddd" \
+&&  du -sk /tmp/* || true \
+&&  ls -lart /tmp ||true \
+&& ls -Rlart  /opt/install/exachem || true \
+&& ls -lart  /opt/install/exachem/include || true \
+&& ls -lart  /opt/install/exachem || true 
+
+#&&  apt-get  -y purge  git  gcc-11  g++-11  gfortran-11  libstdc++-11-dev  libgcc-11-dev git \
+#&& apt-get -y install libgcc-s1 libgfortran5 \
+#&& apt-get -y autoremove && apt-get clean
+
+
+
+
+#cd /data
+%environment
+export MPICH_DIR=/opt/mpich
+export SINGULARITY_MPICH_DIR=$MPICH_DIR
+export CUDA_VERSION_MAJOR=11 
+export CUDA_VERSION_MINOR=7
+if [ -f /rocm_version.txt ]; then  export `cat /rocm_version.txt` ; fi
+export PATH=/opt/rocm/bin:$PATH
+export LD_LIBRARY_PATH=/opt/rocm/lib:$LD_LIBRARY_PATH
+export PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$MPICH_DIR/lib:$ROCM_PATH/lib:$LD_LIBRARY_PATH
+
+export PATH=/opt/install/exachem/bin:$MPICH_DIR/bin:$PATH
+export LD_LIBRARY_PATH=$MPICH_DIR/lib:/usr/local/lib:$LD_LIBRARY_PATHs
+#export APPTAINERENV_APPEND_PATH=/opt/install/exachem/bin:$MPICH_DIR/bin:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/bin:"$ROCM_PATH"/bin
+#export APPTAINERENV_APPEND_LD_LIBRARY_PATH=$MPICH_DIR/lib:/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"/lib64:/usr/local/lib:$MPICH_DIR/lib:$ROCM_PATH/lib
+export COMEX_MAX_NB_OUTSTANDING=12
+export APPTAINERENV_COMEX_MAX_NB_OUTSTANDING=12
+#%runscript
+#exec /bin/bash "$@"
+

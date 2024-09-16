@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: bioconductor/bioconductor_docker:RELEASE_3_17
+Stage: spython-base
+
+%post
+
+# Update apt-get
+apt-get update \
+&& apt-get upgrade -y \
+&& apt-get install -y nano git libncurses-dev xorg openbox \
+&& pip install magic-wormhole \
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/*
+
+# Install CRAN packages
+Rscript -e 'install.packages(c("zoo","tidyverse","reshape2","gplots","MASS","eulerr","kableExtra","vioplot","pkgload","beeswarm"))'
+
+# Install bioconductor packages
+Rscript -e 'BiocManager::install(c("DESeq2","fgsea","limma","topconfects","mitch"))'
+
+# get a clone of the codes
+git clone https://github.com/markziemann/lung_brain.git
+
+# Set the container working directory
+DIRPATH=/lung_brain
+mkdir -p $DIRPATH
+cd $DIRPATH
+%environment
+export DIRPATH=/lung_brain
+%runscript
+cd $DIRPATH
+exec /bin/bash "$@"
+%startscript
+cd $DIRPATH
+exec /bin/bash "$@"

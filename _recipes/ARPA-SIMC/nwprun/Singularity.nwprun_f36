@@ -19,7 +19,7 @@ Include: dnf
     dnf install -y dnf-plugins-core
     dnf copr enable -y simc/stable
 # install packages required for scacchiera & c.
-    dnf install -y $COMPOPT python3-pandas python3-matplotlib python3-numpy python3-cartopy python3-pygrib
+    dnf install -y $COMPOPT python3-pandas python3-matplotlib python3-numpy python3-cartopy python3-pygrib python3-eccodes
 # install smnd packages from simc repository
     dnf install -y $COMPOPT wreport bufr2netcdf dballe arkimet libsim ma_utils
 # other useful packages
@@ -29,3 +29,7 @@ Include: dnf
 # save some space
     dnf clean all
     rm -rf /var/lib/{dnf,rpm,yum} /var/cache/*
+
+%environment
+    export LOG4C_APPENDER=stderr
+    export LOG4C_PRIORITY=info

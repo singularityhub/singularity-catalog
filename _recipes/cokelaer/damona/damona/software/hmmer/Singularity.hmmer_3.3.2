@@ -1,20 +1,31 @@
-BootStrap: docker
-From: mambaorg/micromamba:1.4.4
-
+Bootstrap: docker
+From: alpine:3.20
 
 %post
-    # Create a micromamba environment (based won't work)
-    micromamba create -y -n main
+    # Update and install necessary packages
+    apk update && apk add --no-cache bash python3 py3-pip
 
-    # Example of installing bwa inside the environment
-    micromamba install -q -y -n main -c conda-forge -c bioconda hmmer=3.3.2 python
+    # Install build dependencies for HMMER
+    apk add --no-cache gcc make musl-dev perl
 
-    #cleanup
-    rm -rf /opt/conda/pkgs/
+    # Download and install HMMER
+    HMMER_VERSION=3.3.2
+    wget http://eddylab.org/software/hmmer/hmmer-${HMMER_VERSION}.tar.gz
+    tar -xzf hmmer-${HMMER_VERSION}.tar.gz
+    cd hmmer-${HMMER_VERSION}
+    ./configure --prefix=/usr/local
+    make
+    make install
+    cd ..
+    rm -rf hmmer-${HMMER_VERSION}*
+
+    # Clean up unnecessary packages
+    apk del gcc make musl-dev perl
 
 %environment
-    export PATH=/opt/conda/envs/main/bin:$PATH
-    export LANG=C   # prevents perl for raising warnings
-    export LANG=C.UTF-8
-    export LC_ALL=C.UTF-8
+    export PATH="/usr/local/bin:$PATH"
+    export LC_ALL=C
+
+%runscript
+    exec hmmsearch "$@"
 

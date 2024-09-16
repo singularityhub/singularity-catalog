@@ -1,0 +1,142 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%environment
+    export DEBIAN_FRONTEND=noninteractive
+    export PATH="/opt/STAR-2.7.11b/bin/Linux_x86_64_static:/opt/hisat2:/opt/bowtie2:/opt/samtools-1.10:/usr/local/bin:/opt/FastQC:$PATH"
+
+%post
+    # Set non-interactive installation to avoid getting stuck at prompts
+    export DEBIAN_FRONTEND=noninteractive
+
+    # Install system dependencies and tools, resolving conflicts
+    apt-get update && apt-get install -y \
+        wget \
+        bzip2 \
+        gcc \
+        g++ \
+        make \
+        zlib1g-dev \
+        build-essential \
+        libncurses5-dev \
+        libncursesw5-dev \
+        libcurl4-openssl-dev \
+        libbz2-dev \
+        liblzma-dev \
+        libssl-dev \
+        libxml2-dev \
+        ca-certificates \
+        default-jre \
+        unzip \
+        zip \
+        python3 \
+        python3-pip \
+        git \
+        tar \
+        xz-utils \
+        vim-common \
+        cutadapt && \
+        apt-get clean && rm -rf /var/lib/apt/lists/*
+
+    # Install Perl from source
+    cd /usr/local/src
+    wget https://www.cpan.org/src/5.0/perl-5.40.0.tar.gz
+    tar -xzf perl-5.40.0.tar.gz
+    cd perl-5.40.0
+    ./Configure -des -Dprefix=/usr/local
+    make -j$(nproc)
+    make install
+    cd /
+    rm -rf /usr/local/src/perl-5.40.0*
+
+    # Quality Control Tools
+    ## FastQC
+    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip && \
+    unzip fastqc_v0.12.1.zip && \
+    chmod +x FastQC/fastqc && \
+    mv FastQC /opt/ && \
+    ln -s /opt/FastQC/fastqc /usr/local/bin/fastqc && \
+    rm fastqc_v0.12.1.zip
+
+    ## MultiQC
+    pip3 install multiqc
+
+    # Read Trimming and Filtering Tools
+    ## Trimmomatic
+    apt-get update && apt-get install -y openjdk-8-jre-headless wget unzip
+    wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.39.zip
+    unzip Trimmomatic-0.39.zip -d /opt
+    ln -s /opt/Trimmomatic-0.39/trimmomatic-0.39.jar /usr/local/bin/trimmomatic
+
+    ## Fastx Toolkit
+    wget http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2 && \
+    tar -xjf fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2 -C /opt/ && \
+    ln -sf /opt/fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64/* /usr/local/bin/ && \
+    rm fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2
+
+    # Alignment Tools
+    ## STAR
+    wget https://github.com/alexdobin/STAR/archive/2.7.11b.tar.gz && \
+    tar -xzf 2.7.11b.tar.gz && \
+    rm 2.7.11b.tar.gz && \
+    mkdir -p /opt/STAR-2.7.11b/bin/Linux_x86_64_static && \
+    cd STAR-2.7.11b/source && \
+    make STAR && \
+    mv STAR /opt/STAR-2.7.11b/bin/Linux_x86_64_static
+
+    ## Bowtie2
+    wget https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.4.2/bowtie2-2.4.2-linux-x86_64.zip && \
+    unzip bowtie2-2.4.2-linux-x86_64.zip && \
+    mv bowtie2-2.4.2-linux-x86_64 /opt/bowtie2 && \
+    ln -sf /opt/bowtie2/* /usr/local/bin/ && \
+    rm bowtie2-2.4.2-linux-x86_64.zip
+
+    ## HISAT2
+    git clone https://github.com/DaehwanKimLab/hisat2.git /opt/hisat2 && \
+    cd /opt/hisat2 && \
+    make && \
+    ln -sf /opt/hisat2/* /usr/local/bin/
+
+    # Post Alignment Tools
+    ## SAMtools
+    wget https://github.com/samtools/samtools/releases/download/1.10/samtools-1.10.tar.bz2 && \
+    tar -xjf samtools-1.10.tar.bz2 -C /opt/ && \
+    cd /opt/samtools-1.10 && \
+    ./configure --prefix=/usr/local && \
+    make && \
+    make install 
+
+    ## PICARD
+    wget https://github.com/broadinstitute/picard/releases/download/2.23.9/picard.jar -O /opt/picard.jar && \
+    ln -sf /opt/picard.jar /usr/local/bin/picard
+    
+    ## HOMER
+    wget http://homer.ucsd.edu/homer/configureHomer.pl && \
+    perl configureHomer.pl -install
+
+
+    ## MACS2
+    pip install MACS2
+    
+    ## MEME Suit
+    wget https://meme-suite.org/meme/meme-software/5.5.5/meme-5.5.5.tar.gz && \
+    tar zxf meme-5.5.5.tar.gz && \
+    cd meme-5.5.5 && \
+    ./configure --prefix=$HOME/meme --enable-build-libxml2 --enable-build-libxslt && \
+    make && \
+    make test && \
+    make install
+    
+    # Set environment variable for tools
+    echo 'export PATH="/root/homer/bin:${PATH}"' >> /environment
+    export PATH=/opt/local/bin:/opt/local/libexec/meme-5.5.5:$PATH
+
+%runscript
+    exec /bin/bash "$@"
+
+%labels
+    Author YourName
+    Version 1.0
+
+%help
+    This container includes tools for quality control, read trimming, alignment, and post-alignment analysis in bioinformatics.

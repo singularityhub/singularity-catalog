@@ -1,0 +1,29 @@
+BootStrap: yum
+OSVersion: 8
+MirrorURL: http://dl.rockylinux.org/pub/rocky/%{OSVERSION}/BaseOS/x86_64/os/
+Include: dnf
+
+%runscript
+    exec "$@"
+
+%post
+    COMPOPT="--nodocs --setopt install_weak_deps=False"
+    dnf install -y $COMPOPT epel-release
+    dnf install -y 'dnf-command(config-manager)'
+    dnf config-manager --set-enabled powertools
+    dnf config-manager --set-enabled appstream
+
+    dnf copr enable -y simc/stable
+# install dballe and bufr2netcdf from simc repository
+    dnf install -y $COMPOPT bufr2netcdf dballe
+# fix for some badly coded airep reports, rewrite bufr table
+# https://github.com/ARPA-SIMC/wreport/issues/58
+    cp /usr/share/wreport/B0000000000000015000.txt \
+     /usr/share/wreport/B0000000000000014000.txt
+# save some space
+    dnf clean all
+    rm -rf /var/lib/{dnf,rpm,yum} /var/cache/*
+
+%help
+    This container includes a minimum amount of SIMC tools for
+    converting bufr to netcdf format and manipulating bufr files.

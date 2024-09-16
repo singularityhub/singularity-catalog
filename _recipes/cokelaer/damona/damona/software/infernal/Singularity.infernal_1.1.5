@@ -1,0 +1,53 @@
+BootStrap: docker
+From: alpine:3.20
+
+
+
+%post
+    # Install essential packages
+    apk update && apk add --no-cache \
+        build-base \
+        gcc \
+        g++ \
+        make \
+        perl \
+        bash \
+        wget \
+        zlib-dev \
+        ncurses-dev \
+        bzip2-dev \
+        xz-dev \
+        bash python3 py3-pip
+
+    # Download and install Infernal
+    wget http://eddylab.org/infernal/infernal-1.1.5.tar.gz -O /tmp/infernal.tar.gz
+    cd /tmp
+    tar -xzf infernal.tar.gz
+    cd infernal-1.1.5
+
+    # Compile and install Infernal
+    ./configure --prefix=/usr/local
+    make
+    make check 
+    make install
+
+    # Clean up
+    cd /
+    rm -rf /tmp/infernal*
+    apk del gcc make wget 
+    rm -rf /var/cache/apk*
+
+%environment
+    # Set environment variables needed for Infernal
+    export PATH=/usr/local/bin:$PATH
+
+%runscript
+    # This is the default command that runs when the container is executed
+    echo "Infernal is ready to use!"
+    exec cmsearch "$@"
+
+
+%test
+    # Basic test to check if Infernal is installed correctly
+    cmsearch -h
+

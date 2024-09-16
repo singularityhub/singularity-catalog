@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: python:3.10-slim
+%post
+  SAMTOOLS_VERSION=1.19
+  AUGUSTUS_VERSION=3.5.0
+
+  apt update && apt install -yq --no-install-recommends curl bzip2 make g++ libbz2-dev \
+     liblzma-dev  zlib1g-dev libncurses-dev zlib1g-dev
+
+  # install python package
+  pip install --upgrade pip
+
+  # install samtools
+  curl -sSL https://github.com/samtools/samtools/releases/download/$SAMTOOLS_VERSION/samtools-$SAMTOOLS_VERSION.tar.bz2 | tar -xjf - \
+    && cd samtools-$SAMTOOLS_VERSION \
+    && ./configure && make && make install && cd -
+  # install htslib
+  cd samtools-${SAMTOOLS_VERSION}/htslib-${SAMTOOLS_VERSION} && make && make install && cd -
+  rm -rf samtools-${SAMTOOLS_VERSION}
+
+  ## install augustus
+  apt install -yq --no-install-recommends libgsl-dev libboost-all-dev libsuitesparse-dev liblpsolve55-dev \
+    libsqlite3-dev libmysql++-dev libbamtools-dev
+  curl -sSL https://github.com/Gaius-Augustus/Augustus/archive/refs/tags/v$AUGUSTUS_VERSION.tar.gz | tar zx \
+    && mv Augustus-$AUGUSTUS_VERSION augustus && cd augustus && make augustus && make && make install && cd -
+  mv augustus/config augustusconf && rm -rf augustus/* && mv augustusconf augustus/config
+
+  apt purge -yq git curl libncurses-dev zlib1g-dev libbz2-dev liblzma-dev bzip2 autoconf automake 
+  # NOTE "apt autoremove" remove libboost that must be kept for augustus to work
+
+%environment
+  export AUGUSTUS_CONFIG_PATH="/augustus/config"
+  export LC_ALL=C.UTF-8
+

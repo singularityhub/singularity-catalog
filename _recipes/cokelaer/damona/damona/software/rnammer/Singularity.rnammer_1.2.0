@@ -1,0 +1,54 @@
+Bootstrap: docker
+From: alpine:3.20
+
+%files
+    # https://zenodo.org/records/13732706
+    rnammer-1.2.Unix.tar.gz
+    # in the damona repo
+    rnammer-1.2.patch
+
+%post
+
+    # update and install python/bach
+    apk update && apk add --no-cache bash python3 py3-pip
+
+    apk add --no-cache gcc make musl-dev perl patch 
+
+    apk add perl-xml-simple
+
+
+    # Download and install HMMER compatible with rnammer
+    HMMER_VERSION=2.3.2
+    wget http://eddylab.org/software/hmmer/hmmer-${HMMER_VERSION}.tar.gz
+    tar -xzf hmmer-${HMMER_VERSION}.tar.gz
+    cd hmmer-${HMMER_VERSION}
+    ./configure --prefix=/usr/local --enable-threads
+    make
+    make install
+    #make check
+    cd ..
+    rm -rf hmmer-${HMMER_VERSION}*
+
+    # install rnammer and apply a patch
+    mkdir /rnammer
+    cp rnammer-1.2.Unix.tar.gz /rnammer
+    cp rnammer-1.2.patch /rnammer
+    cd rnammer
+    tar xvfz rnammer-1.2.Unix.tar.gz
+    patch -u rnammer -i rnammer-1.2.patch
+
+    rm -f rnammer*tar.gz
+    rm -f rnammer-1.2.patch
+
+    apk del gcc make patch musl-dev
+    rm -rf /var/cache/apk*
+
+
+%environment
+    export PATH=$PATH:/rnammer
+    export LC_ALL=C
+
+
+%runscript
+    exec rnammer "$@"
+

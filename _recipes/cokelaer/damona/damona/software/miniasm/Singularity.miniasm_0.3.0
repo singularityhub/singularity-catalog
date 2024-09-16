@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: alpine:3.18
+
+%post
+    # Install required packages
+    apk update && apk upgrade && apk add --no-cache bash wget make gcc g++ zlib-dev python3 py3-pip
+
+    # Install miniasm
+
+    wget https://github.com/lh3/miniasm/archive/refs/tags/v0.3.tar.gz
+    tar xvfz v0.3.tar.gz
+    cd miniasm-0.3
+    make
+    mv miniasm /usr/local/bin
+    mv minidot /usr/local/bin
+    cd ..
+    rm -rf miniasm-0.3
+
+    apk del wget make gcc g++ musl-dev
+    rm -rf /var/cache/apk/*
+
+%environment
+    # Set up environment variables
+    export PATH=/usr/local/bin:$PATH
+
+%runscript
+    exec minimap2 "$@"
