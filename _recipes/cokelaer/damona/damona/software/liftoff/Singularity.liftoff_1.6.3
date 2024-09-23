@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: python:3.11-slim
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    apt update -y && apt install -y git build-essential zlib1g-dev libbz2-dev \
+        liblzma-dev libcurl4-openssl-dev curl
+
+    MINIMAP2_VERSION=2.24
+    curl -L https://github.com/lh3/minimap2/releases/download/v${MINIMAP2_VERSION}/minimap2-${MINIMAP2_VERSION}_x64-linux.tar.bz2 | tar -jxf - minimap2-${MINIMAP2_VERSION}_x64-linux/minimap2 \
+    && mv ./minimap2-${MINIMAP2_VERSION}_x64-linux/minimap2 /usr/local/bin
+
+
+    git clone https://github.com/agshumate/Liftoff && cd Liftoff
+
+    pip install --upgrade pip
+    pip install "setuptools>=61"
+    pip install cython
+    pip install pysam
+    python setup.py install
+
+    cd ../
+    rm -rf /Liftoff
+    rm -rf /minimap2-2.24_x64-linux/
+    apt-get remove -y curl git make gcc
+    apt-get autoremove -y
+    apt-get clean -y
+
+%runscript
+    exec lifoff "$@"
+
+

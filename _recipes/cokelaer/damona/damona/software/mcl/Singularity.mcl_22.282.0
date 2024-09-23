@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: python:3.11-slim
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    apt update -y && apt install -y mcl
+
+    apt-get autoremove -y
+    apt-get clean -y
+
+
+%runscript
+    exec mcl "$@"
+
