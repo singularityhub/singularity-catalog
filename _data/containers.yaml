@@ -1,5 +1,5 @@
 bases:
-- count: 2113
+- count: 2114
   name: ubuntu
 - count: 449
   name: nvidia/cuda
@@ -23,7 +23,7 @@ bases:
   name: mkandes/naked-singularity
 - count: 96
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 86
+- count: 87
   name: nfcore/base
 - count: 71
   name: neurodebian
@@ -404,6 +404,8 @@ bases:
 - count: 4
   name: magland/mlsing
 - count: 4
+  name: marcchpc/pytorch_cuda9
+- count: 4
   name: nvcr.io/nvidia/nemo
 - count: 4
   name: godloved/secure/centos8
@@ -760,6 +762,8 @@ bases:
 - count: 2
   name: ISU-HPC/centos7-base
 - count: 2
+  name: bigdatalabteam/hcp-prefreesurfer
+- count: 2
   name: iarcbioinfo/strelka2-nf
 - count: 2
   name: icbi/quantiseq2
@@ -853,8 +857,6 @@ bases:
   name: cibiobcg/pacbam
 - count: 2
   name: sriggi/caesar-base
-- count: 2
-  name: marcchpc/pytorch_cuda9
 - count: 2
   name: bud42/rwml
 - count: 2
@@ -1588,8 +1590,6 @@ bases:
 - count: 1
   name: ISU-HPC/machine-learning
 - count: 1
-  name: bigdatalabteam/hcp-prefreesurfer
-- count: 1
   name: iarcbioinfo/needlestack
 - count: 1
   name: iarcbioinfo/vcf_normalization-nf
@@ -1728,6 +1728,8 @@ bases:
 - count: 1
   name: exsidius/openpose
 - count: 1
+  name: dalbohn/yolo_aci
+- count: 1
   name: dalbohn/emorec_aci
 - count: 1
   name: rocker/tensorflow-gpu
@@ -1817,6 +1819,8 @@ bases:
   name: nvcr.io/nvidia/tao/tao-toolkit-tf
 - count: 1
   name: gcr.io/kaggle-gpu-images/python
+- count: 1
+  name: khanlab/despot1
 - count: 1
   name: mustxyk/fsl
 - count: 1
@@ -2116,7 +2120,7 @@ bases:
 - count: 1
   name: rocm/pytorch
 bootstraps:
-- count: 6907
+- count: 6914
   name: docker
 - count: 509
   name: shub
@@ -2128,7 +2132,7 @@ bootstraps:
   name: oras
 - count: 203
   name: localimage
-- count: 177
+- count: 178
   name: yum
 - count: 35
   name: zypper
@@ -2161,7 +2165,7 @@ orgs:
   name: ghcr.io/truatpasteurdotfr
 - count: 14
   name: registry.gitlab.com/rode0day
-- count: 13
+- count: 14
   name: khanlab
 - count: 13
   name: rocker
@@ -2211,6 +2215,8 @@ orgs:
   name: willgpaik
 - count: 4
   name: jcsda
+- count: 4
+  name: dalbohn
 - count: 4
   name: willprice
 - count: 4
@@ -2263,8 +2269,6 @@ orgs:
   name: stevekm
 - count: 3
   name: icaoberg
-- count: 3
-  name: dalbohn
 - count: 3
   name: waldronlab
 - count: 3
@@ -3112,8 +3116,8 @@ orgs:
 - count: 1
   name: pytorch
 tags:
-  latest: 735
-  other: 6539
+  latest: 736
+  other: 6541
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3454,6 +3458,7 @@ versions:
     v1.9.9: 1
   bigdatalabteam/hcp-prefreesurfer:
     exec-centos7-reprozip.fslbuild-centos5: 1
+    exec-centos7.freesurferbuild-centos4-latest: 1
   biobb_cmip:
     3.7.1--py_0: 1
   biobb_haddock:
@@ -4317,6 +4322,8 @@ versions:
     __TAG__: 1
   keceli/mpi_benchmark:
     theta: 1
+  khanlab/despot1:
+    latest: 1
   khanlab/funcmasker-flex:
     v0.2.0: 1
   khanlab/gradcorrect:
@@ -5927,7 +5934,7 @@ versions:
     '18.10': 10
     '19.04': 33
     '19.10': 16
-    '20.04': 462
+    '20.04': 463
     '20.04  ': 1
     '20.10': 3
     '21.04': 3
