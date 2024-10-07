@@ -2,6 +2,7 @@ Bootstrap: docker
 From: python:3
 
 %environment
+    export LC_ALL=C.UTF-8
 
 %runscript
 
@@ -9,12 +10,13 @@ From: python:3
 	cp -r ../../../core ${SINGULARITY_ROOTFS}/core/
 	cp get_field.sh ${SINGULARITY_ROOTFS}/usr/local/bin/get_field.sh
 	chmod a+rx ${SINGULARITY_ROOTFS}/usr/local/bin/get_field.sh
+    chmod -R a+rx ${SINGULARITY_ROOTFS}/core/
 
 %post
 	# Install openVariant
     pip install open-variant
-    # Install bgparsers
-    #pip --no-cache-dir install https://bitbucket.org/bgframework/bgparsers/get/master.tar.gz
+    
+    # Install intogen-core package
 	pip install /core
 
     # Clean unused things

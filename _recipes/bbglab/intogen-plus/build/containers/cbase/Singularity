@@ -9,8 +9,9 @@ From: debian:buster-slim
 
 %setup
     mkdir ${SINGULARITY_ROOTFS}/cbase
-    cp cbase.py ${SINGULARITY_ROOTFS}/cbase/
-    chmod -R a+r ${SINGULARITY_ROOTFS}/cbase/
+    cp cbase.py ${SINGULARITY_ROOTFS}/cbase/cbase.py
+    cp -r Auxiliary/ ${SINGULARITY_ROOTFS}/cbase/Auxiliary/
+    chmod -R a+xr ${SINGULARITY_ROOTFS}/cbase/
 
 %post
     apt-get update

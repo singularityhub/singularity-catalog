@@ -1,4 +1,4 @@
-# Author: B. Anderson
+# Author: B.M. Anderson
 # Singularity recipe for creating a container for using the program Stacks (https://catchenlab.life.illinois.edu/stacks/)
 # NOTE: in order to use this on the supercomputing system, I will compile it with OpenMPI installed (see image)
 
@@ -10,7 +10,7 @@ From: pawsey/openmpi-base:2.1.2_ubuntu20.04
 %labels
 	MAINTAINER bmichanderson
 	PROGRAM Stacks
-	VERSION 2.62
+	VERSION 2.68
 
 
 %help
@@ -35,7 +35,7 @@ From: pawsey/openmpi-base:2.1.2_ubuntu20.04
 
 
 	# build and install the program
-	VER=2.62
+	VER=2.68
 	URL=https://catchenlab.life.illinois.edu/stacks/source/stacks-"$VER".tar.gz
 	wget "$URL"
 	tar -xzf stacks-"$VER".tar.gz
@@ -58,4 +58,3 @@ From: pawsey/openmpi-base:2.1.2_ubuntu20.04
 
 %runscript
 	# This will be executed when the container is run (singularity run [container])
-

@@ -1,0 +1,14 @@
+Bootstrap: docker
+
+From: continuumio/miniconda3
+
+%files
+    conda-lock.yml
+
+%post
+    /opt/conda/bin/conda install -c conda-forge conda-lock
+    /opt/conda/bin/conda-lock install -n renv conda-lock.yml
+
+%runscript
+    exec /opt/conda/envs/renv/bin/Rscript "$@"
+

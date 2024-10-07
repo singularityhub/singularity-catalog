@@ -1,0 +1,8 @@
+bootstrap: localimage
+from: env.d/base.sif
+
+
+%post
+    apt-get purge -y blender
+    apt-get install -y libsm6
+    apt-get clean

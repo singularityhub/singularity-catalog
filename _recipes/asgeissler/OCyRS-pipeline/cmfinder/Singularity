@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: centos:7
+#From: debian:latest
+
+%post
+    #apt-get update
+    #apt-get install build-essential wget libdbi-perl -y
+    yum update -y
+    yum groupinstall -y "Development Tools"
+    # install all annoying dependencies
+    yum install -y wget perl-DBI perl-DB_File perl-FindBin perl-Getopt-Long perl-Clone
+
+    wget https://downloads.sourceforge.net/project/weinberg-cmfinder/cmfinder-0.4.1.18.tgz
+    tar -xf cmfinder-0.4.1.18.tgz
+    cd cmfinder-0.4.1.18
+    ./configure
+    make
+
+    cd ..
+    mv cmfinder-0.4.1.18 /usr/local/share/cmfinder
+
+%environment
+    export LC_ALL=C
+    export CMfinder=/usr/local/share/cmfinder
+    export PATH=$CMfinder/bin:$PATH
+
+%runscript
+    exec /bin/bash "$@"
+

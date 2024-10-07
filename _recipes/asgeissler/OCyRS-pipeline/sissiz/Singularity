@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%files
+    3_0_SISSIz.tar.gz
+
+%post
+    apt-get update
+    apt-get install build-essential -y
+    tar -xf 3_0_SISSIz.tar.gz
+    cd 3_0_SISSIz
+    ./configure
+    make
+    make install
+    cd ..
+    rm -rf 3_0_SISSIz
+
+%environment
+    export LC_ALL=C
+
+%runscript
+    exec /bin/bash "$@"
+

@@ -1,21 +1,21 @@
 bases:
-- count: 2114
+- count: 2117
   name: ubuntu
-- count: 449
+- count: 451
   name: nvidia/cuda
 - count: 375
   name: debian
-- count: 296
+- count: 297
   name: centos
 - count: 279
   name: alpine
-- count: 274
+- count: 275
   name: python
 - count: 258
   name: ghcr.io/mkandes/naked-singularity
 - count: 246
   name: aibasel/downward
-- count: 224
+- count: 226
   name: continuumio/miniconda3
 - count: 133
   name: tensorflow/tensorflow
@@ -73,7 +73,7 @@ bases:
   name: r-base
 - count: 22
   name: khanlab/tar2bids
-- count: 21
+- count: 22
   name: nipy/heudiconv
 - count: 19
   name: rocker/r-ver
@@ -451,6 +451,8 @@ bases:
   name: richelbilderbeek/default/gcaer
 - count: 3
   name: richelbilderbeek/default/plinkr
+- count: 3
+  name: nvidia/12.2.2-runtime-ubuntu20.04
 - count: 3
   name: accre.internal.base.sif
 - count: 3
@@ -1137,8 +1139,6 @@ bases:
   name: spellrun/dynet
 - count: 1
   name: spellrun/caffe2
-- count: 1
-  name: nvidia/12.2.2-runtime-ubuntu20.04
 - count: 1
   name: crown421/default/juliabase
 - count: 1
@@ -1990,6 +1990,8 @@ bases:
 - count: 1
   name: jncc/arcsi-base
 - count: 1
+  name: env.d/base.sif
+- count: 1
   name: docker.io/library/archlinux
 - count: 1
   name: base/archlinux
@@ -2120,7 +2122,7 @@ bases:
 - count: 1
   name: rocm/pytorch
 bootstraps:
-- count: 6914
+- count: 6926
   name: docker
 - count: 509
   name: shub
@@ -2130,7 +2132,7 @@ bootstraps:
   name: library
 - count: 344
   name: oras
-- count: 203
+- count: 204
   name: localimage
 - count: 178
   name: yum
@@ -3006,6 +3008,8 @@ orgs:
 - count: 1
   name: jncc
 - count: 1
+  name: env.d
+- count: 1
   name: nipy
 - count: 1
   name: raj76
@@ -3116,8 +3120,8 @@ orgs:
 - count: 1
   name: pytorch
 tags:
-  latest: 736
-  other: 6541
+  latest: 737
+  other: 6548
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3585,7 +3589,7 @@ versions:
     '6.10': 2
     '6.8': 2
     '6.9': 1
-    '7': 103
+    '7': 104
     7.4.1708: 12
     7.5.1804: 6
     '7.6': 4
@@ -4714,6 +4718,7 @@ versions:
     1.1.3: 1
     1.1.6: 1
     1.2.0: 1
+    1.3.0: 1
     latest: 3
     v0.11.1: 1
     v0.11.2: 1
@@ -4920,11 +4925,13 @@ versions:
     11.7.0-runtime-ubuntu22.04: 1
     11.7.1-base-ubuntu22.04: 1
     11.7.1-cudnn8-devel-ubuntu20.04: 1
+    11.7.1-cudnn8-devel-ubuntu22.04: 1
     11.7.1-cudnn8-runtime-ubuntu22.04: 1
     11.7.1-runtime-ubuntu22.04: 1
     11.8.0-cudnn8-devel-ubuntu20.04: 2
     11.8.0-devel-ubuntu20.04: 2
     12.1.0-runtime-ubuntu22.04: 1
+    12.3.1-devel-ubuntu20.04: 1
     12.4.1-cudnn-devel-ubuntu22.04: 1
     7.0-cudnn4-devel-ubuntu14.04: 1
     7.5-cudnn5-devel: 1
@@ -5263,7 +5270,7 @@ versions:
     3.10-slim: 9
     3.10-slim-bullseye: 2
     3.10.3-bullseye: 1
-    '3.11': 1
+    '3.11': 2
     3.11-slim: 13
     3.4-slim: 1
     '3.5': 1
@@ -5939,7 +5946,7 @@ versions:
     '20.10': 3
     '21.04': 3
     '21.10': 3
-    '22.04': 63
+    '22.04': 65
     '22.10': 6
     '23.10': 2
     '24.04': 1
@@ -5961,7 +5968,7 @@ versions:
     focal-20200925: 3
     focal-20210827: 1
     jammy: 11
-    latest: 164
+    latest: 165
     rolling: 1
     sha256.21678b2846063434e2009dee535d3e28ded35774ca72722e1d62b37077de30da: 5
     sha256.80c52afadf3e7c3f9573de4fe79b7dca57fb3290df6c8dc46a75b02768a81146: 3

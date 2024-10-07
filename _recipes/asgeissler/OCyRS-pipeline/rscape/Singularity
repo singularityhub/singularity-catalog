@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+
+%post
+    apt-get update
+    apt-get install wget build-essential -y
+    # At the time-point of runnin, this was version 2.0.0.j
+    wget 'http://eddylab.org/software/rscape/rscape.tar.gz'
+    tar -xf rscape.tar.gz
+    cd rscape_v2.0.0.j
+    ./configure
+    make
+    make install
+
+%environment
+    export LC_ALL=C
+    export PATH=/rscape_v2.0.0.j/bin:$PATH
+
+%runscript
+    exec /bin/bash "$@"
+
