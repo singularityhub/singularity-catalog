@@ -1,0 +1,37 @@
+Bootstrap: ubuntu
+From: ubuntu:latest
+
+%post
+    # Update and install SSH server
+    apt-get update && apt-get install -y openssh-server
+
+    # Allow root login via SSH
+    sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+    # Set the working directory
+    mkdir -p /pong_game
+    cd /pong_game
+
+    # Copy create_users.sh and run it
+    cp /path/to/create_users.sh /pong_game/create_users.sh
+    bash /pong_game/create_users.sh
+
+    # Clean up the script after execution
+    rm /pong_game/create_users.sh
+
+    # Setup SSH keys for umpire
+    mkdir -p /home/umpire/.ssh
+    cp /path/to/keys.pub /home/umpire/.ssh/authorized_keys
+    chmod 700 /home/umpire/.ssh
+    chmod 600 /home/umpire/.ssh/authorized_keys
+    chown -R umpire:umpire /home/umpire/.ssh
+
+%files
+    # Include the necessary scripts and key files
+    create_users.sh /pong_game/create_users.sh
+    keys.pub /home/umpire/.ssh/authorized_keys
+
+%runscript
+    # Start the SSH service and then launch a bash shell
+    service ssh start
+    exec /bin/bash

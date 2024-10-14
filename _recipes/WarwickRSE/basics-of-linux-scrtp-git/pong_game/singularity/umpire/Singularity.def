@@ -1,0 +1,43 @@
+Bootstrap: ubuntu
+From: ubuntu:latest
+
+%post
+    # Set working directory
+    mkdir -p /pong_game
+    cd /pong_game
+
+    # Update the package list and install OpenSSH server
+    apt-get update && apt-get install -y openssh-server
+    
+    # Modify SSH configuration to allow root login
+    sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+    # Add umpire user and set the password
+    useradd -ms /bin/bash umpire
+    echo 'umpire:qwerty2000' | chpasswd
+
+    # Change ownership of the /pong_game directory to the umpire user
+    chown -R umpire:umpire /pong_game
+
+    # Install Python3 and pip
+    apt-get update && apt-get install -y python3-full python3-pip
+    
+    # Install python-lorem via pip
+    pip3 install python-lorem --break-system-packages
+
+    # Set up SSH keys for the umpire user
+    mkdir -p /home/umpire/.ssh
+    cp /path/to/keys /home/umpire/.ssh/
+    chown -R umpire:umpire /home/umpire/.ssh
+
+%files
+    # Copy the necessary scripts to the container
+    make_points.sh /pong_game/make_points.sh
+    make_points.py /pong_game/make_points.py
+    calculate_points.py /pong_game/calculate_points.py
+    keys /home/umpire/.ssh/
+
+%runscript
+    # Start the SSH service and execute the make_points.sh script
+    service ssh start
+    exec /bin/bash /pong_game/make_points.sh

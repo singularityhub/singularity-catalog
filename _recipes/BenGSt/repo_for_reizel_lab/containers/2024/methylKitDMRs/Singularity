@@ -1,0 +1,7 @@
+Bootstrap: docker
+From: bioconductor/bioconductor_docker:RELEASE_3_19
+
+%post
+    R -e 'install.packages(c("argparser", "dplyr", "stringr"))'
+    R -e 'if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")'
+    R -e 'BiocManager::install("methylKit")'

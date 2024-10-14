@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: alpine:3.20
+
+%post
+
+    VERSION="2.0.2"
+    # update and install python/bach
+    apk update \
+        && apk add --no-cache bash python3 py3-pip \
+        && apk add --no-cache g++ make boost boost-dev boost-system boost-thread boost-static pigz \
+        && wget https://github.com/refresh-bio/DSRC/archive/v${VERSION}.tar.gz \
+        && tar -xzvf v${VERSION}.tar.gz \
+        && rm -rf v${VERSION}.tar.gz \
+        && cd DSRC-${VERSION} \
+        && make bin \
+        && mv bin/dsrc /usr/local/bin/ \
+        && cd /usr/local \
+        && rm -rf /usr/local/DSRC-${VERSION} \
+        && apk del wget g++ make \
+        && rm -rf /var/cache/apk*
+
+
+%environment
+    export LC_ALL=C
+
+%runscript
+    exec dsrc "$@"
+

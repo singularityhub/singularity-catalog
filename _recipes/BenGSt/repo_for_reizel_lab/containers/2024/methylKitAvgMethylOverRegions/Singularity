@@ -1,0 +1,7 @@
+Bootstrap: docker
+From: bioconductor/bioconductor_docker:RELEASE_3_19
+
+%post
+    R -e 'install.packages(c("rtracklayer", "data.table", "dplyr", "parallel", "argparser", "IRanges"))'
+    R -e 'if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")'
+    R -e 'BiocManager::install(c("GenomeInfoDb", "GenomicRanges", "methylKit"))'

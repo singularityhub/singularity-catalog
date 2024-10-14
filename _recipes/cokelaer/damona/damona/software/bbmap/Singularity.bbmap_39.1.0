@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: python:3.11-slim
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    VERSION="39.01"
+
+    apt-get update --fix-missing\
+        && apt-get install -y wget default-jre\
+        && cd /usr/local/ \
+        && wget -O BBMap_${VERSION}.tar.gz https://sourceforge.net/projects/bbmap/files/BBMap_${VERSION}.tar.gz/download \
+        && tar -xzvf BBMap_${VERSION}.tar.gz \
+        && rm -rf  BBMap_${VERSION}.tar.gz \
+        && mv bbmap/* /usr/local/bin/ \
+        && rm -rf bbmap \
+        && apt-get remove -y wget gcc \
+        && apt-get autoremove -y \
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/* 
+
+
+%runscript
+    exec bbmap.sh "$@"
+

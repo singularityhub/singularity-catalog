@@ -1,5 +1,5 @@
-Bootstrap: docker
-From: ubuntu:20.04
+Bootstrap: localimage
+From: ubuntu_jammy.sif
 %labels
 MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 
@@ -9,6 +9,7 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 &&     rm -f ${SINGULARITY_ROOTFS}/*.txt || true\
 &&     bash -c "if [[ -z '${FC}' ]]; then echo 'FC=gfortran ' >> ${SINGULARITY_ROOTFS}/fc.txt ; else echo 'FC is ${FC}'; echo 'FC=${FC} ' >> ${SINGULARITY_ROOTFS}/fc.txt ; fi"\
 &&     bash -c "if [[ -z '${MPICH}' ]]; then echo 'MPICH=3.4.2 ' >> ${SINGULARITY_ROOTFS}/MPICH.txt ; else echo 'MPICH is ${MPICH}'; echo 'MPICH=${MPICH} ' >> ${SINGULARITY_ROOTFS}/mpich.txt ; fi"\
+&&     bash -c "if [[ -z '${MPICH_DEVICE}' ]]; then echo 'MPICH_DEVICE=ch4:ofi ' >> ${SINGULARITY_ROOTFS}/MPICH_DEVICE.txt ; else echo 'MPICH_DEVICE is ${MPICH_DEVICE}'; echo 'MPICH_DEVICE=${MPICH_DEVICE} ' >> ${SINGULARITY_ROOTFS}/mpich_device.txt ; fi"\
 &&     bash -c "if [[ -z '${ARMCI_NETWORK}' ]]; then echo 'ARMCI_NETWORK=MPI-PR ' >> ${SINGULARITY_ROOTFS}/armci_network.txt ; else echo 'ARMCI_NETWORK is ${ARMCI_NETWORK}'; echo 'ARMCI_NETWORK=${ARMCI_NETWORK} ' >> ${SINGULARITY_ROOTFS}/armci_network.txt ; fi"\
 &&     bash -c "if [[ -z '${MPI_IMPL}' ]]; then echo 'MPI_IMPL=mpich ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; else echo 'MPI_IMPL is ${MPI_IMPL}'; echo 'MPI_IMPL=${MPI_IMPL} ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; fi"\
 &&     bash -c "if [[ -z '${BRANCH}' ]]; then echo 'BRANCH=master ' >> ${SINGULARITY_ROOTFS}/branch.txt ; else echo 'BRANCH is ${BRANCH}'; echo 'BRANCH=${BRANCH} ' >> ${SINGULARITY_ROOTFS}/branch.txt ; fi"\
@@ -43,8 +44,10 @@ export DEBIAN_FRONTEND=noninteractive \
 && export `cat ./mpi_impl.txt`\
 && export `cat ./branch.txt`\
 && export `cat ./myusername.txt`\
+&& export `cat ./mpich_device.txt`\
 && echo FC is $FC\
 && echo MPICH is $MPICH\
+&& echo MPICH_DEVICE is $MPICH_DEVICE\
 && export mpich_prefix=mpich-$MPICH\
 && echo mpich_prefix is $mpich_prefix \
 && export mpich_major=$(echo $MPICH | cut -d . -f1) \
@@ -57,6 +60,7 @@ export DEBIAN_FRONTEND=noninteractive \
 else
     export mpich_options=' '
 fi \
+&& export GCC_VERSION=11 \
 && echo mpich_options $mpich_options \
 && echo ARMCI_NETWORK is $ARMCI_NETWORK\
 && echo MPI_IMPL is $MPI_IMPL\
@@ -84,17 +88,23 @@ fi \
  g++ gfortran   make patch   unzip perl-base file \
  python3 python3-dev cmake  unzip zip perl automake libtool autoconf flex  \
  libnuma-dev libslurm-dev \
-libpmix-bin libpmix-dev libpmix2 \
+ libpmix-dev libpmix2 \
 libpmi2-0-dev libpmi0-dev  \
  libnl-3-dev  libnl-route-3-dev udev \
  librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers  \
  libhwloc-dev \
- pkg-config gawk  software-properties-common \
+ pkg-config gawk  software-properties-common gdb\
 && if [ $mpich_major = '5' ]; then
     apt-get -y install -y libpmix-bin libpmix-dev libpmix2
 else
     apt-get -y install -y libpmi2-0-dev libpmi0-dev
 fi \
+&& add-apt-repository -y ppa:ubuntu-toolchain-r/test && apt-get update \
+            && apt-get install -q=2 -y  gcc-"$GCC_VERSION"  g++-"$GCC_VERSION" gfortran-"$GCC_VERSION" libgfortran-"$GCC_VERSION"-dev  make patch curl rsync wget git file  bzip2 tar gnupg2  \
+&& update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-"$GCC_VERSION" 100 \
+&& update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-"$GCC_VERSION" 100 \
+&& update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-"$GCC_VERSION" 100 \
+            && apt-get install  -q=2 -y  autoconf automake libtool git \
 && apt-get clean \
 && echo TTTTT \
 && df -h \
@@ -110,14 +120,40 @@ fi \
 && echo 'ls -l /opt/mpich/lib/libmpi.a' $(ls -l /opt/mpich/lib/libmpi.a) || true \
 && bash -o pipefail -c "if [[ ! -f /opt/mpich/lib/libmpi.a ]]; then  \
 $FC -v \
+&& wget --progress=dot:giga https://github.com/Cray-HPE/xpmem/tarball/master -O xpmem.tar.gz \
+&& tar xzf xpmem.tar.gz \
+&& rm xpmem.tar.gz \
+&& cd Cray-HPE-xpmem* \
+&& sh autogen.sh \
+&& ./configure --prefix=$MPICH_DIR --disable-kernel-module  \
+&& make -j3 \
+&& make install \
+&& cd .. \
+&& if [[ ${MPICH_DEVICE} != ch4:ofi ]]; then echo 'installing ucx' ; \
+   export ucx=1.11.0 ; \
+   echo 'the ucx version is'  \$ucx ; \
+   wget --progress=dot:giga  https://github.com/openucx/ucx/releases/download/v\$ucx/ucx-\$ucx.tar.gz ; \
+   tar xzf ucx-\$ucx.tar.gz && rm ucx-\$ucx.tar.gz  ;\
+   cd ucx-\$ucx ; \
+   wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/ucx_malloc.patch ;\
+   patch -p0 < ./ucx_malloc.patch ;\
+   mkdir -p build && cd build ;\
+   ../configure --prefix=\$MPICH_DIR --disable-logging --disable-debug --disable-assertions --disable-params-check ;\
+   make -j4 && make install ;\
+   export mpich_options='$mpich_options --with-ucx=$MPICH_DIR' ; \
+ if [ ! -f $MPICH_DIR/bin/ucx_info ]; then echo ucx_info\ not\ found ; exit 1 ; fi ;\
+   fi  \
+&& cd .. \
+&& echo ' mpich_options is set to' \$mpich_options \
 && wget  --progress=dot:giga https://www.mpich.org/static/downloads/$MPICH/mpich-'$MPICH'.tar.gz  -O - | tar xzf -   \
 && cd $mpich_prefix                                                        && \
 ./configure  --prefix=$MPICH_DIR   \
-$mpich_options \
---with-device=ch4:ofi  \
+\$mpich_options \
+--with-device=$MPICH_DEVICE  \
 --enable-fortran=all \
 --disable-opencl --enable-silent-rules \
 --disable-cuda \
+--with-xpmem=$MPICH_DIR \
  FFLAGS=' -fallow-argument-mismatch ' \
  FCFLAGS=' -fallow-argument-mismatch ' \
   FC=$FC \
@@ -156,6 +192,7 @@ fi	   \
 && export USE_SIMINT=y \
 && export SIMINT_MAXAM=5\
 && export SIMINT_VECTOR=AVX2 \
+&& export USE_OPENMP=1 \
 && export PYTHONVERSION=$(python -V| cut -d ' ' -f 2 |cut -d . -f 1-2) \
 && ls -l nwchem* || true \
 && /usr/bin/env|egrep BUILD_ \
@@ -222,8 +259,8 @@ rm -rf ~/apps  /var/intel  l_*sh ; fi"   \
 && echo "dddddddddddd" \
 &&  du -sk /tmp/* || true \
 &&  ls -lart /tmp ||true \
-&&  apt-get  -y purge cmake git  gcc-11  g++-11  gfortran-11  libstdc++-11-dev  libgcc-11-dev git \
-&& apt-get -y install libgcc-s1 libgfortran5 \
+&&  apt-get  -y purge cmake git  gcc-"$GCC_VERSION"  g++-"$GCC_VERSION"  gfortran-"$GCC_VERSION"  libstdc++-"$GCC_VERSION"-dev  libgcc-"$GCC_VERSION"-dev git \
+&& apt-get -y install libgcc-s1 libgfortran5 libatomic1 libquadmath0 \
 && apt-get -y autoremove && apt-get clean
 
 

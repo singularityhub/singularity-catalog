@@ -5,7 +5,6 @@ From: python:3.11
     # Copy your application's source code from host to container
     src /usr/src/code/src
     conf /usr/src/code/conf
-    requirements-rapidsai.txt /usr/src/code/requirements-rapidsai.txt
     requirements.txt /usr/src/code/requirements.txt
     requirements-torch.txt /usr/src/code/requirements-torch.txt
     

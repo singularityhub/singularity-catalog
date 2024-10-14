@@ -23,7 +23,10 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
     bash -c "if [[ -z '${MPI_IMPL}' ]]; then echo 'MPI_IMPL=mpich ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; else echo 'MPI_IMPL is ${MPI_IMPL}'; echo 'MPI_IMPL=${MPI_IMPL} ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; fi"
     bash -c "if [[ -z '${TAMM_BRANCH}' ]]; then echo 'TAMM_BRANCH=main' >> ${SINGULARITY_ROOTFS}/tamm_branch.txt ; else echo 'TAMM_BRANCH is ${TAMM_BRANCH}'; echo 'TAMM_BRANCH=${TAMM_BRANCH} ' >> ${SINGULARITY_ROOTFS}/tamm_branch.txt ; fi"
     bash -c "if [[ -z '${EXACHEM_BRANCH}' ]]; then echo 'EXACHEM_BRANCH=main ' >> ${SINGULARITY_ROOTFS}/exachem_branch.txt ; else echo 'EXACHEM_BRANCH is ${EXACHEM_BRANCH}'; echo 'EXACHEM_BRANCH=${EXACHEM_BRANCH} ' >> ${SINGULARITY_ROOTFS}/exachem_branch.txt ; fi"
-    bash -c "if [[ -z '${MPICH}' ]]; then echo 'MPICH=3.4.2 ' >> ${SINGULARITY_ROOTFS}/MPICH.txt ; else echo 'MPICH is ${MPICH}'; echo 'MPICH=${MPICH} ' >> ${SINGULARITY_ROOTFS}/mpich.txt ; fi"
+    bash -c "if [[ -z '${MPICH}' ]]; then echo 'MPICH=3.4.2 ' >> ${SINGULARITY_ROOTFS}/mpich.txt ; else echo 'MPICH is ${MPICH}'; echo 'MPICH=${MPICH} ' >> ${SINGULARITY_ROOTFS}/mpich.txt ; fi"
+    bash -c "if [[ -z '${MPICH_DEVICE}' ]]; then echo 'MPICH_DEVICE=ch4:ofi ' >> ${SINGULARITY_ROOTFS}/mpich_device.txt ; else echo 'MPICH_DEVICE is ${MPICH_DEVICE}'; echo 'MPICH_DEVICE=${MPICH_DEVICE} ' >> ${SINGULARITY_ROOTFS}/mpich_device.txt ; fi"
+    bash -c "if [[ -z '${SCALAPACK}' ]]; then echo 'SCALAPACK=y ' >> ${SINGULARITY_ROOTFS}/scalapack.txt ; else echo 'SCALAPACK is ${SCALAPACK}'; echo 'SCALAPACK=${SCALAPACK} ' >> ${SINGULARITY_ROOTFS}/scalapack.txt ; fi"
+    bash -c "if [[ -z '${ELPA}' ]]; then echo 'ELPA=y ' >> ${SINGULARITY_ROOTFS}/elpa.txt ; else echo 'ELPA is ${ELPA}'; echo 'ELPA=${ELPA} ' >> ${SINGULARITY_ROOTFS}/elpa.txt ; fi"
     ls -lrt ${CACHEDIR} || true
     ls -la  ${CACHEDIR}/ || true
     ls -la  ${CACHEDIR}/mpich || true
@@ -43,6 +46,16 @@ export DEBIAN_FRONTEND=noninteractive
 export `cat ./mpich.txt`
 export mpich_prefix=mpich-$MPICH
 echo mpich_prefix is $mpich_prefix 
+export mpich_major=$(echo $MPICH | cut -d . -f1) 
+echo mpich_major is $mpich_major 
+export mpich_minor=$(echo $MPICH | cut -d . -f2) 
+echo mpich_minor is $mpich_minor 
+echo mpich_major is $mpich_major 
+if [ $mpich_major = '4' ]; then
+    export mpich_options=' '
+else
+    export mpich_options=' '
+fi 
 export MPICH_DIR=/opt/mpich
 export SINGULARITY_mpich=$mpich
 export SINGULARITY_mpich_prefix=mpich-$mpich
@@ -75,10 +88,17 @@ export `cat ./ga_runtime.txt`
 export `cat ./mpi_impl.txt`
 export `cat ./exachem_branch.txt`
 export `cat ./tamm_branch.txt`
+export `cat ./mpich_device.txt`
+export `cat ./mpich.txt`
+export `cat ./scalapack.txt`
+export `cat ./elpa.txt`
+
 echo GPU is $GPU
 echo ROCM_PATH is ${ROCM_PATH}
 echo GA_RUNTIME is $GA_RUNTIME
 echo MPI_IMPL is $MPI_IMPL
+ echo MPICH is $MPICH
+ echo MPICH_DEVICE is $MPICH_DEVICE
 echo EXACHEM_BRANCH is $EXACHEM_BRANCH
 echo TAMM_BRANCH is $TAMM_BRANCH
  if [ "$GPU" = "amd" ]; then export FC=amdflang ; export CC=amdclang; export CXX=amdclang++; \
@@ -110,10 +130,15 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && apt-get -y install -y coreutils  tar libnl-3-200 libnl-route-3-200 libgomp1 libnuma1 \
  g++ gfortran   make  patch   unzip perl-base file \
  python3 python3-dev   unzip zip perl automake libtool autoconf flex  \
- libnuma-dev libslurm-dev libpmi2-0-dev libpmi0-dev  libnl-3-dev libnl-route-3-dev udev \
+ libnuma-dev  libnl-3-dev libnl-route-3-dev udev \
  librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers \
  libhwloc-dev  lsb-release \
  pkg-config gawk  software-properties-common  gdb \
+ && if [ $mpich_major = '4' ]; then
+    apt-get -y install -y libpmix-bin libpmix-dev libpmix2
+else
+    apt-get -y install -y libpmi2-0-dev libpmi0-dev
+fi \
 && export UBUNTU_CODE=$(lsb_release -c |cut -d : -f 2 | sed 's/\t//') \
 && echo UBUNTU_CODE is $UBUNTU_CODE \
 && export UBUNTU_RELEASE=$(lsb_release -r |cut -d : -f 2 | sed 's/\t//') \
@@ -124,14 +149,13 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-"$GCC_VERSION" 100 \
 && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-"$GCC_VERSION" 100 \
             && apt-get install  -q=2 -y  autoconf automake libtool git \
-&& bash -o  pipefail -c "if [[ $GPU == nvidia ]]; then  \	    
- curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-archive-keyring.gpg \
- && cp cuda-archive-keyring.gpg /usr/share/keyrings/cuda-archive-keyring.gpg \
- && echo 'deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /' |  tee /etc/apt/sources.list.d/cuda-ubuntu2204-x86_64.list \
- &&  curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin \
- && mv cuda-*.pin /etc/apt/preferences.d/cuda-repository-pin-600 \
- && apt-get  update \
-&& apt-get  -y install cuda-nvcc-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-cudart-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} libcublas-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} ; fi " \
+&& if [ $GPU = "nvidia" ]; then  curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-archive-keyring.gpg ;\
+ cp cuda-archive-keyring.gpg /usr/share/keyrings/cuda-archive-keyring.gpg ;\
+ echo 'deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /' |  tee /etc/apt/sources.list.d/cuda-ubuntu2204-x86_64.list ;\
+  curl -LJO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin ;\
+ mv cuda-*.pin /etc/apt/preferences.d/cuda-repository-pin-600 ;\
+  apt-get  update ;\
+apt-get  -y install cuda-nvcc-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-cudart-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} libcublas-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-libraries-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-nvml-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} ; export CUDA_PATH=/usr/local/cuda-"$CUDA_VERSION_MAJOR"."$CUDA_VERSION_MINOR"; ln -sf $CUDA_PATH/targets/x86_64-linux/lib $CUDA_PATH/targets/x86_64-linux/lib64; echo cublas $(ls -lrt $CUDA_PATH/lib64/libcublas*) ;   echo ls cudapath $(ls -lrt $CUDA_PATH ) || true; echo find libnvidia-ml $(find $CUDA_PATH -name "libnvidia-ml*") || true ;  echo cublas target $(ls -lrt $CUDA_PATH/targets/x86_64-linux/lib/libcublas*)|| true ;   fi  \
 && if [ $GPU = "amd" ]; then mkdir --parents --mode=0755 /etc/apt/keyrings \
 && wget --quiet https://repo.radeon.com/rocm/rocm.gpg.key -O - |  gpg --dearmor | tee /etc/apt/keyrings/rocm.gpg > /dev/null \
 && echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/'$ROCM_VERSION $UBUNTU_CODE 'main' | tee --append /etc/apt/sources.list.d/rocm.list \
@@ -160,24 +184,51 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && apt-get clean  \
 && echo 'ls -l /opt/mpich/lib/libmpi.a' $(ls -l /opt/mpich/lib/libmpi.a) || true  \
 && if [ $FC = gfortran ]; then export mpich_options=" FFLAGS=-fallow-argument-mismatch  FCFLAGS=-fallow-argument-mismatch " ; fi  \
-&& echo FC is $FC \
-&& echo mpich_options is $mpich_options \
-&& if [ ! -f /opt/mpich/lib/libmpi.a ]; then  \
+&& echo FC is $FC
+
+if [ ! -f /opt/mpich/lib/libmpi.a ]; then  \
 $FC -v \
+	 && if [ ${MPICH_DEVICE} = ch4:ofi ]; then echo 'installing libfabrics' ; \
+	   export libfabric_version="1.15.2" ; \
+	   echo using libfabric_version "$libfabric_version" ; \
+	    wget --progress=dot:giga  https://github.com/ofiwg/libfabric/releases/download/v"$libfabric_version"/libfabric-"$libfabric_version".tar.bz2 -O - | tar --no-same-owner  -xjf -  ; \
+ cd libfabric-$libfabric_version ; \
+ mkdir build && cd build  ; \
+ ../configure --prefix=$MPICH_DIR && make -j4 && make install ; \
+ if [ ! -f $MPICH_DIR/bin/fi_info ]; then echo fi_info\ not\ found ; exit 1 ; fi ;\
+   export mpich_options=$mpich_options" --with-libfabrics="$MPICH_DIR ; \
+	 else echo 'installing ucx' ; \
+   export ucx=1.15.0 ; \
+   echo 'the ucx version is'  $ucx ; \
+   wget --progress=dot:giga  https://github.com/openucx/ucx/releases/download/v$ucx/ucx-$ucx.tar.gz ; \
+   tar xzf ucx-$ucx.tar.gz && rm ucx-$ucx.tar.gz  ;\
+   cd ucx-$ucx ; \
+   wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/ucx_malloc.patch ;\
+   patch -p0 < ./ucx_malloc.patch ;\
+   mkdir -p build && cd build ;\
+   ../configure --prefix=$MPICH_DIR --disable-logging --disable-debug --disable-assertions --disable-params-check ;\
+   make -j4 && make install ;\
+   if [ ! -f $MPICH_DIR/bin/ucx_info ]; then echo ucx_info\ not\ found ; exit 1 ; fi 
+   export mpich_options=$mpich_options" --with-ucx="$MPICH_DIR ; \
+     fi \
+   && cd ../..  \
+&& echo ' mpich_options is set to' $mpich_options \
 && wget  --progress=dot:giga https://www.mpich.org/static/downloads/$MPICH/mpich-$MPICH.tar.gz  -O - | tar xzf - \
 && cd $mpich_prefix     \
-&& mv autogen.sh autogen.sh.org \
-&& wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/autogen.sh \
-&& chmod +x autogen.sh \
-&& wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/install-autotools.sh \
-&& chmod +x install-autotools.sh \
-&& wget https://github.com/pmodels/mpich/commit/3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch \
-&& patch -p1 < 3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch \
-&& cd maint/patches/optional/confdb && rm -f flang.patch &&  wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/flang.patch && cd ../../../../  && pwd \
-&& sh ./autogen.sh \
+&& if [ $mpich_major = '3' ]; then echo 'mpich 3 autotools ' ; \
+mv autogen.sh autogen.sh.org ;\
+wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/autogen.sh ;\
+ chmod +x autogen.sh ;\
+ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/install-autotools.sh ;\
+ chmod +x install-autotools.sh ;\
+ wget https://github.com/pmodels/mpich/commit/3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch ;\
+ patch -p1 < 3d351d49a07b401a35cb0e9b76fb077edca64eb9.patch ;\
+ cd maint/patches/optional/confdb && rm -f flang.patch &&  wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/flang.patch ; cd ../../../../  ; pwd ;\
+ sh ./autogen.sh ;\
+ fi \
 && ./configure  --prefix=$MPICH_DIR   \
  $mpich_options \
---with-device=ch4:ofi  \
+--with-device=$MPICH_DEVICE  \
 --enable-fortran=all \
 --disable-opencl --enable-silent-rules \
 --disable-cuda \
@@ -188,8 +239,9 @@ $FC -v \
 && make install                  \
 && if [ ! -f $MPICH_DIR/bin/mpif90 ]; then echo mpif90\ not\ found ; exit 1 ; fi \
 && echo mpif90 show is $($MPICH_DIR/bin/mpif90 -show) \
-&& cd .. ; rm -rf *tar*gz mpich-*  ;fi  \
-&& if [ ! -f $MPICH_DIR/bin/mpif90 ]; then echo mpif90\ not\ found ; exit 1 ; fi \
+&& cd .. ; rm -rf *tar*gz mpich-*  ;fi
+
+ if [ ! -f $MPICH_DIR/bin/mpif90 ]; then echo mpif90\ not\ found ; exit 1 ; fi \
 && echo '********' \
 && export PATH=$MPICH_DIR/bin:$PATH \
 && export LD_LIBRARY_PATH=$MPICH_DIR/lib:$LD_LIBRARY_PATH \
@@ -213,19 +265,25 @@ $FC -v \
 &&              git clone -b ${TAMM_BRANCH} --depth 100 https://github.com/NWChemEx/TAMM.git   \
 && 	     cd TAMM   \
 && 	     mkdir build && cd build  \
-&&              CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/opt/install/exachem -DMODULES='CC;DFT' "  \
+&&              CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/opt/install/exachem -DMODULES='CC' "  \
 &&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DDFT_CPU=ON " \
 && 	     CMAKE_OPTIONS="$CMAKE_OPTIONS -DBLIS_CONFIG=zen3 -DMARCH_FLAGS=-march=znver3"  \
 &&              if [ ${GPU} = "nvidia" ]; then echo "nvidia gpu "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_CUDA=ON -DGPU_ARCH=${GPU_ARCH}" ; fi  \
 &&              if [ ${GPU} = "amd" ]; then echo "amd gpu "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_HIP=ON -DROCM_ROOT=$ROCM_PATH -DGPU_ARCH=${GPU_ARCH} -DGCCROOT=/usr " ; ls -lrt $ROCM_PATH/include/rocblas/rocblas.h $ROCM_PATH/include/ ; ln -sf $ROCM_PATH/include/rocblas/rocblas.h $ROCM_PATH/include/rocblas.h; fi  \
-&&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_SCALAPACK=ON "   \
-&&              if [ ${CC} = "gcc" ]; then CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_ELPA=ON " ; fi  \
-&&              if [ ${CC} = "amdclang" ]; then echo "scalapack workaround for clang "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DUSE_SCALAPACK=ON -DCMAKE_C_FLAGS_INIT='-Wno-error=implicit-function-declaration' 	" ; fi  \
+&&             export USE_SCALAPACK=OFF \
+&&              if [ ${SCALAPACK} = "y" ]; then echo "SCALAPACK ON"; CMAKE_OPTIONS="$CMAKE_OPTIONS -DUSE_SCALAPACK=ON "; export USE_SCALAPACK=ON; fi   \
+&&              if [ \( ${CC} = "gcc" \) -a \(  ${ELPA} = "y" \) ]; then echo "ELPA ON"; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_ELPA=ON " ; fi  \
+&&              if [ \( ${CC} = "amdclang" \) -a \( ${SCALAPACK} = "y" \) ]; then echo "scalapack workaround for clang "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DCMAKE_C_FLAGS_INIT='-Wno-error=implicit-function-declaration' 	" ; fi  \
 &&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DGA_RUNTIME=${GA_RUNTIME}"  \
 &&              export CMAKE_OPTIONS   \
 && 	     echo CMAKE_OPTIONS $CMAKE_OPTIONS  \
-&& 	     USE_SCALAPACK=ON CC="$CC" CXX="$CXX" FC="$FC" cmake  $CMAKE_OPTIONS .. || { echo "Cmake failure"; exit 1; }  \
+&& 	     echo USE_SCALAPACK is set to $USE_SCALAPACK  \
+&& 	     USE_SCALAPACK="$USE_SCALAPACK" CC="$CC" CXX="$CXX" FC="$FC" cmake  $CMAKE_OPTIONS .. || { echo "Cmake failure"; exit 1; }  \
+&&           wget https://raw.githubusercontent.com/edoapra/exachem-container-images/refs/heads/pullsep09/patches/CMakeLists_elpa.patch \
+&&           patch -p1 < CMakeLists_elpa.patch \
 &&             make -j3 || { echo "Compilation failure in tamm step";
+               echo cublas $(ls -lrt $CUDA_PATH/lib64/libcublas*) || true ;  echo cublas target $(ls -lrt $CUDA_PATH/targets/x86_64-linux/lib64/libcublas*) ||true ;  echo ls cudapath $(ls -lrt $CUDA_PATH ) || true;  \
+	    cat $(find /opt/TAMM/ -name config.log) || true ; \
 	    cat $(find /opt/TAMM/ -name CMakeOutput.log) || true ; \
             cat $(find /opt/TAMM/ -name CMakeError.log ) || true; exit 1; } \
 && 	     echo exit code for TAMM compilation $?   \
@@ -264,7 +322,7 @@ $FC -v \
 	    && rm -rf /usr/share/doc \
             &&  apt-get -q=2 -y purge   patch curl  wget  make git cpp-"$GCC_VERSION" gfortran-"$GCC_VERSION" gcc-"$GCC_VERSION" libicu-dev libpython"$PY_VERSION"-dev libstdc++-"$GCC_VERSION"-dev libc6-dev libgcc-"$GCC_VERSION"-dev libgfortran-"$GCC_VERSION"-dev  || true \
             && apt-get -q=2 -y install libgfortran5 libgomp1 && apt-get clean \
-	    && if [ "$GPU" = nvidia ]; then apt-get purge -y cuda-cccl-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcublas-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" cuda-nvml-dev-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} ; fi\
+	    && if [ "$GPU" = nvidia ]; then apt-get purge -y cuda-cccl-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" libcublas-dev-"$CUDA_VERSION_MAJOR"-"$CUDA_VERSION_MINOR" ; fi\
 	    && if [ "$GPU" = "amd" ]; then  apt-get  purge -y   git-man openmp-extras \
 	    lib32gcc-11-dev  libc6-dev-i386 libx32gcc-11-dev libc6-dev-x32 lib32gcc-11-dev  \
 	    lib32asan6 lib32atomic1 lib32gcc-s1 lib32gomp1 lib32itm1 lib32quadmath0 lib32stdc++6 lib32ubsan1 libc6-i386 \

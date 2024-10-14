@@ -1,5 +1,5 @@
-Bootstrap: docker
-From: ubuntu:22.04
+Bootstrap: localimage
+From: ubuntu_jammy.sif
 %labels
 MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 
@@ -35,12 +35,12 @@ export DEBIAN_FRONTEND=noninteractive \
 && export OMPI_DIR=/opt/ompi\
 && export SINGULARITY_ompi=4.1.4\
 && export SINGULARITY_ompi_prefix=ompi-$ompi\
-&& export PATH=$OMPI_DIR/bin:/root/apps/oneapi/compiler/latest/bin:/root/apps/oneapi/compiler/latest/linux/bin/intel64:/root//apps/oneapi/compiler/latest/linux/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
-&& export LD_LIBRARY_PATH=$OMPI_DIR/lib:/root/apps/oneapi/compiler/latest/lib:/root/apps/oneapi/compiler/latest/linux/lib:/root/apps/oneapi/compiler/latest/linux/lib/x64:/root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin \
-&& export LIBRARY_PATH=/root/apps/oneapi/compiler/latest/lib:/root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/root/apps/oneapi/compiler/latest/linux/lib \
-&& export SINGULARITY_PATH=$OMPI_DIR/bin:/root/apps/oneapi/compiler/latest/bin:/root/apps/oneapi/compiler/latest/linux/bin/intel64:/root/apps/oneapi/compiler/latest/linux/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
-&& export SINGULARITY_LD_LIBRARY_PATH=$OMPI_DIR/lib:/root/apps/oneapi/compiler/latest/lib:/root/apps/oneapi/compiler/latest/linux/lib:/root/apps/oneapi/compiler/latest/linux/lib/x64:~/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin \
-&& export SINGULARITY_LIBRARY_PATH=/root/apps/oneapi/compiler/latest/lib:/root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/root/apps/oneapi/compiler/latest/linux/lib \
+&& export PATH=$OMPI_DIR/bin:/opt/intel/oneapi/compiler/latest/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+&& export LD_LIBRARY_PATH=$OMPI_DIR/lib:/opt/intel/oneapi/compiler/latest/lib \
+&& export LIBRARY_PATH=/opt/intel/oneapi/compiler/latest/lib \
+&& export SINGULARITY_PATH=$PATH \
+&& export SINGULARITY_LD_LIBRARY_PATH=$LD_LIBRARY_PATH \
+&& export SINGULARITY_LIBRARY_PATH=$LIBRARY_PATH \
 && export `cat ./fc.txt`\
 && export `cat ./armci_network.txt`\
 && export `cat ./mpi_impl.txt`\
@@ -155,7 +155,10 @@ fi	   \
 && bash -o pipefail -c "if [[ ! -f nwchem/src/GNUmakefile ]]; then git clone -b $BRANCH --depth 1  https://github.com/$MYUSERNAME/nwchem.git; fi" \
 && cd nwchem \
 && echo "output of git describe  --always " `git describe  --always` || true \
+&& pwd \
 && wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/largebasis.patch \
+&& wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/gt.patch \
+&& ls -l *patch \
 && patch -p1 < largebasis.patch \
 && export NWCHEM_TOP=`pwd` \
 && echo 'ls -lrta ' $(ls -lrta) \
@@ -167,18 +170,19 @@ fi	   \
 && make nwchem_config || { echo "config Failure"; exit 1; } \
 && bash -o pipefail -c " \
 echo 'ls ~/' `ls -lrt ~/` \
+&& if [ "$BRANCH" = "master" ]; then export GA_BRANCH=feature/malloc ; fi \
 && echo '222 PATH is ' `/usr/bin/env | grep PATH` \
 && echo '111 which FC ' `which $FC` || true \
 && mpif90 -show \
 && echo FC is $FC \
-&& $FC -v \
-&& make FC=$FC -j6 || { echo 'Compilation Failure'; exit 1; } \
+&& echo 'FC -v ' $FC -v \
+&& make V=-1 FC=$FC -j6 || { echo 'Compilation Failure'; exit 1; } \
 && FC=$FC ../contrib/getmem.nwchem 2000  || true \
 && make FC=$FC install INSTALL_PREFIX=/opt/nwchem \
 && ldd  ../bin/LINUX64/nwchem  "\
-&& if [ -f /root/apps/oneapi/compiler/latest/env/vars.sh ]; then  \
-rsync -av /root/apps/oneapi/compiler/latest/lib/lib*.so* $OMPI_DIR/lib/. ; fi \
-&&  rm -rf /root/apps/oneapi/  /opt/nwchem/src/tce /opt/nwchem/src/NWints/simint/libsimint_source/simint.l?_p?_d? \
+&& if [ -f /opt/intel/oneapi/compiler/latest/env/vars.sh ]; then  \
+rsync -av /opt/intel/oneapi/compiler/latest/lib/lib*.so* $OMPI_DIR/lib/. ; fi \
+&&  rm -rf /opt/intel/oneapi/  /opt/nwchem/src/tce /opt/nwchem/src/NWints/simint/libsimint_source/simint.l?_p?_d? || true \
 && DEBIAN_FRONTEND=noninteractive apt-get clean -y \
 && DEBIAN_FRONTEND=noninteractive apt-get -y install localepurge \
 && echo MANDELETE >  /etc/locale.nopurge \
