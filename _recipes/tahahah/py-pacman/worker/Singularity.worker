@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: python:3.9-slim
+Stage: spython-base
+
+%files
+requirements.txt .
+. .
+%post
+# Use an official Python runtime as a parent image
+
+# Set the working directory in the container
+mkdir -p /usr/src/app
+cd /usr/src/app
+
+# Copy the requirements.txt file into the container
+
+# Install the dependencies from requirements.txt
+pip install --no-cache-dir -r requirements.txt
+
+# Copy the current directory contents into the container at /usr/src/app
+
+
+# Run the worker
+%runscript
+cd /usr/src/app
+exec /bin/bash python ./worker.py "$@"
+%startscript
+cd /usr/src/app
+exec /bin/bash python ./worker.py "$@"

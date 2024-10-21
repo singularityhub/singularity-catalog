@@ -1,0 +1,48 @@
+Bootstrap: docker
+From: python:3.8
+Stage: spython-base
+
+%files
+start.sh /start.sh
+requirements.txt .
+. .
+%post
+# Use the official Python 3.8 image from the Docker Hub
+UV_SYSTEM_PYTHON=1
+
+# Add a script to start Xvfb and run your Python script
+chmod +x /start.sh
+
+# Set the working directory in the container
+mkdir -p /app
+cd /app
+
+# Copy the requirements.txt file into the container
+
+# Copy the rest of your application code into the container
+
+# Install the dependencies from requirements.txt and error if pip errors
+pip install -r requirements.txt
+
+# Ensure the directory exists and has the correct permissions
+mkdir -p /var/lib/apt/lists/partial && chmod -R 755 /var/lib/apt/lists
+
+# Install Xvfb, ALSA, and other necessary packages
+apt-get update && apt-get install -y \
+xvfb \
+alsa-utils \
+python3-pygame \
+&& rm -rf /var/lib/apt/lists/*
+
+# Create necessary directories for X11
+mkdir -p /tmp/.X11-unix && chmod 1777 /tmp/.X11-unix
+
+# Use the script as the entry point
+%environment
+export UV_SYSTEM_PYTHON=1
+%runscript
+cd /app
+exec /start.sh "$@"
+%startscript
+cd /app
+exec /start.sh "$@"

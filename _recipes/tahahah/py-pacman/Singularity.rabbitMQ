@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: rabbitmq
+Stage: spython-base
+
+%files
+rabbit_init.sh /init.sh
+%post
+
+# Define environment variables.
+RABBITMQ_USER=user
+RABBITMQ_PASSWORD=user
+RABBITMQ_PID_FILE=/var/lib/rabbitmq/mnesia/rabbitmq
+
+chmod +x /init.sh
+
+
+# Expose RabbitMQ ports
+# EXPOSE 5672 15672
+
+# Define default command
+%environment
+export RABBITMQ_USER=user
+export RABBITMQ_PASSWORD=user
+export RABBITMQ_PID_FILE=/var/lib/rabbitmq/mnesia/rabbitmq
+%runscript
+exec /bin/bash /init.sh "$@"
+%startscript
+exec /bin/bash /init.sh "$@"
