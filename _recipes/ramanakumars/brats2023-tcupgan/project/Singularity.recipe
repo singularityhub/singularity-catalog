@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: ramanakumars/tcupgan:latest
+
+%post
+bash -c "cd /tcupgan && git pull origin main"
+
+# A docker image must define an entry point. Rename `entry_point.py` to your main python file. Adjust if project
+# contains multiple files.
+
+%runscript
+exec python3 /tcupgan/mlcube.py "$@"
+%startscript
+exec python3 /tcupgan/mlcube.py "$@"

@@ -9,6 +9,7 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 &&     rm -f ${SINGULARITY_ROOTFS}/*.txt || true\
 &&     bash -c "if [[ -z '${FC}' ]]; then echo 'FC=gfortran ' >> ${SINGULARITY_ROOTFS}/fc.txt ; else echo 'FC is ${FC}'; echo 'FC=${FC} ' >> ${SINGULARITY_ROOTFS}/fc.txt ; fi"\
 &&     bash -c "if [[ -z '${MPICH}' ]]; then echo 'MPICH=3.4.2 ' >> ${SINGULARITY_ROOTFS}/MPICH.txt ; else echo 'MPICH is ${MPICH}'; echo 'MPICH=${MPICH} ' >> ${SINGULARITY_ROOTFS}/mpich.txt ; fi"\
+&&     bash -c "if [[ -z '${OFI}' ]]; then echo 'OFI=builtin ' >> ${SINGULARITY_ROOTFS}/OFI.txt ; else echo 'OFI is ${OFI}'; echo 'OFI=${OFI} ' >> ${SINGULARITY_ROOTFS}/ofi.txt ; fi"\
 &&     bash -c "if [[ -z '${MPICH_DEVICE}' ]]; then echo 'MPICH_DEVICE=ch4:ofi ' >> ${SINGULARITY_ROOTFS}/MPICH_DEVICE.txt ; else echo 'MPICH_DEVICE is ${MPICH_DEVICE}'; echo 'MPICH_DEVICE=${MPICH_DEVICE} ' >> ${SINGULARITY_ROOTFS}/mpich_device.txt ; fi"\
 &&     bash -c "if [[ -z '${ARMCI_NETWORK}' ]]; then echo 'ARMCI_NETWORK=MPI-PR ' >> ${SINGULARITY_ROOTFS}/armci_network.txt ; else echo 'ARMCI_NETWORK is ${ARMCI_NETWORK}'; echo 'ARMCI_NETWORK=${ARMCI_NETWORK} ' >> ${SINGULARITY_ROOTFS}/armci_network.txt ; fi"\
 &&     bash -c "if [[ -z '${MPI_IMPL}' ]]; then echo 'MPI_IMPL=mpich ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; else echo 'MPI_IMPL is ${MPI_IMPL}'; echo 'MPI_IMPL=${MPI_IMPL} ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; fi"\
@@ -18,12 +19,12 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 &&     ls -la  ${CACHEDIR}/ || true\
 &&     ls -la  ${CACHEDIR}/mpich || true\
 &&     ls -la  ${CACHEDIR}/mpich/lib || true\
-&&     ls -la  ${CACHEDIR}/simint.l5_p5_d1.install/lib/libnwc_simint.a || true\
-&&     ls -la  ${CACHEDIR}/simint.l5_p5_d1.install/lib/libsimint.a ||true\
+&&     ls -la  ${CACHEDIR}/simint_install/lib/libnwc_simint.a || true\
+&&     ls -la  ${CACHEDIR}/simint_install/lib/libsimint.a ||true\
 &&     bash -c "if [ ! -z "${GITHUB_WORKSPACE}" ]; then mkdir -p ${SINGULARITY_ROOTFS}/nwchem/contrib; rsync -a ${GITHUB_WORKSPACE}/nwchem/src ${SINGULARITY_ROOTFS}/nwchem/. ; rsync -a ${GITHUB_WORKSPACE}/nwchem/contrib/getmem.nwchem ${SINGULARITY_ROOTFS}/nwchem/contrib/. ;rsync -a ${GITHUB_WORKSPACE}/nwchem/travis ${SINGULARITY_ROOTFS}/nwchem/. ; rsync -a ${GITHUB_WORKSPACE}/nwchem/.git ${SINGULARITY_ROOTFS}/nwchem/. ; fi"\
 &&     bash -c "if [[  -f ${CACHEDIR}/mpich/lib/libmpi.a ]]; then mkdir -p ${SINGULARITY_ROOTFS}/opt ;rsync -a ${CACHEDIR}/mpich ${SINGULARITY_ROOTFS}/opt/. ; echo mpich cache fetched ;fi"\
 &&     bash -c "if [[  -f ${CACHEDIR}/libext/lib/libnwc_openblas.a ]]; then rsync -a ${CACHEDIR}/libext/* ${SINGULARITY_ROOTFS}/nwchem/src/libext/. ; echo libext cache fetched ;fi"\
-&&     bash -c "if [[  -f ${CACHEDIR}/simint.l5_p5_d1.install/lib/libsimint.a ]]; then rsync -av ${CACHEDIR}/simint.l5_p5_d1.install ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/. ; ln -sf ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/simint.l5_p5_d1.install  ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/simint_install;  ls -l ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/; echo simint cache fetched ;fi"
+&&     bash -c "if [[  -f ${CACHEDIR}/simint_install/lib/libsimint.a ]]; then rsync -av ${CACHEDIR}/simint* ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/. ;  ls -l ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/; echo simint cache fetched ;fi"
 
 ##%files
 ##    ${GITHUB_WORKSPACE}/nwchem nwchem
@@ -40,6 +41,7 @@ export DEBIAN_FRONTEND=noninteractive \
 && export SINGULARITY_LIBRARY_PATH=/root/apps/oneapi/compiler/latest/lib:/root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/root/apps/oneapi/compiler/latest/linux/lib \
 && export `cat ./fc.txt`\
 && export `cat ./mpich.txt`\
+&& export `cat ./ofi.txt`\
 && export `cat ./armci_network.txt`\
 && export `cat ./mpi_impl.txt`\
 && export `cat ./branch.txt`\
@@ -47,6 +49,7 @@ export DEBIAN_FRONTEND=noninteractive \
 && export `cat ./mpich_device.txt`\
 && echo FC is $FC\
 && echo MPICH is $MPICH\
+&& echo OFI is $OFI\
 && echo MPICH_DEVICE is $MPICH_DEVICE\
 && export mpich_prefix=mpich-$MPICH\
 && echo mpich_prefix is $mpich_prefix \
@@ -87,13 +90,15 @@ fi \
 && apt-get -y install -y   tar libnl-3-200 libnl-route-3-200 libgomp1 libnuma1 \
  g++ gfortran   make patch   unzip perl-base file \
  python3 python3-dev cmake  unzip zip perl automake libtool autoconf flex  \
- libnuma-dev libslurm-dev \
+ libnuma-dev libslurm-dev slurm-client\
  libpmix-dev libpmix2 \
 libpmi2-0-dev libpmi0-dev  \
  libnl-3-dev  libnl-route-3-dev udev \
  librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers  \
  libhwloc-dev \
  pkg-config gawk  software-properties-common gdb\
+-&&  apt-get -y install -y libpmix-bin libpmix-dev libpmix2 \
+-&&    apt-get -y install -y libpmi2-0-dev libpmi0-dev \
 && if [ $mpich_major = '5' ]; then
     apt-get -y install -y libpmix-bin libpmix-dev libpmix2
 else
@@ -142,6 +147,14 @@ $FC -v \
    make -j4 && make install ;\
    export mpich_options='$mpich_options --with-ucx=$MPICH_DIR' ; \
  if [ ! -f $MPICH_DIR/bin/ucx_info ]; then echo ucx_info\ not\ found ; exit 1 ; fi ;\
+elif [[ ${OFI} == builtin ]]; then echo 'builtin OFI - nothing to download'; \
+else wget --progress=dot:giga  https://github.com/ofiwg/libfabric/releases/download/v'$OFI'/libfabric-'$OFI'.tar.bz2 -O - | tar --no-same-owner  -xjf - ; \
+  cd libfabric-'$OFI' ;\
+ mkdir build && cd build ; \
+ ../configure --prefix=$MPICH_DIR  ;\
+ make -j4 && make install ; \
+ export mpich_options='$mpich_options --with-libfabric=$MPICH_DIR' ; \
+if [ ! -f $MPICH_DIR/bin/fi_info ]; then echo fi_info\ not\ found ; exit 1 ; fi \
    fi  \
 && cd .. \
 && echo ' mpich_options is set to' \$mpich_options \
@@ -190,7 +203,7 @@ fi	   \
 && export EACCSD=y \
 && export MRCC_METHODS=y \
 && export USE_SIMINT=y \
-&& export SIMINT_MAXAM=5\
+&& export SIMINT_MAXAM=6\
 && export SIMINT_VECTOR=AVX2 \
 && export USE_OPENMP=1 \
 && export PYTHONVERSION=$(python -V| cut -d ' ' -f 2 |cut -d . -f 1-2) \
@@ -227,7 +240,7 @@ echo 'ls ~/' `ls -lrt ~/` \
 && mpif90 -show \
 && echo FC is $FC \
 && $FC -v \
-&& make FC=$FC -j6 || { echo 'Compilation Failure'; exit 1; } \
+&& make GA_DEV=1 GA_BRANCH=hostid GA_URL=https://github.com/edoapra/ga.git FC=$FC -j6 || { echo 'Compilation Failure'; exit 1; } \
 && FC=$FC ../contrib/getmem.nwchem 2000   \
 && make FC=$FC install INSTALL_PREFIX=/opt/nwchem \
 && ldd  ../bin/LINUX64/nwchem  "\

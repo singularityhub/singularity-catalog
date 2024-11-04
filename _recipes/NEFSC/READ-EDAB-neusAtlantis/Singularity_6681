@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+  Atlantis v6681 model
+
+%labels
+  Author andrew.beet@noaa.gov
+
+%environment
+  TZ=UTC
+  DEBIAN_FRONTEND=noninteractive
+
+%files
+  /contrib/atlantisCode/v6681/atlantis /app/atlantis
+  /contrib/atlantisCode/v6681/svn /app/.svn
+
+%post
+  export TZ=UTC
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get update && apt-get install -yq build-essential autoconf libnetcdf-dev libxml2-dev libproj-dev subversion valgrind dos2unix nano r-base-core
+  cd /app/atlantis
+  aclocal && autoheader && autoconf && automake -a && ./configure --enable-rassesslink && make && make install
+  mkdir /app/model
+ 
+%runscript
+  cd /app/model 
+  ./RunAtlantis.sh
+
+%startscript
+ cd /app/model
+ ./RunAtlantis.sh

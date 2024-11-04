@@ -1,0 +1,37 @@
+Bootstrap: docker
+From: python:3.11-slim
+
+%post
+
+    apt update -y && apt install -y git build-essential &&
+        apt install -y wget gcc make git libbz2-dev zlib1g zlib1g-dev \
+            liblzma5 liblzma-dev libncurses5 libncurses5-dev bzip2 \
+            libcurl4-openssl-dev libssl-dev libgetopt-complete-perl
+
+    export VERSION=1.16
+    export HTSVERSION=1.16
+
+    cd /usr/local/ \
+        && git clone https://github.com/samtools/htslib.git \
+        && cd htslib && git checkout ${HTSVERSION} \
+        && git submodule update --init --recursive \
+        && make \
+        && cd .. \
+        && git clone https://github.com/samtools/bcftools.git \
+        && cd bcftools \
+        && git checkout ${VERSION} \
+        && make \
+        && make install \
+        && rm -rf /usr/local/bcftools \
+        && rm -rf /usr/local/htslib \
+        && apt-get remove -y wget gcc make libbz2-dev zlib1g-dev liblzma-dev libncurses-dev bzip2 \
+
+
+    apt autoremove -y
+    apt clean -y
+    rm -rf /var/lib/apt/lists/*
+
+
+%runscript
+    exec bcftools "$@"
+

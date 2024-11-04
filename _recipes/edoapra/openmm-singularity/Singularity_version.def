@@ -7,16 +7,18 @@ Stage: spython-base
 %arguments
    CUDA_DRIVER_VERSION=530
    CUDA_VERSION=12.2.0
-   MY_BOOTSTRAP=nvidia/cuda:{{ CUDA_VERSION }}-runtime-ubuntu22.04
+   UBUNTU_VERSION=22.04
+   MY_BOOTSTRAP=nvidia/cuda:{{ CUDA_VERSION }}-runtime-ubuntu{{ UBUNTU_VERSION }}
 
 %files
+#data/notExistPDBsList /notExistPDBsList
 %labels
 maintainer  Edoardo Apra <edoardo.apra@pnnl.gov>
 org.opencontainers.image.version  "1.0.0"
 org.opencontainers.image.authors  "Edoardo Apra"
 %post
 
-apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get -q install -y wget libstdc++6 gcc g++ gfortran tzdata lsof zlib1g-dev && \
+apt-get -q update && DEBIAN_FRONTEND=noninteractive apt-get -q install -y wget libstdc++6 gcc g++ gfortran tzdata lsof zlib1g-dev make && \
 ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime && \
 dpkg-reconfigure --frontend noninteractive tzdata && \
 if [ {{  CUDA_DRIVER_VERSION }} != "0" ]; then echo CUDA_DRIVER_VERSION is {{ CUDA_DRIVER_VERSION }} ; \
@@ -33,15 +35,20 @@ MYPREFIX="/opt/conda"
     bash /tmp/$MINIFORGE3 -b -u -p $MYPREFIX && \
     rm -f /tmp/$MINIFORGE3 && \
     export PATH="$MYPREFIX/bin:$PATH" && \
-    eval "$($MYPREFIX/bin/conda shell.dash hook)" && \
-      conda update -n base -c conda-forge conda  && \
-      conda install -y -c conda-forge micromamba && \
-    export MAMBA_ROOT_PREFIX=/opt/micromamba && \
-      eval "$(micromamba shell hook --shell dash)" && \
-    export MAMBA_ROOT_PREFIX=/opt/micromamba 
+    eval "$($MYPREFIX/bin/conda shell.dash hook)" 
+      conda update --quiet -y -n base -c conda-forge conda 
+      conda install -y -c conda-forge micromamba
+#      ls -lrt
+#      ls -lrta /opt
+#      echo "find micromamba in /opt" $(find /opt  -name micromamba) ||true
+#      echo "find micromamba from pwd" $(find .  -name micromamba) ||true
+#    export MAMBA_ROOT_PREFIX=/opt/micromamba 
+#      eval "$(micromamba shell hook --shell dash)" 
+    conda create -y --name py38 python==3.8
+    conda activate py38 
 export CONDA_FETCH_THREADS=2 # parallel download for recent conda versions
 export MAX_JOBS=2 # ninja workers
- eval "$(${MYPREFIX}/bin/conda shell.bash hook)"
+# eval "$(${MYPREFIX}/bin/conda shell.bash hook)"
 #hack to fix miniconda GLIBCXX error
 #conda install -q -y libstdcxx-ng
 #ls -l /opt/miniconda3/lib/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so.6 || true
@@ -59,7 +66,71 @@ micromamba install  -y -c conda-forge  yank
 
 micromamba install -y -c conda-forge flask=2.1.3
 micromamba install -y -c conda-forge werkzeug=2.0.3
+#openawsem & req.
 micromamba install -y -c conda-forge openawsem
+# use python 3.9 and pin     biopython=1.79 to avoid the error "cannot import name 'three_to_one' 
+    micromamba install -c conda-forge -y biopython=1.79 
+OPENAWSEM_LOCATION=$(python -c "import openawsem; print(openawsem.__location__)")
+echo OPENAWSEM_LOCATION is $OPENAWSEM_LOCATION
+cd /opt/conda    
+    mkdir openawsem.reqs
+    cd openawsem.reqs
+    mkdir stride-src && cd stride-src
+    wget https://webclu.bio.wzw.tum.de/stride/stride.tar.gz
+tar -xvzf stride.tar.gz
+rm stride.tar.gz
+make
+mv stride ../
+cd ..
+rm -rf stride-src
+wget https://raw.githubusercontent.com/realbigws/Predict_Property/refs/heads/master/Predict_Property.sh 
+chmod +x Predict_Property.sh
+cd ..
+ls -lrt
+
+micromamba install -c conda-forge -c bioconda -y blast
+# replace ftp://ftp.wwpdb.org with https://files.rcsb.org since it has DNS failures
+BIOPYTHON_LOCATION=$(python -c "import Bio; print(Bio.__location__)") || true
+echo BIOPTYHON_LOCATION is $BIOPTYHON_LOCATION || true
+sed -i 's/ftp:\/\/ftp.wwpdb.org/https:\/\/files.rcsb.org/' /opt/conda/envs/py38/lib/python3.8/site-packages/Bio/PDB/PDBList.py
+cd $OPENAWSEM_LOCATION/helperFunctions
+sed -i 's/ftp:\/\/ftp.wwpdb.org/https:\/\/files.rcsb.org/'  create_fragment_memory.py
+sed -i 's/ftp:\/\/ftp.wwpdb.org/https:\/\/files.rcsb.org/' MultCha_prepFrags_index.py
+
+
+cd /
+
+wget https://files.rcsb.org/pub/pdb/derived_data/pdb_seqres.txt
+OPENAWSEM_LOCATION=$(python -c "import openawsem; print(openawsem.__location__)")
+echo OPENAWSEM_LOCATION is $OPENAWSEM_LOCATION
+mkdir -p $OPENAWSEM_LOCATION/data
+cp pdb_seqres.txt $OPENAWSEM_LOCATION/data
+touch $OPENAWSEM_LOCATION/data/notExistPDBsList
+#cp /notExistPDBsList  $OPENAWSEM_LOCATION/data
+rm pdb_seqres.txt #/notExistPDBsList
+
+#needed for pdb_reres
+micromamba install -c conda-forge pdb-tools
+
+export COMMIT=3327f28b49e388e1ce4a6a83ab2f0c0ac7ca5050
+wget https://github.com/markovmodel/PyEMMA/archive/$COMMIT.tar.gz -O pyemma.tar.gz
+tar xzf pyemma.tar.gz
+rm pyemma.tar.gz
+cd PyEMMA-*
+pip install --user -e .
+cd ..
+rm -rf PyEMMA-*
+#git clone https://github.com/cabb99/awsemtools.git
+export COMMIT=cd5c6a914d85e9b05bbf9eef13947aa2f596d9fc
+wget https://github.com/cabb99/awsemtools/archive/$COMMIT.tar.gz -O awsemtools.tar.gz
+tar xzf awsemtools.tar.gz
+rm awsemtools.tar.gz
+cd awsemtools-*
+pip install --user -e .
+cd ..
+rm -rf awsemtools-*
+
+#micromamba install -c conda-forge pyemma
 
     conda clean -y --force-pkgs-dirs
     du -sk $MYPREFIX/lib/*|sort -n    
@@ -77,7 +148,14 @@ python -m pip install matplotlib mdtraj nglview numpy pandas ParmEd
 %environment
 export CUDA=$(echo $CUDA_VERSION |cut -c 1-4)
 MYPREFIX="/opt/conda"
-export PATH=$MYPREFIX/bin:$MYPREFIX/condabin:$PATH
+CONDA_PREFIX=$MYPREFIX/envs/py38
+CONDA_PROMPT_MODIFIER=(py38) 
+CONDA_DEFAULT_ENV=py38
+CONDA_EXE=$MYPREFIX/bin/conda
+CONDA_PREFIX=$MYPREFIX/envs/py38
+MAMBA_ROOT_PREFIX=$MYPREFIX/micromamba
+CONDA_PYTHON_EXE=$MYPREFIX/bin/python
+export PATH=$CONDA_PREFIX/bin:$MYPREFIX/bin:$MYPREFIX/condabin:$MYPREFIX/openawsem.reqs:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-${CUDA}/compat:/usr/local/cuda-${CUDA}/lib64:$LD_LIBRARY_PATH
 #%runscript
 #exec /bin/bash "$@"

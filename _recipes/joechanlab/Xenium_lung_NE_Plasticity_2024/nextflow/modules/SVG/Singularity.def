@@ -1,0 +1,13 @@
+Bootstrap: docker
+
+From: continuumio/miniconda3
+
+%post
+    wget -O environment.yml https://raw.githubusercontent.com/joechanlab/Xenium_lung_NE_Plasticity_2024/main/nextflow/modules/SVG/environment.yml
+    /opt/conda/bin/conda env create -f environment.yml
+
+%environment
+    export PATH=/opt/conda/envs/squidpy/bin/:$PATH
+
+%runscript
+    exec python "$@"

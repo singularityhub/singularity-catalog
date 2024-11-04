@@ -1,29 +1,33 @@
-Bootstrap: localimage
-From: micromamba_1.4.3.img
-
-
+Bootstrap: docker
+From: python:3.11-slim
 
 %post
-    apt -y update && apt -y upgrade
+    # Update package list and install build tools, dependencies, and gnuplot
+    apt-get update && apt-get install -y \
+        build-essential \
+        g++ \
+        git \
+        make \
+        zlib1g-dev \
+        libbz2-dev \
+        liblzma-dev \
+        gnuplot \
+        wget
 
-    # export the PATH here so that pip is found later on
-    export PATH=$PATH:/opt/conda/envs/main/bin/
+    # Install MUMmer
+    cd /opt
+    git clone https://github.com/mummer4/mummer.git
+    cd mummer
+    #make install
 
-    # an alias
-    export OPTS=" -q -c conda-forge -c bioconda -n main -y "
-
-    micromamba install $OPTS python="3.10"
-
-    micromamba install $OPTS "mummer==3.23"
-
-    # cleanup
-    micromamba clean --packages -y
-    micromamba clean --all -y
-    rm -rf /opt/condas/pkg
+    # Clean up
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 %environment
-    export PATH=$PATH:/opt/conda/envs/main/bin/
+    export PATH="/opt/mummer:$PATH"
 
 %runscript
-    # Set the default command to run sequana
-    mummer "$@"
+    exec "$@"
+
+
+

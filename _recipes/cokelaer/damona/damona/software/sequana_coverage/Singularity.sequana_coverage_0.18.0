@@ -1,0 +1,37 @@
+Bootstrap: docker
+From: alpine:3.18
+
+%files
+    mosdepth
+
+%post
+
+    SAMTOOLS_VERSION=1.17
+    SEQUANA_VERSION=0.18
+
+    apk update && apk upgrade && apk add git bash libc6-compat python3
+
+    # SAMTOOLS
+    apk add autoconf automake make gcc musl-dev perl zlib-dev bzip2-dev xz-dev curl-dev ncurses-dev
+
+    curl -L https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.    tar.bz2 | tar -jxf - \
+      && cd samtools-${SAMTOOLS_VERSION} \
+      && ./configure && make all all-htslib && make install
+      rm -rf samtools-${SAMTOOLS_VERSION}
+
+
+    pip install cython
+    pip install sequana=="$SEQUANA_VERSION"
+
+    cp  mosdepth /usr/loca/bin/
+
+    # cleanup
+    apk del git
+    rm -f /var/cache/apk/*
+
+%environment
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+
+%runscript
+    exec sequana_coverage "$@"
+

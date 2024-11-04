@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: python:3.12-slim
+
+%post
+    apt-get update && apt-get install -y wget git
+    wget https://raw.githubusercontent.com/joechanlab/Xenium_lung_NE_Plasticity_2024/main/nextflow/modules/SCENVI/requirements.txt
+    pip install -r requirements.txt
+    mkdir -p /tmp/numba_cache
+    chmod 777 /tmp/numba_cache
+
+%environment
+    export NUMBA_CACHE_DIR=/tmp/numba_cache
+
+%runscript
+    exec python "$@"
+
+%test
+    # Test if the virtual environment is set up correctly
+    python -c "import scenvi"

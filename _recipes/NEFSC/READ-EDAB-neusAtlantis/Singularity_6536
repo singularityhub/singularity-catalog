@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: debian:buster
+
+%help
+  Atlantis v6536 model
+
+%labels
+  Author andrew.beet@noaa.gov
+
+%files
+  /contrib/atlantisCode/v6536/atlantis /app/atlantis
+  /contrib/atlantisCode/v6536/svn /app/.svn
+
+%post
+  apt-get update && apt-get install -yq build-essential autoconf libnetcdf-dev libxml2-dev libproj-dev subversion valgrind dos2unix nano
+  cd /app/atlantis
+  aclocal && autoheader && autoconf && automake -a && ./configure && make && make install
+  mkdir /app/model
+
+%runscript
+  cd /app/model 
+  ./RunAtlantis.sh
+
+%startscript
+ cd /app/model
+ ./RunAtlantis.sh

@@ -1,0 +1,11 @@
+Bootstrap: docker
+From: lemene/pecat:v0.0.3
+
+%post
+
+%environment
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+
+%runscript
+    exec pecat.pl "$@"
+

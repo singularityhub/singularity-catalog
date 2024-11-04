@@ -1,0 +1,74 @@
+Bootstrap:shub
+From:ResearchIT/spack-singularity:openmpi
+
+%labels
+MAINTAINER severin@iastate.edu
+APPLICATION MaSurCArunScripts
+
+%help
+This container contains all the necessary programs to run MaSuRCA
+See https://github.com/ISUGIFsingularity/canu.git for more inforation
+
+%environment
+source /etc/profile.d/modules.sh
+SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+source /etc/profile.d/modules.sh
+source $SPACK_ROOT/share/spack/setup-env.sh
+#for d in /opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/*/bin; do export PATH="$PATH:$d"; done
+
+module load perl
+module load jdk
+module load gnuplot
+module load canu
+
+
+
+
+%post
+export SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+
+# make sure spack is up2date
+cd $SPACK_ROOT
+git pull
+
+# modify package to include latest verson
+awk '/v1.5.tar.gz/ { print; print "\n";printf "    version('\''1.8.0'\'', '\''b2543a06787368763d2183388160a00e'\'', url='\''https://github.com/marbl/canu/releases/download/v1.8/canu-1.8.Linux-amd64.tar.xz'\'')"; next }1' $SPACK_ROOT/var/spack/repos/builtin/packages/canu/package.py  > package.py
+
+
+mv package.py $SPACK_ROOT/var/spack/repos/builtin/packages/canu/
+cd -
+
+
+yum -y install bc paste wget
+yum clean all
+
+export FORCE_UNSAFE_CONFIGURE=1
+
+source $SPACK_ROOT/share/spack/setup-env.sh
+
+
+#bzip.org is down, dfetching repo from fossies.org into mirror
+mkdir -p $SPACK_ROOT/mirror/bzip2
+spack mirror add local $SPACK_ROOT/mirror
+pushd $SPACK_ROOT/mirror/bzip2
+wget https://fossies.org/linux/misc/bzip2-1.0.6.tar.gz
+popd
+
+
+
+
+
+spack install canu@1.8.0
+
+
+
+#for d in /opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/*/bin; do export PATH="$PATH:$d"; done
+
+
+cd $SPACK_ROOT
+
+%runscript

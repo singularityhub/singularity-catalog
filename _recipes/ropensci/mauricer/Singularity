@@ -57,4 +57,4 @@ is_beast2_pkg_installed(name = "bacter", beast2_folder = beast2_folder)
 
     URL https://github.com/ropensci/mauricer
 
-    VERSION 2.5.1
+    VERSION 2.5.5
