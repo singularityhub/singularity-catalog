@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: ubuntu:jammy
+
+%labels
+    Author Luiz Carvalho
+
+%help
+	GOAL: Compile black solver (v0.5.2)
+	TORUN: singularity build black.sif Singularity
+	TOCALL: singularity exec black.sif /home/black/build/black --help
+
+%post
+    apt-get update -y
+    apt-get install wget nano git build-essential cmake libtsl-hopscotch-map-dev libfmt-dev libz3-dev libcryptominisat5-dev minisat libz-dev libgmp-dev -y 
+    apt-get install g++ python3 python3-pip openjdk-17-jdk time -y
+   	python3 -m pip install toml
+    echo ">>>nlohmann-json instalation<<<"
+    cd /home
+    git clone https://github.com/nlohmann/json.git
+    cd json
+    mkdir build && cd build
+    cmake -DJSON_BuildTests=OFF ..
+    make install
+    echo ">>>black instalation<<<"
+    cd /home
+    git clone https://github.com/black-sat/black.git
+    cd black
+    git checkout v0.5.2
+    echo ">>>mathsat instalation<<<"
+    ./download-mathsat.sh
+    echo ">>>black instalation<<<"
+    mkdir build
+    cd build
+    cmake .. -DENABLE_Z3=YES -DENABLE_MATHSAT=YES -DENABLE_CMSAT=YES -DENABLE_MINISAT=NO -DBLACK_DEFAULT_BACKEND=z3
+    make
+    echo ">>>Black examples<<<"
+    ./black --help
+    ./black solve -B z3 -f 'a && !a'
+    ./black solve -B z3 -f 'a && a'

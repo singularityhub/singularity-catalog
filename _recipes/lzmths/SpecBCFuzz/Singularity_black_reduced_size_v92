@@ -1,0 +1,55 @@
+Bootstrap: docker
+From: ubuntu:jammy
+
+%labels
+    Author Luiz Carvalho
+
+%help
+	GOAL: Compile black solver (v0.9.2)
+	TORUN: singularity build black.sif Singularity
+	TOCALL: singularity exec black.sif /home/black/build/black --help
+
+%post
+    apt-get update -y
+    apt-get install wget nano git build-essential cmake libtsl-hopscotch-map-dev libfmt-dev libz3-dev libcryptominisat5-dev minisat libz-dev libgmp-dev -y 
+    apt-get install g++ python3 python3-pip openjdk-17-jdk time -y
+   	python3 -m pip install toml
+    echo ">>>nlohmann-json instalation<<<"
+    cd /home
+    git clone https://github.com/nlohmann/json.git
+    cd json
+    mkdir build && cd build
+    cmake -DJSON_BuildTests=OFF ..
+    make install
+    echo ">>>cvc5 instalation<<<"
+    cd /home
+    git clone https://github.com/cvc5/cvc5/
+    cd cvc5
+    git checkout cvc5-1.0.0
+    chmod +x configure.sh
+    ./configure.sh --auto-download
+    cd build
+    make
+    make install
+    echo ">>>black instalation<<<"
+    cd /home
+    git clone https://github.com/black-sat/black.git
+    cd black
+    git checkout v0.9.2
+    echo ">>>mathsat instalation<<<"
+    ./download-mathsat.sh
+    echo ">>>black instalation<<<"
+    mkdir build
+    cd build
+    cmake .. -DENABLE_Z3=YES -DENABLE_MATHSAT=YES -DENABLE_CMSAT=YES -DENABLE_CVC5=YES -DENABLE_MINISAT=NO -DBLACK_DEFAULT_BACKEND=z3
+    make
+    echo ">>>Black examples<<<"
+    ./black --help
+    ./black solve -B z3 -f 'a && !a'
+    ./black solve -B z3 -f 'a && a'
+    echo ">>>Clean UP<<<"
+    rm -rf /home/cvc5/
+    rm -rf /home/json/
+    apt-get remove wget git build-essential cmake libz-dev -y
+    apt-get remove g++ python3 python3-pip openjdk-17-jdk -y
+    apt-get autoremove -y

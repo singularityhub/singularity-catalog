@@ -1,0 +1,22 @@
+	Bootstrap: docker                                                                                                                                                                    
+From: ubuntu:latest                                                                                                                                                                  
+                                                                                                                                                                                     
+%environment
+    source /opt/software/conda/bin/activate /opt/software/conda-env
+    export PATH=/opt/software/CAT/CAT_pack/:$PATH
+%post
+    apt -y update
+    apt -y install -y build-essential wget git automake zlib1g zlib1g-dev pkg-config curl
+
+    mkdir -p /opt/software && cd /opt/software
+
+    git clone https://github.com/dutilh/CAT
+
+    curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    sh ./Miniconda3-latest-Linux-x86_64.sh -p /opt/software/conda -b
+       
+    /opt/software/conda/bin/conda config --add channels bioconda
+    /opt/software/conda/bin/conda config --add channels conda-forge
+
+    /opt/software/conda/bin/conda create -p /opt/software/conda-env -y  spades bbmap quast emboss minimap2 samtools qualimap hisat2 stringtie metabat2 barrnap diamond blast checkm-genome cat busco=5.7 
+    /opt/software/conda/bin/conda clean --all --yes

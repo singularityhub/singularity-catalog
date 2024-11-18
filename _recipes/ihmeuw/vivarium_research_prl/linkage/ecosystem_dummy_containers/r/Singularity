@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: rocker/tidyverse@sha256:6a7c913590e758b5fe2ad9921ccc5df7c7160e5de1db5f353630fe8e0ee2f876
+Stage: spython-base
+
+%files
+dummy_step.R .
+%post
+
+mkdir -p /input_data
+mkdir -p /results
+mkdir -p /diagnostics
+# VOLUME /results
+# VOLUME /input_data
+# VOLUME /diagnostics
+
+%runscript
+exec /usr/local/bin/Rscript dummy_step.R "$@"
+%startscript
+exec /usr/local/bin/Rscript dummy_step.R "$@"
