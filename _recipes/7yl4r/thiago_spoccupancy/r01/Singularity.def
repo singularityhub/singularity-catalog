@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: rocker/r-ver:4.3.0
+
+%post
+    apt-get update && apt-get install -y \
+    cmake \
+    libssl-dev \
+    libudunits2-dev \
+    libgdal-dev \
+    gdal-bin \
+    && rm -rf /var/lib/apt/lists/*
+
+    singularity exec /apps/R/4.3.0/R_4.3.0.sif Rscript -e "
+      install.packages(
+        c('spOccupancy', 'stars', 'ggplot2'),
+        repos='https://cloud.r-project.org/'
+      )
+    "
+
+
+
+%runscript
+    exec Rscript "$@"

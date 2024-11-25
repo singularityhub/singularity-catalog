@@ -170,7 +170,7 @@ fi	   \
 && make nwchem_config || { echo "config Failure"; exit 1; } \
 && bash -o pipefail -c " \
 echo 'ls ~/' `ls -lrt ~/` \
-&& if [ "$BRANCH" = "master" ]; then export GA_BRANCH=feature/malloc ; fi \
+&& if [ "$BRANCH" = "master" ]; then export GA_BRANCH=develop ; fi \
 && echo '222 PATH is ' `/usr/bin/env | grep PATH` \
 && echo '111 which FC ' `which $FC` || true \
 && mpif90 -show \
