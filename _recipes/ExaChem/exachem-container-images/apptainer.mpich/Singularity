@@ -6,11 +6,14 @@ Stage: spython-base
    UBUNTU_VERSION=focal
 
 %files
+    usemyga.patch /tmp/usemyga.patch
 %labels
 MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 
 %setup
     #!/bin/bash
+    cat usemyga.patch
+    cp usemyga.patch /tmp
     echo "$(readlink /proc/$$/exe) is the shell in use"
     env|egrep SHELL
     ls -la  ${GITHUB_WORKSPACE}
@@ -21,6 +24,7 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
     bash -c "if [[ -z '${GPU}' ]]; then echo 'GPU=nvidia ' >> ${SINGULARITY_ROOTFS}/gpu.txt ; else echo 'GPU is ${GPU}'; echo 'GPU=${GPU} ' >> ${SINGULARITY_ROOTFS}/gpu.txt ; fi"
     bash -c "if [[ -z '${GA_RUNTIME}' ]]; then echo 'GA_RUNTIME=MPI_PROGRESS_RANK ' >> ${SINGULARITY_ROOTFS}/ga_runtime.txt ; else echo 'GA_RUNTIME is ${GA_RUNTIME}'; echo 'GA_RUNTIME=${GA_RUNTIME} ' >> ${SINGULARITY_ROOTFS}/ga_runtime.txt ; fi"
     bash -c "if [[ -z '${MPI_IMPL}' ]]; then echo 'MPI_IMPL=mpich ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; else echo 'MPI_IMPL is ${MPI_IMPL}'; echo 'MPI_IMPL=${MPI_IMPL} ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; fi"
+    bash -c "if [[ -z '${OFI}' ]]; then echo 'OFI=builtin ' >> ${SINGULARITY_ROOTFS}/OFI.txt ; else echo 'OFI is ${OFI}'; echo 'OFI=${OFI} ' >> ${SINGULARITY_ROOTFS}/ofi.txt ; fi"
     bash -c "if [[ -z '${TAMM_BRANCH}' ]]; then echo 'TAMM_BRANCH=main' >> ${SINGULARITY_ROOTFS}/tamm_branch.txt ; else echo 'TAMM_BRANCH is ${TAMM_BRANCH}'; echo 'TAMM_BRANCH=${TAMM_BRANCH} ' >> ${SINGULARITY_ROOTFS}/tamm_branch.txt ; fi"
     bash -c "if [[ -z '${EXACHEM_BRANCH}' ]]; then echo 'EXACHEM_BRANCH=main ' >> ${SINGULARITY_ROOTFS}/exachem_branch.txt ; else echo 'EXACHEM_BRANCH is ${EXACHEM_BRANCH}'; echo 'EXACHEM_BRANCH=${EXACHEM_BRANCH} ' >> ${SINGULARITY_ROOTFS}/exachem_branch.txt ; fi"
     bash -c "if [[ -z '${MPICH}' ]]; then echo 'MPICH=3.4.2 ' >> ${SINGULARITY_ROOTFS}/mpich.txt ; else echo 'MPICH is ${MPICH}'; echo 'MPICH=${MPICH} ' >> ${SINGULARITY_ROOTFS}/mpich.txt ; fi"
@@ -31,6 +35,7 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
     ls -la  ${CACHEDIR}/ || true
     ls -la  ${CACHEDIR}/mpich || true
     ls -la  ${CACHEDIR}/mpich/lib || true
+    ls -la  ${CACHEDIR}/mpich/bin || true
     ls -la  ${CACHEDIR}/libint.tar.bz2 || true
     bash -c "if [[  -f ${CACHEDIR}/mpich/lib/libmpi.so ]]; then mkdir -p ${SINGULARITY_ROOTFS}/opt ;rsync -a ${CACHEDIR}/mpich ${SINGULARITY_ROOTFS}/opt/. ; echo mpich cache fetched ;fi"
     bash -c "if [[  -f ${CACHEDIR}/libint.tar.bz2 ]]; then cd ${SINGULARITY_ROOTFS}/ ; tar xvjf ${CACHEDIR}/libint.tar.bz2; echo libint cache fetched ;fi"
@@ -60,6 +65,7 @@ export MPICH_DIR=/opt/mpich
 export SINGULARITY_mpich=$mpich
 export SINGULARITY_mpich_prefix=mpich-$mpich
 export `cat ./gpu.txt`
+echo 'ROCM_VERSION=0' > rocm_version.txt ;
 bash -o  pipefail -c "if [[ $(echo $GPU | cut -c 1-3)  == 'amd' ]]; then echo gpus is amd;
 echo 'ROCM_VERSION='`echo $GPU | cut -c 16-` > rocm_version.txt ;
 echo 'GPU_ARCH='`echo $GPU | cut -c 5-10` > gpu_arch.txt ;
@@ -90,6 +96,7 @@ export `cat ./exachem_branch.txt`
 export `cat ./tamm_branch.txt`
 export `cat ./mpich_device.txt`
 export `cat ./mpich.txt`
+export `cat ./ofi.txt`
 export `cat ./scalapack.txt`
 export `cat ./elpa.txt`
 
@@ -107,6 +114,7 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && echo ' CC is ' "$CC" \
 && echo ' CXX is ' "$CXX" \
 && echo MPICH is $MPICH \
+&& echo OFI is $OFI\
 && cd / \
 && pwd \
 && apt-get -y update \
@@ -164,11 +172,10 @@ apt-get  -y install cuda-nvcc-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-c
 && apt-get  update -y &&  apt-get -y install hip-dev hip-runtime-amd rocm-llvm rocm-device-libs rocblas-dev openmp-extras rocm-smi-lib rocminfo hipcc hipblas-dev\
 && ls -lrt /opt \
 && ls -lrt  /opt/rocm* || true \
+&& echo "$GPU_ARCH" >> $ROCM_PATH/bin/target.lst \
+&& echo 'rrrr' $(cat  $ROCM_PATH/bin/target.lst) \
 && echo '$$$$$$$$$$$$$$$$$$$$' \
-&& echo 'dpkg-query -L rocminfo' $(dpkg-query -L rocminfo) \
-&& if [ $UBUNTU_CODE = "jammy_std" ]; then ln -sf /usr/bin/rocm_agent_enumerator $ROCM_PATH/bin/. ;  ln -sf /usr/bin/rocminfo $ROCM_PATH/bin/. ; fi \
-&& echo '$$$$$$$$$$$$$$$$$$$$' \
-&& echo 'rocminfo' $(/opt/rocm/bin/rocm_agent_enumerator) \
+&& echo 'rocminfo' $(rocm_agent_enumerator) \
 && echo '$$$$$$$$$$$$$$$$$$$$' \
 && echo 'hipcc --version' $(hipcc --version) \
 && echo '$$$$$$$$$$$$$$$$$$$$' \
@@ -188,16 +195,16 @@ apt-get  -y install cuda-nvcc-${CUDA_VERSION_MAJOR}-${CUDA_VERSION_MINOR} cuda-c
 
 if [ ! -f /opt/mpich/lib/libmpi.a ]; then  \
 $FC -v \
-	 && if [ ${MPICH_DEVICE} = ch4:ofi ]; then echo 'installing libfabrics' ; \
-	   export libfabric_version="1.15.2" ; \
+	 && if [ ${MPICH_DEVICE} = ch4:ofi ] && [ ${OFI} != builtin ] ; then echo 'installing libfabrics' ; \
+	   export libfabric_version=${OFI} ; \
 	   echo using libfabric_version "$libfabric_version" ; \
+   export mpich_options=$mpich_options" --with-libfabrics="$MPICH_DIR ; \
 	    wget --progress=dot:giga  https://github.com/ofiwg/libfabric/releases/download/v"$libfabric_version"/libfabric-"$libfabric_version".tar.bz2 -O - | tar --no-same-owner  -xjf -  ; \
  cd libfabric-$libfabric_version ; \
  mkdir build && cd build  ; \
  ../configure --prefix=$MPICH_DIR && make -j4 && make install ; \
  if [ ! -f $MPICH_DIR/bin/fi_info ]; then echo fi_info\ not\ found ; exit 1 ; fi ;\
-   export mpich_options=$mpich_options" --with-libfabrics="$MPICH_DIR ; \
-	 else echo 'installing ucx' ; \
+	 elif [ ${MPICH_DEVICE} = ch4:ucx ]; then echo 'installing ucx' ; \
    export ucx=1.15.0 ; \
    echo 'the ucx version is'  $ucx ; \
    wget --progress=dot:giga  https://github.com/openucx/ucx/releases/download/v$ucx/ucx-$ucx.tar.gz ; \
@@ -213,7 +220,15 @@ $FC -v \
      fi \
    && cd ../..  \
 && echo ' mpich_options is set to' $mpich_options \
-&& wget  --progress=dot:giga https://www.mpich.org/static/downloads/$MPICH/mpich-$MPICH.tar.gz  -O - | tar xzf - \
+&& if [ ${MPICH} = main ]; then git clone -b main https://github.com/pmodels/mpich.git mpich-main ;  \
+cd mpich-main ; \
+mpich_hash=49bb9c1b3dd4cc54e5567e7ee47800d666f1c3c0;  \
+git reset --hard $mpich_hash ; \
+   git submodule update --init ;\
+   sh autogen.sh ;\
+   cd ..;\
+   else  wget  --progress=dot:giga https://www.mpich.org/static/downloads/$MPICH/mpich-$MPICH.tar.gz  -O - | tar xzf -  ;\
+   fi \
 && cd $mpich_prefix     \
 && if [ $mpich_major = '3' ]; then echo 'mpich 3 autotools ' ; \
 mv autogen.sh autogen.sh.org ;\
@@ -235,6 +250,10 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
   FC=$FC \
 && head config.log \
 && tail -300 config.log \
+&&   echo 'checkcheckechk******' \
+&&   grep -i psm2 Makefile ||true \
+&&   grep -i infinipat Makefile ||true \
+&&   echo 'checkcheckechk******' \
 && make FC=$FC -j 6                                                  \
 && make install                  \
 && if [ ! -f $MPICH_DIR/bin/mpif90 ]; then echo mpif90\ not\ found ; exit 1 ; fi \
@@ -250,10 +269,18 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 && export PATH=$PATH:"$ROCM_PATH"/bin \
 && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"$ROCM_PATH"/lib \
 && which mpicc \
+&& wget https://raw.githubusercontent.com/pmodels/mpich/refs/heads/main/examples/cpi.c \
+&& mpicc cpi.c -o cpi.x \
+&& echo 'first cpi.x run' \
+&& ./cpi.x < /dev/null \
 && sed -i 's/final_cflags=\" \"/final_cflags=\" -Wno-implicit-function-declarations \"/' /opt/mpich/bin/mpicc \
 && if [ $(command -v mpicc) ]; then echo mpicc present; else echo mpicc missing; exit 1; fi  \
 && echo "which mpicc is" $(which mpicc)  \
 && echo "mpicc -show is " $(mpicc -show)  || { tail -700 $mpich_prefix/config.log ;echo "mpi compilation failed"; exit 1; } \
+&& echo 'second cpi.x run' \
+&& rm -f cpi.x \
+&& mpicc cpi.c -o cpi.x \
+&& ./cpi.x < /dev/null \
 && wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/apptainer.mpich/autoconf-2.71.tar.xz && tar -xf autoconf-2.71.tar.xz \
 && cd autoconf-2.71/ && ./configure --prefix=/usr && make -j3 && make -j3 install \
 && echo autoconf $(autoconf --version) \
@@ -275,12 +302,12 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 &&              if [ \( ${CC} = "gcc" \) -a \(  ${ELPA} = "y" \) ]; then echo "ELPA ON"; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_ELPA=ON " ; fi  \
 &&              if [ \( ${CC} = "amdclang" \) -a \( ${SCALAPACK} = "y" \) ]; then echo "scalapack workaround for clang "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DCMAKE_C_FLAGS_INIT='-Wno-error=implicit-function-declaration' 	" ; fi  \
 &&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DGA_RUNTIME=${GA_RUNTIME}"  \
+&&              echo "modify ga repository to use" \
+&&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DGA_REPO='https://github.com/GlobalArrays/ga.git' -DGA_TAG='develop'"    \
 &&              export CMAKE_OPTIONS   \
 && 	     echo CMAKE_OPTIONS $CMAKE_OPTIONS  \
 && 	     echo USE_SCALAPACK is set to $USE_SCALAPACK  \
 && 	     USE_SCALAPACK="$USE_SCALAPACK" CC="$CC" CXX="$CXX" FC="$FC" cmake  $CMAKE_OPTIONS .. || { echo "Cmake failure"; exit 1; }  \
-&&           wget https://raw.githubusercontent.com/edoapra/exachem-container-images/refs/heads/pullsep09/patches/CMakeLists_elpa.patch \
-&&           patch -p1 < CMakeLists_elpa.patch \
 &&             make -j3 || { echo "Compilation failure in tamm step";
                echo cublas $(ls -lrt $CUDA_PATH/lib64/libcublas*) || true ;  echo cublas target $(ls -lrt $CUDA_PATH/targets/x86_64-linux/lib64/libcublas*) ||true ;  echo ls cudapath $(ls -lrt $CUDA_PATH ) || true;  \
 	    cat $(find /opt/TAMM/ -name config.log) || true ; \
@@ -332,6 +359,7 @@ wget https://raw.githubusercontent.com/edoapra/exachem-container-images/main/app
 	    cd $ROCM_PATH/lib/rocblas/ ; mkdir keep ; mv library/*"$GPU_ARCH"* keep/.  ; \
 	    rm -rf library ; mv keep library ; \
 	    ln -sf "$ROCM_PATH"/ /opt/rocm ;\
+	    rm  -f "$ROCM_PATH"/bin/rocm-smi ; ln -sf "$ROCM_PATH"/libexec/rocm_smi/rocm_smi.py "$ROCM_PATH"/bin/rocm-smi  \
 	    rm -rf   "$ROCM_PATH"/llvm/bin  ; fi\
 	    && echo '*** ls -l CC/bin **' \
 	    && ls -l /opt/install/exachem/bin/ || true \

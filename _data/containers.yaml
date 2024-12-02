@@ -1,5 +1,5 @@
 bases:
-- count: 2131
+- count: 2132
   name: ubuntu
 - count: 451
   name: nvidia/cuda
@@ -7,13 +7,13 @@ bases:
   name: debian
 - count: 299
   name: centos
-- count: 286
+- count: 289
   name: python
-- count: 282
+- count: 284
   name: alpine
 - count: 258
   name: ghcr.io/mkandes/naked-singularity
-- count: 246
+- count: 253
   name: aibasel/downward
 - count: 230
   name: continuumio/miniconda3
@@ -47,7 +47,7 @@ bases:
   name: poldracklab/fmriprep
 - count: 35
   name: nvcr.io/nvidia/pytorch
-- count: 34
+- count: 35
   name: pytorch/pytorch
 - count: 33
   name: provarepro/mlperf_inference
@@ -78,9 +78,9 @@ bases:
 - count: 21
   name: rocker/r-ver
 - count: 19
-  name: nvcr.io/nvidia/nvhpc
-- count: 18
   name: pennlinc/xcp_d
+- count: 19
+  name: nvcr.io/nvidia/nvhpc
 - count: 18
   name: glotzerlab/software
 - count: 18
@@ -93,6 +93,8 @@ bases:
   name: rocker/tidyverse
 - count: 16
   name: ResearchIT/spack-singularity
+- count: 16
+  name: bioconductor/bioconductor_docker
 - count: 15
   name: ghcr.io/mkandes/mofed
 - count: 15
@@ -134,9 +136,9 @@ bases:
 - count: 12
   name: ufscar/ubuntu_ompi
 - count: 12
-  name: intel/oneapi-hpckit
+  name: rockylinux
 - count: 12
-  name: bioconductor/bioconductor_docker
+  name: intel/oneapi-hpckit
 - count: 12
   name: vitchyr/railrl-torch4cuda9
 - count: 11
@@ -159,8 +161,6 @@ bases:
   name: bioconductor/release_core2
 - count: 11
   name: trinityrnaseq/trinityrnaseq
-- count: 11
-  name: rockylinux
 - count: 10
   name: nipreps/nibabies
 - count: 10
@@ -360,6 +360,8 @@ bases:
 - count: 4
   name: repronim/reproin
 - count: 4
+  name: openneuropet/petdeface
+- count: 4
   name: cpplab/bidsmreye
 - count: 4
   name: sebastientourbier/mialsuperresolutiontoolkit
@@ -465,6 +467,8 @@ bases:
   name: /home/vfonov/src/minc-toolkit-containers/singularity/minc-toolkit-base.simg
 - count: 3
   name: computationalradiationphysics/picongpu
+- count: 3
+  name: rocm/jax-community
 - count: 3
   name: willgpaik/centos8_roar
 - count: 3
@@ -586,6 +590,8 @@ bases:
 - count: 3
   name: zhouwanding/transvar
 - count: 3
+  name: python@sha256
+- count: 3
   name: rapidsai/rapidsai
 - count: 3
   name: adigenova/nf-gene-fusions
@@ -659,8 +665,6 @@ bases:
   name: bids/magetbrain
 - count: 2
   name: cpplab/bidspm
-- count: 2
-  name: openneuropet/petdeface
 - count: 2
   name: peerherholz/bidsonym
 - count: 2
@@ -763,6 +767,8 @@ bases:
   name: caffe2ai/caffe2
 - count: 2
   name: twesterhout/default/alpine-openblas
+- count: 2
+  name: penngwyn/jupytercasa
 - count: 2
   name: library/mariadb
 - count: 2
@@ -919,8 +925,6 @@ bases:
   name: kulhanek/target-driven-visual-navigation
 - count: 2
   name: docker
-- count: 2
-  name: python@sha256
 - count: 2
   name: nistmni/minc-toolkit-min
 - count: 2
@@ -1586,6 +1590,8 @@ bases:
 - count: 1
   name: redhat/ubi9-minimal
 - count: 1
+  name: eclipse-temurin
+- count: 1
   name: redhat/ubi9
 - count: 1
   name: sequana_tools_0.14.5.img
@@ -1627,8 +1633,6 @@ bases:
   name: darsh3/openfoam_hisa_pytorch
 - count: 1
   name: utdemir/ghc-musl
-- count: 1
-  name: penngwyn/jupytercasa
 - count: 1
   name: cokelaer/damona/sequana
 - count: 1
@@ -2140,7 +2144,7 @@ bases:
 - count: 1
   name: ubuntu16.04
 bootstraps:
-- count: 7000
+- count: 7028
   name: docker
 - count: 511
   name: shub
@@ -2343,6 +2347,8 @@ orgs:
   name: repronim
 - count: 2
   name: barbagroup
+- count: 2
+  name: rocm
 - count: 2
   name: openfoamplus
 - count: 2
@@ -2663,8 +2669,6 @@ orgs:
   name: laletscaria
 - count: 1
   name: yelpmoe
-- count: 1
-  name: rocm
 - count: 1
   name: arm32v7
 - count: 1
@@ -3151,7 +3155,7 @@ orgs:
   name: thomasrobinson
 tags:
   latest: 747
-  other: 6606
+  other: 6634
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3216,12 +3220,12 @@ versions:
   adriansevcenco/alienpy.dock:
     latest: 1
   aibasel/downward:
-    '19.06': 47
-    '19.12': 49
-    '20.06': 66
-    '21.12': 28
-    '22.06': 30
-    '22.12': 26
+    '19.06': 48
+    '19.12': 50
+    '20.06': 67
+    '21.12': 29
+    '22.06': 31
+    '22.12': 28
   airl_lab/default/airl_env:
     base_ci: 1
   alan0415/singularity_tf_rdma:
@@ -3262,7 +3266,7 @@ versions:
     '3.17': 12
     '3.18': 6
     '3.19': 1
-    '3.20': 6
+    '3.20': 8
     3.20.0: 1
     '3.4': 2
     '3.5': 1
@@ -3513,7 +3517,8 @@ versions:
     RELEASE_3_14: 1
     RELEASE_3_17: 1
     RELEASE_3_18: 2
-    RELEASE_3_19: 2
+    RELEASE_3_19: 4
+    RELEASE_3_20: 2
   bioconductor/bioconductor_full:
     RELEASE_3_10: 2
     RELEASE_3_8: 2
@@ -3886,6 +3891,8 @@ versions:
     plotting_centos6: 1
     rivet: 2
     rivet_centos6: 2
+  eclipse-temurin:
+    '8': 1
   ecpe4s/ubuntu20.04-oneapi-x86_64:
     '22.02': 2
   eddelbuettel/r2u:
@@ -5071,6 +5078,8 @@ versions:
   openneuropet/petdeface:
     0.1.1: 1
     0.2.1: 1
+    0.2.1a: 1
+    0.2.2: 1
   openresty/openresty:
     1.13.6.1-2-alpine: 6
   opensciencegrid/osgvo-tensorflow-gpu:
@@ -5163,6 +5172,8 @@ versions:
     '1.0': 1
     1.2.1: 1
     1.2.3: 1
+  penngwyn/jupytercasa:
+    hub: 1
   pennlinc/aslprep:
     0.5.0: 1
     0.5.1: 1
@@ -5177,6 +5188,7 @@ versions:
     unstable: 1
   pennlinc/xcp_d:
     0.10.0: 1
+    0.10.1: 1
     0.6.0: 1
     0.6.1: 1
     0.6.2: 1
@@ -5321,10 +5333,10 @@ versions:
     '3': 15
     3-slim: 1
     3.10-slim: 9
-    3.10-slim-bullseye: 2
+    3.10-slim-bullseye: 3
     3.10.3-bullseye: 1
     '3.11': 2
-    3.11-slim: 19
+    3.11-slim: 20
     3.12-slim: 1
     3.4-slim: 1
     '3.5': 1
@@ -5368,7 +5380,7 @@ versions:
     '3.9': 3
     3.9-alpine: 1
     3.9-buster: 4
-    3.9-slim: 3
+    3.9-slim: 4
     3.9.2: 1
     3.9.5: 1
     3.9.6: 1
@@ -5378,6 +5390,7 @@ versions:
     slim-buster: 4
     '{{ python_version }}': 1
   python@sha256:
+    15f10b142547000e2429615b3d314474ae7d6ac062a8dd2c9246adcee7068e55: 1
     1c26c25390307b64e8ff73e7edf34b4fbeac59d41da41c08da28dc316a721899: 2
   pytorch/pytorch:
     1.0-cuda10.0-cudnn7-runtime: 1
@@ -5400,6 +5413,7 @@ versions:
     1.9.0-cuda10.2-cudnn7-runtime: 2
     1.9.0-cuda11.1-cudnn8-devel: 1
     2.0.0-cuda11.7-cudnn8-devel: 1
+    2.1.0-cuda12.1-cudnn8-runtime: 1
     2.1.2-cuda12.1-cudnn8-runtime: 1
   qiime2/core:
     '2018.11': 1
@@ -5689,7 +5703,7 @@ versions:
     4.1.1: 1
     4.2.0: 2
   rockylinux:
-    '8': 4
+    '8': 5
     '8.5': 2
     8.5.20220308: 1
     8.6.20227707: 2
@@ -5698,6 +5712,8 @@ versions:
     '8': 1
     '8.5': 1
     8.6.20220707: 1
+  rocm/jax-community:
+    rocm6.2.3-jax0.4.33-py3.12.6: 3
   rocm/pytorch:
     rocm2.2_ubuntu16.04_py3.6_pytorch: 1
   rootproject/root:
@@ -6003,12 +6019,12 @@ versions:
     '18.10': 10
     '19.04': 33
     '19.10': 16
-    '20.04': 463
+    '20.04': 461
     '20.04  ': 1
     '20.10': 3
     '21.04': 3
     '21.10': 3
-    '22.04': 64
+    '22.04': 67
     '22.10': 6
     '23.10': 2
     '24.04': 1

@@ -153,6 +153,19 @@ fi \
 && apt-get  update -y &&  apt-get -y install hip-dev hip-runtime-amd rocm-llvm rocm-device-libs rocblas-dev openmp-extras rocm-smi-lib \
 && ls -lrt /opt \
 && ls -lrt  /opt/rocm* || true \
+&& echo "$GPU_ARCH" >> $ROCM_PATH/bin/target.lst \
+&& echo 'rrrr' $(cat  $ROCM_PATH/bin/target.lst) \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo 'rocminfo' $(rocm_agent_enumerator) \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo 'hipcc --version' $(hipcc --version) \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo 'hipconfig' $(hipconfig) \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo ' ls -l  ROCM_PATH/lib' $(ls -l $ROCM_PATH/lib)   \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo ' ls -l  ROCM_PATH/lib/libamdhip64.so*' $(ls -l $ROCM_PATH/lib/libamdhip64.so*)   \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
 && wget --quiet https://download.amd.com/developer/eula/blis/blis-4-1/aocl-blis-linux-aocc-4.1.0.tar.gz -O - | tar xzf - -C /opt ; fi "  \
 && export kernelv=$(dpkg-query -W linux-headers-generic|cut -f2 ) \
 && echo kernelv is $kernelv \
@@ -300,9 +313,8 @@ cd .. ; rm -rf *tar*gz openmpi-* ucx-$ucx ;fi " \
 	    apt-get install -y hip-runtime-amd rocblas openmp-extras-runtime;  \
 	    cd $ROCM_PATH/lib/rocblas/ ; mkdir keep ; mv library/*"$GPU_ARCH"* keep/.  ; \
 	    rm -rf library ; mv keep library ; \
-	    cp "$ROCM_PATH"/bin/rocm-smi /tmp/rocm-smi ;\
 	    rm -rf "$ROCM_PATH"/bin  "$ROCM_PATH"/llvm/bin  ; \
-	    mkdir -p "$ROCM_PATH"/bin  && cp /tmp/rocm-smi "$ROCM_PATH"/bin/. ; fi\
+	    mkdir -p "$ROCM_PATH"/bin  && ln -sf "$ROCM_PATH"/libexec/rocm_smi/rocm_smi.py "$ROCM_PATH"/bin/rocm-smi ; fi\
 	    && echo '*** ls -l CC/bin **' \
 	    && ls -l /opt/install/exachem/bin/ || true \
 	    && echo '*** ldd ***'  \

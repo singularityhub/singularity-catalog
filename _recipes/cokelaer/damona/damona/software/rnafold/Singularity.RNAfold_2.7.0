@@ -1,0 +1,46 @@
+Bootstrap: docker
+From: alpine:3.20
+
+
+%post
+
+    # update and install python/bach
+    apk update && apk add --no-cache bash python3 python3-dev py3-pip
+
+    # requirements to compile the code; Need libc6-compat and musl-dev
+    apk add --no-cache gcc g++ libc6-compat make autoconf automake cmake musl-dev perl-dev zlib-dev libgomp
+
+    NAME="ViennaRNA"
+    VERSION="2.7.0"
+
+    wget https://github.com/ViennaRNA/ViennaRNA/releases/download/v${VERSION}/${NAME}-${VERSION}.tar.gz
+    tar xvfz ${NAME}-${VERSION}.tar.gz
+
+    cd ${NAME}-${VERSION}
+
+    # Here, the ash shell from alpine is incompatible with this configure set up, so
+    # we add bash before
+    bash ./configure --prefix=/usr/local --enable-threads --with-python=/usr/bin/python3
+    make -j 8
+    make install
+    make check
+    cd ..
+    rm -rf ${NAME}-${VERSION}*
+
+    # Remove build dependencies
+    apk del --no-cache g++ make autoconf automake perl-dev python3-dev
+
+    # Add runtime dependencies
+    apk add --no-cache libgomp zlib python3
+
+    apk del --no-cache  autoconf automake  gcc g++
+    rm -rf /var/cache/apk*
+
+
+%environment
+    export LC_ALL=C
+
+²
+%runscript
+    exec RNAfold "$@"
+

@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: eclipse-temurin:8
+
+%post
+
+    apt-get update --fix-missing && apt-get install -y wget unzip libxext6 libxrender1 libxtst6 libxi6 python3
+
+    # Install Mauve
+    mkdir -p /opt/mauve
+    cd /opt/mauve
+    wget https://darlinglab.org/mauve/snapshots/2015/2015-02-13/linux-x64/mauve_linux_snapshot_2015-02-13.tar.gz
+
+    # version 2.4.0 
+    tar -xzf mauve_linux_snapshot_2015-02-13.tar.gz 
+
+    mv mauve_snapshot_2015-02-13/* .
+    rm -rf mauve_snapshot_2015-02-13 Mauve-linux-x64.tar.gz
+
+    # Add a symbolic link for MauveAligner
+    ln -s /opt/mauve/Mauve /usr/local/bin/Mauve
+    ln -s /usr/bin/python3 /usr/local/bin/python
+    # Clean up
+    apt-get autoremove -y && apt-get clean
+
+%environment
+    export PATH=/opt/mauve:$PATH
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+
+
+%runscript
+    exec /usr/local/bin/Mauve "$@"
+

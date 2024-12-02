@@ -13,9 +13,10 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 #    ls -l ${SINGULARITY_ROOTFS}
     rm -f ${SINGULARITY_ROOTFS}/*.txt || true
     bash -c "if [[ -z '${GPU}' ]]; then echo 'GPU=nvidia ' >> ${SINGULARITY_ROOTFS}/gpu.txt ; else echo 'GPU is ${GPU}'; echo 'GPU=${GPU} ' >> ${SINGULARITY_ROOTFS}/gpu.txt ; fi"
+    bash -c "if [[ -z '${GA_RUNTIME}' ]]; then echo 'GA_RUNTIME=MPI_PROGRESS_RANK ' >> ${SINGULARITY_ROOTFS}/ga_runtime.txt ; else echo 'GA_RUNTIME is ${GA_RUNTIME}'; echo 'GA_RUNTIME=${GA_RUNTIME} ' >> ${SINGULARITY_ROOTFS}/ga_runtime.txt ; fi"
+    bash -c "if [[ -z '${SCALAPACK}' ]]; then echo 'SCALAPACK=Y ' >> ${SINGULARITY_ROOTFS}/scalapack.txt ; else echo 'SCALAPACK is ${SCALAPACK}'; echo 'SCALAPACK=${SCALAPACK} ' >> ${SINGULARITY_ROOTFS}/scalapack.txt ; fi"
     bash -c "echo 'ELPA is ${ELPA}'; echo 'ELPA=${ELPA} ' >> ${SINGULARITY_ROOTFS}/elpa.txt "
     cat ${SINGULARITY_ROOTFS}/elpa.txt
-    bash -c "if [[ -z '${GA_RUNTIME}' ]]; then echo 'GA_RUNTIME=MPI_2SIDED ' >> ${SINGULARITY_ROOTFS}/ga_runtime.txt ; else echo 'GA_RUNTIME is ${GA_RUNTIME}'; echo 'GA_RUNTIME=${GA_RUNTIME} ' >> ${SINGULARITY_ROOTFS}/ga_runtime.txt ; fi"
     bash -c "if [[ -z '${MPI_IMPL}' ]]; then echo 'MPI_IMPL=ompi ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; else echo 'MPI_IMPL is ${MPI_IMPL}'; echo 'MPI_IMPL=${MPI_IMPL} ' >> ${SINGULARITY_ROOTFS}/mpi_impl.txt ; fi"
     bash -c "if [[ -z '${TAMM_BRANCH}' ]]; then echo 'TAMM_BRANCH=main ' >> ${SINGULARITY_ROOTFS}/branch.txt ; else echo 'TAMM_BRANCH is ${TAMM_BRANCH}'; echo 'TAMM_BRANCH=${TAMM_BRANCH} ' >> ${SINGULARITY_ROOTFS}/tamm_branch.txt ; fi"
     bash -c "if [[ -z '${EXACHEM_BRANCH}' ]]; then echo 'EXACHEM_BRANCH=main ' >> ${SINGULARITY_ROOTFS}/branch.txt ; else echo 'EXACHEM_BRANCH is ${EXACHEM_BRANCH}'; echo 'EXACHEM_BRANCH=${EXACHEM_BRANCH} ' >> ${SINGULARITY_ROOTFS}/exachem_branch.txt ; fi"
@@ -45,6 +46,7 @@ export OMPI_DIR=/opt/ompi
 export SINGULARITY_ompi=$ompi
 export SINGULARITY_ompi_prefix=ompi-$ompi
 export `cat ./gpu.txt`
+export `cat ./scalapack.txt`
 export `cat ./elpa.txt`
 bash -o  pipefail -c "if [[ $(echo $GPU | cut -c 1-3)  == 'amd' ]]; then echo gpus is amd;
 echo 'ROCM_VERSION='`echo $GPU | cut -c 16-` > rocm_version.txt ;
@@ -131,6 +133,19 @@ echo TAMM_BRANCH is $TAMM_BRANCH
 && apt-get  update -y &&  apt-get -y install hip-dev hip-runtime-amd rocm-llvm rocm-device-libs rocblas-dev openmp-extras rocm-smi-lib \
 && ls -lrt /opt \
 && ls -lrt  /opt/rocm* || true \
+&& echo "$GPU_ARCH" >> $ROCM_PATH/bin/target.lst \
+&& echo 'rrrr' $(cat  $ROCM_PATH/bin/target.lst) \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo 'rocminfo' $(rocm_agent_enumerator) \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo 'hipcc --version' $(hipcc --version) \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo 'hipconfig' $(hipconfig) \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo ' ls -l  ROCM_PATH/lib' $(ls -l $ROCM_PATH/lib)   \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
+&& echo ' ls -l  ROCM_PATH/lib/libamdhip64.so*' $(ls -l $ROCM_PATH/lib/libamdhip64.so*)   \
+&& echo '$$$$$$$$$$$$$$$$$$$$' \
 && wget --quiet https://download.amd.com/developer/eula/blis/blis-4-1/aocl-blis-linux-aocc-4.1.0.tar.gz -O - | tar xzf - -C /opt ; fi "  \
 && export kernelv=$(dpkg-query -W linux-headers-generic|cut -f2 ) \
 && echo kernelv is $kernelv \
@@ -224,11 +239,14 @@ cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx ;fi " \
 && 	     CMAKE_OPTIONS="$CMAKE_OPTIONS -DBLIS_CONFIG=zen3 -DMARCH_FLAGS=-march=znver3"  \
 &&              if [ ${GPU} = "nvidia" ]; then echo "nvidia gpu "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_CUDA=ON -DGPU_ARCH=${GPU_ARCH}" ; fi  \
 &&              if [ ${GPU} = "amd" ]; then echo "amd gpu "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_HIP=ON -DROCM_ROOT=$ROCM_PATH -DGPU_ARCH=${GPU_ARCH} -DGCCROOT=/usr " ; ls -lrt $ROCM_PATH/include/rocblas/rocblas.h $ROCM_PATH/include/ ; ln -sf $ROCM_PATH/include/rocblas/rocblas.h $ROCM_PATH/include/rocblas.h; fi  \
+&&              if [ ${SCALAPACK} = "Y" ]; then echo "SCALAPACK ON"; CMAKE_OPTIONS="$CMAKE_OPTIONS -DUSE_SCALAPACK=ON "; export USE_SCALAPACK=ON; fi   \
+&&              if [ \( ${CC} = "amdclang" \) -a \( ${SCALAPACK} = "Y" \) ]; then echo "scalapack workaround for clang "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DCMAKE_C_FLAGS_INIT='-Wno-error=implicit-function-declaration' 	" ; fi  \
 &&              if [ ${ELPA} = "Y" ]; then echo "ELPA enabled "; CMAKE_OPTIONS="$CMAKE_OPTIONS -DTAMM_ENABLE_ELPA=ON" ; fi  \
 &&              CMAKE_OPTIONS="$CMAKE_OPTIONS -DGA_RUNTIME=${GA_RUNTIME}"  \
 &&              export CMAKE_OPTIONS   \
 && 	     echo CMAKE_OPTIONS $CMAKE_OPTIONS  \
-&& 	     CC="$CC" CXX="$CXX" FC="$FC" cmake  $CMAKE_OPTIONS .. || { echo "Cmake failure"; exit 1; }  \
+&& 	     echo USE_SCALAPACK is set to $USE_SCALAPACK  \
+&& 	     USE_SCALAPACK="$USE_SCALAPACK" CC="$CC" CXX="$CXX" FC="$FC" cmake  $CMAKE_OPTIONS .. || { echo "Cmake failure"; exit 1; }  \
 &&             make -j3 || { echo "Compilation failure"; 
 	    cat /opt/TAMM/build/TAMM_External-prefix/src/TAMM_External-build/GlobalArrays_External-prefix/src/GlobalArrays_External-build/CMakeFiles/CMakeOutput.log || true ; \
             cat /opt/TAMM/build/TAMM_External-prefix/src/TAMM_External-build/GlobalArrays_External-prefix/src/GlobalArrays_External-build/CMakeFiles/CMakeError.log || true; exit 1; } \
@@ -277,9 +295,8 @@ cd .. ; rm -rf *tar*gz $ompi-prefix ucx-$ucx ;fi " \
 	    apt-get install -y hip-runtime-amd rocblas openmp-extras-runtime;  \
 	    cd $ROCM_PATH/lib/rocblas/ ; mkdir keep ; mv library/*"$GPU_ARCH"* keep/.  ; \
 	    rm -rf library ; mv keep library ; \
-	    cp "$ROCM_PATH"/bin/rocm-smi /tmp/rocm-smi ;\
 	    rm -rf "$ROCM_PATH"/bin  "$ROCM_PATH"/llvm/bin  ; \
-	    mkdir -p "$ROCM_PATH"/bin  && cp /tmp/rocm-smi "$ROCM_PATH"/bin/. ; fi\
+	    mkdir -p "$ROCM_PATH"/bin  && ln -sf "$ROCM_PATH"/libexec/rocm_smi/rocm_smi.py "$ROCM_PATH"/bin/rocm-smi ; fi\
 	    && echo '*** ls -l CC/bin **' \
 	    && ls -l /opt/install/exachem/bin/ || true \
 	    && echo '*** ldd ***'  \

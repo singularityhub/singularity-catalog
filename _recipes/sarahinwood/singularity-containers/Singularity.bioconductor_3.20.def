@@ -1,0 +1,52 @@
+Bootstrap: docker
+From: bioconductor/bioconductor_docker:RELEASE_3_20
+
+%help
+
+    R 4.4.2 with Bioconductor 3.20
+
+%labels
+
+    MAINTAINER "Sarah Inwood (sninwood@gmail.com)"
+    VERSION "Bioconductor 3.20"
+
+%post
+    # install packages from bioconductor
+    Rscript -e "options(Ncpus=8); \
+        BiocManager::install(c( \
+            'adegenet', \
+            'apeglm', \
+            'Biostrings', \
+            'clusterProfiler', \
+            'dada2', \
+            'data.table', \
+            'DECIPHER', \
+            'DESeq2', \
+            'fgsea', \
+            'microbiome', \
+            'pcadapt', \
+            'pheatmap', \
+            'phyloseq', \
+            'RnaSeqSampleSize', \
+            'rtracklayer', \
+            'ShortRead', \
+            'S4Vectors', \
+            'tidyverse', \
+            'tximport', \
+            'vcfR', \
+            'VennDiagram', \
+            'viridis'
+            ), \
+        type='source', ask=FALSE)"
+
+    # install zoo
+    Rscript -e "options(Ncpus=8); \
+        install.packages('zoo')"
+
+    # install poppr
+    Rscript -e "options(Ncpus=8); \
+        install.packages('poppr')"
+
+%runscript
+
+    exec /usr/local/bin/R "$@"

@@ -1,0 +1,61 @@
+Bootstrap: docker
+From: rocm/jax-community:rocm6.2.3-jax0.4.33-py3.12.6
+
+%labels
+    Author Filippo Vicentini
+    Version v0.0.1
+    GPU: AMD
+
+%help
+    This is a container to run Jax + NetKet in an AMD environment
+
+%files
+    netket_pro /netket_pro
+    pyproject.toml /pyproject.toml
+    .python-version /.python-version
+
+%environment
+    export PATH="/.cargo/bin/:$PATH"
+    export PATH="/.venv/bin:$PATH"
+    export UV_CACHE_DIR=/.cache/uv
+    export UV_PYTHON_INSTALL_DIR=/.uvpython
+
+%post
+    pwd
+    # Unset things to fix things
+    unset XLA_CLONE_DIR
+    unset XLA_BRANCH
+    sed -i '2d' /.singularity.d/env/10-docker2singularity.sh
+
+    # setup uv (must add to %environment as well)
+    mkdir -p /.cache
+    export UV_CACHE_DIR=/.cache/uv/
+    mkdir -p /.uvpython
+    export UV_PYTHON_INSTALL_DIR=/.uvpython
+
+    # Install uv (path must be edited in %environment)
+    apt-get update && apt-get install -y --no-install-recommends curl ca-certificates
+    wget --no-verbose https://astral.sh/uv/install.sh
+    export UV_INSTALL_DIR="/.cargo"
+    sh /install.sh && rm /install.sh
+    export PATH="/.cargo/bin/:$PATH"
+
+    # download
+    wget --no-verbose https://github.com/ROCm/jax/releases/download/rocm-jax-v0.4.33/jaxlib-0.4.33-cp312-cp312-manylinux_2_28_x86_64.whl
+    wget --no-verbose https://github.com/ROCm/jax/releases/download/rocm-jax-v0.4.33/jax_rocm60_pjrt-0.4.33-py3-none-manylinux_2_28_x86_64.whl
+    wget --no-verbose https://github.com/ROCm/jax/releases/download/rocm-jax-v0.4.33/jax_rocm60_plugin-0.4.33-cp312-cp312-manylinux_2_28_x86_64.whl
+
+    uv sync --compile-bytecode
+    # export PATH="/.venv/bin:$PATH"
+
+%runscript
+    echo "Launching the AMD Jax container"
+    echo "Arguments received: $*"
+    exec $@
+
+##############################
+# python app
+##############################
+
+%apprun python
+    exec python "$@"

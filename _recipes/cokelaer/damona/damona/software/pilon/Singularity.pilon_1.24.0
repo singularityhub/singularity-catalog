@@ -1,0 +1,40 @@
+Bootstrap: docker
+From: alpine:3.20
+
+%post
+    # Update the package repository and install dependencies
+    apk update && apk add --no-cache openjdk11 bash curl python3
+
+    # Set environment variables
+    export PILON_VERSION=1.24
+    export PILON_JAR=pilon-$PILON_VERSION.jar
+    export PILON_URL=https://github.com/broadinstitute/pilon/releases/download/v$PILON_VERSION/$PILON_JAR
+
+    # Download Pilon JAR
+    curl -L $PILON_URL -o /opt/$PILON_JAR
+
+    # Create a symbolic link for easy usage
+    ln -s /opt/$PILON_JAR /usr/bin/pilon.jar
+
+    # Create a wrapper script to act as an alias
+    echo '#!/bin/bash' > /usr/bin/pilon
+    echo 'exec java -jar /usr/bin/pilon.jar "$@"' >> /usr/bin/pilon
+    chmod +x /usr/bin/pilon
+
+    # Cleanup
+    apk del curl && rm -rf /var/cache/apk/*
+    alias pilon='java -jar /usr/bin/pilon.jar'
+
+%environment
+    export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+    export PATH=$JAVA_HOME/bin:$PATH
+    export PILON_JAR=/usr/bin/pilon.jar
+
+%labels
+    Author "Your Name"
+    Version "1.0"
+    Description "Singularity container for Pilon based on Alpine Linux"
+
+%runscript
+    exec java -jar $PILON_JAR "$@"
+

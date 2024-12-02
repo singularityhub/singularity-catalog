@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: bioconductor/bioconductor_docker:RELEASE_3_20
+
+%post
+    # Install core R packages
+    R -e 'install.packages("dplyr")'
+    
+    # Install Bioconductor packages
+    R -e 'BiocManager::install(c("dmrseq"))'
