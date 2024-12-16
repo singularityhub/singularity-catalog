@@ -2,13 +2,15 @@ Bootstrap: docker
 From: python:3.9
 
 %environment
+    export DEBIAN_FRONTEND=noninteractive
 
 %runscript
 
 %setup
 	cp -r ../../../combination ${SINGULARITY_ROOTFS}/combination/
 
-%post
+%post    
+    pip install setuptools
 
 	pip install /combination
 

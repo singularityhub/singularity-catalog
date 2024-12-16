@@ -1,0 +1,29 @@
+BootStrap: docker
+From: continuumio/miniconda:latest
+IncludeCmd: yes
+
+%help
+
+%setup
+	#chmod 755 /lab/work/porchard/sn-muscle-project/singularity/demuxlet/demuxlet.simg
+
+%files
+	/home/porchard/sw/demuxlet /home/demuxlet
+
+%labels
+
+%environment
+
+%post
+	umask 0022
+	apt update
+	apt -y dist-upgrade
+	apt -y install build-essential git environment-modules wget libxml2-dev libssl-dev tar gzip libgsl-dev
+	apt-get -y install autoconf automake make gcc perl zlib1g-dev libbz2-dev liblzma-dev libcurl4-gnutls-dev libssl-dev libtool
+	export PATH=/opt/conda/bin:$PATH
+	conda install -c conda-forge -c bioconda -c defaults bedtools=2.27.1 samtools=1.9 python=3.6
+	mkdir -p /sw
+	cd /sw && git clone https://github.com/samtools/htslib.git && cd htslib && autoheader && autoconf && ./configure && make && make install
+	cd /sw && git clone /home/demuxlet/.git demuxlet && cd demuxlet && autoreconf -vfi && ./configure && make && make install
+	mkdir -p /scratch
+	mkdir -p /gpfs

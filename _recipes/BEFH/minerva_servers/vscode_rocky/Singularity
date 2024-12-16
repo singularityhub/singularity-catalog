@@ -1,0 +1,67 @@
+Bootstrap: docker
+From: rockylinux/rockylinux:9
+
+# perl-CPAN cpan install LSF::Base LSF::Batch
+
+%post
+  # Install necessary dependencies
+  # libxcrypt-compat instead of libxcrypt in Rocky 9
+  # compat-openssl10 not available in Rocky 9
+  # fish not available in Rocky 8
+  dnf install -y --allowerasing \
+    dnf-plugins-core wget curl openssh-clients zsh gzip bzip2 xz git which \
+    libnsl libxcrypt-compat acl epel-release git diffutils iputils \
+    zip unzip traceroute bind-utils net-tools procps-ng lsof file
+
+  ## Rocky 9 only ##
+  dnf config-manager --set-enabled crb
+  /bin/crb enable
+  dnf -y localinstall "https://pkgs.dyn.su/el9/base/x86_64/raven-release.el9.noarch.rpm" #for compat-openssl10
+  dnf clean all && dnf update -y
+  ## end Rocky 9 only ##
+
+  ## Rocky 8 only ##
+  #dnf config-manager --set-enabled powertools
+  #wget -O fish.rpm https://download.opensuse.org/repositories/shells:/fish:/release:/3/CentOS_8/x86_64/fish-3.7.1-3.1.x86_64.rpm
+  #dnf install -y fish.rpm
+  #rm -f fish.rpm
+  ## end Rocky 8 only ##
+  
+  dnf install -y Lmod lua-devel eza fish compat-openssl10
+  ln -s $(which eza) /usr/local/bin/exa
+
+  # Install Conda
+  
+  wget -O Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh" && \
+  bash Miniforge3.sh -b -p /opt/conda && \
+  rm Miniforge3.sh && \
+  echo "done"
+
+%files
+    vscode_rocky/start_code.sh /opt/start_code.sh
+
+%environment
+    export S_CONDAENV=${S_CONDAENV:-$CONDA_DEFAULT_ENV}
+    [[ -z "$http_proxy" ]] || export http_proxy=$http_proxy
+    [[ -z "$https_proxy" ]] || export https_proxy=$https_proxy
+    [[ -z "$no_proxy" ]] || export no_proxy=$no_proxy
+    [[ -z "$ftp_proxy" ]] || export ftp_proxy=$ftp_proxy
+    [[ -z "$all_proxy" ]] || export all_proxy=$all_proxy
+    [[ -z "$rsync_proxy" ]] || export rsync_proxy=$rsync_proxy
+
+%apprun code
+    bash /opt/start_code.sh "${@}"
+
+%apprun bash
+    #!/bin/bash
+    . /opt/conda/etc/profile.d/conda.sh && \
+    . /opt/conda/etc/profile.d/mamba.sh && \
+    alias ll='ls -l' && \
+    echo "activating env $RS_CONDAENV" && \
+    conda activate $RS_CONDAENV && \
+    echo "starting BASH" && \
+    /bin/bash
+
+%runscript
+    #!/bin/bash
+    bash /opt/start_code.sh "${@}"

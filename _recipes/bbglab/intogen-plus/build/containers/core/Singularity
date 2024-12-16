@@ -1,8 +1,9 @@
 Bootstrap: docker
-From: python:3
+From: python:3.12
 
 %environment
     export LC_ALL=C.UTF-8
+    export DEBIAN_FRONTEND=noninteractive
 
 %runscript
 
@@ -14,7 +15,9 @@ From: python:3
 
 %post
 	# Install openVariant
-    pip install open-variant
+    pip install setuptools
+
+    pip install open-variant==1.0.0
     
     # Install intogen-core package
 	pip install /core

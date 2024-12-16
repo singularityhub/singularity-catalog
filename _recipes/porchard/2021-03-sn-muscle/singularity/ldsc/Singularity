@@ -1,0 +1,42 @@
+BootStrap: docker
+From: continuumio/miniconda:latest
+IncludeCmd: yes
+
+%help
+
+%setup
+	#chmod 755 /lab/work/porchard/sn-muscle-project/singularity/ldsc/ldsc.simg
+
+%files
+
+%labels
+
+%environment
+
+%post
+	umask 0022
+	apt update
+	apt -y dist-upgrade
+	apt -y install build-essential git environment-modules wget libxml2-dev libssl-dev tar gzip libgsl-dev
+	apt install -y libboost-all-dev libhts-dev libncurses5-dev libtinfo-dev zlib1g-dev lcov
+	export PATH=/opt/conda/bin:$PATH
+	mkdir -p /sw
+	mkdir -p /scratch
+	mkdir -p /gpfs
+	cd /sw && git clone https://github.com/bulik/ldsc.git
+	echo "name: ldsc" >> environment.yml
+	echo "channels:" >> environment.yml
+	echo "- bioconda" >> environment.yml
+	echo "- anaconda" >> environment.yml
+	echo "- pandas" >> environment.yml
+	echo "dependencies:" >> environment.yml
+	echo "- python=2.7" >> environment.yml
+	echo "- bitarray=0.8.1" >> environment.yml
+	echo "- nose=1.3.4" >> environment.yml
+	echo "- pybedtools=0.7" >> environment.yml
+	echo "- scipy" >> environment.yml
+	echo "- pandas=0.17" >> environment.yml
+	echo "- numpy" >> environment.yml
+	cat environment.yml
+	conda env create --file environment.yml	
+	

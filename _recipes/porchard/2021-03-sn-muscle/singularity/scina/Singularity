@@ -1,0 +1,28 @@
+BootStrap: docker
+From: continuumio/miniconda:latest
+IncludeCmd: yes
+
+%help
+
+%setup
+	#chmod 755 /lab/work/porchard/sn-muscle-project/singularity/scina/scina.simg
+
+%files
+
+%labels
+
+%environment
+
+%post
+	umask 0022
+	apt update
+	apt -y dist-upgrade
+	apt -y install build-essential git environment-modules wget libxml2-dev libssl-dev tar gzip libgsl-dev
+	apt install -y libboost-all-dev libhts-dev libncurses5-dev libtinfo-dev zlib1g-dev lcov
+	export PATH=/opt/conda/bin:$PATH
+	conda install -c conda-forge -c bioconda -c defaults r=3.6 r-devtools r-optparse r-tidyverse r-viridis r-ggrepel r-cowplot r-biocmanager 
+	mkdir -p /sw
+	mkdir -p /scratch
+	mkdir -p /gpfs
+	cd /sw && git clone https://github.com/bmbolstad/preprocessCore.git && cd preprocessCore && R CMD INSTALL --configure-args="--disable-threading" .
+	Rscript -e "install.packages('SCINA', repos='http://cran.us.r-project.org')"

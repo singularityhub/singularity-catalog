@@ -1,0 +1,26 @@
+BootStrap: docker
+From: continuumio/miniconda:latest
+IncludeCmd: yes
+
+%help
+
+%setup
+	#chmod 755 /lab/work/porchard/sn-muscle-project/singularity/r-plot/r-plot.simg
+
+%files
+
+%labels
+
+%environment
+
+%post
+	umask 0022
+	apt update
+	apt -y dist-upgrade
+	apt -y install build-essential git environment-modules wget libxml2-dev libssl-dev tar gzip libgsl-dev
+	apt install -y libboost-all-dev libhts-dev libncurses5-dev libtinfo-dev zlib1g-dev lcov
+	export PATH=/opt/conda/bin:$PATH
+	conda install -c conda-forge -c r -c bioconda -c defaults bedtools=2.27.1 r=3.5.1 r-devtools r-optparse r-tidyverse r-ggseqlogo r-viridis r-ggrepel r-cowplot r-htmlwidgets r-d3heatmap r-ggally r-ggpointdensity
+	mkdir -p /sw
+	mkdir -p /scratch
+	mkdir -p /gpfs

@@ -1,0 +1,25 @@
+BootStrap: docker
+From: continuumio/miniconda:latest
+IncludeCmd: yes
+
+%help
+
+%setup
+	#chmod 755 /lab/work/porchard/sn-muscle-project/singularity/bnmapper/bnmapper.simg
+
+%files
+
+%labels
+
+%environment
+
+%post
+	umask 0022
+	apt update
+	apt -y dist-upgrade
+	apt -y install build-essential git environment-modules wget libxml2-dev libssl-dev tar gzip libgsl-dev
+	apt install -y libboost-all-dev libhts-dev libncurses5-dev libtinfo-dev zlib1g-dev lcov
+	export PATH=/opt/conda/bin:$PATH
+	conda install -c conda-forge -c bioconda -c defaults bedtools=2.27.1 biopython picard samtools=1.9 python=3.6 pysam=0.14 pybedtools=0.8.0 numpy=1.16.4 matplotlib seaborn pandas bx-python
+	mkdir -p /scratch
+	mkdir -p /gpfs

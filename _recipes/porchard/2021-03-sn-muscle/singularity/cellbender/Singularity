@@ -1,0 +1,29 @@
+BootStrap: docker
+From: continuumio/miniconda:latest
+IncludeCmd: yes
+
+%help
+
+%setup
+	#chmod 755 /lab/work/porchard/sn-muscle-project/singularity/cellbender/cellbender.simg
+
+%files
+
+%labels
+
+%environment
+
+%post
+	umask 0022
+	apt update
+	apt -y dist-upgrade
+	apt -y install build-essential git environment-modules wget libxml2-dev libssl-dev tar gzip libgsl-dev
+	apt install -y libboost-all-dev libhts-dev libncurses5-dev libtinfo-dev zlib1g-dev lcov
+	export PATH=/opt/conda/bin:$PATH
+	conda install python=3.7 pip
+	conda install -c anaconda pytables
+	conda install -c pytorch pytorch torchvision
+	git clone https://github.com/broadinstitute/CellBender.git
+	pip install -e CellBender
+	mkdir -p /scratch
+	mkdir -p /gpfs

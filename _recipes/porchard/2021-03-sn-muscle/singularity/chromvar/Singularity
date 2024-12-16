@@ -1,0 +1,29 @@
+BootStrap: docker
+From: continuumio/miniconda:latest
+IncludeCmd: yes
+
+%help
+
+%setup
+	#chmod 755 /lab/work/porchard/sn-muscle-project/singularity/chromvar/chromvar.simg
+
+%files
+
+%labels
+
+%environment
+
+%post
+	umask 0022
+	apt update
+	apt -y dist-upgrade
+	apt -y install build-essential git environment-modules wget libxml2-dev libssl-dev tar gzip libgsl-dev
+	apt install -y libboost-all-dev libhts-dev libncurses5-dev libtinfo-dev zlib1g-dev lcov libxml2-dev
+	export PATH=/opt/conda/bin:$PATH
+	conda install -c bioconda -c r -c defaults -c conda-forge r=3.6 r-optparse bioconductor-chromvar bioconductor-summarizedexperiment r-tidyverse bioconductor-bsgenome.hsapiens.ucsc.hg19 python=3.6
+	#conda install -c bioconda -c r r-optparse bioconductor-chromvar r-tidyverse
+	mkdir -p /sw
+	mkdir -p /scratch
+	mkdir -p /gpfs
+	ln -s /bin/gzip /usr/bin/gzip
+	ln -s /bin/tar /bin/gtar

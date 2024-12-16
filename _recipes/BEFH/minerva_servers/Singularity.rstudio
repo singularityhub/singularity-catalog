@@ -1,0 +1,46 @@
+Bootstrap: docker
+From: rocker/rstudio:4.4
+
+%post
+    # lua-posix lua-posix-dev \
+    #  tcl tcl-dev tcl8.6 tcl8.6-dev libtcl8.6 \
+    #  lua5.1 liblua5.1-0-dev liblua5.1-0
+    apt-get update && \
+    apt-get install -y wget less openssh-client exa fish && \
+    apt-get clean
+    echo "lock-type=linkbased" > /etc/rstudio/file-locks
+    wget -O Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh" && \
+    bash Miniforge3.sh -b -p /opt/conda && \
+    rm Miniforge3.sh && \
+    echo "done"
+
+%environment
+    #export MODULEPATH=/usr/share/lmod/lmod/modulefiles/Core:/opt/hpc/packages/minerva-centos7/modulefiles:/opt/hpc/packages/minerva-common/modulefiles
+    export RS_CONDAENV=${RS_CONDAENV:-$CONDA_DEFAULT_ENV}
+
+%apprun rserver
+    echo "enabling conda" && \
+      . /opt/conda/etc/profile.d/conda.sh && \
+      . /opt/conda/etc/profile.d/mamba.sh && \
+      alias ll='ls -l' && \
+      echo "activating env $RS_CONDAENV" && \
+      conda activate $RS_CONDAENV && \
+      echo "starting RStudio Server" && \
+      exec /usr/lib/rstudio-server/bin/rserver "${@}"
+
+%apprun bash
+    echo "Enabling conda" && \
+      . /opt/conda/etc/profile.d/conda.sh && \
+      . /opt/conda/etc/profile.d/mamba.sh && \
+      alias ll='ls -l' && \
+      echo "activating env $RS_CONDAENV" && \
+      conda activate $RS_CONDAENV && \
+      echo "starting BASH" && \
+      /bin/bash
+
+%runscript
+    echo "Enabling conda" && \
+      . /opt/conda/etc/profile.d/conda.sh && \
+      . /opt/conda/etc/profile.d/mamba.sh && \
+      echo "starting RStudio Server" && \
+      exec rserver "${@}"
