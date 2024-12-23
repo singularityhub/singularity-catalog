@@ -45,8 +45,8 @@ From: ubuntu:20.04
 
 
 	# install Julia
-	JVER="1.10.4"
-	curl -sSL "https://julialang-s3.julialang.org/bin/linux/x64/1.10/julia-"$JVER"-linux-x86_64.tar.gz" > julia.tar.gz
+	JVER="1.11.1"
+	curl -sSL "https://julialang-s3.julialang.org/bin/linux/x64/"${JVER%.*}"/julia-"$JVER"-linux-x86_64.tar.gz" > julia.tar.gz
 	tar -C / -xzf julia.tar.gz
 	rm julia.tar.gz
 	mkdir /depot
