@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: rust:latest
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY https://github.com/icaoberg/singularity-rucola
+    COPYRIGHT Copyright © 2024 Pittsburgh Supercomputing Center. All Rights Reserved.
+    VERSION 0.40
+
+%post
+    cargo install --locked rucola-notes
+
+%runscript
+    rucola "$@"
