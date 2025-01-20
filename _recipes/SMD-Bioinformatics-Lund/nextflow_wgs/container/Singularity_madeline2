@@ -1,0 +1,29 @@
+Bootstrap:docker
+From:nfcore/base:1.7
+
+%labels
+	MAINTAINER Viktor henmyr <viktor.henmyr@skane.se>
+	DESCRIPTION Singularity container for CMD WGS pipeline
+	VERSION 0.0.2
+
+%environment
+	PATH=/opt/conda/envs/CMD-WGS/bin:/opt/sentieon-genomics-202010.01/bin/:/opt/bin:/opt/conda/envs/py3-env/bin:/TIDDIT:$PATH
+	PICARD_HOME=/opt/conda/envs/CMD-WGS/share/picard-2.21.2-0/
+	export PERL5LIB=$PERL5LIB:/opt/conda/envs/CMD-WGS/lib/site_perl/5.26.2/
+	export PERL5LIB=$PERL5LIB:/opt/conda/envs/CMD-WGS/lib/site_perl/5.26.2/x86_64-linux-thread-multi/
+	export PERL5LIB=$PERL5LIB:/opt/bin/
+
+%files
+
+%post
+	rm -rf /var/lib/apt/lists/*
+	apt -y clean
+	apt -y update
+	apt -y install libz-dev build-essential gettext cmake libxml2-dev libcurl4-openssl-dev libssl-dev make libbz2-dev
+
+    /opt/conda/bin/conda create -n tools python=3.6
+    /opt/conda/envs/tools/bin/pip install ped_parser
+
+    cd / && git clone https://github.com/piratical/Madeline_2.0_PDE.git
+    cd Madeline_2.0_PDE && git checkout 06e29563b4e22b41180475fd06a7405be8e411ef
+    ./configure --with-include-gettext && make && make install

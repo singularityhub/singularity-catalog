@@ -1,0 +1,86 @@
+# Author: B.M. Anderson
+# Singularity recipe for creating a container for running treePL https://github.com/blackrim/treePL
+
+
+Bootstrap: docker
+From: ubuntu:20.04
+
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM treePL
+	VERSION latest
+
+
+%help
+	This container is for running treePL
+
+	To use it, call as:
+		singularity exec -H "$(pwd)" treepl.sif treePL [config_file]
+
+
+%post
+	export DEBIAN_FRONTEND=noninteractive
+
+	# install dependencies
+	apt update && apt install -y \
+		autoconf \
+		automake \
+		build-essential \
+		cmake \
+		git \
+		libboost-system-dev \
+		libcolpack-dev \
+		libtool \
+		locales \
+		make \
+		wget
+
+
+	## set locale
+	locale-gen en_US.UTF-8
+	echo "LANG=en_US.UTF-8" >> /etc/default/locale
+
+
+	## ADOL-C
+	URL=https://github.com/coin-or/ADOL-C/archive/refs/tags/releases/2.7.2.tar.gz
+	wget "$URL"
+	tar -xzf 2.7.2.tar.gz && rm 2.7.2.tar.gz
+	cd ADOL-C-releases-2.7.2
+	autoreconf -fi
+	./configure --prefix=/usr/local --with-openmp-flag=-fopenmp
+	make
+	make install
+	cd .. && rm -r ADOL-C-releases-2.7.2
+
+
+	## NLopt
+	URL=https://github.com/stevengj/nlopt/archive/v2.7.1.tar.gz
+	wget "$URL"
+	tar -xzf v2.7.1.tar.gz && rm v2.7.1.tar.gz
+	cd nlopt-2.7.1
+	cmake .
+	make
+	make install
+	cd .. && rm -r nlopt-2.7.1
+
+
+	# TreePL
+	git clone https://github.com/blackrim/treePL.git
+	cd treePL/src
+	./configure --prefix=/usr/local
+	make
+	make install
+	cd ../.. && rm -r treePL
+
+
+	# clean-up
+	apt autoremove -y && apt clean all
+
+
+%environment
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64
+
+
+%runscript
+

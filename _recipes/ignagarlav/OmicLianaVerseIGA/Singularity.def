@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: starlitnightly/omicverse:py310_cpu_latest
+
+%labels
+    MAINTAINER "Ignacio Garzón Álvarez igarzonalva@alumni.unav.es"
+    VERSION "PLACEHOLDER_VERSION" 
+
+%post
+    echo "Instalando paquetes Python locales..."
+    pip install --no-index --find-links=/packages torch==2.4.0 torchvision==0.19.0 torchaudio==2.4.0
+    pip install --no-index --find-links=/packages torch_geometric
+    pip install --no-index --find-links=/packages pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv
+    pip install --no-index --find-links=/packages omicverse
+    pip install --no-index --find-links=/packages dgl
+    pip install --no-index --find-links=/packages tangram pot tangram cvxpy libpysal gudhi openai patsy combat pydeseq2==0.4.1 pymde opencv-python scikit-image
+    pip install --no-index --find-links=/packages harmonypy intervaltree fbpca mofax metatime s-gd2 mellon scvelo cellrank
+    pip install --no-index --find-links=/packages numpy==1.23.5 llvmlite==0.41.1 numba==0.58.1
+
+    echo "Instalando LIANA con pip..."
+    pip install liana
+
+

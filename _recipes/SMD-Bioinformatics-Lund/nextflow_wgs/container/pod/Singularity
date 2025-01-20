@@ -1,0 +1,23 @@
+Bootstrap:docker
+From:nfcore/base
+
+%labels
+        MAINTAINER Paul Piccinelli <Paul.Piccinelli@skane.se>
+        DESCRIPTION Singularity container for mito pipeline
+        VERSION 0.0.1
+
+%environment
+        PATH=/opt/conda/envs/CMD-WGS/bin:/opt/conda/envs/tools/bin:/opt:$PATH
+
+%files
+        environment.yml /py2.yml
+        /data/bnf/dev/paul/NextFlow/POD/container/parental_origin_of_duplication.pl /opt
+        /data/bnf/dev/paul/NextFlow/POD/container/plotting_POD.R /opt
+
+%post
+        /opt/conda/bin/conda create -n tools python=3
+        /opt/conda/bin/conda clean -a
+        . /opt/conda/bin/activate tools
+
+        /opt/conda/bin/conda env create -f /py2.yml
+        /opt/conda/bin/conda clean -a

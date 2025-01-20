@@ -1,0 +1,115 @@
+Bootstrap:docker
+From:nfcore/base:1.8
+
+%labels
+	MAINTAINER Viktor henmyr <viktor.henmyr@skane.se>
+	DESCRIPTION Singularity container for CMD WGS pipeline
+	VERSION 0.0.2
+
+%environment
+	PATH=/opt/conda/envs/CMD-WGS/bin:/opt/sentieon-genomics-202010.01/bin/:/opt/bin:/opt/conda/envs/py3-env/bin:/TIDDIT:$PATH
+	PICARD_HOME=/opt/conda/envs/CMD-WGS/share/picard-2.21.2-0/
+	export PERL5LIB=$PERL5LIB:/opt/conda/envs/CMD-WGS/lib/site_perl/5.26.2/
+	export PERL5LIB=$PERL5LIB:/opt/conda/envs/CMD-WGS/lib/site_perl/5.26.2/x86_64-linux-thread-multi/
+	export PERL5LIB=$PERL5LIB:/opt/bin/
+	PATH=/eKLIPse:/eKLIPse/data:$PATH
+	PATH=/GraphAlignmentViewer:/SMNCopyNumberCaller/:$PATH
+	umask 0002
+
+%files
+    genmod.patch /
+	environment.yml /
+	environment_gatk.yml /
+	environment_py3.yml /
+	environment_java8.yml /
+	environment_htslib10.yml /
+	../bin/ /opt
+	/data/bnf/sw/sentieon/sentieon-genomics-202010.01 /opt
+	/data/bnf/sw/melt/MELTv2.1.5/MELT.jar /opt/
+%post
+	rm -rf /var/lib/apt/lists/*
+	apt -y clean
+	apt -y update
+	apt -y install libz-dev build-essential gettext cmake libxml2-dev libcurl4-openssl-dev libssl-dev make libbz2-dev graphicsmagick-imagemagick-compat
+
+	/opt/conda/bin/conda env create -f /environment.yml
+	/opt/conda/bin/conda env create -f /environment_htslib10.yml
+	
+    git clone https://github.com/dooguypapua/eKLIPse.git
+    cd eKLIPse
+    git checkout c25931b48f9db0c6e26068eab9d733c55956785d
+
+
+
+	/opt/conda/bin/conda env create -f /environment_java8.yml
+	/opt/conda/bin/conda env create -f /environment_gatk.yml
+        
+	/opt/conda/bin/conda create -n tools python=3.6
+    /opt/conda/bin/conda clean -a
+    . /opt/conda/bin/activate tools
+	
+	cd / && git clone https://github.com/robertopreste/HmtNote
+	cd HmtNote
+	git checkout 0f2c0f684a45c0087cabc3cb15f61803fac7daf1
+	export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+	/opt/conda/envs/tools/bin/pip install numpy
+	/opt/conda/envs/tools/bin/pip install HmtNote
+	/opt/conda/envs/tools/bin/hmtnote dump
+	
+	wget -P /usr/bin https://github.com/seppinho/mutserve/releases/download/v1.3.4/mutserve-1.3.4.jar
+	wget -P /usr/bin https://github.com/seppinho/haplogrep-cmd/releases/download/2.1.25/haplogrep-2.1.25.jar
+	wget https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc7/mutserve.zip
+	/opt/conda/envs/CMD-WGS/bin/jar -xvf mutserve.zip
+	mv mutserve.jar /opt/bin/
+	wget https://github.com/seppinho/haplogrep-cmd/releases/download/v2.2.9/haplogrep.zip
+	/opt/conda/envs/CMD-WGS/bin/jar -vxf haplogrep.zip
+	mv haplogrep.jar /opt/bin/
+	
+	/opt/conda/envs/CMD-WGS/bin/cpanm Path::Tiny --force
+	/opt/conda/envs/CMD-WGS/bin/cpanm MongoDB::Collection
+	/opt/conda/envs/CMD-WGS/bin/cpanm JSON
+    /opt/conda/envs/CMD-WGS/bin/pip install genmod
+    patch /opt/conda/envs/CMD-WGS/lib/python2.7/site-packages/genmod/score_variants/compound_scorer.py /genmod.patch
+
+	cd / && git clone https://github.com/Clinical-Genomics-Lund/modify_vcf_scout.git
+	cd modify_vcf_scout && git checkout 97006fa5eaf8f8b08b151c2272ab0fcb3246cc59
+	cp modify_vcf_scout.pl /opt/bin/.
+	
+	cd / && git clone https://github.com/Clinical-Genomics-Lund/qc_sentieon.git
+	cd qc_sentieon && git checkout c453713628a52125e72f5cadb7a0d1a44b058132
+	cp qc_sentieon.pl /opt/bin/.
+
+	
+	wget https://github.com/brentp/vcfanno/releases/download/v0.3.2/vcfanno_linux64 -O /opt/bin/vcfanno
+
+	/opt/conda/bin/conda env create -f /environment_py3.yml python=3
+	/opt/conda/bin/conda clean -a
+    . /opt/conda/bin/activate py3-env
+
+	cd / && git clone https://github.com/SciLifeLab/TIDDIT.git
+	cd TIDDIT && git checkout TIDDIT-2.8.1
+	./INSTALL.sh
+
+	cd / && git clone https://github.com/bjhall/upd.git
+	cd upd && git checkout 6f34d2e1a890ef7f030a2bf1458b82453835bf27
+	/opt/conda/envs/py3-env/bin/pip install --editable .
+
+    cd / && git clone https://github.com/moonso/stranger.git
+	cd stranger && git checkout dd9eee5fd6f7fda2235a4452923dad505fdcfa65
+	/opt/conda/envs/py3-env/bin/pip install --editable .
+
+	cd / && git clone https://github.com/J35P312/SVDB
+	cd SVDB && git checkout 2.2.0
+	/opt/conda/envs/py3-env/bin/pip install --editable .
+
+	/opt/conda/envs/CMD-WGS/bin/cpanm List::MoreUtils --force
+
+	/opt/conda/envs/py3-env/bin/pip install pysam
+	/opt/conda/envs/py3-env/bin/pip install reportlab
+	cd / && git clone https://github.com/Illumina/GraphAlignmentViewer.git
+	cd GraphAlignmentViewer && git checkout afba7c2e7e13dc3b8a0f480242c8eed2ca293274
+
+	cd / && git clone https://github.com/Illumina/SMNCopyNumberCaller.git
+	cd SMNCopyNumberCaller && git checkout v1.1.1
+

@@ -1,9 +1,9 @@
 bases:
-- count: 2136
+- count: 2137
   name: ubuntu
 - count: 451
   name: nvidia/cuda
-- count: 381
+- count: 382
   name: debian
 - count: 305
   name: python
@@ -23,7 +23,7 @@ bases:
   name: mkandes/naked-singularity
 - count: 96
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 88
+- count: 93
   name: nfcore/base
 - count: 72
   name: neurodebian
@@ -122,6 +122,8 @@ bases:
 - count: 13
   name: ghcr.io/mkandes/openmpi
 - count: 13
+  name: intel/oneapi-hpckit
+- count: 13
   name: ros
 - count: 12
   name: nipreps/smriprep
@@ -129,8 +131,6 @@ bases:
   name: pawsey/openfoam
 - count: 12
   name: openfluid/openfluid
-- count: 12
-  name: intel/oneapi-hpckit
 - count: 12
   name: khanlab/heudiconv
 - count: 12
@@ -188,6 +188,8 @@ bases:
 - count: 8
   name: sebastientourbier/connectomemapper-bidsapp
 - count: 8
+  name: pennlinc/aslprep
+- count: 8
   name: arezaii/pf_singularity
 - count: 8
   name: rocker/geospatial
@@ -223,8 +225,6 @@ bases:
   name: cpllab/language-models
 - count: 7
   name: mattocci/rstan
-- count: 7
-  name: pennlinc/aslprep
 - count: 7
   name: iarcbioinfo/mutect-nf
 - count: 7
@@ -276,6 +276,8 @@ bases:
 - count: 6
   name: einar90/fieldopt
 - count: 6
+  name: intel/oneapi-basekit
+- count: 6
   name: khanlab/gradcorrect
 - count: 6
   name: centos-7.7.1908-cuda-11.0.sif
@@ -326,8 +328,6 @@ bases:
 - count: 5
   name: pndni/centos7-base
 - count: 5
-  name: intel/oneapi-basekit
-- count: 5
   name: ../library/micromamba/micromamba_1.5.8.img
 - count: 5
   name: nextgenusfs/funannotate
@@ -339,6 +339,8 @@ bases:
   name: combinelab/salmon
 - count: 5
   name: ufscar/ubuntu_mpich
+- count: 5
+  name: letaylor/sc_qc_cluster
 - count: 4
   name: dcgc-bfx/dcgc-base-conda
 - count: 4
@@ -367,6 +369,8 @@ bases:
   name: sebastientourbier/mialsuperresolutiontoolkit
 - count: 4
   name: cpplab/bidsmreye
+- count: 4
+  name: pennlinc/qsirecon
 - count: 4
   name: ISU-HPC/ml-base
 - count: 4
@@ -485,8 +489,6 @@ bases:
   name: poldracklab/fitlins
 - count: 3
   name: bids/baracus
-- count: 3
-  name: pennlinc/qsirecon
 - count: 3
   name: trends/gift-bids
 - count: 3
@@ -716,6 +718,8 @@ bases:
 - count: 2
   name: brainiak/rttools
 - count: 2
+  name: brainiak/brainiak
+- count: 2
   name: brainiak/rtconda
 - count: 2
   name: brainiak/rttoolslite
@@ -891,8 +895,6 @@ bases:
   name: iarcbioinfo/imputation-nf
 - count: 2
   name: iarcbioinfo/fastqc-nf
-- count: 2
-  name: letaylor/sc_qc_cluster
 - count: 2
   name: justinblaber/multi_pyspin
 - count: 2
@@ -1400,8 +1402,6 @@ bases:
 - count: 1
   name: brainiak/rtcloudlite
 - count: 1
-  name: brainiak/brainiak
-- count: 1
   name: poldracklab/ds003-example
 - count: 1
   name: reprostat/reproa
@@ -1874,6 +1874,8 @@ bases:
 - count: 1
   name: pndni/minc-and-ants-container
 - count: 1
+  name: starlitnightly/omicverse
+- count: 1
   name: ubuntu-focal
 - count: 1
   name: tswetnam/cloudcompare
@@ -2144,11 +2146,11 @@ bases:
 - count: 1
   name: centos7.sif
 bootstraps:
-- count: 7082
+- count: 7098
   name: docker
 - count: 511
   name: shub
-- count: 430
+- count: 431
   name: debootstrap
 - count: 384
   name: library
@@ -2956,6 +2958,8 @@ orgs:
 - count: 1
   name: einar90
 - count: 1
+  name: starlitnightly
+- count: 1
   name: tswetnam
 - count: 1
   name: pdal
@@ -3021,8 +3025,6 @@ orgs:
   name: anibali
 - count: 1
   name: ribin7bok
-- count: 1
-  name: letaylor
 - count: 1
   name: justinblaber
 - count: 1
@@ -3146,16 +3148,18 @@ orgs:
 - count: 1
   name: BIDS-Apps
 - count: 1
-  name: nfcore
-- count: 1
   name: danigoland
+- count: 1
+  name: nfcore
 - count: 1
   name: pytorch
 - count: 1
   name: marcchpc
+- count: 1
+  name: letaylor
 tags:
-  latest: 771
-  other: 6663
+  latest: 775
+  other: 6674
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3553,6 +3557,7 @@ versions:
     stretch: 1
   brainiak/brainiak:
     v0.11-20201015: 1
+    v0.12-20250106: 1
   brainiak/rtcloud:
     '1.4': 1
   brainiak/rtcloudlite:
@@ -3819,7 +3824,7 @@ versions:
     buster-slim: 36
     jessie: 10
     jessie-slim: 18
-    latest: 65
+    latest: 66
     sid-slim: 2
     stable: 2
     stable-slim: 6
@@ -3955,7 +3960,7 @@ versions:
     '34': 5
     '35': 3
     '36': 2
-    '38': 2
+    '40': 2
     latest: 3
   fempar/fempar-env:
     gnu-debug_p4est-parallel: 1
@@ -4268,18 +4273,20 @@ versions:
   impica:
     latest: 1
   intel/oneapi-basekit:
-    devel-rockylinux9: 1
+    2025.0.0-0-devel-rockylinux9: 1
+    2025.0.0-0-devel-ubuntu22.04: 1
+    2025.0.0-0-devel-ubuntu24.04: 1
     devel-ubuntu18.04: 1
     devel-ubuntu20.04: 1
-    devel-ubuntu22.04: 1
   intel/oneapi-hpckit:
     2021.2-devel-ubuntu18.04: 4
     2022.1.1-devel-ubuntu18.04: 1
+    2025.0.0-0-devel-rockylinux9: 1
+    2025.0.0-0-devel-ubuntu22.04: 1
+    2025.0.0-0-devel-ubuntu24.04: 1
     devel-centos8: 1
-    devel-rockylinux9: 1
     devel-ubuntu18.04: 3
     devel-ubuntu20.04: 1
-    devel-ubuntu22.04: 1
   intelaipg/intel-optimized-tensorflow:
     latest: 1
     latest-devel-mkl-py3: 1
@@ -4484,7 +4491,7 @@ versions:
   lemene/pecat:
     v0.0.3: 1
   letaylor/sc_qc_cluster:
-    latest: 2
+    latest: 5
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -4671,8 +4678,8 @@ versions:
     v1.8.15: 1
     v1.8.9: 1
   nfcore/base:
-    '1.7': 3
-    '1.8': 8
+    '1.7': 4
+    '1.8': 11
     '1.9': 3
     latest: 1
   nginx:
@@ -5183,9 +5190,11 @@ versions:
     0.7.2: 1
     0.7.3: 1
     0.7.4: 1
+    0.7.5: 1
   pennlinc/qsirecon:
     0.23.1: 1
     0.23.2: 1
+    1.0.0: 1
     unstable: 1
   pennlinc/xcp_d:
     0.10.0: 1
@@ -5829,6 +5838,8 @@ versions:
     1.14.5: 1
   staphb/samtools:
     '1.15': 1
+  starlitnightly/omicverse:
+    py310_cpu_latest: 1
   statgen/epacts:
     dev: 1
   sternacht/hpcc_openblas:
@@ -6024,7 +6035,7 @@ versions:
     '18.10': 10
     '19.04': 34
     '19.10': 16
-    '20.04': 461
+    '20.04': 462
     '20.04  ': 1
     '20.10': 3
     '21.04': 3

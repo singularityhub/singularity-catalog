@@ -44,8 +44,8 @@ MYPREFIX="/opt/conda"
 #      echo "find micromamba from pwd" $(find .  -name micromamba) ||true
 #    export MAMBA_ROOT_PREFIX=/opt/micromamba 
 #      eval "$(micromamba shell hook --shell dash)" 
-    conda create -y --name py38 python==3.8
-    conda activate py38 
+    conda create -y --name py39 python==3.9
+    conda activate py39 
 export CONDA_FETCH_THREADS=2 # parallel download for recent conda versions
 export MAX_JOBS=2 # ninja workers
 # eval "$(${MYPREFIX}/bin/conda shell.bash hook)"
@@ -62,6 +62,8 @@ micromamba install  -y -c conda-forge  openmm=8.1.1
 micromamba install  -y -c conda-forge  openmm-setup
 micromamba install  -y -c conda-forge  openmmtools
 micromamba install  -y -c conda-forge  yank
+#micromamba install  -y -c conda-forge  nglview 
+#micromamba install  -y -c conda-forge  jupyter_packaging
 
 
 micromamba install -y -c conda-forge flask=2.1.3
@@ -92,7 +94,7 @@ micromamba install -c conda-forge -c bioconda -y blast
 # replace ftp://ftp.wwpdb.org with https://files.rcsb.org since it has DNS failures
 BIOPYTHON_LOCATION=$(python -c "import Bio; print(Bio.__location__)") || true
 echo BIOPTYHON_LOCATION is $BIOPTYHON_LOCATION || true
-sed -i 's/ftp:\/\/ftp.wwpdb.org/https:\/\/files.rcsb.org/' /opt/conda/envs/py38/lib/python3.8/site-packages/Bio/PDB/PDBList.py
+sed -i 's/ftp:\/\/ftp.wwpdb.org/https:\/\/files.rcsb.org/' /opt/conda/envs/py39/lib/python3.9/site-packages/Bio/PDB/PDBList.py
 cd $OPENAWSEM_LOCATION/helperFunctions
 sed -i 's/ftp:\/\/ftp.wwpdb.org/https:\/\/files.rcsb.org/'  create_fragment_memory.py
 sed -i 's/ftp:\/\/ftp.wwpdb.org/https:\/\/files.rcsb.org/' MultCha_prepFrags_index.py
@@ -121,6 +123,12 @@ pip install --user -e .
 cd ..
 rm -rf PyEMMA-*
 #git clone https://github.com/cabb99/awsemtools.git
+#fix Dec 2024 awsemtools build breakage
+pip install ProDy==2.4.1
+#pip install nglview==3.1.2
+pip install ffmpeg==1.4
+#pip install ipywidgets==7.8.5
+#pip install jupyterlab_widgets==1.1.11
 export COMMIT=cd5c6a914d85e9b05bbf9eef13947aa2f596d9fc
 wget https://github.com/cabb99/awsemtools/archive/$COMMIT.tar.gz -O awsemtools.tar.gz
 tar xzf awsemtools.tar.gz
@@ -136,6 +144,8 @@ rm -rf awsemtools-*
     du -sk $MYPREFIX/lib/*|sort -n    
     rm -f /usr/local/cuda-*/targets/x86_64-linux/lib/lib*.a || true
     rm -f $MYPREFIX/lib/*amdg* || true
+#    rm -rf /opt/conda/envs/py39/include/* || true
+#    rm -f /opt/conda/envs/py39/lib/python3.9/site-packages/openawsem/data/pdb_seqres.txt ||true
 #    rm -f $MYPREFIX/lib/*cublas*
 
 
@@ -148,11 +158,11 @@ python -m pip install matplotlib mdtraj nglview numpy pandas ParmEd
 %environment
 export CUDA=$(echo $CUDA_VERSION |cut -c 1-4)
 MYPREFIX="/opt/conda"
-CONDA_PREFIX=$MYPREFIX/envs/py38
-CONDA_PROMPT_MODIFIER=(py38) 
-CONDA_DEFAULT_ENV=py38
+CONDA_PREFIX=$MYPREFIX/envs/py39
+CONDA_PROMPT_MODIFIER=(py39) 
+CONDA_DEFAULT_ENV=py39
 CONDA_EXE=$MYPREFIX/bin/conda
-CONDA_PREFIX=$MYPREFIX/envs/py38
+CONDA_PREFIX=$MYPREFIX/envs/py39
 MAMBA_ROOT_PREFIX=$MYPREFIX/micromamba
 CONDA_PYTHON_EXE=$MYPREFIX/bin/python
 export PATH=$CONDA_PREFIX/bin:$MYPREFIX/bin:$MYPREFIX/condabin:$MYPREFIX/openawsem.reqs:$PATH
