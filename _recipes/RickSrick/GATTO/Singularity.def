@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: python:3.8.10
+
+%post
+    # Install Python dependencies
+    pip install argparse numpy pandas networkx matplotlib scikit-learn tensorflow tqdm stellargraph node2vec joblib seaborn chardet
+    
+%environment
+    # Set environment variables
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%runscript
+    # Default command to run when the container starts
+    python3 "$@"
+

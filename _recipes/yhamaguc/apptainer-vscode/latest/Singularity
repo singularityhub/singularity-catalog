@@ -1,0 +1,168 @@
+BootStrap: library
+From: ubuntu:22.04
+
+%apprun python
+  exec python "${@}"
+
+%apprun python3
+  exec python3 "${@}"
+
+%apprun pip
+  exec pip "${@}"
+
+%apprun pip3
+  exec pip3 "${@}"
+
+%apprun R
+  exec R "${@}"
+
+%apprun Rscript
+  exec Rscript "${@}"
+
+%apprun radian
+  exec radian "${@}"
+
+%apprun julia
+  exec julia "${@}"
+
+%apprun code
+  exec code "${@}"
+
+%environment
+  export PATH=${HOME}/.local/bin:${PATH}
+
+%files
+  51716619E084DAB9.asc /var
+
+
+# Install dependencies
+%post
+  # NOTE: To avoid interactive dialogue
+  DEBIAN_FRONTEND=noninteractive && \
+  ln -snf /usr/share/zoneinfo/UTC /etc/localtime && echo UTC > /etc/timezone && \
+  apt-get update -y && \
+  apt-get install -y software-properties-common && \
+  apt-get install -y gnupg2 && \
+  cat /var/51716619E084DAB9.asc | apt-key add - && \
+  rm /var/51716619E084DAB9.asc && \
+  add-apt-repository ppa:ubuntugis/ppa && \
+  apt-get update -y && \
+  apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    zsh \
+    wget \
+    curl \
+    gpg \
+    ca-certificates \
+    vim \
+    git \
+    less \
+    xsel
+
+
+# Install R
+%post
+  R_VERSION=4.4.1 && \
+  DEBIAN_FRONTEND=noninteractive && \
+  wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc && \
+  apt-get update && \
+  apt-get install -y --no-install-recommends \
+    locales \
+    gnupg \
+    lsb-release \
+    libgdal-dev \
+    libgeos-dev \
+    libproj-dev \
+    libudunits2-dev && \
+  # NOTE: Configure default locale
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
+  locale-gen en_US.utf8 && \
+  /usr/sbin/update-locale LANG=en_US.UTF-8 && \
+  LC_ALL=en_US.UTF-8 && \
+  LANG=en_US.UTF-8 && \
+  add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" && \
+  apt update --allow-insecure-repositories && \
+  apt-get install -y --no-install-recommends \
+    r-base=${R_VERSION}* \
+    r-base-core=${R_VERSION}* \
+    r-base-dev=${R_VERSION}* \
+    r-recommended=${R_VERSION}* \
+    r-base-html=${R_VERSION}* \
+    r-doc-html=${R_VERSION}* \
+    libgsl-dev \
+    r-cran-gsl \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
+    libcairo2-dev \
+    libxt-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    ghostscript &&
+  apt update --allow-insecure-repositories && \
+  apt -y install ghostscript && \
+  rm -rf /var/lib/apt/lists/* && \
+  # NOTE: Add a default CRAN mirror
+  echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl')" >> /usr/lib/R/etc/Rprofile.site && \
+  # NOTE: Necessary to write to the system volume
+  R -e 'install.packages("BiocManager")'
+
+
+# Install Julia
+%post
+  JULIA_VERSION=1.10.2 && \
+  JULIA_VERSION_SHORT=$(echo "${JULIA_VERSION}" | cut -d. -f 1,2) && \
+  DEBIAN_FRONTEND=noninteractive && \
+  apt-get update -y && \
+  apt-get install -y --no-install-recommends \
+    fonts-dejavu \
+    gfortran && \
+  cd /tmp && \
+  wget \
+    --no-verbose \
+    --no-check-certificate \
+    "https://julialang-s3.julialang.org/bin/linux/x64/${JULIA_VERSION_SHORT}/julia-${JULIA_VERSION}-linux-x86_64.tar.gz" && \
+  mkdir "/opt/julia-${JULIA_VERSION}" && \
+  tar xzf julia-${JULIA_VERSION}-linux-x86_64.tar.gz -C /opt/julia-${JULIA_VERSION} --strip-components=1 && \
+  ln -s /opt/julia-*/bin/julia /usr/local/bin/julia && \
+  apt-get clean && \
+  rm -rf \
+    julia-${JULIA_VERSION}-linux-x86_64.tar.gz \
+    /var/lib/apt/lists/*
+
+
+# Install Python
+%post
+  DEBIAN_FRONTEND=noninteractive && \
+  apt-get update && \
+  apt-get install -y --no-install-recommends \
+    python3.10 \
+    python3-pip \
+    libpython3.10-dev \
+    sqlite3 && \
+  ln -s /usr/bin/python3 /usr/bin/python && \
+  rm -rf /var/lib/apt/lists/*
+
+
+# Install Latest VSCODE
+%post
+  cd /var/tmp && \
+  wget --no-verbose --no-check-certificate https://packages.microsoft.com/keys/microsoft.asc && \
+  gpg --dearmor -o packages.microsoft.gpg --batch --yes microsoft.asc && \
+  install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg && \
+  sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list' && \
+  DEBIAN_FRONTEND=noninteractive && \
+  apt update && \
+  apt install -y apt-transport-https && \
+  apt update && \
+  apt install -y code && \
+  apt-get clean && \
+  rm -rf \
+    /config/* \
+    /var/lib/apt/lists/* \
+    /var/tmp/*

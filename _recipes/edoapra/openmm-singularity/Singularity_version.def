@@ -78,7 +78,7 @@ cd /opt/conda
     mkdir openawsem.reqs
     cd openawsem.reqs
     mkdir stride-src && cd stride-src
-    wget https://webclu.bio.wzw.tum.de/stride/stride.tar.gz
+    wget --no-check-certificate https://webclu.bio.wzw.tum.de/stride/stride.tar.gz
 tar -xvzf stride.tar.gz
 rm stride.tar.gz
 make
@@ -165,6 +165,7 @@ CONDA_EXE=$MYPREFIX/bin/conda
 CONDA_PREFIX=$MYPREFIX/envs/py39
 MAMBA_ROOT_PREFIX=$MYPREFIX/micromamba
 CONDA_PYTHON_EXE=$MYPREFIX/bin/python
+export PYTHONPATH=$CONDA_PREFIX/lib/python3.9/site-packages/
 export PATH=$CONDA_PREFIX/bin:$MYPREFIX/bin:$MYPREFIX/condabin:$MYPREFIX/openawsem.reqs:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-${CUDA}/compat:/usr/local/cuda-${CUDA}/lib64:$LD_LIBRARY_PATH
 #%runscript

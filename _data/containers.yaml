@@ -1,15 +1,15 @@
 bases:
-- count: 2137
+- count: 2142
   name: ubuntu
 - count: 451
   name: nvidia/cuda
 - count: 382
   name: debian
-- count: 305
+- count: 308
   name: python
 - count: 300
   name: centos
-- count: 285
+- count: 287
   name: alpine
 - count: 258
   name: ghcr.io/mkandes/naked-singularity
@@ -27,6 +27,8 @@ bases:
   name: nfcore/base
 - count: 72
   name: neurodebian
+- count: 56
+  name: conda/miniconda3
 - count: 53
   name: fedora
 - count: 52
@@ -35,8 +37,6 @@ bases:
   name: nvcr.io/nvidia/cuda
 - count: 49
   name: cokelaer/damona/conda
-- count: 47
-  name: conda/miniconda3
 - count: 44
   name: bids/validator
 - count: 40
@@ -76,9 +76,9 @@ bases:
 - count: 22
   name: khanlab/tar2bids
 - count: 21
-  name: rocker/r-ver
-- count: 20
   name: pennlinc/xcp_d
+- count: 21
+  name: rocker/r-ver
 - count: 19
   name: nvcr.io/nvidia/nvhpc
 - count: 18
@@ -146,6 +146,8 @@ bases:
 - count: 12
   name: ufscar/ubuntu_ompi
 - count: 11
+  name: nipreps/nibabies
+- count: 11
   name: hariszaf/pema
 - count: 11
   name: scientificlinux/sl
@@ -161,8 +163,6 @@ bases:
   name: trinityrnaseq/trinityrnaseq
 - count: 11
   name: perl
-- count: 10
-  name: nipreps/nibabies
 - count: 10
   name: khanlab/prepdwi
 - count: 10
@@ -235,6 +235,8 @@ bases:
   name: cpllab/language-models
 - count: 7
   name: thomasrobinson/centos7-netcdff
+- count: 7
+  name: letaylor/sc_qc_cluster
 - count: 7
   name: anair17/railrl_hand_v2
 - count: 7
@@ -715,8 +717,6 @@ bases:
   name: cloudpg/centos-7-grid
 - count: 2
   name: quay.io/ohpc/ohpc-gnu9
-- count: 2
-  name: letaylor/sc_qc_cluster
 - count: 2
   name: APPIAN-PET/APPIAN
 - count: 2
@@ -1243,6 +1243,8 @@ bases:
   name: lemene/pecat
 - count: 1
   name: trinityrnaseq/transdecoder
+- count: 1
+  name: cerebis/qc3c
 - count: 1
   name: sequana_tools_0.14.3.img
 - count: 1
@@ -2146,13 +2148,13 @@ bases:
 - count: 1
   name: amd64/ubuntu
 bootstraps:
-- count: 7096
+- count: 7122
   name: docker
 - count: 511
   name: shub
 - count: 431
   name: debootstrap
-- count: 384
+- count: 385
   name: library
 - count: 344
   name: oras
@@ -2576,6 +2578,8 @@ orgs:
 - count: 1
   name: lemene
 - count: 1
+  name: cerebis
+- count: 1
   name: phgenomics-singularity
 - count: 1
   name: funkey
@@ -2621,8 +2625,6 @@ orgs:
   name: nesinz
 - count: 1
   name: arezaii
-- count: 1
-  name: letaylor
 - count: 1
   name: osrf
 - count: 1
@@ -2922,6 +2924,8 @@ orgs:
 - count: 1
   name: thomasrobinson
 - count: 1
+  name: letaylor
+- count: 1
   name: arcsUVA
 - count: 1
   name: mtmiller
@@ -3158,8 +3162,8 @@ orgs:
 - count: 1
   name: nfcore
 tags:
-  latest: 772
-  other: 6675
+  latest: 778
+  other: 6686
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3270,7 +3274,7 @@ versions:
     '3.17': 12
     '3.18': 6
     '3.19': 1
-    '3.20': 8
+    '3.20': 9
     3.20.0: 1
     '3.4': 2
     '3.5': 1
@@ -3280,7 +3284,7 @@ versions:
     3.8.4: 1
     '3.9': 6
     edge: 54
-    latest: 66
+    latest: 67
   alpine/git:
     1.0.4: 1
   amazon/aws-cli:
@@ -4491,7 +4495,7 @@ versions:
   lemene/pecat:
     v0.0.3: 1
   letaylor/sc_qc_cluster:
-    latest: 2
+    latest: 7
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -4747,6 +4751,7 @@ versions:
     23.1.0: 1
     24.0.1: 1
     24.1.0: 1
+    25.0.0: 1
   nipreps/nirodents:
     0.2.1: 1
   nipreps/smriprep:
@@ -5200,6 +5205,7 @@ versions:
     0.10.0: 1
     0.10.1: 1
     0.10.3: 1
+    0.10.5: 1
     0.6.0: 1
     0.6.1: 1
     0.6.2: 1
@@ -5347,7 +5353,7 @@ versions:
     3.10-slim-bullseye: 3
     3.10.3-bullseye: 1
     '3.11': 2
-    3.11-slim: 20
+    3.11-slim: 22
     '3.12': 1
     3.12-slim: 1
     3.4-slim: 1
@@ -5384,6 +5390,7 @@ versions:
     3.8-slim-bullseye: 2
     3.8.0-buster: 1
     3.8.1-slim-buster: 1
+    3.8.10: 1
     3.8.12-bullseye: 1
     3.8.2: 1
     3.8.3-buster: 1
@@ -6036,12 +6043,12 @@ versions:
     '18.10': 10
     '19.04': 34
     '19.10': 16
-    '20.04': 462
+    '20.04': 466
     '20.04  ': 1
     '20.10': 3
     '21.04': 3
     '21.10': 3
-    '22.04': 67
+    '22.04': 68
     '22.10': 6
     '23.10': 2
     '24.04': 1

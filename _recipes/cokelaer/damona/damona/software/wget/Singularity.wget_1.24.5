@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: alpine:3.20
+
+%post
+
+    # update and install wget (bash for snakemake)
+    apk update && apk add --no-cache bash wget
+
+    apk del gcc make
+    rm -rf /var/cache/apk*
+
+
+%environment
+    export LC_ALL=C
+
+
+%runscript
+    exec wget "$@"
+

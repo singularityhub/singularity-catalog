@@ -1,0 +1,68 @@
+Bootstrap: docker
+From: conda/miniconda3
+Stage: devel
+
+%files
+environment.yml /environment.yml
+
+ 
+%post
+
+apt-get update && apt-get install -y  procps 
+conda update -n base -c defaults conda
+conda env create -n environment -f /environment.yml
+conda install -c conda-forge conda-pack
+conda-pack -n environment -o /tmp/env.tar && mkdir /venv && cd /venv && tar xf /tmp/env.tar && rm /tmp/env.tar
+/venv/bin/conda-unpack
+chmod +x /venv/bin/*
+
+
+
+Bootstrap: docker
+From: debian:buster-slim 
+Stage: final
+IncludeCmd: yes
+
+%files from devel
+/venv /venv
+
+%files
+debian.packages.run.list /opt/packages.run.list
+SOFTWARE.tsv /opt
+
+%post
+apt update && apt install -y $(cat /opt/packages.run.list)
+apt clean
+
+mkdir -p /opt/wrappers
+echo "#!/bin/bash\ncat /opt/SOFTWARE.tsv\n" > /opt/wrappers/software_info
+chmod +x /opt/wrappers/software_info
+
+%environment
+export PATH=/venv/bin:/opt/wrappers:$PATH
+
+%runscript
+"$@"
+
+%test
+echo "[Test] varscan help"
+varscan
+
+%labels
+    Maintainer Sebastien.Carrere@inrae.fr
+    Version 2.4.4
+
+%help
+## VARSCAN
+
+VarScan 2: Somatic mutation and copy number alteration discovery in cancer by exome sequencing
+
+### USAGE
+
+	$ {IMAGE} varscan
+	$ {IMAGE} tabix
+
+### CITATION
+
+Koboldt, D., Zhang, Q., Larson, D., Shen, D., McLellan, M., Lin, L., Miller, C., Mardis, E., Ding, L., & Wilson, R. (2012). VarScan 2: Somatic mutation and copy number alteration discovery in cancer by exome sequencing Genome Research DOI: 10.1101/gr.129684.111
+

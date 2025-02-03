@@ -1,0 +1,76 @@
+BOOTSTRAP: docker
+FROM: ubuntu:20.04 
+
+%files
+
+%post
+################################# APT INSTALL  ################################
+###############################################################################
+
+export DEBIAN_FRONTEND=noninteractive
+mkdir -p /tmp/apt/cache
+mkdir -p /tmp/apt/lists
+# Avoid downloading everything again if killed
+echo 'Dir::Cache "/tmp/apt/cache";' > /etc/apt/apt.conf.d/99custom
+echo 'Dir::State::Lists "/tmp/apt/lists";' >> /etc/apt/apt.conf.d/99custom
+
+apt-get clean
+apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    wget \
+    curl \
+    git \
+    libopenmpi-dev \
+    libssl-dev \
+    libffi-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    zlib1g-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libopenblas-dev \
+    libblas-dev \
+    liblapack-dev \
+    libhdf5-serial-dev \
+    libcurl4-openssl-dev \
+    autoconf \
+    libc++-dev \
+    libc++abi-dev \
+    libxml2 \
+    libxml2-dev \
+    cmake \
+    make \
+    g++ \
+    libprotobuf-dev \
+    protobuf-compiler \
+    libgoogle-perftools-dev \
+    python3.10 \
+    python3-dev \
+    python3-pip \
+    unzip \
+    libjson-c-dev \
+    libjansson-dev \
+    parallel
+
+wget http://freesasa.github.io/freesasa-2.1.2.zip && \
+    unzip freesasa-2.1.2.zip && \
+    cd freesasa-2.1.2 && \
+    ./configure --disable-xml && \
+    make && \
+    make install
+
+echo "Installing Rust and Cargo..."
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+. $HOME/.cargo/env
+export PATH="$HOME/.cargo/bin:$PATH"
+
+git clone https://github.com/Sherman-1/MicroStruct /MicroStruct && \
+    cd /MicroStruct/crates && cargo build --release
+
+################################# PIP INSTALL #################################
+###############################################################################
+
+# Set cache for pip
+mkdir -p /tmp/pip/cache
+
+

@@ -1,0 +1,57 @@
+Bootstrap: docker
+From: python:3.11-slim
+
+%labels
+    Author Thomas Cokelaer
+    Version "0.2.7"
+    Description "Apptainer recipe for Chromap using the GitHub tarball."
+
+%post
+    # Update and install basic dependencies
+    apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        wget \
+        git \
+        zlib1g-dev \
+        libbz2-dev \
+        liblzma-dev \
+        libcurl4-openssl-dev \
+        libssl-dev \
+        libgomp1 \
+        && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+    # Set working directory
+    mkdir -p /opt/chromap && cd /opt/chromap
+
+    # Download Chromap tarball from GitHub
+    wget -q https://github.com/haowenz/chromap/archive/refs/tags/v0.2.7.tar.gz -O chromap.tar.gz
+
+    # Verify the tarball integrity
+    if ! tar tzf chromap.tar.gz >/dev/null 2>&1; then
+        echo "Error: Tarball is corrupted or invalid"
+        exit 1
+    fi
+
+    # Extract and build Chromap
+    tar xzf chromap.tar.gz --strip-components=1
+    make
+    # Build Chromap
+    make
+
+    # Install Chromap binary
+    cp chromap /usr/local/bin/
+
+    # Clean up build dependencies
+    apt-get purge -y --auto-remove \
+        build-essential \
+        wget \
+        git
+
+%environment
+    export PATH="/usr/local/bin:$PATH"
+    export LC_ALL=C
+
+
+%runscript
+    exec chromap "$@"
+

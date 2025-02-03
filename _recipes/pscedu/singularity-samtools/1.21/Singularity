@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: alpine:latest
+
+%labels
+    MAINTAINER icaoberg
+    EMAIL icaoberg@psc.edu
+    SUPPORT help@psc.edu
+    REPOSITORY https://github.com/pscedu/singularity-samtools
+    COPYRIGHT Copyright © 2024 Pittsburgh Supercomputing Center. All Rights Reserved.
+    VERSION 1.21
+
+%post
+    apk update && apk add --no-cache \
+        build-base \
+        openssl-dev \
+        zlib-dev \
+        bzip2-dev \
+        xz-dev \
+        curl-dev \
+        ncurses-dev \
+        wget \
+        tar
+    wget -nc https://github.com/samtools/samtools/releases/download/1.21/samtools-1.21.tar.bz2
+    tar -xvf samtools-1.21.tar.bz2 && rm -f samtools-1.21.tar.bz2
+    mv samtools-1.21 /opt/
+    cd /opt/samtools-1.21
+    ./configure
+    make
+    make install

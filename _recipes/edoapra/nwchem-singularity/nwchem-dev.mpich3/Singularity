@@ -63,6 +63,9 @@ export DEBIAN_FRONTEND=noninteractive \
 else
     export mpich_options=' '
 fi \
+&& if [ $MPICH = '4.3.0rc3' ]; then
+    export mpich_options=' --disable-maintainer-mode --with-pm=no --enable-romio --with-slurm=no --with-pmi=pmix --with-pmix-include=/usr/lib/x86_64-linux-gnu/pmix2/include --with-pmix-lib=/usr/lib/x86_64-linux-gnu/pmix2/lib/ '
+fi \
 && export GCC_VERSION=11 \
 && echo mpich_options $mpich_options \
 && echo ARMCI_NETWORK is $ARMCI_NETWORK\
