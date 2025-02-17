@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+MAINTAINER darachm
+
+%help
+
+    This container is for providing `bartender` for some bioinformatic pipelines.
+    
+%post
+
+    apt -y update
+    apt -y install gcc-4.8 git make g++ python
+    apt -y install gawk grep
+    git clone https://github.com/LaoZZZZZ/bartender-1.1.git
+    cd bartender-1.1
+    make all
+    make install
+
+%test
+
+    # ?

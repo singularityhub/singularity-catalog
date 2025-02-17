@@ -1,0 +1,62 @@
+Bootstrap: docker
+From: rocker/verse:4.3.2
+
+%runscript
+  exec launch_rserver "${@}"
+
+%apprun R
+  exec R "${@}"
+
+%apprun Rscript
+  exec Rscript "${@}"
+
+%apprun default
+  exec "${@}"
+
+%environment
+  export PATH=/usr/lib/rstudio-server/bin:${PATH}
+
+# During the build process, commands in the %setup section are first executed
+# on the host system outside of the container after the base OS has been
+# installed. You can reference the container file system with the
+# $SINGULARITY_ROOTFS environment variable in the %setup section.
+%setup
+
+  # Copy files (often executable) to a system location like `/usr/local/bin`,
+  # give them the appropriate permissions/ownership.
+  #
+  # install path/to/source_file1 path/to/source_file2 ... path/to/destination
+  #
+  # -D     create all leading components of DEST except the last, or all
+  #        components of --target-directory, then copy SOURCE to DEST
+  # -v     verbose
+  install -Dv \
+    rstudio_auth.sh \
+    ${SINGULARITY_ROOTFS}/usr/lib/rstudio-server/bin/rstudio_auth
+
+  install -Dv \
+    launch_rserver.sh \
+    ${SINGULARITY_ROOTFS}/usr/lib/rstudio-server/bin/launch_rserver
+
+%post
+    # Update the image
+    apt update
+    apt upgrade -y
+
+    # for igraph
+    apt install -y glpk-utils libglpk-dev
+
+    # for sctransform
+    apt install -y libicu-dev
+
+    # for BPCells
+    apt install -y libhdf5-dev
+
+    # Install R packages
+    R -e 'install.packages(c("BiocManager", "remotes"))'
+
+    # Set user package directory to /tmp if you want to prevent package collison
+    # mkdir -p /home/rstudio_session
+    # printf 'R_LIBS_USER="/home/rstudio_session"\n' >> /usr/local/lib/R/etc/Renviron.site
+
+    apt clean

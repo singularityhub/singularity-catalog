@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: debian:bookworm-20250113
+
+%post
+    apt update
+    apt upgrade -y
+    apt install -y curl
+    apt clean
+    curl -fsSL https://ollama.com/install.sh | sh
+
+%startscript
+    ollama serve

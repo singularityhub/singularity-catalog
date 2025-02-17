@@ -1,0 +1,11 @@
+# The container uses docker image nipype/nipype:py38 as a base image
+Bootstrap: docker
+From: nipype/nipype:py38
+
+# Installing NARPS Open Pipelines
+%post
+    /neurodocker/startup.sh conda run -n neuro pip install /work
+
+# Use the same start script as nipype/nipype:py38
+%startscript
+    /neurodocker/startup.sh
