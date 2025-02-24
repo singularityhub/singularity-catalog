@@ -1,0 +1,99 @@
+Bootstrap: docker
+From: rockylinux:9
+
+%arguments
+
+	# Version of R to build
+	R_VER=4.4.2
+
+        # These are the architectures to optimize OpenBLAS and R for:
+        ### x86-64-v4
+        ARCH_OPENBLAS=SKYLAKE
+        ARCH_R=x86-64-v4
+
+        ### x86-64-v3
+        # ARCH_OPENBLAS=HASWELL
+        # ARCH_R=x86-64-v3
+
+        ### x86-64-v2 (our oldest compute node is Nehalam)
+        # ARCH_OPENBLAS=NEHALEM
+        # ARCH_R=x86-64-v2
+
+%labels
+	Maintainer: Mathew Binkley <Mathew.Binkley@Vanderbilt.edu>
+	Software: R {{ R_VER }} built on Rocky Linux 9
+
+%help
+	Singularity container for R {{ R_VER }}, linked against an OpenBLAS kernel for the specified microarchitecture
+
+%post
+
+	# Enable EPEL repository
+	dnf install -y 'dnf-command(config-manager)'
+	dnf config-manager --set-enabled crb
+	dnf update -y
+	dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+
+	# Install build dependencies
+	yum install -y \
+		bzip2-devel cairo-devel cmake diffutils fontconfig-devel freetype-devel \
+		fribidi-devel gcc gcc-c++ gcc-gfortran gdal gdal-devel gdal-libs git \
+		glibc-langpack-en harfbuzz-devel hwloc-devel ImageMagick-devel \
+		java-latest-openjdk java-latest-openjdk-devel libcurl-devel libevent-devel \
+		libicu-devel libjpeg-turbo-devel libgomp libomp-devel libpng-devel \
+		libtiff-devel libX11-devel libxml2-devel llvm-libs make make nodejs-libs \
+		openmpi openssl-devel pcre2-devel perl python3 python3-devel readline \
+		readline-devel sqlite-devel tcl texlive texlive-latex texlive-pdftex \
+		tk tk-devel tzdata udunits2-devel wget which libXt-devel xz-devel zlib-devel
+		
+	# Ensure locale is set to en_US.UTF-8
+	echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+	echo "LANG=en_US.UTF-8" > /etc/locale.conf
+
+	# Build R
+	wget https://cran.r-project.org/src/base/R-4/R-{{ R_VER }}.tar.gz
+	tar -xf R-{{ R_VER }}.tar.gz
+	cd R-{{ R_VER }}
+	CFLAGS="-march={{ ARCH_R }}" ./configure
+	make -j
+	make install
+	cd ..
+	rm -rf R-{{ R_VER }}
+	rm -rf R-{{ R_VER }}.tar.gz
+
+	# Build OpenBLAS
+	git clone https://github.com/OpenMathLib/OpenBLAS
+	cd OpenBLAS
+	make -j TARGET={{ ARCH_OPENBLAS }}
+	cp libopenblas.so /usr/local/lib64/R/lib
+	mv /usr/local/lib64/R/lib/libRblas.so /usr/local/lib64/R/lib/old-libRblas.so
+	ln -s /usr/local/lib64/R/lib/libopenblas.so  /usr/local/lib64/R/lib/libRblas.so
+	cd ..
+	rm -rf OpenBLAS
+
+	# Example 1:  How to include CRAN packages in the .sif
+	# /usr/local/bin/Rscript -e 'install.packages(c("tidyverse", "lubridate", "purrr", "broom"), repos = "https://cloud.r-project.org")'
+
+	# Example 2:  How to include Bioconductor packages in the .sif
+	# /usr/local/bin/Rscript -e 'install.packages("BiocManager", repos = "https://cloud.r-project.org")'
+	# /usr/local/bin/Rscript -e 'BiocManager::install(version = "3.20")'
+	# /usr/local/bin/Rscript -e 'BiocManager::install(c("BiocVersion", "GenomicAlignments", "preprocessCore"))'
+
+	# Remove files that are no longer necessary after building (can probably be pared down further)
+	dnf clean all -y
+	dnf autoremove -y
+	rpm -e texlive $(rpm -qa | grep texlive)
+	rpm -e perl perl-CPAN annobin redhat-rpm-config perl-devel python-srpm-macros go-srpm-macros fonts-srpm-macros perl-ExtUtils-Embed perl-ExtUtils-Miniperl perl-ExtUtils-CBuilder
+#	rpm -e $(rpm -qa | grep \\-devel | egrep -v "(libstdc|perl-devel|perl-Encode-devel|libquadmath-devel|glibc-devel|systemtap-sdt-devel|libxcrypt-devel|openmpi|openssl|libcurl|zlib|fontconfig|freetype|libxml2)")
+
+	# Test 1:  Verify that we can build the top 100 CRAN packages
+	# /usr/local/bin/Rscript -e 'install.packages(c("ggplot2", "rlang", "magrittr", "dplyr", "vctrs", "cli", "tibble", "jsonlite", "devtools", "Rcpp", "lifecycle", "pillar", "glue", "ragg", "textshaping", "stringr", "stringi", "tidyverse", "digest", "tidyselect", "knitr", "tidyr", "R6", "withr", "scales", "sf", "curl", "purrr", "httr", "htmltools", "xfun", "crayon", "fansi", "rmarkdown", "utf8", "data.table", "yaml", "ellipsis", "colorspace", "fs", "pkgconfig", "evaluate", "processx", "hms", "lubridate", "openssl", "RColorBrewer", "callr", "mime", "aws.ec2metadata", "pkgdown", "zoo", "gtable", "highr", "readr", "munsell", "rgl", "rsconnect", "tinytex", "cpp11", "viridisLite", "labeling", "ps", "broom", "xml2", "aws.s3", "readxl", "rstudioapi", "plyr", "Hmisc", "base64enc", "generics", "backports", "testthat", "prettyunits", "isoband", "markdown", "farver", "DBI", "haven", "rvest", "rprojroot", "reshape2", "sys", "BH", "lazyeval", "shiny", "RcppArmadillo", "fastmap", "pkgload", "assertthat", "dbplyr", "htmlwidgets", "forcats", "askpass", "progress", "clipr", "lme4", "memoise", "bslib"), repos = "https://cloud.r-project.org")'
+
+	# Test 2:  Verify that we can build the top 75 Bioconductor packages
+	# /usr/local/bin/Rscript -e 'install.packages("BiocManager", repos = "https://cloud.r-project.org")'
+	# /usr/local/bin/Rscript -e 'BiocManager::install(version = "3.20")'
+	# /usr/local/bin/Rscript -e 'BiocManager::install(c("BiocVersion", "GenomicAlignments", "preprocessCore", "BiocGenerics", "biomaRt", "BiocSingular", "GenomeInfoDb", "DESeq2", "ScaledMatrix", "S4Vectors", "ggtree", "multtest", "zlibbioc", "treeio", "genefilter", "IRanges", "rtracklayer", "VariantAnnotation", "XVector", "rhdf5", "ProtGenerics", "Biostrings", "clusterProfiler", "AnnotationHub", "Biobase", "BiocIO", "AnnotationFilter", "GenomicRanges", "rhdf5filters", "BiocNeighbors", "DelayedArray", "GenomicFeatures", "impute", "BiocParallel", "enrichplot", "ensembldb", "MatrixGenerics", "graph", "GEOquery", "S4Arrays", "DOSE", "Rgraphviz", "SparseArray", "GOSemSim", "scuttle", "SummarizedExperiment", "fgsea", "RBGL", "AnnotationDbi", "qvalue", "GSEABase", "KEGGREST", "annotate", "affyio", "limma", "BSgenome", "affy", "UCSC.utils", "beachmat", "ExperimentHub", "BiocFileCache", "SingleCellExperiment", "sva", "Rhtslib", "DelayedMatrixStats", "GSVA", "edgeR", "ComplexHeatmap", "scater", "Rsamtools", "sparseMatrixStats", "BiocBaseUtils", "Rhdf5lib", "HDF5Array", "MultiAssayExperiment"))'
+
+%test
+	# Ensure that R starts up
+	R --version

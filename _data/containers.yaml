@@ -3,9 +3,9 @@ bases:
   name: ubuntu
 - count: 451
   name: nvidia/cuda
-- count: 384
+- count: 386
   name: debian
-- count: 310
+- count: 311
   name: python
 - count: 300
   name: centos
@@ -23,7 +23,7 @@ bases:
   name: mkandes/naked-singularity
 - count: 96
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
-- count: 93
+- count: 95
   name: nfcore/base
 - count: 72
   name: neurodebian
@@ -96,6 +96,8 @@ bases:
 - count: 16
   name: ResearchIT/spack-singularity
 - count: 16
+  name: rockylinux
+- count: 16
   name: bioconductor/bioconductor_docker
 - count: 15
   name: jtchilders/singularity_image_recipes
@@ -111,8 +113,6 @@ bases:
   name: shahzebmsiddiqui/default/easybuild
 - count: 14
   name: khanlab/hippunfold
-- count: 14
-  name: rockylinux
 - count: 14
   name: golang
 - count: 14
@@ -801,6 +801,8 @@ bases:
   name: pmitev/Teoroo-singularity
 - count: 2
   name: netreconlab/hipaa-postgres
+- count: 2
+  name: netreconlab/parse-hipaa
 - count: 2
   name: docker.km3net.de/orcanet
 - count: 2
@@ -1766,8 +1768,6 @@ bases:
 - count: 1
   name: clamav/clamav
 - count: 1
-  name: netreconlab/parse-hipaa
-- count: 1
   name: netreconlab/parse-hipaa-dashboard
 - count: 1
   name: vcatechnology/linux-mint
@@ -2148,7 +2148,7 @@ bases:
 - count: 1
   name: gcr.io/deepvariant-docker/deepvariant_gpu
 bootstraps:
-- count: 7126
+- count: 7134
   name: docker
 - count: 511
   name: shub
@@ -3162,8 +3162,8 @@ orgs:
 - count: 1
   name: ensemblorg
 tags:
-  latest: 773
-  other: 6696
+  latest: 774
+  other: 6701
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3826,7 +3826,7 @@ versions:
     buster: 95
     buster-20200908-slim: 4
     buster-20201012: 1
-    buster-slim: 36
+    buster-slim: 38
     jessie: 10
     jessie-slim: 18
     latest: 66
@@ -4652,7 +4652,7 @@ versions:
   netreconlab/hipaa-postgres:
     latest: 2
   netreconlab/parse-hipaa:
-    latest: 1
+    latest: 2
   netreconlab/parse-hipaa-dashboard:
     latest: 1
   neurodebian:
@@ -5357,7 +5357,7 @@ versions:
     3.10.3-bullseye: 1
     '3.11': 2
     3.11-slim: 22
-    '3.12': 1
+    '3.12': 2
     3.12-slim: 1
     3.13-slim: 1
     3.4-slim: 1
@@ -5732,7 +5732,7 @@ versions:
     '8.5': 2
     8.5.20220308: 1
     8.6.20227707: 2
-    '9': 2
+    '9': 4
     latest: 2
   rockylinux/rockylinux:
     '8': 1
