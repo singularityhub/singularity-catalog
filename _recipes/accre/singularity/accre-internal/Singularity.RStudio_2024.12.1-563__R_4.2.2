@@ -128,6 +128,14 @@ From: rockylinux:9
 	cd ..
 	rm -rf OpenBLAS
 
+	# Install CRAN packages in the image
+	# /usr/local/bin/Rscript -e 'install.packages(c("tidyverse", "lubridate", "purrr", "broom"), repos = "https://cloud.r-project.org")'
+
+	# Install Bioconductor packages in the image
+	# /usr/local/bin/Rscript -e 'install.packages("BiocManager", repos = "https://cloud.r-project.org")'
+	# /usr/local/bin/Rscript -e 'BiocManager::install(version = "3.20")'
+	# /usr/local/bin/Rscript -e 'BiocManager::install(c("BiocVersion", "GenomicAlignments", "preprocessCore"))'
+
 	# Create folders for bind mounting
 	mkdir -p /accre /afs /cvmfs /data /dors /programs /sb /nobackup /labs /store /run/user /panfs /gpfs51
 
