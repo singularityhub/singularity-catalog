@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: python:3.11-slim
+
+%post
+    apt-get update && apt-get install -y \
+        git \
+        zlib1g-dev \
+        libbz2-dev \
+        liblzma-dev \
+        libcurl4-openssl-dev \
+        libssl-dev \
+        samtools \
+        bedtools \
+        && rm -rf /var/lib/apt/lists/*
+
+    # Install purge_haplotigs
+    git clone https://bitbucket.org/mroachawri/purge_haplotigs/src/master/ /opt/purge_haplotigs
+    ln -s /opt/purge_haplotigs/bin/* /usr/local/bin/
+
+    # Install Python dependencies
+    pip install --no-cache-dir numpy
+
+%environment
+    export PATH="/opt/purge_haplotigs/bin:$PATH"
+    export LC_ALL=C
+
+%runscript
+    exec purge_haplotigs "$@"
+

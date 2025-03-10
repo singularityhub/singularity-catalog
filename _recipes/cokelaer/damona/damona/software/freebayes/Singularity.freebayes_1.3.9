@@ -1,0 +1,183 @@
+BootStrap: docker
+From: debian:stable-slim
+
+%files 
+
+meson.build
+
+%post
+
+    export DEBIAN_FRONTEND=noninteractive
+    apt update && apt install -y \
+        git \
+        gcc \
+        g++ \
+        cmake \
+        meson \
+        samtools \
+        bc \
+        vim \
+        wget \
+        python3-dev \
+        python3-pybind11 \
+        parallel \
+        ninja-build \
+        liblzma-dev \
+        libbz2-dev \
+        zlib1g-dev \
+        libbz2-dev \
+        libcurl4-openssl-dev \
+        libncurses-dev \
+        ca-certificates \
+        perl \
+        perl-modules \
+        libtest-harness-perl \
+        pkg-config \
+        && apt clean
+
+    # pybind11-dev could not be installed using apt
+    cd /opt
+    git clone --recursive https://github.com/pybind/pybind11.git
+    cd pybind11
+    mkdir build && cd build
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local
+    make -j 8 && make install
+
+    # Install libwfa2 (the one in vcflib does not work
+    cd /opt
+    git clone https://github.com/smarco/WFA2-lib.git
+    cd WFA2-lib
+    mkdir build && cd build
+    cmake .. -DCMAKE_BUILD_TYPE=Release    -DBUILD_STATIC_LIBS=ON
+    make install
+
+    # fastahack
+    cd /opt
+    git clone --recursive https://github.com/ekg/fastahack.git
+    cd fastahack
+    sed -i -e s'/-O3/-O3 -fPIC -std=c++11/' Makefile
+    make
+    ar rcs libfastahack.a *.o
+    gcc -shared -o libfastahack.so *.o
+    mv libfastahack.so /usr/local/lib/
+
+    # smithwaterman
+    cd /opt
+    git clone https://github.com/ekg/smithwaterman.git
+    cd smithwaterman
+    sed -i -e s'/-O3/-O3 -fPIC -std=c++11/' Makefile
+    make
+    ar rcs libsmithwaterman.a *.o
+    cp libsmithwaterman.a /usr/local/lib/
+
+
+
+
+    # ========================= VCFLIB
+    cd /opt
+    git clone --recursive https://github.com/ekg/vcflib
+
+    # fastahack
+    cd vcflib/contrib/fastahack/
+    make && make install
+    cp stage/bin/fastahack  /usr/local/bin/
+
+    # WFA2
+    cd /opt/vcflib/contrib/WFA2-lib
+    make
+
+    # smith
+    cd /opt/vcflib/contrib/smithwaterman
+    make
+    ar rcs libsmithwaterman.a *.o
+    cp libsmithwaterman.a /usr/local/lib
+
+    # tabixpp
+    cd /opt/vcflib/contrib/tabixpp
+    make -j 4 && make install
+    cp *.hpp /usr/local/lib/
+    cp stage/usr/local/lib/libtabix* /usr/local/lib
+    cp *hpp /usr/local/include/
+    
+    # htslib
+    cd /opt/vcflib/contrib/tabixpp/htslib
+    make -j 4 && make install
+
+    # intervaltree
+    cd /opt/vcflib/contrib/intervaltree
+    make && make install
+    cp -r stage/usr/local/include/intervaltree/ /usr/local/include/
+    
+
+    # multichoose ? what for
+    cd /opt/vcflib/contrib/multichoose
+    make 
+    
+    # vcflib itself
+    cd /opt/vcflib
+    mkdir build && cd build
+    cmake ..  -Dpybind11_DIR=/usr/local/share/cmake/pybind11/ -DZIG=OFF .. -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_INSTALL_LIBDIR=/usr/local/lib
+    make -j 4 && make install
+    cp /opt/vcflib/build/libvcflib.a /usr/local/lib/
+
+    # SeqLib
+    cd /opt
+    git clone --recursive https://github.com/walaj/SeqLib.git
+    cd SeqLib
+    cmake . -DHTSLIB_DIR=/opt/htslib
+    make -j 4
+    cp -r SeqLib/ /usr/local/include/
+    cp libseqlib.a /usr/local/lib
+
+    # other include required
+    cp /opt/vcflib/contrib/multichoose/*.h /usr/local/include
+
+    # json
+    cd /opt
+    mkdir jsoncpp # for some reasons, we need to move the jsonccp in a directory jsoncpp
+    cd jsoncpp
+    git clone https://github.com/open-source-parsers/jsoncpp.git
+    mkdir build
+    cd build
+    cmake ../jsoncpp -DCMAKE_INSTALL_PREFIX=/usr/local
+    make -j$(nproc)
+    make install
+
+
+
+    # ================================== freebayes
+    cd /opt
+    git clone --recursive https://github.com/ekg/freebayes.git
+    cd freebayes
+    git submodule update --init --recursive
+
+
+    cp /meson.build .
+
+    meson build/ --buildtype release
+    cd build
+    ninja -j4 && ninja install
+    ninja test
+    cp /opt/freebayes/scripts/* /usr/local/bin/
+
+    
+    ln -s /usr/bin/python3 /usr/local/bin/python 
+
+    rm -rf /usr/share/doc
+    apt remove -y git gcc g++ cmake meson vim wget ninja-build
+    apt autoremove -y && apt autoclean -y 
+
+
+    rm -rf /opt/vcflib /opt/freebayes /opt/pybind11
+
+%environment
+    export PATH=/opt/freebayes/bin:$PATH
+
+%environment
+export LC_ALL=C
+export LC_NUMERIC=en_GB.UTF-8
+
+
+
+%runscript
+    exec freebayes "$@"

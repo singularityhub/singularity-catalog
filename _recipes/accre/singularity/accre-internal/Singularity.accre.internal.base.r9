@@ -1,12 +1,17 @@
 Bootstrap: docker
 From: rockylinux:9
 
+%arguments
+
+        # Define the software versions to install
+        LMOD_VERSION=8.7.56
+
 %labels
 	Maintainer: Mathew Binkley
 
 %help
 	Base container for internal ACCRE use with Lmod support
-	To access the software stack make sure to bind mount /accre and /cvmfs
+	Be sure to bind mount ACCRE folders so they're accessible inside the container
 
 %environment
 	export MODULEPATH_ROOT=/accre/arch/easybuild/modules/all
@@ -30,22 +35,21 @@ From: rockylinux:9
         dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 	/usr/bin/crb enable
  
-	# Install Lmod
-	export LMOD_VERSION=8.7.56
-	yum -y install lua lua-filesystem lua-posix lua-term lua-devel
-	yum -y install make
-	wget https://github.com/TACC/Lmod/archive/${LMOD_VERSION}.tar.gz
-	tar xzf ${LMOD_VERSION}.tar.gz
-	cd Lmod-${LMOD_VERSION}
-	./configure --with-spiderCacheDir=/accre/arch/lmod/cache \
-	      --with-updateSystemFn=/accre/arch/lmod/cache/timestamp.lmod \
-	      --with-tcl=no
-	make install
-	cd ..
-	rm -rf ${LMOD_VERSION}.tar.gz Lmod-${LMOD_VERSION}
+        # Install Lmod
+        yum -y install lua lua-filesystem lua-posix lua-term lua-devel
+        yum -y install make
+        wget https://github.com/TACC/Lmod/archive/{{ LMOD_VERSION }}.tar.gz
+        tar xzf {{ LMOD_VERSION }}.tar.gz
+        cd Lmod-{{ LMOD_VERSION }}
+        ./configure --with-spiderCacheDir=/accre/arch/lmod/cache \
+              --with-updateSystemFn=/accre/arch/lmod/cache/timestamp.lmod \
+              --with-tcl=no
+        make install
+        cd ..
+        rm -rf {{ LMOD_VERSION }}.tar.gz Lmod-{{ LMOD_VERSION }}
 
-	# Setup CVMFS binds for ACCRE software stack
-	mkdir -p /accre /cvmfs
+	# Create folders for bind mounting
+	mkdir -p /accre /afs /cvmfs /data /dors /programs /sb /nobackup /labs /store /run/user /panfs /gpfs51
 
 	# Remove files that are no longer necessary after building
 	dnf clean all -y

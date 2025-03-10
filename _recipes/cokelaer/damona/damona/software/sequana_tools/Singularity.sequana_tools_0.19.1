@@ -1,0 +1,62 @@
+Bootstrap: localimage
+From: micromamba_2.0.5.img
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    # removed rseqc, rnaseqc, pbccs that have their own recipe
+
+    export DEBIAN_FRONTEND=noninteractive
+    apt -y update && apt -y upgrade && apt install -y graphviz gcc
+
+    # export the PATH here so that pip is found later on
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+    export PERL5LIB=/opt/conda/envs/main/lib/5.26.2/
+    export LANG=C   # prevents perl for raising warnings
+
+    # an alias
+    export OPTS=" -q -c conda-forge -c bioconda -n main -y "
+
+    # micromamba
+    micromamba install $OPTS python="3.10"
+
+    # misc
+    micromamba install $OPTS pigz pbzip2 dsrc
+
+    # easy-to-install software. not all of them are required by sequana but handy
+    # to have them. 
+    # Note, however, that those ones are used within wrappers alongside sequana, or
+    # are required by sequana
+    # - cd-hit freebayes, dot, kraken2; snpeff, mosdepth, shustring
+    # - samtools bwa 
+    micromamba install $OPTS cd-hit fastp bcftools deeptools samtools
+    micromamba install $OPTS bamtools freebayes sambamba bedtools bowtie bowtie2 star
+    micromamba install $OPTS bwa subread salmon kallisto shustring mosdepth
+
+    micromamba install $OPTS picard gffread khmer spades
+
+    micromamba install $OPTS krona kraken2
+    micromamba install $OPTS minimap2 mafft vt tabix sra-tools
+
+    micromamba install $OPTS "snpeff==5.1d"
+
+    # for datrie
+    export CFLAGS="-Wno-error=incompatible-pointer-types"
+    export CXXFLAGS="-Wno-error=incompatible-pointer-types"
+
+    # just install sequana
+    pip install sequana==0.19.1
+
+    # cleanup
+    micromamba clean --packages -y
+    micromamba clean --all -y
+    rm -rf /opt/conda/pkgs
+    rm -rf /opt/conda/envs/main/share/doc
+
+%environment
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+
+%runscript
+    PYTHONNOUSERSITE=1 exec ${1+"$@"}

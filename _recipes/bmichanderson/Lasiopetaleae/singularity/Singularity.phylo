@@ -1,0 +1,167 @@
+# Author: B. Anderson
+# Singularity recipe for creating a container for running phylogenetic analyses
+
+
+Bootstrap: docker
+From: ubuntu:20.04
+
+
+%labels
+	MAINTAINER bmichanderson
+	PROGRAM phylo_suite
+	VERSION latest
+
+
+%help
+	This container is for running phylogenetic analysis tasks and programs
+		ASTER (includes weighted ASTRAL) v. 1.13
+		ASTRAL v. 5.7.1
+		Clustal Omega v. 1.2.4
+		FastTreeMP v. 2.1.11
+		IQ-TREE v. 2.2.2
+		MAFFT v. 7.453
+		MUSCLE v. 3.8.1551
+		Newick Utilities
+		pal2nal v. 14
+		TreeShrink v. 1.3.9
+		trimAl v. 1.4
+
+	To use programs in it, call as:
+		singularity exec -H "$(pwd)" phylo.sif [program]
+	For example, for ASTRAL:
+		singularity exec -H "$(pwd)" phylo.sif java -jar /Astral/astral.5.7.1.jar [options]
+	or for trimal:
+		singularity exec -H "$(pwd)" phylo.sif trimal [options]
+	or for weighted ASTRAL:
+		singularity exec -H "$(pwd)" phylo.sif astral-hybrid [options]
+	or pal2nal:
+		singularity exec -H "$(pwd)" phylo.sif pal2nal [options]
+
+
+%post
+	export DEBIAN_FRONTEND=noninteractive
+
+	# install dependencies
+	apt update && apt install -y \
+		autoconf \
+		automake \
+		bison \
+		build-essential \
+		clustalo \
+		flex \
+		git \
+		libtool \
+		locales \
+		mafft \
+		make \
+		muscle \
+		openjdk-8-jre \
+		python3 \
+		python3-biopython \
+		python3-setuptools \
+		r-base-dev \
+		r-cran-bms \
+		unzip \
+		wget
+
+
+	## set locale
+	locale-gen en_US.UTF-8
+	echo "LANG=en_US.UTF-8" >> /etc/default/locale
+
+
+	## ASTER
+	AST_VER=1.13
+	URL=https://github.com/chaoszhang/ASTER/archive/refs/tags/v"$AST_VER".tar.gz
+	wget $URL
+	tar -xzf v"$AST_VER".tar.gz && rm v"$AST_VER".tar.gz
+	cd ASTER-"$AST_VER"
+	make
+	mv bin/* /usr/bin
+	cd .. && rm -r ASTER-"$AST_VER"
+
+
+	## ASTRAL
+	AS_VER=5.7.1
+	URL=https://github.com/smirarab/ASTRAL/archive/refs/tags/v"$AS_VER".tar.gz
+	wget $URL
+	tar -xzf v"$AS_VER".tar.gz && rm v"$AS_VER".tar.gz
+	cd ASTRAL-"$AS_VER"
+	unzip Astral."$AS_VER".zip
+	mv Astral/ /Astral
+	cd .. && rm -r ASTRAL-"$AS_VER"
+	chmod -R a+rX /Astral
+
+
+	## FastTreeMP
+	URL=http://www.microbesonline.org/fasttree/FastTreeMP
+	wget "$URL"
+	chmod 755 FastTreeMP
+	mv FastTreeMP /usr/bin/
+
+
+	## IQ-TREE
+	IQ_VER=2.2.2
+	URL=https://github.com/iqtree/iqtree2/releases/download/v"$IQ_VER"/iqtree-"$IQ_VER"-Linux.tar.gz
+	wget "$URL"
+	tar -xzf iqtree-"$IQ_VER"-Linux.tar.gz && rm iqtree-"$IQ_VER"-Linux.tar.gz
+	mv iqtree-"$IQ_VER"-Linux/bin/iqtree2 /usr/bin/iqtree2
+	ln -s /usr/bin/iqtree2 /usr/bin/iqtree
+	rm -r iqtree-"$IQ_VER"-Linux
+
+
+	## Newick Utilities
+	git clone https://github.com/tjunier/newick_utils.git
+	cd newick_utils
+	autoreconf -fi
+	./configure
+	make
+	make check
+	make install
+	cd .. && rm -r newick_utils
+
+
+	## pal2nal
+	URL=http://www.bork.embl.de/pal2nal/distribution/pal2nal.v14.tar.gz
+	wget "$URL"
+	tar -xzf pal2nal.v14.tar.gz && rm pal2nal.v14.tar.gz
+	cp pal2nal.v14/pal2nal.pl /usr/bin/
+	echo 'perl /usr/bin/pal2nal.pl "$@"' > /usr/bin/pal2nal
+	chmod 755 /usr/bin/pal2nal
+	rm -r pal2nal.v14/
+
+
+	## TreeShrink
+	git clone https://github.com/uym2/TreeShrink.git
+	cd TreeShrink
+	#R CMD INSTALL -l Rlib dependencies/BMS_0.3.3.tar.gz
+	python3 setup.py install
+	cd .. && rm -r TreeShrink
+
+
+	## trimAl
+	TA_VER=1.4.1
+	URL=https://github.com/inab/trimal/archive/refs/tags/v"$TA_VER".tar.gz
+	wget "$URL"
+	tar -xzf v"$TA_VER".tar.gz && rm v"$TA_VER".tar.gz
+	cd trimal-"$TA_VER"/source
+	make
+	mv *al /usr/bin/
+	cd ../.. && rm -r trimal-"$TA_VER"
+
+
+	# clean-up
+	apt autoremove -y && apt clean all
+
+
+	# python alias
+	ln -s /usr/bin/python3 /usr/bin/python
+
+
+%environment
+	export PATH="$PATH":/Astral
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
+
+%runscript
+

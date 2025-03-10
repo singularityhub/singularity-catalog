@@ -1,0 +1,19 @@
+BootStrap: docker
+From: memesuite/memesuite:5.5.3
+
+
+%post
+    #
+   cp /usr/bin/python3 /usr/local/bin/python 
+
+%environment
+    # Set environment variables needed for Infernal
+    export PATH=/usr/local/bin:$PATH
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+
+
+%runscript
+    # This is the default command that runs when the container is executed
+    exec meme "$@"
+

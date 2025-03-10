@@ -1,8 +1,12 @@
 Bootstrap: localimage
-From: micromamba_1.5.8.img
-# wget https://zenodo.org/record/11302814/files/micromamba_1.5.8.img
+From: micromamba_2.0.5.img
+wget  https://zenodo.org/record/14945238/files/micromamba_2.0.5.img
 
 %post
+
+    # prevent annoying mapping
+    export DEBIAN_FRONTEND=noninteractive
+
     apt -y update && apt -y upgrade
 
     # export the PATH here so that pip is found later on

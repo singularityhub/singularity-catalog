@@ -1,0 +1,31 @@
+Bootstrap: localimage
+From: micromamba_2.0.5.img
+
+%labels
+    Author thomas cokelaer
+
+%post
+
+    apt -y update && apt -y upgrade && apt install -y graphviz gcc
+
+    # export the PATH here so that pip is found later on
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+    export PERL5LIB=/opt/conda/envs/main/lib/5.26.2/
+    export LANG=C   # prevents perl for raising warnings
+
+    # an alias
+    export OPTS=" -q -c conda-forge -c bioconda -n main -y "
+
+    # micromamba
+    micromamba install $OPTS python="3.10" rseqc
+
+    # cleanup
+    micromamba clean --packages -y
+    micromamba clean --all -y
+    rm -rf /opt/condas/pkgs
+
+%environment
+    export PATH=$PATH:/opt/conda/envs/main/bin/
+
+%runscript
+    PYTHONNOUSERSITE=1 exec ${1+"$@"}
