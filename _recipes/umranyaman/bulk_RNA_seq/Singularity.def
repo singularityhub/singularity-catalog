@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: continuumio/miniconda3:latest
+
+%post
+    # Downgrade Python to 3.11 for compatibility.
+    conda install -y python=3.11 && conda clean -a -y
+    # Update conda and install Snakemake (v8.9.0) and Graphviz.
+    conda update -n base -c defaults conda -y && \
+    conda install -y -c conda-forge -c bioconda snakemake=8.9.0 graphviz && \
+    conda clean -a -y
+    # Create the working directory.
+    mkdir -p /app
+
+%files
+    # Copy only the essential files and directories.
+    Snakefile           /app/Snakefile
+    config/             /app/config
+    rules/              /app/rules
+    workflow/           /app/workflow
+    README.md           /app/README.md
+    # Add any other directories or files that are needed for the pipeline.
+
+%environment
+    export PATH=/opt/conda/bin:$PATH
+
+%runscript
+    exec snakemake "$@"
