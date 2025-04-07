@@ -7,7 +7,7 @@ bases:
   name: debian
 - count: 314
   name: python
-- count: 300
+- count: 301
   name: centos
 - count: 287
   name: alpine
@@ -43,12 +43,12 @@ bases:
   name: busybox
 - count: 38
   name: ghcr.io/mkandes/ubuntu
+- count: 38
+  name: pytorch/pytorch
 - count: 37
   name: poldracklab/fmriprep
 - count: 37
   name: bilbydev/bilby-test-suite-python37
-- count: 37
-  name: pytorch/pytorch
 - count: 35
   name: nvcr.io/nvidia/pytorch
 - count: 33
@@ -206,6 +206,8 @@ bases:
 - count: 8
   name: nvcr.io/nvidia/deepstream
 - count: 8
+  name: bids/example
+- count: 8
   name: singularityhub/ubuntu
 - count: 8
   name: drneavin/SingularityBaseImages
@@ -291,8 +293,6 @@ bases:
   name: openresty/openresty
 - count: 6
   name: bud42/fs6
-- count: 6
-  name: bids/example
 - count: 6
   name: accre.internal.base.sif
 - count: 6
@@ -2156,7 +2156,7 @@ bases:
 - count: 1
   name: opensciencegrid/osgvo-el7
 bootstraps:
-- count: 7161
+- count: 7165
   name: docker
 - count: 511
   name: shub
@@ -3176,8 +3176,8 @@ orgs:
 - count: 1
   name: philarevalo
 tags:
-  latest: 775
-  other: 6726
+  latest: 776
+  other: 6727
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3677,7 +3677,7 @@ versions:
     centos7.8.2003: 3
     centos7.9.2009: 2
     centos8: 7
-    latest: 23
+    latest: 24
   chainguard/bazel:
     latest: 1
   chambm/wine-dotnet:
@@ -5454,7 +5454,7 @@ versions:
     1.3-cuda10.1-cudnn7-devel: 1
     1.4-cuda10.1-cudnn7-devel: 1
     1.6.0-cuda10.1-cudnn7-runtime: 3
-    1.7.0-cuda11.0-cudnn8-runtime: 1
+    1.7.0-cuda11.0-cudnn8-runtime: 2
     1.8.0-cuda11.1-cudnn8-devel: 1
     1.8.1-cuda10.2-cudnn7-devel: 1
     1.8.1-cuda11.1-cudnn8-devel: 1
