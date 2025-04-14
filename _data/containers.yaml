@@ -1,11 +1,11 @@
 bases:
-- count: 2149
+- count: 2151
   name: ubuntu
 - count: 452
   name: nvidia/cuda
-- count: 387
+- count: 388
   name: debian
-- count: 314
+- count: 315
   name: python
 - count: 301
   name: centos
@@ -25,7 +25,7 @@ bases:
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
 - count: 95
   name: nfcore/base
-- count: 72
+- count: 73
   name: neurodebian
 - count: 56
   name: conda/miniconda3
@@ -73,10 +73,10 @@ bases:
   name: continuumio/anaconda3
 - count: 25
   name: r-base
+- count: 23
+  name: pennlinc/xcp_d
 - count: 22
   name: khanlab/tar2bids
-- count: 22
-  name: pennlinc/xcp_d
 - count: 21
   name: rocker/r-ver
 - count: 20
@@ -315,6 +315,8 @@ bases:
   name: ../library/micromamba/micromamba_1.5.8.img
 - count: 5
   name: sternacht/hpcc_openblas
+- count: 5
+  name: letaylor/sc_qc_cluster
 - count: 5
   name: finalduty/archlinux
 - count: 5
@@ -743,8 +745,6 @@ bases:
   name: zalfrpm/simplace-hpc
 - count: 2
   name: stevekm/ngs580-nf
-- count: 2
-  name: letaylor/sc_qc_cluster
 - count: 2
   name: ghcr.io/truatpasteurdotfr/singularity-docker-centos7-ci
 - count: 2
@@ -2156,19 +2156,19 @@ bases:
 - count: 1
   name: opensciencegrid/osgvo-el7
 bootstraps:
-- count: 7165
+- count: 7173
   name: docker
 - count: 511
   name: shub
 - count: 431
   name: debootstrap
-- count: 385
+- count: 386
   name: library
 - count: 344
   name: oras
 - count: 214
   name: localimage
-- count: 180
+- count: 178
   name: yum
 - count: 35
   name: zypper
@@ -2188,6 +2188,8 @@ bootstraps:
   name: docker-archive
 - count: 2
   name: ubuntu
+- count: 2
+  name: dnf
 - count: 1
   name: library'
 - count: 1
@@ -2754,13 +2756,13 @@ orgs:
 - count: 1
   name: zalfrpm
 - count: 1
-  name: letaylor
-- count: 1
   name: i686
 - count: 1
   name: sbidprod.azurecr.io
 - count: 1
   name: gnina
+- count: 1
+  name: letaylor
 - count: 1
   name: finalduty
 - count: 1
@@ -3176,8 +3178,8 @@ orgs:
 - count: 1
   name: philarevalo
 tags:
-  latest: 776
-  other: 6727
+  latest: 780
+  other: 6732
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3855,7 +3857,7 @@ versions:
     testing: 2
     testing-slim: 2
     trixie: 1
-    unstable: 5
+    unstable: 6
   deeplabcut/deeplabcut:
     latest-core: 1
   deeplearnphysics/larcv2:
@@ -4513,7 +4515,7 @@ versions:
   lemene/pecat:
     v0.0.3: 1
   letaylor/sc_qc_cluster:
-    latest: 2
+    latest: 5
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -4684,7 +4686,7 @@ versions:
     buster-non-free: 2
     focal-non-free: 1
     jessie: 7
-    latest: 17
+    latest: 18
     nd100: 1
     nd90: 1
     non-free: 5
@@ -5233,6 +5235,7 @@ versions:
     0.10.3: 1
     0.10.5: 1
     0.10.6: 1
+    0.10.7: 1
     0.6.0: 1
     0.6.1: 1
     0.6.2: 1
@@ -5379,7 +5382,7 @@ versions:
     3.10-slim: 9
     3.10-slim-bullseye: 3
     3.10.3-bullseye: 1
-    '3.11': 2
+    '3.11': 4
     3.11-slim: 25
     '3.12': 2
     3.12-slim: 1
@@ -5411,7 +5414,7 @@ versions:
     3.7.6-alpine3.11: 1
     3.7.7-slim-buster: 1
     3.7.9: 1
-    '3.8': 15
+    '3.8': 14
     3.8-alpine: 10
     3.8-buster: 2
     3.8-slim: 18
@@ -6074,7 +6077,7 @@ versions:
     '18.10': 10
     '19.04': 34
     '19.10': 16
-    '20.04': 470
+    '20.04': 471
     '20.04  ': 1
     '20.10': 3
     '21.04': 3
@@ -6083,6 +6086,7 @@ versions:
     '22.10': 6
     '23.10': 2
     '24.04': 2
+    '24.10': 1
     UBUNTU_VERSION: 1
     artful: 8
     artful-20180227: 1
