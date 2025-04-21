@@ -316,8 +316,6 @@ bases:
 - count: 5
   name: sternacht/hpcc_openblas
 - count: 5
-  name: letaylor/sc_qc_cluster
-- count: 5
   name: finalduty/archlinux
 - count: 5
   name: nextgenusfs/funannotate
@@ -746,6 +744,8 @@ bases:
 - count: 2
   name: stevekm/ngs580-nf
 - count: 2
+  name: letaylor/sc_qc_cluster
+- count: 2
   name: ghcr.io/truatpasteurdotfr/singularity-docker-centos7-ci
 - count: 2
   name: hariszaf/darn
@@ -951,6 +951,8 @@ bases:
   name: buildpack-deps
 - count: 2
   name: gberseth/smirl
+- count: 2
+  name: vnmd/freesurfer_8.0.0
 - count: 2
   name: mcr.microsoft.com/devcontainers/anaconda
 - count: 2
@@ -2128,8 +2130,6 @@ bases:
 - count: 1
   name: beapen/fhir
 - count: 1
-  name: vnmd/freesurfer_8.0.0
-- count: 1
   name: chainguard/bazel
 - count: 1
   name: wangyinz/tacc-containers
@@ -2156,7 +2156,7 @@ bases:
 - count: 1
   name: opensciencegrid/osgvo-el7
 bootstraps:
-- count: 7173
+- count: 7171
   name: docker
 - count: 511
   name: shub
@@ -2756,13 +2756,13 @@ orgs:
 - count: 1
   name: zalfrpm
 - count: 1
+  name: letaylor
+- count: 1
   name: i686
 - count: 1
   name: sbidprod.azurecr.io
 - count: 1
   name: gnina
-- count: 1
-  name: letaylor
 - count: 1
   name: finalduty
 - count: 1
@@ -3178,7 +3178,7 @@ orgs:
 - count: 1
   name: philarevalo
 tags:
-  latest: 780
+  latest: 777
   other: 6732
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
@@ -4515,7 +4515,7 @@ versions:
   lemene/pecat:
     v0.0.3: 1
   letaylor/sc_qc_cluster:
-    latest: 5
+    latest: 2
   libatomsquip/quip-base:
     latest: 1
   library/centos:
