@@ -8,6 +8,7 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 &&     export CACHEDIR=${GITHUB_WORKSPACE}/../../../cache\
 &&     rm -f ${SINGULARITY_ROOTFS}/*.txt || true\
 &&     bash -c "if [[ -z '${FC}' ]]; then echo 'FC=gfortran ' >> ${SINGULARITY_ROOTFS}/fc.txt ; else echo 'FC is ${FC}'; echo 'FC=${FC} ' >> ${SINGULARITY_ROOTFS}/fc.txt ; fi"\
+&&     bash -c "if [[ -z '${CC}' ]]; then echo 'CC=gcc ' >> ${SINGULARITY_ROOTFS}/fc.txt ; else echo 'CC is ${CC}'; echo 'CC=${CC} ' >> ${SINGULARITY_ROOTFS}/fc.txt ; fi"\
 &&     bash -c "if [[ -z '${MPICH}' ]]; then echo 'MPICH=3.4.2 ' >> ${SINGULARITY_ROOTFS}/MPICH.txt ; else echo 'MPICH is ${MPICH}'; echo 'MPICH=${MPICH} ' >> ${SINGULARITY_ROOTFS}/mpich.txt ; fi"\
 &&     bash -c "if [[ -z '${OFI}' ]]; then echo 'OFI=builtin ' >> ${SINGULARITY_ROOTFS}/OFI.txt ; else echo 'OFI is ${OFI}'; echo 'OFI=${OFI} ' >> ${SINGULARITY_ROOTFS}/ofi.txt ; fi"\
 &&     bash -c "if [[ -z '${MPICH_DEVICE}' ]]; then echo 'MPICH_DEVICE=ch4:ofi ' >> ${SINGULARITY_ROOTFS}/MPICH_DEVICE.txt ; else echo 'MPICH_DEVICE is ${MPICH_DEVICE}'; echo 'MPICH_DEVICE=${MPICH_DEVICE} ' >> ${SINGULARITY_ROOTFS}/mpich_device.txt ; fi"\
@@ -19,10 +20,12 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 &&     ls -la  ${CACHEDIR}/ || true\
 &&     ls -la  ${CACHEDIR}/mpich || true\
 &&     ls -la  ${CACHEDIR}/mpich/lib || true\
+&&     ls -la  ${CACHEDIR}/pmix || true\
 &&     ls -la  ${CACHEDIR}/simint_install/lib/libnwc_simint.a || true\
 &&     ls -la  ${CACHEDIR}/simint_install/lib/libsimint.a ||true\
 &&     bash -c "if [ ! -z "${GITHUB_WORKSPACE}" ]; then mkdir -p ${SINGULARITY_ROOTFS}/nwchem/contrib; rsync -a ${GITHUB_WORKSPACE}/nwchem/src ${SINGULARITY_ROOTFS}/nwchem/. ; rsync -a ${GITHUB_WORKSPACE}/nwchem/contrib/getmem.nwchem ${SINGULARITY_ROOTFS}/nwchem/contrib/. ;rsync -a ${GITHUB_WORKSPACE}/nwchem/travis ${SINGULARITY_ROOTFS}/nwchem/. ; rsync -a ${GITHUB_WORKSPACE}/nwchem/.git ${SINGULARITY_ROOTFS}/nwchem/. ; fi"\
 &&     bash -c "if [[  -f ${CACHEDIR}/mpich/lib/libmpi.a ]]; then mkdir -p ${SINGULARITY_ROOTFS}/opt ;rsync -a ${CACHEDIR}/mpich ${SINGULARITY_ROOTFS}/opt/. ; echo mpich cache fetched ;fi"\
+&&     bash -c "if [[  -f ${CACHEDIR}/pmix/etc/pmix-mca-params.conf ]]; then mkdir -p ${SINGULARITY_ROOTFS}/opt ;rsync -a ${CACHEDIR}/pmix ${SINGULARITY_ROOTFS}/opt/. ; echo pmix cache fetched ;fi"\
 &&     bash -c "if [[  -f ${CACHEDIR}/libext/lib/libnwc_openblas.a ]]; then rsync -a ${CACHEDIR}/libext/* ${SINGULARITY_ROOTFS}/nwchem/src/libext/. ; echo libext cache fetched ;fi"\
 &&     bash -c "if [[  -f ${CACHEDIR}/simint_install/lib/libsimint.a ]]; then rsync -av ${CACHEDIR}/simint* ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/. ;  ls -l ${SINGULARITY_ROOTFS}/nwchem/src/NWints/simint/libsimint_source/; echo simint cache fetched ;fi"
 
@@ -32,14 +35,17 @@ MAINTAINER  Edoardo Apra <edoardo.apra@pnnl.gov>
 %post
 #https://sylabs.io/guides/3.6/user-guide/mpi.html
 export DEBIAN_FRONTEND=noninteractive \
+&& export MPICH_AURORA="4.3.0" \
+&& export PMIX_VERSION="4.2.9" \
 && export MPICH_DIR=/opt/mpich\
-&& export PATH=$MPICH_DIR/bin:/root/apps/oneapi/compiler/latest/bin:/root/apps/oneapi/compiler/latest/linux/bin/intel64:/root//apps/oneapi/compiler/latest/linux/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
-&& export LD_LIBRARY_PATH=$MPICH_DIR/lib:/root/apps/oneapi/compiler/latest/lib:/root/apps/oneapi/compiler/latest/linux/lib:/root/apps/oneapi/compiler/latest/linux/lib/x64:/root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin \
-&& export LIBRARY_PATH=/root/apps/oneapi/compiler/latest/lib:/root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/root/apps/oneapi/compiler/latest/linux/lib \
-&& export SINGULARITY_PATH=$MPICH_DIR/bin:/root/apps/oneapi/compiler/latest/bin:/root/apps/oneapi/compiler/latest/linux/bin/intel64:/root/apps/oneapi/compiler/latest/linux/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
-&& export SINGULARITY_LD_LIBRARY_PATH=$MPICH_DIR/lib:/root/apps/oneapi/compiler/latest/lib:/root/apps/oneapi/compiler/latest/linux/lib:/root/apps/oneapi/compiler/latest/linux/lib/x64:~/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin \
-&& export SINGULARITY_LIBRARY_PATH=/root/apps/oneapi/compiler/latest/lib:/root/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/root/apps/oneapi/compiler/latest/linux/lib \
+&& export PATH=$MPICH_DIR/bin:/opt/intel/oneapi/compiler/latest/bin:/opt/intel/oneapi/compiler/latest/linux/bin/intel64:/root//apps/oneapi/compiler/latest/linux/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+&& export LD_LIBRARY_PATH=$MPICH_DIR/lib:/opt/intel/oneapi/compiler/latest/lib:/opt/intel/oneapi/compiler/latest/linux/lib:/opt/intel/oneapi/compiler/latest/linux/lib/x64:/opt/intel/oneapi/compiler/latest/linux/compiler/lib/intel64_lin \
+&& export LIBRARY_PATH=/opt/intel/oneapi/compiler/latest/lib:/opt/intel/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/opt/intel/oneapi/compiler/latest/linux/lib \
+&& export SINGULARITY_PATH=$MPICH_DIR/bin:/opt/intel/oneapi/compiler/latest/bin:/opt/intel/oneapi/compiler/latest/linux/bin/intel64:/opt/intel/oneapi/compiler/latest/linux/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+&& export SINGULARITY_LD_LIBRARY_PATH=$MPICH_DIR/lib:/opt/intel/oneapi/compiler/latest/lib:/opt/intel/oneapi/compiler/latest/linux/lib:/opt/intel/oneapi/compiler/latest/linux/lib/x64:~/apps/oneapi/compiler/latest/linux/compiler/lib/intel64_lin \
+&& export SINGULARITY_LIBRARY_PATH=/opt/intel/oneapi/compiler/latest/lib:/opt/intel/oneapi/compiler/latest/linux/compiler/lib/intel64_lin:/opt/intel/oneapi/compiler/latest/linux/lib \
 && export `cat ./fc.txt`\
+&& export `cat ./cc.txt`\
 && export `cat ./mpich.txt`\
 && export `cat ./ofi.txt`\
 && export `cat ./armci_network.txt`\
@@ -48,14 +54,20 @@ export DEBIAN_FRONTEND=noninteractive \
 && export `cat ./myusername.txt`\
 && export `cat ./mpich_device.txt`\
 && echo FC is $FC\
+&& echo CC is $CC\
 && echo MPICH is $MPICH\
+&& if [ $MPICH = aurora ]; then
+    export MPICH_VERSION=$MPICH_AURORA
+    	   else
+    export MPICH_VERSION=$MPICH
+fi \
 && echo OFI is $OFI\
 && echo MPICH_DEVICE is $MPICH_DEVICE\
-&& export mpich_prefix=mpich-$MPICH\
+&& export mpich_prefix=mpich-$MPICH_VERSION\
 && echo mpich_prefix is $mpich_prefix \
-&& export mpich_major=$(echo $MPICH | cut -d . -f1) \
+&& export mpich_major=$(echo $MPICH_VERSION | cut -d . -f1) \
 && echo mpich_major is $mpich_major \
-&& export mpich_minor=$(echo $MPICH | cut -d . -f2) \
+&& export mpich_minor=$(echo $MPICH_VERSION | cut -d . -f2) \
 && echo mpich_minor is $mpich_minor \
 && echo mpich_major is $mpich_major \
 && if [ $mpich_major = '4' ]; then
@@ -63,8 +75,8 @@ export DEBIAN_FRONTEND=noninteractive \
 else
     export mpich_options=' '
 fi \
-&& if [ $MPICH = '4.3.0rc3' ]; then
-    export mpich_options=' --disable-maintainer-mode --with-pm=no --enable-romio --with-slurm=no --with-pmi=pmix --with-pmix-include=/usr/lib/x86_64-linux-gnu/pmix2/include --with-pmix-lib=/usr/lib/x86_64-linux-gnu/pmix2/lib/ '
+&& if [ $MPICH = aurora ]; then
+    export mpich_options=$mpich_options' --disable-maintainer-mode --with-pm=no --enable-romio --with-slurm=no --with-pmi=pmix --with-pmix=/opt/pmix '
 fi \
 && export GCC_VERSION=11 \
 && echo mpich_options $mpich_options \
@@ -79,6 +91,7 @@ fi \
 && echo ca_certificate=/etc/ssl/certs/ca-certificates.crt >  ~/.wgetrc \
 && echo        "cacert=/etc/ssl/certs/ca-certificates.crt" >> ~/.curlrc \
 && bash -o  pipefail -c "if [[ $(echo $FC | cut -c -8) == gfortran ]]; then apt-get -y install -y  ${FC}; fi" \
+&& bash -o  pipefail -c "if [[ $(echo $CC | cut -c -8) == gcc ]]; then apt-get -y install -y  ${CC}; fi" \
 && pwd \
 && echo '@@ ls -lart ' \
 && ls -lart  \
@@ -114,6 +127,16 @@ fi \
 && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-"$GCC_VERSION" 100 \
             && apt-get install  -q=2 -y  autoconf automake libtool git \
 && apt-get clean \
+&& set -x \
+&& if [ $FC = 'ifx' ]; then
+    APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 \
+    && TERM=dumb \
+    && wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor | sudo tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null \
+    && echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" |sudo tee /etc/apt/sources.list.d/oneAPI.list \
+    && sudo apt-get update \
+    && sudo apt-get install -y intel-oneapi-compiler-fortran intel-oneapi-mkl intel-oneapi-compiler-dpcpp-cpp
+fi \
+&& ls -lrt /opt/intel/oneapi || true \
 && echo TTTTT \
 && df -h \
 && echo TTTTT \
@@ -121,8 +144,7 @@ fi \
 && echo "LD_LIBRARY_PATH" $LD_LIBRARY_PATH \
 && echo FFFFF \
 && echo 'FC -v ' `$FC -v` \
-&& rm -f ./cc.txt || true \
-&& if [ -f ./cc.txt ]; then export `cat ./cc.txt` ; fi \
+&& echo 'CC -v ' `$CC -v` \
 && echo ' CC is ' "$CC" \
 && echo ' CXX is ' "$CXX" || true \
 && echo 'ls -l /opt/mpich/lib/libmpi.a' $(ls -l /opt/mpich/lib/libmpi.a) || true \
@@ -137,6 +159,16 @@ $FC -v \
 && make -j3 \
 && make install \
 && cd .. \
+&& if [ $MPICH = aurora ]; then
+wget https://github.com/openpmix/openpmix/releases/download/v${PMIX_VERSION}/pmix-${PMIX_VERSION}.tar.gz \
+&& tar xzf pmix-${PMIX_VERSION}.tar.gz \
+&& cd pmix-${PMIX_VERSION} \
+&& ./configure --prefix=/opt/pmix \
+&& make -j3 \
+&& make -j3 install \
+&& cd .. \
+&& rm -rf pmix-*.*
+fi \
 && if [[ ${MPICH_DEVICE} != ch4:ofi ]]; then echo 'installing ucx' ; \
    export ucx=1.11.0 ; \
    echo 'the ucx version is'  \$ucx ; \
@@ -151,16 +183,21 @@ $FC -v \
    export mpich_options='$mpich_options --with-ucx=$MPICH_DIR' ; \
  if [ ! -f $MPICH_DIR/bin/ucx_info ]; then echo ucx_info\ not\ found ; exit 1 ; fi ;\
 elif [[ ${OFI} == builtin ]]; then echo 'builtin OFI - nothing to download'; \
-  else if [[ ${OFI} == git ]]; then  git clone https://github.com/ofiwg/libfabric libfabric-git && cd libfabric-git && sh autogen.sh;\
+  else if [[ ${OFI} == git ]]; then export COMMIT=c3420a7402a10f5fe3f475ac5eb39b3f2837f8d1  \
+ && curl -L https://github.com/ofiwg/libfabric/archive/\$COMMIT.tar.gz -o libfabric-\$COMMIT.tar.gz  \
+ && tar xzf libfabric-\$COMMIT.tar.gz  \
+ && ls -lrt \
+ && mv libfabric-\$COMMIT libfabric-git \
+ && cd libfabric-git && sh autogen.sh;\
    apt-get install -y libconfig-dev libsensors-dev libuv1-dev libfuse-dev libyaml-dev libjson-c-dev libcurl4-openssl-dev  ;\
    cd / ; ls -lrta  ;\
    mkdir -p $MPICH_DIR  ;\
    cd $MPICH_DIR ; \
+   export SHSTAG=release/shs-12.0 ;\
    git clone https://github.com/HewlettPackard/shs-cassini-headers ;\
-   git clone https://github.com/HewlettPackard/shs-cxi-driver ;\
-   rm -rf shs*/.git ;\ 
+   git clone --branch \$SHSTAG https://github.com/HewlettPackard/shs-cxi-driver ;\
    cd / ; \
-   git clone https://github.com/HewlettPackard/shs-libcxi ; \
+   git clone --branch \$SHSTAG https://github.com/HewlettPackard/shs-libcxi ; \
    cd shs-libcxi ; \
    sh autogen.sh ; \
    ./configure --prefix=$MPICH_DIR ;\
@@ -182,7 +219,7 @@ if [ ! -f $MPICH_DIR/bin/fi_info ]; then echo fi_info\ not\ found ; exit 1 ; fi 
 && cd .. \
 && rm -rf libfabr* \
 && echo ' mpich_options is set to' \$mpich_options \
-&& wget  --progress=dot:giga https://www.mpich.org/static/downloads/$MPICH/mpich-'$MPICH'.tar.gz  -O - | tar xzf -   \
+&& wget  --progress=dot:giga https://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-'$MPICH_VERSION'.tar.gz  -O - | tar xzf -   \
 && cd $mpich_prefix                                                        && \
 ./configure  --prefix=$MPICH_DIR   \
 \$mpich_options \
@@ -244,11 +281,6 @@ fi	   \
 && patch -p1 < largebasis.patch \
 && wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi5x/okeep.patch \
 && patch -p1 < okeep.patch \
-&& cd src/tools \
-&& mv get-tools-github get-tools-github.org && wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi5x/get-tools-github  \
-&& chmod +x get-tools-github \
-&& wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi5x/scalasl2_patch.sh \
-&& cd ../.. \
 && export NWCHEM_TOP=`pwd` \
 && echo 'ls -lrta ' $(ls -lrta) \
 && echo 'pwd ' $(pwd) \
@@ -264,13 +296,13 @@ echo 'ls ~/' `ls -lrt ~/` \
 && mpif90 -show \
 && echo FC is $FC \
 && $FC -v \
-&& make GA_DEV=1 GA_BRANCH=develop GA_URL=https://github.com/GlobalArrays/ga.git FC=$FC -j6 || { echo 'Compilation Failure'; exit 1; } \
+&& make FC=$FC -j6 || { echo 'Compilation Failure'; exit 1; } \
 && FC=$FC ../contrib/getmem.nwchem 2000   \
 && make FC=$FC install INSTALL_PREFIX=/opt/nwchem \
 && ldd  ../bin/LINUX64/nwchem  "\
-&& if [ -f /root/apps/oneapi/compiler/latest/env/vars.sh ]; then  \
-rsync -av /root/apps/oneapi/compiler/latest/lib/lib*.so* $MPICH_DIR/lib/. ; fi \
-&&  rm -rf /root/apps/oneapi/  /opt/nwchem/src/tce /opt/nwchem/src/NWints/simint/libsimint_source/simint.l?_p?_d? || true \
+&& if [ -f /opt/intel/oneapi/compiler/latest/env/vars.sh ]; then  \
+rsync -av /opt/intel/oneapi/compiler/latest/lib/lib*.so* $MPICH_DIR/lib/. ; fi \
+&&  rm -rf /opt/intel/oneapi/  /opt/nwchem/src/tce /opt/nwchem/src/NWints/simint/libsimint_source/simint.l?_p?_d? || true \
 && DEBIAN_FRONTEND=noninteractive apt-get clean -y \
 && DEBIAN_FRONTEND=noninteractive apt-get -y install localepurge \
 && echo MANDELETE >  /etc/locale.nopurge \
@@ -286,7 +318,7 @@ rsync -av /root/apps/oneapi/compiler/latest/lib/lib*.so* $MPICH_DIR/lib/. ; fi \
 && cd ../.. \
 && du -sh nwchem \
 && du -sk *|sort -n  \
-&& bash -o pipefail -c "if [[ $FC == 'ifx' ]] || [[ $FC  == 'ifort' ]]; then \
+&& bash -o pipefail -c "if [[ $FC == 'ifx' ]] ; then \
 rm -rf ~/apps  /var/intel  l_*sh ; fi"   \
 && ls -lrth    \
 &&  ldd  /opt/nwchem/bin/nwchem  \

@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: rust:1.70-slim  # 也可以根据需要替换为其它 rust 版本，比如:1.72 等
+
+%labels
+    Author "Your Name"
+    Version "0.1"
+
+# %files 可以将宿主机的文件复制到容器内
+%files
+    Cargo.toml /app/
+    process_tile.rs /app/src/main.rs
+
+%post
+    # 安装必要工具
+    apt-get update && apt-get install -y \
+        musl-tools \
+        pkg-config \
+        libssl-dev
+
+    # 由于使用的是官方 rust 镜像，系统中已有 rustup，但需给 musl target 做准备
+    rustup target add x86_64-unknown-linux-musl
+
+    # 在容器内编译
+    mkdir -p /app
+    cd /app
+    # 这里用 musl 进行编译，生成静态链接的可执行文件
+    cargo build --release --target x86_64-unknown-linux-musl
+
+    # 将编译好的可执行文件放到 /usr/local/bin
+    cp target/x86_64-unknown-linux-musl/release/process_tile /usr/local/bin/s2_process_tile
+
+%runscript
+    # 定义容器启动时的默认执行命令
+    exec /usr/local/bin/s2_process_tile "$@"
+

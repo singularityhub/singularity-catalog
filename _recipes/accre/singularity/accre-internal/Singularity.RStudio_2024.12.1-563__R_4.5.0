@@ -1,0 +1,155 @@
+Bootstrap: docker
+From: rockylinux:9
+
+%arguments
+
+	# Define the software versions we wish to build
+	RSTUDIO_VERSION=2024.12.1-563
+	R_VERSION=4.5.0
+	LMOD_VERSION=8.7.56
+
+        # These are the architectures to optimize OpenBLAS and R for:
+        ### x86-64-v4 (doesn't build yet!)
+        ARCH_OPENBLAS=SKYLAKEX
+        ARCH_R=x86-64-v4 
+	# R doesn't build yet with v4, so use v3
+
+	### x86-64-v3
+	# ARCH_OPENBLAS=HASWELL
+	# ARCH_R=x86-64-v3
+
+	### x86-64-v2 (our oldest compute node is Nehalam)
+	# ARCH_OPENBLAS=NEHALEM
+	# ARCH_R=x86-64-v2
+
+%labels
+
+	Maintainer Mathew Binkley <Mathew.Binkley@Vanderbilt.edu>
+	Software RStudio Server {{ RSTUDIO_VERSION }} with R {{ R_VERSION }} optimized for {{ ARCH_R }}
+	RStudio_Version {{ RSTUDIO_VERSION }}
+	R_Version {{ R_VERSION }}
+
+%help
+
+	Singularity container for RStudio {{ RSTUDIO_VERSION }} and R {{ R_VERSION }} optimized for {{ ARCH_R }} for use with ACCRE OnDemand Visualization Portal.
+
+%apprun rserver
+
+	exec rserver "${@}"
+
+%runscript
+
+	exec rserver "${@}"
+
+%environment
+
+	export MODULEPATH_ROOT=/accre/arch/easybuild/modules/all
+	export MODULEPATH=$MODULEPATH_ROOT/Core:$MODULEPATH_ROOT/BinDist
+	export LMOD_SHORT_TIME=86400
+	export LMOD_ADMIN_FILE=/accre/common/lmod/etc/admin.lmod
+	export LMOD_RC=/accre/common/lmod/etc/lmodrc.lua
+	source /usr/local/lmod/lmod/init/bash
+	export PATH=/usr/lib/rstudio-server/bin:${PATH}
+	# Enable the lmod line below if you're using the lmod version of R instead of the Singularity R
+	#  ml GCC/10.2.0 OpenMPI/4.0.5 R/4.0.5
+
+%setup
+
+	install -Dv accre_lmod_bash_profile    ${SINGULARITY_ROOTFS}/etc/profile.d/accre_01_lmod.sh
+	install -Dv rstudio_auth.sh            ${SINGULARITY_ROOTFS}/usr/lib/rstudio-server/bin/rstudio_auth
+	install -Dv accre_rstudio_bash_profile ${SINGULARITY_ROOTFS}/etc/profile.d/accre_02_rstudio.sh
+
+%post
+
+	# Enable the EPEL repo
+	dnf install -y 'dnf-command(config-manager)'
+	dnf config-manager --set-enabled crb
+	dnf update -y
+	dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+	/usr/bin/crb enable
+
+	# Install build dependencies
+	yum install -y \
+		bc bzip2 bzip2-devel cairo-devel cmake diffutils file fontconfig-devel \
+		freetype-devel fribidi-devel gcc gcc-c++ gcc-gfortran gdal gdal-devel \
+		gdal-libs geos geos-devel git glibc-langpack-en harfbuzz-devel hwloc-devel \
+		ImageMagick-devel java-latest-openjdk java-latest-openjdk-devel libcurl-devel \
+		libevent-devel libicu-devel libjpeg-turbo-devel libgomp libomp-devel \
+		libpng-devel libtiff-devel libX11-devel libxml2-devel libXt-devel llvm-libs \
+		make nodejs-libs openmpi openssl-devel pamtester pcre2-devel perl procps proj \
+		proj-devel python3 python3-devel readline readline-devel sqlite-devel tar \
+		tcl texlive texlive-latex texlive-pdftex tk tk-devel tzdata udunits2-devel \
+		wget which libXt-devel xz-devel zlib-devel
+	yum clean all
+
+	# Ensure locale is set to en_US.UTF-8
+	echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+	echo "LANG=en_US.UTF-8" > /etc/locale.conf
+
+	# Set the timezone
+	rm -f /etc/localtime
+	TZ="America/Chicago" ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
+
+	# Install Lmod
+	yum -y install lua lua-filesystem lua-posix lua-term lua-devel
+	yum -y install make
+	wget https://github.com/TACC/Lmod/archive/{{ LMOD_VERSION }}.tar.gz
+	tar xzf {{ LMOD_VERSION }}.tar.gz
+	cd Lmod-{{ LMOD_VERSION }}
+	./configure --with-spiderCacheDir=/accre/arch/lmod/cache \
+	      --with-updateSystemFn=/accre/arch/lmod/cache/timestamp.lmod \
+	      --with-tcl=no
+	make install
+	cd ..
+	rm -rf {{ LMOD_VERSION }}.tar.gz Lmod-{{ LMOD_VERSION }}
+
+	# Install RStudio Server
+	wget https://download2.rstudio.org/server/rhel9/x86_64/rstudio-server-rhel-{{ RSTUDIO_VERSION }}-x86_64.rpm
+	yum -y install rstudio-server-rhel-{{ RSTUDIO_VERSION }}-x86_64.rpm
+	rm -f rstudio-server-rhel-{{ RSTUDIO_VERSION }}-x86_64.rpm
+
+	# Install R
+	wget https://cran.r-project.org/src/base/R-4/R-{{ R_VERSION }}.tar.gz
+	tar -xf R-{{ R_VERSION }}.tar.gz
+	cd R-{{ R_VERSION }}
+	FFLAGS="-march={{ ARCH_R}}" CFLAGS="-march={{ ARCH_R }}" ./configure --enable-R-shlib
+	make -j
+	make install
+	cd ..
+	rm -rf R-{{ R_VERSION }}
+	rm -rf R-{{ R_VERSION }}.tar.gz
+
+	# Install OpenBLAS
+	git clone https://github.com/OpenMathLib/OpenBLAS
+	cd OpenBLAS
+	make -j TARGET={{ ARCH_OPENBLAS }}
+	cp libopenblas.so /usr/local/lib64/R/lib
+	rm /usr/local/lib64/R/lib/libRblas.so
+	ln -s /usr/local/lib64/R/lib/libopenblas.so  /usr/local/lib64/R/lib/libRblas.so
+	cd ..
+	rm -rf OpenBLAS
+
+	# Install CRAN packages in the image
+	# /usr/local/bin/Rscript -e 'install.packages(c("tidyverse", "lubridate", "purrr", "broom"), repos = "https://cloud.r-project.org")'
+
+	# Install Bioconductor packages in the image
+	# /usr/local/bin/Rscript -e 'install.packages("BiocManager", repos = "https://cloud.r-project.org")'
+	# /usr/local/bin/Rscript -e 'BiocManager::install(version = "3.20")'
+	# /usr/local/bin/Rscript -e 'BiocManager::install(c("BiocVersion", "GenomicAlignments", "preprocessCore"))'
+
+	# Create folders for bind mounting
+	mkdir -p /accre /afs /cvmfs /data /dors /programs /sb /nobackup /labs /store /run/user /panfs /gpfs51
+
+	# Overwrite /etc/pam.d/rstudio with something more appropriate
+	cp /etc/pam.d/login /etc/pam.d/rstudio
+
+	# Remove files that are no longer necessary after building
+	dnf clean all -y
+	dnf autoremove -y
+	rpm -e texlive $(rpm -qa | grep texlive)
+	rpm -e perl perl-CPAN annobin redhat-rpm-config perl-devel python-srpm-macros go-srpm-macros fonts-srpm-macros perl-ExtUtils-Embed perl-ExtUtils-Miniperl perl-ExtUtils-CBuilder
+
+%test
+
+	# Verify that R starts properly
+	R --version

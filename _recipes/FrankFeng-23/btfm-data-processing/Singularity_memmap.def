@@ -1,0 +1,49 @@
+Bootstrap: docker
+From: rust:1.75-slim
+
+%labels
+    Author "Your Name"
+    Version "0.1.2"
+
+%files
+    # 将 Cargo.toml 复制到容器内 /app
+    Cargo.toml /app/
+    # 将您的 Rust 源码复制到容器内 /app/src/main.rs
+    # 如果您的文件名不是 process_tile_memmap.rs，请自行调整
+    process_tile_memmap.rs /app/src/main.rs
+
+%post
+    # 安装基础依赖，包括 GDAL
+    apt-get update && apt-get install -y \
+        pkg-config \
+        libssl-dev \
+        ca-certificates \
+        git \
+        gdal-bin \
+        libgdal-dev \
+        && rm -rf /var/lib/apt/lists/*
+
+    # 设置 GDAL 环境变量，以便 gdal crate 能找到 GDAL
+    export CPLUS_INCLUDE_PATH=/usr/include/gdal
+    export C_INCLUDE_PATH=/usr/include/gdal
+
+    # 进入 /app 目录，编译项目
+    cd /app
+
+    # 清理旧的构建缓存（可选）
+    cargo clean
+
+    # 编译项目（使用默认 glibc 目标）
+    cargo build --release \
+        --config net.git-fetch-with-cli=true
+
+    # 若编译成功，target/release/ 下应产生 `process_tile_memmap`
+    cp target/release/process_tile_memmap /usr/local/bin/s2_process_tile_memmap
+
+%environment
+    # 确保 GDAL 库在运行时可被找到
+    export LD_LIBRARY_PATH=/usr/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+
+%runscript
+    # 指定容器启动时默认执行的可执行文件
+    exec /usr/local/bin/s2_process_tile_memmap "$@"

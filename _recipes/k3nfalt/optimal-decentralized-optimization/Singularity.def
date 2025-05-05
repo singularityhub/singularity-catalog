@@ -1,0 +1,52 @@
+Bootstrap: docker
+From: nvidia/cuda:11.6.1-cudnn8-runtime-centos7
+
+# python3-devel \
+	# python3-tk \
+	# python3-pip \
+	# python3-setuptools \
+
+%post
+	yum -y install epel-release
+	yum -y update
+
+	yum -y install \
+	gcc-c++ \
+	systemd \
+	imagemagick \
+	curl \
+	openslide-tools \
+	wget \
+	make \
+	vim
+	
+	yum -y groupinstall "Development Tools"
+	yum-builddep -y python3-devel
+	yum -y install openssl-devel libffi-devel bzip2-devel liblzma-dev zlib-devel xz-devel libsqlite3-dev
+
+	wget https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tgz
+	tar zxvf Python-3.7.9.tgz
+	cd Python-3.7.9/
+	sed -i '211s/^.//' ./Modules/Setup.dist
+	sed -i '212s/^.//' ./Modules/Setup.dist
+	sed -i '213s/^.//' ./Modules/Setup.dist
+	sed -i '214s/^.//' ./Modules/Setup.dist
+	./configure --enable-optimizations
+	make -j40 altinstall
+
+	alias python3=python3.7
+	alias pip3=pip3.7
+
+	python3 -m pip install --upgrade pip
+
+	pip3 install wheel
+    pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
+	pip3 install numpy matplotlib torchsummary tensorboardX \
+	scikit-learn Pillow pandas scikit-image scipy opencv-python pytest pylint jupyterlab \
+	numba matplotlib
+    pip3 install py-spy
+	pip3 install pyyaml
+	pip3 install kaggle --upgrade
+	pip3 install pepit
+	pip3 install sympy
+	

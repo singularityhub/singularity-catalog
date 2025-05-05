@@ -1,7 +1,7 @@
 bases:
 - count: 2151
   name: ubuntu
-- count: 452
+- count: 454
   name: nvidia/cuda
 - count: 388
   name: debian
@@ -73,14 +73,14 @@ bases:
   name: r-base
 - count: 25
   name: nipy/heudiconv
+- count: 24
+  name: rockylinux
 - count: 23
   name: pennlinc/xcp_d
 - count: 22
   name: khanlab/tar2bids
 - count: 21
   name: rocker/r-ver
-- count: 20
-  name: rockylinux
 - count: 19
   name: nvcr.io/nvidia/nvhpc
 - count: 18
@@ -112,6 +112,8 @@ bases:
 - count: 14
   name: shahzebmsiddiqui/default/easybuild
 - count: 14
+  name: rust
+- count: 14
   name: golang
 - count: 14
   name: 'GodloveD/busybox   '
@@ -127,8 +129,6 @@ bases:
   name: nitishnarula/secure/ubuntu-focal
 - count: 13
   name: nipreps/mriqc
-- count: 12
-  name: rust
 - count: 12
   name: conda/miniconda2
 - count: 12
@@ -302,6 +302,8 @@ bases:
 - count: 6
   name: bids/hcppipelines
 - count: 6
+  name: pennlinc/qsirecon
+- count: 6
   name: bids/freesurfer
 - count: 5
   name: pndni/centos7-base
@@ -335,8 +337,6 @@ bases:
   name: vanessa/pokemon
 - count: 5
   name: neuronets/kwyk
-- count: 5
-  name: pennlinc/qsirecon
 - count: 5
   name: bids/pymvpa
 - count: 5
@@ -971,6 +971,8 @@ bases:
   name: micalab/micapipe
 - count: 2
   name: bids/broccoli
+- count: 2
+  name: arovai/cvrmap
 - count: 2
   name: bids/magetbrain
 - count: 2
@@ -2094,8 +2096,6 @@ bases:
 - count: 1
   name: nipreps/dmriprep
 - count: 1
-  name: arovai/cvrmap
-- count: 1
   name: bids/cpac
 - count: 1
   name: nipreps/nirodents
@@ -2156,7 +2156,7 @@ bases:
 - count: 1
   name: mdzik/default/tclb
 bootstraps:
-- count: 7172
+- count: 7182
   name: docker
 - count: 511
   name: shub
@@ -3144,8 +3144,6 @@ orgs:
 - count: 1
   name: neuronets
 - count: 1
-  name: arovai
-- count: 1
   name: haotingwang
 - count: 1
   name: peerherholz
@@ -3159,6 +3157,8 @@ orgs:
   name: dcanumn
 - count: 1
   name: openneuropet
+- count: 1
+  name: arovai
 - count: 1
   name: nipy
 - count: 1
@@ -3179,7 +3179,7 @@ orgs:
   name: scleveland
 tags:
   latest: 777
-  other: 6733
+  other: 6743
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3341,6 +3341,7 @@ versions:
     ompi: 1
   arovai/cvrmap:
     2.0.26: 1
+    3.0.0: 1
   artifacts/base:
     1.5.4: 1
   arushiv/default/r4py3:
@@ -5014,6 +5015,7 @@ versions:
     11.3.1-devel-ubuntu20.04: 3
     11.4.2-base-ubuntu20.04: 3
     11.6.0-devel-ubuntu20.04: 1
+    11.6.1-cudnn8-runtime-centos7: 1
     11.7.0-cudnn8-devel-ubuntu20.04: 1
     11.7.0-runtime-ubuntu22.04: 1
     11.7.1-base-ubuntu22.04: 1
@@ -5026,6 +5028,7 @@ versions:
     12.1.0-runtime-ubuntu22.04: 1
     12.3.1-devel-ubuntu20.04: 1
     12.4.1-cudnn-devel-ubuntu22.04: 1
+    12.8.1-devel-ubuntu22.04: 1
     7.0-cudnn4-devel-ubuntu14.04: 1
     7.5-cudnn5-devel: 1
     7.5-cudnn5-devel-ubuntu14.04: 6
@@ -5228,6 +5231,7 @@ versions:
     0.23.2: 1
     1.0.0: 1
     1.0.1: 1
+    1.1.0: 1
     unstable: 1
   pennlinc/xcp_d:
     0.10.0: 1
@@ -5760,7 +5764,7 @@ versions:
     '8.5': 2
     8.5.20220308: 1
     8.6.20227707: 2
-    '9': 8
+    '9': 12
     latest: 2
   rockylinux/rockylinux:
     '8': 1
@@ -5788,6 +5792,8 @@ versions:
     latest: 1
   rust:
     1.58.1: 2
+    '1.70-slim  ': 1
+    1.75-slim: 1
     latest: 1
     slim-buster: 9
   ryanpepper/finmag:

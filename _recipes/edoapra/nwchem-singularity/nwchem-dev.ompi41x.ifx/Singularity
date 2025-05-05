@@ -68,10 +68,10 @@ export DEBIAN_FRONTEND=noninteractive \
 && echo pwd $(pwd) \
 && echo 'ls nwchem' $(ls -lrta nwchem) \
 && echo 'ls nwchem/src' $(ls -lrta nwchem/src) \
-&& bash -o  pipefail -c "if [[ ! -f nwchem/src/GNUmakefile ]]; then git clone -b $BRANCH --depth 1  https://github.com/$MYUSERNAME/nwchem.git; fi " \
+&& bash -o  pipefail -c "if [[ ! -f nwchem/src/GNUmakefile ]]; then git clone -b $BRANCH  https://github.com/$MYUSERNAME/nwchem.git; fi " \
 && apt-get -y install -y   tar libnl-3-200 libnl-route-3-200 libgomp1 libnuma1 \
  g++ gfortran   make ssh patch   unzip perl-base file \
- python3 python3-dev cmake  unzip zip perl automake libtool autoconf flex  \
+ python3 python3-dev python-is-python3 cmake  unzip zip perl automake libtool autoconf flex  \
  libnuma-dev libslurm-dev libpmi2-0-dev libpmi0-dev  libnl-3-dev libnl-route-3-dev udev \
  librdmacm-dev librdmacm1 rdma-core libibverbs-dev  ibverbs-providers  \
  libhwloc-dev \
@@ -157,7 +157,6 @@ fi	   \
 && echo "output of git describe  --always " `git describe  --always` || true \
 && pwd \
 && wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/largebasis.patch \
-&& wget https://raw.githubusercontent.com/edoapra/nwchem-singularity/master/nwchem-dev.ompi41x.ifx/gt.patch \
 && ls -l *patch \
 && patch -p1 < largebasis.patch \
 && export NWCHEM_TOP=`pwd` \
@@ -170,7 +169,6 @@ fi	   \
 && make nwchem_config || { echo "config Failure"; exit 1; } \
 && bash -o pipefail -c " \
 echo 'ls ~/' `ls -lrt ~/` \
-&& if [ "$BRANCH" = "master" ]; then export GA_BRANCH=develop ; fi \
 && echo '222 PATH is ' `/usr/bin/env | grep PATH` \
 && echo '111 which FC ' `which $FC` || true \
 && mpif90 -show \
