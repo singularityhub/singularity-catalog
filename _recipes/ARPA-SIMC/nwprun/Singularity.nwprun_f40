@@ -1,0 +1,35 @@
+Bootstrap: docker
+From: fedora:40
+
+%runscript
+    exec "$@"
+
+%post
+    COMPOPT="--nodocs --setopt install_weak_deps=False"
+    dnf install -y 'dnf-command(copr)'
+    dnf copr enable -y simc/stable
+    dnf -y $COMPOPT update
+# install packages required for scacchiera & c. eccodes-devel seems to be
+# erroneously required by python3-eccodes
+    dnf install -y $COMPOPT python3-pandas python3-matplotlib python3-numpy python3-cartopy python3-pygrib python3-eccodes python3-gdal eccodes-devel
+# install smnd packages from simc repository
+    dnf install -y $COMPOPT wreport bufr2netcdf dballe arkimet libsim ma_utils
+# fix for some badly coded airep reports, rewrite bufr table
+# https://github.com/ARPA-SIMC/wreport/issues/58
+    cp /usr/share/wreport/B0000000000000015000.txt \
+     /usr/share/wreport/B0000000000000014000.txt
+# other useful packages
+    dnf install -y $COMPOPT ncview
+# save some space
+    dnf clean all
+    rm -rf /var/lib/{dnf,rpm,yum} /var/cache/*
+
+%environment
+    export LOG4C_APPENDER=stderr
+    export LOG4C_PRIORITY=warning
+
+%help
+    This container includes most of the tools developed at SIMC and
+    the specific tools required for running nwp postprocessing.
+
+

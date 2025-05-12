@@ -1,13 +1,11 @@
 bootstrap: docker
-from: nvidia/cuda:11.2.2-devel-centos7
+from: nvidia/cuda:12.8.1-devel-ubuntu20.04
 
 
 
 
 %help
-Centos7 with conda python, jupyter, latex, cuda
-
-
+IDI jupyterhub (Cuda 12)
 
 
 %environment
@@ -17,24 +15,10 @@ export CUDA_ROOT
 SINGULARITY_SHELL=/bin/zsh
 export SINGULARITY_SHELL
 
-# MKLROOT=/opt/intel/compilers_and_libraries/linux/mkl
-# export MKLROOT
-# TBBROOT=/opt/intel/compilers_and_libraries/linux/tbb
-# export TBBROOT
-# INTEL_LICENSE_FILE=/opt/intel/compilers_and_libraries/linux/licenses
-# export INTEL_LICENSE_FILE
-# LIBRARY_PATH=$LIBRARY_PATH:/opt/intel/compilers_and_libraries/linux/compiler/lib/intel64_lin:/opt/intel/compilers_and_libraries/linux/mkl/lib/intel64_lin:/opt/intel/compilers_and_libraries/linux/tbb/lib/intel64/gcc4.8:/opt/intel/compilers_and_libraries/linux/tbb/lib/intel64/gcc4.8
-# export LIBRARY_PATH
-# CPATH=$CPATH:/opt/intel/compilers_and_libraries/linux/mkl/include:/opt/intel/compilers_and_libraries/linux/tbb/include:/opt/intel/compilers_and_libraries/linux/tbb/include
-# export CPATH
-# PATH=$PATH:/opt/intel/compilers_and_libraries/linux/bin/intel64:/opt/intel/compilers_and_libraries/linux/bin
-# PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/opt/intel/compilers_and_libraries/linux/mkl/bin/pkgconfig
-# export PKG_CONFIG_PATH
-
-PATH=$PATH:/opt/anaconda3/bin:/usr/local/texlive/bin/x86_64-linux:/usr/local/cuda/bin
+PATH=$PATH:/opt/anaconda3/bin:/usr/local/cuda/bin
 export PATH
 
-LD_PRELOAD=/usr/local/lib64/mklpatch.so
+LD_PRELOAD=/usr/local/lib/mklpatch.so
 export LD_PRELOAD
 
 SHELL=/usr/bin/zsh
@@ -48,180 +32,38 @@ export CONDA_PKGS_DIRS
 
 
 
-
-
-
 %post
-##yum
-yum-config-manager --add-repo https://yum.repos.intel.com/mkl/setup/intel-mkl.repo
-yum -y install epel-release https://repo.ius.io/ius-release-el7.rpm && yum clean all && rm -rf /var/cache/yum/*  && yum makecache && yum update -y && yum upgrade -y
-yum install -y aria2 bsdtar curl git224 gzip lz4 p7zip p7zip-plugins perl-Digest-MD5 perl-File-Fetch perl-LWP-Protocol-https perl-Mozilla-CA perl-libwww-perl rsync unzip wget xz zip openssl bzip2
-#intel-mkl-64bit-2020.3-111.x86_64 intel-mkl-gnu-2020.3-279.x86_64 intel-mkl-tbb-rt-2020.3-279.x86_64 
-yum install -y axel binutils cmake3 curl diffutils elfutils environment-modules file gcc gcc-c++ gdb gettext ghostscript htop less libstdc++ libtiff libtool ltrace make man man-pages mc mosh openmpi-devel openssh patch patchutils perf psmisc screen strace tmux vim zsh  openssl-devel pam-devel numactl numactl-devel hwloc hwloc-devel lua lua-devel readline-devel rrdtool-devel ncurses-devel man2html libibmad libibumad munge-libs mesa-libOSMesa mesa-libOSMesa-devel nmap nc ImageMagick && yum clean all && rm -rf /var/cache/yum &
-
-
-##texlive
-echo "installing texlive"
-cat > /tmp/texlive.profile << "EOF0"
-# texlive.profile
-selected_scheme scheme-custom
-collection-basic 1
-collection-bibtexextra 1
-collection-context 0
-collection-fontsextra 0
-collection-fontsrecommended 1
-collection-fontutils 0
-collection-formatsextra 1
-collection-humanities 1
-collection-langenglish 1
-collection-langfrench 0
-collection-langgerman 1
-collection-langgreek 0
-collection-latex 1
-collection-latexextra 1
-collection-latexrecommended 1
-collection-luatex 1
-collection-mathscience 1
-collection-metapost 1
-collection-pictures 1
-collection-plaingeneric 1
-collection-pstricks 1
-collection-publishers 1
-collection-xetex 1
-TEXDIR /usr/local/texlive/
-TEXMFCONFIG ~/.texlive/texmf-config
-TEXMFHOME ~/.texlive/texmf
-TEXMFLOCAL /usr/local/texlive/texmf-local
-TEXMFSYSCONFIG /usr/local/texlive/texmf-config
-TEXMFSYSVAR /usr/local/texlive/texmf-var
-TEXMFVAR ~/.texlive/texmf-var
-binary_x86_64-linux 1
-instopt_adjustpath 0
-instopt_adjustrepo 1
-instopt_letter 0
-instopt_portable 0
-instopt_write18_restricted 1
-tlpdbopt_autobackup 0
-tlpdbopt_backupdir tlpkg/backups
-tlpdbopt_create_formats 1
-tlpdbopt_desktop_integration 1
-tlpdbopt_file_assocs 1
-tlpdbopt_generate_updmap 0
-tlpdbopt_install_docfiles 0
-tlpdbopt_install_srcfiles 0
-tlpdbopt_post_code 1
-tlpdbopt_sys_bin /usr/local/bin
-tlpdbopt_sys_info /usr/local/share/info
-tlpdbopt_sys_man /usr/local/share/man
-tlpdbopt_w32_multi_user 1
-EOF0
-
-#mounting iso (not possible on shub)
-#cd /tmp && aria2c -q -j8 -x8 http://mirror.ctan.org/systems/texlive/Images/texlive2020.iso && mkdir /mnt/iso &&  mount -o loop /tmp/texlive2020.iso /mnt/iso && cd /mnt/iso && ./install-tl -profile /tmp/texlive.profile -no-verify-downloads -persistent-downloads  && sleep 60 &&  umount /mnt/iso || true && rm -f /tmp/texlive2020.iso && echo 'done' &
-
-#unpacking iso (can cause checksum fails?)
-#cd /tmp && aria2c -q -j8 -x8 http://mirror.ctan.org/systems/texlive/Images/texlive2020.iso && mkdir /tmp/iso &&  bsdtar -xf texlive2020.iso -C /tmp/iso && rm /tmp/texlive2020.iso && cd /tmp/iso && ./install-tl -profile /tmp/texlive.profile -no-verify-downloads -persistent-downloads -q &&  rm /tmp/texlive2020.iso && rm -rf /tmp/iso && echo 'done' &
-
-#online install
-wget -q -O /tmp/install-tl-unx.tar.gz http://ftp.acc.umu.se/mirror/CTAN/systems/texlive/tlnet/install-tl-unx.tar.gz && \
-    cd /tmp/ && tar xzf install-tl-unx.tar.gz && \
-    cd /tmp/install-tl-* && ./install-tl -profile /tmp/texlive.profile -no-verify-downloads -persistent-downloads --location https://mirrors.rit.edu/CTAN/systems/texlive/tlnet/ -q && \
-    rm -rf /tmp/install-tl* && echo 'tl install done' &
+apt-get update && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends aria2 curl git gzip lz4 p7zip-full p7zip-rar \
+  rsync unzip wget xz-utils zip openssl bzip2 axel binutils cmake diffutils \
+  elfutils file build-essential gdb htop less libstdc++6 ltrace make mc mosh \
+  openmpi-bin libopenmpi-dev openssh-client patch patchutils linux-tools-common \
+  linux-tools-generic psmisc screen strace tmux vim zsh libssl-dev munge \
+  imagemagick slurm-wlm \
+&& rm -rf /var/lib/apt/lists/*
 
 
 #miniconda
-echo "installing miniconda"
-wget -q -O /tmp/Miniconda3.sh https://repo.anaconda.com/miniconda/Miniconda3-py38_4.9.2-Linux-x86_64.sh
-cd /tmp/&& bash /tmp/Miniconda3.sh -b -p /opt/anaconda3
-rm /tmp/Miniconda3.sh
-ln -s /opt/anaconda3/etc/profile.d/conda.sh /etc/profile.d/conda.sh
-PATH=$PATH:/usr/local/cuda/bin:/opt/anaconda3/bin
-PYVERSION="3.8.10=hdb3f193_7"
-echo using python $PYVERSION
+echo "installing conda"
+wget -O /tmp/Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+cd /tmp/ && bash /tmp/Miniforge3.sh -b -p /opt/conda
+rm /tmp/Miniforge3.sh
+ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+PATH=$PATH:/usr/local/cuda/bin:/opt/conda/bin
 
 #conda env
 . /etc/profile.d/conda.sh
 echo "installing conda extensions"
 conda activate
-conda install -q -y "python==${PYVERSION}"
-conda install -q -y -c "pkgs/main" -c anaconda -c conda-forge mamba conda "zstd<1.5"
-mamba install -q -y simplejson colorama   protobuf requests "numexpr>=2.7.2" "numpy>=1.17" hdf5 scipy "jedi=0.17" numba "mkl>=2020" "tbb<=2021" cython  "jupyterlab<3"  jupyter scikit-image appdirs mako scikit-learn  seaborn pandas line_profiler black ninja colorama memory_profiler isort "mkl-include>=2020" fastrlock six setuptools cmake sympy pytest   "python==${PYVERSION}"
-mamba install -q -y -c "pkgs/main" -c anaconda -c  conda-forge -c plotly gpustat colorful "h5py>3,<3.2" lmfit ipympl pathos "nodejs>=14"  ptvsd xeus-python pytools nbdime "pip>=20.1" jupyter-dash ipyvolume "jupyter-server-proxy<3" six openssl "jedi<0.18" ffmpeg pytest-flake8 "python==${PYVERSION}"
-mamba install -q -y -c numba icc_rt
+mamba install -q -y "python=3.11"  "numexpr>=2.7.2" "numpy>=1.17" h5py scipy numba "mkl>=2020" cython  "jupyterlab" jupyter scikit-image scikit-learn seaborn pandas line_profiler black ninja memory_profiler isort "mkl-include>=2020" cmake sympy pytest lmfit pytest-flake8 ruff "numpy<2.2" matplotlib tqdm cython mkl-devel mkl-service "setuptools<60" einops uv joblib
 conda clean -a -y &
 
-
-#jupyterlab extensions
-echo "installing jlab extensions"
-jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build
-jupyter labextension install ipyvolume --no-build
-jupyter labextension install jupyter-matplotlib --no-build
-jupyter labextension install jupyter-threejs --no-build
-jupyter labextension install @krassowski/jupyterlab_go_to_definition --no-build
-jupyter labextension install @aquirdturtle/collapsible_headings --no-build
-jupyter labextension install @jupyterlab/google-drive --no-build
-# jupyter labextension install jupyterlab-plotly --no-build
-jupyter labextension install @jupyterlab/server-proxy --no-build
-
-pip install -q --upgrade "jupyterlab-git<0.30" "jupyterlab_code_formatter<1.4"  jupyterlab_latex  "jupyterlab<3" jupyterlab_hdf "jedi<0.18" #jupyter-dash
-jupyter labextension install @jupyterlab/latex --no-build
-jupyter labextension install "@ryantam626/jupyterlab_code_formatter@<1.4" --no-build
-jupyter labextension install @jupyterlab/git --no-build
-jupyter labextension install @jupyterlab/debugger --no-build
-# jupyter labextension install  jupyterlab-dash --no-build
-jupyter labextension install jupyterlab-tabular-data-editor --no-build
-jupyter labextension install @jupyterlab/hdf5 --no-build
-jupyter serverextension enable --py jupyterlab_code_formatter --sys-prefix
-jupyter serverextension enable --sys-prefix jupyterlab_latex
-jupyter serverextension enable --py jupyterlab_git --sys-prefix
-jupyter serverextension enable --py jupyter_server_proxy --sys-prefix
-jupyter serverextension enable --py nbdime --sys-prefix
-jupyter serverextension enable --py jupyterlab_hdf --sys-prefix
-
-echo 'waiting'
-sleep 10
-wait #make sure not to run out of memory
-sleep 60
-
-echo 'building lab'
-jupyter lab build --dev-build=False --minimize=True ||true
-cat /tmp/jupyterlab-debug-* ||true
-
-cat > /opt/anaconda3/etc/jupyter/jupyter_config.json << "EOF3"
-{
-  "NotebookApp": {
-    "nbserver_extensions": {
-      "jupyterlab_git": true,
-      "jupyterlab_hdf": true,
-      "jupyterlab": true,
-      "jupyterlab_latex": true,
-      "nbdime": true,
-      "jupyterlab_code_formatter": true,
-      "jupyter_server_proxy": true
-    }
-  },
-  "LabApp": {
-    "tornado_settings": {
-      "page_config_data": {
-        "buildCheck": false,
-        "buildAvailable": false
-      },
-    "compress_response" : true
-    }
-  }
-}
-EOF3
-
-
-#pip
 echo 'installing pnumpy from pip' && pip install pnumpy
 echo "installing pycuda from pip" && CFLAGS=-std=c++11 CXXFLAGS=-std=c++11  LIBRARY_PATH=/usr/local/cuda/lib64/stubs CPATH=/usr/local/cuda/include CUDA_ROOT=/usr/local/cuda pip install pycuda
-echo 'installing cupy from pip' && pip install cupy-cuda112  &
-echo 'installing mkl_umath wheel' && pip install https://zimf.de/mkl_umath-0.1.1-cp38-cp38-linux_x86_64.whl --no-deps &
+echo 'installing cupy from pip' && pip install cupy-cuda12x &
 
 #conda config
-conda config  --file /opt/anaconda3/.condarc --set changeps1 False
-conda config  --file /opt/anaconda3/.condarc --set auto_activate_base true
+conda config  --file /opt/conda/.condarc --set changeps1 False
+conda config  --file /opt/conda/.condarc --set auto_activate_base true
 
 cat > /etc/profile.d/zconda.sh << "EOF1"
 #. /etc/profile.d/conda.sh
@@ -246,40 +88,36 @@ int mkl_serv_intel_cpu_true() {
 }
 EOF4
 gcc -shared -fPIC -o /tmp/mklpatch.so /tmp/mklpatch.c
-cp /tmp/mklpatch.so /usr/local/lib64/mklpatch.so && chmod 775 /usr/local/lib64/mklpatch.so && echo 'done'
+cp /tmp/mklpatch.so /usr/local/lib/mklpatch.so && chmod 775 /usr/local/lib/mklpatch.so && echo 'done'
 
 
 
 #idi
 wait
-echo 'install idi' && pip install git+https://github.com/fzimmermann89/idi --no-deps
+echo 'install idi' && pip install git+https://github.com/fzimmermann89/idi
 
 
 #cleanup
 wait
 conda clean -a -y -f
-jlpm cache clean
 pip cache purge
-npm cache clean --force
 jupyter lab clean
 rm -rf /root/.conda | true
 rm -rf /root/.npm | true
 rm -rf /root/.cache | true
 rm -rf /tmp/npm* | true
-rm -rf /tmp/texlive* | true
 rm -rf /tmp/yarn* | true
 rm -rf /var/cache/* | true
-rm -f /anaconda-post.log | true
 touch /INSIDE_SINGULARITY_IDI_IMAGE
 echo '####ALL DONE####'
 
 #slurm user
-useradd -r --shell /usr/sbin/nologin slurm
+#useradd -r --shell /usr/sbin/nologin slurm
 
 
 %labels
     Maintainer zimmf
-    Version 0.1-200910
+    Version 0.2
         
 %runscript
 exec /opt/runscript.sh python "$@"
@@ -293,5 +131,3 @@ exec /opt/runscript.sh jupyter "$@"
 %apprun ipython
 exec /opt/runscript.sh ipython "$@"
 
-%apprun pdftex
-exec pdftex "$@"

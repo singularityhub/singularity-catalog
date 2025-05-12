@@ -1,89 +1,57 @@
-# Author: B. Anderson
-# Singularity recipe for creating a container for using the program SNAPPER implemented in BEAST2
-# also includes SPEEDEMON
+# Author: B.M. Anderson
+# Singularity recipe for creating a container for using the program SNAPPER as implemented in BEAST2
+# The container also includes the program SPEEDEMON
 
 
 Bootstrap: docker
-From: ubuntu:20.04
+From: ubuntu:22.04
 
 
 %labels
 	MAINTAINER bmichanderson
-	PROGRAM SNAPPER, speedemon
-	VERSION 1.0.2, 0.1.1
+	PROGRAM BEAST2, SNAPPER, SPEEDEMON
+	VERSION 2.7.7, latest, latest
 
 
 %help
 	This container is for running SNAPPER and other packages related to species delimitation as implemented in BEAST2
 	
-	To use: singularity exec -H "$(pwd)" snapper.sif [args]
-
-	NOTE: args may be, e.g. 
-		beast input.xml 
+	To use the programs in it:
+		singularity exec -H "$(pwd)" snapper.sif [args]
+	Example args include:
+		beast input.xml
 		packagemanager -list
-		applauncher app_name
+		applauncher {app_name}
 	
-	NOTE: binding home directory is needed to prevent use of system home directory for creating the .beast directory
+	Note: binding home directory is needed to prevent use of system home for creating a ~/.beast directory
 
-	To directly run beast, use: singularity run -H "$(pwd)" snapper.sif [args]
-	(equivalent to exec snapper.sif beast [args])
-	
-	Check contents by entering it as: singularity shell snapper.sif
+	To directly run beast, use:
+		singularity run -H "$(pwd)" snapper.sif [args]
 
 
 %post
 	# install necessary programs
 	export DEBIAN_FRONTEND=noninteractive
 	apt update && apt install -y \
-		openjdk-8-jre \
-		unzip \
+		openjdk-11-jdk \
 		wget
 	apt autoremove -y && apt clean
 
 
 	# download and install BEAST2
-	BEAST_VERSION=2.6.7
-	URL=https://github.com/CompEvol/beast2/releases/download/v${BEAST_VERSION}/BEAST.v${BEAST_VERSION}.Linux.tgz
+	BEAST_VER=2.7.7
+	URL=https://github.com/CompEvol/beast2/releases/download/v${BEAST_VER}/BEAST.v${BEAST_VER}.Linux.x86.tgz
 	wget "$URL"
-	tar -xzf BEAST.v${BEAST_VERSION}.Linux.tgz && rm BEAST.v${BEAST_VERSION}.Linux.tgz
+	tar -xzf BEAST.v${BEAST_VER}.Linux.x86.tgz && rm BEAST.v${BEAST_VER}.Linux.x86.tgz
 
 
-	# create default home beast directory
-	mkdir -p ~/.beast/2.6
-
-
-	# install a number of packages for species delimitation
+	# install packages for species delimitation
 	/beast/bin/packagemanager -useAppDir -add SNAPP
 	/beast/bin/packagemanager -useAppDir -add snapper
 	/beast/bin/packagemanager -useAppDir -add MODEL_SELECTION
 	/beast/bin/packagemanager -useAppDir -add starbeast3
-	
-
-	# add the URL to be able to locate speedemon (and pre-releases)
-	URL_line="packages.url=https\://raw.githubusercontent.com/CompEvol/CBAN/master/packages-extra.xml"
-	echo $URL_line >> ~/.beast/2.6/beauti.properties
-	
-	
-	# install the new speedemon package
 	/beast/bin/packagemanager -useAppDir -add BICEPS
 	/beast/bin/packagemanager -useAppDir -add speedemon
-
-
-	# alternatively, manually download a specific version of SNAPPER
-	#VER=1.0.1
-	#URL="https://github.com/rbouckaert/snapper/raw/master/dist/snapper.addon.v"$VER".zip"
-	#mkdir -p /usr/local/share/beast/2.6/snapper && cd /usr/local/share/beast/2.6/snapper
-	#wget "$URL"
-	#unzip snapper.addon.v"$VER".zip && rm snapper.addon.v"$VER".zip
-	#cd /
-
-	# and/or speedemon
-	#VER=0.1.1
-	#URL="https://raw.githubusercontent.com/CompEvol/packages/main/speedemon/speedemon.addon.v"$VER".zip"
-	#mkdir -p /usr/local/share/beast/2.6/speedemon && cd /usr/local/share/beast/2.6/speedemon
-	#wget "$URL"
-	#unzip speedemon.addon.v"$VER".zip && rm speedemon.addon.v"$VER".zip
-	#cd /
 
 
 %environment
