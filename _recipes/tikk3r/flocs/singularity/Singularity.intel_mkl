@@ -22,10 +22,10 @@ From: fedora:40
 
     # Settings relevant to the installed software.
     export AOFLAGGER_VERSION=bdf03b28
-    export CASACORE_VERSION=a4c457b
+    export CASACORE_VERSION=v3.7.1
     export DDFPIPELINE_VERSION=df58808
-    export DP3_VERSION=f475bc30
-    export EVERYBEAM_VERSION=59c755a6
+    export DP3_VERSION=c7fe69da
+    export EVERYBEAM_VERSION=v0.6.2
     export HDF5_VERSION=1.14.5
     export IDG_VERSION=2af6f285
     export LOSOTO_VERSION=e4ed09a
@@ -33,7 +33,7 @@ From: fedora:40
     export PYBDSF_VERSION=8471637
     export PYTHON_CASACORE_VERSION=3.6.1
     export RMEXTRACT_VERSION=0.5.0
-    export WSCLEAN_VERSION=c1e4fcb2
+    export WSCLEAN_VERSION=df9a4fd2
     export HDF5_USE_FILE_LOCKING=FALSE
     export OMPI_ALLOW_RUN_AS_ROOT=1
 
@@ -81,7 +81,7 @@ From: fedora:40
     dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
     dnf -y install wget
     wget https://raw.githubusercontent.com/tikk3r/flocs/fedora-py3/dnf-packages.txt -O $INSTALLDIR/dnf-packages.txt
-    dnf -y install $(</opt/lofar/dnf-packages.txt)
+    dnf -y install $(<$INSTALLDIR/dnf-packages.txt)
     wget --progress=bar:force:noscroll https://download.oracle.com/otn_software/linux/instantclient/2360000/oracle-instantclient-basic-23.6.0.24.10-1.el9.x86_64.rpm
     dnf -y install oracle-instantclient-basic-23.6.0.24.10-1.el9.x86_64.rpm
     rm oracle-instantclient-basic-*.rpm
@@ -186,7 +186,6 @@ EOF
 
     sudo dnf -y install python3-cx-oracle
     pip --version
-    pip install --upgrade setuptools
     pip --no-cache-dir install virtualenv
 
     # Install shadeMS in its own environment to avoid conflicts.
@@ -212,13 +211,18 @@ EOF
     cd ..
     rm -rf datashape-0.5.2/
 
-    pip install --upgrade pip wheel Cython
+    pip install --upgrade pip wheel Cython "setuptools>=59.5.0,<71"
     pip install "numpy<2"
     pip install --no-binary pandas pandas
     pip install --no-binary h5py h5py
     pip install -r $INSTALLDIR/flocs/requirements.txt
+    # Install facetselfcal this way to make sure data gets installed.
+    cd /opt/lofar
+    git clone https://github.com/rvweeren/lofar_facet_selfcal.git
+    pip install ./lofar_facet_selfcal
+    rm -rf lofar_facet_selfcal
     # Install this separately since it keeps forcefully downgrading numpy.
-    pip install --no-deps lofarSun
+    #pip install --no-deps lofarSun
     pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 
     #
@@ -285,7 +289,7 @@ EOF
     git clone --single-branch --branch master https://github.com/casacore/casacore.git src
     cd ${INSTALLDIR}/casacore/src && git checkout ${CASACORE_VERSION} && echo export CASACORE_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
     cd ${INSTALLDIR}/casacore/data
-    ncftpget ftp://anonymous@ftp.astron.nl/outgoing/Measures/WSRT_Measures.ztar
+    wget -nv https://www.astron.nl/iers/WSRT_Measures.ztar
     tar xf WSRT_Measures.ztar && rm WSRT_Measures.ztar
     cd ${INSTALLDIR}/casacore/build
     if [ $HAS_MKL = true ]; then
@@ -436,9 +440,9 @@ EOF
     echo export DP3_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
     cd $INSTALLDIR/DP3/build
     if [ $MARCH = 'x86-64' ] && [ $MTUNE = 'generic' ]; then
-        cmake $CMAKE_ADD_OPTION -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLDIR/DP3 -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include -DAOFLAGGER_INCLUDE_DIR=$INSTALLDIR/aoflagger/include -DAOFLAGGER_LIB=$INSTALLDIR/aoflagger/lib/libaoflagger.so -DPORTABLE=True -DLIBDIRAC_PREFIX=$INSTALLDIR/sagecal/ ../src
+        cmake $CMAKE_ADD_OPTION -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLDIR/DP3 -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include -DAOFLAGGER_INCLUDE_DIR=$INSTALLDIR/aoflagger/include -DAOFLAGGER_LIB=$INSTALLDIR/aoflagger/lib/libaoflagger.so -DPORTABLE=True -DLIBDIRAC_PREFIX=$INSTALLDIR/sagecal/ -DMETADATA_COMPRESSION_DEFAULT=True ../src
     else
-        cmake $CMAKE_ADD_OPTION -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLDIR/DP3 -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include -DAOFLAGGER_INCLUDE_DIR=$INSTALLDIR/aoflagger/include -DAOFLAGGER_LIB=$INSTALLDIR/aoflagger/lib/libaoflagger.so -DTARGET_CPU=${MARCH} -DLIBDIRAC_PREFIX=$INSTALLDIR/sagecal/ ../src
+        cmake $CMAKE_ADD_OPTION -DCMAKE_INSTALL_PREFIX:PATH=$INSTALLDIR/DP3 -DIDGAPI_LIBRARIES=$INSTALLDIR/idg/lib/libidg-api.so -DIDGAPI_INCLUDE_DIRS=$INSTALLDIR/idg/include -DAOFLAGGER_INCLUDE_DIR=$INSTALLDIR/aoflagger/include -DAOFLAGGER_LIB=$INSTALLDIR/aoflagger/lib/libaoflagger.so -DTARGET_CPU=${MARCH} -DLIBDIRAC_PREFIX=$INSTALLDIR/sagecal/ -DMETADATA_COMPRESSION_DEFAULT=True ../src
     fi
     # Boost 1.75 requires c++14, so override this during make
     make -s -j $J && make install
@@ -548,6 +552,7 @@ EOF
     git checkout 5cec4db8 
     patch -u DDFacet/Other/AsyncProcessPool.py -i $INSTALLDIR/flocs/patches/DDFacet_cpus.patch
     cd ..
+    sed -i '5d' DDFacet/pyproject.toml
     ## Strip out version requirements.
     sed -i 's/<=.*"/"/' DDFacet/pyproject.toml
     # sed doesn't support negative lookahead, so we use perl here.
@@ -562,6 +567,8 @@ EOF
     find DDFacet/ -name "*.c" -exec sed -i "s/PyArray_INT32/NPY_INT32/g" {} \;
     find DDFacet/ -name "*.c" -exec sed -i "s/PyArray_FLOAT32/NPY_FLOAT32/g" {} \;
 
+    find . \( -name "CMakeLists.txt" -o -name "*.cmake" \) -exec sed -E "s/cmake_minimum_required\(VERSION 2\.[68]/cmake_minimum_required\(VERSION 3.5/gm" {} \;
+
     pip install --no-deps DDFacet/
 
 
@@ -570,6 +577,7 @@ EOF
     #
     cd $INSTALLDIR
     git clone --single-branch -b v3.2.0 https://github.com/saopicc/killMS.git
+    sed -i '5d' killMS/pyproject.toml
     sed -i 's/<=.*"/"/' killMS/pyproject.toml
     sed -i "s/3\.11/3.13/g" killMS/pyproject.toml
     find killMS/ -name "*.c" -exec sed -i "s/PyArray_FLOAT64/NPY_FLOAT64/g" {} \;
@@ -585,6 +593,8 @@ EOF
     sed -i "s/gcc/gcc -march=${MARCH} -mtune=${MTUNE}/" killMS/killMS/Gridder/Makefile
 
     sed -i '261s/np\.complex/np\.complex128/' killMS/killMS/Data/ClassMS.py
+
+    find . \( -name "CMakeLists.txt" -o -name "*.cmake" \) -exec sed -E "s/cmake_minimum_required\(VERSION 2\.[68]/cmake_minimum_required\(VERSION 3.5/gm" {} \;
 
     pip install --no-deps killMS/
 
