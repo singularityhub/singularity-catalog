@@ -25,7 +25,7 @@ bases:
   name: Characterisation-Virtual-Laboratory/CharacterisationVL-Software
 - count: 95
   name: nfcore/base
-- count: 75
+- count: 76
   name: neurodebian
 - count: 56
   name: conda/miniconda3
@@ -124,6 +124,8 @@ bases:
 - count: 13
   name: nipreps/smriprep
 - count: 13
+  name: nipreps/nibabies
+- count: 13
   name: intel/oneapi-hpckit
 - count: 13
   name: ghcr.io/mkandes/openmpi
@@ -133,8 +135,6 @@ bases:
   name: ros
 - count: 12
   name: khanlab/heudiconv
-- count: 12
-  name: nipreps/nibabies
 - count: 12
   name: conda/miniconda2
 - count: 12
@@ -683,6 +683,8 @@ bases:
   name: bids/mindboggle
 - count: 2
   name: cpplab/bidspm
+- count: 2
+  name: bids/giga_connectome
 - count: 2
   name: peerherholz/bidsonym
 - count: 2
@@ -1375,8 +1377,6 @@ bases:
   name: sebastientourbier/multiscalebrainparcellator
 - count: 1
   name: bids/antscorticalthickness
-- count: 1
-  name: bids/giga_connectome
 - count: 1
   name: bids/nipypelines
 - count: 1
@@ -2174,7 +2174,7 @@ bases:
 - count: 1
   name: ubuntu-vnc-xfce.sif
 bootstraps:
-- count: 7200
+- count: 7203
   name: docker
 - count: 511
   name: shub
@@ -3203,7 +3203,7 @@ orgs:
   name: starlitnightly
 tags:
   latest: 777
-  other: 6759
+  other: 6762
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3459,6 +3459,7 @@ versions:
     v6.0.1-6.1: 1
   bids/giga_connectome:
     0.5.0: 1
+    0.6.0: 1
   bids/hcppipelines:
     v3.17.0-18: 1
     v4.1.3-1: 1
@@ -4708,7 +4709,7 @@ versions:
     latest: 1
   neurodebian:
     artful-non-free: 3
-    bookworm: 5
+    bookworm: 6
     bullseye: 3
     bullseye-non-free: 2
     buster: 6
@@ -4806,6 +4807,7 @@ versions:
     24.1.0: 1
     25.0.0: 1
     25.0.1: 1
+    25.0.2: 1
   nipreps/nirodents:
     0.2.1: 1
   nipreps/smriprep:

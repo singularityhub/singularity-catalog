@@ -4,7 +4,7 @@ Stage: build
 
 # path, BLASTMAT (blast matrices)
 %environment
-    export PATH=/home/w3const/systool/ncbitool:/opt/w3constbin:/opt/jParser:/opt/transChecker:/opt/ncbi-blast/bin:/opt/ncbitool:/opt/sratoolkit/bin:/opt/aspera/connect/bin:$PATH
+    export PATH=/home/w3const/systool/ncbitool:/opt/w3constbin:/opt/jParser:/opt/transChecker:/opt/ncbi-blast/bin:/opt/ncbitool:/opt/sratoolkit/bin:/opt/aspera/connect/bin:/opt/edirect:$PATH
     export BLASTDB=/opt/blastdb
     export BLASTMAT=/opt/blastmatrix
 
@@ -17,6 +17,7 @@ Stage: build
 %files
     curatortool/* /opt/w3constbin
     ncbi-blast-matrices.tar.gz /opt
+    ibm-aspera-connect_4.1.3.93_linux.tar.gz /root
     ncbitool/* /opt/ncbitool
 
 %runscript
@@ -30,9 +31,11 @@ Stage: build
     ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime    
     dpkg-reconfigure --frontend noninteractive tzdata
     apt -y install language-pack-en language-pack-ja
+    apt -y install fonts-noto-cjk fonts-noto-core fonts-noto-mono
     update-locale LANG=ja_JP.UTF-8
     apt -y install build-essential
-    apt -y install autoconf bison libssl-dev libyaml-dev libreadline-dev zlib1g-dev libncurses-dev libffi-dev libgdm1 libgdbm-dev git bash-completion wget curl jq pigz lftp rsync openjdk-17-jre emboss emboss-data python3-pip rename
+    apt -y install autoconf bison libssl-dev libyaml-dev libreadline-dev zlib1g-dev libncurses-dev libffi-dev libgdm1 libgdbm-dev git bash-completion wget curl jq pigz lftp rsync openjdk-17-jre emboss emboss-data rename vim
+    apt -y install python3-pip python3-venv python3-schedule python3-pandas python3-numpy 
     apt -y install postgresql-client postgresql-client-common
     # Put base scripts, binaries
     chmod a+x /opt/w3constbin/*.sh /opt/w3constbin/*.py /opt/ncbitool/*
@@ -54,6 +57,7 @@ Stage: build
     chmod +x ./jParser/jParser.sh ./transChecker/transChecker.sh
     chmod 644 ./jParser/jar/*.jar ./transChecker/jar/*.jar
     # blast bin
+    cd /opt
     VER=$(curl -s https://ftp.ncbi.nih.gov/blast/executables/blast+/VERSION)
     wget ftp://ftp.ncbi.nih.gov/blast/executables/blast+/${VER}/ncbi-blast-${VER}+-x64-linux.tar.gz
     tar xvfz ncbi-blast-${VER}+-x64-linux.tar.gz
@@ -69,14 +73,26 @@ Stage: build
     tar xvfz sratoolkit.${VER}-ubuntu64.tar.gz
     ln -s sratoolkit.${VER}-ubuntu64 sratoolkit
     rm sratoolkit.${VER}-ubuntu64.tar.gz
+    # E-utilities NCBI, https://www.ncbi.nlm.nih.gov/books/NBK179288/
+    wget ftp://ftp.ncbi.nih.gov/entrez/entrezdirect/edirect.tar.gz
+    wget ftp://ftp.ncbi.nih.gov/entrez/entrezdirect/rchive.Linux.gz
+    wget ftp://ftp.ncbi.nih.gov/entrez/entrezdirect/transmute.Linux.gz
+    wget ftp://ftp.ncbi.nih.gov/entrez/entrezdirect/xtract.Linux.gz    
+    tar xvfz edirect.tar.gz
+    rm -f edirect.tar.gz
+    gunzip rchive.Linux.gz
+    gunzip transmute.Linux.gz
+    gunzip xtract.Linux.gz
+    chmod a+x rchive.Linux transmute.Linux xtract.Linux
+    mv rchive.Linux transmute.Linux xtract.Linux edirect/
     # aspera connect
     # VER="4.2.12.780"
     # wget -P /root https://ak-delivery04-mul.dhe.ibm.com/sar/CMA/OSA/0c9pt/0/ibm-aspera-connect_${VER}_linux_x86_64.tar.gz
-    ASCPLATEST="https://d3gcli72yxqn2z.cloudfront.net/downloads/connect/latest/bin/ibm-aspera-connect_4.2.12.780_linux_x86_64.tar.gz"
+    ASCPLATEST="https://d3gcli72yxqn2z.cloudfront.net/downloads/connect/latest/bin/ibm-aspera-connect_4.2.13.820_linux_x86_64.tar.gz"
     VER=$(echo ${ASCPLATEST} | awk -F'_' '{print $2}')
     wget -P /root ${ASCPLATEST}
-    # former aspera to obtain pubkey
-    wget -P /root https://ak-delivery04-mul.dhe.ibm.com/sar/CMA/OSA/0adrj/0/ibm-aspera-connect_4.1.3.93_linux.tar.gz
+    # former aspera to obtain pubkey, ver 4.1.3.93 is on /root
+    # wget -P /root https://ak-delivery04-mul.dhe.ibm.com/sar/CMA/OSA/0adrj/0/ibm-aspera-connect_4.1.3.93_linux.tar.gz
     tar xvfz /root/ibm-aspera-connect_${VER}_linux_x86_64.tar.gz -C /root
     tar xvfz /root/ibm-aspera-connect_4.1.3.93_linux.tar.gz -C /root
     bash /root/ibm-aspera-connect_4.1.3.93_linux.sh
