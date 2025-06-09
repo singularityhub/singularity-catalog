@@ -1,0 +1,76 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2018/11/06: initial version
+
+
+Bootstrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+  VERSION 1.9
+
+
+%environment
+	export  LC_ALL=en_US.UTF-8
+	export  LANGUAGE=en_US.UTF-8
+	export C_INCLUDE_PATH=/opt/htslib-1.9/include
+	export LIBRARY_PATH=/opt/htslib-1.9/lib
+	export LD_LIBRARY_PATH=/opt/htslib-1.9/lib
+
+
+%help
+
+
+
+%post
+	  echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get clean 
+
+	apt-get -y update
+	apt-get -y install build-essential \
+	wget \
+	make \
+	gcc \
+	zlibc \
+	autoconf \
+	libperl5.26 \
+	ca-certificates \
+	libbz2-dev \
+	liblzma-dev \
+	libncurses5-dev \
+	libncursesw5-dev \
+	libcurl4-gnutls-dev \
+	zlib1g-dev \
+	libcrypto++6 \
+	libgsl-dev 
+
+
+
+	mkdir -p /opt/
+	cd /opt/
+
+	wget https://github.com/samtools/htslib/releases/download/1.9/htslib-1.9.tar.bz2
+	
+	tar xjvf htslib-1.9.tar.bz2
+
+	cd /opt/htslib-1.9/   && ./configure && make  -j 20 
+	make install prefix=/opt/htslib-1.9/
+	cd /opt/ && rm htslib-1.9.tar.bz2
+
+	export C_INCLUDE_PATH=/opt/htslib-1.9/include
+	export CPATH=/opt/htslib-1.9/include
+	export LIBRARY_PATH=/opt/htslib-1.9/lib
+	export LD_LIBRARY_PATH=/opt/htslib-1.9/lib
+
+	wget https://github.com/OpenGene/gencore/archive/v0.13.0.tar.gz 
+	
+	tar zxvf v0.13.0.tar.gz 
+	cd /opt/gencore-0.13.0/ 
+	make -j 20 
+	make install
+	cd /opt/ && rm v0.13.0.tar.gz 
+
+
+

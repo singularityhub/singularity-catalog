@@ -1,0 +1,93 @@
+#!/bin/bash
+#
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+
+%files
+ /tmp/GeneHancer_V4_13_for_annotsv.zip /opt/
+
+%labels
+  MAINTAINER Emilie Ait Yahya
+  ANNOTSV 2.3
+
+%post  -xe
+    # set noninteractive installation
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update && \
+    apt-get install -y \
+    tar \
+    tcl \
+    wget \
+	  build-essential \
+    make \
+    git \
+    unzip \
+    ca-certificates \
+    zlib1g \
+    zlib1g-dev
+    # set your timezone
+    ln -fs /usr/share/zoneinfo/Europe/Paris /etc/localtime
+    dpkg-reconfigure --frontend noninteractive tzdata
+    
+    apt-get install --yes \
+    python2.7 \
+    python2.7-dev \
+    libpython2.7 \
+    libpython2.7-dev
+
+    apt-get clean
+
+    ln -s /usr/bin/python2.7 /usr/bin/python
+
+  ## install miniconda
+    wget https://repo.continuum.io/miniconda/Miniconda3-4.5.12-Linux-x86_64.sh 
+
+    bash Miniconda3-4.5.12-Linux-x86_64.sh -p /miniconda -b
+    rm Miniconda3-4.5.12-Linux-x86_64.sh
+
+    PATH=/miniconda/bin:$PATH
+
+    conda config --add channels defaults
+    conda config --add channels bioconda
+
+    ## install bedtools
+    conda install -c bioconda bedtools=2.29.2
+
+    ## install bcftools
+    conda install -c bioconda bcftools=1.9
+
+    ## install java
+    conda install -c bioconda java-jdk=8.0.92
+
+    ## install ANNOTSV
+    mkdir -p /opt/annotsv2.3 
+    cd /opt/annotsv2.3
+
+    git clone https://github.com/lgmgeo/AnnotSV.git
+
+    cd /opt/annotsv2.3/AnnotSV
+
+    make PREFIX=. install
+
+    make PREFIX=. install-human-annotation
+
+    chmod -R 777 /opt/annotsv2.3/AnnotSV
+    export ANNOTSV=/opt/annotsv2.3/AnnotSV
+
+    #Installation of GeneHancer annotation data
+
+    mv /opt/GeneHancer_V4_13_for_annotsv.zip $ANNOTSV/share/AnnotSV/Annotations_Human/FtIncludedInSV/GeneHancer/
+
+    cd $ANNOTSV/share/AnnotSV/Annotations_Human/FtIncludedInSV/GeneHancer/
+    unzip GeneHancer_V4_13_for_annotsv.zip
+
+    #Run AnnotSV so GeneHancer archive is reprocessed and then removed
+    cd /tmp
+    $ANNOTSV/bin/AnnotSV -SVinputFile $ANNOTSV/share/doc/AnnotSV/Example/test.bed -outputFile ./test.annotated.tsv -svtBEDcol 
+
+%environment
+    
+    export ANNOTSV=/opt/annotsv2.3/AnnotSV
+    export PATH=/miniconda/bin:$PATH
+    export DEBIAN_FRONTEND=noninteractive

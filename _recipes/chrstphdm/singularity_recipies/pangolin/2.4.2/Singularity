@@ -1,0 +1,21 @@
+Bootstrap: docker-daemon
+From: dragen-covid-lineage-tools:1.0.0.3
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+  export PATH=/miniconda/envs/ggd_env/bin:$PATH
+  export PANGOLIN_VERSION="v.2.4.2"
+  export PANGOLIN_LEARN_VERSION="2021-04-28"
+  export ENV PATH="/miniconda/bin:$PATH"
+  export LC_ALL=C
+
+
+%post
+    pip3.8 install --no-cache-dir git+https://github.com/cov-lineages/pangoLEARN.git --upgrade
+    pip3.8 install --no-cache-dir git+https://github.com/cov-lineages/lineages.git --upgrade
+    npm install --global @neherlab/nextclade
+    chmod 6777 /root/scripts/covid-lineage-tools.py

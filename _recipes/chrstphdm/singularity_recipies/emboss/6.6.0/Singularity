@@ -1,0 +1,44 @@
+#!/bin/bash
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+  export  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
+  export  PATH="/opt/miniconda/bin/:${PATH}"
+
+%help
+
+
+%post
+
+    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+    apt-get clean 
+
+    apt-get update
+    TZ=Asia/Qatar \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get -y install --no-install-recommends \
+        build-essential \
+        pkg-config \
+        gcc make \
+        libssl-dev \
+        wget \
+        git 
+
+    PREFIX="/usr/local"
+    export PREFIX
+    cd /tmp/ && \
+        wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+        bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda
+    export  PATH="/opt/miniconda/bin/:${PATH}"
+    conda config --add channels defaults
+    conda config --add channels bioconda
+    conda config --add channels conda-forge
+    conda config --set ssl_verify no
+    conda config --set default_threads 12
+
+
+    conda install -c bioconda emboss

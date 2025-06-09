@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2019/02/01: initial version
+
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+
+%help
+    QualiMap v2.2.1
+
+%environment
+    PATH="/usr/local/src/qualimap_v2.2.1:${PATH}"
+    export LC_ALL=C
+
+%post
+    ln -fs /usr/share/zoneinfo/Asia/Qatar /etc/localtime
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+    apt-get update &&
+    apt-get dist-upgrade -y &&
+    apt-get install -y \
+        wget  \
+        gcc   \
+        unzip \
+        openjdk-8-jre \
+        r-base-core \
+        libxml2-dev \
+        libcurl4-openssl-dev \
+        && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+    mkdir -p /usr/local/src && cd /usr/local/src
+    wget -q https://bitbucket.org/kokonech/qualimap/downloads/qualimap_v2.2.1.zip  &&
+    unzip qualimap_v2.2.1.zip
+    cd qualimap_v2.2.1
+    Rscript scripts/installDependencies.r
+

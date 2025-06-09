@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2019/02/01: initial version
+
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+
+%help
+    FastQC 0.11.8
+
+%environment
+    PATH="/usr/local/src/FastQC:${PATH}"
+    export LC_ALL=C
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get clean 
+
+    apt-get update &&
+    apt-get dist-upgrade -y &&
+    apt-get install -y \
+        wget \
+        unzip \
+        openjdk-8-jre \
+        perl \
+        &&
+    apt-get clean &&
+    rm -rf /var/lib/apt/lists/*
+
+    mkdir -p /usr/local/src && cd /usr/local/src
+    wget -q https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip &&
+    unzip fastqc_v0.11.8.zip && chmod 755 ./FastQC/fastqc && rm fastqc_v0.11.8.zip

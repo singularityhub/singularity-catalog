@@ -1,0 +1,40 @@
+#!/bin/bash
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+
+%environment
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
+
+%help
+%post
+
+    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+    apt-get clean 
+
+    apt-get update
+    TZ=Asia/Qatar \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get -y install --no-install-recommends \
+        build-essential \
+        pkg-config \
+        gcc make \
+        wget \
+        libreadline-dev \
+        libncurses-dev \
+        visidata \
+        unzip 
+
+    PREFIX="/usr/local"
+    export PREFIX
+    echo $PREFIX
+
+    cd /opt
+    wget -O - https://www.sqlite.org/2022/sqlite-autoconf-3390400.tar.gz | tar xzf -
+    cd sqlite-autoconf-3390400
+    ./configure --enable-readline 
+    make
+    make install
+

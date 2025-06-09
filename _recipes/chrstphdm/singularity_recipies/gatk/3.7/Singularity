@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# Emilie Ait Yahya <emilie.aityahya@chru-lille.fr>
+# 2019/01/18: initial version
+
+
+Bootstrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER emilie.aityahya@chru-lille.fr
+  VERSION 3.7-0-gcfedb67
+
+
+%environment
+  export  GATK_HOME="/opt/gatk-3.7-0-gcfedb67/GenomeAnalysisTK.jar"
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+
+
+%help
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+ 	apt-get clean 
+
+
+	apt-get -y update
+	apt-get -y install build-essential \
+	wget \
+	gcc \
+	zlibc \
+	autoconf \
+	ca-certificates \
+	libbz2-dev \
+	liblzma-dev \
+	libncurses5-dev \
+	libncursesw5-dev \
+	libcurl4-gnutls-dev \
+	zlib1g-dev \
+	libcrypto++6 \
+	libgsl-dev \
+	openjdk-8-jdk \
+	openjdk-8-jre \
+	r-base r-base-dev \
+	python2.7 \
+	python-pip 
+
+
+
+
+	pip install gsutil
+
+	#oracle-java8-jdk \
+	mkdir -p /opt/gatk-3.7-0-gcfedb67
+	cd /opt/gatk-3.7-0-gcfedb67
+
+	#wget -O GenomeAnalysisTK-3.7-0-gcfedb67.tar.bz2 https://software.broadinstitute.org/gatk/download/auth?package=GATK-archive\&version=3.7-0-gcfedb67	
+
+	gsutil cp  gs://gatk-software/package-archive/gatk/GenomeAnalysisTK-3.7-0-gcfedb67.tar.bz2  /opt/gatk-3.7-0-gcfedb67/GenomeAnalysisTK-3.7-0-gcfedb67.tar.bz2
+
+	tar -jxvf GenomeAnalysisTK-3.7-0-gcfedb67.tar.bz2 
+	rm -r /opt/gatk-3.7-0-gcfedb67/resources/
+	ln -s /opt/gatk-3.7-0-gcfedb67/GenomeAnalysisTK.jar /usr/local/bin/GenomeAnalysisTK.jar
+
+	
+

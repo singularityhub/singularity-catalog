@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2018/11/06: initial version
+
+
+Bootstrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+
+
+%help
+
+
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  	apt-get clean 
+
+	apt-get -y update
+	apt-get -y install build-essential \
+	wget \
+	make \
+	gcc \
+	libz-dev
+
+
+	mkdir -p /opt/
+	cd /opt
+	wget https://github.com/OpenGene/MutScan/archive/v1.14.0.tar.gz
+	
+	tar -xvf v1.14.0.tar.gz 
+
+	cd /opt/MutScan-1.14.0/  && make  -j 10 
+
+	make install

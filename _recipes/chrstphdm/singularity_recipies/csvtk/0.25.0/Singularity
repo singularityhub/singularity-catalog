@@ -1,0 +1,33 @@
+#!/bin/bash
+
+Bootstrap: docker
+From: phusion/baseimage:0.11
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+	export  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/opt/ITDetect/lib"
+
+%help
+
+
+%post -c /bin/bash
+   
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+
+    add-apt-repository -y ppa:openjdk-r/ppa
+	
+	apt-get -y update
+	apt-get -y install build-essential \
+	wget 
+
+	mkdir -p /opt/
+	cd /opt/
+
+	wget https://github.com/shenwei356/csvtk/releases/download/v0.25.0/csvtk_linux_amd64.tar.gz 
+	
+	tar -xzf *.tar.gz
+
+    cp csvtk /usr/local/bin/
+

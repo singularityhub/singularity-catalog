@@ -1,0 +1,45 @@
+#!/bin/bash
+Bootstrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+    MAINTAINER christophe.demay@chru-lille.fr
+    VERSION 1
+
+
+%environment
+    export  LC_ALL=en_US.UTF-8
+    export  LANGUAGE=en_US.UTF-8
+    export  PATH=~/bin:$PATH
+
+%help
+
+
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+    apt-get clean 
+
+    apt-get update \
+        && apt-get install -y -q \
+        git \
+        wget \
+        curl \
+        libz-dev libssl-dev \
+        openssl \
+        libpng-dev \
+        gcc \
+        make \
+	    zip unzip
+
+    cd /tmp
+    wget https://ftp.gnu.org/gnu/datamash/datamash-1.7.tar.gz
+    tar -xzf datamash-1.7.tar.gz
+    cd datamash-1.7
+    ./configure
+    make
+    make check
+    make install
+
+    apt-get clean
+    apt-get remove --yes --purge build-essential

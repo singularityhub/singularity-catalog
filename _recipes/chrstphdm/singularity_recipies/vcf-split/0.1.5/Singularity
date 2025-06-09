@@ -1,0 +1,46 @@
+#!/bin/bash
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+
+%environment
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
+
+%help
+%post
+
+    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+    apt-get clean 
+
+    apt-get update
+    apt-get -y install --no-install-recommends \
+        build-essential \
+        pkg-config \
+        gcc make \
+        wget \
+        unzip 
+
+    PREFIX="/usr/local"
+    export PREFIX
+    echo $PREFIX
+
+    cd /opt
+    wget -O - https://github.com/outpaddling/libxtend/archive/refs/tags/0.1.6.tar.gz | tar xzf -
+    cd libxtend-0.1.6
+    make depend
+    make install
+    cd ..
+
+    wget -O - https://github.com/auerlab/biolibc/archive/refs/tags/0.2.3.tar.gz | tar xzf -
+    cd biolibc-0.2.3
+    make depend
+    make install
+
+    cd ..
+    wget -O - https://github.com/auerlab/vcf-split/archive/refs/tags/0.1.5.tar.gz | tar xzf - 
+    cd vcf-split-0.1.5
+    make depend
+    make install
+

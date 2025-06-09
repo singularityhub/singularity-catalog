@@ -1,0 +1,204 @@
+Bootstrap: docker
+From: rocker/rstudio:4.4.2
+
+#########
+# Help  #
+#########
+
+%help
+  Container for running the workbook(s) for spatial analysis of the 2025 NGS-CN Summer School.
+  
+  see XXXXX
+
+##########################
+# Environment variables  #
+##########################
+  
+%environment
+  export RETICULATE_MINICONDA_PATH=/2025-ngs-cn-summer-school/python/miniconda
+  
+#######################
+# Files for building  #
+#######################
+
+%files
+  install_R_packages.R /2025-ngs-cn-summer-school/R/
+
+#################
+# Installation  #
+#################
+
+%post
+  set -eu
+ 
+  # Build date (when building, pass via SINGULARITYENV_CONTAINER_BUILD_DATE otherwise date when building)
+  if [ -z ${CONTAINER_BUILD_DATE+x} ]
+  then
+    CONTAINER_BUILD_DATE=$(date)
+  fi
+  echo "export CONTAINER_BUILD_DATE=\"${CONTAINER_BUILD_DATE}\"" >> $SINGULARITY_ENVIRONMENT
+
+  # Git repository names (when building, pass via SINGULARITYENV_CONTAINER_GIT_NAME otherwise empty)
+  if [ -z ${CONTAINER_GIT_NAME+x} ]
+  then
+    CONTAINER_GIT_NAME=''
+  fi
+  echo "export CONTAINER_GIT_NAME=\"${CONTAINER_GIT_NAME}\"" >> $SINGULARITY_ENVIRONMENT
+
+  # Git repository url (when building, pass via SINGULARITYENV_CONTAINER_GIT_URL otherwise empty)
+  if [ -z ${CONTAINER_GIT_URL+x} ]
+  then
+    CONTAINER_GIT_URL=''
+  fi
+  echo "export CONTAINER_GIT_URL=\"${CONTAINER_GIT_URL}\"" >> $SINGULARITY_ENVIRONMENT
+
+  # Git repository commit id (when building, pass via SINGULARITYENV_CONTAINER_GIT_COMMIT_ID otherwise empty)
+  if [ -z ${CONTAINER_GIT_COMMIT_ID+x} ]
+  then
+    CONTAINER_GIT_COMMIT_ID=''
+  fi
+  echo "export CONTAINER_GIT_COMMIT_ID=\"${CONTAINER_GIT_COMMIT_ID}\"" >> $SINGULARITY_ENVIRONMENT
+
+  # Container version (when building, pass via SINGULARITYENV_CONTAINER_VERSION otherwise empty)
+  if [ -z ${CONTAINER_VERSION+x} ]
+  then
+    CONTAINER_VERSION=''
+  fi
+  echo "export CONTAINER_VERSION=\"${CONTAINER_VERSION}\"" >> $SINGULARITY_ENVIRONMENT
+
+  # the linux command 'make' supports the compilation of independent targets in parallel; this is also passed to R 'install.packages' since it uses 'make' internally
+  if [ -z ${CONTAINER_COMPILE_CPUS+x} ]
+  then
+    COMPILE_CPUS=6
+  else
+    COMPILE_CPUS="${CONTAINER_COMPILE_CPUS}"
+  fi
+  export COMPILE_CPUS
+  
+  ##########
+  # System #
+  ##########
+  
+  # deactive interactive dialogs
+  export DEBIAN_FRONTEND=noninteractive
+  export TZ="Europe/Berlin"
+  
+  # update sources
+  apt-get clean -q && apt-get update -y -q
+  
+  # install and reconfigure locale (language etc)
+  apt-get install -y -q locales
+  export LANGUAGE="en_US.UTF-8"
+  export LANG="en_US.UTF-8"
+  export LC_ALL="en_US.UTF-8"
+  echo "LC_ALL=en_US.UTF-8" >> /etc/environment
+  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+  echo "LANG=en_US.UTF-8" > /etc/locale.conf
+  locale-gen --purge en_US.UTF-8
+  dpkg-reconfigure --frontend=noninteractive locales
+
+  # Install some important system libraries
+  apt-get install -y \
+    build-essential \
+    g++ \
+    cmake \
+    libxt6t64 \
+    libgl1 \
+    libglx-mesa0 \
+    libcurl4-openssl-dev \
+    libglpk-dev \
+    libxml2-dev \
+    libproj-dev \
+    libudunits2-dev \
+    libgdal-dev \
+    tree \
+    libcairo2-dev \
+    libjpeg8-dev \
+    libgif-dev \
+    libpango1.0-dev \
+    libxt-dev 
+
+ 
+  ###########################
+  # RStudio Server settings #
+  ###########################
+  
+  # Require to login again after five days
+  echo "auth-timeout-minutes=7200" >> /etc/rstudio/rserver.conf
+  # Stay signed in at most five days
+  echo "auth-stay-signed-in-days=7" >> /etc/rstudio/rserver.conf
+  # Time-out R session after four days
+  echo "session-timeout-minutes=7200" >> /etc/rstudio/rsession.conf
+  # When time-out is reached, do not suspend but quit
+  echo "session-timeout-suspend=0" >> /etc/rstudio/rsession.conf
+  # When quit, also kill child processes
+  echo "session-quit-child-processes-on-exit=1" >> /etc/rstudio/rsession.conf
+
+
+  # Enable GitHub Copilot
+  echo "copilot-enabled=1" >> /etc/rstudio/rsession.conf
+
+  
+  #########################
+  # R and python packages #
+  #########################
+  
+  # Use the install script to install R packages. Install python and python packages via miniconda.
+  export RETICULATE_MINICONDA_PATH=/2025-ngs-cn-summer-school/python/miniconda
+  Rscript --no-save --no-restore --no-init-file /2025-ngs-cn-summer-school/R/install_R_packages.R
+  
+  # Add some environment variables that should be included in R
+  echo >> /usr/local/lib/R/etc/Renviron
+  echo "# These environment variables should be present in R, rstudio and rserver so add them to Renviron." >> /usr/local/lib/R/etc/Renviron
+  echo "CONTAINER_BUILD_DATE=\"${CONTAINER_BUILD_DATE}\"" >> /usr/local/lib/R/etc/Renviron
+  echo "CONTAINER_GIT_NAME=\"${CONTAINER_GIT_NAME}\"" >> /usr/local/lib/R/etc/Renviron
+  echo "CONTAINER_GIT_COMMIT_ID=\"${CONTAINER_GIT_COMMIT_ID}\"" >> /usr/local/lib/R/etc/Renviron
+  echo "CONTAINER_GIT_URL=\"${CONTAINER_GIT_URL}\"" >> /usr/local/lib/R/etc/Renviron
+  echo "CONTAINER_VERSION=\"${CONTAINER_VERSION}\"" >> /usr/local/lib/R/etc/Renviron
+  echo "RETICULATE_MINICONDA_PATH=\"/2025-ngs-cn-summer-school/python/miniconda\"" >> /usr/local/lib/R/etc/Renviron
+  
+  # Add some R code that should be run at the start
+  echo >> /usr/local/lib/R/etc/Rprofile.site
+  echo "options(reticulate.conda_binary=\"/2025-ngs-cn-summer-school/python/miniconda/bin/conda\")" >> /usr/local/lib/R/etc/Rprofile.site
+  echo "options(repos=c(CRAN=\"https://cloud.r-project.org\"))" >> /usr/local/lib/R/etc/Rprofile.site
+  
+  ############
+  # Clean up #
+  ############
+  
+  # Clean up apt files
+  apt-get clean --quiet
+  apt-get autoremove
+  
+  # Clean up conda files
+  /2025-ngs-cn-summer-school/python/miniconda/bin/conda clean --all
+
+ 
+#############
+# Runscript #
+#############
+
+%runscript
+  bash <<-EOF
+    # RSERVER_USER, RSERVER_PASSWORD and RSERVER_PORT need to be defined
+    if [ -z ${RSERVER_USER+x} ]
+    then 
+      echo "Please set the environment variable RSERVER_USER for the user"
+      exit 1
+    fi
+    if [ -z ${RSERVER_PASSWORD+x} ]
+    then
+      echo "Please set the environment variable RSERVER_PASSWORD for the user"
+      exit 1
+    fi
+    if [ -z ${RSERVER_PORT+x} ]
+    then
+      echo "Please set the environment variable RSERVER_PORT for the user"
+      exit 1
+    fi
+
+    # Start R-Server
+    PASSWORD=${RSERVER_PASSWORD} rserver --auth-none=0 --auth-pam-helper-path=pam-helper --server-user=${RSERVER_USER} --www-port=${RSERVER_PORT}
+EOF
+
+ 

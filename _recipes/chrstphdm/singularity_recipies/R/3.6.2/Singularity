@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+# Emilie Ait Yahya <emilie.aityahya@chru-lille.fr>
+# 2020/01/10: initial version
+
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER emilie.aityahya@chru-lille.fr
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+  export  PATH="/miniconda/bin/:${PATH}"
+  export R_LIBS="/opt/R/3.6.2/library"
+
+%help
+
+
+%post
+  apt-get update
+  apt-get -y install build-essential \
+  wget 
+
+export  PATH="/miniconda/bin/:${PATH}"
+
+## install miniconda
+wget https://repo.continuum.io/miniconda/Miniconda3-4.5.12-Linux-x86_64.sh 
+
+bash Miniconda3-4.5.12-Linux-x86_64.sh -p /miniconda -b
+rm   Miniconda3-4.5.12-Linux-x86_64.sh
+
+
+
+conda config --add channels defaults
+
+
+
+## install R3.6.2
+conda install -c conda-forge r-base=3.6.2
+mkdir -p /opt/R/3.6.2/library
+R_LIBS="/opt/R/3.6.2/library"
+
+## install packages
+R -e "install.packages('nnls', repos='http://cran.irsn.fr/')"
+R -e "install.packages('Hmisc', repos='http://cran.irsn.fr/')"
+R -e "install.packages('mgcv', repos='http://cran.irsn.fr/')"
+R -e "install.packages('plyr', repos='http://cran.irsn.fr/')"

@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2018/12/18: initial version
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+
+%labels
+AUTHOR chadi.saad@chru-lille.fr
+
+%environment
+  export  PATH=/opt/vt:$PATH
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+
+%help
+
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+  apt-get update
+  apt-get -y install build-essential \
+  zlibc        \
+  zlib1g-dev   \
+  libgsl-dev   \
+  libbz2-dev   \
+  liblzma-dev  \
+  libcurl4-gnutls-dev \
+  libssl-dev \
+  git
+  
+  git config --global http.postBuffer 524288000
+
+  cd /opt
+
+  git clone https://github.com/atks/vt.git
+  cd vt
+  git checkout tags/0.57721
+  make -j 10
+  make test
+

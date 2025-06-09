@@ -1,0 +1,30 @@
+Bootstrap: docker
+From: perl:5.20.2
+
+
+%labels
+  MAINTAINER christophe.demay@chru-lille.fr
+  VERSION 5.20.2
+
+%environment
+  export LC_ALL=en_US.UTF-8
+  export LC_TYPE=en_US.UTF-8
+  export LANGUAGE=en_US.UTF-8
+  export LANG=en_US.UTF-8
+
+%help
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get clean 
+
+  apt update -y
+  apt-get install -y locales locales-all libfile-find-rule-perl libjson-perl liburi-encode-perl libdata-structure-util-perl libwww-perl
+  # libfile-find-rule-perl libjson-perl liburi-encode-perl libdata-structure-util-perl libwww-perl
+  locale-gen
+  # cpanm File::Find::Rule
+  # cpanm JSON
+  # cpanm URI::Encode
+  # cpanm Data::Diver
+  # cpanm Data::Structure::Util
+  # cpanm LWP::Simple

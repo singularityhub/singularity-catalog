@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2019/09/12: initial version
+
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+  export  getITD_path="/opt/getitd-1.2.1/getitd.py"
+
+%help
+
+
+%post
+  echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get clean 
+
+  apt-get update
+  apt-get -y install build-essential \
+  python3 \
+  python3-pip \
+	wget \
+
+
+pip3 install numpy pandas biopython easygui
+
+
+mkdir -p /opt
+cd /opt
+wget https://github.com/tjblaette/getitd/archive/v1.2.1.tar.gz -O getITD-v1.2.1.tar.gz
+
+tar -xvf getITD-v1.2.1.tar.gz
+

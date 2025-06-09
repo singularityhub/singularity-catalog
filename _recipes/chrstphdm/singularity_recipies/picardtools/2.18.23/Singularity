@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+# Emilie Ait Yahya <emilie.aityahya@chru-lille.fr>
+# 2019/01/18: initial version
+
+
+Bootstrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER emilie.aityahya@chru-lille.fr
+  VERSION 2.18.23
+
+
+%environment
+  export  PICARD_HOME="/opt/picardtools-2.18.23/picard.jar"
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+
+
+%help
+
+
+%post
+
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+	apt-get -y update
+	apt-get -y install build-essential \
+	wget \
+	make \
+	gcc \
+	zlibc \
+	autoconf \
+	ca-certificates \
+	libbz2-dev \
+	liblzma-dev \
+	libncurses5-dev \
+	libncursesw5-dev \
+	libcurl4-gnutls-dev \
+	zlib1g-dev \
+	libcrypto++6 \
+	libgsl-dev \
+	openjdk-8-jdk \
+	openjdk-8-jre \
+	r-base r-base-dev
+
+	mkdir -p /opt/picardtools-2.18.23
+	cd /opt/picardtools-2.18.23
+
+	wget https://github.com/broadinstitute/picard/releases/download/2.18.23/picard.jar
+	
+	ln -s /opt/picardtools-2.18.23/picard.jar /usr/local/bin/picard.jar
+
+	
+

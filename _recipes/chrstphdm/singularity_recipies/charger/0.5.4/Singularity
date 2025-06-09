@@ -1,0 +1,56 @@
+#!/bin/bash
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+
+%environment
+    export PATH="/opt/CharGer-0.5.4/bin:${PATH}"
+
+%help
+%post
+
+    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+    apt-get clean 
+
+    apt-get update
+    apt-get -y install --no-install-recommends \
+        build-essential \
+        pkg-config \
+        gcc make \
+        libreadline-dev \
+        libncursesw5-dev \
+        libssl-dev \
+        libsqlite3-dev \
+        libgdbm-dev \
+        libc6-dev \
+        libbz2-dev \
+        liblzma-dev \
+        zlib1g-dev \
+        wget git ca-certificates
+
+    # install python-2.7.14
+    cd /opt
+    wget -O - https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tgz | tar xzf - 
+    cd Python-2.7.14
+    ./configure
+    make install
+    cd ..
+    rm -rf Python-2.7.14
+    
+    # Install pip
+    wget -O get-pip.py https://bootstrap.pypa.io/pip/2.7/get-pip.py
+    python ./get-pip.py
+    rm -f ./get-pip.py
+    pip install cython
+
+    # Install CharGer
+    wget -O - https://github.com/ding-lab/CharGer/archive/refs/tags/v0.5.4.tar.gz | tar xzf -
+    cd CharGer-0.5.4
+    pip install .
+    
+    # Cleanup
+    apt-get remove -y '.*-dev'
+    apt-get autoremove -y
+    rm -rf /var/lib/apt/lists/*

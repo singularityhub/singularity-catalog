@@ -84,7 +84,7 @@ fi \
 && bash -o  pipefail -c "if [[ ! -f nwchem/src/GNUmakefile ]]; then git clone -b $BRANCH --depth 1  https://github.com/$MYUSERNAME/nwchem.git; fi " \
 && apt-get -y install -y   tar libnl-3-200 libnl-route-3-200 libgomp1 libnuma1 \
  g++ gfortran   make ssh patch   unzip perl-base file \
- python3 python3-minimal python3-dev cmake  unzip zip perl automake libtool autoconf flex  \
+ python3 python3-minimal python3-dev python-is-python3 cmake  unzip zip perl automake libtool autoconf flex  \
  libnuma-dev libslurm-dev \
 libpmix-bin libpmix-dev libpmix2 \
 libpmi2-0-dev libpmi0-dev  \
@@ -169,6 +169,7 @@ fi	   \
 && export MRCC_METHODS=y \
 && export USE_SIMINT=y\
 && export SIMINT_MAXAM=5\
+&& export USE_FPICF=1 \
 && export PYTHONVERSION=$(python -V| cut -d ' ' -f 2 |cut -d . -f 1-2) \
 && ls -l nwchem* || true \
 && /usr/bin/env|egrep BUILD_ \
@@ -192,17 +193,16 @@ fi	   \
 && echo 'pwd ' $(pwd) \
 && ls -lrt libext/lib || true \
 && make nwchem_config || { echo "config Failure"; exit 1; } \
-&& bash -o pipefail -c " \
-echo 'ls ~/' `ls -lrt ~/` \
+&& echo 'ls ~/' `ls -lrt ~/` \
 && echo '222 PATH is ' `/usr/bin/env | grep PATH` \
 && echo '111 which FC ' `which $FC` || true \
 && mpif90 -show \
 && echo FC is $FC \
 && $FC -v \
-&& make FC=$FC -j6 || { echo 'Compilation Failure'; exit 1; } \
+&& make FC=$FC V=-1 -j3 || { echo 'Compilation Failure' && echo 'ls tools $(ls -Rl $NWCHEM_TOP/src/tools)' || true &&  cat $(find $NWCHEM_TOP/src/tools/build -name config.log) || true && echo ga net libs $(tools/install/bin/ga-config  --network_libs) || true ; } \
 && FC=$FC ../contrib/getmem.nwchem 2000   \
 && make FC=$FC install INSTALL_PREFIX=/opt/nwchem \
-&& ldd  ../bin/LINUX64/nwchem  "\
+&& ldd  ../bin/LINUX64/nwchem  \
 && if [ -f /opt/intel/oneapi/compiler/latest/env/vars.sh ]; then  \
 rsync -av /opt/intel/oneapi/compiler/latest/lib/lib*.so* $OMPI_DIR/lib/. ; fi \
 &&  rm -rf /opt/intel/oneapi/  /opt/nwchem/src/tce /opt/nwchem/src/NWints/simint/libsimint_source/simint.l?_p?_d? || true \

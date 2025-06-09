@@ -1,0 +1,20 @@
+#!/bin/bash
+#
+# Christophe Demay <christophe.demay@chru-lille.fr>
+# 2018/12/18: initial version
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  AUTHOR christophe.demay@chru-lille.fr
+
+%environment
+
+%help
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  	apt-get clean 
+
+  apt-get -y update
+	apt-get -y install build-essential gnumeric

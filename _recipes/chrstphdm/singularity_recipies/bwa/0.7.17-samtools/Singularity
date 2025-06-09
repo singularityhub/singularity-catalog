@@ -1,0 +1,73 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2018/11/06: initial version
+
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+  export  PATH=/miniconda/bin/:$PATH
+  export  PATH=/opt/samtools-1.10:$PATH
+
+%help
+
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get clean 
+
+  apt-get update
+  apt-get -y install build-essential \
+  wget  \
+  git   \
+	make \
+	gcc \
+	zlibc \
+	autoconf \
+	libperl5.26 \
+	ca-certificates \
+	libbz2-dev \
+	liblzma-dev \
+	libncurses5-dev \
+	libncursesw5-dev \
+	libcurl4-gnutls-dev \
+	zlib1g-dev \
+	libcrypto++6 \
+	libgsl-dev 
+
+
+export  PATH="/miniconda/bin/:${PATH}"
+
+## install miniconda
+wget https://repo.continuum.io/miniconda/Miniconda2-4.7.12.1-Linux-x86_64.sh 
+
+bash Miniconda2-4.7.12.1-Linux-x86_64.sh -p /miniconda -b
+rm   Miniconda2-4.7.12.1-Linux-x86_64.sh
+
+
+
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --set default_threads 12
+
+
+## install BWA
+conda install -c bioconda  bwa=0.7.17
+
+
+## install Samtools 1.10
+mkdir -p /opt/
+wget https://github.com/samtools/samtools/releases/download/1.10/samtools-1.10.tar.bz2 && mv samtools-1.10.tar.bz2 /opt/
+
+cd /opt/ && tar xjvf samtools-1.10.tar.bz2 
+
+cd /opt/samtools-1.10/ && ./configure && make  -j 10 
+cd /opt/ && rm samtools-1.10.tar.bz2
+

@@ -1,0 +1,39 @@
+#!/bin/bash
+#
+
+Bootstrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER christophe.demay@chru-lille.fr
+  VERSION 0.1.18
+
+
+%environment
+  export  PATH=/opt/samtools-0.1.18:$PATH
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+
+
+%help
+
+
+
+%post
+	
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+	apt-get -y update
+	apt-get -y install build-essential \
+	wget unzip \
+	zlibc \
+	zlib1g-dev \
+	libncurses5-dev 
+
+	cd /opt
+	wget https://github.com/samtools/samtools/archive/0.1.18.zip
+
+	unzip 0.1.18.zip
+	cd samtools-0.1.18
+	make -j 12
+

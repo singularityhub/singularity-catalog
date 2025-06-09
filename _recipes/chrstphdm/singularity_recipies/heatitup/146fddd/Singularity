@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+# Augustin Boudry <ogust1@gmail.com>
+# 2021/06/03: initial version
+
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%runscript
+
+%labels
+  MAINTAINER ogust1@gmail.com
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+
+%post
+  echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get clean
+
+  apt-get update
+  apt-get -y install build-essential \
+  git \
+  curl
+  echo "Going to download"
+  curl -sSL https://get.haskellstack.org/ | sh
+  stack setup
+  cd /opt
+  git clone https://github.com/GregorySchwartz/heatitup.git
+  cd heatitup
+  mkdir -p /opt/heatitup
+  chmod 777 /opt/heatitup
+  stack install --local-bin-path /opt/heatitup
+  ln /opt/heatitup/heatitup /usr/local/bin/heatitup

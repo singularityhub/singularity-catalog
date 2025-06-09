@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2018/11/06: initial version
+
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+  export PATH=/miniconda/envs/ggd_env/bin:$PATH
+
+%help
+
+
+%post
+  echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get clean 
+
+  apt-get update
+  apt-get -y install build-essential \
+  wget \
+  unzip \
+  gcc \
+  zlib1g-dev
+
+
+
+## install miniconda
+wget https://repo.anaconda.com/miniconda/Miniconda2-4.7.12.1-Linux-x86_64.sh
+
+bash Miniconda2-4.7.12.1-Linux-x86_64.sh -p /miniconda -b
+rm   Miniconda2-4.7.12.1-Linux-x86_64.sh
+export  PATH="/miniconda/bin/:${PATH}"
+
+conda config --add channels defaults
+conda config --add channels ggd-genomics
+conda config --add channels bioconda
+conda config --add channels conda-forge
+# conda config --set ssl_verify no
+conda config --set default_threads 12
+
+conda update -y conda
+  conda create -n gdd_env -c bioconda gdd #python=3.7
+  conda init bash
+  exec bash -l
+  conda activate gdd_env
+# ## install sambamba
+# /miniconda/bin/conda install -c bioconda ggd=1.1.3
+

@@ -1,0 +1,62 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2018/11/06: initial version
+
+
+Bootstrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+  VERSION 1.9
+
+
+%environment
+  export  PATH=/opt/samtools-1.9:$PATH
+  export  PATH=/opt/itdseek-1.2:$PATH
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+
+
+%help
+
+
+
+%post
+
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+	
+	apt-get -y update
+	apt-get -y install build-essential \
+	wget \
+	make \
+	gcc \
+	zlibc \
+	autoconf \
+	libperl5.26 \
+	ca-certificates \
+	libbz2-dev \
+	liblzma-dev \
+	libncurses5-dev \
+	libncursesw5-dev \
+	libcurl4-gnutls-dev \
+	zlib1g-dev \
+	libcrypto++6 \
+	libgsl-dev 
+
+
+	mkdir -p /opt/
+	wget https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2 && mv samtools-1.9.tar.bz2 /opt/
+	
+	cd /opt/ && tar xjvf samtools-1.9.tar.bz2 
+
+	cd /opt/samtools-1.9/ && ./configure && make  -j 10 
+	cd /opt/ && rm samtools-1.9.tar.bz2
+
+
+
+	cd /opt/
+	wget https://github.com/tommyau/itdseek/archive/v1.2.tar.gz
+	tar xvf v1.2.tar.gz

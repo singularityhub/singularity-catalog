@@ -1,0 +1,40 @@
+Bootstrap: docker
+From: python:3.11-slim
+
+%environment
+    export PATH=/opt/lastz/bin:$PATH
+
+%post
+    # Basic tools
+    apt-get update && apt-get install -y \
+        build-essential \
+        wget \
+        git \
+        bash \
+        python3 \
+        python3-pip \
+        ca-certificates \
+        zlib1g-dev \
+        libbz2-dev \
+        libncurses5-dev \
+        libncursesw5-dev \
+        liblzma-dev \
+        libcurl4-openssl-dev \
+        unzip \
+        && apt-get clean
+
+    # Create install directory
+    mkdir -p /opt/lastz/bin
+    cd /opt/lastz
+
+    # Download and compile LASTZ from UCSC (or backup GitHub)
+    wget https://github.com/lastz/lastz/archive/refs/tags/1.04.52.tar.gz
+
+    tar xzf 1.04.52.tar.gz
+    cd lastz-1.04.52/src
+    make
+    cp lastz /opt/lastz/bin/
+
+%runscript
+    exec lastz "$@"
+

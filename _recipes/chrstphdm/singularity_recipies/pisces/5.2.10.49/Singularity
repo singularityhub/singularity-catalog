@@ -1,0 +1,58 @@
+#!/bin/bash
+#
+
+
+Bootstrap: docker
+From: microsoft/dotnet:2.1-sdk
+
+
+%labels
+  MAINTAINER christophe.demay@chru-lille.fr
+  VERSION 5.2.10.49
+
+%environment
+  export  PATH=/opt/samtools-1.9:$PATH
+  export  PATH=/opt/bcftools-1.9:$PATH
+  export  PATH=/opt/htslib-1.9:$PATH
+  export  PATH=/opt/sambamba-0.6.8:$PATH
+
+%help
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+  apt-get update
+  apt-get -y install build-essential \
+    wget curl unzip git \
+    libcurl4-gnutls-dev \
+    libncurses5-dev \
+    libbz2-dev liblzma-dev \
+    libcurl4-gnutls-dev \
+    zlib1g zlib1g-dev lib32z1 lib32z1-dev 
+
+  cd /opt
+
+  wget -q https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2
+  tar xjvf samtools-1.9.tar.bz2
+  wget -q https://github.com/samtools/bcftools/releases/download/1.9/bcftools-1.9.tar.bz2
+  tar xjvf bcftools-1.9.tar.bz2
+  wget -q https://github.com/samtools/htslib/releases/download/1.9/htslib-1.9.tar.bz2
+  tar xjvf htslib-1.9.tar.bz2
+
+  cd /opt/samtools-1.9/ && ./configure && make  -j 10 
+  cd /opt/ && rm samtools-1.9.tar.bz2
+
+  cd /opt/bcftools-1.9/ && ./configure && make  -j 10 
+  cd /opt/ && rm bcftools-1.9.tar.bz2
+  
+  cd /opt/htslib-1.9/   && ./configure && make  -j 10 
+  cd /opt/ && rm htslib-1.9.tar.bz2
+
+  git clone https://github.com/Illumina/Pisces.git
+  cd Pisces
+  git checkout  v5.2.10.49
+  cd binaries/5.2.10.49
+  find . -name "*.gz" -exec tar -xzf {} \;
+  echo "dotnet /opt/Pisces/binaries/5.2.10.49/Pisces_5.2.10.49/Pisces.dll \"\$@\"" > /usr/bin/pisces
+  chmod a+x /usr/bin/pisces
+  

@@ -1,0 +1,66 @@
+#!/bin/bash
+#
+# Christophe Demay <christophe.demay@chru-lille.fr>
+# 2018/11/06: initial version
+
+
+Bootstrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER christophe.demay@chru-lille.fr
+  VERSION 1.15.1
+
+
+%environment
+  export  PATH=/opt/samtools-1.15.1:$PATH
+  export  PATH=/opt/bcftools-1.15.1:$PATH
+  export  PATH=/opt/htslib-1.15.1:$PATH
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+
+
+%help
+
+
+
+%post
+		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get clean 
+
+
+	apt-get -y update
+	apt-get -y install build-essential \
+	wget \
+	make \
+	gcc \
+	zlibc \
+	autoconf \
+	libperl5.26 \
+	ca-certificates \
+	libbz2-dev \
+	liblzma-dev \
+	libncurses5-dev \
+	libncursesw5-dev \
+	libcurl4-gnutls-dev \
+	zlib1g-dev \
+	libcrypto++6 \
+	libgsl-dev 
+
+
+	mkdir -p /opt/
+	wget https://github.com/samtools/samtools/releases/download/1.15.1/samtools-1.15.1.tar.bz2 && mv samtools-1.15.1.tar.bz2 /opt/
+	wget https://github.com/samtools/bcftools/releases/download/1.15.1/bcftools-1.15.1.tar.bz2 && mv bcftools-1.15.1.tar.bz2 /opt/
+	wget https://github.com/samtools/htslib/releases/download/1.15.1/htslib-1.15.1.tar.bz2 && mv htslib-1.15.1.tar.bz2 /opt/
+	
+	cd /opt/ && tar xjvf samtools-1.15.1.tar.bz2 && tar xjvf bcftools-1.15.1.tar.bz2 && tar xjvf htslib-1.15.1.tar.bz2
+
+	cd /opt/samtools-1.15.1/ && ./configure && make  -j 10 
+	cd /opt/ && rm samtools-1.15.1.tar.bz2
+
+	cd /opt/bcftools-1.15.1/ && ./configure && make  -j 10 
+	cd /opt/ && rm bcftools-1.15.1.tar.bz2
+
+	cd /opt/htslib-1.15.1/   && ./configure && make  -j 10 
+	cd /opt/ && rm htslib-1.15.1.tar.bz2
+

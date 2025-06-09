@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# Fabrice Bonte <fabrice.bonte@chru-lille.fr> 
+# 2019/02/10: initial version
+
+
+Bootstrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER fabrice.bonte@chru-lille.fr
+  VERSION 1
+
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+  export  PATH=~/bin:$PATH
+
+%help
+
+
+
+%post
+  echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get clean 
+
+	apt-get update \
+	&& apt-get install -y gnumeric \
+	&& apt-get install -y zip
+
+	mkdir /.cache && chmod -R 777 /.cache	

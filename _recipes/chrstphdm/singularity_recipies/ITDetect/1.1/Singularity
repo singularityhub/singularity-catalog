@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2018/11/06: initial version
+
+
+Bootstrap: docker
+From: phusion/baseimage:0.11
+
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+  VERSION 1.9
+
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+	export  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/opt/ITDetect/lib"
+
+%help
+
+
+
+%post -c /bin/bash
+   
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+
+    add-apt-repository -y ppa:openjdk-r/ppa
+	
+	apt-get -y update
+	apt-get -y install build-essential \
+	wget \
+	make \
+	openjdk-8-jre 
+
+
+	mkdir -p /opt/
+	cd /opt/
+
+	wget https://snuheme.org/ITDetect/download/ITDetect.tar.gz 
+	
+	tar -xzf ITDetect.tar.gz
+

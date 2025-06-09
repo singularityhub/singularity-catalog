@@ -1,0 +1,66 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2018/11/06: initial version
+
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+  export  PATH="/miniconda/bin/:${PATH}"
+  export  SPIP_PATH="/opt/SPiP/SPiPv0.4.r"
+  export  SAMTOOLS_PATH="/miniconda/bin/samtools"
+
+%help
+
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get clean 
+
+
+  apt-get update
+  apt-get -y install build-essential \
+  wget \
+  git
+
+
+export  PATH="/miniconda/bin/:${PATH}"
+
+## install miniconda
+wget https://repo.continuum.io/miniconda/Miniconda3-4.5.12-Linux-x86_64.sh 
+
+bash Miniconda3-4.5.12-Linux-x86_64.sh -p /miniconda -b
+rm   Miniconda3-4.5.12-Linux-x86_64.sh
+
+
+
+conda config --add channels defaults
+
+
+
+## install R3.6.1
+conda install  -c r r-base=3.6.1
+conda install  -c bioconda samtools=1.9
+
+## install packages
+R -e "install.packages('RCurl', repos='http://cran.irsn.fr/')"
+R -e "install.packages('parallel', repos='http://cran.irsn.fr/')"
+
+
+mkdir -p /opt
+cd /opt
+git clone https://github.com/raphaelleman/SPiP.git
+
+cd SPiP
+git checkout b8b7a69066dcc5b5c3e1e13294c8a038200fb784
+rm -rf .git
+
+### TO RUN
+#> Rscript $SPIP_PATH  -s $SAMTOOLS_PATH  ...

@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2018/11/06: initial version
+
+
+BootStrap: docker
+From: qiaseq/qiaseq-dna:smcounter-v2
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+  export  getITD_path="/opt/getitd-1.2.1/getitd.py"
+
+%help
+
+
+# %post
+#   apt-get update
+#   apt-get -y install build-essential \
+# 	wget \
+
+# cd /srv/qgen/code/
+
+# wget https://github.com/qiaseq/qiaseq-smcounter-v2/archive/v1.0a.tar.gz -O smCounter_1.0a.tar.gz
+# tar -xvf smCounter_1.0a.tar.gz
+
+# mv qiaseq-dna-1.2  qiaseq-dna
+

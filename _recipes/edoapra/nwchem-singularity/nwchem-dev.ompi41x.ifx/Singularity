@@ -169,6 +169,7 @@ fi	   \
 && make nwchem_config || { echo "config Failure"; exit 1; } \
 && bash -o pipefail -c " \
 echo 'ls ~/' `ls -lrt ~/` \
+&& if [ "$BRANCH" = "master_disabled" ]; then export GA_BRANCH=hotfix/5.9.2 ; fi \
 && echo '222 PATH is ' `/usr/bin/env | grep PATH` \
 && echo '111 which FC ' `which $FC` || true \
 && mpif90 -show \

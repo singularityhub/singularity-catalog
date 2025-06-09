@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+# Christophe Demay <christophe.demay@chru-lille.fr>
+# 2018/12/18: initial version
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+
+%labels
+  AUTHOR christophe.demay@chru-lille.fr
+
+%environment
+  export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+  export PATH=/opt/VarScan_2.3.6/VarScan.v2.3.6.jar:$PATH
+
+%help
+
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+  apt-get update 
+
+  apt-get install -y  wget 	openjdk-8-jdk openjdk-8-jre 
+
+
+
+
+  cd /opt && mkdir VarScan_2.3.6
+  cd VarScan_2.3.6
+  wget https://downloads.sourceforge.net/project/varscan/VarScan.v2.3.6.jar
+
+  echo "java -Xmx18g -jar /opt/VarScan_2.3.6/VarScan.v2.3.6.jar \"\$@\"" > /usr/bin/varscan
+  chmod a+x /usr/bin/varscan
+
+  apt-get clean && rm -rf /var/lib/apt/lists/* 

@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2018/12/18: initial version
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+
+%labels
+AUTHOR chadi.saad@chru-lille.fr
+
+%help
+  SnpEff version 4.3l
+  
+%environment
+    export SNPEFF_HOME="/usr/local/src/snpEff/snpEff.jar"
+    export LC_ALL=C
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+    apt-get update &&
+    apt-get dist-upgrade -y &&
+    apt-get install -y \
+        libncurses5-dev \
+        libncursesw5-dev \
+        wget \
+        zlib1g-dev \
+        wget  \
+        openjdk-8-jre \
+        unzip \
+        &&
+    apt-get clean &&
+    rm -rf /var/lib/apt/lists/*
+
+    mkdir -p /usr/local/src && cd /usr/local/src
+    wget -q https://downloads.sourceforge.net/project/snpeff/snpEff_v4_3l_core.zip  &&
+    unzip snpEff_v4_3l_core.zip
+    rm snpEff_v4_3l_core.zip
+    cd snpEff
+    wget -q https://downloads.sourceforge.net/project/snpeff/databases/v4_3/snpEff_v4_3_GRCh37.75.zip
+    unzip snpEff_v4_3_GRCh37.75.zip
+    rm snpEff_v4_3_GRCh37.75.zip
+
+  

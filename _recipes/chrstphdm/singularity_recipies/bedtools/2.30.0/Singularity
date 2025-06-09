@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+# Christophe Demay <christophe.demay@chru-lille.fr>
+# 2018/04/24: initial version
+BootStrap: docker
+From: phusion/baseimage:0.10.1
+%labels
+  MAINTAINER christophe.demay@chru-lille.fr
+  BEDTOOLS_VERSION 2.30.0
+  RECIPE_VERSION 0.1
+
+%environment
+
+%help
+  
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get clean 
+
+  apt-get update
+  apt-get -y install  build-essential \
+  libgcc1 \
+  libc6 \
+  libstdc++6 \
+  gcc-multilib \
+  apt-utils \
+  unzip \
+  zlibc \
+  zlib1g \
+  zlib1g-dev \
+  libbz2-dev \
+  liblzma-dev \
+  filo \
+  aria2 \
+  python2.7 \
+  python2.7-dev \
+  libpython2.7 \
+  libpython2.7-dev
+
+  ln -s /usr/bin/python2.7 /usr/bin/python
+  
+  cd /usr/local/
+  aria2c -x 6 -s 6 https://github.com/arq5x/bedtools2/releases/download/v2.30.0/bedtools-2.30.0.tar.gz
+  tar -zxvf bedtools-2.30.0.tar.gz
+  cd /usr/local/bedtools2
+  make -j 20
+  ln -s /usr/local/bedtools2/bin/* /usr/local/bin/
+  
+  apt-get clean
+  

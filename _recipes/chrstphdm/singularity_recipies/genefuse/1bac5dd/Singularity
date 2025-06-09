@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# Christophe Demay <christophe.demay@chru-lille.fr>
+# 2020/11/09: initial version
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+
+%labels
+AUTHOR christophe.demay@chru-lille.fr
+
+%environment
+  export  PATH=/opt/vt:$PATH
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+
+%help
+
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+  apt-get update
+  apt-get -y install build-essential \
+  zlibc        \
+  zlib1g-dev   \
+  libgsl-dev   \
+  libbz2-dev   \
+  liblzma-dev  \
+  libcurl4-gnutls-dev \
+  libssl-dev \
+  git
+  
+  git config --global http.postBuffer 524288000
+
+  cd /opt
+
+  git clone https://github.com/OpenGene/GeneFuse.git
+  cd GeneFuse
+  git checkout 1bac5dd
+  make
+  make install
+

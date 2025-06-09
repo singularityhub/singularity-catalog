@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+  export  PATH="/miniconda/bin/:${PATH}"
+
+%help
+
+
+%post
+
+  echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+
+  apt-get clean 
+  apt-get update
+  apt-get -y install build-essential \
+  wget  \
+  git \
+  texlive-xetex
+
+export  PATH="/miniconda/bin/:${PATH}"
+
+## install miniconda
+wget https://repo.continuum.io/miniconda/Miniconda3-4.5.12-Linux-x86_64.sh 
+
+bash Miniconda3-4.5.12-Linux-x86_64.sh -p /miniconda -b
+rm   Miniconda3-4.5.12-Linux-x86_64.sh
+
+
+
+conda config --add channels defaults
+
+
+
+## install fastp
+conda install -c anaconda pip=19.2.3
+conda install -c conda-forge pandoc=2.7.3
+
+pip install git+https://github.com/ewels/MultiQC.git@acbc04a079df4015af431c4ca265ea73ff29465f
+
+
+### CUSTOM TO INCULE PCT OFF TARGET IN THE REPORT
+sed -i '/if h.startswith("PCT"):/,+1d' /miniconda/lib/python3.7/site-packages/multiqc/modules/picard/HsMetrics.py
+

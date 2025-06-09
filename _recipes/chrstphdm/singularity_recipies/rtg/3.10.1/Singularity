@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2019/02/01: initial version
+
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+
+%help
+    RTG Tools 3.10.1
+
+%environment
+    export PATH="/usr/local/src/rtg-tools-3.10.1:${PATH}"
+    export LC_ALL=C
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+    apt-get update &&
+    apt-get dist-upgrade -y &&
+    apt-get install -y \
+        wget  \
+        openjdk-8-jre \
+        unzip \
+        &&
+    apt-get clean &&
+    rm -rf /var/lib/apt/lists/*
+
+    mkdir -p /usr/local/src && cd /usr/local/src
+    wget -q https://github.com/RealTimeGenomics/rtg-tools/releases/download/3.10.1/rtg-tools-3.10.1-linux-x64.zip  &&
+    unzip rtg-tools-3.10.1-linux-x64.zip
+    cd rtg-tools-3.10.1
+    touch rtg.cfg

@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2018/11/06: initial version
+
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+  export  PATH=/opt/samtools-1.3.1:$PATH
+  export  PATH=/opt/outLyzer-2:$PATH
+
+%help
+
+
+%post
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get clean 
+
+  apt-get update
+  apt-get -y install build-essential \
+  zlibc \
+  python2.7 \
+  python-pip \
+  git \
+	wget \
+	make \
+	gcc \
+	zlibc \
+	autoconf \
+	libperl5.26 \
+	ca-certificates \
+	libbz2-dev \
+	liblzma-dev \
+	libncurses5-dev \
+	libncursesw5-dev \
+	libcurl4-gnutls-dev \
+	zlib1g-dev \
+	libcrypto++6 \
+	libgsl-dev 
+ 
+  pip install --upgrade pip
+  pip install pysam
+  pip install numpy
+  pip install scipy
+  pip install argparse
+  pip install multiprocessing
+
+
+  mkdir -p /opt
+  cd /opt
+
+   
+
+	wget https://github.com/samtools/samtools/releases/download/1.3.1/samtools-1.3.1.tar.bz2 
+  tar xjvf samtools-1.3.1.tar.bz2
+  cd /opt/samtools-1.3.1/ && ./configure && make  -j 20 
+	cd /opt/ && rm samtools-1.3.1.tar.bz2
+
+
+  cd /opt
+  wget  https://github.com/EtieM/outLyzer/archive/v2.tar.gz 
+  tar -zxvf v2.tar.gz 
+  cd /opt/outLyzer-2
+  chmod 755 outLyzer.py

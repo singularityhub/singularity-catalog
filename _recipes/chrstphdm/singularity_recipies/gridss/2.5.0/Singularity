@@ -1,0 +1,66 @@
+#!/bin/bash
+#
+# Chadi Saad <chadi.saad@chru-lille.fr>
+# 2018/11/06: initial version
+
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER chadi.saad@chru-lille.fr
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+  export  PATH="/miniconda/bin/:${PATH}"
+  export  GRIDSS_JAR="/opt/GRIDSS/gridss-2.5.0.jar"
+
+%help
+
+
+%post
+
+  echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get clean 
+
+  apt-get update
+  apt-get -y install build-essential \
+  wget \
+  openjdk-8-jdk \
+  time
+
+
+
+## install miniconda
+wget https://repo.continuum.io/miniconda/Miniconda3-4.5.12-Linux-x86_64.sh 
+
+bash Miniconda3-4.5.12-Linux-x86_64.sh -p /miniconda -b
+rm   Miniconda3-4.5.12-Linux-x86_64.sh
+
+/miniconda/bin/conda config --add channels defaults
+/miniconda/bin/conda config --add channels bioconda
+/miniconda/bin/conda config --add channels conda-forge
+
+
+
+## install bwa
+/miniconda/bin/conda install -c bioconda  bwa=0.7.17
+/miniconda/bin/conda install -c bioconda  sambamba=0.7.0
+/miniconda/bin/conda install -c r r=3.6.0
+
+
+mkdir -p /opt/GRIDSS
+wget -O /opt/GRIDSS/gridss-2.5.0.jar https://github.com/PapenfussLab/gridss/releases/download/v2.5.0/gridss-2.5.0-gridss-jar-with-dependencies.jar
+
+
+wget -O /usr/bin/gridss https://github.com/PapenfussLab/gridss/releases/download/v2.5.0/gridss.sh
+
+chmod +x /usr/bin/gridss
+
+wget -O /opt/GRIDSS/gridss-2.5.0.tar.gz https://github.com/PapenfussLab/gridss/archive/v2.5.0.tar.gz
+cd /opt/GRIDSS/
+tar -zxvf gridss-2.5.0.tar.gz
+
+cp gridss-2.5.0/example/gridss_targeted.sh /usr/bin/gridss_targeted
+chmod +x /usr/bin/gridss_targeted

@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+# Boudry Augustin <ogust1@gmail.com>
+# 2020: initial version
+
+
+BootStrap: docker
+From: phusion/baseimage:0.11
+
+%labels
+  MAINTAINER ogust1@gmail.com
+
+%environment
+  export  LC_ALL=en_US.UTF-8
+  export  LANGUAGE=en_US.UTF-8
+
+%help
+
+
+%post
+  echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+  apt-get clean 
+
+  apt-get update
+  apt-get -y install build-essential \
+  git \
+  python3 \
+  python3-pip \
+  wget \
+  python3-venv
+    
+ln -s /usr/bin/pip3 /usr/bin/pip
+ln -s /usr/bin/python3.6 /usr/bin/python
+ln -s /usr/bin/pip3 /bin/pip
+ln -s /usr/bin/python3.6 /bin/python
+
+cd /opt
+
+git clone https://github.com/iric-soft/km.git
+
+cd km
+
+git checkout tags/2.0.1
+
+sed -i 's/INSTALL_DIR=$HOME/INSTALL_DIR=\/opt\/km/' easy_install.sh
+
+
+bash easy_install.sh
+
