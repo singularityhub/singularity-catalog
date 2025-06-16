@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: continuumio/miniconda3
+
+%post
+    apt-get update
+    mkdir /src
+    pip install pandas
+    pip install dask
+    pip install tifffile
+    pip install zarr
+    pip install scikit-image
+    pip install git+https://github.com/CBI-PITT/stack_to_multiscale_ngff.git
+
+%runscript
+    python $*

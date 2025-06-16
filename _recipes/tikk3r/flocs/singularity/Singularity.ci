@@ -174,23 +174,23 @@ EOF
 
     sudo dnf -y install python3-cx-oracle
     pip --version
-    pip --no-cache-dir install virtualenv
+    pip install uv
 
     # Install the normal Python environment.
-    virtualenv $INSTALLDIR/pyenv-py3 --python=python3
+    uv venv --seed $INSTALLDIR/pyenv-py3 --python=python3
     # Without this strange bash errors appear with singularity shell from apptainer with 1.1.6-1.el8.
     printf "unset \$PROMPT_COMMAND\n$(cat $INSTALLDIR/pyenv-py3/bin/activate)" > $INSTALLDIR/pyenv-py3/bin/activate
     source $INSTALLDIR/pyenv-py3/bin/activate
 
-    pip install --upgrade pip wheel Cython
-    pip install "numpy<2"
-    pip install --no-binary pandas pandas
-    pip install --no-binary h5py h5py
-    pip install -r $INSTALLDIR/flocs/requirements_ci.txt
+    uv pip install --upgrade pip wheel Cython
+    uv pip install "numpy<2"
+    uv pip install --no-binary pandas pandas
+    uv pip install --no-binary h5py h5py
+    uv pip install -r $INSTALLDIR/flocs/requirements_ci.txt
     # Install facetselfcal this way to make sure data gets installed.
     cd /opt/lofar
     git clone https://github.com/rvweeren/lofar_facet_selfcal.git
-    pip install lofar_facet_selfcal
+    uv pip install lofar_facet_selfcal
     rm -rf lofar_facet_selfcal
 
     #
@@ -199,7 +199,7 @@ EOF
     mkdir -p ${INSTALLDIR}/pybdsf
     cd ${INSTALLDIR}/pybdsf && git clone https://github.com/lofar-astron/pybdsf && cd ${INSTALLDIR}/pybdsf/pybdsf && git checkout ${PYBDSF_VERSION} && echo export PYBDSF_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
     cd ${INSTALLDIR}/pybdsf/pybdsf
-    pip install .
+    uv pip install .
     cd $INSTALLDIR
     rm -rf $INSTALLDIR/pybdsf/pybdsf
 
@@ -248,8 +248,7 @@ EOF
     # Install Python-CASAcore
     #
     # In case anything was installed previously
-    pip uninstall -y python-casacore
-    pip install --no-deps --no-binary python-casacore "python-casacore==${PYTHON_CASACORE_VERSION}"
+    uv pip install --no-deps --no-binary python-casacore "python-casacore==${PYTHON_CASACORE_VERSION}"
     
     #
     # Install SAGECal
@@ -386,7 +385,7 @@ EOF
     find . -type f -name '*.py' -exec sed -i 's/np\.float16(weights)/weights.astype(float)/' {} \;
     find . -type f -name '*.py' -exec sed -i 's/np\.float16/float/g' {} \;
     find . -type f -name '*.py' -exec sed -i 's/Float16Atom/FloatAtom/g' {} \;
-    pip install --no-deps .
+    uv pip install --no-deps .
     cd $INSTALLDIR
     rm -rf $INSTALLDIR/losoto
 

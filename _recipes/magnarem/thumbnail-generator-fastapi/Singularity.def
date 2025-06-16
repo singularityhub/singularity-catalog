@@ -1,0 +1,13 @@
+Bootstrap: docker
+From: ghcr.io/multi-py/python-celery:py3.12-5.4.0
+
+%files
+    requirements.txt /requirements.txt
+    ./app /app
+
+%post
+    # Install Python dependencies
+    pip install --no-cache-dir -r /requirements.txt
+
+%runscript
+    exec "$@"

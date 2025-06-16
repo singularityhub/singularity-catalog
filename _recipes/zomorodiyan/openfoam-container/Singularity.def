@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: zomorodiyan/openfoam10-lbf:mpich-jun12
+
+%post
+    ln -sf /bin/bash /bin/sh
+
+    # Auto-load OpenFOAM environment in all interactive shells
+    echo "source /opt/OpenFOAM/OpenFOAM-10/etc/bashrc" >> /etc/bash.bashrc
+
+    # Check that laserbeamFoam binary exists
+    if [ ! -f /opt/OpenFOAM/OpenFOAM-10/platforms/linux64GccDPInt32Opt/bin/laserbeamFoam ]; then
+        echo "ERROR: laserbeamFoam binary not found!"
+        echo "Check if it was built into the Docker image before generating the .sif file."
+        exit 1
+    else
+        echo "✅ laserbeamFoam is installed."
+    fi
+
+
+%environment
+    # Explicitly set OpenFOAM environment
+    export FOAM_INST_DIR=/opt/OpenFOAM
+    export WM_PROJECT_DIR=/opt/OpenFOAM/OpenFOAM-10
+    export PATH=$WM_PROJECT_DIR/bin:$PATH
+    export LD_LIBRARY_PATH=$WM_PROJECT_DIR/lib:$LD_LIBRARY_PATH
+
+%runscript
+    # Source OpenFOAM environment correctly for any command passed in
+    export FOAM_INST_DIR=/opt/OpenFOAM
+    export WM_PROJECT_DIR=$FOAM_INST_DIR/OpenFOAM-10
+    source $WM_PROJECT_DIR/etc/bashrc
+    exec "$@"

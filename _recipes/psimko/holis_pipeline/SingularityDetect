@@ -1,0 +1,11 @@
+Bootstrap: docker
+From: continuumio/miniconda3:4.9.2
+
+%post
+    echo `python --version`
+    mkdir /src
+    conda install -y -c bbquercus deepblink
+
+%runscript
+    deepblink $*
+

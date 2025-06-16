@@ -89,6 +89,8 @@ From: fedora:40
     # Necessary for nomacs
     sudo strip --remove-section=.note.ABI-tag /usr/lib64/libQt5Core.so.5
 
+    dnf -y install https://na.edge.kernel.org/fedora/releases/39/Everything/x86_64/os/Packages/o/openssl1.1-1.1.1q-5.fc39.x86_64.rpm
+
     # Install OpenBLAS
     mkdir -p /opt/OpenBLAS
     cd /opt/OpenBLAS
@@ -213,45 +215,28 @@ From: fedora:40
     cd $INSTALLDIR && git clone --single-branch -b fedora-py3 https://github.com/tikk3r/flocs.git
 
     sudo dnf -y install python3-cx-oracle
-    pip --version
-    pip --no-cache-dir install virtualenv
+    pip install uv
 
-    # Install shadeMS in its own environment to avoid conflicts.
-    virtualenv $INSTALLDIR/pyenv-shadeMS --python=python3
-    # Without this strange bash errors appear with singularity shell from apptainer with 1.1.6-1.el8.
-    printf "unset \$PROMPT_COMMAND\n$(cat $INSTALLDIR/pyenv-py3/bin/activate)" > $INSTALLDIR/pyenv-shadeMS/bin/activate
-    source $INSTALLDIR/pyenv-shadeMS/bin/activate
-    pip install shadems
+    uv tool install shadems
 
     # Install the normal Python environment.
-    virtualenv $INSTALLDIR/pyenv-py3 --python=python3
+    uv venv --seed --python=python3 $INSTALLDIR/pyenv-py3
     # Without this strange bash errors appear with singularity shell from apptainer with 1.1.6-1.el8.
-    printf "unset \$PROMPT_COMMAND\n$(cat $INSTALLDIR/pyenv-py3/bin/activate)" > $INSTALLDIR/pyenv-py3/bin/activate
     source $INSTALLDIR/pyenv-py3/bin/activate
 
-    wget --progress=bar:force:noscroll https://github.com/blaze/datashape/archive/refs/tags/0.5.2.tar.gz
-    tar -xzvf 0.5.2.tar.gz
-    rm 0.5.2.tar.gz
-    cd datashape-0.5.2/
-    sed -i 's/SafeConfigParser/ConfigParser/g' versioneer.py
-    sed -i 's/readfp/read_file/g' versioneer.py
-    pip install .
-    cd ..
-    rm -rf datashape-0.5.2/
-
-    pip install --upgrade pip wheel Cython "setuptools>=59.5.0,<71"
-    pip install "numpy<2"
-    pip install --no-binary pandas pandas
-    pip install --no-binary h5py h5py
-    pip install -r $INSTALLDIR/flocs/requirements.txt
+    uv pip install --upgrade pip wheel Cython "setuptools>=59.5.0,<71"
+    uv pip install "numpy<2"
+    uv pip install --no-binary pandas pandas
+    uv pip install --no-binary h5py h5py
+    uv pip install -r $INSTALLDIR/flocs/requirements.txt
     # Install facetselfcal this way to make sure data gets installed.
     cd /opt/lofar
     git clone https://github.com/rvweeren/lofar_facet_selfcal.git
-    pip install ./lofar_facet_selfcal
+    uv pip install ./lofar_facet_selfcal
     rm -rf lofar_facet_selfcal
     # Install this separately since it keeps forcefully downgrading numpy.
     #pip install --no-deps lofarSun
-    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+    uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 
     #
     # Install LTA client
@@ -260,7 +245,7 @@ From: fedora:40
     wget --progress=bar:force:noscroll https://lta.lofar.eu/software/lofar_lta-2.8.0.tar.gz
     tar xf lofar_lta-*
     cd lofar_lta-2.8.0
-    pip install .
+    uv pip install .
     cd ..
     rm lofar_lta*.tar.gz
     rm -rf lofar_lta-2.8.0/
@@ -304,7 +289,7 @@ From: fedora:40
     mkdir -p ${INSTALLDIR}/pybdsf
     cd ${INSTALLDIR}/pybdsf && git clone https://github.com/lofar-astron/pybdsf && cd ${INSTALLDIR}/pybdsf/pybdsf && git checkout ${PYBDSF_VERSION} && echo export PYBDSF_VERSION=$(git rev-parse --short HEAD) >> $INSTALLDIR/init.sh
     cd ${INSTALLDIR}/pybdsf/pybdsf
-    pip install .
+    uv pip install .
     cd $INSTALLDIR
     rm -rf $INSTALLDIR/pybdsf/pybdsf
 
@@ -323,10 +308,8 @@ From: fedora:40
     cmake $CMAKE_ADD_OPTION \
         -DCMAKE_INSTALL_PREFIX=${INSTALLDIR}/casacore/ \
         -DDATA_DIR=${INSTALLDIR}/casacore/data \
-        -DBUILD_PYTHON=False \
         -DUSE_OPENMP=True \
         -DUSE_HDF5=True \
-        -DBUILD_PYTHON3=True \
         -DBUILD_DYSCO=ON \
         -DBLAS_LIBRARIES="${AOCL_ROOT}/lib/libblis.so" \
         -DFFTW3_LIBRARY="${AOCL_ROOT}/lib/libfftw3.so" \
@@ -348,8 +331,7 @@ From: fedora:40
     # Install Python-CASAcore
     #
     # In case anything was installed previously
-    pip uninstall -y python-casacore
-    pip install --no-deps --no-binary python-casacore "python-casacore==${PYTHON_CASACORE_VERSION}"
+    uv pip install --no-deps --no-binary python-casacore "python-casacore==${PYTHON_CASACORE_VERSION}"
     
     #
     # Install SAGECal
@@ -474,7 +456,7 @@ From: fedora:40
     #
     # Install LoSiTo
     #
-    pip install --no-deps git+https://github.com/darafferty/losito.git
+    uv pip install --no-deps git+https://github.com/darafferty/losito.git
 
     #
     # Install LoSoTo
@@ -487,7 +469,7 @@ From: fedora:40
     find . -type f -name '*.py' -exec sed -i 's/np\.float16(weights)/weights.astype(float)/' {} \;
     find . -type f -name '*.py' -exec sed -i 's/np\.float16/float/g' {} \;
     find . -type f -name '*.py' -exec sed -i 's/Float16Atom/FloatAtom/g' {} \;
-    pip install --no-deps .
+    uv pip install --no-deps .
     cd $INSTALLDIR
     rm -rf $INSTALLDIR/losoto
 
@@ -540,8 +522,8 @@ From: fedora:40
     ls ${INSTALLDIR}
     
     # Setup DDF
-    pip --no-cache-dir install meqtrees-cattery --no-deps
-    pip --no-cache-dir install owlcat --no-deps
+    uv pip --no-cache-dir install meqtrees-cattery --no-deps
+    uv pip --no-cache-dir install owlcat --no-deps
 
     #
     # Install the standalone StationResponse libraries. DDFacet still uses these.
@@ -588,9 +570,9 @@ From: fedora:40
     find DDFacet/ -name "*.c" -exec sed -i "s/PyArray_INT32/NPY_INT32/g" {} \;
     find DDFacet/ -name "*.c" -exec sed -i "s/PyArray_FLOAT32/NPY_FLOAT32/g" {} \;
 
-    find . \( -name "CMakeLists.txt" -o -name "*.cmake" \) -exec sed -E "s/cmake_minimum_required\(VERSION 2\.[68]/cmake_minimum_required\(VERSION 3.5/gm" {} \;
+    find . \( -name "CMakeLists.txt" -o -name "*.cmake" \) -exec sed -i -E "s/cmake_minimum_required\(VERSION 2\.[68]/cmake_minimum_required\(VERSION 3.5/gm" {} \;
 
-    pip install --no-deps DDFacet/
+    uv pip install --no-deps DDFacet/
 
 
     #
@@ -615,9 +597,9 @@ From: fedora:40
     
     sed -i '261s/np\.complex/np\.complex128/' killMS/killMS/Data/ClassMS.py
 
-    find . \( -name "CMakeLists.txt" -o -name "*.cmake" \) -exec sed -E "s/cmake_minimum_required\(VERSION 2\.[68]/cmake_minimum_required\(VERSION 3.5/gm" {} \;
+    find . \( -name "CMakeLists.txt" -o -name "*.cmake" \) -exec sed -i -E "s/cmake_minimum_required\(VERSION 2\.[68]/cmake_minimum_required\(VERSION 3.5/gm" {} \;
 
-    pip install --no-deps killMS/
+    uv pip install --no-deps killMS/
 
 
 
@@ -774,9 +756,8 @@ From: fedora:40
     echo export DDF_DIR=$INSTALLDIR >> $INSTALLDIR/init.sh
     echo export DDF_PIPELINE_CATALOGS=$INSTALLDIR/DDFCatalogues >> $INSTALLDIR/init.sh
     echo export KILLMS_DIR=$INSTALLDIR >> $INSTALLDIR/init.sh
-    echo export PATH=\$INSTALLDIR/killMS/killMS:\$PATH >> $INSTALLDIR/init.sh
     echo export PYTHONPATH=\$INSTALLDIR/lotss-hba-survey:\$INSTALLDIR/lotss-query:\$INSTALLDIR/ddf-pipeline/scripts:$INSTALLDIR/ddf-pipeline/utils:$INSTALLDIR/DDFacet/DDFacet:$INSTALLDIR/DynSpecMS:\$PYTHONPATH >> $INSTALLDIR/init.sh
-    echo export PATH=$INSTALLDIR/DDFacet/SkyModel:\$INSTALLDIR/DynSpecMS/:\$INSTALLDIR/ddf-pipeline/scripts:\$PATH >> $INSTALLDIR/init.sh
+    echo export PATH=\$INSTALLDIR/DynSpecMS/:\$INSTALLDIR/ddf-pipeline/scripts:\$PATH >> $INSTALLDIR/init.sh
     echo "if echo \$(hostname) | grep -qi leiden; then export DDF_PIPELINE_CLUSTER="paracluster"; else export DDF_PIPELINE_CLUSTER=; fi" >> $INSTALLDIR/init.sh
 
 %help
