@@ -53,10 +53,10 @@ bases:
   name: poldracklab/fmriprep
 - count: 35
   name: nvcr.io/nvidia/pytorch
+- count: 35
+  name: nipreps/fmriprep
 - count: 33
   name: provarepro/mlperf_inference
-- count: 33
-  name: nipreps/fmriprep
 - count: 32
   name: vitchyr/railrl_v12_cuda10-1_mj2-0-2-2_torch1-1-0_gym0-12-5_py3-6-5
 - count: 31
@@ -230,6 +230,8 @@ bases:
 - count: 7
   name: mattocci/rstan
 - count: 7
+  name: bids/mrtrix3_connectome
+- count: 7
   name: dcanumn/bibsnet
 - count: 7
   name: khanlab/neuroglia-core
@@ -263,8 +265,6 @@ bases:
   name: gnuoctave/octave
 - count: 6
   name: bensonyang88/hpl-cuda
-- count: 6
-  name: bids/mrtrix3_connectome
 - count: 6
   name: pennlinc/qsirecon
 - count: 6
@@ -327,8 +327,6 @@ bases:
   name: sternacht/hpcc_openblas
 - count: 5
   name: genomicpariscentre/guppy-gpu
-- count: 5
-  name: letaylor/sc_qc_cluster
 - count: 5
   name: nextgenusfs/funannotate
 - count: 5
@@ -671,6 +669,8 @@ bases:
   name: brainiak/rttoolsxl
 - count: 2
   name: repronim/simple_workflow
+- count: 2
+  name: letaylor/sc_qc_cluster
 - count: 2
   name: library/debian@sha256
 - count: 2
@@ -1180,6 +1180,8 @@ bases:
 - count: 1
   name: nipreps/nirodents
 - count: 1
+  name: pennlinc/qsiprep
+- count: 1
   name: bids/nipypelines
 - count: 1
   name: bids/fibredensityandcrosssection
@@ -1415,6 +1417,8 @@ bases:
   name: pchengi/nscjekyll
 - count: 1
   name: ollama/ollama
+- count: 1
+  name: '{{ ROCKER_BASE }}'
 - count: 1
   name: '{{NV_BASE_IMAGE}}'
 - count: 1
@@ -2200,7 +2204,7 @@ bases:
 - count: 1
   name: wangyoucao577/centos7-gcc7.4
 bootstraps:
-- count: 7339
+- count: 7341
   name: docker
 - count: 511
   name: shub
@@ -2292,6 +2296,8 @@ orgs:
 - count: 5
   name: jupyter
 - count: 4
+  name: pennlinc
+- count: 4
   name: joey3639570
 - count: 4
   name: willprice
@@ -2333,8 +2339,6 @@ orgs:
   name: icaoberg
 - count: 3
   name: sebastientourbier
-- count: 3
-  name: pennlinc
 - count: 3
   name: magland
 - count: 3
@@ -2595,6 +2599,8 @@ orgs:
   name: datascienceworkshops
 - count: 1
   name: mcw-rcc
+- count: 1
+  name: letaylor
 - count: 1
   name: thinca
 - count: 1
@@ -2948,8 +2954,6 @@ orgs:
 - count: 1
   name: halfpipe
 - count: 1
-  name: letaylor
-- count: 1
   name: fermilab
 - count: 1
   name: antismash
@@ -3244,8 +3248,8 @@ orgs:
 - count: 1
   name: wangyoucao577
 tags:
-  latest: 781
-  other: 6892
+  latest: 778
+  other: 6896
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3522,6 +3526,7 @@ versions:
     0.5.1: 1
     0.5.2: 1
     0.5.3: 1
+    0.6.0: 1
   bids/ndmg:
     v0.1.0: 1
   bids/niak:
@@ -4608,7 +4613,7 @@ versions:
   lemene/pecat:
     v0.0.3: 1
   letaylor/sc_qc_cluster:
-    latest: 5
+    latest: 2
   libatomsquip/quip-base:
     latest: 1
   library/centos:
@@ -4846,6 +4851,8 @@ versions:
     24.1.1: 1
     25.0.0: 1
     25.1.1: 1
+    25.1.2: 1
+    25.1.3: 1
   nipreps/mriqc:
     22.0.1: 1
     22.0.2: 1
@@ -5328,6 +5335,8 @@ versions:
     0.7.3: 1
     0.7.4: 1
     0.7.5: 1
+  pennlinc/qsiprep:
+    1.0.1: 1
   pennlinc/qsirecon:
     0.23.1: 1
     0.23.2: 1
