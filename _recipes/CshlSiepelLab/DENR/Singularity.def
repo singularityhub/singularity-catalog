@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: rocker/ml:4.0.1
+
+%post
+    apt-get update && apt-get install -y \
+        libcurl4-openssl-dev \
+        libssl-dev \
+        libxml2-dev \
+        libbz2-dev \
+        build-essential
+
+    pip install h5py
+
+    mkdir -p ~/.R
+    echo 'CFLAGS = -g -O2 -fstack-protector-strong -Wformat -Wdate-time -D_FORTIFY_SOURCE=2 -g' > ~/.R/Makevars
+    echo 'CXXFLAGS = -g -O2 -fstack-protector-strong -Wformat -Wdate-time -D_FORTIFY_SOURCE=2 -g' >> ~/.R/Makevars
+
+    R -e 'devtools::install_github("CshlSiepelLab/DENR"); BiocManager::install("rhdf5"); reticulate::install_miniconda(); keras::install_keras(method="conda", version = "2.4.0")'
+    
+%runscript
+    exec R "$@"
