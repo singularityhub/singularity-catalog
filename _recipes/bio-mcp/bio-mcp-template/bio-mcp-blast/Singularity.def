@@ -1,0 +1,70 @@
+Bootstrap: docker
+From: biocontainers/blast:2.15.0
+
+%post
+    # Install Python 3.11 and dependencies
+    apt-get update && apt-get install -y \
+        python3.11 \
+        python3.11-venv \
+        python3.11-dev \
+        python3-pip \
+        git \
+        build-essential \
+        libgomp1 \
+        && rm -rf /var/lib/apt/lists/*
+
+    # Create virtual environment
+    python3.11 -m venv /opt/venv
+    . /opt/venv/bin/activate
+
+    # Install Python dependencies
+    pip install --no-cache-dir \
+        mcp>=1.1.0 \
+        pydantic>=2.0.0 \
+        pydantic-settings>=2.0.0 \
+        httpx>=0.25.0 \
+        uvloop>=0.19.0
+
+    # Create directories
+    mkdir -p /app/src
+    mkdir -p /tmp/mcp-blast
+    chmod 755 /tmp/mcp-blast
+
+%files
+    src /app/src
+    pyproject.toml /app/
+
+%environment
+    export PATH="/opt/venv/bin:/usr/local/bin:$PATH"
+    export PYTHONPATH="/app"
+    export BIO_MCP_TEMP_DIR="/tmp/mcp-blast"
+
+%runscript
+    cd /app
+    exec python -m src.server "$@"
+
+%test
+    # Verify BLAST tools are available
+    blastn -version
+    blastp -version
+    makeblastdb -version
+    blastdbcmd -version
+    
+    # Test Python imports
+    python -c "import src.server; print('BLAST MCP server is ready')"
+
+%help
+    This container runs the Bio-MCP BLAST server.
+    
+    Usage:
+        singularity run blast.sif
+        
+    Environment variables:
+        BIO_MCP_TEMP_DIR: Temporary directory for processing (default: /tmp/mcp-blast)
+        BIO_MCP_TIMEOUT: Command timeout in seconds (default: 300)
+        BIO_MCP_MAX_FILE_SIZE: Maximum input file size in bytes
+
+%labels
+    Author Bio-MCP Project
+    Version 0.1.0
+    Description MCP server for BLAST sequence analysis tools

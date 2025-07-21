@@ -1,6 +1,6 @@
 Bootstrap: docker
 
-From: continuumio/anaconda3
+From: continuumio/miniconda3
 
 %files
     environment.yml
@@ -13,5 +13,3 @@ From: continuumio/anaconda3
     gdb \
     libhdf5-dev
     /opt/conda/bin/conda env create -f environment.yml
-
-%runscript

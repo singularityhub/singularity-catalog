@@ -9,13 +9,13 @@ bases:
   name: python
 - count: 301
   name: centos
-- count: 287
+- count: 288
   name: alpine
 - count: 258
   name: ghcr.io/mkandes/naked-singularity
 - count: 253
   name: aibasel/downward
-- count: 236
+- count: 237
   name: continuumio/miniconda3
 - count: 134
   name: tensorflow/tensorflow
@@ -30,9 +30,9 @@ bases:
 - count: 77
   name: neurodebian
 - count: 56
-  name: conda/miniconda3
-- count: 55
   name: fedora
+- count: 56
+  name: conda/miniconda3
 - count: 52
   name: continuumio/miniconda
 - count: 51
@@ -73,12 +73,12 @@ bases:
   name: osrf/ros
 - count: 25
   name: nipy/heudiconv
-- count: 25
-  name: continuumio/anaconda3
+- count: 24
+  name: pennlinc/xcp_d
 - count: 24
   name: rockylinux
-- count: 23
-  name: pennlinc/xcp_d
+- count: 24
+  name: continuumio/anaconda3
 - count: 22
   name: khanlab/tar2bids
 - count: 21
@@ -102,6 +102,8 @@ bases:
 - count: 16
   name: rocker/verse
 - count: 15
+  name: nipreps/nibabies
+- count: 15
   name: khanlab/neuroglia-dwi
 - count: 15
   name: ghcr.io/mkandes/mofed
@@ -111,8 +113,6 @@ bases:
   name: jtchilders/singularity_image_recipes
 - count: 14
   name: khanlab/hippunfold
-- count: 14
-  name: nipreps/nibabies
 - count: 14
   name: ebothmann/sherpa-singularity
 - count: 14
@@ -790,6 +790,10 @@ bases:
 - count: 2
   name: vnmd/freesurfer_8.0.0
 - count: 2
+  name: biocontainers/blast
+- count: 2
+  name: biocontainers/bcftools
+- count: 2
   name: scleveland/centos7-base-singularity
 - count: 2
   name: hub.opensciencegrid.org/opensciencegrid/htcondor-file-transfer-ep
@@ -970,6 +974,8 @@ bases:
 - count: 2
   name: ../../R/r/r_3.5.1.simg
 - count: 2
+  name: registry.scicore.unibas.ch/schwede/openstructure
+- count: 2
   name: ecpe4s/ubuntu20.04-oneapi-x86_64
 - count: 2
   name: intel_netcdf_ubuntu.sif
@@ -1027,10 +1033,6 @@ bases:
   name: sorcerer01/opensees
 - count: 1
   name: biocontainers/samtools
-- count: 1
-  name: biocontainers/bcftools
-- count: 1
-  name: biocontainers/blast
 - count: 1
   name: alantrrs/py-faster-rcnn
 - count: 1
@@ -1470,6 +1472,8 @@ bases:
 - count: 1
   name: cyberbotics/webots
 - count: 1
+  name: continuumio/miniconda3@sha256
+- count: 1
   name: spark.img
 - count: 1
   name: thinca/vim
@@ -1707,6 +1711,8 @@ bases:
   name: singularity_libs_mpich
 - count: 1
   name: rootproject/root
+- count: 1
+  name: biocontainers/{{tool_name}}
 - count: 1
   name: jupyter/scipy-notebook
 - count: 1
@@ -2150,8 +2156,6 @@ bases:
 - count: 1
   name: r-minimal/r-minimal_3.5.1.simg
 - count: 1
-  name: registry.scicore.unibas.ch/schwede/openstructure
-- count: 1
   name: electronioncollider/jleic
 - count: 1
   name: jlabsolid/jlabsolidbase
@@ -2204,11 +2208,11 @@ bases:
 - count: 1
   name: tin6150/r4eta
 bootstraps:
-- count: 7344
+- count: 7353
   name: docker
 - count: 511
   name: shub
-- count: 431
+- count: 433
   name: debootstrap
 - count: 386
   name: library
@@ -2216,7 +2220,7 @@ bootstraps:
   name: oras
 - count: 214
   name: localimage
-- count: 178
+- count: 182
   name: yum
 - count: 35
   name: zypper
@@ -2274,13 +2278,13 @@ orgs:
 - count: 8
   name: vanessa
 - count: 8
+  name: biocontainers
+- count: 8
+  name: continuumio
+- count: 8
   name: nvidia
 - count: 7
   name: nvcr.io/hpc
-- count: 7
-  name: biocontainers
-- count: 7
-  name: continuumio
 - count: 6
   name: nipreps
 - count: 6
@@ -3249,7 +3253,7 @@ orgs:
   name: tin6150
 tags:
   latest: 778
-  other: 6899
+  other: 6908
 versions:
   /nrs/funke/singularity/linajea/pylp_base:
     v1.5.img: 1
@@ -3362,6 +3366,7 @@ versions:
     '3.19': 1
     '3.20': 9
     3.20.0: 1
+    '3.22': 1
     '3.4': 2
     '3.5': 1
     '3.6': 4
@@ -3635,6 +3640,10 @@ versions:
     RELEASE_3_11: 1
   biocontainers/bamtools:
     latest: 1
+  biocontainers/bcftools:
+    1.19--h8b25389_0: 1
+  biocontainers/blast:
+    2.15.0: 1
   biocontainers/bowtie2:
     v2.4.1_cv1: 1
   biocontainers/fastqc:
@@ -3643,6 +3652,8 @@ versions:
     v0.11.9_cv8: 1
   biocontainers/t-coffee:
     v12.00.7fb08c2-4-deb_cv1: 1
+  biocontainers/{{tool_name}}:
+    '{{tool_version}}': 1
   biocorecrg/debian-perlbrew:
     buster: 1
   biocorecrg/debian-perlbrew-pyenv3-java:
@@ -3835,6 +3846,8 @@ versions:
     4.8.2: 11
     4.9.2: 2
     latest: 33
+  continuumio/miniconda3@sha256:
+    3a2017213a16daff5bc8dec8571354249c3370d6b0d64ac78e8538257ce42d4c: 1
   cornellcac/presto:
     latest: 1
   cornellcac/pulsar-pipeline:
@@ -4075,7 +4088,7 @@ versions:
     '34': 5
     '35': 3
     '36': 2
-    '40': 4
+    '40': 5
     latest: 3
   fempar/fempar-env:
     gnu-debug_p4est-parallel: 1
@@ -4882,6 +4895,7 @@ versions:
     25.0.1: 1
     25.0.2: 1
     25.1.0: 1
+    25.1.1: 1
   nipreps/nirodents:
     0.2.1: 1
   nipreps/smriprep:
@@ -5023,7 +5037,7 @@ versions:
     22.04-py3: 3
     22.05-py3: 1
     22.08-py3: 1
-    23.09-py3: 1
+    25.06-py3: 1
   nvcr.io/nvidia/rapidsai/rapidsai-core:
     22.08-cuda11.0-runtime-ubuntu20.04-py3.9: 1
   nvcr.io/nvidia/riva/riva-speech:
@@ -5352,6 +5366,7 @@ versions:
     0.10.5: 1
     0.10.6: 1
     0.10.7: 1
+    0.11.0: 1
     0.6.0: 1
     0.6.1: 1
     0.6.2: 1
@@ -5805,6 +5820,7 @@ versions:
     '20.04': 1
   registry.scicore.unibas.ch/schwede/openstructure:
     2.0.0: 1
+    2.11.0: 1
   repronim/reproin:
     0.11.3: 1
     0.11.6: 1

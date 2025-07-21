@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: alpine:3.22
+
+# version 2.0 according to the website.
+# commit 2f5a24f
+
+%post
+    apk update\
+        && apk upgrade\
+        && apk add  --no-cache build-base bash git
+
+
+    # Install Triplexator
+    mkdir -p /opt
+    cd /opt
+    git clone https://github.com/abcsFrederick/non-B_gfa.git
+    cd non-B_gfa
+    make
+    
+    cp gfa /usr/local/bin/
+
+    apk del git build-base
+    rm -rf /var/lib/apt/list/*
+    rm -rf /var/cache/apk/*
+    rm -rf /opt/non-B_gfa 
+
+%environment
+    export PATH="/usr/local/bin:$PATH"
+
+%runscript
+    exec gfa "$@"
+

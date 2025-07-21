@@ -1,0 +1,99 @@
+Bootstrap: yum
+OSVersion: 8.9
+MirrorURL: https://dl.rockylinux.org/vault/rocky/%{OSVERSION}/BaseOS/x86_64/os/
+Include: yum
+
+%post
+yum --assumeyes update 
+yum install --quiet --assumeyes epel-release
+# This is needed for the change to CentOS8 which we need in Rocky8 too
+yum install --quiet --assumeyes dnf-plugins-core 
+dnf config-manager --set-enabled powertools 
+yum install --quiet --assumeyes python3 Lmod 
+yum install --quiet --assumeyes python3-pip
+yum install --quiet --assumeyes bzip2 gzip tar zip unzip xz
+yum install --quiet --assumeyes curl wget rsync cpio
+yum install --quiet --assumeyes patch make
+yum install --quiet --assumeyes file git which
+yum install --quiet --assumeyes gcc-c++
+yum install --quiet --assumeyes perl-Data-Dumper
+yum install --quiet --assumeyes perl-Thread-Queue
+yum install --quiet --assumeyes openssl-devel openssl
+yum install --quiet --assumeyes ncurses-term tcsh findutils hostname p7zip-plugins 
+yum install --quiet --assumeyes diffutils compat-openssl10 vim-enhanced
+yum install --quiet --assumeyes glibc-static
+yum clean all
+
+# install EasyBuild using pip3
+python3 -m pip install -U pip
+python3 -m pip install wheel
+python3 -m pip install easybuild==4.9.4
+python3 -m pip install rich
+python3 -m pip install PyYAML
+
+# create 'easybuild' user (if missing)
+id easybuild || useradd easybuild
+
+# create /apps and /sw-eb software installation prefix + /scratch sandbox directory
+if [ ! -d /rds ]; then mkdir -p /rds; chown easybuild:easybuild -R /rds; fi
+if [ ! -d /scratch ]; then mkdir -p /scratch; chown easybuild:easybuild -R /scratch; fi
+if [ ! -d /software ]; then mkdir -p /software; chown easybuild:easybuild -R /software; fi
+if [ ! -d /home/easybuild ]; then mkdir -p /home/easybuild; chown easybuild:easybuild -R /home/easybuild;fi
+
+# verbose commands, exit on first error
+set -ve
+set -o noclobber
+
+# We set this so if we need to open the container again, we got the environment set up correctly
+cat >> /home/easybuild/.bashrc << 'EOG'
+# Setting up the environment for EasyBuild. The default is for dev
+# for the interactive EasyBuild user!
+export EASYBUILD_PREFIX=/rds/easybuild/dev
+export EASYBUILD_SOURCEPATH=/software/sources
+export EASYBUILD_INSTALLPATH=/rds/easybuild/dev
+export EASYBUILD_TMPDIR="/dev/shm/${USER}"
+export EASYBUILD_BUILDPATH="/dev/shm/${USER}"
+export EASYBUILD_PARALLEL=1
+export EASYBUILD_ACCEPT_EULA_FOR="Intel-oneAPI,NVHPC,NVIDIA-driver"
+export MODULEPATH=/rds/easybuild/dev/apps/modules/all
+
+export PYTHONIOENCODING="utf-8"
+EOG
+
+%runscript
+eval "$@"
+
+%environment
+# this seems to be needed to make sure the terminal is working:
+export TERM=xterm-256color
+# make sure that 'module' and 'ml' commands are defined
+source /etc/profile.d/modules.sh 
+# purge any modules that may be loaded outside container
+unset LOADEDMODULES
+unset _LMFILES_
+# avoid picking up modules from outside of container
+module unuse $MODULEPATH
+# pick up modules installed in /rds/easybuild for dev or specific builds
+# the default here is for dev
+# export MODULEPATH=/rds/easybuild/ARCH/modules/all
+export MODULEPATH="/rds/easybuild/dev/modules/all"
+# setting up the installation environment:
+USER=$(whoami)
+shopt -s expand_aliases
+export EASYBUILD_PREFIX=/rds/easybuild/dev
+export EASYBUILD_SOURCEPATH=/software/sources
+# Use this if you are working for the generic build:
+# export EASYBUILD_INSTALLPATH=/rds/easybuild/dev
+# This is for the architectur specific builds:
+export EASYBUILD_TMPDIR="/dev/shm/${USER}"
+export EASYBUILD_BUILDPATH="/dev/shm/${USER}"
+export EASYBUILD_PARALLEL="24"
+export EASYBUILD_ACCEPT_EULA_FOR="Intel-oneAPI,NVHPC,NVIDIA-driver"
+alias eb="eb --robot --hooks=/software/hooks/site-hooks.py"
+export PYTHONIOENCODING="utf-8"
+
+%labels
+Author J. Sassmannshausen <j.sassmannshausen@imperial.ac.uk>
+EasyBuild-version 4.9.4
+Software build container
+

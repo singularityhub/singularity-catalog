@@ -1,0 +1,123 @@
+Bootstrap: debootstrap
+OSVersion: jammy 
+MirrorURL: http://archive.ubuntu.com/ubuntu/
+
+%post
+# For Ubuntu, we need to add other repositories as well:
+sed -i 's/main/main universe/' /etc/apt/sources.list
+apt update 
+apt dist-upgrade -y 
+apt install -y python3 python3-setuptools lmod
+apt install -y python3-pip
+apt install -y bzip2 gzip tar zip unzip xz-utils 
+apt install -y curl wget rsync cpio locales
+apt install -y patch make
+apt install -y file git debianutils
+apt install -y gcc libxml2-dev 
+apt install -y libibverbs-dev 
+apt install -y libssl-dev
+apt install -y binutils libthread-queue-any-perl
+apt install -y procps
+apt install -y man libdb-dev
+apt clean
+
+# install EasyBuild using pip3
+pip3 install -U pip
+pip3 install wheel
+pip3 install -U setuptools==58.5.3
+pip3 install easybuild==5.1.0
+pip3 install rich
+pip3 install PyYAML
+
+# create 'easybuild' user (if missing)
+id easybuild || useradd -s /bin/bash -m easybuild
+
+# create /app software installation prefix + /scratch sandbox directory
+if [ ! -d /apps/easybuild ]; then mkdir -p /apps/easybuild; chown easybuild:easybuild -R /apps/easybuild; fi
+if [ ! -d /scratch ]; then mkdir -p /scratch; chown easybuild:easybuild -R /scratch; fi
+if [ ! -d /home/easybuild ]; then mkdir -p /home/easybuild; chown easybuild:easybuild -R /home/easybuild;fi
+
+# install Lmod RC file
+cat > /etc/lmodrc.lua << EOD
+scDescriptT = {
+  {
+    ["dir"]       = "/apps/easybuild/lmodcache",
+    ["timestamp"] = "/apps/easybuild/lmodcache/timestamp",
+  },
+}
+EOD
+
+# verbose commands, exit on first error
+set -ve
+set -o noclobber
+# We set this so if we need to open the container again, we got the environment set up correctly
+cat >> /home/easybuild/.bashrc << 'EOG'
+export EASYBUILD_SOURCEPATH=/software/easybuild/sources
+export EASYBUILD_INSTALLPATH=/apps/easybuild
+export EASYBUILD_TMPDIR=/dev/shm/easybuild
+export EASYBUILD_BUILDPATH="/dev/shm/easybuild"
+export EASYBUILD_PARALLEL=1
+export EASYBUILD_ACCEPT_EULA_FOR=Intel-oneAPI,NVHPC
+export MODULEPATH=/apps/easybuild/modules/all
+alias eb="eb --robot --download-timeout=1000"
+export PYTHONIOENCODING='utf-8'
+ulimit -l unlimited
+EOG
+
+# configure EasyBuild
+cat > /home/easybuild/eb-environment.sh << 'EOD'
+#!/usr/bin/env bash
+echo  "Setting up environment for interactive use"
+shopt -s expand_aliases
+export EASYBUILD_SOURCEPATH=/software/easybuild/sources
+export EASYBUILD_INSTALLPATH=/apps/easybuild
+export EASYBUILD_TMPDIR=/dev/shm/easybuild
+export EASYBUILD_BUILDPATH="/dev/shm/easybuild"
+export EASYBUILD_PARALLEL=36
+export EASYBUILD_ACCEPT_EULA_FOR=Intel-oneAPI,NVHPC
+export MODULEPATH=/apps/easybuild/modules/all
+alias eb="eb --robot --download-timeout=1000"
+export PYTHONIOENCODING='utf-8'
+ulimit -l unlimited
+# For interative runs, we need to remove all the SLURM environments
+echo "For interactive runs, please do:"
+echo "# for i in \$(export | grep SLURM); do unset \$( echo \$i | grep SLURM | awk -F "=" '{print \$1}' )  ; done"
+echo "# for i in \$(export | grep SLURM); do echo \$i; done"
+EOD
+
+chmod a+x /home/easybuild/eb-environment.sh
+
+%runscript
+eval "$@"
+
+%environment
+# this seems to be needed to make sure the terminal is working:
+export TERM=xterm-256color
+# make sure that 'module' and 'ml' commands are defined
+source /etc/profile
+# increase threshold time for Lmod to write cache in $HOME (which we don't want to do)
+export LMOD_SHORT_TIME=86400
+# purge any modules that may be loaded outside container
+module --force purge
+# avoid picking up modules from outside of container
+module unuse $MODULEPATH
+# pick up modules installed in /app
+module use /app/modules/all
+# setting up the installation environment:
+USER=$(whoami)
+shopt -s expand_aliases
+export EASYBUILD_SOURCEPATH=/software/easybuild/sources
+export EASYBUILD_INSTALLPATH=/apps/easybuild
+export EASYBUILD_TMPDIR=/dev/shm/easybuild
+export EASYBUILD_BUILDPATH="/dev/shm/easybuild"
+export EASYBUILD_PARALLEL=36
+export EASYBUILD_ACCEPT_EULA_FOR=Intel-oneAPI,NVHPC
+export MODULEPATH=/apps/easybuild/modules/all
+export PYTHONIOENCODING='utf-8'
+alias eb="eb --robot --download-timeout=1000"
+ 
+%labels
+Author J. Sassmannshausen <jorg.sassmannshausen@kcl.ac.uk>
+EasyBuild version 5.1.0 
+Software build container
+

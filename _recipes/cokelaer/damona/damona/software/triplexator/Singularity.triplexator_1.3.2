@@ -1,0 +1,38 @@
+Bootstrap: docker
+From: fedora:40
+
+%files
+    fix_triplexator.patch /opt
+
+%post
+  dnf install -y \
+        make \
+        cmake \
+        gcc \
+        gcc-c++ \
+        boost-devel \
+        git
+
+
+    # Install Triplexator
+    mkdir -p /opt
+    cd /opt
+    git clone https://github.com/Gurado/triplexator.git
+    cd triplexator
+
+    git apply /opt/fix_triplexator.patch
+
+    mkdir -p build/Release && cd build/Release
+    cmake ../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -G "Unix Makefiles" -DCMAKE_CXX_FLAGS="-Wno-error=address-of-packed-member" && make
+
+
+
+    # Symlink to /usr/local/bin
+    ln -s /opt/triplexator/bin/triplexator /usr/local/bin/triplexator
+
+%environment
+    export PATH="/usr/local/bin:$PATH"
+
+%runscript
+    exec triplexator "$@"
+

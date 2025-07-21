@@ -1,5 +1,6 @@
 Bootstrap: docker
-From: nvcr.io/nvidia/pytorch:23.09-py3
+#From: nvcr.io/nvidia/pytorch:25.06-py3
+From: pytorch/pytorch:2.7.1-cuda12.8-cudnn9-runtime
 
 %files
 requirements_factorySim.txt /workspace/factorySim/
@@ -14,11 +15,13 @@ pkg-config \
 python3-dev \
 ffmpeg \
 bash-completion \
+nano\
 
 python3 -m pip install --upgrade pip
 python3 -m pip install --no-cache-dir -U -r requirements_factorySim.txt
 python3 -m pip install --no-cache-dir -U lark
 python3 -m pip install --no-cache-dir -U typing_extensions
+python3 -m pip install --no-cache-dir -U gymnasium[mujoco]==1.2.0
 
 
 
@@ -30,6 +33,5 @@ cd $HOME/factorySim
 python3 -u train.py "$SLURM_CPUS_PER_TASK"
 
 %startscript
-cd $HOME/factorySim
-python3 -u train.py "$SLURM_CPUS_PER_TASK"
+echo "Ray instance started. Awaiting exec commands."
 
