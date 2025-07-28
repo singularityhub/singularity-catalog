@@ -1,0 +1,68 @@
+Bootstrap: docker
+From: biocontainers/bedtools:2.31.1--hf5e1c6e_0
+
+%post
+    # Install Python 3.11 and dependencies
+    apt-get update && apt-get install -y \
+        python3.11 \
+        python3.11-venv \
+        python3.11-dev \
+        python3-pip \
+        git \
+        build-essential \
+        && rm -rf /var/lib/apt/lists/*
+
+    # Create virtual environment
+    python3.11 -m venv /opt/venv
+    . /opt/venv/bin/activate
+
+    # Install Python dependencies
+    pip install --no-cache-dir \
+        mcp>=1.1.0 \
+        pydantic>=2.0.0 \
+        pydantic-settings>=2.0.0 \
+        httpx>=0.25.0 \
+        uvloop>=0.19.0
+
+    # Create directories
+    mkdir -p /app/src
+    mkdir -p /tmp/mcp-work
+    chmod 755 /tmp/mcp-work
+
+%files
+    src /app/src
+    pyproject.toml /app/
+
+%environment
+    export PATH="/opt/venv/bin:$PATH"
+    export PYTHONPATH="/app"
+    export BIO_MCP_TEMP_DIR="/tmp/mcp-work"
+    export BIO_MCP_BEDTOOLS_PATH="/usr/local/bin/bedtools"
+
+%runscript
+    cd /app
+    exec python -m src.server "$@"
+
+%test
+    # Verify BEDTools is available
+    bedtools --version
+    
+    # Test Python imports
+    python -c "import src.server; print('BEDTools MCP server is ready')"
+
+%help
+    This container runs the Bio-MCP BEDTools server.
+    
+    Usage:
+        singularity run bedtools.sif
+        
+    Environment variables:
+        BIO_MCP_TEMP_DIR: Temporary directory for processing (default: /tmp/mcp-work)
+        BIO_MCP_BEDTOOLS_PATH: Path to bedtools binary (default: /usr/local/bin/bedtools)
+        BIO_MCP_TIMEOUT: Command timeout in seconds
+        BIO_MCP_MAX_FILE_SIZE: Maximum input file size in bytes
+
+%labels
+    Author Bio-MCP Project
+    Version 0.1.0
+    Description MCP server for BEDTools genomic interval operations
